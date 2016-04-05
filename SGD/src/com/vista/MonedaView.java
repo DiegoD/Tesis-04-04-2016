@@ -23,7 +23,7 @@ public class MonedaView extends Panel implements View{
     {
         this.codMoneda.setCaption("Codigo");
          this.simboloMoneda.setCaption("Simbolo1");
-         this.nomMoneda.setCaption("Nombre");
+         this.nomMoneda.setCaption("Nombre1");
          
          this.btnIngresar.addClickListener(new Button.ClickListener() {
             @Override
