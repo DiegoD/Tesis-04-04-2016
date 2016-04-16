@@ -6,6 +6,11 @@ public class MonedaVO {
 	private String nomMoneda;
 	private String simboloMoneda;
 	
+	@Override
+	public String toString() { 
+	    return this.nomMoneda;
+	} 
+	
 	public String getCodMoneda() {
 		return codMoneda;
 	}
