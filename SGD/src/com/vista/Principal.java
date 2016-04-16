@@ -21,6 +21,7 @@ public class Principal extends UI {
 
 	private Panel ActualView;
 	private MonedaView monedaView; 
+	private CotizacionesView cotizacionesView;
 	
 	@WebServlet(value = "/*", asyncSupported = true)
 	@VaadinServletConfiguration(productionMode = false, ui = Principal.class)
@@ -50,12 +51,24 @@ public class Principal extends UI {
             }
         };
         
+     // Comando para items.
+        MenuBar.Command cmdCotizacionesView = new MenuBar.Command() {
+            public void menuSelected(MenuItem selectedItem) {
+            	cotizacionesView = new CotizacionesView();
+                
+                layout.replaceComponent(ActualView, cotizacionesView);
+                ActualView = cotizacionesView;
+            }
+        };
+        
+        
         // A top-level menu item that opens a submenu
         MenuItem mnuMantenimientos = barmenu.addItem("Mantenimientos", null, null);
 
         // Submenu item with a sub-submenu
         MenuItem mnuItemGral = mnuMantenimientos.addItem("General", null, null);
         mnuItemGral.addItem("Moneda",null,    cmdMonedaView);
+        mnuItemGral.addItem("Cotizaciones",null,    cmdCotizacionesView);
         mnuItemGral.addItem("OtroConIcono",
             new ThemeResource("icons/coffee-16px.png"), cmdMonedaView);
 
