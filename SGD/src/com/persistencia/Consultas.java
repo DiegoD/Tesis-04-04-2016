@@ -67,4 +67,61 @@ public class Consultas {
    }
     
    ////////////////////////<COTIZACIONES/>/////////////////////////////////////////////////
+    
+    
+   ////////////////////////<DOCUMENTO ADUANERO>///////////////////////////////////////////
+    
+    
+    public String memberDocumentoAduanero(){
+    	
+      	 StringBuilder sb = new StringBuilder();
+      	      	 
+      	 sb.append("SELECT cod_docum, nom_docum, activo ");
+      	 sb.append("FROM ct_documaduan WHERE nom_docum = ? ");
+
+      	 return sb.toString();
+      }
+    
+    public String insertDocumentoAduanero(){
+    	
+   	 StringBuilder sb = new StringBuilder();
+   	 
+   	 sb.append("INSERT INTO ct_documaduan (nom_docum, activo) ");
+   	 sb.append("VALUES (?, ?)");
+   	 
+   	 return sb.toString();
+   }
+    
+    public String getDocumentosAduanerosActivos(){
+    	
+    	 StringBuilder sb = new StringBuilder();
+    	 
+    	 sb.append("SELECT cod_docum, nom_docum, activo ");
+    	 sb.append("FROM ct_documaduan WHERE activo = 1 ");
+
+    	 return sb.toString();
+    }
+   
+    public String getDocumentosAduanerosTodos(){
+    	
+   	 StringBuilder sb = new StringBuilder();
+   	 
+   	 sb.append("SELECT cod_docum, nom_docum, activo ");
+   	 sb.append("FROM ct_documaduan ");
+
+   	 return sb.toString();
+   }
+    
+    public String getDocumentoAduanero(){
+   	
+     	 StringBuilder sb = new StringBuilder();
+     	 
+     	 sb.append("SELECT cod_docum, nom_docum, activo ");
+     	 sb.append("FROM ct_documaduan WHERE cod_docum = ?  ");
+
+     	 return sb.toString();
+     }
+    
+   ////////////////////////<DOCUMENTO ADUANERO/>//////////////////////////////////////////
+    
 }

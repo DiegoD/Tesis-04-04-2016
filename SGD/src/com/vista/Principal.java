@@ -22,6 +22,7 @@ public class Principal extends UI {
 	private Panel ActualView;
 	private MonedaView monedaView; 
 	private CotizacionesView cotizacionesView;
+	private DocumentoAduaneroView documentoAduaneroView;
 	
 	@WebServlet(value = "/*", asyncSupported = true)
 	@VaadinServletConfiguration(productionMode = false, ui = Principal.class)
@@ -41,7 +42,7 @@ public class Principal extends UI {
 		layout.setMargin(true);
 		setContent(layout);
 
-		// Comando para items.
+		/*Comando para Monedas*/
         MenuBar.Command cmdMonedaView = new MenuBar.Command() {
             public void menuSelected(MenuItem selectedItem) {
                 monedaView = new MonedaView();
@@ -51,13 +52,23 @@ public class Principal extends UI {
             }
         };
         
-     // Comando para items.
+        /*Comando para cotizaciones*/
         MenuBar.Command cmdCotizacionesView = new MenuBar.Command() {
             public void menuSelected(MenuItem selectedItem) {
             	cotizacionesView = new CotizacionesView();
                 
                 layout.replaceComponent(ActualView, cotizacionesView);
                 ActualView = cotizacionesView;
+            }
+        };
+        
+        /*Comando para Documentos Aduaneros*/
+        MenuBar.Command cmdDocumentosAduanerosView = new MenuBar.Command() {
+            public void menuSelected(MenuItem selectedItem) {
+            	documentoAduaneroView = new DocumentoAduaneroView();
+                
+                layout.replaceComponent(ActualView, documentoAduaneroView);
+                ActualView = documentoAduaneroView;
             }
         };
         
@@ -69,6 +80,7 @@ public class Principal extends UI {
         MenuItem mnuItemGral = mnuMantenimientos.addItem("General", null, null);
         mnuItemGral.addItem("Moneda",null,    cmdMonedaView);
         mnuItemGral.addItem("Cotizaciones",null,    cmdCotizacionesView);
+        mnuItemGral.addItem("Docs. Aduaneros",null,    cmdDocumentosAduanerosView);
         mnuItemGral.addItem("OtroConIcono",
             new ThemeResource("icons/coffee-16px.png"), cmdMonedaView);
 
