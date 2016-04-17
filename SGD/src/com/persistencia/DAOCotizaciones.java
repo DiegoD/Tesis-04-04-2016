@@ -105,7 +105,7 @@ public class DAOCotizaciones {
     	
     	Consultas clts = new Consultas();
     	
-    	String insert = clts.getMonedas();
+    	String insert = clts.insertCotizacion();
     	
     	PreparedStatement pstmt1;
     	ResultSet rs;

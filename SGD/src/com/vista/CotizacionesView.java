@@ -118,10 +118,17 @@ public class CotizacionesView extends Panel implements View{
 	            	   
 	            	   
 						controlador.insertCotizacion(cotizacionVO);
-					} catch (IngresandoCotizacionException | MemberCotizacionException | ExisteCotizacionException e) {
+						
+						mostrarMensajeOK(Variables.OK_INGRESO);
+						
+					} catch (IngresandoCotizacionException | MemberCotizacionException e) {
 						
 						mostrarMensajeError(e.getMessage());
 					}
+            	   	catch(ExisteCotizacionException e){
+            		   mostrarMensajeWarning(e.getMessage());
+            		   
+            	   	}
             	    catch(Exception e) {
             	    	
             	    	mostrarMensajeError(Variables.ERROR_INESPERADO);
@@ -130,26 +137,9 @@ public class CotizacionesView extends Panel implements View{
                }
                else
                {
-            	// BEGIN-EXAMPLE: application.errors.notification.customization
-                   // Notification with default settings for a warning
-                   Notification notif = new Notification(
-                       "Atención",
-                       "<br/>Algunos campos no son válidos",
-                       Notification.Type.WARNING_MESSAGE,
-                       true); // Contains HTML
-
-                   // Customize it
-                   notif.setDelayMsec(20000);
-                   notif.setPosition(Position.BOTTOM_RIGHT);
-                   //notif.setStyleName("mystyle");
-                   //notif.setIcon(new ThemeResource("img/reindeer-64px.png"));
-                   
-                   // Show it in the page
-                   notif.show(Page.getCurrent());
-                   // END-EXAMPLE: application.errors.notification.customization
+            	   mostrarMensajeWarning(Variables.WARNING_CAMPOS_NO_VALIDOS);
                }
-               
-           
+                          
            }
        });
 		
@@ -173,9 +163,28 @@ public class CotizacionesView extends Panel implements View{
 		
 		
         Notification notif = new Notification(
-            "Atención",
+            "Error",
             "<br/>" + msj,
             Notification.Type.ERROR_MESSAGE,
+            true); // Contains HTML
+
+       
+        notif.setDelayMsec(20000);
+        notif.setPosition(Position.BOTTOM_RIGHT);
+        //notif.setStyleName("mystyle");
+        //notif.setIcon(new ThemeResource("img/reindeer-64px.png"));
+        
+        notif.show(Page.getCurrent());
+      		
+	}
+	
+	private void mostrarMensajeOK(String msj){
+		
+		
+        Notification notif = new Notification(
+            "OK",
+            "<br/>" + msj,
+            Notification.Type.HUMANIZED_MESSAGE,
             true); // Contains HTML
 
        
