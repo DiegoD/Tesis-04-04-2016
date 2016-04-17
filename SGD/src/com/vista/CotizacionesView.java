@@ -5,10 +5,10 @@ import com.valueObject.*;
 import java.util.ArrayList;
 
 import com.controladores.CotizacionesController;
-import com.excepciones.ExisteCotizacionException;
-import com.excepciones.IngresandoCotizacionException;
-import com.excepciones.MemberCotizacionException;
 import com.excepciones.ObteniendoMonedasException;
+import com.excepciones.cotizaciones.ExisteCotizacionException;
+import com.excepciones.cotizaciones.IngresandoCotizacionException;
+import com.excepciones.cotizaciones.MemberCotizacionException;
 import com.google.gwt.user.datepicker.client.DatePicker;
 import com.sun.org.apache.xpath.internal.operations.VariableSafeAbsRef;
 import com.vaadin.data.Validator;

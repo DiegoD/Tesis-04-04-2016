@@ -8,6 +8,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.excepciones.*;
+import com.excepciones.cotizaciones.IngresandoCotizacionException;
+import com.excepciones.cotizaciones.MemberCotizacionException;
+import com.excepciones.cotizaciones.ObteniendoCotizacionException;
 import com.valueObject.*;
 
 public class DAOCotizaciones {

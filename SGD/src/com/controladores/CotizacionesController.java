@@ -4,6 +4,11 @@ import java.sql.Date;
 import java.util.ArrayList;
 
 import com.excepciones.*;
+import com.excepciones.cotizaciones.ExisteCotizacionException;
+import com.excepciones.cotizaciones.IngresandoCotizacionException;
+import com.excepciones.cotizaciones.MemberCotizacionException;
+import com.excepciones.cotizaciones.NoExisteCotizacionException;
+import com.excepciones.cotizaciones.ObteniendoCotizacionException;
 import com.logica.Fachada;
 import com.valueObject.*;
 import com.persistencia.*;
