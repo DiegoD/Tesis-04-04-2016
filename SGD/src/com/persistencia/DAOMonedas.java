@@ -43,7 +43,7 @@ public class DAOMonedas {
 	    	 while (rs.next()){
 	    		 
 	    		 monedaVO = new MonedaVO();
-	    		 monedaVO.setCodMoneda(rs.getString(1));
+	    		 monedaVO.setCodMoneda(rs.getInt(1));
 	    		 monedaVO.setNomMoneda(rs.getString(2));
 	    		 monedaVO.setSimboloMoneda(rs.getString(3));
 	    		 
@@ -53,7 +53,7 @@ public class DAOMonedas {
 	    	 
 	    	 rs.close ();
 			 pstmt1.close ();
-    	
+			 con.close();
     	
     	} catch (SQLException e) {
 			throw new ObteniendoMonedasException();
@@ -61,18 +61,6 @@ public class DAOMonedas {
 		} catch (ClassNotFoundException e) {
 			throw new ObteniendoMonedasException();
 		}
-    	finally{
-    		 try 
-    		 {
-    			 if(!con.isClosed())
-				     con.close();
-
-			} catch (SQLException e) {
-				throw new ObteniendoMonedasException();
-			}
-    	}
-    	
-    	
     	
     	return lstMonedas;
     }

@@ -2,7 +2,7 @@ package com.valueObject;
 
 public class MonedaVO {
 
-	private String codMoneda;
+	private int codMoneda;
 	private String nomMoneda;
 	private String simboloMoneda;
 	
@@ -11,10 +11,10 @@ public class MonedaVO {
 	    return this.nomMoneda;
 	} 
 	
-	public String getCodMoneda() {
+	public int getCodMoneda() {
 		return codMoneda;
 	}
-	public void setCodMoneda(String codMoneda) {
+	public void setCodMoneda(int codMoneda) {
 		this.codMoneda = codMoneda;
 	}
 	public String getNomMoneda() {

@@ -1,5 +1,6 @@
 package com.logica;
 
+import java.sql.Date;
 import java.util.ArrayList;
 
 import com.excepciones.*;
@@ -12,10 +13,12 @@ public class Fachada {
 	private static volatile Fachada INSTANCE = null;
 	
 	private DAOMonedas monedas;
+	private DAOCotizaciones cotizaciones;
 	
     private Fachada()
     {
         this.monedas = new DAOMonedas();
+        this.cotizaciones = new DAOCotizaciones();
     }
     
     public static Fachada getInstance(){
@@ -32,10 +35,39 @@ public class Fachada {
     }
     
     
+    /////////////////////////////////<MONEDAS>/////////////////////////////////////////////////
     public ArrayList<MonedaVO> getMonedas() throws ObteniendoMonedasException{
     	
     	return this.monedas.getMonedas();
     }
 
+    /////////////////////////////////<MONEDAS/>/////////////////////////////////////////////////
+    
+    
+    /////////////////////////////////<COTIZACIONES>////////////////////////////////////////////
+    
+    public ArrayList<CotizacionVO> getCotizaciones() throws ObteniendoCotizacionException{
+    	
+    	return this.cotizaciones.getCotizaciones();
+    }
+    
+    public CotizacionVO getCotizacion(Date fecha, int codMoneda) throws ObteniendoCotizacionException, MemberCotizacionException, NoExisteCotizacionException{
+    	
+    	if(this.cotizaciones.memberCotizacion(fecha, codMoneda))
+    	    	return this.cotizaciones.getCotizacion(fecha, codMoneda);
+    	else 
+    		throw new NoExisteCotizacionException();
+    }
+
+    public void insertCotizacion(CotizacionVO cotizacionVO) throws IngresandoCotizacionException, MemberCotizacionException, ExisteCotizacionException{
+    	
+    	if(!this.cotizaciones.memberCotizacion(cotizacionVO.getFecha(), cotizacionVO.getCodMoneda()))
+    		this.cotizaciones.insertCotizacion(cotizacionVO);
+    	else
+    		throw new ExisteCotizacionException();
+    }
+    
+    /////////////////////////////////<COTIZACIONES/>//////////////////////////////////////////
+    
     
 }

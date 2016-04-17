@@ -5,8 +5,12 @@ import com.valueObject.*;
 import java.util.ArrayList;
 
 import com.controladores.CotizacionesController;
+import com.excepciones.ExisteCotizacionException;
+import com.excepciones.IngresandoCotizacionException;
+import com.excepciones.MemberCotizacionException;
 import com.excepciones.ObteniendoMonedasException;
 import com.google.gwt.user.datepicker.client.DatePicker;
+import com.sun.org.apache.xpath.internal.operations.VariableSafeAbsRef;
 import com.vaadin.data.Validator;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.validator.DoubleValidator;
@@ -77,38 +81,52 @@ public class CotizacionesView extends Panel implements View{
 		this.tfImpCompra.addValidator(numberValidator);
 		this.tfImpCompra.setImmediate(true);
 		
-		
-
-		
-		
-		
 		///////////////////////////////////////////
 		
+		//region Description
+
+		int asd =0;
+
+		//endregion
 		
 		
 		this.btnIngresar.addClickListener(new Button.ClickListener() {
 	           
-            @Override
+          
+
+			@Override
            public void buttonClick(ClickEvent event) {
                
                String result = "";
                
-               //Llamamos al controller
-              
-               
+               /*Verificamos que todos los campos sean válidos*/
                if(tfImpCompra.isValid() && pupFecha.isValid() && ddlMonedas.isValid() 
             		   && tfImpVenta.isValid() && tfImpCompra.isValid())
                {   
             	 
-	               try {
-
-		               MonedaVO mon = (MonedaVO)ddlMonedas.getValue();
-		               
-		               String s =mon.getClass().toString();
-		               layout1.addComponent(new Label(mon.getNomMoneda()));
-	               
-	               }catch (Exception ex) { }
-               
+	              
+            	   try {
+		               /*MonedaVO mon = (MonedaVO)ddlMonedas.getValue();
+		               String s =mon.getClass().toString(); */
+  
+		               CotizacionVO cotizacionVO = new CotizacionVO();
+	            	   
+	            	   cotizacionVO.setFecha(new java.sql.Date(pupFecha.getValue().getTime()));
+	            	   cotizacionVO.setCodMoneda(((MonedaVO)ddlMonedas.getValue()).getCodMoneda());
+	            	   cotizacionVO.setImpVenta(Float.parseFloat(tfImpVenta.getValue()));
+	            	   cotizacionVO.setImpCompra(Float.parseFloat(tfImpCompra.getValue()));
+	            	   
+	            	   
+						controlador.insertCotizacion(cotizacionVO);
+					} catch (IngresandoCotizacionException | MemberCotizacionException | ExisteCotizacionException e) {
+						
+						mostrarMensajeError(e.getMessage());
+					}
+            	    catch(Exception e) {
+            	    	
+            	    	mostrarMensajeError(Variables.ERROR_INESPERADO);
+            	    }
+		           
                }
                else
                {
@@ -117,7 +135,7 @@ public class CotizacionesView extends Panel implements View{
                    Notification notif = new Notification(
                        "Atención",
                        "<br/>Algunos campos no son válidos",
-                       Notification.Type.ERROR_MESSAGE,
+                       Notification.Type.WARNING_MESSAGE,
                        true); // Contains HTML
 
                    // Customize it
@@ -149,6 +167,46 @@ public class CotizacionesView extends Panel implements View{
 		setContent(layout1);
 	}
 
+	
+	
+	private void mostrarMensajeError(String msj){
+		
+		
+        Notification notif = new Notification(
+            "Atención",
+            "<br/>" + msj,
+            Notification.Type.ERROR_MESSAGE,
+            true); // Contains HTML
+
+       
+        notif.setDelayMsec(20000);
+        notif.setPosition(Position.BOTTOM_RIGHT);
+        //notif.setStyleName("mystyle");
+        //notif.setIcon(new ThemeResource("img/reindeer-64px.png"));
+        
+        notif.show(Page.getCurrent());
+      		
+	}
+	
+	private void mostrarMensajeWarning(String msj){
+		
+		
+        Notification notif = new Notification(
+            "Atención",
+            "<br/>" + msj,
+            Notification.Type.WARNING_MESSAGE,
+            true); // Contains HTML
+
+       
+        notif.setDelayMsec(20000);
+        notif.setPosition(Position.BOTTOM_RIGHT);
+        //notif.setStyleName("mystyle");
+        //notif.setIcon(new ThemeResource("img/reindeer-64px.png"));
+        
+        notif.show(Page.getCurrent());
+      		
+	}
+	
 	
 	private void fillComboMonedas(){
 		

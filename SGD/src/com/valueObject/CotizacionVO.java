@@ -1,6 +1,6 @@
 package com.valueObject;
 
-import java.util.Date;
+import java.sql.Date;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
@@ -9,12 +9,15 @@ import com.vaadin.ui.Panel;
 public class CotizacionVO {
 
 	private Date fecha;
-	private String codMoneda;
+	private int codMoneda;
 	private float impCompra;
 	private float impVenta;
 	
-	public CotizacionVO(String codMoneda, float impCompra, float impVenta){
+	public CotizacionVO(){}
+	
+	public CotizacionVO(Date fecha,int codMoneda, float impCompra, float impVenta){
 		
+		this.fecha = fecha;
 		this.codMoneda = codMoneda;
 		this.impCompra = impCompra;
 		this.impVenta = impVenta;
@@ -26,10 +29,10 @@ public class CotizacionVO {
 	public void setFecha(Date fecha) {
 		this.fecha = fecha;
 	}
-	public String getCodMoneda() {
+	public int getCodMoneda() {
 		return codMoneda;
 	}
-	public void setCodMoneda(String codMoneda) {
+	public void setCodMoneda(int codMoneda) {
 		this.codMoneda = codMoneda;
 	}
 	public float getImpCompra() {
