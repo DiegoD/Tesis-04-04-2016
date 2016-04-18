@@ -9,6 +9,8 @@ import com.excepciones.cotizaciones.IngresandoCotizacionException;
 import com.excepciones.cotizaciones.MemberCotizacionException;
 import com.excepciones.cotizaciones.NoExisteCotizacionException;
 import com.excepciones.cotizaciones.ObteniendoCotizacionException;
+import com.excepciones.documentosAduaneros.IngresandoDocumentoAduaneroException;
+import com.excepciones.documentosAduaneros.ObteniendoDocumentoAduaneroException;
 import com.valueObject.*;
 import com.persistencia.*;
 
@@ -19,11 +21,13 @@ public class Fachada {
 	
 	private DAOMonedas monedas;
 	private DAOCotizaciones cotizaciones;
+	private DAODocumentosAduaneros docsAduaneros;
 	
     private Fachada()
     {
         this.monedas = new DAOMonedas();
         this.cotizaciones = new DAOCotizaciones();
+        this.docsAduaneros = new DAODocumentosAduaneros();
     }
     
     public static Fachada getInstance(){
@@ -73,6 +77,34 @@ public class Fachada {
     }
     
     /////////////////////////////////<COTIZACIONES/>//////////////////////////////////////////
+    
+    
+    /////////////////////////////////<DOCUMENTOS ADUANEROS>//////////////////////////////////
+    
+    
+    public ArrayList<DocumentoAuaneroVO> getDocumentosAduanerosActivos() throws ObteniendoDocumentoAduaneroException  {
+    	
+    	return this.docsAduaneros.getDocumentosAduanerosActivos();
+    }
+    
+    public ArrayList<DocumentoAuaneroVO> getDocumentosAduanerosTodos() throws ObteniendoDocumentoAduaneroException  {
+    	
+    	return this.docsAduaneros.getDocumentosAduanerosTodos();
+    }
+    
+    public DocumentoAuaneroVO  getDocumentosAduanero(int codDocum) throws ObteniendoDocumentoAduaneroException {
+    	
+    	return this.docsAduaneros.getDocumentosAduanero(codDocum);
+    }
+
+    public void insertDocumentAduanero(DocumentoAuaneroVO documentoAuaneroVO) throws IngresandoDocumentoAduaneroException{
+    	
+    	this.docsAduaneros.insertCotizacion(documentoAuaneroVO);
+    }
+    
+    
+    
+    /////////////////////////////////<DOCUMENTOS ADUANEROS/>/////////////////////////////////
     
     
 }

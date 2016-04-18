@@ -1,6 +1,6 @@
 package com.valueObject;
 
-public class DocumentoAuaneroVO {
+public class DocumentoAuaneroVO extends AuditoriaVO {
 
 	private int codDocum;
 	private String nomDocum;

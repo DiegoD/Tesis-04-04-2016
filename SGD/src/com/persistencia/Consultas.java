@@ -29,7 +29,7 @@ public class Consultas {
     	
      	 StringBuilder sb = new StringBuilder();
      	 
-     	 sb.append("SELECT fec_cotizacion, cod_moneda, imp_venta, imp_compra ");
+     	 sb.append("SELECT fec_cotizacion, cod_moneda, imp_venta, imp_compra, usuario_mod, fecha_mod ");
      	 sb.append("FROM ct_cotizaciones ");
 
      	 return sb.toString();
@@ -39,7 +39,7 @@ public class Consultas {
     	
       	 StringBuilder sb = new StringBuilder();
       	 
-      	 sb.append("SELECT fec_cotizacion, cod_moneda, imp_venta, imp_compra ");
+      	 sb.append("SELECT fec_cotizacion, cod_moneda, imp_venta, imp_compra, usuario_mod, fecha_mod ");
       	 sb.append("FROM ct_cotizaciones WHERE fec_cotizacion = ? AND cod_moneda = ? ");
 
       	 return sb.toString();
@@ -50,8 +50,8 @@ public class Consultas {
     	
     	 StringBuilder sb = new StringBuilder();
     	 
-    	 sb.append("INSERT INTO ct_cotizaciones (fec_cotizacion, cod_moneda, imp_venta, imp_compra) ");
-    	 sb.append("VALUES (?, ?, ?, ?)");
+    	 sb.append("INSERT INTO ct_cotizaciones (fec_cotizacion, cod_moneda, imp_venta, imp_compra, usuario_mod, fecha_mod) ");
+    	 sb.append("VALUES (?, ?, ?, ?, ?, NOW())");
     	 
     	 return sb.toString();
     }
@@ -76,7 +76,7 @@ public class Consultas {
     	
       	 StringBuilder sb = new StringBuilder();
       	      	 
-      	 sb.append("SELECT cod_docum, nom_docum, activo ");
+      	 sb.append("SELECT cod_docum, nom_docum, activo, usuario_mod, fecha_mod ");
       	 sb.append("FROM ct_documaduan WHERE nom_docum = ? ");
 
       	 return sb.toString();
@@ -86,8 +86,8 @@ public class Consultas {
     	
    	 StringBuilder sb = new StringBuilder();
    	 
-   	 sb.append("INSERT INTO ct_documaduan (nom_docum, activo) ");
-   	 sb.append("VALUES (?, ?)");
+   	 sb.append("INSERT INTO ct_documaduan (nom_docum, activo, usuario_mod, fecha_mod) ");
+   	 sb.append("VALUES (?, ?, ?, NOW()) ");
    	 
    	 return sb.toString();
    }
@@ -96,7 +96,7 @@ public class Consultas {
     	
     	 StringBuilder sb = new StringBuilder();
     	 
-    	 sb.append("SELECT cod_docum, nom_docum, activo ");
+    	 sb.append("SELECT cod_docum, nom_docum, activo, usuario_mod, fecha_mod ");
     	 sb.append("FROM ct_documaduan WHERE activo = 1 ");
 
     	 return sb.toString();
@@ -106,7 +106,7 @@ public class Consultas {
     	
    	 StringBuilder sb = new StringBuilder();
    	 
-   	 sb.append("SELECT cod_docum, nom_docum, activo ");
+   	 sb.append("SELECT cod_docum, nom_docum, activo, usuario_mod, fecha_mod ");
    	 sb.append("FROM ct_documaduan ");
 
    	 return sb.toString();
@@ -116,12 +116,32 @@ public class Consultas {
    	
      	 StringBuilder sb = new StringBuilder();
      	 
-     	 sb.append("SELECT cod_docum, nom_docum, activo ");
+     	 sb.append("SELECT cod_docum, nom_docum, activo, usuario_mod, fecha_mod ");
      	 sb.append("FROM ct_documaduan WHERE cod_docum = ?  ");
 
      	 return sb.toString();
      }
     
    ////////////////////////<DOCUMENTO ADUANERO/>//////////////////////////////////////////
+    
+    
+    
+    ////////////////////////<EMPRESAS>////////////////////////////////////////////////////
+    
+    
+    public String memberEmpresa(){
+    	
+     	 StringBuilder sb = new StringBuilder();
+     	      	 
+     	 sb.append("SELECT cod_emp, nom_emp, activo, usuario_mod, fecha_mod ");
+     	 sb.append("FROM ct_empresas WHERE nom_emp = ? ");
+
+     	 return sb.toString();
+     }
+   
+  
+    
+    
+    ////////////////////////<EMPRESAS/>///////////////////////////////////////////////////
     
 }

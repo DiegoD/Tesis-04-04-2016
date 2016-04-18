@@ -6,7 +6,7 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Panel;
 
-public class CotizacionVO {
+public class CotizacionVO extends AuditoriaVO{
 
 	private Date fecha;
 	private int codMoneda;

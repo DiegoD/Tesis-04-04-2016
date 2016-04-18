@@ -1,42 +1,46 @@
 package com.vista;
 
-
-import com.controladores.CotizacionesController;
 import com.controladores.DocumentoAduaneroController;
-import com.excepciones.cotizaciones.ExisteCotizacionException;
-import com.excepciones.cotizaciones.IngresandoCotizacionException;
-import com.excepciones.cotizaciones.MemberCotizacionException;
+import com.excepciones.documentosAduaneros.IngresandoDocumentoAduaneroException;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.Page;
 import com.vaadin.shared.Position;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Button.ClickEvent;
-import com.valueObject.CotizacionVO;
-import com.valueObject.MonedaVO;
+import com.valueObject.DocumentoAuaneroVO;
 import com.valueObject.Variables;
 
 public class DocumentoAduaneroView extends Panel implements View{
+
 
 	FormLayout  layout1 = new FormLayout();
 	
 	private DocumentoAduaneroController controlador;
 
 	final TextField tfNomDocum = new TextField();
+	final ComboBox ddlActivo = new ComboBox();
 	final Button btnIngresar = new Button("Ingresar");
 	
 	public DocumentoAduaneroView(){
 		
 		this.controlador = new DocumentoAduaneroController();
+		
 		this.tfNomDocum.setCaption("Nombre");
+		this.ddlActivo.setCaption("Activo");
+		
+		this.ddlActivo.setRequired(true);
+		this.ddlActivo.setRequiredError("Es requerido");
 		
 		this.tfNomDocum.setRequired(true);
 		this.tfNomDocum.setRequiredError("Es requerido");
 		
+		this.fillDdlActivo();
 		
 		this.btnIngresar.addClickListener(new Button.ClickListener() {
 	           
@@ -53,21 +57,31 @@ public class DocumentoAduaneroView extends Panel implements View{
             	   try {
 		               /*MonedaVO mon = (MonedaVO)ddlMonedas.getValue();
 		               String s =mon.getClass().toString(); */
-  
-            		   //DocumentoAuaneroVO documentoAuaneroVO = new DocumentoAuaneroVO();
+
+            		   boolean activo = ddlActivo.getValue().equals("S") ? true : false;
+            		   
+            		   DocumentoAuaneroVO documentoAuaneroVO = new DocumentoAuaneroVO();
+           		   
+            		   documentoAuaneroVO.setNomDocum(tfNomDocum.getValue().trim());
+            		   documentoAuaneroVO.setActivo(activo);
+            		   documentoAuaneroVO.setUsuarioMod("usuario");
 	            	   
-	            	  
 	            	   
-	            	   
-						/*Llamamos al controladoe*/
+						/*Llamamos al controlador*/
+            		   controlador.insertDocumentAduanero(documentoAuaneroVO);
 						
 						mostrarMensajeOK(Variables.OK_INGRESO);
 						
 					}
-            	    catch(Exception e) {
+            	    catch(IngresandoDocumentoAduaneroException e) {
             	    	
-            	    	mostrarMensajeError(Variables.ERROR_INESPERADO);
+            	    	mostrarMensajeError(e.getMessage());
             	    }
+            	   catch(Exception e) {
+           	    	
+           	    	mostrarMensajeError(Variables.ERROR_INESPERADO);
+           	    }
+            	   
 		           
                }
                else
@@ -81,12 +95,18 @@ public class DocumentoAduaneroView extends Panel implements View{
 		
 		
 		layout1.addComponent(tfNomDocum);
+		layout1.addComponent(ddlActivo);
 		layout1.addComponent(btnIngresar);
 		
 		setContent(layout1);
 		
 	}
 	
+	private void fillDdlActivo(){
+		
+		this.ddlActivo.addItem("S");
+		this.ddlActivo.addItem("N");
+	}
 	
 	private void mostrarMensajeError(String msj){
 		

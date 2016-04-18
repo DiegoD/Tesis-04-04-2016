@@ -115,7 +115,7 @@ public class CotizacionesView extends Panel implements View{
 	            	   cotizacionVO.setCodMoneda(((MonedaVO)ddlMonedas.getValue()).getCodMoneda());
 	            	   cotizacionVO.setImpVenta(Float.parseFloat(tfImpVenta.getValue()));
 	            	   cotizacionVO.setImpCompra(Float.parseFloat(tfImpCompra.getValue()));
-	            	   
+	            	   cotizacionVO.setUsuarioMod("usuario");
 	            	   
 						controlador.insertCotizacion(cotizacionVO);
 						

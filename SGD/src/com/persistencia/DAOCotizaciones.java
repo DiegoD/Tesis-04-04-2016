@@ -44,7 +44,9 @@ public class DAOCotizaciones {
 				cotizacionVO.setFecha(rs.getDate(1));
 				cotizacionVO.setCodMoneda(rs.getInt(2));
 				cotizacionVO.setImpVenta(rs.getFloat(3));
-				cotizacionVO.setImpCompra(rs.getFloat(3));
+				cotizacionVO.setImpCompra(rs.getFloat(4));
+				cotizacionVO.setUsuarioMod(rs.getString(5));
+				cotizacionVO.setFechaMod(rs.getDate(6));
 				
 			}
 			
@@ -84,7 +86,9 @@ public class DAOCotizaciones {
 				cotizacionVO.setFecha(rs.getDate(1));
 				cotizacionVO.setCodMoneda(rs.getInt(2));
 				cotizacionVO.setImpVenta(rs.getFloat(3));
-				cotizacionVO.setImpCompra(rs.getFloat(3));
+				cotizacionVO.setImpCompra(rs.getFloat(4));
+				cotizacionVO.setUsuarioMod(rs.getString(5));
+				cotizacionVO.setFechaMod(rs.getDate(6));
 				
 				lstCotizaciones.add(cotizacionVO);
 				
@@ -124,6 +128,8 @@ public class DAOCotizaciones {
 			pstmt1.setInt(2, cotizacionVO.getCodMoneda());
 			pstmt1.setFloat(3, cotizacionVO.getImpVenta());
 			pstmt1.setFloat(4, cotizacionVO.getImpCompra());
+			pstmt1.setString(5, cotizacionVO.getUsuarioMod());
+			
 			
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
