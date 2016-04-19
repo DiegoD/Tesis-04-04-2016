@@ -5,7 +5,7 @@ public class Consultas {
     protected final static String URL = "jdbc:mysql://localhost:3306/vaadin";
     protected final static String USER = "root";
     protected final static String DRIVER = "com.mysql.jdbc.Driver";
-    protected final static String PASS  = "rootfuerte15";
+    protected final static String PASS  = "root";
     
     
     ////////////////////////<MONEDAS>/////////////////////////////////////////////////////
@@ -55,6 +55,16 @@ public class Consultas {
     	 
     	 return sb.toString();
     }
+    
+    public String insertImpuesto(){
+    	
+   	 StringBuilder sb = new StringBuilder();
+   	 
+   	 sb.append("INSERT INTO ct_impuestos (cod_impuesto, desc_impuesto, porcentaje_impuesto) ");
+   	 sb.append("VALUES (?, ?, ?)");
+   	 
+   	 return sb.toString();
+   }
 	
     public String memberCotizacion(){
     	
