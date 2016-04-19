@@ -4,6 +4,6 @@ import com.logica.Impuesto;
 
 public interface IDaoImpuesto {
 	
-	public void insertImpuesto(Impuesto impuesto);
+	public void insertImpuesto(Impuesto impuesto) throws ClassNotFoundException;
 
 }

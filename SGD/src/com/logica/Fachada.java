@@ -1,8 +1,12 @@
 package com.logica;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
 
+import com.abstractFactory.AbstractFactoryBuilder;
+import com.abstractFactory.IAbstractFactory;
 import com.excepciones.*;
 import com.excepciones.cotizaciones.ExisteCotizacionException;
 import com.excepciones.cotizaciones.IngresandoCotizacionException;
@@ -23,14 +27,23 @@ public class Fachada {
 	private DAOCotizaciones cotizaciones;
 	private DAODocumentosAduaneros docsAduaneros;
 	
-    private Fachada()
+	/*Esto es para abstract factory*/
+	private IDaoImpuesto daoImpuesto;
+	private AbstractFactoryBuilder fabrica;
+	private IAbstractFactory fabricaConcreta;
+	
+	
+    private Fachada() throws InstantiationException, IllegalAccessException, ClassNotFoundException, FileNotFoundException, IOException
     {
         this.monedas = new DAOMonedas();
         this.cotizaciones = new DAOCotizaciones();
+        
+        fabrica = AbstractFactoryBuilder.getInstancia();
+		fabricaConcreta = fabrica.getAbstractFactory();
         this.docsAduaneros = new DAODocumentosAduaneros();
     }
     
-    public static Fachada getInstance(){
+    public static Fachada getInstance() throws InstantiationException, IllegalAccessException, ClassNotFoundException, FileNotFoundException, IOException{
          
         if(INSTANCE == null)
         {
@@ -75,6 +88,16 @@ public class Fachada {
     	else
     		throw new ExisteCotizacionException();
     }
+    
+    public void insertImpuesto (ImpuestoVO impuestoVO) throws ClassNotFoundException{
+    	
+    	Impuesto impuesto = new Impuesto(impuestoVO.getCodImpuesto(), impuestoVO.getDescImpuesto(), impuestoVO.getPorcentaje());
+    	
+    	System.out.println("estoy en fachada llamando a DAO");
+    	this.daoImpuesto = fabricaConcreta.crearDaoImpuestos();
+    	this.daoImpuesto.insertImpuesto(impuesto);
+    }
+    
     
     /////////////////////////////////<COTIZACIONES/>//////////////////////////////////////////
     

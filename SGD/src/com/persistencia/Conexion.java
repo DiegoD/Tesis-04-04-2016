@@ -10,15 +10,17 @@ import com.mysql.jdbc.Connection;
 
 public class Conexion {
 	
-	public static Conexion instance;
-	private Conexion cnn = null;
+	
+	private java.sql.Connection con = null;
+	private String URL;
+	private String user;
+	private String pass;
 	
 	public Conexion() throws ClassNotFoundException{
 		
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			this.cnn = (Conexion) DriverManager.getConnection ("jdbc:mysql://localhost:3306/vaadin","root","root");
-			
+			this.con = (java.sql.Connection) DriverManager.getConnection ("jdbc:mysql://localhost:3306/vaadin","root","root");
 		} 
 		catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -26,22 +28,11 @@ public class Conexion {
 		}
 	}
 	
-	public static Conexion getInstanceConexion() throws ClassNotFoundException{
-        
-        if(instance == null)
-        {
-        	instance = new Conexion();
-        }
-        
-        return instance;
-    }
-	
-	public Conexion getConn(){
-		return cnn;
+	public java.sql.Connection getConnection() {
+		return con;
 	}
 	
-	public void cerrarConexion(){
-		instance = null;
+	public void cerrarConnection(){
+		con = null;
 	}
-
 }
