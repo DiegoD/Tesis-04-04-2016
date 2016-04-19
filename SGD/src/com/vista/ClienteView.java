@@ -10,5 +10,4 @@ public class ClienteView extends UI{
 		// TODO Auto-generated method stub
 		
 	}
-
 }

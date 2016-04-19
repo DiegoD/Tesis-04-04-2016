@@ -1,5 +1,7 @@
 package com.vista;
 
+import java.io.IOException;
+
 import javax.servlet.annotation.WebServlet;
 
 
@@ -23,6 +25,7 @@ public class Principal extends UI {
 	private MonedaView monedaView; 
 	private CotizacionesView cotizacionesView;
 	private DocumentoAduaneroView documentoAduaneroView;
+	private ImpuestosView impuestosView;
 	
 	@WebServlet(value = "/*", asyncSupported = true)
 	@VaadinServletConfiguration(productionMode = false, ui = Principal.class)
@@ -55,7 +58,12 @@ public class Principal extends UI {
         /*Comando para cotizaciones*/
         MenuBar.Command cmdCotizacionesView = new MenuBar.Command() {
             public void menuSelected(MenuItem selectedItem) {
-            	cotizacionesView = new CotizacionesView();
+            	try {
+					cotizacionesView = new CotizacionesView();
+				} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
                 
                 layout.replaceComponent(ActualView, cotizacionesView);
                 ActualView = cotizacionesView;
@@ -72,6 +80,16 @@ public class Principal extends UI {
             }
         };
         
+        /*Comando para cotizaciones*/
+        MenuBar.Command cmdImpuestoView = new MenuBar.Command() {
+            public void menuSelected(MenuItem selectedItem) {
+            	impuestosView = new ImpuestosView();
+                
+                layout.replaceComponent(ActualView, impuestosView);
+                ActualView = impuestosView;
+            }
+        };
+        
         
         // A top-level menu item that opens a submenu
         MenuItem mnuMantenimientos = barmenu.addItem("Mantenimientos", null, null);
@@ -81,6 +99,7 @@ public class Principal extends UI {
         mnuItemGral.addItem("Moneda",null,    cmdMonedaView);
         mnuItemGral.addItem("Cotizaciones",null,    cmdCotizacionesView);
         mnuItemGral.addItem("Docs. Aduaneros",null,    cmdDocumentosAduanerosView);
+        mnuItemGral.addItem("Impuestos",null,    cmdImpuestoView);
         mnuItemGral.addItem("OtroConIcono",
             new ThemeResource("icons/coffee-16px.png"), cmdMonedaView);
 
@@ -93,12 +112,13 @@ public class Principal extends UI {
         mnuIngresoCliente.addItem("Factura",      null, cmdMonedaView);
         
         
+        /*
         // Another top-level item
         MenuItem mnuOtros = barmenu.addItem("Otros", null, null);
         mnuOtros.addItem("Otros1", null, cmdMonedaView);
         mnuOtros.addItem("Otros2",  null, cmdMonedaView);
         mnuOtros.addItem("Otros3", null, cmdMonedaView);
-
+         */
         // Yet another top-level item
         MenuItem mnuPagos = barmenu.addItem("Pagos", null, null);
         mnuPagos.addItem("Solicitud", null, cmdMonedaView);

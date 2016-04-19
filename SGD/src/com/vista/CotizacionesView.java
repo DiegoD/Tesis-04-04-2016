@@ -2,6 +2,8 @@ package com.vista;
 
 import com.valueObject.*;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import com.controladores.CotizacionesController;
@@ -51,7 +53,7 @@ public class CotizacionesView extends Panel implements View{
 		
 	final Button btnIngresar = new Button("Ingresar");
 	
-	public CotizacionesView(){
+	public CotizacionesView() throws InstantiationException, IllegalAccessException, ClassNotFoundException, FileNotFoundException, IOException{
 			
 		this.controlador = new CotizacionesController();
 		
@@ -217,7 +219,7 @@ public class CotizacionesView extends Panel implements View{
 	}
 	
 	
-	private void fillComboMonedas(){
+	private void fillComboMonedas() throws InstantiationException, IllegalAccessException, ClassNotFoundException, FileNotFoundException, IOException{
 		
 		try {
 			
