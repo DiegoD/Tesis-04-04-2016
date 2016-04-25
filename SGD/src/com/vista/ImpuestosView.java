@@ -66,7 +66,6 @@ public class ImpuestosView extends Panel implements View{
             		
             		org.json.simple.JSONObject obj = new org.json.simple.JSONObject();
 
-            		
             		obj.put("codigo", codImpuesto.getValue());
             		obj.put("descImpuesto", descImpuesto.getValue());
             		

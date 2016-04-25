@@ -40,6 +40,7 @@ public class Fachada {
         
         fabrica = AbstractFactoryBuilder.getInstancia();
 		fabricaConcreta = fabrica.getAbstractFactory();
+		
         this.docsAduaneros = new DAODocumentosAduaneros();
     }
     

@@ -10,5 +10,7 @@ public class AbstractFactoryMySql implements IAbstractFactory
 	{
 		return new DAOImpuestos();
 	}
+	
+	
 
 }
