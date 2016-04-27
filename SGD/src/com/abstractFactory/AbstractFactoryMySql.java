@@ -1,7 +1,6 @@
 package com.abstractFactory;
 
-import com.persistencia.DAOImpuestos;
-import com.persistencia.IDaoImpuesto;
+import com.persistencia.*;
 
 public class AbstractFactoryMySql implements IAbstractFactory
 {
@@ -11,6 +10,19 @@ public class AbstractFactoryMySql implements IAbstractFactory
 		return new DAOImpuestos();
 	}
 	
+	public IDAOCotizaciones crearDAOCotizaciones() 
+	{
+		return new DAOCotizaciones();
+	}
 	
+	public IDAOMonedas crearDAOMonedas() 
+	{
+		return new DAOMonedas();
+	}
+	
+	public IDAODocumentosAduaneros crearDAODocumentosAduaneros() 
+	{
+		return new DAODocumentosAduaneros();
+	}
 
 }

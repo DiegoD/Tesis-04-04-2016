@@ -13,7 +13,7 @@ import com.excepciones.cotizaciones.MemberCotizacionException;
 import com.excepciones.cotizaciones.ObteniendoCotizacionException;
 import com.valueObject.*;
 
-public class DAOCotizaciones {
+public class DAOCotizaciones implements IDAOCotizaciones {
 
     private java.sql.Connection con = null;
     private PreparedStatement pst = null;

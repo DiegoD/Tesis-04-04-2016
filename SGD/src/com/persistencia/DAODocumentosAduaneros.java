@@ -10,7 +10,7 @@ import com.excepciones.documentosAduaneros.*;
 import com.valueObject.DocumentoAuaneroVO;
 
 
-public class DAODocumentosAduaneros {
+public class DAODocumentosAduaneros implements IDAODocumentosAduaneros{
 	
     private java.sql.Connection con = null;
     private PreparedStatement pst = null;

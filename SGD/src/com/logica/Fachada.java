@@ -23,25 +23,27 @@ public class Fachada {
 	private static final Object lock = new Object();
 	private static volatile Fachada INSTANCE = null;
 	
-	private DAOMonedas monedas;
-	private DAOCotizaciones cotizaciones;
-	private DAODocumentosAduaneros docsAduaneros;
 	
 	/*Esto es para abstract factory*/
 	private IDaoImpuesto daoImpuesto;
+	private IDAOCotizaciones cotizaciones;
+	private IDAOMonedas monedas;
+	private IDAODocumentosAduaneros docsAduaneros;
+	
 	private AbstractFactoryBuilder fabrica;
 	private IAbstractFactory fabricaConcreta;
 	
 	
     private Fachada() throws InstantiationException, IllegalAccessException, ClassNotFoundException, FileNotFoundException, IOException
     {
-        this.monedas = new DAOMonedas();
-        this.cotizaciones = new DAOCotizaciones();
-        
         fabrica = AbstractFactoryBuilder.getInstancia();
 		fabricaConcreta = fabrica.getAbstractFactory();
 		
-        this.docsAduaneros = new DAODocumentosAduaneros();
+        this.daoImpuesto = fabricaConcreta.crearDaoImpuestos();
+        this.cotizaciones = fabricaConcreta.crearDAOCotizaciones();
+        this.monedas = fabricaConcreta.crearDAOMonedas();
+        this.docsAduaneros = fabricaConcreta.crearDAODocumentosAduaneros();
+        
     }
     
     public static Fachada getInstance() throws InstantiationException, IllegalAccessException, ClassNotFoundException, FileNotFoundException, IOException{
@@ -95,7 +97,7 @@ public class Fachada {
     	Impuesto impuesto = new Impuesto(impuestoVO.getCodImpuesto(), impuestoVO.getDescImpuesto(), impuestoVO.getPorcentaje());
     	
     	System.out.println("estoy en fachada llamando a DAO");
-    	this.daoImpuesto = fabricaConcreta.crearDaoImpuestos();
+    	
     	this.daoImpuesto.insertImpuesto(impuesto);
     }
     

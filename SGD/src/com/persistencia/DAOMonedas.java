@@ -11,7 +11,7 @@ import com.valueObject.*;
 
 
 
-public class DAOMonedas {
+public class DAOMonedas implements IDAOMonedas{
 	
 	
     private java.sql.Connection con = null;
