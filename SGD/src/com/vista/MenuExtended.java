@@ -11,6 +11,19 @@ public class MenuExtended extends Menu{
 			this.content.removeAllComponents();
 			this.content.addComponent(new MonedaView());
 		});
+		
+		this.statusButton.addClickListener(click -> {
+			
+			this.content.removeAllComponents();
+			this.content.addComponent(new ImpuestosView());
+		});
+		
+		this.inboxButton.addClickListener(click -> {
+			
+			this.content.removeAllComponents();
+			this.content.addComponent(new Ejemplo());
+		});
+		
 	}
 	
 
