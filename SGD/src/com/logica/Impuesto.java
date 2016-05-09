@@ -1,5 +1,7 @@
 package com.logica;
 
+import org.json.simple.JSONObject;
+
 public class Impuesto {
 	
 	private int codImpuesto;
@@ -14,6 +16,12 @@ public class Impuesto {
 		this.codImpuesto = codImpuesto;
 		this.descImpuesto = descImpuesto;
 		this.porcentajeImpuesto = porcentajeImpuesto;
+	}
+	
+	public Impuesto (JSONObject jsonImpuesto){
+		this.codImpuesto = (int) jsonImpuesto.get("codigo");
+		this.descImpuesto = (String) jsonImpuesto.get("descImpuesto");
+		this.porcentajeImpuesto = (int) jsonImpuesto.get("porcentaje");
 	}
 
 	public int getCodImpuesto() {

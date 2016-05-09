@@ -1,25 +1,16 @@
 package com.vista;
 
-import com.controladores.CotizacionesController;
-
 import com.controladores.ImpuestosController;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONString;
 import com.vaadin.data.Item;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Label;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.valueObject.ImpuestoVO;
-import com.valueObject.Variables;
-import org.json.*;
-import org.json.simple.JSONValue;
-
-import com.vaadin.ui.Button.ClickEvent;
 
 public class ImpuestosView extends Panel implements View{
 	

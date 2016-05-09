@@ -24,6 +24,13 @@ public class MenuExtended extends Menu{
 			this.content.addComponent(new MonedaAltaExtended());
 		});
 		
+		this.archiveButton.addClickListener(click -> {
+			
+			this.content.removeAllComponents();
+			this.content.addComponent(new GrillaExtend());
+		});
+		
+		
 	}
 	
 

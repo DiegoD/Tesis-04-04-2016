@@ -55,15 +55,7 @@ public class Consultas {
     	 return sb.toString();
     }
     
-    public String insertImpuesto(){
-    	
-   	 StringBuilder sb = new StringBuilder();
-   	 
-   	 sb.append("INSERT INTO ct_impuestos (cod_impuesto, desc_impuesto, porcentaje_impuesto) ");
-   	 sb.append("VALUES (?, ?, ?)");
-   	 
-   	 return sb.toString();
-   }
+    
 	
     public String memberCotizacion(){
     	
@@ -153,4 +145,26 @@ public class Consultas {
     
     ////////////////////////<EMPRESAS/>///////////////////////////////////////////////////
     
+    ////////////////////////<IMPUESTOS>///////////////////////////////////////////////////
+    public String insertImpuesto(){
+    	
+      	 StringBuilder sb = new StringBuilder();
+      	 
+      	 sb.append("INSERT INTO ct_impuestos (cod_impuesto, desc_impuesto, porcentaje_impuesto) ");
+      	 sb.append("VALUES (?, ?, ?)");
+      	 
+      	 return sb.toString();
+    }
+    
+    public String getImpuestosTodos(){
+    	 StringBuilder sb = new StringBuilder();
+      	 
+      	 sb.append("SELECT cod_impuesto, desc_impuesto, porcentaje_impuesto ");
+      	 sb.append("FROM ct_impuestos ");
+
+      	 return sb.toString();
+    }
+    
+    
+    ////////////////////////<IMPUESTOS/>///////////////////////////////////////////////////
 }

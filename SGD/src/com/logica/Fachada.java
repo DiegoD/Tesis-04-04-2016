@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
 
+import org.json.simple.JSONObject;
+
 import com.abstractFactory.AbstractFactoryBuilder;
 import com.abstractFactory.IAbstractFactory;
 import com.excepciones.*;
@@ -92,15 +94,6 @@ public class Fachada {
     		throw new ExisteCotizacionException();
     }
     
-    public void insertImpuesto (ImpuestoVO impuestoVO) throws ClassNotFoundException{
-    	
-    	Impuesto impuesto = new Impuesto(impuestoVO.getCodImpuesto(), impuestoVO.getDescImpuesto(), impuestoVO.getPorcentaje());
-    	
-    	System.out.println("estoy en fachada llamando a DAO");
-    	
-    	this.daoImpuesto.insertImpuesto(impuesto);
-    }
-    
     
     /////////////////////////////////<COTIZACIONES/>//////////////////////////////////////////
     
@@ -132,5 +125,22 @@ public class Fachada {
     
     /////////////////////////////////<DOCUMENTOS ADUANEROS/>/////////////////////////////////
     
+    /////////////////////////////////<IMPUESTOS>/////////////////////////////////
+    public void insertImpuesto (ImpuestoVO impuestoVO) throws ClassNotFoundException{
+    	
+    	Impuesto impuesto = new Impuesto(impuestoVO.getCodImpuesto(), impuestoVO.getDescImpuesto(), impuestoVO.getPorcentaje());
+    	
+    	System.out.println("estoy en fachada llamando a DAO");
+    	
+    	this.daoImpuesto.insertImpuesto(impuesto);
+    }
     
+    public ArrayList<JSONObject> getImpuestosTodos() throws ClassNotFoundException{
+    	
+    	System.out.println("estoy en fachada");
+    	
+    	return this.daoImpuesto.getImpuestosTodos();
+    	
+    }
+    /////////////////////////////////<IMPUESTOS/>/////////////////////////////////
 }

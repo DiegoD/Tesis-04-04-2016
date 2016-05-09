@@ -38,6 +38,7 @@ public class Principal extends UI {
 	protected void init(VaadinRequest request) {
 		
 		setContent(new MenuExtended());
+		
 	}
 
 }

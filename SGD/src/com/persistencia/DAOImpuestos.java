@@ -1,10 +1,13 @@
 package com.persistencia;
 
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import org.json.simple.JSONObject;
+
 import com.logica.Impuesto;
-import com.valueObject.ImpuestoVO;
 
 public class DAOImpuestos implements IDaoImpuesto{
 	
@@ -15,6 +18,7 @@ public class DAOImpuestos implements IDaoImpuesto{
     private ResultSet rs = null;
     
     public void insertImpuesto (Impuesto impuesto) throws ClassNotFoundException{
+
     	
     	conexion = new Conexion();
     	Consultas clts = new Consultas();
@@ -44,4 +48,46 @@ public class DAOImpuestos implements IDaoImpuesto{
     	
     }
 
+    @SuppressWarnings("unchecked")
+	public ArrayList<JSONObject> getImpuestosTodos() throws ClassNotFoundException{
+    	
+    	conexion = new Conexion();
+    	Consultas clts = new Consultas();
+    	String query = clts.getImpuestosTodos();
+    	PreparedStatement pstmt1;
+    	ResultSet rs;
+    	ArrayList<JSONObject> lstImpuesto = new ArrayList<JSONObject>();
+    	
+    	System.out.println("Estoy en controlador");
+    	
+    	try {
+    		
+    		this.con = conexion.getConnection();
+    		pstmt1 = con.prepareStatement(query);
+			rs = pstmt1.executeQuery();
+			
+			while(rs.next ()) {
+				
+				org.json.simple.JSONObject obj = new org.json.simple.JSONObject();
+
+				obj.put("cod_impuesto", rs.getInt(1));
+				obj.put("desc_impuesto", rs.getString(2));
+				obj.put("porcentaje_impuesto", rs.getInt(3));
+				
+				System.out.println(rs.getString(2));			
+				
+				lstImpuesto.add(obj);
+				
+			}
+			rs.close ();
+			pstmt1.close ();
+			con.close ();
+    	}
+    	catch (SQLException e) {
+			e.printStackTrace();
+			
+		}
+			
+		return lstImpuesto;
+    }
 }

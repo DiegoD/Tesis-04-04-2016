@@ -6,7 +6,6 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.declarative.Design;
 
@@ -43,7 +42,6 @@ public class Ejemplo extends CssLayout {
 	protected Label order_heading;
 	protected CssLayout order_item;
 	protected Label order_label;
-	protected NativeButton cancel_order_button;
 	protected Label tax_sum;
 	protected Label total_sum;
 
