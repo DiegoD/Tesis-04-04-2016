@@ -14,6 +14,7 @@ import com.excepciones.cotizaciones.MemberCotizacionException;
 import com.google.gwt.user.datepicker.client.DatePicker;
 import com.sun.org.apache.xpath.internal.operations.VariableSafeAbsRef;
 import com.vaadin.data.Validator;
+import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.validator.DoubleValidator;
 import com.vaadin.data.validator.FloatRangeValidator;
@@ -42,13 +43,16 @@ public class CotizacionesView extends Panel implements View{
 
 	private CotizacionesController controlador;
 	
+	public BeanFieldGroup<CotizacionVO> fieldGroup =
+	        new BeanFieldGroup<CotizacionVO>(CotizacionVO.class);
+	
 	FormLayout  layout1 = new FormLayout ();
 	
 	
-	final PopupDateField  pupFecha = new PopupDateField ();
-	final ComboBox ddlMonedas = new ComboBox();
-	final TextField tfImpVenta = new TextField();
-	final TextField tfImpCompra = new TextField();
+	final PopupDateField  fecha = new PopupDateField ();
+	final ComboBox codMoneda = new ComboBox();
+	final TextField impVenta = new TextField();
+	final TextField impCompra = new TextField();
 
 		
 	final Button btnIngresar = new Button("Ingresar");
@@ -57,31 +61,31 @@ public class CotizacionesView extends Panel implements View{
 			
 		this.controlador = new CotizacionesController();
 		
-		this.pupFecha.setCaption("Fecha");
-		this.ddlMonedas.setCaption("Moneda");
+		this.fecha.setCaption("Fecha");
+		this.codMoneda.setCaption("Moneda");
 		
-		this.tfImpVenta.setCaption("Importe Venta");
-		this.tfImpCompra.setCaption("Importe Compra");
+		this.impVenta.setCaption("Importe Venta");
+		this.impCompra.setCaption("Importe Compra");
 		
 		////////////////////////////////////////////
 		
 		Validator numberValidator = new RegexpValidator("^\\d*\\.?\\d*$", "Admite solamente numeros");
 		
-		this.pupFecha.setRequired(true);
-		this.pupFecha.setRequiredError("Es requerido");
+		this.fecha.setRequired(true);
+		this.fecha.setRequiredError("Es requerido");
 		
-		this.ddlMonedas.setRequired(true);
-		this.ddlMonedas.setRequiredError("Es requerido");
+		this.codMoneda.setRequired(true);
+		this.codMoneda.setRequiredError("Es requerido");
 		
-		this.tfImpVenta.setRequired(true);
-		this.tfImpVenta.setRequiredError("Es requerido");
-		this.tfImpVenta.addValidator(numberValidator);
-		this.tfImpVenta.setImmediate(true);
+		this.impVenta.setRequired(true);
+		this.impVenta.setRequiredError("Es requerido");
+		this.impVenta.addValidator(numberValidator);
+		this.impVenta.setImmediate(true);
 		
-		this.tfImpCompra.setRequired(true);
-		this.tfImpCompra.setRequiredError("Es requerido");
-		this.tfImpCompra.addValidator(numberValidator);
-		this.tfImpCompra.setImmediate(true);
+		this.impCompra.setRequired(true);
+		this.impCompra.setRequiredError("Es requerido");
+		this.impCompra.addValidator(numberValidator);
+		this.impCompra.setImmediate(true);
 		
 		///////////////////////////////////////////
 		
@@ -102,8 +106,8 @@ public class CotizacionesView extends Panel implements View{
                String result = "";
                
                /*Verificamos que todos los campos sean válidos*/
-               if(tfImpCompra.isValid() && pupFecha.isValid() && ddlMonedas.isValid() 
-            		   && tfImpVenta.isValid() && tfImpCompra.isValid())
+               if(impCompra.isValid() && fecha.isValid() && codMoneda.isValid() 
+            		   && impVenta.isValid() && impCompra.isValid())
                {   
             	 
 	              
@@ -113,10 +117,10 @@ public class CotizacionesView extends Panel implements View{
   
 		               CotizacionVO cotizacionVO = new CotizacionVO();
 	            	   
-	            	   cotizacionVO.setFecha(new java.sql.Date(pupFecha.getValue().getTime()));
-	            	   cotizacionVO.setCodMoneda(((MonedaVO)ddlMonedas.getValue()).getCodMoneda());
-	            	   cotizacionVO.setImpVenta(Float.parseFloat(tfImpVenta.getValue()));
-	            	   cotizacionVO.setImpCompra(Float.parseFloat(tfImpCompra.getValue()));
+	            	   cotizacionVO.setFecha(new java.sql.Date(fecha.getValue().getTime()));
+	            	   cotizacionVO.setCodMoneda(((MonedaVO)codMoneda.getValue()).getCodMoneda());
+	            	   cotizacionVO.setImpVenta(Float.parseFloat(impVenta.getValue()));
+	            	   cotizacionVO.setImpCompra(Float.parseFloat(impCompra.getValue()));
 	            	   cotizacionVO.setUsuarioMod("usuario");
 	            	   
 						controlador.insertCotizacion(cotizacionVO);
@@ -150,15 +154,22 @@ public class CotizacionesView extends Panel implements View{
 		this.fillComboMonedas();
 		
 		
-		layout1.addComponent(pupFecha);
-		layout1.addComponent(ddlMonedas);
-		layout1.addComponent(tfImpVenta);
-		layout1.addComponent(tfImpCompra);
+		layout1.addComponent(fecha);
+		layout1.addComponent(codMoneda);
+		layout1.addComponent(impVenta);
+		layout1.addComponent(impCompra);
 		layout1.addComponent(btnIngresar);
 		
 		setContent(layout1);
 	}
 
+	public CotizacionesView(boolean editar){
+		
+		if(editar){
+			
+			fieldGroup.buildAndBindMemberFields(this);
+		}
+	}
 	
 	
 	private void mostrarMensajeError(String msj){
@@ -227,7 +238,7 @@ public class CotizacionesView extends Panel implements View{
 			
 			for (MonedaVO monedaVO : lstMonedas) {
 				
-				this.ddlMonedas.addItem(monedaVO);
+				this.codMoneda.addItem(monedaVO);
 			}
 			
 		} catch (ObteniendoMonedasException e) {

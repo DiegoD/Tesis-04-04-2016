@@ -9,7 +9,14 @@ public class MenuExtended extends Menu{
 		this.userButton.addClickListener(click -> {
 			
 			this.content.removeAllComponents();
-			this.content.addComponent(new MonedaView());
+			try {
+				
+				this.content.addComponent(new CotizacionesPanelExtended());
+				
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		});
 		
 		this.statusButton.addClickListener(click -> {
