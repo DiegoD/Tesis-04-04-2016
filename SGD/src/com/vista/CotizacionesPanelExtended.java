@@ -54,7 +54,7 @@ public class CotizacionesPanelExtended extends CotizacionesPanel{
 		//gridview.getColumn(1).setHeaderCaption("Fulano");
 		
 		com.vaadin.ui.Grid.HeaderRow row = gridview.prependHeaderRow();
-		row.getCell("Fecha").setHtml("<b>Full name</b>");
+		//row.getCell("Fecha").setHtml("<b>Full name</b>");
 		
 		gridview.setEditorEnabled(true);
 		gridview.setEditorSaveCaption("Save my data, please!");
