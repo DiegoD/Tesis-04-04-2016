@@ -31,6 +31,8 @@ public class ImpuestosView extends Panel implements View{
          this.porcentaje.setCaption("Porcentaje");
          this.controlador = new ImpuestosController();
          
+         GrillaExtend grillaImpuestos = new GrillaExtend();
+         
          final Table table = new Table("The Brightest Stars");
          
 	     // Define two columns for the built-in container
@@ -66,7 +68,8 @@ public class ImpuestosView extends Panel implements View{
             		impuestoVO.setDescImpuesto(descImpuesto.getValue());
             		impuestoVO.setPorcentaje(Integer.parseInt(porcentaje.getValue()));
             		
-            		controlador.insertImpuesto(impuestoVO, obj);
+            	
+            		//controlador.insertImpuesto(impuestoVO, obj);
 					
 				} catch (Exception e) {
 					// TODO: handle exception
