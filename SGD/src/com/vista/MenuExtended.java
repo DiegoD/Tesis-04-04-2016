@@ -1,17 +1,27 @@
 package com.vista;
 
+import com.vaadin.ui.Component;
+
 public class MenuExtended extends Menu{
 	
+	private Component contentAnterior;
+	
+
 	
 	public MenuExtended(){
 		
-	
+		
+		
+		
 		this.userButton.addClickListener(click -> {
 			
 			this.content.removeAllComponents();
 			try {
 				
-				this.content.addComponent(new CotizacionesPanelExtended());
+				CotizacionesPanelExtended c = new CotizacionesPanelExtended();
+				c.setMenu(this);
+				
+				this.content.addComponent(c);
 				
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -28,16 +38,23 @@ public class MenuExtended extends Menu{
 		this.inboxButton.addClickListener(click -> {
 			
 			this.content.removeAllComponents();
-			this.content.addComponent(new MonedaAltaExtended());
+			//this.content.addComponent(new MonedaAltaExtended());
 		});
 		
 		this.archiveButton.addClickListener(click -> {
 			
 			this.content.removeAllComponents();
-			this.content.addComponent(new GrillaExtend());
+			//this.content.addComponent(new GrillaExtend());
 		});
 		
 		
+	}
+	
+	public  void setContent(Component comp)
+	{
+		contentAnterior = this.content;
+		this.content.removeAllComponents();
+		this.content.addComponent(comp);
 	}
 	
 

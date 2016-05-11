@@ -43,8 +43,7 @@ public class CotizacionesView extends Panel implements View{
 
 	private CotizacionesController controlador;
 	
-	public BeanFieldGroup<CotizacionVO> fieldGroup =
-	        new BeanFieldGroup<CotizacionVO>(CotizacionVO.class);
+	public BeanFieldGroup<CotizacionVO> fieldGroup;
 	
 	FormLayout  layout1 = new FormLayout ();
 	
@@ -57,9 +56,27 @@ public class CotizacionesView extends Panel implements View{
 		
 	final Button btnIngresar = new Button("Ingresar");
 	
-	public CotizacionesView() throws InstantiationException, IllegalAccessException, ClassNotFoundException, FileNotFoundException, IOException{
+	public CotizacionesView(boolean editar) throws InstantiationException, IllegalAccessException, ClassNotFoundException, FileNotFoundException, IOException{
+		
+		
+		this.inicializarForm();
+				
+	}
+
+	public CotizacionesView(){
+		boolean editar = false;
+		if(editar){
 			
+			fieldGroup.buildAndBindMemberFields(this);
+		}
+	}
+	
+	
+	private void inicializarForm() throws InstantiationException, IllegalAccessException, ClassNotFoundException, FileNotFoundException, IOException{
+		
 		this.controlador = new CotizacionesController();
+		
+		this.fieldGroup =  new BeanFieldGroup<CotizacionVO>(CotizacionVO.class);
 		
 		this.fecha.setCaption("Fecha");
 		this.codMoneda.setCaption("Moneda");
@@ -161,15 +178,11 @@ public class CotizacionesView extends Panel implements View{
 		layout1.addComponent(btnIngresar);
 		
 		setContent(layout1);
-	}
-
-	public CotizacionesView(boolean editar){
 		
-		if(editar){
-			
+		if(true)
 			fieldGroup.buildAndBindMemberFields(this);
-		}
-	}
+		
+	}	//Fin inicializar FORM
 	
 	
 	private void mostrarMensajeError(String msj){

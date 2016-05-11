@@ -11,9 +11,22 @@ import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.UI;
 import com.valueObject.CotizacionVO;
 
-public class CotizacionesPanelExtended extends CotizacionesPanel{
+public class CotizacionesPanelExtended extends CotizacionesPanel {
+	
+	
+	
+	private MenuExtended menuAcual;
+	
+	private CotizacionesView form;
+	BeanItemContainer<CotizacionVO> container;
+	
+	public void setMenu(MenuExtended menu){
+		this.menuAcual = menu;
+	}
+	
 	
 	public CotizacionesPanelExtended() throws InstantiationException, IllegalAccessException, ClassNotFoundException, FileNotFoundException, IOException{
 		
@@ -43,7 +56,7 @@ public class CotizacionesPanelExtended extends CotizacionesPanel{
 		c2.setImpVenta(21);
 		c2.setUsuarioMod("gfeuerstein");
 		
-		BeanItemContainer<CotizacionVO> container = 
+		this.container = 
 				new BeanItemContainer<CotizacionVO>(CotizacionVO.class);
 		
 		container.addBean(c1);
@@ -59,17 +72,36 @@ public class CotizacionesPanelExtended extends CotizacionesPanel{
 		gridview.setEditorEnabled(true);
 		gridview.setEditorSaveCaption("Save my data, please!");
 		
-		final CotizacionesView form = new CotizacionesView(true);
-		panelVerticalGral.addComponent(form);
+		this.form = new CotizacionesView(true);
+		//panelVerticalGral.addComponent(form);
 		gridview.addSelectionListener(new SelectionListener() {
-
+						
 		    @Override
 		    public void select(SelectionEvent event) {
 		        BeanItem<CotizacionVO> item = container.getItem(gridview.getSelectedRow());
 		        form.fieldGroup.setItemDataSource(item);
+		        
+		        try {
+		        	
+		        	CotizacionesView cot = new CotizacionesView();
+		        	
+					MySub subCotizaciones = new MySub();
+					subCotizaciones.setVista(form);
+					//subCotizaciones.setVista(cot);
+					
+					  UI.getCurrent().addWindow(subCotizaciones);
+				
+		        
+		        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		                       
 		    }
 		});
 		
 	}
+	
+  
 
 }
