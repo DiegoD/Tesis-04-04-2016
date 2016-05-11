@@ -177,6 +177,9 @@ public class CotizacionesView extends Panel implements View{
 		layout1.addComponent(impCompra);
 		layout1.addComponent(btnIngresar);
 		
+		layout1.setWidth("400px");
+		layout1.setMargin(true);
+		
 		setContent(layout1);
 		
 		if(true)
@@ -266,6 +269,8 @@ public class CotizacionesView extends Panel implements View{
 		// TODO Auto-generated method stub
 		
 	}
+	
+	
 	
 	
 }

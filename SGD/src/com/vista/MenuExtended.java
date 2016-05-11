@@ -9,11 +9,10 @@ public class MenuExtended extends Menu{
 
 	
 	public MenuExtended(){
-		
-		
-		
-		
+			
 		this.userButton.addClickListener(click -> {
+			
+			setSizeFull();
 			
 			this.content.removeAllComponents();
 			try {
@@ -44,7 +43,8 @@ public class MenuExtended extends Menu{
 		this.archiveButton.addClickListener(click -> {
 			
 			this.content.removeAllComponents();
-			//this.content.addComponent(new GrillaExtend());
+			this.content.addComponent(new CotizacionViewExtended(true));
+			
 		});
 		
 		
