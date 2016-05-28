@@ -37,7 +37,7 @@ public class MenuExtended extends Menu{
 		this.inboxButton.addClickListener(click -> {
 			
 			this.content.removeAllComponents();
-			//this.content.addComponent(new MonedaAltaExtended());
+			this.content.addComponent(new FacturaEj());
 		});
 		
 		this.archiveButton.addClickListener(click -> {

@@ -20,7 +20,8 @@ public class CotizacionesPanelExtended extends CotizacionesPanel {
 	
 	private MenuExtended menuAcual;
 	
-	private CotizacionesView form;
+	//private CotizacionesView form;
+	private FacturaEjExtended form;
 	BeanItemContainer<CotizacionVO> container;
 	
 	public void setMenu(MenuExtended menu){
@@ -72,18 +73,18 @@ public class CotizacionesPanelExtended extends CotizacionesPanel {
 		gridview.setEditorEnabled(true);
 		gridview.setEditorSaveCaption("Save my data, please!");
 		
-		this.form = new CotizacionesView(true);
+		this.form = new FacturaEjExtended();
 		//panelVerticalGral.addComponent(form);
 		gridview.addSelectionListener(new SelectionListener() {
 						
 		    @Override
 		    public void select(SelectionEvent event) {
 		        BeanItem<CotizacionVO> item = container.getItem(gridview.getSelectedRow());
-		        form.fieldGroup.setItemDataSource(item);
+		        //form.fieldGroup.setItemDataSource(item);
 		        
 		        try {
 		        	
-		        	CotizacionesView cot = new CotizacionesView();
+		        	//CotizacionesView cot = new CotizacionesView();
 		        	
 					MySub subCotizaciones = new MySub();
 					subCotizaciones.setVista(form);

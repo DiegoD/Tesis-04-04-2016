@@ -14,6 +14,12 @@ public class MySub extends Window{
 		//setContent(new CotizacionesView());
 		
 		center();
+		setClosable(true);
+		//setDraggable(true);
+		setModal(true);
+		setResizable(true);
+		//setScrollLeft(true);
+		
 	}
 	
 	public void setVista(Component component){
