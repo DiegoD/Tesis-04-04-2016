@@ -9,16 +9,19 @@ import com.vaadin.ui.Window;
 
 public class MySub extends Window{
 	
-	public MySub() throws InstantiationException, IllegalAccessException, ClassNotFoundException, FileNotFoundException, IOException{
+	public MySub(){
 		
 		//setContent(new CotizacionesView());
 		
 		center();
 		setClosable(true);
 		//setDraggable(true);
-		setModal(true);
+		//setModal(true);
 		setResizable(true);
 		//setScrollLeft(true);
+		
+		setHeight("70%");
+		setWidth("80%");
 		
 	}
 	

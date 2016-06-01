@@ -17,6 +17,8 @@ public class CotizacionVO extends AuditoriaVO{
 	
 	public CotizacionVO(Date fecha,int codMoneda, float impCompra, float impVenta){
 		
+		super("feuer", fecha);
+		
 		this.fecha = fecha;
 		this.codMoneda = codMoneda;
 		this.impCompra = impCompra;

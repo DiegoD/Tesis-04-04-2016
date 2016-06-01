@@ -7,6 +7,13 @@ public abstract class AuditoriaVO {
 	private Date fechaMod;
 	private String usuarioMod;
 	
+	protected AuditoriaVO(){};
+	
+	protected AuditoriaVO(String usuario, Date fecha ){
+		
+		this.fechaMod = fecha;
+		this.usuarioMod = usuario;
+	}
 		
 	public Date getFechaMod() {
 		return fechaMod;
