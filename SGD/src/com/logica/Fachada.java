@@ -10,6 +10,7 @@ import org.json.simple.JSONObject;
 import com.abstractFactory.AbstractFactoryBuilder;
 import com.abstractFactory.IAbstractFactory;
 import com.excepciones.*;
+import com.excepciones.Login.LoginException;
 import com.excepciones.cotizaciones.ExisteCotizacionException;
 import com.excepciones.cotizaciones.IngresandoCotizacionException;
 import com.excepciones.cotizaciones.MemberCotizacionException;
@@ -17,6 +18,10 @@ import com.excepciones.cotizaciones.NoExisteCotizacionException;
 import com.excepciones.cotizaciones.ObteniendoCotizacionException;
 import com.excepciones.documentosAduaneros.IngresandoDocumentoAduaneroException;
 import com.excepciones.documentosAduaneros.ObteniendoDocumentoAduaneroException;
+import com.excepciones.grupos.ExisteGrupoException;
+import com.excepciones.grupos.InsertandoGrupoException;
+import com.excepciones.grupos.MemberGrupoException;
+import com.excepciones.grupos.ObteniendoGruposException;
 import com.valueObject.*;
 import com.persistencia.*;
 
@@ -31,6 +36,8 @@ public class Fachada {
 	private IDAOCotizaciones cotizaciones;
 	private IDAOMonedas monedas;
 	private IDAODocumentosAduaneros docsAduaneros;
+	private IDAOUsuarios usuarios;
+	private IDAOGrupos grupos;
 	
 	private AbstractFactoryBuilder fabrica;
 	private IAbstractFactory fabricaConcreta;
@@ -45,16 +52,24 @@ public class Fachada {
         this.cotizaciones = fabricaConcreta.crearDAOCotizaciones();
         this.monedas = fabricaConcreta.crearDAOMonedas();
         this.docsAduaneros = fabricaConcreta.crearDAODocumentosAduaneros();
+        this.usuarios =  fabricaConcreta.crearDAOUsuarios();
+        this.grupos = fabricaConcreta.crearDAOGrupos();
         
     }
     
-    public static Fachada getInstance() throws InstantiationException, IllegalAccessException, ClassNotFoundException, FileNotFoundException, IOException{
+    public static Fachada getInstance() throws InicializandoException {
          
-        if(INSTANCE == null)
+         	
+    	if(INSTANCE == null)
         {
             synchronized (lock)
             {   
-                INSTANCE = new Fachada();
+                try {
+					INSTANCE = new Fachada();
+				} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+					
+					throw new InicializandoException();
+				}
             }
         }
         
@@ -143,4 +158,32 @@ public class Fachada {
     	
     }
     /////////////////////////////////<IMPUESTOS/>/////////////////////////////////
+    
+/////////////////////////////////INI-LOGIN/////////////////////////////////
+    
+    public boolean usuarioValido(LoginVO loginVO) throws LoginException{
+    	
+    	return this.usuarios.usuarioValido(loginVO);
+    	
+    }
+    
+/////////////////////////////////FIN-LOGIN/////////////////////////////////
+    
+/////////////////////////////////INI-GUPOS/////////////////////////////////
+    public ArrayList<JSONObject> getGrupos() throws ObteniendoGruposException {
+    	
+    	
+    	return this.grupos.getGrupos();
+    	
+    }
+    
+    public void insertarGrupo(GrupoVO grupoVO) throws InsertandoGrupoException, MemberGrupoException, ExisteGrupoException{
+    	
+    	if(!this.grupos.memberGrupo(grupoVO.getCodGrupo()))
+    		this.grupos.insertarGrupo(grupoVO);
+    	else
+    		throw new ExisteGrupoException();
+    }
+    
+/////////////////////////////////FIN-GUPOS/////////////////////////////////
 }

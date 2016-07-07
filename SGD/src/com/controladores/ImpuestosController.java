@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import org.json.JSONException;
 import org.json.simple.JSONObject;
 
+import com.excepciones.InicializandoException;
 import com.logica.Fachada;
 import com.valueObject.ImpuestoVO;
 
@@ -16,7 +17,7 @@ public class ImpuestosController {
 		
 	}
 	
-	public void insertImpuesto(ImpuestoVO impuestoVO, JSONObject json) throws InstantiationException, IllegalAccessException, ClassNotFoundException, FileNotFoundException, IOException, JSONException {
+	public void insertImpuesto(ImpuestoVO impuestoVO, JSONObject json) throws JSONException, ClassNotFoundException, InicializandoException {
 		
 		System.out.println("estoy en controlador llamando a fachada");
 		System.out.println(json.get("codigo"));
@@ -26,7 +27,7 @@ public class ImpuestosController {
 		
 	}
 	
-	public ArrayList<JSONObject> getImpuestosTodos() throws ClassNotFoundException, InstantiationException, IllegalAccessException, FileNotFoundException, IOException {
+	public ArrayList<JSONObject> getImpuestosTodos() throws ClassNotFoundException, InicializandoException  {
 		System.out.println("controlador Impuestos");
 		return Fachada.getInstance().getImpuestosTodos();
 	}

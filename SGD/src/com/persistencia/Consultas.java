@@ -167,4 +167,55 @@ public class Consultas {
     
     
     ////////////////////////<IMPUESTOS/>///////////////////////////////////////////////////
+    
+////////////////////////INI-USUARIOS///////////////////////////////////////////////////
+    
+    public String getUsuarioValido(){
+   	 StringBuilder sb = new StringBuilder();
+     	 
+     	 sb.append("SELECT nombre ");
+     	 sb.append("FROM m_usuarios  ");
+     	sb.append("WHERE usuario = ? AND pass = ?  ");
+
+     	 return sb.toString();
+   }
+    
+////////////////////////FIN-USUARIOSS///////////////////////////////////////////////////
+    
+////////////////////////INI-GRUPOS///////////////////////////////////////////////////
+    
+    public String getGrupos(){
+    	
+    	 StringBuilder sb = new StringBuilder();
+    	 
+    	 sb.append("SELECT cod_grupo, nombre, fecha_mod, usuario_mod, operacion ");
+    	 sb.append("FROM m_grupos ");
+
+    	 return sb.toString();
+    }
+    
+    public String insertarGrupo(){
+    	
+    	StringBuilder sb = new StringBuilder();
+    	 
+    	 sb.append("INSERT INTO vaadin.m_grupos (cod_grupo, nombre, fecha_mod, usuario_mod, operacion)");
+    	 sb.append("VALUES (?, ?, NOW(), ?, ?) ");
+
+    	 return sb.toString();
+    	
+    }
+    
+    public String memberGrupo(){
+    	
+      	 StringBuilder sb = new StringBuilder();
+        	 
+      	 sb.append("SELECT cod_grupo ");
+      	 sb.append("FROM m_grupos  ");
+      	 sb.append("WHERE cod_grupo = ? ");
+
+      	 return sb.toString();
+      }
+    
+////////////////////////FIN-GRUPOS///////////////////////////////////////////////////
+    
 }

@@ -21,8 +21,14 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=SGD&amp;ivyXmlPath=ivy.xml&amp;confs=widgetset-compile&amp;ivySettingsPath=%24%7Bworkspace_loc%3ASGD%2Fivysettings.xml%7D&amp;loadSettingsOnDemand=false&amp;ivyUserDir=&amp;propertyFiles="/>
 	<classpathentry kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=SGD&amp;ivyXmlPath=ivy.xml&amp;confs=nodeploy&amp;ivySettingsPath=%24%7Bworkspace_loc%3ASGD%2Fivysettings.xml%7D&amp;loadSettingsOnDemand=false&amp;ivyUserDir=&amp;propertyFiles="/>
-	<classpathentry exported="true" kind="lib" path="WebContent/WEB-INF/lib/mysql-connector-java-5.1.23-bin.jar"/>
+	<classpathentry exported="true" kind="lib" path="WebContent/WEB-INF/lib/mysql-connector-java-5.1.23-bin.jar" sourcepath="C:/Users/User/.m2/repository/mysql/mysql-connector-java/5.1.23/mysql-connector-java-5.1.23-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="C:/Users/ddorner/Downloads/java-json.jar"/>
 	<classpathentry kind="lib" path="C:/Users/ddorner/Downloads/json-simple-1.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-collections-3.2.1-1.0.0.jar"/>
+	<classpathentry kind="lib" path="lib/commons-digester-2.1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-logging-1.2.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/itext-pdfa-5.5.4.jar"/>
+	<classpathentry kind="lib" path="lib/itextpdf-5.5.4.jar"/>
+	<classpathentry kind="lib" path="lib/jasperreports-6.2.2.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

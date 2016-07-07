@@ -68,6 +68,8 @@ public class DAOCotizaciones implements IDAOCotizaciones {
     	
 		try
 		{
+			Class.forName("com.mysql.jdbc.Driver");
+			
 			this.con = DriverManager.getConnection (Consultas.URL,Consultas.USER,Consultas.PASS);
 			
 			Consultas consultas = new Consultas ();
@@ -98,10 +100,10 @@ public class DAOCotizaciones implements IDAOCotizaciones {
 			pstmt1.close ();
 			con.close ();
 		}
-		catch (SQLException e) {
+		catch (SQLException | ClassNotFoundException e) {
 			throw new ObteniendoCotizacionException();
 			
-		}
+		} 
 			
 		return lstCotizaciones;
     	

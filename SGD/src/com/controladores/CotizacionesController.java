@@ -21,24 +21,24 @@ public class CotizacionesController {
 	public CotizacionesController(){}
 	
 	
-	public ArrayList<MonedaVO> getMonedas() throws ObteniendoMonedasException, InstantiationException, IllegalAccessException, ClassNotFoundException, FileNotFoundException, IOException{
+	public ArrayList<MonedaVO> getMonedas() throws ObteniendoMonedasException, InicializandoException {
 		
 		return Fachada.getInstance().getMonedas();
 	}
 	
 	
-	public ArrayList<CotizacionVO> getCotizaciones() throws ObteniendoCotizacionException, InstantiationException, IllegalAccessException, ClassNotFoundException, FileNotFoundException, IOException{
+	public ArrayList<CotizacionVO> getCotizaciones() throws ObteniendoCotizacionException, InicializandoException {
 		
 		return Fachada.getInstance().getCotizaciones();
 	}
 	
 	
-	public CotizacionVO getCotizacion(Date fecha, int codMoneda) throws ObteniendoCotizacionException, MemberCotizacionException, NoExisteCotizacionException, InstantiationException, IllegalAccessException, ClassNotFoundException, FileNotFoundException, IOException{
+	public CotizacionVO getCotizacion(Date fecha, int codMoneda) throws ObteniendoCotizacionException, MemberCotizacionException, NoExisteCotizacionException, InicializandoException {
 		
 		return Fachada.getInstance().getCotizacion(fecha, codMoneda);
 	}
 	
-	public void insertCotizacion(CotizacionVO cotizacionVO) throws IngresandoCotizacionException, MemberCotizacionException, ExisteCotizacionException, InstantiationException, IllegalAccessException, ClassNotFoundException, FileNotFoundException, IOException{
+	public void insertCotizacion(CotizacionVO cotizacionVO) throws IngresandoCotizacionException, MemberCotizacionException, ExisteCotizacionException, InicializandoException {
 		
 		Fachada.getInstance().insertCotizacion(cotizacionVO);
 		

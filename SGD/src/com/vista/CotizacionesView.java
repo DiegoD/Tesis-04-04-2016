@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import com.controladores.CotizacionesController;
+import com.excepciones.InicializandoException;
 import com.excepciones.ObteniendoMonedasException;
 import com.excepciones.cotizaciones.ExisteCotizacionException;
 import com.excepciones.cotizaciones.IngresandoCotizacionException;
@@ -257,7 +258,7 @@ public class CotizacionesView extends Panel implements View{
 				this.codMoneda.addItem(monedaVO);
 			}
 			
-		} catch (ObteniendoMonedasException e) {
+		} catch (ObteniendoMonedasException | InicializandoException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

@@ -17,9 +17,9 @@ public class BusquedaExtended extends Busqueda {
 	         public void buttonClick(ClickEvent event) {
 	             
 	             padre.setField(tfBusqueda.getValue());
-	             close(); // Close the sub-window
 	             
-	             
+	             //close(); // Close the sub-window
+	            	             
 	         }
 	     });
 		
