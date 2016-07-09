@@ -22,6 +22,7 @@ public class GrupoView extends VerticalLayout {
 	protected TextField codGrupo;
 	protected TextField nomGrupo;
 	protected Button aceptar;
+	protected Button btnEditar;
 
 	public GrupoView() {
 		Design.read(this);
