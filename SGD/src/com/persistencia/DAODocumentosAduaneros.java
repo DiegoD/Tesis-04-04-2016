@@ -45,7 +45,7 @@ public class DAODocumentosAduaneros implements IDAODocumentosAduaneros{
 				documentoAduaneroVO.setNomDocum(rs.getString(2));
 				documentoAduaneroVO.setActivo(rs.getBoolean(3));
 				documentoAduaneroVO.setUsuarioMod(rs.getString(4));
-				documentoAduaneroVO.setFechaMod(rs.getDate(5));
+				documentoAduaneroVO.setFechaMod(rs.getTimestamp(5));
 				
 				lstDocs.add(documentoAduaneroVO);
 		}
@@ -90,7 +90,7 @@ public class DAODocumentosAduaneros implements IDAODocumentosAduaneros{
 				documentoAduaneroVO.setNomDocum(rs.getString(2));
 				documentoAduaneroVO.setActivo(rs.getBoolean(3));
 				documentoAduaneroVO.setUsuarioMod(rs.getString(4));
-				documentoAduaneroVO.setFechaMod(rs.getDate(5));
+				documentoAduaneroVO.setFechaMod(rs.getTimestamp(5));
 				
 				lstDocs.add(documentoAduaneroVO);
 		}
@@ -134,7 +134,7 @@ public class DAODocumentosAduaneros implements IDAODocumentosAduaneros{
 				documentoAduaneroVO.setNomDocum(rs.getString(2));
 				documentoAduaneroVO.setActivo(rs.getBoolean(3));
 				documentoAduaneroVO.setUsuarioMod(rs.getString(4));
-				documentoAduaneroVO.setFechaMod(rs.getDate(5));
+				documentoAduaneroVO.setFechaMod(rs.getTimestamp(5));
 				
 				
 		}

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import org.json.simple.JSONObject;
 
+import com.excepciones.ConexionException;
 import com.excepciones.InicializandoException;
 import com.excepciones.grupos.ExisteGrupoException;
 import com.excepciones.grupos.InsertandoGrupoException;
@@ -15,16 +16,15 @@ import com.valueObject.GrupoVO;
 
 public class GrupoControlador {
 
-public void insertarGrupo(GrupoVO grupoVO) throws InsertandoGrupoException, MemberGrupoException, ExisteGrupoException, InicializandoException{
+public void insertarGrupo(JSONObject grupoJS) throws InsertandoGrupoException, MemberGrupoException, ExisteGrupoException, InicializandoException, ConexionException{
 	
 	//VEr si retornamos a la vista un objeto con Error = true o false y el mensaje
 	//en vez de mandar la exception para arriba
-	Fachada.getInstance().insertarGrupo(grupoVO);
+	Fachada.getInstance().insertarGrupo(grupoJS);
 }
 	
-public ArrayList<JSONObject> getGrupos() throws ObteniendoGruposException, InicializandoException {
-    	
-    		
+public ArrayList<JSONObject> getGrupos() throws ObteniendoGruposException, InicializandoException, ConexionException {
+	
 		return Fachada.getInstance().getGrupos();
 
     }

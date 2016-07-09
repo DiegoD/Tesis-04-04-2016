@@ -170,14 +170,15 @@ public class Fachada {
 /////////////////////////////////FIN-LOGIN/////////////////////////////////
     
 /////////////////////////////////INI-GUPOS/////////////////////////////////
-    public ArrayList<JSONObject> getGrupos() throws ObteniendoGruposException {
-    	
+    public ArrayList<JSONObject> getGrupos() throws ObteniendoGruposException, ConexionException {
     	
     	return this.grupos.getGrupos();
     	
     }
     
-    public void insertarGrupo(GrupoVO grupoVO) throws InsertandoGrupoException, MemberGrupoException, ExisteGrupoException{
+    public void insertarGrupo(JSONObject grupoJS) throws InsertandoGrupoException, MemberGrupoException, ExisteGrupoException, ConexionException{
+    	
+    	GrupoVO grupoVO = new GrupoVO(grupoJS);
     	
     	if(!this.grupos.memberGrupo(grupoVO.getCodGrupo()))
     		this.grupos.insertarGrupo(grupoVO);

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import org.json.simple.JSONObject;
 
+import com.excepciones.ConexionException;
 import com.logica.Impuesto;
 
 public class DAOImpuestos implements IDaoImpuesto{
@@ -20,7 +21,12 @@ public class DAOImpuestos implements IDaoImpuesto{
     public void insertImpuesto (Impuesto impuesto) throws ClassNotFoundException{
 
     	
-    	conexion = new Conexion();
+    	try {
+			conexion = new Conexion();
+		} catch (ConexionException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
     	Consultas clts = new Consultas();
     	String insert = clts.insertImpuesto();
     	PreparedStatement pstmt1;
@@ -51,7 +57,12 @@ public class DAOImpuestos implements IDaoImpuesto{
     @SuppressWarnings("unchecked")
 	public ArrayList<JSONObject> getImpuestosTodos() throws ClassNotFoundException{
     	
-    	conexion = new Conexion();
+    	try {
+			conexion = new Conexion();
+		} catch (ConexionException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
     	Consultas clts = new Consultas();
     	String query = clts.getImpuestosTodos();
     	PreparedStatement pstmt1;

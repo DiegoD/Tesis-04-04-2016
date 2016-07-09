@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import org.json.simple.JSONObject;
 
+import com.excepciones.ConexionException;
 import com.excepciones.cotizaciones.IngresandoCotizacionException;
 import com.excepciones.cotizaciones.ObteniendoCotizacionException;
 import com.excepciones.grupos.InsertandoGrupoException;
@@ -25,19 +26,19 @@ public class DAOGrupos implements IDAOGrupos {
 	
 
 	@Override
-	public ArrayList<JSONObject> getGrupos() throws ObteniendoGruposException {
+	public ArrayList<JSONObject> getGrupos() throws ObteniendoGruposException, ConexionException {
 		
 	
-		
 		//ArrayList<GrupoVO> lstGrupos = new ArrayList<GrupoVO>();
 		ArrayList<JSONObject> lstGrupos = new ArrayList<JSONObject>();
-    	
-		
+	
 		try
 		{
-			Class.forName("com.mysql.jdbc.Driver");
+			//Class.forName("com.mysql.jdbc.Driver");
+			//this.con = DriverManager.getConnection (Consultas.URL,Consultas.USER,Consultas.PASS);
 			
-			this.con = DriverManager.getConnection (Consultas.URL,Consultas.USER,Consultas.PASS);
+			this.conexion = new Conexion();
+			this.con = conexion.getConnection();
 			
 			Consultas consultas = new Consultas ();
 			String query = consultas.getGrupos();
@@ -51,11 +52,11 @@ public class DAOGrupos implements IDAOGrupos {
 			while(rs.next ()) {
 				
 				
-				org.json.simple.JSONObject obj = new org.json.simple.JSONObject();
+				JSONObject obj = new JSONObject();
 
 				obj.put("codGrupo", rs.getString(1));
 				obj.put("nomGrupo", rs.getString(2));
-				obj.put("fechaMod", rs.getDate(3));
+				obj.put("fechaMod", rs.getTimestamp(3));
 				obj.put("usuarioMod", rs.getString(4));
 				obj.put("operacion", rs.getString(5));
 				
@@ -78,7 +79,7 @@ public class DAOGrupos implements IDAOGrupos {
 
 
 	@Override
-	public void insertarGrupo(GrupoVO grupoVO) throws InsertandoGrupoException {
+	public void insertarGrupo(GrupoVO grupoVO) throws InsertandoGrupoException, ConexionException {
 
 		Consultas clts = new Consultas();
     	
@@ -97,6 +98,7 @@ public class DAOGrupos implements IDAOGrupos {
 			pstmt1.setString(2, grupoVO.getNomGrupo());
 			pstmt1.setString(3, grupoVO.getUsuarioMod());
 			pstmt1.setString(4, grupoVO.getOperacion());
+			//pstmt1.setDate(5, grupoVO.getFechaMod());
 			
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
@@ -110,7 +112,7 @@ public class DAOGrupos implements IDAOGrupos {
 		
 	}
 	
-	public boolean memberGrupo(String codGrupo) throws MemberGrupoException{
+	public boolean memberGrupo(String codGrupo) throws MemberGrupoException, ConexionException{
 		
 		boolean existe = false;
 		

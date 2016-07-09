@@ -2,6 +2,7 @@ package com.valueObject;
 
 import java.sql.Date;
 
+import com.sun.jmx.snmp.Timestamp;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Panel;
@@ -17,7 +18,7 @@ public class CotizacionVO extends AuditoriaVO{
 	
 	public CotizacionVO(Date fecha,int codMoneda, float impCompra, float impVenta){
 		
-		super("feuer", fecha);
+		super(); //Hay que ver luego para pasarle la fecha GF
 		
 		this.fecha = fecha;
 		this.codMoneda = codMoneda;

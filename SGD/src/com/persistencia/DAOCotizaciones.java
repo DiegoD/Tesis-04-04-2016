@@ -46,7 +46,7 @@ public class DAOCotizaciones implements IDAOCotizaciones {
 				cotizacionVO.setImpVenta(rs.getFloat(3));
 				cotizacionVO.setImpCompra(rs.getFloat(4));
 				cotizacionVO.setUsuarioMod(rs.getString(5));
-				cotizacionVO.setFechaMod(rs.getDate(6));
+				cotizacionVO.setFechaMod(rs.getTimestamp(6));
 				
 			}
 			
@@ -90,7 +90,7 @@ public class DAOCotizaciones implements IDAOCotizaciones {
 				cotizacionVO.setImpVenta(rs.getFloat(3));
 				cotizacionVO.setImpCompra(rs.getFloat(4));
 				cotizacionVO.setUsuarioMod(rs.getString(5));
-				cotizacionVO.setFechaMod(rs.getDate(6));
+				cotizacionVO.setFechaMod(rs.getTimestamp(6));
 				
 				lstCotizaciones.add(cotizacionVO);
 				

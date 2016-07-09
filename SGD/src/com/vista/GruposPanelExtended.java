@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import org.json.simple.JSONObject;
 
 import com.controladores.GrupoControlador;
+import com.excepciones.ConexionException;
 import com.excepciones.InicializandoException;
 import com.excepciones.grupos.ObteniendoGruposException;
 import com.vaadin.data.util.BeanItem;
@@ -42,7 +43,7 @@ public class GruposPanelExtended extends GruposPanel {
 				try {
 					
 					MySub subGrupoView = new MySub();
-					form = new GrupoViewExtended();
+					form = new GrupoViewExtended(Variables.OPERACION_NUEVO);
 					subGrupoView.setVista(form);
 					
 					UI.getCurrent().addWindow(subGrupoView);
@@ -55,7 +56,7 @@ public class GruposPanelExtended extends GruposPanel {
 			
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
 			
-			this.mostrarMensajeError("Ha ocurrido un error inesperado");
+			Mensajes.mostrarMensajeError("Ha ocurrido un error inesperado");
 		}
 		
 	}
@@ -64,7 +65,7 @@ public class GruposPanelExtended extends GruposPanel {
 		
 			
 		java.util.Date utilDate = new java.util.Date();
-		java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+		java.sql.Timestamp sqlDate = new java.sql.Timestamp(utilDate.getTime());
 			
 						
 		this.container = 
@@ -98,7 +99,7 @@ public class GruposPanelExtended extends GruposPanel {
 		        BeanItem<GrupoVO> item = container.getItem(gridview.getSelectedRow());
 		
 					MySub sub = new MySub();
-					form = new GrupoViewExtended();
+					form = new GrupoViewExtended(Variables.OPERACION_EDITAR);
 					//form.fieldGroup.setItemDataSource(item);
 					form.setDataSourceFormulario(item);
 					sub.setVista(form);
@@ -126,9 +127,9 @@ public class GruposPanelExtended extends GruposPanel {
 		try {
 			lstGruposJ = controlador.getGrupos();
 
-		} catch (ObteniendoGruposException | InicializandoException e) {
+		} catch (ObteniendoGruposException | InicializandoException | ConexionException e) {
 			
-			mostrarMensajeError(e.getMessage());
+			Mensajes.mostrarMensajeError(e.getMessage());
 		}
 		
 		GrupoVO aux;
@@ -140,66 +141,6 @@ public class GruposPanelExtended extends GruposPanel {
 		}
 		
 		return lstGrupos;
-	}
-	
-	
-////////////////////MENSAJES//////////////////////
-	
-	private void mostrarMensajeError(String msj){
-	
-	
-		Notification notif = new Notification(
-		"Error",
-		"<br/>" + msj,
-		Notification.Type.ERROR_MESSAGE,
-		true); // Contains HTML
-		
-		
-		notif.setDelayMsec(20000);
-		notif.setPosition(Position.BOTTOM_RIGHT);
-		//notif.setStyleName("mystyle");
-		//notif.setIcon(new ThemeResource("img/reindeer-64px.png"));
-		
-		notif.show(Page.getCurrent());
-	
-	}
-	
-	private void mostrarMensajeOK(String msj){
-	
-	
-		Notification notif = new Notification(
-		"OK",
-		"<br/>" + msj,
-		Notification.Type.HUMANIZED_MESSAGE,
-		true); // Contains HTML
-		
-		
-		notif.setDelayMsec(20000);
-		notif.setPosition(Position.BOTTOM_RIGHT);
-		//notif.setStyleName("mystyle");
-		//notif.setIcon(new ThemeResource("img/reindeer-64px.png"));
-		
-		notif.show(Page.getCurrent());
-	
-	}
-	
-	private void mostrarMensajeWarning(String msj){
-	
-	
-		Notification notif = new Notification(
-		"Atención",
-		"<br/>" + msj,
-		Notification.Type.WARNING_MESSAGE,
-		true); // Contains HTML
-		
-		
-		notif.setDelayMsec(20000);
-		notif.setPosition(Position.BOTTOM_RIGHT);
-		//notif.setStyleName("mystyle");
-		//notif.setIcon(new ThemeResource("img/reindeer-64px.png"));
-		
-		notif.show(Page.getCurrent());
-	
 	}
 	
 }

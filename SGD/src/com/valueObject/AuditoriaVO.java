@@ -1,10 +1,10 @@
 package com.valueObject;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 public abstract class AuditoriaVO {
 
-	private Date fechaMod;
+	private Timestamp fechaMod;
 	private String usuarioMod;
 	private String operacion;
 	
@@ -19,16 +19,22 @@ public abstract class AuditoriaVO {
 
 	protected AuditoriaVO(){};
 	
-	protected AuditoriaVO(String usuario, Date fecha ){
+	protected AuditoriaVO(String usuario, Timestamp fecha ){
+		
+		this.fechaMod = fecha;
+		this.usuarioMod = usuario;
+	}
+	
+	protected AuditoriaVO(String usuario, Timestamp fecha, String operacion){
 		
 		this.fechaMod = fecha;
 		this.usuarioMod = usuario;
 	}
 		
-	public Date getFechaMod() {
+	public Timestamp getFechaMod() {
 		return fechaMod;
 	}
-	public void setFechaMod(Date fechaMod) {
+	public void setFechaMod(Timestamp fechaMod) {
 		this.fechaMod = fechaMod;
 	}
 	public String getUsuarioMod() {

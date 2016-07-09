@@ -56,6 +56,9 @@ public class LoginExtended extends Login implements ViewDisplay {
 			
 			if(usuarioValido){
 				
+				getSession().setAttribute("usuario", loginVO.getUsuario());
+				getSession().setAttribute("pass", loginVO.getPass());
+				
 				principal.setMenu();
 			
 			}else{
