@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import org.json.simple.JSONObject;
 
+import com.excepciones.ConexionException;
 import com.excepciones.Login.LoginException;
 import com.excepciones.Usuarios.ObteniendoUsuariosException;
 import com.excepciones.cotizaciones.MemberCotizacionException;
@@ -62,7 +63,7 @@ public class DAOUsuarios implements IDAOUsuarios {
 		
 	}
 
-	public ArrayList<Usuario> getUsuarios() throws ClassNotFoundException, ObteniendoUsuariosException{
+	public ArrayList<Usuario> getUsuarios() throws ClassNotFoundException, ObteniendoUsuariosException, ConexionException{
 		
 		System.out.println("estoy en DAO usuarios ");
 		conexion = new Conexion();
