@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.json.simple.JSONObject;
 
 import com.controladores.UsuarioControlador;
+import com.excepciones.ConexionException;
 import com.excepciones.InicializandoException;
 import com.excepciones.Usuarios.ObteniendoUsuariosException;
 import com.vaadin.data.util.BeanItemContainer;
@@ -77,9 +78,8 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 		try {
 			lstUsuariosJ = controlador.getUsuarios();
 
-		} catch (InicializandoException e) {
-			
-			//mostrarMensajeError(e.getMessage());
+		} catch (InicializandoException|ConexionException e) {
+			Mensajes.mostrarMensajeError(e.getMessage());
 		}
 		
 		UsuarioVO aux;

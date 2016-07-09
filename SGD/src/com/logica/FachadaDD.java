@@ -83,7 +83,7 @@ public class FachadaDD {
     
 /////////////////////////////////NUEVO/////////////////////////////////
     @SuppressWarnings("null")
-	public ArrayList<JSONObject> getUsuarios() throws ObteniendoUsuariosException, ClassNotFoundException {
+	public ArrayList<JSONObject> getUsuarios() throws ObteniendoUsuariosException, ClassNotFoundException, ConexionException {
     	
     	ArrayList<Usuario> lstUsuarios = this.usuarios.getUsuarios();
     	ArrayList<JSONObject> lstUsuariosJson = new ArrayList<JSONObject>();
