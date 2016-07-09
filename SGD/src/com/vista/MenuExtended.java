@@ -67,10 +67,11 @@ public class MenuExtended extends Menu{
 			this.content.removeAllComponents();
 			try {
 				
-				CotizacionesPanelExtended c = new CotizacionesPanelExtended();
-				c.setMenu(this);
+				//CotizacionesPanelExtended c = new CotizacionesPanelExtended();
+				//c.setMenu(this);
 				
-				this.content.addComponent(c);
+				UsuariosPanelExtend u = new UsuariosPanelExtend();
+				this.content.addComponent(u);
 				
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
