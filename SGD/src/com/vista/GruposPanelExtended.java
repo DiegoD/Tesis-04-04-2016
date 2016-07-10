@@ -8,6 +8,7 @@ import org.json.simple.JSONObject;
 
 import com.controladores.GrupoControlador;
 import com.excepciones.ConexionException;
+import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
 import com.excepciones.grupos.ObteniendoGruposException;
 import com.vaadin.data.util.BeanItem;
@@ -135,7 +136,7 @@ public class GruposPanelExtended extends GruposPanel {
 		try {
 			lstGruposJ = controlador.getGrupos();
 
-		} catch (ObteniendoGruposException | InicializandoException | ConexionException e) {
+		} catch (ObteniendoGruposException | InicializandoException | ConexionException | ErrorInesperadoException e) {
 			
 			Mensajes.mostrarMensajeError(e.getMessage());
 		}

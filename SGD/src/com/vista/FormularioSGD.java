@@ -1,11 +1,11 @@
 package com.vista;
 
 import com.vaadin.data.util.BeanItem;
+import com.vaadin.ui.VerticalLayout;
 import com.valueObject.AuditoriaVO;
-import com.valueObject.GrupoVO;
 
-public interface Formulario {
-	
+public abstract class FormularioSGD extends VerticalLayout{
+
 	/**
 	 * Metodo que inicializa el formulario
 	 */
@@ -19,8 +19,9 @@ public interface Formulario {
 	 * EN modo EDITAR: las habilitamos
 	 *
 	 *Tambien las expreciones regulares
+	 * @return 
 	 */
-	void setearValidaciones(boolean setear);
+	abstract void setearValidaciones(boolean setear);
 	
 	
 	/**
@@ -31,25 +32,25 @@ public interface Formulario {
 	 * para que inicialize los campos automaticamente
 	 *
 	 */
-	public void setDataSourceFormulario(BeanItem<AuditoriaVO> item);
+	abstract void setDataSourceFormulario(BeanItem<AuditoriaVO> item);
 	
 	/**
 	 * Seteamos el formulario en modo solo Lectura
 	 *
 	 */
-	void iniFormLectura();
+	abstract void iniFormLectura();
 	
 	/**
 	 * Seteamos el formulario en modo Edicion
 	 *
 	 */
-	void iniFormEditar();
+	abstract void iniFormEditar();
 	
 	/**
 	 * Seteamos el formulario en modo Nuevo
 	 *
 	 */
-	void iniFormNuevo();
+	abstract void iniFormNuevo();
 	
 	
 	/**
@@ -59,7 +60,7 @@ public interface Formulario {
 	 * EJ: el codigo no se deja editar
 	 *
 	 */
-	void setearFieldsEditar();
+	abstract void setearFieldsEditar();
 	
 	
 	/**
@@ -68,34 +69,34 @@ public interface Formulario {
 	 * VISIBLE = FALSE
 	 *
 	 */
-	void disableBotonEditar();
+	abstract void disableBotonEditar();
 	
 	/**
 	 * Habilitamos el boton editar
 	 * ENABLED = TRUE
 	 * VISIBLE = TRUE
 	 */
-	void enableBotonEditar();
+	abstract void enableBotonEditar();
 	
 	/**
 	 * Deshabilitamos el boton aceptar
 	 * ENABLED = FALSE
 	 * VISIBLE = FALSE
 	 */
-	void disableBotonAceptar();
+	abstract void disableBotonAceptar();
 	
 	/**
 	 * Habilitamos el boton aceptar
 	 * ENABLED = TRUE
 	 * VISIBLE = TRUE
 	 */
-    void enableBotonAceptar();
+	abstract void enableBotonAceptar();
     
 	/**
 	 * Dejamos todos los Fields readonly o no,
 	 * dado el boolenao pasado por parametro
 	 *
 	 */
-	void readOnlyFields(boolean setear);
+	abstract void readOnlyFields(boolean setear);
 	
 }

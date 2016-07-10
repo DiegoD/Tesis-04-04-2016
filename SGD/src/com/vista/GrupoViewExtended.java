@@ -95,7 +95,7 @@ public class GrupoViewExtended extends GrupoView {
 	
 	}
 
-	private  void inicializarForm(){
+	public  void inicializarForm(){
 		
 		this.controlador = new GrupoControlador();
 					

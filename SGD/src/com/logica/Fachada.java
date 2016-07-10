@@ -2,7 +2,9 @@ package com.logica;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import org.json.simple.JSONObject;
@@ -30,6 +32,8 @@ public class Fachada {
 	private static final Object lock = new Object();
 	private static volatile Fachada INSTANCE = null;
 	
+	/*Pool de conecciones*/
+	Pool pool;
 	
 	/*Esto es para abstract factory*/
 	private IDaoImpuesto daoImpuesto;
@@ -45,7 +49,9 @@ public class Fachada {
 	
     private Fachada() throws InstantiationException, IllegalAccessException, ClassNotFoundException, FileNotFoundException, IOException
     {
-        fabrica = AbstractFactoryBuilder.getInstancia();
+        pool = new Pool();
+    	
+    	fabrica = AbstractFactoryBuilder.getInstancia();
 		fabricaConcreta = fabrica.getAbstractFactory();
 		
         this.daoImpuesto = fabricaConcreta.crearDaoImpuestos();
@@ -170,20 +176,51 @@ public class Fachada {
 /////////////////////////////////FIN-LOGIN/////////////////////////////////
     
 /////////////////////////////////INI-GUPOS/////////////////////////////////
-    public ArrayList<JSONObject> getGrupos() throws ObteniendoGruposException, ConexionException {
+    public ArrayList<JSONObject> getGrupos() throws ObteniendoGruposException, ConexionException, ErrorInesperadoException {
     	
-    	return this.grupos.getGrupos();
+    	Connection con = null;
     	
+    	try
+    	{
+    		con = this.pool.obtenerConeccion();
+    		
+    		return this.grupos.getGrupos(con);
+    		
+    	}catch(Exception e)
+    	{
+    		throw new ErrorInesperadoException();
+    	}
+    	finally
+    	{
+    		this.pool.liberarConeccion(con);
+    	}
+    	
+    	    	
     }
     
-    public void insertarGrupo(JSONObject grupoJS) throws InsertandoGrupoException, MemberGrupoException, ExisteGrupoException, ConexionException{
+    public void insertarGrupo(JSONObject grupoJS) throws InsertandoGrupoException, MemberGrupoException, ExisteGrupoException, ConexionException, ErrorInesperadoException{
     	
-    	GrupoVO grupoVO = new GrupoVO(grupoJS);
+    	Connection con = null;
     	
-    	if(!this.grupos.memberGrupo(grupoVO.getCodGrupo()))
-    		this.grupos.insertarGrupo(grupoVO);
-    	else
-    		throw new ExisteGrupoException();
+    	try 
+    	{
+			con = this.pool.obtenerConeccion();
+
+	    	GrupoVO grupoVO = new GrupoVO(grupoJS);
+	    	
+	    	if(!this.grupos.memberGrupo(grupoVO.getCodGrupo(), con))
+	    		this.grupos.insertarGrupo(grupoVO, con);
+	    	else
+	    		throw new ExisteGrupoException();
+    	
+    	}catch(Exception e)
+    	{
+    		throw new ErrorInesperadoException();
+    	}
+    	finally
+    	{
+    		pool.liberarConeccion(con);
+    	}
     }
     
 /////////////////////////////////FIN-GUPOS/////////////////////////////////

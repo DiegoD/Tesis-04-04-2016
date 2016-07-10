@@ -192,7 +192,8 @@ public class Consultas {
     
 ////////////////////////INI-GRUPOS///////////////////////////////////////////////////
     
-    public String getGrupos(){
+    public String getGrupos()
+    {
     	
     	 StringBuilder sb = new StringBuilder();
     	 
@@ -202,7 +203,8 @@ public class Consultas {
     	 return sb.toString();
     }
     
-    public String insertarGrupo(){
+    public String insertarGrupo()
+    {
     	
     	StringBuilder sb = new StringBuilder();
     	 
@@ -213,7 +215,8 @@ public class Consultas {
     	
     }
     
-    public String memberGrupo(){
+    public String memberGrupo()
+    {
     	
       	 StringBuilder sb = new StringBuilder();
         	 
@@ -224,6 +227,16 @@ public class Consultas {
       	 return sb.toString();
       }
     
+    public String eliminarGrupo()
+    {
+    	 StringBuilder sb = new StringBuilder();
+    	 
+      	 sb.append("DELETE ");
+      	 sb.append("FROM m_grupos  ");
+      	 sb.append("WHERE cod_grupo = ? ");
+      	 
+      	 return sb.toString();
+    }
 ////////////////////////FIN-GRUPOS///////////////////////////////////////////////////
     
 }
