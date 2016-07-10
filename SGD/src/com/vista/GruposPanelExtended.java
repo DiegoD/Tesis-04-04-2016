@@ -40,23 +40,22 @@ public class GruposPanelExtended extends GruposPanel {
 			this.btnNuevo.addClickListener(click -> {
 				
 
-				try {
-					
 					MySub subGrupoView = new MySub();
 					form = new GrupoViewExtended(Variables.OPERACION_NUEVO);
 					subGrupoView.setVista(form);
 					
 					UI.getCurrent().addWindow(subGrupoView);
 					
-				} catch (Exception e) {
-					
-					
-				}
+				
 			});
 			
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
 			
 			Mensajes.mostrarMensajeError("Ha ocurrido un error inesperado");
+			
+		} catch(Exception e)
+		{
+			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 		}
 		
 	}
@@ -96,16 +95,25 @@ public class GruposPanelExtended extends GruposPanel {
 						
 		    @Override
 		    public void select(SelectionEvent event) {
-		        BeanItem<GrupoVO> item = container.getItem(gridview.getSelectedRow());
+		       
+		    	try{
+		    	BeanItem<GrupoVO> item = container.getItem(gridview.getSelectedRow());
 		
 					MySub sub = new MySub();
-					form = new GrupoViewExtended(Variables.OPERACION_EDITAR);
+					form = new GrupoViewExtended(Variables.OPERACION_LECTURA);
 					//form.fieldGroup.setItemDataSource(item);
-					form.setDataSourceFormulario(item);
+					
 					sub.setVista(form);
+					/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
+					form.setDataSourceFormulario(item);
 					
 					
-					  UI.getCurrent().addWindow(sub);
+					 UI.getCurrent().addWindow(sub);
+					  
+		    	}catch(Exception e)
+		    	{
+		    		Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+		    	}
 		      
 		    }
 		});

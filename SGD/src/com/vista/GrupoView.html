@@ -9,12 +9,12 @@
     <vaadin-label style-name="colored h2" size-auto plain-text>
       Grupo 
     </vaadin-label> 
-    <vaadin-text-field caption="Codigo" _id="codGrupo"></vaadin-text-field> 
-    <vaadin-text-field caption="Nombre" _id="nomGrupo"></vaadin-text-field> 
-    <vaadin-button style-name="primary tiny" plain-text _id="aceptar">
-      Aceptar 
+    <vaadin-text-field caption="Codigo" readonly _id="codGrupo"></vaadin-text-field> 
+    <vaadin-text-field caption="Nombre" readonly _id="nomGrupo"></vaadin-text-field> 
+    <vaadin-button style-name="primary tiny" plain-text _id="aceptar" :bottom>
+      Guardar 
     </vaadin-button> 
-    <vaadin-button style-name="tiny primary" id="btnEditar" plain-text _id="btnEditar">
+    <vaadin-button style-name="tiny primary" id="btnEditar" plain-text _id="btnEditar" :bottom>
       Editar 
     </vaadin-button> 
    </vaadin-form-layout> 
