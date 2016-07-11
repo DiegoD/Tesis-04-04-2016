@@ -6,6 +6,7 @@ import org.json.simple.JSONObject;
 
 import com.controladores.UsuarioControlador;
 import com.excepciones.ConexionException;
+import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
 import com.excepciones.Usuarios.ObteniendoUsuariosException;
 import com.excepciones.grupos.ObteniendoGruposException;
@@ -59,7 +60,7 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 		
 	}
 	
-	private void inicializarGrilla() throws ClassNotFoundException, ObteniendoUsuariosException{
+	private void inicializarGrilla() throws ClassNotFoundException, ObteniendoUsuariosException, ErrorInesperadoException{
 		
 		this.container = new BeanItemContainer<UsuarioVO>(UsuarioVO.class);
 		
@@ -101,7 +102,7 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 		
 	}
 
-	private ArrayList<UsuarioVO> getUsuarios() throws ClassNotFoundException, ObteniendoUsuariosException{
+	private ArrayList<UsuarioVO> getUsuarios() throws ClassNotFoundException, ObteniendoUsuariosException, ErrorInesperadoException{
 		
 		ArrayList<UsuarioVO> lstUsuarios = new ArrayList<UsuarioVO>();
 		
