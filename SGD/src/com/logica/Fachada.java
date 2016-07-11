@@ -206,15 +206,57 @@ public class Fachada {
     	{
 			con = this.pool.obtenerConeccion();
 
-	    	GrupoVO grupoVO = new GrupoVO(grupoJS);
+	    	Grupo grupo = new Grupo(grupoJS);
 	    	
-	    	if(!this.grupos.memberGrupo(grupoVO.getCodGrupo(), con))
-	    		this.grupos.insertarGrupo(grupoVO, con);
+	    	if(!this.grupos.memberGrupo(grupo.getCodGrupo(), con))
+	    		this.grupos.insertarGrupo(grupo, con);
 	    	else
 	    		throw new ExisteGrupoException();
     	
     	}catch(Exception e)
     	{
+    		throw new ErrorInesperadoException();
+    	}
+    	finally
+    	{
+    		pool.liberarConeccion(con);
+    	}
+    }
+    
+public void editarGrupo(JSONObject grupoJS) throws InsertandoGrupoException, MemberGrupoException, ExisteGrupoException, ConexionException, ErrorInesperadoException{
+    	
+    	Connection con = null;
+    	
+    	try 
+    	{
+			con = this.pool.obtenerConeccion();
+			con.setAutoCommit(false);
+			
+			Grupo grupo = new Grupo(grupoJS);
+	    	
+	    	if(!this.grupos.memberGrupo(grupo.getCodGrupo(), con))
+	    	{
+	    		/*Primero eliminamos el grupo*/
+	    		this.grupos.eliminarGrupo(grupo.getCodGrupo(), con);
+	    		
+	    		/*Luego lo volvemos a insertar*/
+	    		this.grupos.insertarGrupo(grupo, con);
+	    		
+	    		con.commit();
+	    	}
+	    	
+	    	else
+	    		throw new ExisteGrupoException();
+    	
+    	}catch(Exception e)
+    	{
+    		try {
+				con.rollback();
+				
+			} catch (SQLException e1) {
+				
+				throw new ConexionException();
+			}
     		throw new ErrorInesperadoException();
     	}
     	finally

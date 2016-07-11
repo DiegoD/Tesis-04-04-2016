@@ -16,6 +16,7 @@ import com.excepciones.grupos.InsertandoGrupoException;
 import com.excepciones.grupos.MemberGrupoException;
 import com.excepciones.grupos.ModificandoGrupoException;
 import com.excepciones.grupos.ObteniendoGruposException;
+import com.logica.Grupo;
 import com.valueObject.CotizacionVO;
 import com.valueObject.GrupoVO;
 
@@ -68,24 +69,26 @@ public class DAOGrupos implements IDAOGrupos {
 	}
 
 
-	@Override
-	public void insertarGrupo(GrupoVO grupoVO, Connection con) throws InsertandoGrupoException, ConexionException {
+	/**
+	 * Insertamos grupo dado grupo,
+	 * PRECONDICION: El código del codigo no debe existir
+	 *
+	 */
+	public void insertarGrupo(Grupo grupo, Connection con) throws InsertandoGrupoException, ConexionException {
 
 		Consultas clts = new Consultas();
     	
     	String insert = clts.insertarGrupo();
     	
     	PreparedStatement pstmt1;
-    	    	
-    	
+  	
     	try {
     		
-
 			pstmt1 =  con.prepareStatement(insert);
-			pstmt1.setString(1, grupoVO.getCodGrupo());
-			pstmt1.setString(2, grupoVO.getNomGrupo());
-			pstmt1.setString(3, grupoVO.getUsuarioMod());
-			pstmt1.setString(4, grupoVO.getOperacion());
+			pstmt1.setString(1, grupo.getCodGrupo());
+			pstmt1.setString(2, grupo.getNomGrupo());
+			pstmt1.setString(3, grupo.getUsuarioMod());
+			pstmt1.setString(4, grupo.getOperacion());
 
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
@@ -98,6 +101,10 @@ public class DAOGrupos implements IDAOGrupos {
 		
 	}
 	
+	/**
+	 * Nos retorna true si existe el código del grupo
+	 *
+	 */
 	public boolean memberGrupo(String codGrupo, Connection con) throws MemberGrupoException, ConexionException{
 		
 		boolean existe = false;
@@ -128,31 +135,38 @@ public class DAOGrupos implements IDAOGrupos {
 		}
 	}
 	
-	public void eliminarGrupo(String codGrupo) throws ModificandoGrupoException, ConexionException
+	/**
+	 * Eliminamos grupo dado el codigo,
+	 * PRECONDICION: El código del codigo debe existir
+	 *
+	 */
+	public void eliminarGrupo(String codGrupo, Connection con) throws ModificandoGrupoException, ConexionException
 	{
+		Consultas consultas = new Consultas ();
+		String delete = consultas.eliminarGrupo();
+		
+		PreparedStatement pstmt1;
+		
+		
 		try 
 		{
-			this.conexion = new Conexion();
-		
-			this.con = conexion.getConnection();
+			pstmt1 =  con.prepareStatement(delete);
+			pstmt1.setString(1, codGrupo);
 			
-			Consultas consultas = new Consultas ();
-			String query = consultas.eliminarGrupo();
+			pstmt1.executeUpdate ();
+			pstmt1.close ();
+	
 			
-			
-		
-		} catch (ClassNotFoundException e) {
+		} catch (SQLException e) {
 			
 			throw new ModificandoGrupoException();
 		}
-	}
-
-
-	@Override
-	public void eliminarGrupo(String codGrupo, Connection con) throws ModificandoGrupoException, ConexionException {
-		// TODO Auto-generated method stub
+		
 		
 	}
+
+
+	
 	    	
 
 }
