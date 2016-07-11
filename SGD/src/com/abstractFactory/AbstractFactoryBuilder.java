@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import com.gargoylesoftware.htmlunit.javascript.host.file.File;
 
 public class AbstractFactoryBuilder 
 {
