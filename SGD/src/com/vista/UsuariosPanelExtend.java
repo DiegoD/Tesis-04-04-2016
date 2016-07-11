@@ -8,8 +8,13 @@ import com.controladores.UsuarioControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.InicializandoException;
 import com.excepciones.Usuarios.ObteniendoUsuariosException;
+import com.excepciones.grupos.ObteniendoGruposException;
+import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.event.SelectionEvent;
+import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.ui.UI;
+import com.valueObject.GrupoVO;
 import com.valueObject.UsuarioVO;
 
 public class UsuariosPanelExtend extends UsuariosPanel{
@@ -35,7 +40,7 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 				try {
 					
 					MySub subGrupoView = new MySub();
-					form = new UsuarioViewExtended();
+					form = new UsuarioViewExtended(Variables.OPERACION_NUEVO);
 					subGrupoView.setVista(form);
 					
 					UI.getCurrent().addWindow(subGrupoView);
@@ -65,6 +70,33 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 			container.addBean(usuarioVO);
 		}
 		gridUsuarios.setContainerDataSource(container);
+		
+		gridUsuarios.addSelectionListener(new SelectionListener() {
+			
+		    @Override
+		    public void select(SelectionEvent event) {
+		       
+		    	try{
+		    	BeanItem<UsuarioVO> item = container.getItem(gridUsuarios.getSelectedRow());
+		
+					MySub sub = new MySub();
+					form = new UsuarioViewExtended(Variables.OPERACION_LECTURA);
+					//form.fieldGroup.setItemDataSource(item);
+					
+					sub.setVista(form);
+					/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
+					form.setDataSourceFormulario(item);
+					
+					
+					 UI.getCurrent().addWindow(sub);
+					  
+		    	}catch(Exception e)
+		    	{
+		    		Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+		    	}
+		      
+		    }
+		});
 		
 		
 	}

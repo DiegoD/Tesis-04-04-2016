@@ -23,6 +23,7 @@ public class UsuarioView extends VerticalLayout {
 	protected TextField usuario;
 	protected TextField pass;
 	protected Button aceptar;
+	protected Button btnEditar;
 
 	public UsuarioView() {
 		Design.read(this);

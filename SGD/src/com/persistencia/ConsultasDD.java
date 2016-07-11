@@ -223,7 +223,27 @@ public class ConsultasDD {
 
       	 return sb.toString();
       }
-    
+
+    public String memberUsuario(){
+    	
+    	 StringBuilder sb = new StringBuilder();
+      	 
+    	 sb.append("SELECT usuario ");
+    	 sb.append("FROM m_usuarios  ");
+    	 sb.append("WHERE usuario = ? ");
+
+    	 return sb.toString();
+    }
+	
+	public String insertarUsuario(){
+	   	
+	   	StringBuilder sb = new StringBuilder();
+	   	 
+	   	sb.append("INSERT INTO vaadin.m_usuarios (usuario, nombre, pass, usuario_mod, fecha_mod)");
+	  	 	sb.append("VALUES (?, ?, ?, ?, NOW()) ");
+	
+	   	return sb.toString();
+	}
 ////////////////////////FIN-GRUPOS///////////////////////////////////////////////////
     
 }

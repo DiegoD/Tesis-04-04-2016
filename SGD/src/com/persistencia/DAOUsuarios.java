@@ -10,10 +10,15 @@ import org.json.simple.JSONObject;
 
 import com.excepciones.ConexionException;
 import com.excepciones.Login.LoginException;
+import com.excepciones.Usuarios.ExisteUsuarioException;
+import com.excepciones.Usuarios.InsertandoUsuarioException;
 import com.excepciones.Usuarios.ObteniendoUsuariosException;
 import com.excepciones.cotizaciones.MemberCotizacionException;
+import com.excepciones.grupos.InsertandoGrupoException;
+import com.excepciones.grupos.MemberGrupoException;
 import com.excepciones.grupos.ObteniendoGruposException;
 import com.logica.Usuario;
+import com.valueObject.GrupoVO;
 import com.valueObject.LoginVO;
 
 public class DAOUsuarios implements IDAOUsuarios {
@@ -63,18 +68,20 @@ public class DAOUsuarios implements IDAOUsuarios {
 		
 	}
 
-	public ArrayList<Usuario> getUsuarios() throws ClassNotFoundException, ObteniendoUsuariosException, ConexionException{
+	public ArrayList<Usuario> getUsuarios() throws ObteniendoUsuariosException, ConexionException{
 		
-		System.out.println("estoy en DAO usuarios ");
-		conexion = new Conexion();
-    	Consultas clts = new Consultas();
-    	String query = clts.getUsuarios();
-    	PreparedStatement pstmt1;
-    	ResultSet rs;
-    	ArrayList<Usuario> lstUsuarios = new ArrayList<Usuario>();
+		ArrayList<Usuario> lstUsuarios = new ArrayList<Usuario>();
+	
+		try {
+			
+			System.out.println("estoy en DAO usuarios ");
+			conexion = new Conexion();
+	    	ConsultasDD clts = new ConsultasDD();
+	    	String query = clts.getUsuarios();
+	    	PreparedStatement pstmt1;
+	    	ResultSet rs;
+	    	
     	
-    	try {
-    		
     		this.con = conexion.getConnection();
     		pstmt1 = con.prepareStatement(query);
 			rs = pstmt1.executeQuery();
@@ -84,14 +91,6 @@ public class DAOUsuarios implements IDAOUsuarios {
 				Usuario usr = new Usuario(rs.getString(1), rs.getString(2), rs.getString(3));
 				
 				System.out.println("Encontro usuario");
-				//org.json.simple.JSONObject obj = new org.json.simple.JSONObject();
-
-				//obj.put("usuario", rs.getString(1));
-				//obj.put("pass", rs.getString(2));
-				//obj.put("nombre", rs.getString(3));
-				
-				
-				
 				lstUsuarios.add(usr);
 				
 			}
@@ -100,11 +99,79 @@ public class DAOUsuarios implements IDAOUsuarios {
 			con.close ();
     	}	
     	
-		catch (SQLException e) {
+		catch (SQLException | ClassNotFoundException e) {
 			throw new ObteniendoUsuariosException();
 			
 		}
     	
     	return lstUsuarios;
 	}
+
+	public boolean memberUsuario(String usuario) throws ExisteUsuarioException, ConexionException{
+		
+		boolean existe = false;
+		
+		try{
+			
+			this.conexion = new Conexion();
+			this.con = conexion.getConnection();
+			
+			ConsultasDD consultas = new ConsultasDD ();
+			String query = consultas.memberUsuario();
+			
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			
+			pstmt1.setString(1, usuario);
+			
+			ResultSet rs = pstmt1.executeQuery();
+			
+			if (rs.next ()) 
+				existe = true;
+						
+			rs.close ();
+			pstmt1.close ();
+			con.close ();
+			
+			return existe;
+			
+		}catch(SQLException | ClassNotFoundException e){
+			
+			throw new ExisteUsuarioException();
+		}
+	}
+
+	public void insertarUsuario(Usuario user) throws InsertandoUsuarioException, ConexionException {
+
+		ConsultasDD clts = new ConsultasDD();
+    	
+    	String insert = clts.insertarUsuario();
+    	String nuevo = "Nuevo";
+    	
+    	PreparedStatement pstmt1;
+    	    	
+    	
+    	try {
+    		
+			this.conexion = new Conexion();
+			this.con = conexion.getConnection();
+			pstmt1 =  con.prepareStatement(insert);
+			pstmt1.setString(1, user.getUsuario());
+			pstmt1.setString(2, user.getNombre());
+			pstmt1.setString(3, user.getPass());
+			pstmt1.setString(4, user.getUsuario());
+			//pstmt1.setString(6, nuevo);
+			
+			
+			pstmt1.executeUpdate ();
+			pstmt1.close ();
+			con.close ();
+
+			
+		} catch (ClassNotFoundException | SQLException e) {
+			throw new InsertandoUsuarioException();
+			
+		} 
+		
+	}
+
 }

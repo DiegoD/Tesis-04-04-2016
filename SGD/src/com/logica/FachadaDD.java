@@ -6,11 +6,14 @@ import java.sql.Date;
 import java.util.ArrayList;
 
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import com.abstractFactory.AbstractFactoryBuilder;
 import com.abstractFactory.IAbstractFactory;
 import com.excepciones.*;
 import com.excepciones.Login.LoginException;
+import com.excepciones.Usuarios.ExisteUsuarioException;
+import com.excepciones.Usuarios.InsertandoUsuarioException;
 import com.excepciones.Usuarios.ObteniendoUsuariosException;
 import com.excepciones.cotizaciones.ExisteCotizacionException;
 import com.excepciones.cotizaciones.IngresandoCotizacionException;
@@ -83,7 +86,7 @@ public class FachadaDD {
     
 /////////////////////////////////NUEVO/////////////////////////////////
     @SuppressWarnings("null")
-	public ArrayList<JSONObject> getUsuarios() throws ObteniendoUsuariosException, ClassNotFoundException, ConexionException {
+	public ArrayList<JSONObject> getUsuarios() throws ConexionException, ClassNotFoundException, ObteniendoUsuariosException {
     	
     	ArrayList<Usuario> lstUsuarios = this.usuarios.getUsuarios();
     	ArrayList<JSONObject> lstUsuariosJson = new ArrayList<JSONObject>();
@@ -109,7 +112,24 @@ public class FachadaDD {
 		}
     	return lstUsuariosJson;
     }
-/////////////////////////////////FIN NUEVO/////////////////////////////////    
+
+    public void insertarUsuario(JSONObject jsonUsuario) throws InsertandoUsuarioException, ConexionException, ExisteUsuarioException{
+	
+    	Usuario user = new Usuario(jsonUsuario.get("nombre").toString(),jsonUsuario.get("usuario").toString(),jsonUsuario.get("pass").toString());
+    	
+    	if(!this.usuarios.memberUsuario(user.getUsuario()))
+    	{
+    		System.out.println("voy a insertar");
+    		this.usuarios.insertarUsuario(user);
+    	}
+    	else
+    	{
+    		System.out.println("ya estaba");
+    		throw new ExisteUsuarioException();
+    	}
+    }
+////////////////////////////////FIN NUEVO/////////////////////////////////   
+    
     
     
 }

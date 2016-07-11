@@ -6,9 +6,11 @@ public class Usuario {
 	private String pass;
 	private String nombre;
 	
-	
+	public Usuario(){
+		
+	}
 	public Usuario(String usuario, String pass, String nombre) {
-		super();
+		
 		this.usuario = usuario;
 		this.pass = pass;
 		this.nombre = nombre;
