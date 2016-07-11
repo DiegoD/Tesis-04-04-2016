@@ -2,6 +2,7 @@ package com.logica;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.Date;
 import java.util.ArrayList;
 
@@ -33,7 +34,7 @@ public class FachadaDD {
 
 	private static final Object lock = new Object();
 	private static volatile FachadaDD INSTANCE = null;
-	
+	Pool pool;
 	
 	/*Esto es para abstract factory*/
 	private IDaoImpuesto daoImpuesto;
@@ -49,6 +50,8 @@ public class FachadaDD {
 	
     private FachadaDD() throws InstantiationException, IllegalAccessException, ClassNotFoundException, FileNotFoundException, IOException
     {
+    	pool = new Pool();
+    	
         fabrica = AbstractFactoryBuilder.getInstancia();
 		fabricaConcreta = fabrica.getAbstractFactory();
 		
@@ -80,24 +83,42 @@ public class FachadaDD {
         return INSTANCE;
     }
     
-    
-
-    
-    
 /////////////////////////////////NUEVO/////////////////////////////////
-    @SuppressWarnings("null")
-	public ArrayList<JSONObject> getUsuarios() throws ConexionException, ClassNotFoundException, ObteniendoUsuariosException {
+    @SuppressWarnings({ "null", "resource" })
+	public ArrayList<JSONObject> getUsuarios() throws ConexionException, ClassNotFoundException, ObteniendoUsuariosException, ErrorInesperadoException {
     	
-    	ArrayList<Usuario> lstUsuarios = this.usuarios.getUsuarios();
-    	ArrayList<JSONObject> lstUsuariosJson = new ArrayList<JSONObject>();
+    	Connection con = null;
     	
-    	lstUsuariosJson = this.convertArray(lstUsuarios);
+    	try 
+    	{
+    		con = this.pool.obtenerConeccion();
+			con.setAutoCommit(false);
+			con = this.pool.obtenerConeccion();
+			
+			ArrayList<Usuario> lstUsuarios = this.usuarios.getUsuarios(con);
+	    	ArrayList<JSONObject> lstUsuariosJson = new ArrayList<JSONObject>();
+	    	lstUsuariosJson = this.convertArray(lstUsuarios);
+	    	System.out.println("Estoy en fachada ");
+	    	
+	    	return lstUsuariosJson;
+	    	
+	    	
+		} 
+    	catch (Exception e) 
+    	{
+    		throw new ErrorInesperadoException();
+		}
+    	finally 
+    	{
+    		this.pool.liberarConeccion(con);
+		}
+    	
 		
-    	System.out.println("Estoy en fachada ");
-    	return lstUsuariosJson;
+    	
     }
     
-    public ArrayList<JSONObject> convertArray(ArrayList<Usuario> lstUsuarios){
+    public ArrayList<JSONObject> convertArray(ArrayList<Usuario> lstUsuarios)
+    {
     	JSONObject json = null;
     	ArrayList<JSONObject> lstUsuariosJson = new ArrayList<JSONObject>();
     	
@@ -113,20 +134,37 @@ public class FachadaDD {
     	return lstUsuariosJson;
     }
 
-    public void insertarUsuario(JSONObject jsonUsuario) throws InsertandoUsuarioException, ConexionException, ExisteUsuarioException{
-	
+    @SuppressWarnings("resource")
+	public void insertarUsuario(JSONObject jsonUsuario) throws InsertandoUsuarioException, ConexionException, ExisteUsuarioException, ErrorInesperadoException
+    {
+    	Connection con = null;
     	Usuario user = new Usuario(jsonUsuario.get("nombre").toString(),jsonUsuario.get("usuario").toString(),jsonUsuario.get("pass").toString());
     	
-    	if(!this.usuarios.memberUsuario(user.getUsuario()))
+    	try 
     	{
-    		System.out.println("voy a insertar");
-    		this.usuarios.insertarUsuario(user);
-    	}
-    	else
+    		con = this.pool.obtenerConeccion();
+			con.setAutoCommit(false);
+			con = this.pool.obtenerConeccion();
+			
+    		if(!this.usuarios.memberUsuario(user.getUsuario(), con))
+        	{
+        		System.out.println("voy a insertar");
+        		this.usuarios.insertarUsuario(user, con);
+        	}
+        	else
+        	{
+        		System.out.println("ya estaba");
+        		throw new ExisteUsuarioException();
+        	}
+		} 
+    	catch (Exception e) 
     	{
-    		System.out.println("ya estaba");
-    		throw new ExisteUsuarioException();
-    	}
+    		throw new ErrorInesperadoException();
+		}
+    	finally 
+    	{
+    		this.pool.liberarConeccion(con);
+		}
     }
 ////////////////////////////////FIN NUEVO/////////////////////////////////   
     
