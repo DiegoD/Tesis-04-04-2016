@@ -15,11 +15,11 @@ import com.valueObject.LoginVO;
 
 public interface IDAOUsuarios {
 	
-	public boolean usuarioValido(LoginVO loginVO) throws LoginException;
+	public boolean usuarioValido(LoginVO loginVO, Connection con) throws LoginException;
 	
-	public ArrayList<Usuario> getUsuarios() throws ClassNotFoundException, ObteniendoUsuariosException, ConexionException;
+	public ArrayList<Usuario> getUsuarios(Connection con) throws ClassNotFoundException, ObteniendoUsuariosException, ConexionException;
 
-	public boolean memberUsuario(String usuario) throws ExisteUsuarioException, ConexionException;
+	public boolean memberUsuario(String usuario, Connection con) throws ExisteUsuarioException, ConexionException;
 	
-	public void insertarUsuario(Usuario user) throws InsertandoUsuarioException, ConexionException;
+	public void insertarUsuario(Usuario user, Connection con) throws InsertandoUsuarioException, ConexionException;
 }
