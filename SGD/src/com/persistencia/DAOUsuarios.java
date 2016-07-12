@@ -1,5 +1,6 @@
 package com.persistencia;
 
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -25,21 +26,17 @@ public class DAOUsuarios implements IDAOUsuarios {
 
     
 	//private java.sql.Connection con = null;
-	private Conexion conexion;
-	private java.sql.Connection con;
     private PreparedStatement pst = null;
     private ResultSet rs = null;
 	
 	@Override
-	public boolean usuarioValido(LoginVO loginVO) throws LoginException {
+	public boolean usuarioValido(LoginVO loginVO, Connection con) throws LoginException {
 		
 	   	boolean usuarioValido = false;
 	   	
 		try
 		{
 			Class.forName("com.mysql.jdbc.Driver");
-			
-			this.con = DriverManager.getConnection (Consultas.URL,Consultas.USER,Consultas.PASS);
 			
 		
 			Consultas consultas = new Consultas ();
@@ -57,7 +54,6 @@ public class DAOUsuarios implements IDAOUsuarios {
 			
 			rs.close ();
 			pstmt1.close ();
-			con.close ();
 			
 			return usuarioValido;
 		}
@@ -68,21 +64,19 @@ public class DAOUsuarios implements IDAOUsuarios {
 		
 	}
 
-	public ArrayList<Usuario> getUsuarios() throws ObteniendoUsuariosException, ConexionException{
+	public ArrayList<Usuario> getUsuarios(Connection con) throws ObteniendoUsuariosException, ConexionException{
 		
 		ArrayList<Usuario> lstUsuarios = new ArrayList<Usuario>();
 	
 		try {
 			
 			System.out.println("estoy en DAO usuarios ");
-			conexion = new Conexion();
 	    	ConsultasDD clts = new ConsultasDD();
 	    	String query = clts.getUsuarios();
 	    	PreparedStatement pstmt1;
 	    	ResultSet rs;
 	    	
     	
-    		this.con = conexion.getConnection();
     		pstmt1 = con.prepareStatement(query);
 			rs = pstmt1.executeQuery();
 			
@@ -96,10 +90,9 @@ public class DAOUsuarios implements IDAOUsuarios {
 			}
 			rs.close ();
 			pstmt1.close ();
-			con.close ();
     	}	
     	
-		catch (SQLException | ClassNotFoundException e) {
+		catch (SQLException e) {
 			throw new ObteniendoUsuariosException();
 			
 		}
@@ -107,14 +100,12 @@ public class DAOUsuarios implements IDAOUsuarios {
     	return lstUsuarios;
 	}
 
-	public boolean memberUsuario(String usuario) throws ExisteUsuarioException, ConexionException{
+	public boolean memberUsuario(String usuario, Connection con) throws ExisteUsuarioException, ConexionException{
 		
 		boolean existe = false;
 		
 		try{
 			
-			this.conexion = new Conexion();
-			this.con = conexion.getConnection();
 			
 			ConsultasDD consultas = new ConsultasDD ();
 			String query = consultas.memberUsuario();
@@ -130,17 +121,16 @@ public class DAOUsuarios implements IDAOUsuarios {
 						
 			rs.close ();
 			pstmt1.close ();
-			con.close ();
 			
 			return existe;
 			
-		}catch(SQLException | ClassNotFoundException e){
+		}catch(SQLException e){
 			
 			throw new ExisteUsuarioException();
 		}
 	}
 
-	public void insertarUsuario(Usuario user) throws InsertandoUsuarioException, ConexionException {
+	public void insertarUsuario(Usuario user, Connection con) throws InsertandoUsuarioException, ConexionException {
 
 		ConsultasDD clts = new ConsultasDD();
     	
@@ -152,8 +142,6 @@ public class DAOUsuarios implements IDAOUsuarios {
     	
     	try {
     		
-			this.conexion = new Conexion();
-			this.con = conexion.getConnection();
 			pstmt1 =  con.prepareStatement(insert);
 			pstmt1.setString(1, user.getUsuario());
 			pstmt1.setString(2, user.getNombre());
@@ -164,10 +152,9 @@ public class DAOUsuarios implements IDAOUsuarios {
 			
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
-			con.close ();
 
 			
-		} catch (ClassNotFoundException | SQLException e) {
+		} catch (SQLException e) {
 			throw new InsertandoUsuarioException();
 			
 		} 
