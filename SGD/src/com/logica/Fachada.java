@@ -23,6 +23,7 @@ import com.excepciones.documentosAduaneros.ObteniendoDocumentoAduaneroException;
 import com.excepciones.grupos.ExisteGrupoException;
 import com.excepciones.grupos.InsertandoGrupoException;
 import com.excepciones.grupos.MemberGrupoException;
+import com.excepciones.grupos.NoExisteGrupoException;
 import com.excepciones.grupos.ObteniendoGruposException;
 import com.valueObject.*;
 import com.persistencia.*;
@@ -238,7 +239,7 @@ public class Fachada {
     	}
     }
     
-public void editarGrupo(JSONObject grupoJS) throws InsertandoGrupoException, MemberGrupoException, ExisteGrupoException, ConexionException, ErrorInesperadoException{
+public void editarGrupo(JSONObject grupoJS) throws InsertandoGrupoException, MemberGrupoException, NoExisteGrupoException, ConexionException, ErrorInesperadoException{
     	
     	Connection con = null;
     	
@@ -249,7 +250,7 @@ public void editarGrupo(JSONObject grupoJS) throws InsertandoGrupoException, Mem
 			
 			Grupo grupo = new Grupo(grupoJS);
 	    	
-	    	if(!this.grupos.memberGrupo(grupo.getCodGrupo(), con))
+	    	if(this.grupos.memberGrupo(grupo.getCodGrupo(), con))
 	    	{
 	    		/*Primero eliminamos el grupo*/
 	    		this.grupos.eliminarGrupo(grupo.getCodGrupo(), con);
@@ -261,7 +262,7 @@ public void editarGrupo(JSONObject grupoJS) throws InsertandoGrupoException, Mem
 	    	}
 	    	
 	    	else
-	    		throw new ExisteGrupoException();
+	    		throw new NoExisteGrupoException();
     	
     	}catch(Exception e)
     	{

@@ -29,6 +29,7 @@ public class Auditoria {
 		
 		this.fechaMod = fecha;
 		this.usuarioMod = usuario;
+		this.operacion = operacion;
 	}
 		
 	public Timestamp getFechaMod() {

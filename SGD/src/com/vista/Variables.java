@@ -11,6 +11,6 @@ public class Variables {
 	public static final String ERROR_INESPERADO = "Ha ocurrido un error inesperado";
 	public static final String WARNING_CAMPOS_NO_VALIDOS = "Veificar campos no válidos";
 	
-	public static final String OK_INGRESO = "Se ha registrado en el sistema correctamente";
+	public static final String OK_INGRESO = "Se han guardado los cambios";
 	
 }

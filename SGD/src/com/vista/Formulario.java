@@ -98,4 +98,20 @@ public interface Formulario {
 	 */
 	void readOnlyFields(boolean setear);
 	
+	/**
+	 * Seteamos todos las validaciones de los fields
+	 * del formulario
+	 *
+	 */
+	void agregarFieldsValidaciones();
+	
+	
+	/**
+	 * Nos retorna true si los campos
+	 * son válidos, se debe invocar antes
+	 * de consumir al controlador
+	 *
+	 */
+	boolean fieldsValidos();
+	
 }

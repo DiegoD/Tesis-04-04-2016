@@ -49,24 +49,33 @@ public class GrupoViewExtended extends GrupoView {
 			/*Validamos los campos antes de invocar al controlador*/
 			if(this.fieldsValidos())
 			{
+				JSONObject grupoJS = new JSONObject();
+				
+				grupoJS.put("codGrupo", codGrupo.getValue().trim());
+				grupoJS.put("nomGrupo", nomGrupo.getValue().trim());
+				grupoJS.put("usuarioMod", getSession().getAttribute("usuario"));
+				grupoJS.put("operacion", operacion);
+				
 				if(this.operacion.equals(Variables.OPERACION_NUEVO))	
 				{	
-					JSONObject grupoJS = new JSONObject();
-					
-					grupoJS.put("codGrupo", codGrupo.getValue().trim());
-					grupoJS.put("nomGrupo", nomGrupo.getValue().trim());
-					grupoJS.put("usuarioMod", getSession().getAttribute("usuario"));
-					grupoJS.put("operacion", operacion);
-									
+	
 					this.controlador.insertarGrupo(grupoJS);
 					
 					Mensajes.mostrarMensajeOK("Se ha guardado el Grupo");
 				
 				}else if(this.operacion.equals(Variables.OPERACION_EDITAR))
 				{
-					//VER DE IMPLEMENTAR PARA EDITAR BORRO TODO E INSERTO NUEVAMENTE
+					/*VER DE IMPLEMENTAR PARA EDITAR BORRO TODO E INSERTO NUEVAMENTE*/
+					this.controlador.editarGrupo(grupoJS);
 					
 				}
+				
+				/*Mensaje de que se han guardado los cambios 
+				 * oculatamos el boton de guardar y mostramos el de editar*/
+				Mensajes.mostrarMensajeWarning(Variables.OK_INGRESO);
+				
+				this.enableBotonEditar();
+				this.disableBotonAceptar();
 			
 			}
 			else /*Si los campos no son válidos mostramos warning*/
@@ -191,6 +200,9 @@ public class GrupoViewExtended extends GrupoView {
 	 */
 	private void iniFormEditar()
 	{
+		/*Seteamos el form en editar*/
+		this.operacion = Variables.OPERACION_EDITAR;
+		
 		/*Oculatamos Editar y mostramos el de guardar*/
 		this.enableBotonAceptar();
 		this.disableBotonEditar();
