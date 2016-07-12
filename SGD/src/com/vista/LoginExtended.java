@@ -4,6 +4,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import com.controladores.LoginControlador;
+import com.excepciones.ConexionException;
+import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
 import com.excepciones.Login.LoginException;
 import com.vaadin.navigator.Navigator;
@@ -69,7 +71,7 @@ public class LoginExtended extends Login implements ViewDisplay {
 	                         .show(Page.getCurrent());
 			}
 					
-		} catch (LoginException | InicializandoException e) {
+		} catch (LoginException | InicializandoException | ErrorInesperadoException | ConexionException e) {
 			
 			 new Notification("Error",
                      "<br/>" + e.getMessage(),

@@ -167,9 +167,24 @@ public class Fachada {
     
 /////////////////////////////////INI-LOGIN/////////////////////////////////
     
-    public boolean usuarioValido(LoginVO loginVO) throws LoginException{
+    public boolean usuarioValido(LoginVO loginVO) throws LoginException, ErrorInesperadoException, ConexionException{
     	
-    	return this.usuarios.usuarioValido(loginVO);
+    	Connection con = null;
+    	
+    	try
+    	{
+    		con = this.pool.obtenerConeccion();
+    	
+    		return this.usuarios.usuarioValido(loginVO, con);
+    		
+    	}catch(Exception e)
+    	{
+    		throw new ErrorInesperadoException();
+    	}
+    	finally
+    	{
+    		this.pool.liberarConeccion(con);
+    	}
     	
     }
     

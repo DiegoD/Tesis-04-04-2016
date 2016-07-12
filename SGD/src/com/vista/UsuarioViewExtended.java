@@ -124,6 +124,11 @@ public class UsuarioViewExtended extends UsuarioView{
 	public void setDataSourceFormulario(BeanItem<UsuarioVO> item)
 	{
 		this.fieldGroup.setItemDataSource(item);
+		
+		/*SETEAMOS LA OPERACION EN MODO LECUTA
+		 * ES CUANDO LLAMAMOS ESTE METODO*/
+		if(this.operacion.equals(Variables.OPERACION_LECTURA))
+			this.iniFormLectura();
 	}
 	
 	/**
