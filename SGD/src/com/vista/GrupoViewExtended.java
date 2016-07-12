@@ -13,6 +13,7 @@ import com.excepciones.grupos.InsertandoGrupoException;
 import com.excepciones.grupos.MemberGrupoException;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
+import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.server.Page;
 import com.vaadin.shared.Position;
 import com.vaadin.ui.Button;
@@ -43,25 +44,34 @@ public class GrupoViewExtended extends GrupoView {
 	/*Inicializamos listener de boton aceptar*/
 	this.aceptar.addClickListener(click -> {
 			
-			try {
-				
-			if(this.operacion.equals(Variables.OPERACION_NUEVO))	
-			{	
-				JSONObject grupoJS = new JSONObject();
-				
-				grupoJS.put("codGrupo", codGrupo.getValue().trim());
-				grupoJS.put("nomGrupo", nomGrupo.getValue().trim());
-				grupoJS.put("usuarioMod", getSession().getAttribute("usuario"));
-				grupoJS.put("operacion", operacion);
-								
-				this.controlador.insertarGrupo(grupoJS);
-				
-				Mensajes.mostrarMensajeOK("Se ha guardado el Grupo");
+		try {
 			
-			}else if(this.operacion.equals(Variables.OPERACION_EDITAR))
+			/*Validamos los campos antes de invocar al controlador*/
+			if(this.fieldsValidos())
 			{
-				//VER DE IMPLEMENTAR PARA EDITAR BORRO TODO E INSERTO NUEVAMENTE
+				if(this.operacion.equals(Variables.OPERACION_NUEVO))	
+				{	
+					JSONObject grupoJS = new JSONObject();
+					
+					grupoJS.put("codGrupo", codGrupo.getValue().trim());
+					grupoJS.put("nomGrupo", nomGrupo.getValue().trim());
+					grupoJS.put("usuarioMod", getSession().getAttribute("usuario"));
+					grupoJS.put("operacion", operacion);
+									
+					this.controlador.insertarGrupo(grupoJS);
+					
+					Mensajes.mostrarMensajeOK("Se ha guardado el Grupo");
 				
+				}else if(this.operacion.equals(Variables.OPERACION_EDITAR))
+				{
+					//VER DE IMPLEMENTAR PARA EDITAR BORRO TODO E INSERTO NUEVAMENTE
+					
+				}
+			
+			}
+			else /*Si los campos no son válidos mostramos warning*/
+			{
+				Mensajes.mostrarMensajeWarning(Variables.WARNING_CAMPOS_NO_VALIDOS);
 			}
 				
 			} catch (InsertandoGrupoException| MemberGrupoException| ExisteGrupoException| InicializandoException| ConexionException e) {
@@ -104,6 +114,9 @@ public class GrupoViewExtended extends GrupoView {
 		//Seteamos info del form si es requerido
 		if(fieldGroup != null)
 			fieldGroup.buildAndBindMemberFields(this);
+		
+		/*Seteamos las validaciones de los fields*/
+		this.agregarFieldsValidaciones();
 		
 		/*SI LA OPERACION NO ES NUEVO, OCULTAMOS BOTON ACEPTAR*/
 		if(this.operacion.equals(Variables.OPERACION_NUEVO))
@@ -274,6 +287,48 @@ public class GrupoViewExtended extends GrupoView {
 		this.nomGrupo.setReadOnly(setear);
 				
 	}
+	
+	/**
+	 * Seteamos todos las validaciones de los fields
+	 * del formulario
+	 *
+	 */
+	private void agregarFieldsValidaciones()
+	{
+        this.codGrupo.addValidator(
+                new StringLengthValidator(
+                     " 20 caracteres máximo", 1, 20, false));
+        
+        this.nomGrupo.addValidator(
+                new StringLengthValidator(
+                        " 255 caracteres máximo", 1, 255, false));
+        
+	}
+	
+	
+	/**
+	 * Nos retorna true si los campos
+	 * son válidos, se debe invocar antes
+	 * de consumir al controlador
+	 *
+	 */
+	private boolean fieldsValidos()
+	{
+		boolean valido = false;
+		
+		try
+		{
+			if(this.codGrupo.isValid() && this.nomGrupo.isValid())
+				valido = true;
+			
+		}catch(Exception e)
+		{
+			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+		}
+		
+		return valido;
+	}
+
 	
 
 	
