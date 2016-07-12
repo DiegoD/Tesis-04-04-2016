@@ -27,5 +27,11 @@ public class UsuarioControlador {
 		System.out.println("llamo a fachada");
 		FachadaDD.getInstance().insertarUsuario(jsonUsuario);
 	}
+	
+	public void modificarUsuario(JSONObject jsonUsuario) throws InsertandoUsuarioException, ConexionException, ExisteUsuarioException, ErrorInesperadoException, InicializandoException
+	{
+		System.out.println("llamo a fachada");
+		FachadaDD.getInstance().modificarUsuario(jsonUsuario);
+	}
 
 }
