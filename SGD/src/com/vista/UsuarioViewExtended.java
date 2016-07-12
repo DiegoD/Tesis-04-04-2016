@@ -49,7 +49,17 @@ public class UsuarioViewExtended extends UsuarioView{
 				}
 				else if(this.operacion.equals(Variables.OPERACION_EDITAR))
 				{
-					//VER DE IMPLEMENTAR PARA EDITAR BORRO TODO E INSERTO NUEVAMENTE
+					JSONObject usuarioJson = new JSONObject();
+					usuarioJson.put("nombre", nombre.getValue().trim());
+					usuarioJson.put("usuario", usuario.getValue().trim());
+					usuarioJson.put("pass", pass.getValue().trim());
+					usuarioJson.put("operacion", operacion);
+									
+					System.out.println("llamo a controlador");
+					this.controlador.modificarUsuario(usuarioJson);
+					
+					Mensajes.mostrarMensajeOK("Se guardaron los cambios");
+				
 					
 				}
 				
@@ -73,6 +83,7 @@ public class UsuarioViewExtended extends UsuarioView{
 			{
 				//this.codGrupo.setReadOnly(true);
 				/*Inicializamos el Form en modo Edicion*/
+				
 				this.iniFormEditar();
 	
 			}
@@ -129,6 +140,9 @@ public class UsuarioViewExtended extends UsuarioView{
 		 * ES CUANDO LLAMAMOS ESTE METODO*/
 		if(this.operacion.equals(Variables.OPERACION_LECTURA))
 			this.iniFormLectura();
+		
+		if(this.operacion.equals(Variables.OPERACION_NUEVO))
+			this.iniFormNuevo();
 	}
 	
 	/**
@@ -155,6 +169,9 @@ public class UsuarioViewExtended extends UsuarioView{
 	 */
 	private void iniFormEditar()
 	{
+		//setea operación
+		operacion = Variables.OPERACION_EDITAR;
+		
 		/*Oculatamos Editar y mostramos el de guardar*/
 		this.enableBotonAceptar();
 		this.disableBotonEditar();
