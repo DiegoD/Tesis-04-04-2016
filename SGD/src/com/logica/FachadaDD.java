@@ -83,7 +83,7 @@ public class FachadaDD {
         return INSTANCE;
     }
     
-/////////////////////////////////NUEVO/////////////////////////////////
+/////////////////////////////////LISTADO DE USUARIOS/////////////////////////////////
     @SuppressWarnings({ "null", "resource" })
 	public ArrayList<JSONObject> getUsuarios() throws ConexionException, ClassNotFoundException, ObteniendoUsuariosException, ErrorInesperadoException {
     	
@@ -133,7 +133,9 @@ public class FachadaDD {
 		}
     	return lstUsuariosJson;
     }
-
+/////////////////////////////////FIN LISTADO DE USUARIOS/////////////////////////////////
+    
+/////////////////////////////////NUEVO/////////////////////////////////
     @SuppressWarnings("resource")
 	public void insertarUsuario(JSONObject jsonUsuario) throws InsertandoUsuarioException, ConexionException, ExisteUsuarioException, ErrorInesperadoException
     {
@@ -168,6 +170,31 @@ public class FachadaDD {
     }
 ////////////////////////////////FIN NUEVO/////////////////////////////////   
     
-    
-    
+/////////////////////////////////NUEVO/////////////////////////////////
+@SuppressWarnings("resource")
+	public void modificarUsuario(JSONObject jsonUsuario) throws InsertandoUsuarioException, ConexionException, ExisteUsuarioException, ErrorInesperadoException
+	{
+		Connection con = null;
+		Usuario user = new Usuario(jsonUsuario.get("usuario").toString(),jsonUsuario.get("pass").toString(),jsonUsuario.get("nombre").toString());
+	
+		try 
+		{
+			
+			con = this.pool.obtenerConeccion();
+			con.setAutoCommit(false);
+			System.out.println("voy a insertar");
+			this.usuarios.eliminarUsuario(user, con);
+			this.usuarios.insertarUsuario(user, con);
+			con.commit();
+		} 
+		catch (Exception e) 
+		{
+			throw new ErrorInesperadoException();
+		}
+		finally 
+		{
+			this.pool.liberarConeccion(con);
+		}
+	}
+
 }
