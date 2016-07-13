@@ -127,6 +127,7 @@ public class FachadaDD {
 			json.put("nombre", usuario.getNombre());
 			json.put("usuario", usuario.getUsuario());
 			json.put("pass", usuario.getPass());
+			json.put("activo", usuario.isActivo());
 			System.out.println(json.toString());
 			
 			lstUsuariosJson.add(json);
@@ -140,7 +141,7 @@ public class FachadaDD {
 	public void insertarUsuario(JSONObject jsonUsuario) throws InsertandoUsuarioException, ConexionException, ExisteUsuarioException, ErrorInesperadoException
     {
     	Connection con = null;
-    	Usuario user = new Usuario(jsonUsuario.get("nombre").toString(),jsonUsuario.get("usuario").toString(),jsonUsuario.get("pass").toString());
+    	Usuario user = new Usuario(jsonUsuario);
     	
     	try 
     	{
@@ -175,7 +176,7 @@ public class FachadaDD {
 	public void modificarUsuario(JSONObject jsonUsuario) throws InsertandoUsuarioException, ConexionException, ExisteUsuarioException, ErrorInesperadoException
 	{
 		Connection con = null;
-		Usuario user = new Usuario(jsonUsuario.get("usuario").toString(),jsonUsuario.get("pass").toString(),jsonUsuario.get("nombre").toString());
+		Usuario user = new Usuario(jsonUsuario);
 	
 		try 
 		{
