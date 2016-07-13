@@ -7,7 +7,7 @@ public class UsuarioVO {
 	private String usuario;
 	private String pass;
 	private String nombre;
-	
+	private boolean activo;
 
 
 	public UsuarioVO(JSONObject obj){
@@ -15,8 +15,17 @@ public class UsuarioVO {
 		this.usuario = (String) obj.get("usuario");
 		this.pass = (String) obj.get("pass");
 		this.nombre = (String) obj.get("nombre");
+		this.activo = (Boolean) obj.get("activo");
 	}
 	
+	public boolean isActivo() {
+		return activo;
+	}
+
+	public void setActivo(boolean activo) {
+		this.activo = activo;
+	}
+
 	public String getUsuario() {
 		return usuario;
 	}
