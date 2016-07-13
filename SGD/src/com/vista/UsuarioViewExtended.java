@@ -13,6 +13,7 @@ import com.excepciones.grupos.InsertandoGrupoException;
 import com.excepciones.grupos.MemberGrupoException;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
+import com.vaadin.data.validator.StringLengthValidator;
 import com.valueObject.GrupoVO;
 import com.valueObject.UsuarioVO;
 
@@ -32,35 +33,47 @@ public class UsuarioViewExtended extends UsuarioView{
 		this.aceptar.addClickListener(click -> {
 			try 
 			{
-				if(this.operacion.equals(Variables.OPERACION_NUEVO))	
-				{	
-					JSONObject usuarioJson = new JSONObject();
-					
-					usuarioJson.put("nombre", nombre.getValue().trim());
-					usuarioJson.put("usuario", usuario.getValue().trim());
-					usuarioJson.put("pass", pass.getValue().trim());
-					usuarioJson.put("operacion", operacion);
-									
-					System.out.println("llamo a controlador");
-					this.controlador.insertarUsuario(usuarioJson);
-					
-					Mensajes.mostrarMensajeOK("Se ha guardado el Usuario");
-				
-				}
-				else if(this.operacion.equals(Variables.OPERACION_EDITAR))
+				if(this.fieldsValidos())
 				{
-					JSONObject usuarioJson = new JSONObject();
-					usuarioJson.put("nombre", nombre.getValue().trim());
-					usuarioJson.put("usuario", usuario.getValue().trim());
-					usuarioJson.put("pass", pass.getValue().trim());
-					usuarioJson.put("operacion", operacion);
-									
-					System.out.println("llamo a controlador");
-					this.controlador.modificarUsuario(usuarioJson);
+					if(this.operacion.equals(Variables.OPERACION_NUEVO))	
+					{	
+						JSONObject usuarioJson = new JSONObject();
+						
+						usuarioJson.put("nombre", nombre.getValue().trim());
+						usuarioJson.put("usuario", usuario.getValue().trim());
+						usuarioJson.put("pass", pass.getValue().trim());
+						usuarioJson.put("usuarioMod", getSession().getAttribute("usuario"));
+						usuarioJson.put("operacion", operacion);
+						usuarioJson.put("activo", activo.getValue());
+						
+						System.out.println("llamo a controlador");
+						this.controlador.insertarUsuario(usuarioJson);
+						
+						Mensajes.mostrarMensajeOK("Se ha guardado el Usuario");
 					
-					Mensajes.mostrarMensajeOK("Se guardaron los cambios");
-				
+					}
+					else if(this.operacion.equals(Variables.OPERACION_EDITAR))
+					{
+								
+						JSONObject usuarioJson = new JSONObject();
+						usuarioJson.put("nombre", nombre.getValue().trim());
+						usuarioJson.put("usuario", usuario.getValue().trim());
+						usuarioJson.put("pass", pass.getValue().trim());
+						usuarioJson.put("usuarioMod", getSession().getAttribute("usuario"));
+						usuarioJson.put("operacion", operacion);
+						usuarioJson.put("activo", activo.getValue());
+										
+						System.out.println("llamo a controlador");
+						this.controlador.modificarUsuario(usuarioJson);
+						
+						Mensajes.mostrarMensajeOK("Se guardaron los cambios");
 					
+						
+					}
+				}
+				else /*Si los campos no son válidos mostramos warning*/
+				{
+					Mensajes.mostrarMensajeWarning(Variables.WARNING_CAMPOS_NO_VALIDOS);
 				}
 				
 			} 
@@ -151,6 +164,7 @@ public class UsuarioViewExtended extends UsuarioView{
 	 */
 	private void iniFormNuevo()
 	{
+		
 		this.enableBotonAceptar();
 		this.disableBotonEditar();
 		
@@ -160,7 +174,7 @@ public class UsuarioViewExtended extends UsuarioView{
 		
 		/*Como es en operacion nuevo, dejamos todos los campos editabls*/
 		this.readOnlyFields(false);
-	
+		this.activo.setValue(true);	
 	}
 	
 	/**
@@ -215,6 +229,7 @@ public class UsuarioViewExtended extends UsuarioView{
 		this.nombre.setReadOnly(setear);
 		this.usuario.setReadOnly(setear);
 		this.pass.setReadOnly(setear);
+		this.activo.setReadOnly(setear);
 				
 	}
 	
@@ -228,6 +243,8 @@ public class UsuarioViewExtended extends UsuarioView{
 	private void setearFieldsEditar()
 	{
 		this.nombre.setReadOnly(false);
+		this.pass.setReadOnly(false);
+		this.activo.setReadOnly(false);
 	}
 	
 	/**
@@ -247,7 +264,7 @@ public class UsuarioViewExtended extends UsuarioView{
 		
 		/*Dejamos todods los campos readonly*/
 		this.readOnlyFields(true);
-				
+		
 	}
 	
 	/**
@@ -268,5 +285,52 @@ public class UsuarioViewExtended extends UsuarioView{
 	{
 		this.aceptar.setEnabled(false);
 		this.aceptar.setVisible(false);
+	}
+	
+	
+	
+	/**
+	 * Seteamos todos las validaciones de los fields
+	 * del formulario
+	 *
+	 */
+	private void agregarFieldsValidaciones()
+	{
+        this.nombre.addValidator(
+                new StringLengthValidator(
+                     " 20 caracteres máximo", 1, 20, false));
+        
+        this.usuario.addValidator(
+                new StringLengthValidator(
+                     " 20 caracteres máximo", 1, 20, false));
+        
+        this.pass.addValidator(
+                new StringLengthValidator(
+                        " 20 caracteres máximo", 1, 255, false));
+        
+	}
+	
+	
+	/**
+	 * Nos retorna true si los campos
+	 * son válidos, se debe invocar antes
+	 * de consumir al controlador
+	 *
+	 */
+	private boolean fieldsValidos()
+	{
+		boolean valido = false;
+		
+		try
+		{
+			if(this.nombre.isValid() && this.usuario.isValid() && this.pass.isValid())
+				valido = true;
+			
+		}catch(Exception e)
+		{
+			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+		}
+		
+		return valido;
 	}
 }

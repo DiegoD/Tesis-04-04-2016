@@ -72,6 +72,8 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 		}
 		gridUsuarios.setContainerDataSource(container);
 		
+		gridUsuarios.removeColumn("activo");
+		
 		gridUsuarios.addSelectionListener(new SelectionListener() {
 			
 		    @Override
