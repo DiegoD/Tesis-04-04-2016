@@ -4,20 +4,26 @@
   <meta charset="UTF-8" name="design-properties" content="{&quot;RULERS_VISIBLE&quot;:true,&quot;GUIDELINES_VISIBLE&quot;:false,&quot;SNAP_TO_OBJECTS&quot;:true,&quot;SNAP_TO_GRID&quot;:true,&quot;SNAPPING_DISTANCE&quot;:10,&quot;JAVA_SOURCES_ROOT&quot;:&quot;src&quot;,&quot;THEME&quot;:&quot;sgd&quot;}">
  </head> 
  <body> 
-  <vaadin-vertical-layout size-full> 
-   <vaadin-form-layout style-name="colored h2" size-full margin> 
-    <vaadin-label style-name="colored h2" size-auto plain-text>
-      Grupo 
-    </vaadin-label> 
-    <vaadin-text-field caption="Codigo" readonly _id="codGrupo"></vaadin-text-field> 
-    <vaadin-text-field caption="Nombre" readonly _id="nomGrupo"></vaadin-text-field> 
-    <vaadin-button style-name="primary tiny" plain-text _id="aceptar" :bottom>
-      Guardar 
-    </vaadin-button> 
-    <vaadin-button style-name="tiny primary" id="btnEditar" plain-text _id="btnEditar" :bottom>
-      Editar 
-    </vaadin-button> 
-   </vaadin-form-layout> 
-  </vaadin-vertical-layout>  
+  <vaadin-form-layout height="356px" margin> 
+   <vaadin-label style-name="colored h2" responsive plain-text :center>
+     Grupo 
+   </vaadin-label> 
+   <vaadin-horizontal-layout responsive width-full height="234px"> 
+    <vaadin-form-layout size-full> 
+     <vaadin-text-field caption="Codigo" readonly _id="codGrupo"></vaadin-text-field> 
+     <vaadin-text-field caption="Nombre" readonly _id="nomGrupo"></vaadin-text-field> 
+     <vaadin-check-box caption="Activo" id="chkActivo" responsive _id="chkActivo"></vaadin-check-box> 
+     <vaadin-button style-name="primary tiny" plain-text _id="aceptar" :bottom>
+       Guardar 
+     </vaadin-button> 
+     <vaadin-button style-name="tiny primary" id="btnEditar" plain-text _id="btnEditar" :bottom>
+       Editar 
+     </vaadin-button> 
+    </vaadin-form-layout> 
+    <vaadin-form-layout spacing="false" size-full> 
+     <vaadin-grid width-full height="186px"></vaadin-grid> 
+    </vaadin-form-layout> 
+   </vaadin-horizontal-layout> 
+  </vaadin-form-layout>  
  </body>
 </html>

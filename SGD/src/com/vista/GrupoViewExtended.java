@@ -15,6 +15,7 @@ import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.server.Page;
+import com.vaadin.server.Page.Styles;
 import com.vaadin.shared.Position;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Notification;
@@ -37,6 +38,15 @@ public class GrupoViewExtended extends GrupoView {
 	@SuppressWarnings("unchecked")
 	public GrupoViewExtended(String opera){
 		
+		 Styles styles = Page.getCurrent().getStyles();
+		 
+		 styles.add(".v-app .v-textarea.text-label { font-size:" + String.valueOf(4) + "px; }");
+		
+		 styles.add(".v-caption-inline-label{ display: inline-block;}");
+		 
+		 
+		codGrupo.addStyleName("inline-label");
+		
 	this.operacion = opera;
 	
 	this.inicializarForm();
@@ -55,6 +65,7 @@ public class GrupoViewExtended extends GrupoView {
 				grupoJS.put("nomGrupo", nomGrupo.getValue().trim());
 				grupoJS.put("usuarioMod", getSession().getAttribute("usuario"));
 				grupoJS.put("operacion", operacion);
+				grupoJS.put("activo", chkActivo.getValue());
 				
 				if(this.operacion.equals(Variables.OPERACION_NUEVO))	
 				{	

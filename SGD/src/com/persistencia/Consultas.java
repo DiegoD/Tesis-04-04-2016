@@ -197,7 +197,7 @@ public class Consultas {
     	
     	 StringBuilder sb = new StringBuilder();
     	 
-    	 sb.append("SELECT cod_grupo, nombre, fecha_mod, usuario_mod, operacion ");
+    	 sb.append("SELECT cod_grupo, nombre, fecha_mod, usuario_mod, operacion, activo ");
     	 sb.append("FROM m_grupos ");
 
     	 return sb.toString();
@@ -208,8 +208,8 @@ public class Consultas {
     	
     	StringBuilder sb = new StringBuilder();
     	 
-    	 sb.append("INSERT INTO vaadin.m_grupos (cod_grupo, nombre, usuario_mod, operacion, fecha_mod)");
-    	 sb.append("VALUES (?, ?, ?, ?, NOW()) ");
+    	 sb.append("INSERT INTO vaadin.m_grupos (cod_grupo, nombre, usuario_mod, operacion, fecha_mod, activo)");
+    	 sb.append("VALUES (?, ?, ?, ?, NOW(), ?) ");
 
     	 return sb.toString();
     	

@@ -53,6 +53,7 @@ public class DAOGrupos implements IDAOGrupos {
 				obj.put("fechaMod", rs.getTimestamp(3));
 				obj.put("usuarioMod", rs.getString(4));
 				obj.put("operacion", rs.getString(5));
+				obj.put("activo", rs.getString(6));
 
 				lstGrupos.add(obj);
 			}
@@ -89,6 +90,7 @@ public class DAOGrupos implements IDAOGrupos {
 			pstmt1.setString(2, grupo.getNomGrupo());
 			pstmt1.setString(3, grupo.getUsuarioMod());
 			pstmt1.setString(4, grupo.getOperacion());
+			pstmt1.setBoolean(5, grupo.isActivo());
 
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
