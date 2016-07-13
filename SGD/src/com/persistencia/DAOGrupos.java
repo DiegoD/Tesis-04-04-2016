@@ -15,7 +15,9 @@ import com.excepciones.cotizaciones.ObteniendoCotizacionException;
 import com.excepciones.grupos.InsertandoGrupoException;
 import com.excepciones.grupos.MemberGrupoException;
 import com.excepciones.grupos.ModificandoGrupoException;
+import com.excepciones.grupos.ObteniendoFormulariosException;
 import com.excepciones.grupos.ObteniendoGruposException;
+import com.logica.Formulario;
 import com.logica.Grupo;
 import com.valueObject.CotizacionVO;
 import com.valueObject.GrupoVO;
@@ -28,34 +30,36 @@ public class DAOGrupos implements IDAOGrupos {
 	private ResultSet rs = null;
 	
 
-	@Override
-	public ArrayList<JSONObject> getGrupos(Connection con) throws ObteniendoGruposException, ConexionException {
+	public ArrayList<Grupo> getGrupos(Connection con) throws ObteniendoGruposException, ObteniendoFormulariosException
+	{
+		ArrayList<Grupo> lstGrupos = new ArrayList<Grupo>();
 		
-		ArrayList<JSONObject> lstGrupos = new ArrayList<JSONObject>();
-	
 		try
 		{
 			Consultas consultas = new Consultas ();
-			String query = consultas.getGrupos();
+			String query = consultas.getFormulariosxGrupo();
 			
 			PreparedStatement pstmt1 = con.prepareStatement(query);
 			
 			ResultSet rs = pstmt1.executeQuery();
 			
-			GrupoVO grupoVO;
+			Grupo grupo;
 			
 			while(rs.next ()) {
 
-				JSONObject obj = new JSONObject();
+				grupo = new Grupo();
 
-				obj.put("codGrupo", rs.getString(1));
-				obj.put("nomGrupo", rs.getString(2));
-				obj.put("fechaMod", rs.getTimestamp(3));
-				obj.put("usuarioMod", rs.getString(4));
-				obj.put("operacion", rs.getString(5));
-				obj.put("activo", rs.getString(6));
+				grupo.setCodGrupo(rs.getString(1));
+				grupo.setNomGrupo(rs.getString(2));
+				grupo.setFechaMod(rs.getTimestamp(3));
+				grupo.setUsuarioMod(rs.getString(4));
+				grupo.setOperacion(rs.getString(5));
+				grupo.setActivo(rs.getBoolean(6));
+				
+				/*Obtenemos los formularios del grupo*/
+				grupo.setLstFormularios(this.getFormulariosxGrupo(grupo.getCodGrupo(), con));
 
-				lstGrupos.add(obj);
+				lstGrupos.add(grupo);
 			}
 			
 			rs.close ();
@@ -75,7 +79,8 @@ public class DAOGrupos implements IDAOGrupos {
 	 * PRECONDICION: El código del codigo no debe existir
 	 *
 	 */
-	public void insertarGrupo(Grupo grupo, Connection con) throws InsertandoGrupoException, ConexionException {
+	public void insertarGrupo(Grupo grupo, Connection con) throws InsertandoGrupoException, ConexionException 
+	{
 
 		Consultas clts = new Consultas();
     	
@@ -91,16 +96,16 @@ public class DAOGrupos implements IDAOGrupos {
 			pstmt1.setString(3, grupo.getUsuarioMod());
 			pstmt1.setString(4, grupo.getOperacion());
 			pstmt1.setBoolean(5, grupo.isActivo());
-
+			
+			this.insertarFormulariosxGrupo(grupo.getCodGrupo(), grupo.getLstFormularios(), con);
+			
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
 	
 		} catch (SQLException e) {
 			
 			throw new InsertandoGrupoException();
-			
 		} 
-		
 	}
 	
 	/**
@@ -140,6 +145,7 @@ public class DAOGrupos implements IDAOGrupos {
 	/**
 	 * Eliminamos grupo dado el codigo,
 	 * PRECONDICION: El código del codigo debe existir
+	 * PRECONDICION: Invocar dentro de una transaction
 	 *
 	 */
 	public void eliminarGrupo(String codGrupo, Connection con) throws ModificandoGrupoException, ConexionException
@@ -156,6 +162,9 @@ public class DAOGrupos implements IDAOGrupos {
 			pstmt1.setString(1, codGrupo);
 			
 			pstmt1.executeUpdate ();
+			
+			this.eliminarFormulariosxGrupo(codGrupo, con);
+			
 			pstmt1.close ();
 	
 			
@@ -167,8 +176,107 @@ public class DAOGrupos implements IDAOGrupos {
 		
 	}
 
+	
+	/**
+	 * Nos retorna los formularios activos para el grupo
+	 *
+	 */
+	private ArrayList<Formulario> getFormulariosxGrupo(String codGrupo, Connection con) throws ObteniendoFormulariosException
+	{
+		ArrayList<Formulario> lstFormulario = new ArrayList<Formulario>();
+		
+		try
+		{
+			Consultas consultas = new Consultas ();
+			String query = consultas.getFormulariosxGrupo();
+			
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			
+			ResultSet rs = pstmt1.executeQuery();
+			
+			Formulario formulario;
+			
+			while(rs.next ()) {
+
+				formulario = new Formulario();
+
+				formulario.setCodFormulario(rs.getString(1));
+				formulario.setNomFormulario(rs.getString(2));
+				
+				lstFormulario.add(formulario);
+			}
+			
+			rs.close ();
+			pstmt1.close ();
+		}
+		catch (SQLException e) {
+			
+			throw new ObteniendoFormulariosException();
+		}
+			
+		return lstFormulario;
+	}
+	
+	/**
+	 * Insertamos grupo dado grupo,
+	 * PRECONDICION: El código del codigo no debe existir
+	 *
+	 */
+	private void insertarFormulariosxGrupo(String codGrupo, ArrayList<Formulario> lstFormularios, Connection con) throws InsertandoGrupoException, ConexionException 
+	{
+
+		Consultas clts = new Consultas();
+    	
+    	String insert = clts.insertarFormulariosxGrupo();
+    	
+    	PreparedStatement pstmt1;
+  	
+    	try {
+    		
+			pstmt1 =  con.prepareStatement(insert);
+    		
+    		for (Formulario formulario : lstFormularios) {
+				
+    			pstmt1.setString(1, formulario.getCodFormulario());
+    			pstmt1.setString(2, codGrupo);
+
+    			pstmt1.executeUpdate ();
+			}
+    		
+			pstmt1.close ();
+	
+		} catch (SQLException e) {
+			
+			throw new InsertandoGrupoException();
+		} 
+	}
 
 	
-	    	
+	/**
+	 * Eliminamos formularios del grupo dado el codigo del grupo,
+	 * PRECONDICION: El código del codigo debe existir
+	 *
+	 */
+	private void eliminarFormulariosxGrupo(String codGrupo, Connection con) throws ModificandoGrupoException, ConexionException
+	{
+		Consultas consultas = new Consultas ();
+		String delete = consultas.eliminarFormulariosxGrupo();
+		
+		PreparedStatement pstmt1;
+		
+		try 
+		{
+			pstmt1 =  con.prepareStatement(delete);
+			pstmt1.setString(1, codGrupo);
+			
+			pstmt1.executeUpdate ();
+			pstmt1.close ();
+	
+			
+		} catch (SQLException e) {
+			
+			throw new ModificandoGrupoException();
+		}
+	}
 
 }

@@ -65,7 +65,7 @@ public class GrupoViewExtended extends GrupoView {
 				grupoJS.put("nomGrupo", nomGrupo.getValue().trim());
 				grupoJS.put("usuarioMod", getSession().getAttribute("usuario"));
 				grupoJS.put("operacion", operacion);
-				grupoJS.put("activo", chkActivo.getValue());
+				grupoJS.put("activo", activo.getValue());
 				
 				if(this.operacion.equals(Variables.OPERACION_NUEVO))	
 				{	

@@ -35,7 +35,7 @@ public ArrayList<JSONObject> getGrupos() throws ObteniendoGruposException, Inici
 
 public void editarGrupo(JSONObject grupoJS) throws InsertandoGrupoException, MemberGrupoException, NoExisteGrupoException, ConexionException, ErrorInesperadoException, InicializandoException
 {
-	Fachada.getInstance().editarGrupo(grupoJS);
+	//Fachada.getInstance().editarGrupo(grupoJS);
 }
 
 }

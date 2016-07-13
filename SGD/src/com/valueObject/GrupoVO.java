@@ -8,7 +8,7 @@ public class GrupoVO extends AuditoriaVO{
 	
 	private String codGrupo;
 	private String nomGrupo;
-	private String activo;
+	private boolean activo;
 
 	public GrupoVO(JSONObject obj){
 		
@@ -16,7 +16,7 @@ public class GrupoVO extends AuditoriaVO{
 		
 		this.codGrupo = (String) obj.get("codGrupo");
 		this.nomGrupo = (String) obj.get("nomGrupo");
-		this.activo = (String) obj.get("activo");
+		this.activo = (boolean) obj.get("activo");
 		
 	}
 	
@@ -33,11 +33,11 @@ public class GrupoVO extends AuditoriaVO{
 		this.nomGrupo = nomGrupo;
 	}
 
-	public String getActivo() {
+	public boolean getActivo() {
 		return activo;
 	}
 
-	public void setActivo(String activo) {
+	public void setActivo(boolean activo) {
 		this.activo = activo;
 	}
 

@@ -85,6 +85,7 @@ public class GruposPanelExtended extends GruposPanel {
 		gridview.removeColumn("fechaMod");
 		gridview.removeColumn("usuarioMod");
 		gridview.removeColumn("operacion");
+		gridview.removeColumn("activo");
 		
 		
 		//gridview.setEditorEnabled(true);

@@ -23,6 +23,7 @@ import com.excepciones.documentosAduaneros.ObteniendoDocumentoAduaneroException;
 import com.excepciones.grupos.ExisteGrupoException;
 import com.excepciones.grupos.InsertandoGrupoException;
 import com.excepciones.grupos.MemberGrupoException;
+import com.excepciones.grupos.ModificandoGrupoException;
 import com.excepciones.grupos.NoExisteGrupoException;
 import com.excepciones.grupos.ObteniendoGruposException;
 import com.valueObject.*;
@@ -192,15 +193,37 @@ public class Fachada {
 /////////////////////////////////FIN-LOGIN/////////////////////////////////
     
 /////////////////////////////////INI-GUPOS/////////////////////////////////
-    public ArrayList<JSONObject> getGrupos() throws ObteniendoGruposException, ConexionException, ErrorInesperadoException {
+    @SuppressWarnings("unchecked")
+	public ArrayList<JSONObject> getGrupos() throws ObteniendoGruposException, ConexionException, ErrorInesperadoException {
     	
     	Connection con = null;
+    	
+    	ArrayList<Grupo> lstGrupos;
+    	ArrayList<JSONObject> lstObj = new ArrayList<JSONObject>();
     	
     	try
     	{
     		con = this.pool.obtenerConeccion();
     		
-    		return this.grupos.getGrupos(con);
+    		lstGrupos = this.grupos.getGrupos(con);
+    		
+    		JSONObject obj;
+    		
+    		for (Grupo grupo : lstGrupos) 
+			{
+    			obj = new JSONObject();
+    			
+				obj.put("codGrupo", grupo.getCodGrupo());
+				obj.put("nomGrupo", grupo.getNomGrupo());
+				obj.put("fechaMod", grupo.getFechaMod());
+				obj.put("usuarioMod", grupo.getUsuarioMod());
+				obj.put("operacion", grupo.getOperacion());
+				obj.put("activo", grupo.isActivo());
+				
+				lstObj.add(obj);
+			}
+    		
+    		return lstObj;
     		
     	}catch(Exception e)
     	{
@@ -210,36 +233,11 @@ public class Fachada {
     	{
     		this.pool.liberarConeccion(con);
     	}
-    	
     	    	
     }
     
-    public void insertarGrupo(JSONObject grupoJS) throws InsertandoGrupoException, MemberGrupoException, ExisteGrupoException, ConexionException, ErrorInesperadoException{
-    	
-    	Connection con = null;
-    	
-    	try 
-    	{
-			con = this.pool.obtenerConeccion();
-
-	    	Grupo grupo = new Grupo(grupoJS);
-	    	
-	    	if(!this.grupos.memberGrupo(grupo.getCodGrupo(), con))
-	    		this.grupos.insertarGrupo(grupo, con);
-	    	else
-	    		throw new ExisteGrupoException();
-    	
-    	}catch(Exception e)
-    	{
-    		throw new ErrorInesperadoException();
-    	}
-    	finally
-    	{
-    		pool.liberarConeccion(con);
-    	}
-    }
-    
-public void editarGrupo(JSONObject grupoJS) throws InsertandoGrupoException, MemberGrupoException, NoExisteGrupoException, ConexionException, ErrorInesperadoException{
+    public void insertarGrupo(JSONObject grupoJS) throws InsertandoGrupoException, ConexionException 
+    {
     	
     	Connection con = null;
     	
@@ -248,32 +246,28 @@ public void editarGrupo(JSONObject grupoJS) throws InsertandoGrupoException, Mem
 			con = this.pool.obtenerConeccion();
 			con.setAutoCommit(false);
 			
-			Grupo grupo = new Grupo(grupoJS);
+	    	Grupo grupo = new Grupo(grupoJS); //ACA VER DE COMO SACAMOS EL ARRAY DE GRUPOS
 	    	
-	    	if(this.grupos.memberGrupo(grupo.getCodGrupo(), con))
+	    	if(!this.grupos.memberGrupo(grupo.getCodGrupo(), con))
 	    	{
-	    		/*Primero eliminamos el grupo*/
-	    		this.grupos.eliminarGrupo(grupo.getCodGrupo(), con);
-	    		
-	    		/*Luego lo volvemos a insertar*/
 	    		this.grupos.insertarGrupo(grupo, con);
 	    		
 	    		con.commit();
 	    	}
-	    	
 	    	else
-	    		throw new NoExisteGrupoException();
+	    		throw new ExisteGrupoException();
     	
-    	}catch(Exception e)
+    	}catch(Exception InsertandoGrupoException)
     	{
     		try {
 				con.rollback();
 				
-			} catch (SQLException e1) {
+			} catch (SQLException e) {
 				
-				throw new ConexionException();
+				throw new InsertandoGrupoException();
 			}
-    		throw new ErrorInesperadoException();
+    		
+    		throw new InsertandoGrupoException();
     	}
     	finally
     	{
@@ -281,5 +275,49 @@ public void editarGrupo(JSONObject grupoJS) throws InsertandoGrupoException, Mem
     	}
     }
     
+	public void editarGrupo(JSONObject grupoJS) throws ConexionException, NoExisteGrupoException, ModificandoGrupoException  
+	{
+	    	
+	    	Connection con = null;
+	    	
+	    	try 
+	    	{
+				con = this.pool.obtenerConeccion();
+				con.setAutoCommit(false);
+				
+				Grupo grupo = new Grupo(grupoJS);
+		    	
+		    	if(this.grupos.memberGrupo(grupo.getCodGrupo(), con))
+		    	{
+		    		/*Primero eliminamos el grupo*/
+		    		this.grupos.eliminarGrupo(grupo.getCodGrupo(), con);
+		    		
+		    		/*Luego lo volvemos a insertar*/
+		    		this.grupos.insertarGrupo(grupo, con);
+		    		
+		    		con.commit();
+		    	}
+		    	
+		    	else
+		    		throw new NoExisteGrupoException();
+	    	
+	    	}catch(InsertandoGrupoException| MemberGrupoException| ConexionException | SQLException | ModificandoGrupoException e)
+	    	{
+	    		try {
+					con.rollback();
+					
+				} catch (SQLException e1) {
+					
+					throw new ConexionException();
+				}
+	    		throw new ModificandoGrupoException();
+	    	}
+	    	finally
+	    	{
+	    		pool.liberarConeccion(con);
+	    	}
+	    }
+    
+		
 /////////////////////////////////FIN-GUPOS/////////////////////////////////
 }
