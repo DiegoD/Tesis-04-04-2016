@@ -22,4 +22,6 @@ public interface IDAOUsuarios {
 	public boolean memberUsuario(String usuario, Connection con) throws ExisteUsuarioException, ConexionException;
 	
 	public void insertarUsuario(Usuario user, Connection con) throws InsertandoUsuarioException, ConexionException;
+	
+	public void eliminarUsuario(Usuario user, Connection con) throws InsertandoUsuarioException, ConexionException;
 }

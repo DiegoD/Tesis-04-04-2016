@@ -82,7 +82,7 @@ public class DAOUsuarios implements IDAOUsuarios {
 			
 			while(rs.next ()) {
 				
-				Usuario usr = new Usuario(rs.getString(1), rs.getString(2), rs.getString(3));
+				Usuario usr = new Usuario(rs.getString(1), rs.getString(2), rs.getString(3), rs.getBoolean(4));
 				
 				System.out.println("Encontro usuario");
 				lstUsuarios.add(usr);
@@ -135,7 +135,6 @@ public class DAOUsuarios implements IDAOUsuarios {
 		ConsultasDD clts = new ConsultasDD();
     	
     	String insert = clts.insertarUsuario();
-    	String nuevo = "Nuevo";
     	
     	PreparedStatement pstmt1;
     	    	
@@ -146,9 +145,38 @@ public class DAOUsuarios implements IDAOUsuarios {
 			pstmt1.setString(1, user.getUsuario());
 			pstmt1.setString(2, user.getNombre());
 			pstmt1.setString(3, user.getPass());
-			pstmt1.setString(4, user.getUsuario());
-			//pstmt1.setString(6, nuevo);
+			pstmt1.setString(4, user.getUsuarioMod());
+			pstmt1.setString(5, user.getOperacion());
+			pstmt1.setBoolean(6, user.isActivo());
 			
+			pstmt1.executeUpdate ();
+			pstmt1.close ();
+
+			
+		} 
+    	catch (SQLException e) 
+    	{
+			throw new InsertandoUsuarioException();
+		} 
+		
+	}
+	
+	public void eliminarUsuario(Usuario user, Connection con) throws InsertandoUsuarioException, ConexionException {
+
+		ConsultasDD clts = new ConsultasDD();
+    	
+    	String eliminar = clts.elminarUsuario();
+    	
+    	PreparedStatement pstmt1;
+    	    	
+    	
+    	try {
+    		
+			pstmt1 =  con.prepareStatement(eliminar);
+			pstmt1.setString(1, user.getUsuario());
+			
+			//pstmt1.setString(6, nuevo);
+			System.out.println("voy a liminar " + user.getUsuario());
 			
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
