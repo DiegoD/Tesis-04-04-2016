@@ -17,7 +17,11 @@ import com.excepciones.Usuarios.ObteniendoUsuariosException;
 import com.excepciones.cotizaciones.MemberCotizacionException;
 import com.excepciones.grupos.InsertandoGrupoException;
 import com.excepciones.grupos.MemberGrupoException;
+import com.excepciones.grupos.ObteniendoFormulariosException;
 import com.excepciones.grupos.ObteniendoGruposException;
+import com.logica.Formulario;
+import com.logica.Grupo;
+import com.logica.GruposUsuario;
 import com.logica.Usuario;
 import com.valueObject.GrupoVO;
 import com.valueObject.LoginVO;
@@ -64,7 +68,7 @@ public class DAOUsuarios implements IDAOUsuarios {
 		
 	}
 
-	public ArrayList<Usuario> getUsuarios(Connection con) throws ObteniendoUsuariosException, ConexionException{
+	public ArrayList<Usuario> getUsuarios(Connection con) throws ObteniendoUsuariosException, ConexionException, ObteniendoGruposException{
 		
 		ArrayList<Usuario> lstUsuarios = new ArrayList<Usuario>();
 	
@@ -85,6 +89,9 @@ public class DAOUsuarios implements IDAOUsuarios {
 				Usuario usr = new Usuario(rs.getString(1), rs.getString(2), rs.getString(3), rs.getBoolean(4));
 				
 				System.out.println("Encontro usuario");
+				
+				usr.setLstGrupos(this.getGruposxUsuario(usr.getUsuario(), con));
+				
 				lstUsuarios.add(usr);
 				
 			}
@@ -176,7 +183,7 @@ public class DAOUsuarios implements IDAOUsuarios {
 			pstmt1.setString(1, user.getUsuario());
 			
 			//pstmt1.setString(6, nuevo);
-			System.out.println("voy a liminar " + user.getUsuario());
+			System.out.println("voy a eliminar " + user.getUsuario());
 			
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
@@ -189,4 +196,40 @@ public class DAOUsuarios implements IDAOUsuarios {
 		
 	}
 
+	private ArrayList<GruposUsuario> getGruposxUsuario(String usuario, Connection con) throws ObteniendoGruposException
+	{
+		ArrayList<GruposUsuario> lstGrupos = new ArrayList<GruposUsuario>();
+		
+		try
+		{
+			ConsultasDD consultas = new ConsultasDD ();
+			String query = consultas.getGrposxUsuario();
+			
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			pstmt1.setString(1, usuario);
+			
+			ResultSet rs = pstmt1.executeQuery();
+			
+			GruposUsuario grupoUsuario;
+			
+			while(rs.next ()) {
+
+				grupoUsuario = new GruposUsuario();
+
+				grupoUsuario.setCodigo(rs.getString(1));
+				grupoUsuario.setNombre(rs.getString(2));
+				
+				lstGrupos.add(grupoUsuario);
+			}
+			
+			rs.close ();
+			pstmt1.close ();
+		}
+		catch (SQLException e) {
+			
+			throw new ObteniendoGruposException();
+		}
+			
+		return lstGrupos;
+	}
 }

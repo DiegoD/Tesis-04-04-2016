@@ -255,6 +255,30 @@ public class ConsultasDD {
 	
 	   	return sb.toString();
 	}
+	
+	public String insertGrposxUsuario()
+	{
+		StringBuilder sb = new StringBuilder();
+		
+    	sb.append("INSERT INTO vaadin.m_gruposxusu (cod_grupo, usuario) ");
+    	sb.append("VALUES (?, ?) ");
+    	
+    	return sb.toString();
+	
+	}
+	
+	public String getGrposxUsuario()
+	{
+		StringBuilder sb = new StringBuilder();
+    	
+		sb.append("SELECT m_grupos.cod_grupo, m_grupos.nombre ");
+    	sb.append("FROM m_gruposxusu, m_grupos "); 
+		sb.append("WHERE m_gruposxusu.usuario = ? ");
+		sb.append("AND m_gruposxusu.cod_grupo = m_grupos.cod_grupo ");
+    	
+    	return sb.toString();
+	
+	}
 ////////////////////////FIN-GRUPOS///////////////////////////////////////////////////
     
 }

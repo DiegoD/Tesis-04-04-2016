@@ -10,6 +10,8 @@ import com.excepciones.Login.LoginException;
 import com.excepciones.Usuarios.ExisteUsuarioException;
 import com.excepciones.Usuarios.InsertandoUsuarioException;
 import com.excepciones.Usuarios.ObteniendoUsuariosException;
+import com.excepciones.grupos.ObteniendoGruposException;
+import com.logica.Grupo;
 import com.logica.Usuario;
 import com.valueObject.LoginVO;
 
@@ -17,7 +19,7 @@ public interface IDAOUsuarios {
 	
 	public boolean usuarioValido(LoginVO loginVO, Connection con) throws LoginException;
 	
-	public ArrayList<Usuario> getUsuarios(Connection con) throws ClassNotFoundException, ObteniendoUsuariosException, ConexionException;
+	public ArrayList<Usuario> getUsuarios(Connection con) throws ClassNotFoundException, ObteniendoUsuariosException, ConexionException, ObteniendoGruposException;
 
 	public boolean memberUsuario(String usuario, Connection con) throws ExisteUsuarioException, ConexionException;
 	
