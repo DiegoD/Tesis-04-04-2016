@@ -1,6 +1,7 @@
 package com.vista;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import org.json.simple.JSONObject;
@@ -13,6 +14,7 @@ import com.excepciones.grupos.InsertandoGrupoException;
 import com.excepciones.grupos.MemberGrupoException;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
+import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.server.Page;
 import com.vaadin.server.Page.Styles;
@@ -20,6 +22,7 @@ import com.vaadin.shared.Position;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Notification;
 import com.valueObject.CotizacionVO;
+import com.valueObject.FormularioVO;
 import com.valueObject.GrupoVO;
 
 
@@ -27,8 +30,10 @@ import com.valueObject.GrupoVO;
 public class GrupoViewExtended extends GrupoView {
 
 	private BeanFieldGroup<GrupoVO> fieldGroup;
+	private ArrayList<FormularioVO> lstFormsVO;
 	private GrupoControlador controlador;
 	private String operacion;
+	BeanItemContainer<FormularioVO> container;
 	
 	/**
 	 * Constructor del formulario, conInfo indica
@@ -202,6 +207,22 @@ public class GrupoViewExtended extends GrupoView {
 		
 		/*Dejamos todods los campos readonly*/
 		this.readOnlyFields(true);
+		
+		
+		/*Seteamos la grilla con los formularios*/
+		this.container = 
+				new BeanItemContainer<FormularioVO>(FormularioVO.class);
+		
+		
+		if(this.lstFormsVO != null)
+		{
+			for (FormularioVO formVO : this.lstFormsVO) {
+				container.addBean(formVO);
+			}
+		}
+		
+		
+		lstFormularios.setContainerDataSource(container);
 				
 	}
 	
@@ -352,7 +373,30 @@ public class GrupoViewExtended extends GrupoView {
 		return valido;
 	}
 
-	
+	/**
+	 * Seteamos la lista de los formularios para mostrarlos
+	 * en la grilla
+	 */
+	public void setLstFormularios(ArrayList<FormularioVO> lstForms)
+	{
+		this.lstFormsVO = lstForms;
+		
+		/*Seteamos la grilla con los formularios*/
+		this.container = 
+				new BeanItemContainer<FormularioVO>(FormularioVO.class);
+		
+		
+		if(this.lstFormsVO != null)
+		{
+			for (FormularioVO formVO : this.lstFormsVO) {
+				container.addBean(formVO);
+			}
+		}
+		
+		
+		lstFormularios.setContainerDataSource(container);
+		
+	}
 
 	
 }

@@ -7,6 +7,7 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import com.abstractFactory.AbstractFactoryBuilder;
@@ -200,6 +201,7 @@ public class Fachada {
     	
     	ArrayList<Grupo> lstGrupos;
     	ArrayList<JSONObject> lstObj = new ArrayList<JSONObject>();
+    	JSONArray JSONlstFormularios = new JSONArray();
     	
     	try
     	{
@@ -219,6 +221,22 @@ public class Fachada {
 				obj.put("usuarioMod", grupo.getUsuarioMod());
 				obj.put("operacion", grupo.getOperacion());
 				obj.put("activo", grupo.isActivo());
+				//obj.put("lstFormularios", grupo.getLstFormularios());
+				
+				for (Formulario form : grupo.getLstFormularios()) {
+					
+					JSONlstFormularios = new JSONArray();
+					
+					JSONObject jForm = new JSONObject();
+					jForm.put("codFormulario", form.getCodFormulario());
+					jForm.put("nomFormulario", form.getNomFormulario());
+					
+					JSONlstFormularios.add(jForm);
+					
+				}
+				
+				if(grupo.getLstFormularios().size() > 0)
+					obj.put("lstFormularios", JSONlstFormularios);
 				
 				lstObj.add(obj);
 			}

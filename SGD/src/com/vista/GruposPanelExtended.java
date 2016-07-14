@@ -86,6 +86,7 @@ public class GruposPanelExtended extends GruposPanel {
 		gridview.removeColumn("usuarioMod");
 		gridview.removeColumn("operacion");
 		gridview.removeColumn("activo");
+		gridview.removeColumn("lstFormularios");
 		
 		
 		//gridview.setEditorEnabled(true);
@@ -108,7 +109,7 @@ public class GruposPanelExtended extends GruposPanel {
 					sub.setVista(form);
 					/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
 					form.setDataSourceFormulario(item);
-					
+					form.setLstFormularios(item.getBean().getLstFormularios());
 					
 					 UI.getCurrent().addWindow(sub);
 					  
@@ -135,6 +136,7 @@ public class GruposPanelExtended extends GruposPanel {
 		ArrayList<JSONObject> lstGruposJ = null;
 		
 		try {
+			
 			lstGruposJ = controlador.getGrupos();
 
 		} catch (ObteniendoGruposException | InicializandoException | ConexionException | ErrorInesperadoException e) {

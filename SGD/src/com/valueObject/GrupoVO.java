@@ -1,7 +1,9 @@
 package com.valueObject;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 public class GrupoVO extends AuditoriaVO{
@@ -9,6 +11,8 @@ public class GrupoVO extends AuditoriaVO{
 	private String codGrupo;
 	private String nomGrupo;
 	private boolean activo;
+	private ArrayList<FormularioVO> lstFormularios;
+
 
 	public GrupoVO(JSONObject obj){
 		
@@ -17,6 +21,21 @@ public class GrupoVO extends AuditoriaVO{
 		this.codGrupo = (String) obj.get("codGrupo");
 		this.nomGrupo = (String) obj.get("nomGrupo");
 		this.activo = (boolean) obj.get("activo");
+		
+		this.lstFormularios = new ArrayList<FormularioVO>();
+		
+		JSONArray JlstForms = (JSONArray) obj.get("lstFormularios");
+		
+		FormularioVO formVO;
+		for (int i = 0; i < JlstForms.size(); i++) {
+			
+		    JSONObject form = (JSONObject) JlstForms.get(i);
+		    formVO = new FormularioVO();		    
+		    formVO.setCodFOrmulario((String)form.get("codFormulario")); 
+		    formVO.setNomFormulario((String)form.get("nomFormulario")); 
+		  
+		    this.lstFormularios.add(formVO);
+		}
 		
 	}
 	
@@ -40,5 +59,14 @@ public class GrupoVO extends AuditoriaVO{
 	public void setActivo(boolean activo) {
 		this.activo = activo;
 	}
+	
+	public ArrayList<FormularioVO> getLstFormularios() {
+		return lstFormularios;
+	}
+
+	public void setLstFormularios(ArrayList<FormularioVO> lstFormularios) {
+		this.lstFormularios = lstFormularios;
+	}
+
 
 }

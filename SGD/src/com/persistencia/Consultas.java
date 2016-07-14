@@ -244,7 +244,7 @@ public class Consultas {
     {
     	StringBuilder sb = new StringBuilder();
     	
-    	sb.append("SELECT g_formularios.formulario, g_formularios.nombre");
+    	sb.append("SELECT g_formularios.formulario, g_formularios.nombre ");
     	sb.append("FROM m_grupoxform, g_formularios "); 
 		sb.append("WHERE cod_grupo = ? AND g_formularios.activo = 1 ");
 		sb.append("AND m_grupoxform.formulario = g_formularios.formulario ");

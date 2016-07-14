@@ -37,9 +37,10 @@ public class DAOGrupos implements IDAOGrupos {
 		try
 		{
 			Consultas consultas = new Consultas ();
-			String query = consultas.getFormulariosxGrupo();
+			String query = consultas.getGrupos();
 			
 			PreparedStatement pstmt1 = con.prepareStatement(query);
+			
 			
 			ResultSet rs = pstmt1.executeQuery();
 			
@@ -191,6 +192,7 @@ public class DAOGrupos implements IDAOGrupos {
 			String query = consultas.getFormulariosxGrupo();
 			
 			PreparedStatement pstmt1 = con.prepareStatement(query);
+			pstmt1.setString(1, codGrupo);
 			
 			ResultSet rs = pstmt1.executeQuery();
 			

@@ -5,6 +5,7 @@ import com.vaadin.annotations.DesignRoot;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.Grid;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.declarative.Design;
 
@@ -25,6 +26,8 @@ public class GrupoView extends FormLayout {
 	protected CheckBox activo;
 	protected Button aceptar;
 	protected Button btnEditar;
+	protected Grid lstFormularios;
+	protected Button btnAgregar;
 
 	public GrupoView() {
 		Design.read(this);
