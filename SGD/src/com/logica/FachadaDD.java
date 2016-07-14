@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.util.ArrayList;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -97,6 +98,8 @@ public class FachadaDD {
 			
 			ArrayList<Usuario> lstUsuarios = this.usuarios.getUsuarios(con);
 	    	ArrayList<JSONObject> lstUsuariosJson = new ArrayList<JSONObject>();
+	    	
+	    	
 	    	lstUsuariosJson = this.convertArray(lstUsuarios);
 	    	System.out.println("Estoy en fachada ");
 	    	
@@ -121,6 +124,7 @@ public class FachadaDD {
     {
     	JSONObject json = null;
     	ArrayList<JSONObject> lstUsuariosJson = new ArrayList<JSONObject>();
+    	JSONArray JSONlstGruposUsuario = new JSONArray();
     	
     	for (Usuario usuario : lstUsuarios) {
 			json = new JSONObject();
@@ -129,6 +133,22 @@ public class FachadaDD {
 			json.put("pass", usuario.getPass());
 			json.put("activo", usuario.isActivo());
 			System.out.println(json.toString());
+			
+			for (GruposUsuario gruposUsuario : usuario.getLstGrupos())
+			{
+				
+				JSONlstGruposUsuario = new JSONArray();
+				
+				JSONObject jGrupoUsuario = new JSONObject();
+				jGrupoUsuario.put("codigo", gruposUsuario.getCodigo());
+				jGrupoUsuario.put("nombre", gruposUsuario.getNombre());
+				
+				JSONlstGruposUsuario.add(jGrupoUsuario);
+				
+			}
+			
+			if(usuario.getLstGrupos().size() > 0)
+				json.put("lstGruposUsuario", JSONlstGruposUsuario);
 			
 			lstUsuariosJson.add(json);
 		}

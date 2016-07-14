@@ -1,6 +1,7 @@
 package com.logica;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 import org.json.simple.JSONObject;
 
@@ -10,9 +11,10 @@ public class Usuario extends Auditoria{
 	private String pass;
 	private String nombre;
 	private boolean activo;
+	private ArrayList<GruposUsuario> lstGrupos;
 	
 	public Usuario(){
-		
+		this.lstGrupos = new ArrayList<GruposUsuario>();
 	}
 	public Usuario(String usuario, String pass, String nombre, Boolean activo) {
 		
@@ -20,8 +22,10 @@ public class Usuario extends Auditoria{
 		this.pass = pass;
 		this.nombre = nombre;
 		this.activo = activo;
+		this.lstGrupos = new ArrayList<GruposUsuario>();
 	}
 	
+
 	public Usuario(JSONObject jsonUsuario)
 	{
 		super(((String)jsonUsuario.get("usuarioMod")),((Timestamp)jsonUsuario.get("fechaMod")), ((String)jsonUsuario.get("operacion")));
@@ -29,6 +33,7 @@ public class Usuario extends Auditoria{
 		this.pass = jsonUsuario.get("pass").toString();
 		this.nombre = jsonUsuario.get("nombre").toString();
 		this.activo = (Boolean) jsonUsuario.get("activo");
+		this.lstGrupos = new ArrayList<GruposUsuario>();
 	}
 	
 	public boolean isActivo() {
@@ -56,6 +61,11 @@ public class Usuario extends Auditoria{
 		this.nombre = nombre;
 	}
 	
-	
+	public ArrayList<GruposUsuario> getLstGrupos() {
+		return lstGrupos;
+	}
+	public void setLstGrupos(ArrayList<GruposUsuario> lstGrupos) {
+		this.lstGrupos = lstGrupos;
+	}
 
 }
