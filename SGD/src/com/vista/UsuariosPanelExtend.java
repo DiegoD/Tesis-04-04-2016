@@ -89,7 +89,7 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 					sub.setVista(form);
 					/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
 					form.setDataSourceFormulario(item);
-					
+					form.setLstGruposUsuario(item.getBean().getLstGrupos());					
 					
 					 UI.getCurrent().addWindow(sub);
 					  

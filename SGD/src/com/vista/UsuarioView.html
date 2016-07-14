@@ -4,23 +4,30 @@
   <meta charset="UTF-8" name="design-properties" content="{&quot;RULERS_VISIBLE&quot;:true,&quot;GUIDELINES_VISIBLE&quot;:false,&quot;SNAP_TO_OBJECTS&quot;:true,&quot;SNAP_TO_GRID&quot;:true,&quot;SNAPPING_DISTANCE&quot;:10,&quot;JAVA_SOURCES_ROOT&quot;:&quot;src&quot;,&quot;THEME&quot;:&quot;sgd&quot;}">
  </head> 
  <body> 
-  <vaadin-vertical-layout size-full> 
-   <vaadin-form-layout style-name="colored h2" size-full margin> 
-    <vaadin-label style-name="colored h2" size-auto plain-text>
-      Usuario 
-    </vaadin-label> 
-    <vaadin-vertical-layout size-auto></vaadin-vertical-layout> 
-    <vaadin-text-field caption="Nombre" _id="nombre"></vaadin-text-field> 
-    <vaadin-text-field caption="Usuario" _id="usuario"></vaadin-text-field> 
-    <vaadin-password-field caption="Contraseña" _id="pass"></vaadin-password-field> 
-    <vaadin-check-box caption="Activo" _id="activo"></vaadin-check-box> 
-    <vaadin-button style-name="primary tiny" plain-text _id="aceptar" :bottom>
-      Guardar 
-    </vaadin-button> 
-    <vaadin-button style-name="tiny primary" id="btnEditar" plain-text _id="btnEditar" :bottom>
-      Editar 
-    </vaadin-button> 
-   </vaadin-form-layout> 
-  </vaadin-vertical-layout>  
+  <vaadin-form-layout height="528px" margin> 
+   <vaadin-label style-name="colored h2" responsive plain-text :center>
+     Usuario 
+   </vaadin-label> 
+   <vaadin-horizontal-layout responsive width-full height="234px"> 
+    <vaadin-form-layout style-name="colored h2" width="53.34%" height-full margin> 
+     <vaadin-text-field caption="Nombre" _id="nombre"></vaadin-text-field> 
+     <vaadin-text-field caption="Usuario" _id="usuario"></vaadin-text-field> 
+     <vaadin-password-field caption="Contraseña" _id="pass"></vaadin-password-field> 
+     <vaadin-check-box caption="Activo" _id="activo"></vaadin-check-box> 
+     <vaadin-button style-name="primary tiny" plain-text _id="aceptar" :bottom>
+       Guardar 
+     </vaadin-button> 
+     <vaadin-button style-name="tiny primary" id="btnEditar" plain-text _id="btnEditar" :bottom>
+       Editar 
+     </vaadin-button> 
+    </vaadin-form-layout> 
+    <vaadin-form-layout width="520px"> 
+     <vaadin-grid height="165px" _id="grillaGrupos"></vaadin-grid> 
+     <vaadin-button style-name="tiny primary" id="btnAgregar" plain-text _id="btnAgregar">
+       Agregar 
+     </vaadin-button> 
+    </vaadin-form-layout> 
+   </vaadin-horizontal-layout> 
+  </vaadin-form-layout>  
  </body>
 </html>

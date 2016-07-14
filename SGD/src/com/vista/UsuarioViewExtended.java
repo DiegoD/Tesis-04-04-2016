@@ -1,19 +1,26 @@
 package com.vista;
 
+import java.util.ArrayList;
+
 import org.json.simple.JSONObject;
 
 import com.controladores.GrupoControlador;
 import com.controladores.UsuarioControlador;
 import com.excepciones.ConexionException;
+import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
 import com.excepciones.Usuarios.ExisteUsuarioException;
 import com.excepciones.Usuarios.InsertandoUsuarioException;
 import com.excepciones.grupos.ExisteGrupoException;
 import com.excepciones.grupos.InsertandoGrupoException;
 import com.excepciones.grupos.MemberGrupoException;
+import com.excepciones.grupos.ObteniendoGruposException;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
+import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.validator.StringLengthValidator;
+import com.valueObject.FormularioVO;
+import com.valueObject.GrupoNombreVO;
 import com.valueObject.GrupoVO;
 import com.valueObject.UsuarioVO;
 
@@ -23,7 +30,12 @@ public class UsuarioViewExtended extends UsuarioView{
 	private BeanFieldGroup<UsuarioVO> fieldGroup;
 	private UsuarioControlador controlador;
 	private String operacion;
-
+	private ArrayList<GrupoNombreVO> lstGruposUsuario;
+	
+	BeanItemContainer<GrupoVO> container;
+	GrupoControlador controladorGrupo;
+	BeanItemContainer<GrupoNombreVO> containerGrupo;
+	
 	public UsuarioViewExtended(String opera){
 		
 		operacion = opera;
@@ -111,7 +123,7 @@ public class UsuarioViewExtended extends UsuarioView{
 	private void inicializarForm(){
 		
 		this.controlador = new UsuarioControlador();
-		
+		this.controladorGrupo = new GrupoControlador();
 		this.fieldGroup =  new BeanFieldGroup<UsuarioVO>(UsuarioVO.class);
 		
 		//Seteamos info del form si es requerido
@@ -131,6 +143,20 @@ public class UsuarioViewExtended extends UsuarioView{
 			this.iniFormLectura();
 					
 		}
+		
+		/*this.container = 
+				new BeanItemContainer<GrupoVO>(GrupoVO.class);
+		*/
+		this.containerGrupo = 
+				new BeanItemContainer<GrupoNombreVO>(GrupoNombreVO.class);
+	
+		if(this.lstGruposUsuario != null )
+		{
+			for(GrupoNombreVO grupoVO: this.lstGruposUsuario){
+				containerGrupo.addBean(grupoVO);
+			}
+		}
+		
 	}
 	
 	private void setearValidaciones(boolean setear){
@@ -333,4 +359,30 @@ public class UsuarioViewExtended extends UsuarioView{
 		
 		return valido;
 	}
+	
+	/**
+	 * Seteamos la lista de los formularios para mostrarlos
+	 * en la grilla
+	 */
+	public void setLstGruposUsuario(ArrayList<GrupoNombreVO> lstGrupos)
+	{
+		this.lstGruposUsuario = lstGrupos;
+		
+		/*Seteamos la grilla con los formularios*/
+		this.containerGrupo = 
+				new BeanItemContainer<GrupoNombreVO>(GrupoNombreVO.class);
+		
+		
+		if(this.lstGruposUsuario != null)
+		{
+			for (GrupoNombreVO grupoVO : this.lstGruposUsuario) {
+				containerGrupo.addBean(grupoVO);
+			}
+		}
+		
+		
+		grillaGrupos.setContainerDataSource(containerGrupo);
+		
+	}
+
 }
