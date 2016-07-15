@@ -1,6 +1,9 @@
 package com.vista;
 
 import java.sql.Date;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -20,6 +23,7 @@ import com.vaadin.server.Page;
 import com.vaadin.server.Page.Styles;
 import com.vaadin.shared.Position;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Grid;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import com.valueObject.CotizacionVO;
@@ -134,7 +138,7 @@ public class GrupoViewExtended extends GrupoView {
 					
 			try {
 				
-				GrupoViewAgregarFormularioExtended form = new GrupoViewAgregarFormularioExtended();
+				GrupoViewAgregarFormularioExtended form = new GrupoViewAgregarFormularioExtended(this.controlador);
 				
 				MySub sub = new MySub();
 				sub.setVista(form);
@@ -161,7 +165,7 @@ public class GrupoViewExtended extends GrupoView {
 
 	public  void inicializarForm(){
 		
-		this.controlador = new GrupoControlador();
+		this.controlador = new GrupoControlador(this);
 					
 		this.fieldGroup =  new BeanFieldGroup<GrupoVO>(GrupoVO.class);
 		
@@ -426,7 +430,57 @@ public class GrupoViewExtended extends GrupoView {
 		lstFormularios.setContainerDataSource(container);
 		
 	}
+	
+	/**
+	 * Agregar Formularios seleccionados
+	 */
+	public void agregarFormulariosSeleccionados(ArrayList<FormularioSelVO> lstForms)
+	{
+		//this.lstFormsVO = lstForms;
+		
+		/*Seteamos la grilla con los formularios*/
+		//this.container = new BeanItemContainer<FormularioVO>(FormularioVO.class);
+		
+		
+		//FormularioVO aux;
+		if(lstForms.size() > 0)
+		{
+			for (FormularioVO formVO : this.lstFormsVO) {
+				
+				//this.lstFormsVO.add(formVO);
+				this.container.addBean(formVO);
+			}
+		}
+		
+		
+		lstFormularios.setContainerDataSource(container);
+		
+		lstFormularios.setEditorEnabled(true);
+		lstFormularios.setEditorEnabled(false);
+		lstFormularios.clearSortOrder();
+		
+		@SuppressWarnings ( "unchecked" )
+        BeanItemContainer<FormularioVO> bic = new BeanItemContainer<>( FormularioVO.class , lstFormsVO ); // Create replacement container.
+        this.lstFormularios.setContainerDataSource( bic );
+        this.updateCaptionAndSize( this.lstFormularios , "" );
+		
+	}
 
+	  private void updateCaptionAndSize ( final Grid grid , final String caption )
+	    {
+	        // Caption
+	        grid.setCaption( caption + " ( updated " + this.now() + " )" );  // Update caption of Grid to indicate fresh data.
+	        // Show all rows.
+	        double h = grid.getContainerDataSource().size() > 0 ? grid.getContainerDataSource().size() : 3; // Cannot set height to zero rows. So if no data, set height to some arbitrary number of (empty) rows.
+	        grid.setHeightByRows( h );
+	    }
+	  
+	  // Helper method.
+	    private String now ()
+	    {
+	        // Get current time in UTC. Truncate fractional seconds. Append a 'Z' to indicate UTC time zone.
+	        return ZonedDateTime.now( ZoneOffset.UTC ).format( DateTimeFormatter.ISO_LOCAL_TIME ).substring( 0 , 8 ).concat( "Z" );
+	    }
 	
 }
 

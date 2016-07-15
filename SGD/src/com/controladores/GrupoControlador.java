@@ -14,12 +14,31 @@ import com.excepciones.grupos.MemberGrupoException;
 import com.excepciones.grupos.NoExisteGrupoException;
 import com.excepciones.grupos.ObteniendoGruposException;
 import com.logica.Fachada;
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 import com.valueObject.FormularioSelVO;
 import com.valueObject.FormularioVO;
 import com.valueObject.GrupoVO;
+import com.vista.GrupoViewExtended;
 
 public class GrupoControlador {
 
+	private GrupoViewExtended vista;
+	
+	public GrupoControlador(GrupoViewExtended view)
+	{
+		this.vista = view;
+	}
+	
+	public GrupoControlador()
+	{
+		
+	}
+	
+	public void agregarFormulariosSeleccionados(ArrayList<FormularioSelVO> lstForms)
+	{
+		this.vista.agregarFormulariosSeleccionados(lstForms);
+	}
+	
 	public void insertarGrupo(JSONObject grupoJS) throws InsertandoGrupoException, MemberGrupoException, ExisteGrupoException, InicializandoException, ConexionException, ErrorInesperadoException
 	{
 		
