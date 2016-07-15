@@ -337,18 +337,27 @@ public class Fachada {
 	    }
     
 	 @SuppressWarnings("unchecked")
-		public ArrayList<FormularioVO> getFormulariosNoGrupo(String codGrupo) throws ObteniendoGruposException, ConexionException, ErrorInesperadoException {
+		public ArrayList<FormularioSelVO> getFormulariosNoGrupo(String codGrupo) throws ObteniendoGruposException, ConexionException, ErrorInesperadoException {
 	    	
 	    	Connection con = null;
 	    	
-	    	ArrayList<FormularioVO> lstFormularios = new ArrayList<FormularioVO>();
+	    	ArrayList<Formulario> lstFormularios = new ArrayList<Formulario>();
+	    	ArrayList<FormularioSelVO> lstFormSelVO = new ArrayList<FormularioSelVO>();
 
-	    	
 	    	try
 	    	{
 	    		con = this.pool.obtenerConeccion();
 	    		
 	    		lstFormularios = this.grupos.getFormulariosNoGrupo(codGrupo, con);
+	    		
+	    		
+	    		/*Transformamos al VO de seleccion*/
+	    		FormularioSelVO formSelVO;
+	    		for (Formulario formulario : lstFormularios) {
+	    			formSelVO = new FormularioSelVO(formulario);
+	    			
+	    			lstFormSelVO.add(formSelVO);
+				}
 	    		
 	    	}catch(Exception e)
 	    	{
@@ -359,7 +368,7 @@ public class Fachada {
 	    		this.pool.liberarConeccion(con);
 	    	}
 	    	
-	    	return lstFormularios;
+	    	return lstFormSelVO;
 	    	    	
 	    }
 		

@@ -14,6 +14,7 @@ import com.excepciones.grupos.MemberGrupoException;
 import com.excepciones.grupos.NoExisteGrupoException;
 import com.excepciones.grupos.ObteniendoGruposException;
 import com.logica.Fachada;
+import com.valueObject.FormularioSelVO;
 import com.valueObject.FormularioVO;
 import com.valueObject.GrupoVO;
 
@@ -39,7 +40,7 @@ public class GrupoControlador {
 		//Fachada.getInstance().editarGrupo(grupoJS);
 	}
 	
-	public ArrayList<FormularioVO> getFormulariosNoGrupo(String codGrupo) throws ObteniendoGruposException, ConexionException, ErrorInesperadoException, InicializandoException {
+	public ArrayList<FormularioSelVO> getFormulariosNoGrupo(String codGrupo) throws ObteniendoGruposException, ConexionException, ErrorInesperadoException, InicializandoException {
 	{
 		return Fachada.getInstance().getFormulariosNoGrupo(codGrupo);
 	}

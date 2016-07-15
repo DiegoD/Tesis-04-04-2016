@@ -23,6 +23,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import com.valueObject.CotizacionVO;
+import com.valueObject.FormularioSelVO;
 import com.valueObject.FormularioVO;
 import com.valueObject.GrupoVO;
 
@@ -144,7 +145,7 @@ public class GrupoViewExtended extends GrupoView {
 				/*Obtenemos los formularios que no estan en el grupo
 				 * para mostrarlos en la grilla para seleccionar*/
 				String codGrupo = fieldGroup.getItemDataSource().getBean().getCodGrupo();
-				ArrayList<FormularioVO> lstForms = this.controlador.getFormulariosNoGrupo(codGrupo);
+				ArrayList<FormularioSelVO> lstForms = this.controlador.getFormulariosNoGrupo(codGrupo);
 				
 				form.setGrillaForms(lstForms);
 				

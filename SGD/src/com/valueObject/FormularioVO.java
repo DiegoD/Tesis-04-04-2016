@@ -2,8 +2,10 @@ package com.valueObject;
 
 public class FormularioVO {
 	
+
 	private String codFormulario;
 	private String nomFormulario;
+	
 	
 	public String getCodFOrmulario() {
 		return codFormulario;

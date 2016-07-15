@@ -8,6 +8,7 @@ import com.excepciones.ConexionException;
 import com.excepciones.grupos.*;
 import com.logica.Formulario;
 import com.logica.Grupo;
+import com.valueObject.FormularioSelVO;
 import com.valueObject.FormularioVO;
 import com.valueObject.GrupoVO;
 
@@ -17,5 +18,5 @@ public interface IDAOGrupos {
 	public void insertarGrupo(Grupo grupo, Connection con) throws  InsertandoGrupoException, ConexionException ;
 	public boolean memberGrupo(String codGrupo, Connection con) throws MemberGrupoException, ConexionException;
 	public void eliminarGrupo(String codGrupo, Connection con) throws ModificandoGrupoException, ConexionException;
-	public ArrayList<FormularioVO> getFormulariosNoGrupo(String codGrupo, Connection con) throws ObteniendoFormulariosException;
+	public ArrayList<Formulario> getFormulariosNoGrupo(String codGrupo, Connection con) throws ObteniendoFormulariosException;
 }

@@ -20,6 +20,7 @@ import com.excepciones.grupos.ObteniendoGruposException;
 import com.logica.Formulario;
 import com.logica.Grupo;
 import com.valueObject.CotizacionVO;
+import com.valueObject.FormularioSelVO;
 import com.valueObject.FormularioVO;
 import com.valueObject.GrupoVO;
 
@@ -288,9 +289,9 @@ public class DAOGrupos implements IDAOGrupos {
 	 * al grupo para que los pueda agregar
 	 *
 	 */
-	public ArrayList<FormularioVO> getFormulariosNoGrupo(String codGrupo, Connection con) throws ObteniendoFormulariosException
+	public ArrayList<Formulario> getFormulariosNoGrupo(String codGrupo, Connection con) throws ObteniendoFormulariosException
 	{
-		ArrayList<FormularioVO> lstFormulario = new ArrayList<FormularioVO>();
+		ArrayList<Formulario> lstFormulario = new ArrayList<Formulario>();
 		
 		try
 		{
@@ -302,11 +303,11 @@ public class DAOGrupos implements IDAOGrupos {
 			
 			ResultSet rs = pstmt1.executeQuery();
 			
-			FormularioVO formulario;
+			Formulario formulario;
 			
 			while(rs.next ()) {
 
-				formulario = new FormularioVO();
+				formulario = new Formulario();
 
 				formulario.setCodFormulario(rs.getString(1));
 				formulario.setNomFormulario(rs.getString(2));
