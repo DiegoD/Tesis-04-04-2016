@@ -449,13 +449,15 @@ public class GrupoViewExtended extends GrupoView {
 		{
 			for (FormularioVO formVO : this.lstFormsVO) {
 				
-				//this.lstFormsVO.add(formVO);
+				this.lstFormsVO.add(formVO);
 				this.container.addBean(formVO);
 			}
 		}
 		
 		
 		lstFormularios.setContainerDataSource(container);
+		
+		
 		
 		lstFormularios.setEditorEnabled(true);
 		lstFormularios.setEditorEnabled(false);

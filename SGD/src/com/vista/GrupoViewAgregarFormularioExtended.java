@@ -51,7 +51,7 @@ public class GrupoViewAgregarFormularioExtended extends GrupoViewAgregarFormular
 
 				controlador.agregarFormulariosSeleccionados(lstSeleccionados);
 				
-				((Window) this.getParent()).removeFromParent(this);
+				//((Window) this.getParent()).removeFromParent(this);
 				
 				
 			
