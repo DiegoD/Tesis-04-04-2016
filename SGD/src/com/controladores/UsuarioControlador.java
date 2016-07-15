@@ -11,7 +11,10 @@ import com.excepciones.Usuarios.ExisteUsuarioException;
 import com.excepciones.Usuarios.InsertandoUsuarioException;
 import com.excepciones.Usuarios.ObteniendoUsuariosException;
 import com.excepciones.grupos.ObteniendoGruposException;
+import com.logica.Fachada;
 import com.logica.FachadaDD;
+import com.valueObject.FormularioVO;
+import com.valueObject.GrupoVO;
 
 public class UsuarioControlador {
 
@@ -32,6 +35,11 @@ public class UsuarioControlador {
 	{
 		System.out.println("llamo a fachada");
 		FachadaDD.getInstance().modificarUsuario(jsonUsuario);
+	}
+	
+	public ArrayList<GrupoVO> getFormulariosNoGrupo(String nombreUsuario) throws ObteniendoGruposException, ConexionException, ErrorInesperadoException, InicializandoException 
+	{
+		return FachadaDD.getInstance().getGruposNoUsuario(nombreUsuario);
 	}
 
 }

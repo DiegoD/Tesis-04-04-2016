@@ -23,6 +23,7 @@ import com.logica.Formulario;
 import com.logica.Grupo;
 import com.logica.GruposUsuario;
 import com.logica.Usuario;
+import com.valueObject.FormularioVO;
 import com.valueObject.GrupoVO;
 import com.valueObject.LoginVO;
 
@@ -196,7 +197,7 @@ public class DAOUsuarios implements IDAOUsuarios {
 		
 	}
 
-	private ArrayList<GruposUsuario> getGruposxUsuario(String usuario, Connection con) throws ObteniendoGruposException
+	public ArrayList<GruposUsuario> getGruposxUsuario(String usuario, Connection con) throws ObteniendoGruposException
 	{
 		ArrayList<GruposUsuario> lstGrupos = new ArrayList<GruposUsuario>();
 		
@@ -231,5 +232,38 @@ public class DAOUsuarios implements IDAOUsuarios {
 		}
 			
 		return lstGrupos;
+	}
+
+	public ArrayList<GrupoVO> getGruposNoUsuario(String nombreUsurio, Connection con) throws ObteniendoUsuariosException, ObteniendoGruposException
+	{
+		ArrayList<GrupoVO> lstGrupo = new ArrayList<GrupoVO>();
+		try 
+		{
+			ConsultasDD consultas = new ConsultasDD();
+			String query = consultas.getGruposNoUsuario();
+			
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			pstmt1.setString(1, nombreUsurio);
+			
+			ResultSet rs = pstmt1.executeQuery();
+			
+			GrupoVO grupo;
+			
+			while(rs.next ()) 
+			{
+				grupo = new GrupoVO();
+				grupo.setCodGrupo(rs.getString(1));
+				grupo.setNomGrupo(rs.getString(2));
+				lstGrupo.add(grupo);
+			}
+			rs.close();
+			pstmt1.close();
+		} 
+		catch (Exception e) 
+		{
+			throw new ObteniendoGruposException();
+		}
+		return lstGrupo;
+		
 	}
 }

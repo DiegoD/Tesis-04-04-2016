@@ -281,4 +281,21 @@ public class ConsultasDD {
 	}
 ////////////////////////FIN-GRUPOS///////////////////////////////////////////////////
     
+	public String getGruposNoUsuario()
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append("SELECT cod_grupo, nombre ");
+		sb.append("FROM m_grupos ");
+		sb.append("WHERE cod_grupo NOT IN (SELECT cod_grupo FROM m_gruposxusu WHERE usuario = ? )");
+		return sb.toString();
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	
 }

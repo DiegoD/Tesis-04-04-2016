@@ -1,0 +1,37 @@
+package com.vista;
+
+import java.util.ArrayList;
+
+import com.vaadin.data.util.BeanItemContainer;
+import com.valueObject.FormularioVO;
+import com.valueObject.GrupoVO;
+
+public class UsuarioViewAgregarGrupoExtend extends UsuarioViewAgregarGrupo
+{
+	BeanItemContainer<GrupoVO> container;
+	
+	/**
+	 *Dado una ArrayList de FormularioVO inicializamos grilla
+	 *de formularios
+	 *
+	 */
+	public void setGrillaGrupos(ArrayList<GrupoVO> lstGruposUsuario)
+	{
+			
+		/*Seteamos la grilla con los formularios*/
+		this.container = 
+				new BeanItemContainer<GrupoVO>(GrupoVO.class);
+		
+		
+		if(lstGruposUsuario != null)
+		{
+			for (GrupoVO grupoVO : lstGruposUsuario) {
+				container.addBean(grupoVO);
+			}
+		}
+				
+		
+	
+		lstGrupos.setContainerDataSource(container);
+	}
+}

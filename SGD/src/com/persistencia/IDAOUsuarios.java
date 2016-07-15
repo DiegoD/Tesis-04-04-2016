@@ -13,6 +13,7 @@ import com.excepciones.Usuarios.ObteniendoUsuariosException;
 import com.excepciones.grupos.ObteniendoGruposException;
 import com.logica.Grupo;
 import com.logica.Usuario;
+import com.valueObject.GrupoVO;
 import com.valueObject.LoginVO;
 
 public interface IDAOUsuarios {
@@ -26,4 +27,6 @@ public interface IDAOUsuarios {
 	public void insertarUsuario(Usuario user, Connection con) throws InsertandoUsuarioException, ConexionException;
 	
 	public void eliminarUsuario(Usuario user, Connection con) throws InsertandoUsuarioException, ConexionException;
+	
+	public ArrayList<GrupoVO> getGruposNoUsuario(String nombreUsurio, Connection con) throws ObteniendoUsuariosException, ObteniendoGruposException;
 }

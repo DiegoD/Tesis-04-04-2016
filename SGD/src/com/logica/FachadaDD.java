@@ -192,7 +192,7 @@ public class FachadaDD {
 ////////////////////////////////FIN NUEVO/////////////////////////////////   
     
 /////////////////////////////////NUEVO/////////////////////////////////
-@SuppressWarnings("resource")
+    @SuppressWarnings("resource")
 	public void modificarUsuario(JSONObject jsonUsuario) throws InsertandoUsuarioException, ConexionException, ExisteUsuarioException, ErrorInesperadoException
 	{
 		Connection con = null;
@@ -217,5 +217,37 @@ public class FachadaDD {
 			this.pool.liberarConeccion(con);
 		}
 	}
+    
+    public ArrayList<GrupoVO> getGruposNoUsuario(String nombreUsuario) throws ErrorInesperadoException, ConexionException
+    {
+    	Connection con = null;
+    	ArrayList<GrupoVO> lstGrupos = new ArrayList<GrupoVO>();
+    	try 
+    	{
+			con = this.pool.obtenerConeccion();
+			lstGrupos = this.usuarios.getGruposNoUsuario(nombreUsuario, con);
+			
+			
+		} 
+    	catch (Exception e) 
+    	{
+    		throw new ErrorInesperadoException();
+		}
+    	finally
+    	{
+    		this.pool.liberarConeccion(con);
+    	}
+    	return lstGrupos;
+    	
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
 }

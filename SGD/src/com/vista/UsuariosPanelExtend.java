@@ -38,7 +38,8 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 			this.btnNuevoUsuario.addClickListener(click -> {
 				
 
-				try {
+				try 
+				{
 					
 					MySub subGrupoView = new MySub();
 					form = new UsuarioViewExtended(Variables.OPERACION_NUEVO);
@@ -46,7 +47,8 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 					
 					UI.getCurrent().addWindow(subGrupoView);
 					
-				} catch (Exception e) {
+				} 
+				catch (Exception e) {
 					
 					
 				}

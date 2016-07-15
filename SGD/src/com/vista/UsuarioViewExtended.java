@@ -19,6 +19,7 @@ import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.validator.StringLengthValidator;
+import com.vaadin.ui.UI;
 import com.valueObject.FormularioVO;
 import com.valueObject.GrupoNombreVO;
 import com.valueObject.GrupoVO;
@@ -79,7 +80,6 @@ public class UsuarioViewExtended extends UsuarioView{
 						this.controlador.modificarUsuario(usuarioJson);
 						
 						Mensajes.mostrarMensajeOK("Se guardaron los cambios");
-					
 						
 					}
 				}
@@ -116,6 +116,29 @@ public class UsuarioViewExtended extends UsuarioView{
 			{
 				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 			}
+		});
+		
+		this.btnAgregar.addClickListener(click -> {
+			try 
+			{
+				UsuarioViewAgregarGrupoExtend form = new UsuarioViewAgregarGrupoExtend();
+				MySub sub = new MySub();
+				sub.setVista(form);
+				sub.setWidth("50%");
+				sub.setHeight("50%");
+				sub.center();
+				
+				String nombre = fieldGroup.getItemDataSource().getBean().getUsuario();
+				ArrayList<GrupoVO> lstGruposNoUsuario = this.controlador.getFormulariosNoGrupo(nombre);
+				form.setGrillaGrupos(lstGruposNoUsuario);
+				UI.getCurrent().addWindow(sub);
+			} 
+			catch (Exception e) 
+			{
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}
+			
+			
 		});
 		
 	}
