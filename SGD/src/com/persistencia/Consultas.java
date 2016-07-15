@@ -271,6 +271,18 @@ public class Consultas {
     	return sb.toString();
     }
     
+    public String getFormulariosNOGrupo()
+    {
+    	StringBuilder sb = new StringBuilder();
+    	
+    	sb.append("SELECT formulario, nombre, fecha_mod, usuario_mod, operacion, activo ");
+    	sb.append("FROM g_formularios ");
+    	sb.append("WHERE formulario NOT IN (SELECT formulario FROM m_grupoxform WHERE cod_grupo = ? )");
+
+    	return sb.toString();
+    }
+    
+    
 ////////////////////////FIN-GRUPOS///////////////////////////////////////////////////
     
 }

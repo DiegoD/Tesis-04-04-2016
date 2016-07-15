@@ -31,7 +31,7 @@ public class GrupoVO extends AuditoriaVO{
 			
 		    JSONObject form = (JSONObject) JlstForms.get(i);
 		    formVO = new FormularioVO();		    
-		    formVO.setCodFOrmulario((String)form.get("codFormulario")); 
+		    formVO.setCodFormulario((String)form.get("codFormulario")); 
 		    formVO.setNomFormulario((String)form.get("nomFormulario")); 
 		  
 		    this.lstFormularios.add(formVO);

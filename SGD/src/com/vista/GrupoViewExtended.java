@@ -21,6 +21,7 @@ import com.vaadin.server.Page.Styles;
 import com.vaadin.shared.Position;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.UI;
 import com.valueObject.CotizacionVO;
 import com.valueObject.FormularioVO;
 import com.valueObject.GrupoVO;
@@ -110,7 +111,6 @@ public class GrupoViewExtended extends GrupoView {
 		});
 	
 	/*Inicalizamos listener para boton de Editar*/
-	//Inicializamos listener de boton aceptar
 		this.btnEditar.addClickListener(click -> {
 				
 		try {
@@ -127,6 +127,34 @@ public class GrupoViewExtended extends GrupoView {
 				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 			}
 		});
+		
+		/*Inicalizamos listener para boton de Agregar Formulario*/
+			this.btnAgregar.addClickListener(click -> {
+					
+			try {
+				
+				GrupoViewAgregarFormularioExtended form = new GrupoViewAgregarFormularioExtended();
+				
+				MySub sub = new MySub();
+				sub.setVista(form);
+				sub.setWidth("50%");
+				sub.setHeight("50%");
+				sub.center();
+				
+				/*Obtenemos los formularios que no estan en el grupo
+				 * para mostrarlos en la grilla para seleccionar*/
+				String codGrupo = fieldGroup.getItemDataSource().getBean().getCodGrupo();
+				ArrayList<FormularioVO> lstForms = this.controlador.getFormulariosNoGrupo(codGrupo);
+				
+				form.setGrillaForms(lstForms);
+				
+				UI.getCurrent().addWindow(sub);
+
+				}catch(Exception e)
+				{
+					Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+				}
+			});
 	
 	}
 

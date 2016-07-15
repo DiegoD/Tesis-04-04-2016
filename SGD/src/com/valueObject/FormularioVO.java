@@ -2,14 +2,14 @@ package com.valueObject;
 
 public class FormularioVO {
 	
-	private String codFOrmulario;
+	private String codFormulario;
 	private String nomFormulario;
 	
 	public String getCodFOrmulario() {
-		return codFOrmulario;
+		return codFormulario;
 	}
-	public void setCodFOrmulario(String codFOrmulario) {
-		this.codFOrmulario = codFOrmulario;
+	public void setCodFormulario(String codFOrmulario) {
+		this.codFormulario = codFOrmulario;
 	}
 	public String getNomFormulario() {
 		return nomFormulario;

@@ -20,6 +20,7 @@ import com.excepciones.grupos.ObteniendoGruposException;
 import com.logica.Formulario;
 import com.logica.Grupo;
 import com.valueObject.CotizacionVO;
+import com.valueObject.FormularioVO;
 import com.valueObject.GrupoVO;
 
 public class DAOGrupos implements IDAOGrupos {
@@ -280,5 +281,49 @@ public class DAOGrupos implements IDAOGrupos {
 			throw new ModificandoGrupoException();
 		}
 	}
+	
+	
+	/**
+	 * Nos retorna los formualrios que no pertenecen
+	 * al grupo para que los pueda agregar
+	 *
+	 */
+	public ArrayList<FormularioVO> getFormulariosNoGrupo(String codGrupo, Connection con) throws ObteniendoFormulariosException
+	{
+		ArrayList<FormularioVO> lstFormulario = new ArrayList<FormularioVO>();
+		
+		try
+		{
+			Consultas consultas = new Consultas ();
+			String query = consultas.getFormulariosNOGrupo();
+			
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			pstmt1.setString(1, codGrupo);
+			
+			ResultSet rs = pstmt1.executeQuery();
+			
+			FormularioVO formulario;
+			
+			while(rs.next ()) {
+
+				formulario = new FormularioVO();
+
+				formulario.setCodFormulario(rs.getString(1));
+				formulario.setNomFormulario(rs.getString(2));
+				
+				lstFormulario.add(formulario);
+			}
+			
+			rs.close ();
+			pstmt1.close ();
+		}
+		catch (SQLException e) {
+			
+			throw new ObteniendoFormulariosException();
+		}
+			
+		return lstFormulario;
+	}
+	
 
 }

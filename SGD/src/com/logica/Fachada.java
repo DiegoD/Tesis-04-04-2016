@@ -336,6 +336,32 @@ public class Fachada {
 	    	}
 	    }
     
+	 @SuppressWarnings("unchecked")
+		public ArrayList<FormularioVO> getFormulariosNoGrupo(String codGrupo) throws ObteniendoGruposException, ConexionException, ErrorInesperadoException {
+	    	
+	    	Connection con = null;
+	    	
+	    	ArrayList<FormularioVO> lstFormularios = new ArrayList<FormularioVO>();
+
+	    	
+	    	try
+	    	{
+	    		con = this.pool.obtenerConeccion();
+	    		
+	    		lstFormularios = this.grupos.getFormulariosNoGrupo(codGrupo, con);
+	    		
+	    	}catch(Exception e)
+	    	{
+	    		throw new ErrorInesperadoException();
+	    	}
+	    	finally
+	    	{
+	    		this.pool.liberarConeccion(con);
+	    	}
+	    	
+	    	return lstFormularios;
+	    	    	
+	    }
 		
 /////////////////////////////////FIN-GUPOS/////////////////////////////////
 }
