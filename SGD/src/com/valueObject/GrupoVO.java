@@ -14,6 +14,11 @@ public class GrupoVO extends AuditoriaVO{
 	private ArrayList<FormularioVO> lstFormularios;
 
 
+	public GrupoVO()
+	 {
+	  
+	 }
+	
 	public GrupoVO(JSONObject obj){
 		
 		super(((String)obj.get("usuarioMod")),((Timestamp)obj.get("fechaMod")), ((String)obj.get("operacion")));

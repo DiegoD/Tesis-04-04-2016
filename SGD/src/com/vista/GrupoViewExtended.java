@@ -49,6 +49,8 @@ public class GrupoViewExtended extends GrupoView {
 	@SuppressWarnings("unchecked")
 	public GrupoViewExtended(String opera){
 		
+		this.lstFormularios.markAsDirty(); 
+		
 		 Styles styles = Page.getCurrent().getStyles();
 		 
 		 styles.add(".v-app .v-textarea.text-label { font-size:" + String.valueOf(4) + "px; }");
@@ -464,6 +466,7 @@ public class GrupoViewExtended extends GrupoView {
         this.lstFormularios.setContainerDataSource( bic );
         this.updateCaptionAndSize( this.lstFormularios , "" );
 		
+        this.lstFormularios.markAsDirty(); 
 	}
 
 	  private void updateCaptionAndSize ( final Grid grid , final String caption )
@@ -481,6 +484,8 @@ public class GrupoViewExtended extends GrupoView {
 	        // Get current time in UTC. Truncate fractional seconds. Append a 'Z' to indicate UTC time zone.
 	        return ZonedDateTime.now( ZoneOffset.UTC ).format( DateTimeFormatter.ISO_LOCAL_TIME ).substring( 0 , 8 ).concat( "Z" );
 	    }
+	    
+	    
 	
 }
 
