@@ -28,10 +28,15 @@ public class UsuarioViewAgregarGrupoExtend extends UsuarioViewAgregarGrupo
 			for (GrupoVO grupoVO : lstGruposUsuario) {
 				container.addBean(grupoVO);
 			}
+			
+			
 		}
-				
-		
-	
+			
 		lstGrupos.setContainerDataSource(container);
+		lstGrupos.removeColumn("activo");
+		lstGrupos.removeColumn("fechaMod");
+		lstGrupos.removeColumn("operacion");
+		lstGrupos.removeColumn("lstFormularios");
+		lstGrupos.removeColumn("usuarioMod");
 	}
 }
