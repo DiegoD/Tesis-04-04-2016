@@ -463,10 +463,10 @@ public class GrupoViewExtended extends GrupoView {
 		lstFormularios.setEditorEnabled(false);
 		lstFormularios.clearSortOrder();
 		
-		@SuppressWarnings ( "unchecked" )
-        BeanItemContainer<FormularioVO> bic = new BeanItemContainer<>( FormularioVO.class , lstFormsVO ); // Create replacement container.
-        this.lstFormularios.setContainerDataSource( bic );
-        this.updateCaptionAndSize( this.lstFormularios , "" );
+		//@SuppressWarnings ( "unchecked" )
+       // BeanItemContainer<FormularioVO> bic = new BeanItemContainer<>( FormularioVO.class , lstFormsVO ); // Create replacement container.
+       // this.lstFormularios.setContainerDataSource( bic );
+      //  this.updateCaptionAndSize( this.lstFormularios , "" );
 		
         this.lstFormularios.markAsDirty(); 
 	}
