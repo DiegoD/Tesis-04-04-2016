@@ -57,7 +57,7 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 		} 
 		
 		catch (Exception e) {
-			//e.fillInStackTrace(e);
+			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 		}
 		
 	}

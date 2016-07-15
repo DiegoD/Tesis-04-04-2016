@@ -25,14 +25,17 @@ public class UsuarioVO {
 		
 		JSONArray jLstGrupos = (JSONArray) obj.get("lstGruposUsuario");
 		GrupoNombreVO grupoNombre;
-		for(int i = 0; i < jLstGrupos.size(); i++)
+		if(jLstGrupos != null)
 		{
-			JSONObject jGrupoUsuario = (JSONObject) jLstGrupos.get(i);
-			grupoNombre = new GrupoNombreVO();
-			grupoNombre.setCodGrupo((String) jGrupoUsuario.get("codigo"));
-			grupoNombre.setNomGrupo((String) jGrupoUsuario.get("nombre"));
-			
-			this.lstGrupos.add(grupoNombre);
+			for(int i = 0; i < jLstGrupos.size(); i++)
+			{
+				JSONObject jGrupoUsuario = (JSONObject) jLstGrupos.get(i);
+				grupoNombre = new GrupoNombreVO();
+				grupoNombre.setCodGrupo((String) jGrupoUsuario.get("codigo"));
+				grupoNombre.setNomGrupo((String) jGrupoUsuario.get("nombre"));
+				
+				this.lstGrupos.add(grupoNombre);
+			}
 		}
 		
 	}
