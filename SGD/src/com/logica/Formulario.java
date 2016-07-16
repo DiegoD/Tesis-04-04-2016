@@ -1,9 +1,22 @@
 package com.logica;
 
+import com.valueObject.FormularioVO;
+
 public class Formulario {
 
 	private String codFormulario;
 	private String nomFormulario;
+	
+	public Formulario()
+	{
+		
+	}
+	
+	public Formulario(FormularioVO form)
+	{
+		this.codFormulario = form.getCodFOrmulario();
+		this.nomFormulario = form.getNomFormulario();
+	}
 	
 	public String getCodFormulario() {
 		return codFormulario;

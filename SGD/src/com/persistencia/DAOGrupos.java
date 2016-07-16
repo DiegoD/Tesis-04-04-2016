@@ -20,7 +20,6 @@ import com.excepciones.grupos.ObteniendoGruposException;
 import com.logica.Formulario;
 import com.logica.Grupo;
 import com.valueObject.CotizacionVO;
-import com.valueObject.FormularioSelVO;
 import com.valueObject.FormularioVO;
 import com.valueObject.GrupoVO;
 
@@ -100,10 +99,10 @@ public class DAOGrupos implements IDAOGrupos {
 			pstmt1.setString(4, grupo.getOperacion());
 			pstmt1.setBoolean(5, grupo.isActivo());
 			
-			this.insertarFormulariosxGrupo(grupo.getCodGrupo(), grupo.getLstFormularios(), con);
-			
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
+			
+			this.insertarFormulariosxGrupo(grupo.getCodGrupo(), grupo.getLstFormularios(), con);
 	
 		} catch (SQLException e) {
 			
@@ -161,12 +160,14 @@ public class DAOGrupos implements IDAOGrupos {
 		
 		try 
 		{
+			this.eliminarFormulariosxGrupo(codGrupo, con);
+			
 			pstmt1 =  con.prepareStatement(delete);
 			pstmt1.setString(1, codGrupo);
 			
 			pstmt1.executeUpdate ();
 			
-			this.eliminarFormulariosxGrupo(codGrupo, con);
+			
 			
 			pstmt1.close ();
 	

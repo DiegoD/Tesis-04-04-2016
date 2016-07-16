@@ -42,7 +42,7 @@ public class GruposPanelExtended extends GruposPanel {
 				
 
 					MySub subGrupoView = new MySub();
-					form = new GrupoViewExtended(Variables.OPERACION_NUEVO);
+					form = new GrupoViewExtended(Variables.OPERACION_NUEVO, this);
 					subGrupoView.setVista(form);
 					
 					UI.getCurrent().addWindow(subGrupoView);
@@ -103,7 +103,7 @@ public class GruposPanelExtended extends GruposPanel {
 		    	BeanItem<GrupoVO> item = container.getItem(gridview.getSelectedRow());
 		
 					MySub sub = new MySub();
-					form = new GrupoViewExtended(Variables.OPERACION_LECTURA);
+					form = new GrupoViewExtended(Variables.OPERACION_LECTURA, GruposPanelExtended.this);
 					//form.fieldGroup.setItemDataSource(item);
 					
 					sub.setVista(form);

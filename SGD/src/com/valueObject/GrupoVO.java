@@ -31,15 +31,18 @@ public class GrupoVO extends AuditoriaVO{
 		
 		JSONArray JlstForms = (JSONArray) obj.get("lstFormularios");
 		
-		FormularioVO formVO;
-		for (int i = 0; i < JlstForms.size(); i++) {
-			
-		    JSONObject form = (JSONObject) JlstForms.get(i);
-		    formVO = new FormularioVO();		    
-		    formVO.setCodFormulario((String)form.get("codFormulario")); 
-		    formVO.setNomFormulario((String)form.get("nomFormulario")); 
-		  
-		    this.lstFormularios.add(formVO);
+		if (JlstForms != null)
+		{
+			FormularioVO formVO;
+			for (int i = 0; i < JlstForms.size(); i++) {
+				
+			    JSONObject form = (JSONObject) JlstForms.get(i);
+			    formVO = new FormularioVO();		    
+			    formVO.setCodFormulario((String)form.get("codFormulario")); 
+			    formVO.setNomFormulario((String)form.get("nomFormulario")); 
+			  
+			    this.lstFormularios.add(formVO);
+			}
 		}
 		
 	}

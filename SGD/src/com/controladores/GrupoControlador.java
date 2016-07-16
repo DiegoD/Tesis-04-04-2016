@@ -11,11 +11,11 @@ import com.excepciones.InicializandoException;
 import com.excepciones.grupos.ExisteGrupoException;
 import com.excepciones.grupos.InsertandoGrupoException;
 import com.excepciones.grupos.MemberGrupoException;
+import com.excepciones.grupos.ModificandoGrupoException;
 import com.excepciones.grupos.NoExisteGrupoException;
 import com.excepciones.grupos.ObteniendoGruposException;
 import com.logica.Fachada;
 import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
-import com.valueObject.FormularioSelVO;
 import com.valueObject.FormularioVO;
 import com.valueObject.GrupoVO;
 import com.vista.GrupoViewExtended;
@@ -34,17 +34,17 @@ public class GrupoControlador {
 		
 	}
 	
-	public void agregarFormulariosSeleccionados(ArrayList<FormularioSelVO> lstForms)
+	public void agregarFormulariosSeleccionados(ArrayList<FormularioVO> lstForms)
 	{
 		this.vista.agregarFormulariosSeleccionados(lstForms);
 	}
 	
-	public void insertarGrupo(JSONObject grupoJS) throws InsertandoGrupoException, MemberGrupoException, ExisteGrupoException, InicializandoException, ConexionException, ErrorInesperadoException
+	public void insertarGrupo(GrupoVO grupoVO) throws InsertandoGrupoException, MemberGrupoException, ExisteGrupoException, InicializandoException, ConexionException, ErrorInesperadoException
 	{
 		
 		//VEr si retornamos a la vista un objeto con Error = true o false y el mensaje
 		//en vez de mandar la exception para arriba
-		Fachada.getInstance().insertarGrupo(grupoJS);
+		Fachada.getInstance().insertarGrupo(grupoVO);
 	}
 		
 	public ArrayList<JSONObject> getGrupos() throws ObteniendoGruposException, InicializandoException, ConexionException, ErrorInesperadoException 
@@ -54,12 +54,12 @@ public class GrupoControlador {
 	
 	}
 	
-	public void editarGrupo(JSONObject grupoJS) throws InsertandoGrupoException, MemberGrupoException, NoExisteGrupoException, ConexionException, ErrorInesperadoException, InicializandoException
+	public void editarGrupo(GrupoVO grupoVO) throws InsertandoGrupoException, MemberGrupoException, NoExisteGrupoException, ConexionException, ErrorInesperadoException, InicializandoException, ModificandoGrupoException
 	{
-		//Fachada.getInstance().editarGrupo(grupoJS);
+		Fachada.getInstance().editarGrupo(grupoVO);
 	}
 	
-	public ArrayList<FormularioSelVO> getFormulariosNoGrupo(String codGrupo) throws ObteniendoGruposException, ConexionException, ErrorInesperadoException, InicializandoException {
+	public ArrayList<FormularioVO> getFormulariosNoGrupo(String codGrupo) throws ObteniendoGruposException, ConexionException, ErrorInesperadoException, InicializandoException {
 	{
 		return Fachada.getInstance().getFormulariosNoGrupo(codGrupo);
 	}

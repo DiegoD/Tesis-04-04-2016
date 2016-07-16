@@ -254,7 +254,7 @@ public class Fachada {
     	    	
     }
     
-    public void insertarGrupo(JSONObject grupoJS) throws InsertandoGrupoException, ConexionException 
+    public void insertarGrupo(GrupoVO grupoVO) throws InsertandoGrupoException, ConexionException 
     {
     	
     	Connection con = null;
@@ -264,7 +264,7 @@ public class Fachada {
 			con = this.pool.obtenerConeccion();
 			con.setAutoCommit(false);
 			
-	    	Grupo grupo = new Grupo(grupoJS); //ACA VER DE COMO SACAMOS EL ARRAY DE GRUPOS
+	    	Grupo grupo = new Grupo(grupoVO); 
 	    	
 	    	if(!this.grupos.memberGrupo(grupo.getCodGrupo(), con))
 	    	{
@@ -293,7 +293,7 @@ public class Fachada {
     	}
     }
     
-	public void editarGrupo(JSONObject grupoJS) throws ConexionException, NoExisteGrupoException, ModificandoGrupoException  
+	public void editarGrupo(GrupoVO grupoVO) throws ConexionException, NoExisteGrupoException, ModificandoGrupoException  
 	{
 	    	
 	    	Connection con = null;
@@ -303,7 +303,7 @@ public class Fachada {
 				con = this.pool.obtenerConeccion();
 				con.setAutoCommit(false);
 				
-				Grupo grupo = new Grupo(grupoJS);
+				Grupo grupo = new Grupo(grupoVO);
 		    	
 		    	if(this.grupos.memberGrupo(grupo.getCodGrupo(), con))
 		    	{
@@ -337,12 +337,12 @@ public class Fachada {
 	    }
     
 	 @SuppressWarnings("unchecked")
-		public ArrayList<FormularioSelVO> getFormulariosNoGrupo(String codGrupo) throws ObteniendoGruposException, ConexionException, ErrorInesperadoException {
+		public ArrayList<FormularioVO> getFormulariosNoGrupo(String codGrupo) throws ObteniendoGruposException, ConexionException, ErrorInesperadoException {
 	    	
 	    	Connection con = null;
 	    	
 	    	ArrayList<Formulario> lstFormularios = new ArrayList<Formulario>();
-	    	ArrayList<FormularioSelVO> lstFormSelVO = new ArrayList<FormularioSelVO>();
+	    	ArrayList<FormularioVO> lstFormSelVO = new ArrayList<FormularioVO>();
 
 	    	try
 	    	{
@@ -352,9 +352,9 @@ public class Fachada {
 	    		
 	    		
 	    		/*Transformamos al VO de seleccion*/
-	    		FormularioSelVO formSelVO;
+	    		FormularioVO formSelVO;
 	    		for (Formulario formulario : lstFormularios) {
-	    			formSelVO = new FormularioSelVO(formulario);
+	    			formSelVO = new FormularioVO(formulario);
 	    			
 	    			lstFormSelVO.add(formSelVO);
 				}

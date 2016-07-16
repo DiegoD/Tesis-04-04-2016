@@ -27,7 +27,6 @@ import com.vaadin.ui.Grid;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import com.valueObject.CotizacionVO;
-import com.valueObject.FormularioSelVO;
 import com.valueObject.FormularioVO;
 import com.valueObject.GrupoVO;
 
@@ -47,9 +46,11 @@ public class GrupoViewExtended extends GrupoView {
 	 *
 	 */
 	@SuppressWarnings("unchecked")
-	public GrupoViewExtended(String opera){
+	public GrupoViewExtended(String opera, GruposPanelExtended main){
 		
 		this.lstFormularios.markAsDirty(); 
+		
+		
 		
 		 Styles styles = Page.getCurrent().getStyles();
 		 
@@ -72,25 +73,27 @@ public class GrupoViewExtended extends GrupoView {
 			/*Validamos los campos antes de invocar al controlador*/
 			if(this.fieldsValidos())
 			{
-				JSONObject grupoJS = new JSONObject();
+								
+				GrupoVO grupoVO = new GrupoVO();
 				
-				grupoJS.put("codGrupo", codGrupo.getValue().trim());
-				grupoJS.put("nomGrupo", nomGrupo.getValue().trim());
-				grupoJS.put("usuarioMod", getSession().getAttribute("usuario"));
-				grupoJS.put("operacion", operacion);
-				grupoJS.put("activo", activo.getValue());
+				grupoVO.setCodGrupo(codGrupo.getValue().trim());
+				grupoVO.setNomGrupo(nomGrupo.getValue().trim());
+				grupoVO.setLstFormularios(this.lstFormsVO);
+				grupoVO.setOperacion(operacion);
+				grupoVO.setActivo(activo.getValue());
+				grupoVO.setUsuarioMod(getSession().getAttribute("usuario").toString());
 				
 				if(this.operacion.equals(Variables.OPERACION_NUEVO))	
 				{	
 	
-					this.controlador.insertarGrupo(grupoJS);
+					this.controlador.insertarGrupo(grupoVO);
 					
 					Mensajes.mostrarMensajeOK("Se ha guardado el Grupo");
 				
 				}else if(this.operacion.equals(Variables.OPERACION_EDITAR))
 				{
 					/*VER DE IMPLEMENTAR PARA EDITAR BORRO TODO E INSERTO NUEVAMENTE*/
-					this.controlador.editarGrupo(grupoJS);
+					this.controlador.editarGrupo(grupoVO);
 					
 				}
 				
@@ -151,7 +154,7 @@ public class GrupoViewExtended extends GrupoView {
 				/*Obtenemos los formularios que no estan en el grupo
 				 * para mostrarlos en la grilla para seleccionar*/
 				String codGrupo = fieldGroup.getItemDataSource().getBean().getCodGrupo();
-				ArrayList<FormularioSelVO> lstForms = this.controlador.getFormulariosNoGrupo(codGrupo);
+				ArrayList<FormularioVO> lstForms = this.controlador.getFormulariosNoGrupo(codGrupo);
 				
 				form.setGrillaForms(lstForms);
 				
@@ -436,38 +439,41 @@ public class GrupoViewExtended extends GrupoView {
 	/**
 	 * Agregar Formularios seleccionados
 	 */
-	public void agregarFormulariosSeleccionados(ArrayList<FormularioSelVO> lstForms)
+	public void agregarFormulariosSeleccionados(ArrayList<FormularioVO> lstForms)
 	{
-		//this.lstFormsVO = lstForms;
 		
+	       // Create a new bean and bind it to the form
+        FormularioVO bean = new FormularioVO();
+        bean.setCodFormulario("Dummie");
+        bean.setNomFormulario("Nombbbb");
+        
+        
+        BeanItem<FormularioVO> item = new BeanItem<FormularioVO>(bean);
+        this.container.addBean(bean);
+        lstFormularios.setContainerDataSource(container);
+        
 		/*Seteamos la grilla con los formularios*/
 		//this.container = new BeanItemContainer<FormularioVO>(FormularioVO.class);
 		
 		
-		//FormularioVO aux;
+		
 		if(lstForms.size() > 0)
 		{
 			for (FormularioVO formVO : this.lstFormsVO) {
 				
-				this.lstFormsVO.add(formVO);
-				this.container.addBean(formVO);
+				/*Hacemos un nuevo objeto por bug de vaadin
+				 * de lo contrario no refresca la grilla*/
+				bean = new FormularioVO();
+		        bean.setCodFormulario(formVO.getCodFOrmulario());
+		        bean.setNomFormulario(formVO.getNomFormulario());
+				
+				//this.lstFormsVO.add(formVO);
+				this.container.addBean(bean);
 			}
 		}
 		
-		
 		lstFormularios.setContainerDataSource(container);
-		
-		
-		
-		lstFormularios.setEditorEnabled(true);
-		lstFormularios.setEditorEnabled(false);
-		lstFormularios.clearSortOrder();
-		
-		//@SuppressWarnings ( "unchecked" )
-       // BeanItemContainer<FormularioVO> bic = new BeanItemContainer<>( FormularioVO.class , lstFormsVO ); // Create replacement container.
-       // this.lstFormularios.setContainerDataSource( bic );
-      //  this.updateCaptionAndSize( this.lstFormularios , "" );
-		
+
         this.lstFormularios.markAsDirty(); 
 	}
 

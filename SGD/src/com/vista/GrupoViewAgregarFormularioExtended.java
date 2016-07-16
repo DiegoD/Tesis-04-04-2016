@@ -8,7 +8,6 @@ import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Grid.SelectionMode;
-import com.valueObject.FormularioSelVO;
 import com.valueObject.FormularioVO;
 
 
@@ -16,7 +15,7 @@ public class GrupoViewAgregarFormularioExtended extends GrupoViewAgregarFormular
 	
 	
 	GrupoControlador controlador;
-	BeanItemContainer<FormularioSelVO> container;
+	BeanItemContainer<FormularioVO> container;
 	
 	/*Pasamos el controlador por referencia, para poder setearle al padre GrupoViewWxtended
 	 * los formularios seleccionados*/
@@ -31,19 +30,19 @@ public class GrupoViewAgregarFormularioExtended extends GrupoViewAgregarFormular
 			int i = 0;
 			
 			
-			BeanItemContainer<FormularioSelVO> selec;
+			BeanItemContainer<FormularioVO> selec;
 			
 			try
 			{
-				ArrayList<FormularioSelVO> lstSeleccionados = new ArrayList<FormularioSelVO>();
+				ArrayList<FormularioVO> lstSeleccionados = new ArrayList<FormularioVO>();
 				
 				/*Obtenemos los formularios seleccionados y se los pasamos a
 				 * la View de Grupos para agregarlos*/
 				Collection<Object> col= this.lstFormularios.getSelectedRows();
 				
-				FormularioSelVO aux;
+				FormularioVO aux;
 				for (Object object : col) {
-					aux = (FormularioSelVO)object;
+					aux = (FormularioVO)object;
 					
 					lstSeleccionados.add(aux);
 					
@@ -70,25 +69,25 @@ public class GrupoViewAgregarFormularioExtended extends GrupoViewAgregarFormular
 	 *de formularios
 	 *
 	 */
-	public void setGrillaForms(ArrayList<FormularioSelVO> lstForms)
+	public void setGrillaForms(ArrayList<FormularioVO> lstForms)
 	{
 		//this.lstFormularios.addAttachListener(listener);
 		
 			
 		/*Seteamos la grilla con los formularios*/
 		this.container = 
-				new BeanItemContainer<FormularioSelVO>(FormularioSelVO.class);
+				new BeanItemContainer<FormularioVO>(FormularioVO.class);
 		
 		
 		if(lstForms != null)
 		{
-			for (FormularioSelVO formVO : lstForms) {
+			for (FormularioVO formVO : lstForms) {
 				container.addBean(formVO);
 			}
 		}
 				
 		this.lstFormularios.setContainerDataSource(container);
 		
-		this.lstFormularios.removeColumn("sel");
+		
 	}
 }
