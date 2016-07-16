@@ -3,6 +3,7 @@ package com.vista;
 import java.util.ArrayList;
 
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.ui.Grid.SelectionMode;
 import com.valueObject.FormularioVO;
 import com.valueObject.GrupoVO;
 
@@ -18,6 +19,8 @@ public class UsuarioViewAgregarGrupoExtend extends UsuarioViewAgregarGrupo
 	public void setGrillaGrupos(ArrayList<GrupoVO> lstGruposUsuario)
 	{
 			
+		this.lstGrupos.setSelectionMode(SelectionMode.MULTI);
+		
 		/*Seteamos la grilla con los formularios*/
 		this.container = 
 				new BeanItemContainer<GrupoVO>(GrupoVO.class);

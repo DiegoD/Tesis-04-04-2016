@@ -32,14 +32,16 @@ public class UsuarioViewExtended extends UsuarioView{
 	private UsuarioControlador controlador;
 	private String operacion;
 	private ArrayList<GrupoNombreVO> lstGruposUsuario;
+	private UsuariosPanelExtend mainView;
 	
 	BeanItemContainer<GrupoVO> container;
 	GrupoControlador controladorGrupo;
 	BeanItemContainer<GrupoNombreVO> containerGrupo;
 	
-	public UsuarioViewExtended(String opera){
+	public UsuarioViewExtended(String opera, UsuariosPanelExtend main){
 		
 		operacion = opera;
+		this.mainView = main;
 		this.inicializarForm();
 		
 		/*Inicializamos listener de boton aceptar*/
@@ -61,7 +63,8 @@ public class UsuarioViewExtended extends UsuarioView{
 						
 						System.out.println("llamo a controlador");
 						this.controlador.insertarUsuario(usuarioJson);
-						
+						UsuarioVO usuario = new UsuarioVO(usuarioJson);
+						main.refreshGrilla(usuario);
 						Mensajes.mostrarMensajeOK("Se ha guardado el Usuario");
 					
 					}

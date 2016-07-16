@@ -21,19 +21,16 @@ public class UsuarioControlador {
 	
 	public ArrayList<JSONObject> getUsuarios() throws ObteniendoUsuariosException, InicializandoException, ClassNotFoundException, ConexionException, ErrorInesperadoException 
 	{
-		System.out.println("estoy en el controlador de usuarios ");
 		return FachadaDD.getInstance().getUsuarios();
     }
 	
 	public void insertarUsuario(JSONObject jsonUsuario) throws InsertandoUsuarioException, ConexionException, ExisteUsuarioException, InicializandoException, ErrorInesperadoException
 	{
-		System.out.println("llamo a fachada");
 		FachadaDD.getInstance().insertarUsuario(jsonUsuario);
 	}
 	
 	public void modificarUsuario(JSONObject jsonUsuario) throws InsertandoUsuarioException, ConexionException, ExisteUsuarioException, ErrorInesperadoException, InicializandoException
 	{
-		System.out.println("llamo a fachada");
 		FachadaDD.getInstance().modificarUsuario(jsonUsuario);
 	}
 	

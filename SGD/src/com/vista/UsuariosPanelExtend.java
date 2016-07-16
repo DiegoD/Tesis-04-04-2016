@@ -42,7 +42,7 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 				{
 					
 					MySub subGrupoView = new MySub();
-					form = new UsuarioViewExtended(Variables.OPERACION_NUEVO);
+					form = new UsuarioViewExtended(Variables.OPERACION_NUEVO, this);
 					subGrupoView.setVista(form);
 					
 					UI.getCurrent().addWindow(subGrupoView);
@@ -82,11 +82,12 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 		    @Override
 		    public void select(SelectionEvent event) {
 		       
-		    	try{
-		    	BeanItem<UsuarioVO> item = container.getItem(gridUsuarios.getSelectedRow());
+		    	try
+		    	{
+		    		BeanItem<UsuarioVO> item = container.getItem(gridUsuarios.getSelectedRow());
 		
 					MySub sub = new MySub();
-					form = new UsuarioViewExtended(Variables.OPERACION_LECTURA);
+					form = new UsuarioViewExtended(Variables.OPERACION_LECTURA, UsuariosPanelExtend.this);
 					//form.fieldGroup.setItemDataSource(item);
 					
 					sub.setVista(form);
@@ -96,7 +97,8 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 					
 					 UI.getCurrent().addWindow(sub);
 					  
-		    	}catch(Exception e)
+		    	}
+		    	catch(Exception e)
 		    	{
 		    		Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 		    	}
@@ -129,6 +131,12 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 		}
 		
 		return lstUsuarios;
+	}
+	
+	public void refreshGrilla(UsuarioVO usuarioVO)
+	{
+		this.container.addBean(usuarioVO);
+		this.gridUsuarios.setContainerDataSource(container);
 	}
 
 }
