@@ -25,7 +25,7 @@ public class AbstractFactoryBuilder
 	    	
 	    } 
 	    else {
-	    	System.out.println("encontro");
+	    	
 	        Properties p = new Properties();
 	        p.load(stream);
 	        String nomFab = p.getProperty("abstractFactory");
