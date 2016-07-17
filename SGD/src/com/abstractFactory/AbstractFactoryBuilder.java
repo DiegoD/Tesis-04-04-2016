@@ -20,8 +20,9 @@ public class AbstractFactoryBuilder
 	    InputStream stream = classLoader.getResourceAsStream("datos.properties");
 	    
 	    if (stream == null) {
-	        // File not nound
-	    	System.out.println("no lo encontro");
+	        /*Archivo no encontrado*/
+	    	throw new FileNotFoundException();
+	    	
 	    } 
 	    else {
 	    	System.out.println("encontro");
@@ -30,21 +31,6 @@ public class AbstractFactoryBuilder
 	        String nomFab = p.getProperty("abstractFactory");
 	        this.myAbstractFactory = (IAbstractFactory) Class.forName(nomFab).newInstance();
 	      }
-		/*
-		Properties p = new Properties();
-		String nomArch = "SGD/WEB-INF/classes/config/datos.properties";
-		//p.load(new FileInputStream(nomArch));
-		p.load(getClass().getResourceAsStream("resources/common/configure/commonData.properties"));
-		System.out.println(p.getProperty("abstractFactory"));
-
-		
-		String nomFab = p.getProperty("abstractFactory");
-		
-		this.myAbstractFactory = (IAbstractFactory) Class.forName(nomFab).newInstance();
-		
-		// Esto es cuando lee desde archivo this.myAbstractFactory = (IAbstractFactory) Class.forName(nomFab).newInstance();
-		//this.myAbstractFactory = (IAbstractFactory) Class.forName("com.abstractFactory.AbstractFactoryMySql").newInstance();
-		*/
 	}
 
 	public static  AbstractFactoryBuilder getInstancia() throws InstantiationException, IllegalAccessException, ClassNotFoundException, FileNotFoundException, IOException

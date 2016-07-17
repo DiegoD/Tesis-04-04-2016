@@ -1,7 +1,9 @@
 package com.logica;
 
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Properties;
 
 import javax.sql.DataSource;
 
@@ -13,30 +15,87 @@ public class Pool {
 
 	private DataSource dataSource;
 	
-	String db;
-	String url;
-	String user;
-	String pass;
+	private String url;
+	private String user;
+	private String pass;
+	private String driver; 
 	
+	private static volatile Pool INSTANCE = null;
+	private static final Object lock = new Object();
 	
-	public Pool()
+	public static Pool getInstance() throws InstantiationException
 	{
-		this.inicializaDataSource();
+		if(INSTANCE == null)
+        {
+            synchronized (lock)
+            {   
+               INSTANCE = new Pool();
+				
+            }
+        }
+        
+        return INSTANCE;
 	}
 	
-	private void inicializaDataSource()
+	private Pool() throws InstantiationException 
+	{
+			/*Inicializamos variables para realizar conexion*/
+			this.inicializarVariables();
+			
+			this.inicializaDataSource();
+		
+	}
+	
+	private void inicializarVariables() throws  InstantiationException
+	{
+		try
+		{
+		
+		/*Carga datos del archivo datos.properties*/
+		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+	    InputStream stream = classLoader.getResourceAsStream("datos.properties");
+	    
+	    if (stream == null) {
+	        
+	    	throw new ConexionException();
+	    } 
+	    else {
+	    	System.out.println("encontro");
+	        Properties p = new Properties();
+	        
+	        
+	        p.load(stream);
+	       	        
+	        this.driver =  p.getProperty("driver");
+			this.user = p.getProperty("user");
+			this.pass = p.getProperty("password");
+			this.url = p.getProperty("url");
+	        
+	      }
+		}catch(Exception e)
+		{
+			throw new InstantiationException();
+		}
+	}
+	
+	private void inicializaDataSource() throws InstantiationException
 	{
 		BasicDataSource basicDataSurce = new BasicDataSource();
 		
-		basicDataSurce.setDriverClassName("com.mysql.jdbc.Driver");
-		
-		basicDataSurce.setUsername("root");
-		basicDataSurce.setPassword("root");
-		basicDataSurce.setUrl("jdbc:mysql://localhost:3306/vaadin");
-		basicDataSurce.setMaxTotal(50);
-		
-		this.dataSource = basicDataSurce;
-		
+		try
+		{
+			basicDataSurce.setDriverClassName(driver);
+			
+			basicDataSurce.setUsername(user);
+			basicDataSurce.setPassword(pass);
+			basicDataSurce.setUrl(url);
+			basicDataSurce.setMaxTotal(50);
+			
+			this.dataSource = basicDataSurce;
+		}catch(Exception e)
+		{
+			throw new InstantiationException();
+		}
 		
 	}
 	
@@ -56,7 +115,11 @@ public class Pool {
 	public void liberarConeccion(Connection con) throws ConexionException 
 	{
 		try {
-			con.close();
+			if(con != null)
+			{
+				if(!con.isClosed())
+					con.close();
+			}
 			
 		} catch (SQLException e) { 
 			

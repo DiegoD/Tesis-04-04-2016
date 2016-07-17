@@ -52,7 +52,7 @@ public class Fachada {
 	
     private Fachada() throws InstantiationException, IllegalAccessException, ClassNotFoundException, FileNotFoundException, IOException
     {
-        pool = new Pool();
+        pool = Pool.getInstance();
     	
     	fabrica = AbstractFactoryBuilder.getInstancia();
 		fabricaConcreta = fabrica.getAbstractFactory();
@@ -170,7 +170,7 @@ public class Fachada {
     
 /////////////////////////////////INI-LOGIN/////////////////////////////////
     
-    public boolean usuarioValido(LoginVO loginVO) throws LoginException, ErrorInesperadoException, ConexionException{
+    public boolean usuarioValido(LoginVO loginVO) throws LoginException, ConexionException{
     	
     	Connection con = null;
     	
@@ -180,9 +180,9 @@ public class Fachada {
     	
     		return this.usuarios.usuarioValido(loginVO, con);
     		
-    	}catch(Exception e)
+    	}catch(LoginException | ConexionException e)
     	{
-    		throw new ErrorInesperadoException();
+    		throw e;
     	}
     	finally
     	{
