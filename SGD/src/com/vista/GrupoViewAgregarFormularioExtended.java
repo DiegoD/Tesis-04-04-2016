@@ -14,22 +14,22 @@ import com.valueObject.FormularioVO;
 public class GrupoViewAgregarFormularioExtended extends GrupoViewAgregarFormulario{
 	
 	
-	GrupoControlador controlador;
+	GrupoViewExtended mainView;
 	BeanItemContainer<FormularioVO> container;
 	
 	/*Pasamos el controlador por referencia, para poder setearle al padre GrupoViewWxtended
 	 * los formularios seleccionados*/
 	@SuppressWarnings("unused")
-	public GrupoViewAgregarFormularioExtended(GrupoControlador control)
+	public GrupoViewAgregarFormularioExtended(GrupoViewExtended main)
 	{
-		this.controlador = control;
+		this.mainView = main;
 		this.lstFormularios.setSelectionMode(SelectionMode.MULTI);
+		
 		
 		this.btnAgregar.addClickListener(click -> {
 			
 			int i = 0;
-			
-			
+	
 			BeanItemContainer<FormularioVO> selec;
 			
 			try
@@ -48,12 +48,10 @@ public class GrupoViewAgregarFormularioExtended extends GrupoViewAgregarFormular
 					
 				}
 
-				controlador.agregarFormulariosSeleccionados(lstSeleccionados);
+				mainView.agregarFormulariosSeleccionados(lstSeleccionados);
 				
 				//((Window) this.getParent()).removeFromParent(this);
-				
-				
-			
+
 			}catch(Exception e)
 			{
 				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
@@ -69,7 +67,7 @@ public class GrupoViewAgregarFormularioExtended extends GrupoViewAgregarFormular
 	 *de formularios
 	 *
 	 */
-	public void setGrillaForms(ArrayList<FormularioVO> lstForms)
+	public void setGrillaForms(ArrayList<FormularioVO> lstFrms)
 	{
 		//this.lstFormularios.addAttachListener(listener);
 		
@@ -79,9 +77,9 @@ public class GrupoViewAgregarFormularioExtended extends GrupoViewAgregarFormular
 				new BeanItemContainer<FormularioVO>(FormularioVO.class);
 		
 		
-		if(lstForms != null)
+		if(lstFrms != null)
 		{
-			for (FormularioVO formVO : lstForms) {
+			for (FormularioVO formVO : lstFrms) {
 				container.addBean(formVO);
 			}
 		}

@@ -35,9 +35,11 @@ import com.valueObject.GrupoVO;
 public class GrupoViewExtended extends GrupoView {
 
 	private BeanFieldGroup<GrupoVO> fieldGroup;
-	private ArrayList<FormularioVO> lstFormsVO;
+	private ArrayList<FormularioVO> lstFormsVO; /*Lista de Formularios del Grupo*/
+	private ArrayList<FormularioVO> lstFormsAgregar; /*Lista de Formularios a agregar*/
 	private GrupoControlador controlador;
 	private String operacion;
+	private GruposPanelExtended mainView;
 	BeanItemContainer<FormularioVO> container;
 	
 	/**
@@ -48,20 +50,12 @@ public class GrupoViewExtended extends GrupoView {
 	@SuppressWarnings("unchecked")
 	public GrupoViewExtended(String opera, GruposPanelExtended main){
 		
-		this.lstFormularios.markAsDirty(); 
-		
-		
-		
-		 Styles styles = Page.getCurrent().getStyles();
-		 
-		 styles.add(".v-app .v-textarea.text-label { font-size:" + String.valueOf(4) + "px; }");
-		
-		 styles.add(".v-caption-inline-label{ display: inline-block;}");
-		 
-		 
-		codGrupo.addStyleName("inline-label");
-		
 	this.operacion = opera;
+	this.mainView = main;
+	
+	/*Esta lista es utilizada solamente para los formularios nuevos
+	 * agregados*/
+	this.lstFormsAgregar = new ArrayList<FormularioVO>();
 	
 	this.inicializarForm();
 	
@@ -78,15 +72,28 @@ public class GrupoViewExtended extends GrupoView {
 				
 				grupoVO.setCodGrupo(codGrupo.getValue().trim());
 				grupoVO.setNomGrupo(nomGrupo.getValue().trim());
-				grupoVO.setLstFormularios(this.lstFormsVO);
+				
 				grupoVO.setOperacion(operacion);
 				grupoVO.setActivo(activo.getValue());
 				grupoVO.setUsuarioMod(getSession().getAttribute("usuario").toString());
+				
+				/*Si hay algun formulario nuevo agregado
+				 * lo agregamos a la lista del formulario*/
+				if(this.lstFormsAgregar.size() > 0)
+				{
+					for (FormularioVO f : this.lstFormsAgregar) {
+						this.lstFormsVO.add(f);
+					}
+				}
+					
+				grupoVO.setLstFormularios(this.lstFormsVO);
 				
 				if(this.operacion.equals(Variables.OPERACION_NUEVO))	
 				{	
 	
 					this.controlador.insertarGrupo(grupoVO);
+					
+					this.mainView.actulaizarGrilla(grupoVO);
 					
 					Mensajes.mostrarMensajeOK("Se ha guardado el Grupo");
 				
@@ -95,14 +102,18 @@ public class GrupoViewExtended extends GrupoView {
 					/*VER DE IMPLEMENTAR PARA EDITAR BORRO TODO E INSERTO NUEVAMENTE*/
 					this.controlador.editarGrupo(grupoVO);
 					
+					this.mainView.actulaizarGrilla(grupoVO);
+					
+					Mensajes.mostrarMensajeOK("Se ha modificado el Grupo");
+					
 				}
 				
 				/*Mensaje de que se han guardado los cambios 
 				 * oculatamos el boton de guardar y mostramos el de editar*/
-				Mensajes.mostrarMensajeWarning(Variables.OK_INGRESO);
-				
+							
 				this.enableBotonEditar();
 				this.disableBotonAceptar();
+				this.disableBotonAgregar();
 			
 			}
 			else /*Si los campos no son válidos mostramos warning*/
@@ -143,7 +154,7 @@ public class GrupoViewExtended extends GrupoView {
 					
 			try {
 				
-				GrupoViewAgregarFormularioExtended form = new GrupoViewAgregarFormularioExtended(this.controlador);
+				GrupoViewAgregarFormularioExtended form = new GrupoViewAgregarFormularioExtended(this);
 				
 				MySub sub = new MySub();
 				sub.setVista(form);
@@ -151,11 +162,23 @@ public class GrupoViewExtended extends GrupoView {
 				sub.setHeight("50%");
 				sub.center();
 				
+				String codGrupo;/*Codigo del grupo para obtener los forms del mismo*/
+				
 				/*Obtenemos los formularios que no estan en el grupo
 				 * para mostrarlos en la grilla para seleccionar*/
-				String codGrupo = fieldGroup.getItemDataSource().getBean().getCodGrupo();
-				ArrayList<FormularioVO> lstForms = this.controlador.getFormulariosNoGrupo(codGrupo);
+				if(this.operacion.equals(Variables.OPERACION_NUEVO) )
+				{
+					/*Si la operacion es nuevo, ponemos el  codGrupo vacio
+					 * asi nos trae todos los grupos disponibles*/
+					codGrupo = "";
+				}
+				else 
+				{
+					/*Si es operacion Editar tomamos el codGrupo de el fieldGroup*/
+					codGrupo = fieldGroup.getItemDataSource().getBean().getCodGrupo();
+				}
 				
+				ArrayList<FormularioVO> lstForms = this.controlador.getFormulariosNoGrupo(codGrupo);
 				form.setGrillaForms(lstForms);
 				
 				UI.getCurrent().addWindow(sub);
@@ -239,6 +262,7 @@ public class GrupoViewExtended extends GrupoView {
 		 * deshabilitamos botn aceptar*/
 		this.enableBotonEditar();
 		this.disableBotonAceptar();
+		this.disableBotonAgregar();
 		
 		/*No mostramos las validaciones*/
 		this.setearValidaciones(false);
@@ -273,9 +297,10 @@ public class GrupoViewExtended extends GrupoView {
 		/*Seteamos el form en editar*/
 		this.operacion = Variables.OPERACION_EDITAR;
 		
-		/*Oculatamos Editar y mostramos el de guardar*/
+		/*Oculatamos Editar y mostramos el de guardar y de agregar formularios*/
 		this.enableBotonAceptar();
 		this.disableBotonEditar();
+		this.enableBotonAgregar();
 		
 		/*Dejamos los textfields que se pueden editar
 		 * en readonly = false asi  se pueden editar*/
@@ -293,6 +318,13 @@ public class GrupoViewExtended extends GrupoView {
 	{
 		this.enableBotonAceptar();
 		this.disableBotonEditar();
+		this.enableBotonAgregar();
+		this.lstFormsAgregar = new ArrayList<FormularioVO>();
+		this.lstFormsVO = new ArrayList<FormularioVO>();
+		
+		/*Inicializamos el container*/
+		this.container = 
+				new BeanItemContainer<FormularioVO>(FormularioVO.class);
 		
 		/*Seteamos validaciones en nuevo, cuando es editar
 		 * solamente cuando apreta el boton editar*/
@@ -335,6 +367,27 @@ public class GrupoViewExtended extends GrupoView {
 		this.btnEditar.setEnabled(true);
 		this.btnEditar.setVisible(true);
 		
+	}
+	
+	/**
+	 * Habilitamos el boton editar
+	 *
+	 */
+	private void enableBotonAgregar()
+	{
+		this.btnAgregar.setEnabled(true);
+		this.btnAgregar.setVisible(true);
+		
+	}
+	
+	/**
+	 * Deshabilitamos el boton editar
+	 *
+	 */
+	private void disableBotonAgregar()
+	{
+		this.btnAgregar.setEnabled(false);
+		this.btnAgregar.setVisible(false);
 	}
 	
 	/**
@@ -441,25 +494,12 @@ public class GrupoViewExtended extends GrupoView {
 	 */
 	public void agregarFormulariosSeleccionados(ArrayList<FormularioVO> lstForms)
 	{
-		
-	       // Create a new bean and bind it to the form
+
         FormularioVO bean = new FormularioVO();
-        bean.setCodFormulario("Dummie");
-        bean.setNomFormulario("Nombbbb");
         
-        
-        BeanItem<FormularioVO> item = new BeanItem<FormularioVO>(bean);
-        this.container.addBean(bean);
-        lstFormularios.setContainerDataSource(container);
-        
-		/*Seteamos la grilla con los formularios*/
-		//this.container = new BeanItemContainer<FormularioVO>(FormularioVO.class);
-		
-		
-		
 		if(lstForms.size() > 0)
 		{
-			for (FormularioVO formVO : this.lstFormsVO) {
+			for (FormularioVO formVO : lstForms) {
 				
 				/*Hacemos un nuevo objeto por bug de vaadin
 				 * de lo contrario no refresca la grilla*/
@@ -467,34 +507,18 @@ public class GrupoViewExtended extends GrupoView {
 		        bean.setCodFormulario(formVO.getCodFOrmulario());
 		        bean.setNomFormulario(formVO.getNomFormulario());
 				
-				//this.lstFormsVO.add(formVO);
+		        /*Por ESTO*/
+			//	this.lstFormsVO.add(formVO);
+		        this.lstFormsAgregar.add(formVO);
+				
 				this.container.addBean(bean);
 			}
 		}
 		
 		lstFormularios.setContainerDataSource(container);
 
-        this.lstFormularios.markAsDirty(); 
 	}
 
-	  private void updateCaptionAndSize ( final Grid grid , final String caption )
-	    {
-	        // Caption
-	        grid.setCaption( caption + " ( updated " + this.now() + " )" );  // Update caption of Grid to indicate fresh data.
-	        // Show all rows.
-	        double h = grid.getContainerDataSource().size() > 0 ? grid.getContainerDataSource().size() : 3; // Cannot set height to zero rows. So if no data, set height to some arbitrary number of (empty) rows.
-	        grid.setHeightByRows( h );
-	    }
-	  
-	  // Helper method.
-	    private String now ()
-	    {
-	        // Get current time in UTC. Truncate fractional seconds. Append a 'Z' to indicate UTC time zone.
-	        return ZonedDateTime.now( ZoneOffset.UTC ).format( DateTimeFormatter.ISO_LOCAL_TIME ).substring( 0 , 8 ).concat( "Z" );
-	    }
-	    
-	    
-	
 }
 
 

@@ -1,17 +1,13 @@
 package com.persistencia;
 
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.sql.Connection;
 
-import org.json.simple.JSONObject;
-
 import com.excepciones.ConexionException;
-import com.excepciones.cotizaciones.IngresandoCotizacionException;
-import com.excepciones.cotizaciones.ObteniendoCotizacionException;
+
 import com.excepciones.grupos.InsertandoGrupoException;
 import com.excepciones.grupos.MemberGrupoException;
 import com.excepciones.grupos.ModificandoGrupoException;
@@ -19,16 +15,9 @@ import com.excepciones.grupos.ObteniendoFormulariosException;
 import com.excepciones.grupos.ObteniendoGruposException;
 import com.logica.Formulario;
 import com.logica.Grupo;
-import com.valueObject.CotizacionVO;
-import com.valueObject.FormularioVO;
-import com.valueObject.GrupoVO;
+
 
 public class DAOGrupos implements IDAOGrupos {
-	
-	private Conexion conexion;
-	private java.sql.Connection con = null;
-	private PreparedStatement pst = null;
-	private ResultSet rs = null;
 	
 
 	public ArrayList<Grupo> getGrupos(Connection con) throws ObteniendoGruposException, ObteniendoFormulariosException
@@ -63,6 +52,8 @@ public class DAOGrupos implements IDAOGrupos {
 
 				lstGrupos.add(grupo);
 			}
+			
+			
 			
 			rs.close ();
 			pstmt1.close ();

@@ -16,8 +16,9 @@ public class GrupoVO extends AuditoriaVO{
 
 	public GrupoVO()
 	 {
-	  
+		this.lstFormularios = new ArrayList<FormularioVO>();
 	 }
+	
 	
 	public GrupoVO(JSONObject obj){
 		
@@ -43,6 +44,41 @@ public class GrupoVO extends AuditoriaVO{
 			  
 			    this.lstFormularios.add(formVO);
 			}
+		}
+		
+	}
+	
+	/**
+	 * Copiamos todos los datos del GrupoVO pasado
+	 * por parametro
+	 *
+	 */
+	public void copiar(GrupoVO grpVO){
+
+		this.setUsuarioMod(grpVO.getUsuarioMod());
+		this.setFechaMod(grpVO.getFechaMod());
+		this.setOperacion(grpVO.getOperacion());
+		
+		this.codGrupo = grpVO.getCodGrupo();
+		this.nomGrupo = grpVO.getNomGrupo();
+		this.activo = 	grpVO.getActivo();
+		
+		this.lstFormularios = new ArrayList<FormularioVO>();
+		
+				
+		if (grpVO.getLstFormularios() != null)
+		{
+			FormularioVO formVO;
+			for (FormularioVO frmVO : grpVO.getLstFormularios()) {
+				
+				formVO = new FormularioVO();		    
+			    formVO.setCodFormulario(frmVO.getCodFOrmulario()); 
+			    formVO.setNomFormulario(frmVO.getNomFormulario()); 
+			  
+			    this.lstFormularios.add(formVO);
+				
+			}
+			
 		}
 		
 	}
@@ -73,7 +109,12 @@ public class GrupoVO extends AuditoriaVO{
 	}
 
 	public void setLstFormularios(ArrayList<FormularioVO> lstFormularios) {
-		this.lstFormularios = lstFormularios;
+		
+		for (FormularioVO formularioVO : lstFormularios) 
+		{
+			this.lstFormularios.add(formularioVO);
+		}
+		
 	}
 
 

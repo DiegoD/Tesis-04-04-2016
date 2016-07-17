@@ -20,19 +20,22 @@ import com.vaadin.shared.Position;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import com.valueObject.GrupoVO;
+import com.valueObject.UsuarioVO;
 import com.vista.CotizacionesPanelExtended.ItemGrilla;
 
 
 public class GruposPanelExtended extends GruposPanel {
 	
-	//private FacturaEjExtended form;
-	private GrupoViewExtended form;
-	BeanItemContainer<GrupoVO> container;
-	GrupoControlador controlador;
+	
+	private GrupoViewExtended form; 
+	private ArrayList<GrupoVO> lstGrupos; /*Lista con los grupos*/
+	private BeanItemContainer<GrupoVO> container;
+	private GrupoControlador controlador;
 	
 	public GruposPanelExtended(){
 		
 		controlador = new GrupoControlador();
+		this.lstGrupos = new ArrayList<GrupoVO>();
 		
 		try {
 			
@@ -40,13 +43,11 @@ public class GruposPanelExtended extends GruposPanel {
 			
 			this.btnNuevo.addClickListener(click -> {
 				
-
 					MySub subGrupoView = new MySub();
 					form = new GrupoViewExtended(Variables.OPERACION_NUEVO, this);
 					subGrupoView.setVista(form);
 					
 					UI.getCurrent().addWindow(subGrupoView);
-					
 				
 			});
 			
@@ -63,16 +64,12 @@ public class GruposPanelExtended extends GruposPanel {
 	
 	private void inicializarGrilla() throws InstantiationException, IllegalAccessException, ClassNotFoundException, FileNotFoundException, IOException{
 		
-			
-		java.util.Date utilDate = new java.util.Date();
-		java.sql.Timestamp sqlDate = new java.sql.Timestamp(utilDate.getTime());
-			
-						
+									
 		this.container = 
 				new BeanItemContainer<GrupoVO>(GrupoVO.class);
 		
 		//Obtenemos lista de grupos del sistema
-		ArrayList<GrupoVO> lstGrupos = this.getGrupos();
+		this.lstGrupos = this.getGrupos();
 		
 		for (GrupoVO grupoVO : lstGrupos) {
 			container.addBean(grupoVO);
@@ -132,27 +129,103 @@ public class GruposPanelExtended extends GruposPanel {
 	private ArrayList<GrupoVO> getGrupos(){
 		
 		ArrayList<GrupoVO> lstGrupos = new ArrayList<GrupoVO>();
-		
-		ArrayList<JSONObject> lstGruposJ = null;
-		
+
 		try {
 			
-			lstGruposJ = controlador.getGrupos();
+			lstGrupos = controlador.getGrupos();
 
 		} catch (ObteniendoGruposException | InicializandoException | ConexionException | ErrorInesperadoException e) {
 			
 			Mensajes.mostrarMensajeError(e.getMessage());
 		}
 		
-		GrupoVO aux;
-		for (JSONObject jsonObject : lstGruposJ) {
 			
-			aux = new GrupoVO(jsonObject);
-			
-			lstGrupos.add(aux);
-		}
-		
 		return lstGrupos;
 	}
+	
+	/**
+	 * Actualizamos Grilla si se agrega o modigfica un grupo
+	 * desde GrupoViewExtended
+	 *
+	 */
+	public void actulaizarGrilla(GrupoVO grupoVO)
+	{
+
+		/*Si esta el grupo en la lista, es una acutalizacion
+		 * y modificamos el objeto en la lista*/
+		if(this.existeGrupoenLista(grupoVO.getCodGrupo()))
+		{
+			this.actualizarGrupoenLista(grupoVO);
+		}
+		else  /*De lo contrario es uno nuevo y lo agregamos a la lista*/
+		{
+			this.lstGrupos.add(grupoVO);
+		}
+			
+		/*Actualizamos la grilla*/
+		this.container.removeAllItems();
+		this.container.addAll(this.lstGrupos);
+		
+		this.gridview.setContainerDataSource(container);
+
+	}
+	
+	
+	/**
+	 * Modificamos un grupoVO de la lista cuando
+	 * se hace una acutalizacion de un Grupo
+	 *
+	 */
+	private void actualizarGrupoenLista(GrupoVO grupoVO)
+	{
+		int i =0;
+		boolean salir = false;
+		
+		GrupoVO grupoEnLista;
+		
+		while( i < this.lstGrupos.size() && !salir)
+		{
+			grupoEnLista = this.lstGrupos.get(i);
+			if(grupoVO.getCodGrupo().equals(grupoEnLista.getCodGrupo()))
+			{
+				//this.lstGrupos.get(i).setNomGrupo(grupoVO.getNomGrupo());
+				
+				this.lstGrupos.get(i).copiar(grupoVO);
+
+				salir = true;
+			}
+			
+			i++;
+		}
+		
+	}
+	
+	/**
+	 * Retornanoms true si esta el grupoVO en la lista
+	 * de grupos de la vista
+	 *
+	 */
+	private boolean existeGrupoenLista(String codGrupo)
+	{
+		int i =0;
+		boolean esta = false;
+		
+		GrupoVO aux;
+		
+		while( i < this.lstGrupos.size() && !esta)
+		{
+			aux = this.lstGrupos.get(i);
+			if(codGrupo.equals(aux.getCodGrupo()))
+			{
+				esta = true;
+			}
+			
+			i++;
+		}
+		
+		return esta;
+	}
+	
+	
 	
 }

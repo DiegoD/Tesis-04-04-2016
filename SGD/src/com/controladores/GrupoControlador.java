@@ -34,11 +34,6 @@ public class GrupoControlador {
 		
 	}
 	
-	public void agregarFormulariosSeleccionados(ArrayList<FormularioVO> lstForms)
-	{
-		this.vista.agregarFormulariosSeleccionados(lstForms);
-	}
-	
 	public void insertarGrupo(GrupoVO grupoVO) throws InsertandoGrupoException, MemberGrupoException, ExisteGrupoException, InicializandoException, ConexionException, ErrorInesperadoException
 	{
 		
@@ -47,7 +42,7 @@ public class GrupoControlador {
 		Fachada.getInstance().insertarGrupo(grupoVO);
 	}
 		
-	public ArrayList<JSONObject> getGrupos() throws ObteniendoGruposException, InicializandoException, ConexionException, ErrorInesperadoException 
+	public ArrayList<GrupoVO> getGrupos() throws ObteniendoGruposException, InicializandoException, ConexionException, ErrorInesperadoException 
 	{
 		
 			return Fachada.getInstance().getGrupos();

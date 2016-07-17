@@ -195,53 +195,49 @@ public class Fachada {
     
 /////////////////////////////////INI-GUPOS/////////////////////////////////
     @SuppressWarnings("unchecked")
-	public ArrayList<JSONObject> getGrupos() throws ObteniendoGruposException, ConexionException, ErrorInesperadoException {
+	public ArrayList<GrupoVO> getGrupos() throws ObteniendoGruposException, ConexionException, ErrorInesperadoException {
     	
     	Connection con = null;
     	
     	ArrayList<Grupo> lstGrupos;
-    	ArrayList<JSONObject> lstObj = new ArrayList<JSONObject>();
-    	JSONArray JSONlstFormularios = new JSONArray();
-    	
+    	ArrayList<GrupoVO> lstGruposVO = new ArrayList<GrupoVO>();
+    	    	
     	try
     	{
     		con = this.pool.obtenerConeccion();
     		
     		lstGrupos = this.grupos.getGrupos(con);
     		
-    		JSONObject obj;
     		
+    		GrupoVO aux;
     		for (Grupo grupo : lstGrupos) 
 			{
-    			obj = new JSONObject();
+    			aux = new GrupoVO();
     			
-				obj.put("codGrupo", grupo.getCodGrupo());
-				obj.put("nomGrupo", grupo.getNomGrupo());
-				obj.put("fechaMod", grupo.getFechaMod());
-				obj.put("usuarioMod", grupo.getUsuarioMod());
-				obj.put("operacion", grupo.getOperacion());
-				obj.put("activo", grupo.isActivo());
-				//obj.put("lstFormularios", grupo.getLstFormularios());
-				
-				for (Formulario form : grupo.getLstFormularios()) {
+    			aux.setCodGrupo(grupo.getCodGrupo());
+    			aux.setNomGrupo(grupo.getNomGrupo());
+    			aux.setFechaMod(grupo.getFechaMod());
+    			aux.setUsuarioMod(grupo.getUsuarioMod());
+    			aux.setOperacion(grupo.getOperacion());
+    			aux.setActivo(grupo.isActivo());
+    			
+    			
+    			FormularioVO auxF;
+    			for (Formulario frm : grupo.getLstFormularios()) {
 					
-					JSONlstFormularios = new JSONArray();
-					
-					JSONObject jForm = new JSONObject();
-					jForm.put("codFormulario", form.getCodFormulario());
-					jForm.put("nomFormulario", form.getNomFormulario());
-					
-					JSONlstFormularios.add(jForm);
-					
+    				auxF = new FormularioVO();
+    				
+    				auxF.setCodFormulario(frm.getCodFormulario());
+    				auxF.setNomFormulario(frm.getNomFormulario());
+    				
+    				aux.getLstFormularios().add(auxF);
 				}
-				
-				if(grupo.getLstFormularios().size() > 0)
-					obj.put("lstFormularios", JSONlstFormularios);
-				
-				lstObj.add(obj);
+    			
+    			lstGruposVO.add(aux);
 			}
     		
-    		return lstObj;
+   		
+    		return lstGruposVO;
     		
     	}catch(Exception e)
     	{
