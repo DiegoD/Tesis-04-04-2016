@@ -12,10 +12,14 @@ import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
 import com.excepciones.Usuarios.ObteniendoUsuariosException;
 import com.excepciones.grupos.ObteniendoGruposException;
+import com.vaadin.client.ui.VScrollTable.HeaderCell;
+import com.vaadin.client.widgets.Grid.HeaderRow;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.valueObject.GrupoVO;
 import com.valueObject.UsuarioVO;
@@ -64,9 +68,12 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 			container.addBean(usuarioVO);
 		}
 		gridUsuarios.setContainerDataSource(container);
+		this.filtroGrilla();
 		
 		gridUsuarios.removeColumn("activo");
 		gridUsuarios.removeColumn("lstGrupos");
+		
+		
 		
 		gridUsuarios.addSelectionListener(new SelectionListener() 
 		{
@@ -191,6 +198,37 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 		this.container.removeAllItems();
 		this.container.addAll(this.lstUsuarios);
 		this.gridUsuarios.setContainerDataSource(container);
+	}
+	
+	private void filtroGrilla()
+	{
+		com.vaadin.ui.Grid.HeaderRow filterRow = gridUsuarios.appendHeaderRow();
+
+		// Set up a filter for all columns
+		for (Object pid: gridUsuarios.getContainerDataSource()
+		                     .getContainerPropertyIds()) 
+		{
+		    com.vaadin.ui.Grid.HeaderCell cell = filterRow.getCell(pid);
+
+		    // Have an input field to use for filter
+		    TextField filterField = new TextField();
+		    filterField.setImmediate(true);
+		    filterField.setWidth("125px");
+		    filterField.setHeight("30px");
+		    filterField.setInputPrompt("Filtro");
+		    // Update filter When the filter input is changed
+		    filterField.addTextChangeListener(change -> {
+		        // Can't modify filters so need to replace
+		    	this.container.removeContainerFilters(pid);
+
+		        // (Re)create the filter if necessary
+		        if (! change.getText().isEmpty())
+		        	this.container.addContainerFilter(
+		                new SimpleStringFilter(pid,
+		                    change.getText(), true, false));
+		    });
+		    cell.setComponent(filterField);
+		}
 	}
 
 }

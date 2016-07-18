@@ -252,6 +252,7 @@ public class UsuarioViewExtended extends UsuarioView{
 		/*Oculatamos Editar y mostramos el de guardar*/
 		this.enableBotonAceptar();
 		this.disableBotonEditar();
+		this.enableBotonAgregar();
 		
 		/*Dejamos los textfields que se pueden editar
 		 * en readonly = false asi  se pueden editar*/
@@ -321,6 +322,7 @@ public class UsuarioViewExtended extends UsuarioView{
 		 * deshabilitamos botn aceptar*/
 		this.enableBotonEditar();
 		this.disableBotonAceptar();
+		this.disableBotonAgregar();
 		
 		/*No mostramos las validaciones*/
 		this.setearValidaciones(false);
@@ -350,7 +352,17 @@ public class UsuarioViewExtended extends UsuarioView{
 		this.aceptar.setVisible(false);
 	}
 	
+	private void disableBotonAgregar()
+	{
+		this.btnAgregar.setEnabled(false);
+		this.btnAgregar.setVisible(false);
+	}
 	
+	private void enableBotonAgregar()
+	{
+		this.btnAgregar.setEnabled(true);
+		this.btnAgregar.setVisible(true);
+	}
 	
 	/**
 	 * Seteamos todos las validaciones de los fields
