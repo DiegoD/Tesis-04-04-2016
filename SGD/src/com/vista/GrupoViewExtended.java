@@ -448,7 +448,7 @@ public class GrupoViewExtended extends GrupoView {
 	}
 	
 	/**
-	 * Habilitamos el boton editar
+	 * Habilitamos los botones de agregar y quitar
 	 *
 	 */
 	private void enableBotonAgregarQuitar()

@@ -32,6 +32,7 @@ public class UsuarioView extends FormLayout {
 	protected Link auditoria;
 	protected Grid grillaGrupos;
 	protected Button btnAgregar;
+	protected Button btnQuitar;
 
 	public UsuarioView() {
 		Design.read(this);

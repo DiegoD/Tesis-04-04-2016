@@ -24,9 +24,14 @@
     </vaadin-form-layout> 
     <vaadin-form-layout spacing="false" size-full> 
      <vaadin-grid id="grillaGrupos" responsive width-full height="267px" _id="grillaGrupos"></vaadin-grid> 
-     <vaadin-button style-name="tiny primary" id="btnAgregar" plain-text _id="btnAgregar">
-       Agregar 
-     </vaadin-button> 
+     <vaadin-horizontal-layout style-name="v-formlayout" responsive width="60%" height-full :middle :right> 
+     <vaadin-button style-name="primary tiny" responsive id="btnAgregar" plain-text _id="btnAgregar" :middle>
+        Agregar 
+      </vaadin-button> 
+      <vaadin-button style-name="primary tiny" responsive id="btnQuitar" plain-text _id="btnQuitar" :middle>
+        Quitar 
+      </vaadin-button> 
+     </vaadin-horizontal-layout> 
     </vaadin-form-layout> 
    </vaadin-horizontal-layout> 
   </vaadin-form-layout>  

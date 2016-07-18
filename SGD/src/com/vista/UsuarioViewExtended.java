@@ -19,6 +19,8 @@ import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.validator.StringLengthValidator;
+import com.vaadin.event.SelectionEvent;
+import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.ui.UI;
 import com.valueObject.FormularioVO;
 import com.valueObject.GrupoNombreVO;
@@ -34,6 +36,8 @@ public class UsuarioViewExtended extends UsuarioView{
 	private ArrayList<GrupoVO> lstGruposUsuario;
 	private ArrayList<GrupoVO> lstGruposAgregar; /*Lista de Formularios a agregar*/
 	private UsuariosPanelExtend mainView;
+	private GrupoVO grupoSeleccionado; /*Variable utilizada cuando se selecciona
+	  									un grupo, para poder quitarlo de la lista*/
 	
 	BeanItemContainer<GrupoVO> container;
 	GrupoControlador controladorGrupo;
@@ -114,9 +118,7 @@ public class UsuarioViewExtended extends UsuarioView{
 			
 			try
 			{
-				//this.codGrupo.setReadOnly(true);
 				/*Inicializamos el Form en modo Edicion*/
-				
 				this.iniFormEditar();
 	
 			}
@@ -159,6 +161,79 @@ public class UsuarioViewExtended extends UsuarioView{
 			
 		});
 		
+		/*Inicalizamos listener para boton de Quitar*/
+		this.btnQuitar.addClickListener(click -> {
+				
+			boolean esta = false;	
+	
+			try {
+				
+				/*Verificamos que haya un formulario seleccionado para
+				 * eliminar*/
+				if(grupoSeleccionado != null)
+				{
+
+					/*Recorremos los formularios del grupo
+					 * y buscamos el seleccionarlo para quitarlo*/
+					int i = 0;
+					while(i < lstGruposUsuario.size() && !esta)
+					{
+						if(lstGruposUsuario.get(i).getCodGrupo().equals(grupoSeleccionado.getCodGrupo()))
+						{
+							/*Quitamos el formulario seleccionado de la lista*/
+							lstGruposUsuario.remove(lstGruposUsuario.get(i));
+							
+							esta = true;
+						}
+
+						i++;
+					}
+					
+					/*Si lo encontro en la grilla*/
+					if(esta)
+					{
+						/*Actualizamos el container y la grilla*/
+						containerGrupo.removeAllItems();
+						containerGrupo.addAll(lstGruposUsuario);
+						grillaGrupos.setContainerDataSource(containerGrupo);
+					}
+					
+				}
+				else /*De lo contrario mostramos mensaje que debe selcionar un formulario*/
+				{
+					Mensajes.mostrarMensajeError("Debe seleccionar un formulario para quitar");
+				}
+		
+				}catch(Exception e)
+				{
+					Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+				}
+			});
+		
+		
+		grillaGrupos.addSelectionListener(new SelectionListener() 
+		{
+			
+		    @Override
+		    public void select(SelectionEvent event) 
+		    {
+		       
+		    	try
+		    	{
+		    		BeanItem<GrupoVO> item = containerGrupo.getItem(grillaGrupos.getSelectedRow());
+			    	grupoSeleccionado = item.getBean(); /*Seteamos el formulario
+			    	 									seleccionado para poder quitarlo*/
+
+					  
+		    	}
+		    	catch(Exception e)
+		    	{
+		    		Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+		    	}
+		      
+		    }
+		});
+
 	}
 	
 	private void inicializarForm(){
@@ -257,7 +332,7 @@ public class UsuarioViewExtended extends UsuarioView{
 		/*Oculatamos Editar y mostramos el de guardar*/
 		this.enableBotonAceptar();
 		this.disableBotonEditar();
-		this.enableBotonAgregar();
+		this.enableBotonAgregarQuitar();
 		
 		/*Dejamos los textfields que se pueden editar
 		 * en readonly = false asi  se pueden editar*/
@@ -327,7 +402,7 @@ public class UsuarioViewExtended extends UsuarioView{
 		 * deshabilitamos botn aceptar*/
 		this.enableBotonEditar();
 		this.disableBotonAceptar();
-		this.disableBotonAgregar();
+		this.disableBotonAgregarQuitar();
 		
 		/*No mostramos las validaciones*/
 		this.setearValidaciones(false);
@@ -357,16 +432,22 @@ public class UsuarioViewExtended extends UsuarioView{
 		this.aceptar.setVisible(false);
 	}
 	
-	private void disableBotonAgregar()
+	private void disableBotonAgregarQuitar()
 	{
 		this.btnAgregar.setEnabled(false);
 		this.btnAgregar.setVisible(false);
+		
+		this.btnQuitar.setEnabled(false);
+		this.btnQuitar.setVisible(false);
 	}
 	
-	private void enableBotonAgregar()
+	private void enableBotonAgregarQuitar()
 	{
 		this.btnAgregar.setEnabled(true);
 		this.btnAgregar.setVisible(true);
+		
+		this.btnQuitar.setEnabled(true);
+		this.btnQuitar.setVisible(true);
 	}
 	
 	/**
