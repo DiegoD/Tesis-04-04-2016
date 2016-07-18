@@ -100,6 +100,7 @@ public class GrupoViewExtended extends GrupoView {
 					this.mainView.actulaizarGrilla(grupoVO);
 					
 					Mensajes.mostrarMensajeOK("Se ha guardado el Grupo");
+					main.cerrarVentanaNuevo();
 				
 				}else if(this.operacion.equals(Variables.OPERACION_EDITAR))
 				{
@@ -109,15 +110,16 @@ public class GrupoViewExtended extends GrupoView {
 					this.mainView.actulaizarGrilla(grupoVO);
 					
 					Mensajes.mostrarMensajeOK("Se ha modificado el Grupo");
+					main.cerrarVentanaEdicion();
 					
 				}
 				
 				/*Mensaje de que se han guardado los cambios 
 				 * oculatamos el boton de guardar y mostramos el de editar*/
 							
-				this.enableBotonEditar();
-				this.disableBotonAceptar();
-				this.disableBotonAgregarQuitar();
+				//this.enableBotonEditar();
+				//this.disableBotonAceptar();
+				//this.disableBotonAgregarQuitar();
 			
 			}
 			else /*Si los campos no son válidos mostramos warning*/
@@ -133,6 +135,7 @@ public class GrupoViewExtended extends GrupoView {
 			{
 				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 			}
+			
 		});
 	
 	/*Inicalizamos listener para boton de Editar*/

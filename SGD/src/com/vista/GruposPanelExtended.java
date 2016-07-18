@@ -33,7 +33,9 @@ public class GruposPanelExtended extends GruposPanel {
 	private ArrayList<GrupoVO> lstGrupos; /*Lista con los grupos*/
 	private BeanItemContainer<GrupoVO> container;
 	private GrupoControlador controlador;
-	
+	//private MySub subGrupoView = new MySub("60%", "55%");
+	private MySub subGrupoView = new MySub();
+	MySub sub = new MySub("60%", "55%");
 	
 	public GruposPanelExtended(){
 		
@@ -49,7 +51,7 @@ public class GruposPanelExtended extends GruposPanel {
 			
 			this.btnNuevo.addClickListener(click -> {
 				
-					MySub subGrupoView = new MySub("60%", "55%");
+					
 					form = new GrupoViewExtended(Variables.OPERACION_NUEVO, this);
 					subGrupoView.setVista(form);
 					
@@ -110,7 +112,7 @@ public class GruposPanelExtended extends GruposPanel {
 		    	try{
 		    	BeanItem<GrupoVO> item = container.getItem(gridview.getSelectedRow());
 		
-					MySub sub = new MySub("60%", "55%");
+					
 					form = new GrupoViewExtended(Variables.OPERACION_LECTURA, GruposPanelExtended.this);
 					//form.fieldGroup.setItemDataSource(item);
 					
@@ -281,6 +283,16 @@ public class GruposPanelExtended extends GruposPanel {
 		{
 			 System.out.println(e.getStackTrace());
 		}
+	}
+	
+	public void cerrarVentanaNuevo()
+	{
+		UI.getCurrent().removeWindow(subGrupoView);
+	}
+	
+	public void cerrarVentanaEdicion()
+	{
+		UI.getCurrent().removeWindow(sub);
 	}
 	
 }
