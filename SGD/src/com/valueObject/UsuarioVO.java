@@ -13,24 +13,28 @@ public class UsuarioVO {
 	private String pass;
 	private String nombre;
 	private boolean activo;
-	private ArrayList<GrupoNombreVO> lstGrupos;
+	private ArrayList<GrupoVO> lstGrupos;
 
+	public UsuarioVO()
+	{
+		this.lstGrupos = new ArrayList<GrupoVO>();
+	}
 	public UsuarioVO(JSONObject obj){
 		
 		this.usuario = (String) obj.get("usuario");
 		this.pass = (String) obj.get("pass");
 		this.nombre = (String) obj.get("nombre");
 		this.activo = (Boolean) obj.get("activo");
-		this.lstGrupos = new ArrayList<GrupoNombreVO>();
+		this.lstGrupos = new ArrayList<GrupoVO>();
 		
 		JSONArray jLstGrupos = (JSONArray) obj.get("lstGruposUsuario");
-		GrupoNombreVO grupoNombre;
+		GrupoVO grupoNombre;
 		if(jLstGrupos != null)
 		{
 			for(int i = 0; i < jLstGrupos.size(); i++)
 			{
 				JSONObject jGrupoUsuario = (JSONObject) jLstGrupos.get(i);
-				grupoNombre = new GrupoNombreVO();
+				grupoNombre = new GrupoVO();
 				grupoNombre.setCodGrupo((String) jGrupoUsuario.get("codigo"));
 				grupoNombre.setNomGrupo((String) jGrupoUsuario.get("nombre"));
 				
@@ -40,11 +44,11 @@ public class UsuarioVO {
 		
 	}
 	
-	public ArrayList<GrupoNombreVO> getLstGrupos() {
+	public ArrayList<GrupoVO> getLstGrupos() {
 		return lstGrupos;
 	}
 
-	public void setLstGrupos(ArrayList<GrupoNombreVO> lstGrupos) {
+	public void setLstGrupos(ArrayList<GrupoVO> lstGrupos) {
 		this.lstGrupos = lstGrupos;
 	}
 
@@ -75,6 +79,33 @@ public class UsuarioVO {
 		this.nombre = nombre;
 	}
 	
-	
+	public void copiar(UsuarioVO usuarioVO)
+	{
+
+		this.usuario = usuarioVO.getUsuario();
+		this.nombre = usuarioVO.getNombre();
+		this.pass = usuarioVO.getPass();
+		this.activo = usuarioVO.isActivo();
+		
+		this.lstGrupos = new ArrayList<GrupoVO>();
+		
+				
+		if (usuarioVO.getLstGrupos() != null)
+		{
+			GrupoVO grupoVO;
+			for (GrupoVO grupoVO1 : usuarioVO.getLstGrupos()) 
+			{
+				
+				grupoVO = new GrupoVO();		    
+				grupoVO.setNomGrupo(grupoVO1.getNomGrupo());
+				grupoVO.setCodGrupo(grupoVO1.getCodGrupo());
+			  
+			    this.lstGrupos.add(grupoVO);
+				
+			}
+			
+		}
+		
+	}
 	
 }

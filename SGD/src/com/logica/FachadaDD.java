@@ -51,7 +51,7 @@ public class FachadaDD {
 	
     private FachadaDD() throws InstantiationException, IllegalAccessException, ClassNotFoundException, FileNotFoundException, IOException
     {
-    	pool = new Pool();
+    	pool = Pool.getInstance();
     	
         fabrica = AbstractFactoryBuilder.getInstancia();
 		fabricaConcreta = fabrica.getAbstractFactory();
@@ -86,24 +86,41 @@ public class FachadaDD {
     
 /////////////////////////////////LISTADO DE USUARIOS/////////////////////////////////
     @SuppressWarnings({ "null", "resource" })
-	public ArrayList<JSONObject> getUsuarios() throws ConexionException, ClassNotFoundException, ObteniendoUsuariosException, ErrorInesperadoException {
+	public ArrayList<UsuarioVO> getUsuarios() throws ConexionException, ClassNotFoundException, ObteniendoUsuariosException, ErrorInesperadoException, ObteniendoGruposException {
     	
     	Connection con = null;
+    	ArrayList<Usuario> lstUsuarios = new ArrayList<Usuario>();
+    	ArrayList<UsuarioVO> lstUsuariosVO = new ArrayList<UsuarioVO>();
     	
     	try 
     	{
-    		con = this.pool.obtenerConeccion();
-			con.setAutoCommit(false);
 			con = this.pool.obtenerConeccion();
+	    	
 			
-			ArrayList<Usuario> lstUsuarios = this.usuarios.getUsuarios(con);
-	    	ArrayList<JSONObject> lstUsuariosJson = new ArrayList<JSONObject>();
+			lstUsuarios = this.usuarios.getUsuarios(con);
+			UsuarioVO aux;
+			
+			for (Usuario usuario: lstUsuarios)
+			{
+				aux = new UsuarioVO();
+				aux.setUsuario(usuario.getUsuario());
+				aux.setNombre(usuario.getNombre());
+				aux.setPass(usuario.getPass());
+				aux.setActivo(usuario.isActivo());
+				
+				GrupoVO auxGrupo;
+				for (Grupo grupo: usuario.getLstGrupos())
+				{
+					auxGrupo = new GrupoVO();
+					auxGrupo.setCodGrupo(grupo.getCodGrupo());
+					auxGrupo.setNomGrupo(grupo.getNomGrupo());
+					aux.getLstGrupos().add(auxGrupo);
+				}
+				
+				lstUsuariosVO.add(aux);
+			}
 	    	
-	    	
-	    	lstUsuariosJson = this.convertArray(lstUsuarios);
-	    	System.out.println("Estoy en fachada ");
-	    	
-	    	return lstUsuariosJson;
+	    	return lstUsuariosVO;
 	    	
 	    	
 		} 
@@ -134,14 +151,14 @@ public class FachadaDD {
 			json.put("activo", usuario.isActivo());
 			System.out.println(json.toString());
 			
-			for (GruposUsuario gruposUsuario : usuario.getLstGrupos())
+			for (Grupo gruposUsuario : usuario.getLstGrupos())
 			{
 				
 				JSONlstGruposUsuario = new JSONArray();
 				
 				JSONObject jGrupoUsuario = new JSONObject();
-				jGrupoUsuario.put("codigo", gruposUsuario.getCodigo());
-				jGrupoUsuario.put("nombre", gruposUsuario.getNombre());
+				jGrupoUsuario.put("codigo", gruposUsuario.getCodGrupo());
+				jGrupoUsuario.put("nombre", gruposUsuario.getNomGrupo());
 				
 				JSONlstGruposUsuario.add(jGrupoUsuario);
 				
@@ -158,10 +175,10 @@ public class FachadaDD {
     
 /////////////////////////////////NUEVO/////////////////////////////////
     @SuppressWarnings("resource")
-	public void insertarUsuario(JSONObject jsonUsuario) throws InsertandoUsuarioException, ConexionException, ExisteUsuarioException, ErrorInesperadoException
+	public void insertarUsuario(UsuarioVO usuarioVO) throws InsertandoUsuarioException, ConexionException, ExisteUsuarioException, ErrorInesperadoException
     {
     	Connection con = null;
-    	Usuario user = new Usuario(jsonUsuario);
+    	Usuario user = new Usuario(usuarioVO);
     	
     	try 
     	{
@@ -193,10 +210,10 @@ public class FachadaDD {
     
 /////////////////////////////////NUEVO/////////////////////////////////
     @SuppressWarnings("resource")
-	public void modificarUsuario(JSONObject jsonUsuario) throws InsertandoUsuarioException, ConexionException, ExisteUsuarioException, ErrorInesperadoException
+	public void modificarUsuario(UsuarioVO usuarioVO) throws InsertandoUsuarioException, ConexionException, ExisteUsuarioException, ErrorInesperadoException
 	{
 		Connection con = null;
-		Usuario user = new Usuario(jsonUsuario);
+		Usuario user = new Usuario(usuarioVO);
 	
 		try 
 		{

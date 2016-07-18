@@ -289,7 +289,26 @@ public class ConsultasDD {
 		sb.append("WHERE cod_grupo NOT IN (SELECT cod_grupo FROM m_gruposxusu WHERE usuario = ? )");
 		return sb.toString();
 	}
+	
+	public String insertarGruposxUsuario()
+    {
+    	StringBuilder sb = new StringBuilder();
+	
+    	sb.append("INSERT INTO vaadin.m_gruposxusu (cod_grupo, usuario) ");
+    	sb.append("VALUES (?, ?) ");
+    	
+    	return sb.toString();
+    }
 
+	public String eliminarGruposxUsuario()
+    {
+    	StringBuilder sb = new StringBuilder();
+	
+    	sb.append("DELETE FROM m_gruposxusu WHERE usuario = ? ");
+
+    	return sb.toString();
+    }
+    
 	
 	
 	

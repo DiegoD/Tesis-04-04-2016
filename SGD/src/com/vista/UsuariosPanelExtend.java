@@ -1,9 +1,11 @@
 package com.vista;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.json.simple.JSONObject;
 
+import com.controladores.GrupoControlador;
 import com.controladores.UsuarioControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.ErrorInesperadoException;
@@ -24,52 +26,41 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	BeanItemContainer<UsuarioVO> container;
-	UsuarioControlador controlador;
+	private UsuarioControlador controlador;
 	private UsuarioViewExtended form;
+	private BeanItemContainer<UsuarioVO> container;
+	private ArrayList<UsuarioVO> lstUsuarios; 
 	
-	public UsuariosPanelExtend() {
+	public UsuariosPanelExtend() throws ClassNotFoundException, ObteniendoUsuariosException, ErrorInesperadoException, ObteniendoGruposException 
+	{
 		
 		controlador = new UsuarioControlador();
-		
-		try {
-			
-			this.inicializarGrilla();
-			this.btnNuevoUsuario.addClickListener(click -> {
+		this.lstUsuarios = new ArrayList<UsuarioVO>();
 				
-
-				try 
-				{
-					
-					MySub subGrupoView = new MySub();
-					form = new UsuarioViewExtended(Variables.OPERACION_NUEVO, this);
-					subGrupoView.setVista(form);
-					
-					UI.getCurrent().addWindow(subGrupoView);
-					
-				} 
-				catch (Exception e) {
-					
-					
-				}
-			});
+		this.inicializarGrilla();
+		this.btnNuevoUsuario.addClickListener(click -> 
+		{
 			
-		} 
-		
-		catch (Exception e) {
-			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
-		}
-		
+			MySub subGrupoView = new MySub();
+			form = new UsuarioViewExtended(Variables.OPERACION_NUEVO, this);
+			subGrupoView.setVista(form);
+			
+			UI.getCurrent().addWindow(subGrupoView);
+				
+		});
 	}
 	
-	private void inicializarGrilla() throws ClassNotFoundException, ObteniendoUsuariosException, ErrorInesperadoException{
+	private void inicializarGrilla() throws ClassNotFoundException, ObteniendoUsuariosException, ErrorInesperadoException, ObteniendoGruposException
+	{
 		
 		this.container = new BeanItemContainer<UsuarioVO>(UsuarioVO.class);
 		
 		//Obtenemos lista de grupos del sistema
-		ArrayList<UsuarioVO> lstUsuarios = this.getUsuarios();
+		//ArrayList<UsuarioVO> lstUsuarios = new ArrayList<UsuarioVO>();
+		this.lstUsuarios = this.getUsuarios();
 		
-		for (UsuarioVO usuarioVO : lstUsuarios) {
+		for (UsuarioVO usuarioVO : this.lstUsuarios) 
+		{
 			container.addBean(usuarioVO);
 		}
 		gridUsuarios.setContainerDataSource(container);
@@ -77,10 +68,12 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 		gridUsuarios.removeColumn("activo");
 		gridUsuarios.removeColumn("lstGrupos");
 		
-		gridUsuarios.addSelectionListener(new SelectionListener() {
+		gridUsuarios.addSelectionListener(new SelectionListener() 
+		{
 			
 		    @Override
-		    public void select(SelectionEvent event) {
+		    public void select(SelectionEvent event) 
+		    {
 		       
 		    	try
 		    	{
@@ -88,7 +81,6 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 		
 					MySub sub = new MySub();
 					form = new UsuarioViewExtended(Variables.OPERACION_LECTURA, UsuariosPanelExtend.this);
-					//form.fieldGroup.setItemDataSource(item);
 					
 					sub.setVista(form);
 					/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
@@ -109,29 +101,82 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 		
 	}
 
-	private ArrayList<UsuarioVO> getUsuarios() throws ClassNotFoundException, ObteniendoUsuariosException, ErrorInesperadoException{
+	private ArrayList<UsuarioVO> getUsuarios() throws ClassNotFoundException, ObteniendoUsuariosException, ErrorInesperadoException, ObteniendoGruposException{
 		
 		ArrayList<UsuarioVO> lstUsuarios = new ArrayList<UsuarioVO>();
 		
-		ArrayList<JSONObject> lstUsuariosJ = null;
-		
-		try {
-			lstUsuariosJ = controlador.getUsuarios();
+		try 
+		{
+			lstUsuarios = controlador.getUsuarios();
 
-		} catch (InicializandoException|ConexionException e) {
+		} 
+		catch (InicializandoException|ConexionException e) 
+		{
 			Mensajes.mostrarMensajeError(e.getMessage());
-		}
-		
-		UsuarioVO aux;
-		for (JSONObject jsonObject : lstUsuariosJ) {
-			
-			aux = new UsuarioVO(jsonObject);
-			
-			lstUsuarios.add(aux);
 		}
 		
 		return lstUsuarios;
 	}
+	
+	public void actualizarGrilla(UsuarioVO usuarioVo)
+	{
+		if(this.existeUsuarioLista(usuarioVo.getUsuario()))
+		{
+			this.actualizarUsuarioenLista(usuarioVo);
+		}
+		else
+		{
+			this.lstUsuarios.add(usuarioVo);
+		}
+		this.container.removeAllItems();
+		this.container.addAll(this.lstUsuarios);
+		this.gridUsuarios.setContainerDataSource(container);
+	}
+	
+	private void actualizarUsuarioenLista(UsuarioVO usuarioVO)
+	{
+		int i = 0;
+		boolean salir = false;
+		UsuarioVO usuarioEnLista;
+		
+		while( i < this.lstUsuarios.size() && !salir)
+		{
+			usuarioEnLista = this.lstUsuarios.get(i);
+			if(usuarioVO.getUsuario().equals(usuarioEnLista.getUsuario()))
+			{
+				//this.lstGrupos.get(i).setNomGrupo(grupoVO.getNomGrupo());
+				
+				this.lstUsuarios.get(i).copiar(usuarioVO);
+
+				salir = true;
+			}
+			
+			i++;
+		}
+	}
+	
+	private boolean existeUsuarioLista(String usuario)
+	{
+		int i =0;
+		boolean esta = false;
+		
+		UsuarioVO aux;
+		
+		while( i < this.lstUsuarios.size() && !esta)
+		{
+			aux = this.lstUsuarios.get(i);
+			if(usuario.equals(aux.getUsuario()))
+			{
+				esta = true;
+			}
+			
+			i++;
+		}
+		
+		return esta;
+	}
+	
+	
 	
 	public void refreshGrilla(UsuarioVO usuarioVO)
 	{

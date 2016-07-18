@@ -1,6 +1,7 @@
 package com.vista;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.Grid.SelectionMode;
@@ -9,7 +10,38 @@ import com.valueObject.GrupoVO;
 
 public class UsuarioViewAgregarGrupoExtend extends UsuarioViewAgregarGrupo
 {
+	UsuarioViewExtended mainView;
 	BeanItemContainer<GrupoVO> container;
+	
+	public UsuarioViewAgregarGrupoExtend(UsuarioViewExtended main)
+	{
+		mainView = main;
+		this.lstGrupos.setSelectionMode(SelectionMode.MULTI);
+		
+		this.btnAgregar.addClickListener(click -> {
+			
+			int i = 0;
+			BeanItemContainer<GrupoVO> selec;
+			try 
+			{
+				ArrayList<GrupoVO> lstSeleccionados = new ArrayList<GrupoVO>();
+				Collection<Object> col= this.lstGrupos.getSelectedRows();
+				GrupoVO aux;
+				for (Object object : col) 
+				{
+					aux = (GrupoVO)object;
+					lstSeleccionados.add(aux);
+				}
+				mainView.agregarGruposSeleccionados(lstSeleccionados);
+			}
+			catch (Exception e) 
+			{
+				// TODO: handle exception
+			}
+		});
+	}
+	
+	
 	
 	/**
 	 *Dado una ArrayList de FormularioVO inicializamos grilla
@@ -19,16 +51,16 @@ public class UsuarioViewAgregarGrupoExtend extends UsuarioViewAgregarGrupo
 	public void setGrillaGrupos(ArrayList<GrupoVO> lstGruposUsuario)
 	{
 			
-		this.lstGrupos.setSelectionMode(SelectionMode.MULTI);
+		
 		
 		/*Seteamos la grilla con los formularios*/
-		this.container = 
-				new BeanItemContainer<GrupoVO>(GrupoVO.class);
+		this.container = new BeanItemContainer<GrupoVO>(GrupoVO.class);
 		
 		
 		if(lstGruposUsuario != null)
 		{
-			for (GrupoVO grupoVO : lstGruposUsuario) {
+			for (GrupoVO grupoVO : lstGruposUsuario) 
+			{
 				container.addBean(grupoVO);
 			}
 			

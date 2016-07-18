@@ -13,10 +13,12 @@ import com.excepciones.ConexionException;
 import com.excepciones.Login.LoginException;
 import com.excepciones.Usuarios.ExisteUsuarioException;
 import com.excepciones.Usuarios.InsertandoUsuarioException;
+import com.excepciones.Usuarios.ModificandoUsuarioException;
 import com.excepciones.Usuarios.ObteniendoUsuariosException;
 import com.excepciones.cotizaciones.MemberCotizacionException;
 import com.excepciones.grupos.InsertandoGrupoException;
 import com.excepciones.grupos.MemberGrupoException;
+import com.excepciones.grupos.ModificandoGrupoException;
 import com.excepciones.grupos.ObteniendoFormulariosException;
 import com.excepciones.grupos.ObteniendoGruposException;
 import com.logica.Formulario;
@@ -78,11 +80,9 @@ public class DAOUsuarios implements IDAOUsuarios {
 			System.out.println("estoy en DAO usuarios ");
 	    	ConsultasDD clts = new ConsultasDD();
 	    	String query = clts.getUsuarios();
-	    	PreparedStatement pstmt1;
-	    	ResultSet rs;
+	    	PreparedStatement pstmt1 = con.prepareStatement(query);
 	    	
-    	
-    		pstmt1 = con.prepareStatement(query);
+	    	ResultSet rs;
 			rs = pstmt1.executeQuery();
 			
 			while(rs.next ()) {
@@ -159,8 +159,8 @@ public class DAOUsuarios implements IDAOUsuarios {
 			
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
-
 			
+			this.insertarGruposxUsuario(user.getNombre(), user.getLstGrupos(), con);
 		} 
     	catch (SQLException e) 
     	{
@@ -169,7 +169,7 @@ public class DAOUsuarios implements IDAOUsuarios {
 		
 	}
 	
-	public void eliminarUsuario(Usuario user, Connection con) throws InsertandoUsuarioException, ConexionException {
+	public void eliminarUsuario(Usuario user, Connection con) throws InsertandoUsuarioException, ConexionException, ModificandoUsuarioException {
 
 		ConsultasDD clts = new ConsultasDD();
     	
@@ -179,6 +179,8 @@ public class DAOUsuarios implements IDAOUsuarios {
     	    	
     	
     	try {
+    		
+    		this.eliminarGruposxUsuario(user.getUsuario(), con);
     		
 			pstmt1 =  con.prepareStatement(eliminar);
 			pstmt1.setString(1, user.getUsuario());
@@ -197,9 +199,9 @@ public class DAOUsuarios implements IDAOUsuarios {
 		
 	}
 
-	public ArrayList<GruposUsuario> getGruposxUsuario(String usuario, Connection con) throws ObteniendoGruposException
+	public ArrayList<Grupo> getGruposxUsuario(String usuario, Connection con) throws ObteniendoGruposException
 	{
-		ArrayList<GruposUsuario> lstGrupos = new ArrayList<GruposUsuario>();
+		ArrayList<Grupo> lstGrupos = new ArrayList<Grupo>();
 		
 		try
 		{
@@ -211,14 +213,14 @@ public class DAOUsuarios implements IDAOUsuarios {
 			
 			ResultSet rs = pstmt1.executeQuery();
 			
-			GruposUsuario grupoUsuario;
+			Grupo grupoUsuario;
 			
 			while(rs.next ()) {
 
-				grupoUsuario = new GruposUsuario();
+				grupoUsuario = new Grupo();
 
-				grupoUsuario.setCodigo(rs.getString(1));
-				grupoUsuario.setNombre(rs.getString(2));
+				grupoUsuario.setCodGrupo(rs.getString(1));
+				grupoUsuario.setNomGrupo(rs.getString(2));
 				
 				lstGrupos.add(grupoUsuario);
 			}
@@ -266,4 +268,61 @@ public class DAOUsuarios implements IDAOUsuarios {
 		return lstGrupo;
 		
 	}
+	
+	/**
+	 * Insertamos grupo dado grupo,
+	 * PRECONDICION: El código del codigo no debe existir
+	 *
+	 */
+	private void insertarGruposxUsuario(String usuario, ArrayList<Grupo> lstGrupos, Connection con) throws InsertandoUsuarioException, ConexionException 
+	{
+
+		ConsultasDD clts = new ConsultasDD();
+    	
+    	String insert = clts.insertarGruposxUsuario();
+    	
+    	PreparedStatement pstmt1;
+  	
+    	try {
+    		
+			pstmt1 =  con.prepareStatement(insert);
+    		
+    		for (Grupo grupo: lstGrupos) {
+				
+    			pstmt1.setString(1, grupo.getCodGrupo());
+    			pstmt1.setString(2, usuario);
+
+    			pstmt1.executeUpdate ();
+			}
+    		
+			pstmt1.close ();
+	
+		} catch (SQLException e) {
+			
+			throw new InsertandoUsuarioException();
+		} 
+	}
+	
+	private void eliminarGruposxUsuario(String usuario, Connection con) throws ModificandoUsuarioException, ConexionException
+	{
+		ConsultasDD consultas = new ConsultasDD ();
+		String delete = consultas.eliminarGruposxUsuario();
+		
+		PreparedStatement pstmt1;
+		
+		try 
+		{
+			pstmt1 =  con.prepareStatement(delete);
+			pstmt1.setString(1, usuario);
+			
+			pstmt1.executeUpdate ();
+			pstmt1.close ();
+	
+			
+		} catch (SQLException e) {
+			
+			throw new ModificandoUsuarioException();
+		}
+	}
+	
 }

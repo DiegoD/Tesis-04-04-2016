@@ -31,17 +31,21 @@ public class UsuarioViewExtended extends UsuarioView{
 	private BeanFieldGroup<UsuarioVO> fieldGroup;
 	private UsuarioControlador controlador;
 	private String operacion;
-	private ArrayList<GrupoNombreVO> lstGruposUsuario;
+	private ArrayList<GrupoVO> lstGruposUsuario;
+	private ArrayList<GrupoVO> lstGruposAgregar; /*Lista de Formularios a agregar*/
 	private UsuariosPanelExtend mainView;
 	
 	BeanItemContainer<GrupoVO> container;
 	GrupoControlador controladorGrupo;
-	BeanItemContainer<GrupoNombreVO> containerGrupo;
+	BeanItemContainer<GrupoVO> containerGrupo;
 	
-	public UsuarioViewExtended(String opera, UsuariosPanelExtend main){
+	public UsuarioViewExtended(String opera, UsuariosPanelExtend main)
+	{
 		
 		operacion = opera;
 		this.mainView = main;
+		this.lstGruposAgregar = new ArrayList<GrupoVO>();
+		
 		this.inicializarForm();
 		
 		/*Inicializamos listener de boton aceptar*/
@@ -50,37 +54,33 @@ public class UsuarioViewExtended extends UsuarioView{
 			{
 				if(this.fieldsValidos())
 				{
+					UsuarioVO usuarioVO = new UsuarioVO();
+					usuarioVO.setUsuario(usuario.getValue().trim());
+					usuarioVO.setActivo(activo.getValue());
+					usuarioVO.setNombre(nombre.getValue().trim());
+					usuarioVO.setPass(pass.getValue().trim());
+					
+					if(this.lstGruposAgregar.size() > 0)
+					{
+						for(GrupoVO g: this.lstGruposAgregar)
+						{
+							this.lstGruposUsuario.add(g);
+						}
+					}
+					
+					usuarioVO.setLstGrupos(this.lstGruposUsuario);
+					
 					if(this.operacion.equals(Variables.OPERACION_NUEVO))	
 					{	
-						JSONObject usuarioJson = new JSONObject();
-						
-						usuarioJson.put("nombre", nombre.getValue().trim());
-						usuarioJson.put("usuario", usuario.getValue().trim());
-						usuarioJson.put("pass", pass.getValue().trim());
-						usuarioJson.put("usuarioMod", getSession().getAttribute("usuario"));
-						usuarioJson.put("operacion", operacion);
-						usuarioJson.put("activo", activo.getValue());
-						
-						System.out.println("llamo a controlador");
-						this.controlador.insertarUsuario(usuarioJson);
-						UsuarioVO usuario = new UsuarioVO(usuarioJson);
-						main.refreshGrilla(usuario);
+						this.controlador.insertarUsuario(usuarioVO);
+						main.refreshGrilla(usuarioVO);
 						Mensajes.mostrarMensajeOK("Se ha guardado el Usuario");
 					
 					}
 					else if(this.operacion.equals(Variables.OPERACION_EDITAR))
 					{
-								
-						JSONObject usuarioJson = new JSONObject();
-						usuarioJson.put("nombre", nombre.getValue().trim());
-						usuarioJson.put("usuario", usuario.getValue().trim());
-						usuarioJson.put("pass", pass.getValue().trim());
-						usuarioJson.put("usuarioMod", getSession().getAttribute("usuario"));
-						usuarioJson.put("operacion", operacion);
-						usuarioJson.put("activo", activo.getValue());
 										
-						System.out.println("llamo a controlador");
-						this.controlador.modificarUsuario(usuarioJson);
+						this.controlador.modificarUsuario(usuarioVO);
 						
 						Mensajes.mostrarMensajeOK("Se guardaron los cambios");
 						
@@ -124,15 +124,25 @@ public class UsuarioViewExtended extends UsuarioView{
 		this.btnAgregar.addClickListener(click -> {
 			try 
 			{
-				UsuarioViewAgregarGrupoExtend form = new UsuarioViewAgregarGrupoExtend();
+				UsuarioViewAgregarGrupoExtend form = new UsuarioViewAgregarGrupoExtend(this);
 				MySub sub = new MySub();
 				sub.setVista(form);
 				sub.setWidth("50%");
 				sub.setHeight("50%");
 				sub.center();
+				String usuario;
 				
-				String nombre = fieldGroup.getItemDataSource().getBean().getUsuario();
-				ArrayList<GrupoVO> lstGruposNoUsuario = this.controlador.getFormulariosNoGrupo(nombre);
+				if(this.operacion.equals(Variables.OPERACION_NUEVO) )
+				{
+					usuario = "";
+				}
+				else 
+				{
+					/*Si es operacion Editar tomamos el codGrupo de el fieldGroup*/
+					usuario = fieldGroup.getItemDataSource().getBean().getUsuario();
+				}
+				
+				ArrayList<GrupoVO> lstGruposNoUsuario = this.controlador.getUsuariosNoGrupo(usuario);
 				form.setGrillaGrupos(lstGruposNoUsuario);
 				UI.getCurrent().addWindow(sub);
 			} 
@@ -174,11 +184,11 @@ public class UsuarioViewExtended extends UsuarioView{
 				new BeanItemContainer<GrupoVO>(GrupoVO.class);
 		*/
 		this.containerGrupo = 
-				new BeanItemContainer<GrupoNombreVO>(GrupoNombreVO.class);
+				new BeanItemContainer<GrupoVO>(GrupoVO.class);
 	
 		if(this.lstGruposUsuario != null )
 		{
-			for(GrupoNombreVO grupoVO: this.lstGruposUsuario){
+			for(GrupoVO grupoVO: this.lstGruposUsuario){
 				containerGrupo.addBean(grupoVO);
 			}
 		}
@@ -219,7 +229,8 @@ public class UsuarioViewExtended extends UsuarioView{
 		
 		this.enableBotonAceptar();
 		this.disableBotonEditar();
-		
+		this.lstGruposAgregar = new ArrayList<GrupoVO>();
+		this.lstGruposUsuario = new ArrayList<GrupoVO>();
 		/*Seteamos validaciones en nuevo, cuando es editar
 		 * solamente cuando apreta el boton editar*/
 		this.setearValidaciones(true);
@@ -390,25 +401,60 @@ public class UsuarioViewExtended extends UsuarioView{
 	 * Seteamos la lista de los formularios para mostrarlos
 	 * en la grilla
 	 */
-	public void setLstGruposUsuario(ArrayList<GrupoNombreVO> lstGrupos)
+	public void setLstGruposUsuario(ArrayList<GrupoVO> lstGrupos)
 	{
 		this.lstGruposUsuario = lstGrupos;
 		
 		/*Seteamos la grilla con los formularios*/
 		this.containerGrupo = 
-				new BeanItemContainer<GrupoNombreVO>(GrupoNombreVO.class);
+				new BeanItemContainer<GrupoVO>(GrupoVO.class);
 		
 		
 		if(this.lstGruposUsuario != null)
 		{
-			for (GrupoNombreVO grupoVO : this.lstGruposUsuario) {
+			for (GrupoVO grupoVO : this.lstGruposUsuario) {
 				containerGrupo.addBean(grupoVO);
 			}
 		}
 		
 		
 		grillaGrupos.setContainerDataSource(containerGrupo);
+		grillaGrupos.removeColumn("activo");
+		grillaGrupos.removeColumn("usuarioMod");
+		grillaGrupos.removeColumn("fechaMod");
+		grillaGrupos.removeColumn("operacion");
+		grillaGrupos.removeColumn("lstFormularios");
+	}
+	
+	public void agregarGruposSeleccionados(ArrayList<GrupoVO> lstGrupos)
+	{
+
+		GrupoVO bean = new GrupoVO();
+        
+		if(lstGrupos.size() > 0)
+		{
+			for (GrupoVO grupoVO : lstGrupos) {
+				
+				/*Hacemos un nuevo objeto por bug de vaadin
+				 * de lo contrario no refresca la grilla*/
+				bean = new GrupoVO();
+		        bean.setCodGrupo(grupoVO.getCodGrupo());
+				bean.setNomGrupo(grupoVO.getNomGrupo());
+		        /*Por ESTO*/
+			//	this.lstFormsVO.add(formVO);
+				this.lstGruposAgregar.add(grupoVO);
+		        this.containerGrupo.addBean(bean);
+				
+			}
+		}
 		
+		grillaGrupos.setContainerDataSource(containerGrupo);
+		grillaGrupos.removeColumn("activo");
+		grillaGrupos.removeColumn("usuarioMod");
+		grillaGrupos.removeColumn("fechaMod");
+		grillaGrupos.removeColumn("operacion");
+		grillaGrupos.removeColumn("lstFormularios");
+
 	}
 
 }

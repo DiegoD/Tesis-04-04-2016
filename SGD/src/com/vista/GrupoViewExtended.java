@@ -69,8 +69,7 @@ public class GrupoViewExtended extends GrupoView {
 			if(this.fieldsValidos())
 			{
 								
-				GrupoVO grupoVO = new GrupoVO();
-				
+				GrupoVO grupoVO = new GrupoVO();				
 				grupoVO.setCodGrupo(codGrupo.getValue().trim());
 				grupoVO.setNomGrupo(nomGrupo.getValue().trim());
 				

@@ -5,16 +5,20 @@ import java.util.ArrayList;
 
 import org.json.simple.JSONObject;
 
+import com.valueObject.FormularioVO;
+import com.valueObject.GrupoVO;
+import com.valueObject.UsuarioVO;
+
 public class Usuario extends Auditoria{
 	
 	private String usuario;
 	private String pass;
 	private String nombre;
 	private boolean activo;
-	private ArrayList<GruposUsuario> lstGrupos;
+	private ArrayList<Grupo> lstGrupos;
 	
 	public Usuario(){
-		this.lstGrupos = new ArrayList<GruposUsuario>();
+		this.lstGrupos = new ArrayList<Grupo>();
 	}
 	public Usuario(String usuario, String pass, String nombre, Boolean activo) {
 		
@@ -22,10 +26,24 @@ public class Usuario extends Auditoria{
 		this.pass = pass;
 		this.nombre = nombre;
 		this.activo = activo;
-		this.lstGrupos = new ArrayList<GruposUsuario>();
+		this.lstGrupos = new ArrayList<Grupo>();
 	}
 	
-
+	public Usuario(UsuarioVO usuarioVO)
+	{
+		this.usuario = usuarioVO.getUsuario();
+		this.nombre = usuarioVO.getNombre();
+		this.pass = usuarioVO.getPass();
+		this.activo = usuarioVO.isActivo();
+		this.lstGrupos = new ArrayList<Grupo>();
+		Grupo aux;
+		for (GrupoVO grupoVO : usuarioVO.getLstGrupos()) {
+			
+			aux = new Grupo(grupoVO);
+			this.lstGrupos.add(aux);
+		}
+	
+	}
 	public Usuario(JSONObject jsonUsuario)
 	{
 		super(((String)jsonUsuario.get("usuarioMod")),((Timestamp)jsonUsuario.get("fechaMod")), ((String)jsonUsuario.get("operacion")));
@@ -33,7 +51,7 @@ public class Usuario extends Auditoria{
 		this.pass = jsonUsuario.get("pass").toString();
 		this.nombre = jsonUsuario.get("nombre").toString();
 		this.activo = (Boolean) jsonUsuario.get("activo");
-		this.lstGrupos = new ArrayList<GruposUsuario>();
+		this.lstGrupos = new ArrayList<Grupo>();
 	}
 	
 	public boolean isActivo() {
@@ -61,10 +79,10 @@ public class Usuario extends Auditoria{
 		this.nombre = nombre;
 	}
 	
-	public ArrayList<GruposUsuario> getLstGrupos() {
+	public ArrayList<Grupo> getLstGrupos() {
 		return lstGrupos;
 	}
-	public void setLstGrupos(ArrayList<GruposUsuario> lstGrupos) {
+	public void setLstGrupos(ArrayList<Grupo> lstGrupos) {
 		this.lstGrupos = lstGrupos;
 	}
 
