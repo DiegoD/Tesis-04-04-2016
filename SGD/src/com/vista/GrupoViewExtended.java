@@ -197,8 +197,7 @@ public class GrupoViewExtended extends GrupoView {
 		this.btnQuitar.addClickListener(click -> {
 				
 			boolean esta = false;	
-			
-			
+	
 			try {
 				
 				/*Verificamos que haya un formulario seleccionado para
