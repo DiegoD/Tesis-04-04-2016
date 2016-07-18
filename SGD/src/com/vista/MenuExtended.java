@@ -88,7 +88,9 @@ public class MenuExtended extends Menu{
 			try {
 				
 				GruposPanelExtended c = new GruposPanelExtended();
-								
+				c.setSizeFull();
+				this.content.setSizeFull();
+				
 				this.content.addComponent(c);
 				
 			} catch (Exception e) {

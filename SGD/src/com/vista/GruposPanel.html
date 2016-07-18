@@ -5,8 +5,10 @@
  </head> 
  <body> 
   <vaadin-vertical-layout size-full> 
-   <vaadin-grid size-full _id="gridview"></vaadin-grid> 
-   <vaadin-button style-name="primary" plain-text _id="btnNuevo">
+   <vaadin-panel size-full :expand="100"> 
+    <vaadin-grid responsive size-full _id="gridview"></vaadin-grid> 
+   </vaadin-panel> 
+   <vaadin-button style-name="primary tiny" responsive plain-text _id="btnNuevo">
      Nuevo 
    </vaadin-button> 
   </vaadin-vertical-layout>  

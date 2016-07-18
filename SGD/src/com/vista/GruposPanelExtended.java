@@ -13,11 +13,13 @@ import com.excepciones.InicializandoException;
 import com.excepciones.grupos.ObteniendoGruposException;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.server.Page;
 import com.vaadin.shared.Position;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.valueObject.GrupoVO;
 import com.valueObject.UsuarioVO;
@@ -38,6 +40,8 @@ public class GruposPanelExtended extends GruposPanel {
 		controlador = new GrupoControlador();
 		this.lstGrupos = new ArrayList<GrupoVO>();
 		
+        //layout.setSizeFull();
+        
 		
 		try {
 			
@@ -80,6 +84,7 @@ public class GruposPanelExtended extends GruposPanel {
 		
 		gridview.setContainerDataSource(container);
 		
+		
 		//Quitamos las columnas de la grilla de auditoria
 		gridview.removeColumn("fechaMod");
 		gridview.removeColumn("usuarioMod");
@@ -87,6 +92,10 @@ public class GruposPanelExtended extends GruposPanel {
 		gridview.removeColumn("activo");
 		gridview.removeColumn("lstFormularios");
 		
+		
+		
+		/*Agregamos los filtros a la grilla*/
+		this.filtroGrilla();
 		
 		//gridview.setEditorEnabled(true);
 		//gridview.setEditorSaveCaption("Save my data, please!");
@@ -228,6 +237,48 @@ public class GruposPanelExtended extends GruposPanel {
 		return esta;
 	}
 	
+	private void filtroGrilla()
+	{
+		try
+		{
+		
+			com.vaadin.ui.Grid.HeaderRow filterRow = gridview.appendHeaderRow();
 	
+			// Set up a filter for all columns
+			for (Object pid: gridview.getContainerDataSource()
+			                     .getContainerPropertyIds()) 
+			{
+			    
+				com.vaadin.ui.Grid.HeaderCell cell = filterRow.getCell(pid);
+			    
+			    if(cell != null)
+				{
+				    // Have an input field to use for filter
+				    TextField filterField = new TextField();
+				    filterField.setImmediate(true);
+				    filterField.setWidth("100%");
+				    filterField.setHeight("80%");
+				    filterField.setInputPrompt("Filtro");
+				    // Update filter When the filter input is changed
+				    filterField.addTextChangeListener(change -> {
+				        // Can't modify filters so need to replace
+				    	this.container.removeContainerFilters(pid);
+		
+				        // (Re)create the filter if necessary
+				        if (! change.getText().isEmpty())
+				        	this.container.addContainerFilter(
+				                new SimpleStringFilter(pid,
+				                    change.getText(), true, false));
+				    });
+
+				    cell.setComponent(filterField);
+				}
+			}
+			
+		}catch(Exception e)
+		{
+			 System.out.println(e.getStackTrace());
+		}
+	}
 	
 }
