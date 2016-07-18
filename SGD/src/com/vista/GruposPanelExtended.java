@@ -253,18 +253,20 @@ public class GruposPanelExtended extends GruposPanel {
 			    
 			    if(cell != null)
 				{
-				    // Have an input field to use for filter
+				    /*Agregar field para usar el filtro*/
 				    TextField filterField = new TextField();
 				    filterField.setImmediate(true);
 				    filterField.setWidth("100%");
 				    filterField.setHeight("80%");
 				    filterField.setInputPrompt("Filtro");
-				    // Update filter When the filter input is changed
+				     /*Actualizar el filtro cuando este tenga un cambio en texto*/
 				    filterField.addTextChangeListener(change -> {
-				        // Can't modify filters so need to replace
+				        
+				    	/*No se pueden modificar los filtros,
+				    	 * necesitamos reemplazarlos*/
 				    	this.container.removeContainerFilters(pid);
 		
-				        // (Re)create the filter if necessary
+				    	/*Hacemos nuevamente el filtro si es necesario*/
 				        if (! change.getText().isEmpty())
 				        	this.container.addContainerFilter(
 				                new SimpleStringFilter(pid,
