@@ -28,6 +28,7 @@ public class GrupoView extends FormLayout {
 	protected Button btnEditar;
 	protected Grid lstFormularios;
 	protected Button btnAgregar;
+	protected Button btnQuitar;
 
 	public GrupoView() {
 		Design.read(this);

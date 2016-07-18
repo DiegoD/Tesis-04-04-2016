@@ -19,6 +19,8 @@ import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.validator.StringLengthValidator;
+import com.vaadin.event.SelectionEvent;
+import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.server.Page;
 import com.vaadin.server.Page.Styles;
 import com.vaadin.shared.Position;
@@ -41,6 +43,8 @@ public class GrupoViewExtended extends GrupoView {
 	private String operacion;
 	private GruposPanelExtended mainView;
 	BeanItemContainer<FormularioVO> container;
+	private FormularioVO formSelecccionado; /*Variable utilizada cuando se selecciona
+	 										  un formulario, para poder quitarlo de la lista*/
 	
 	/**
 	 * Constructor del formulario, conInfo indica
@@ -113,7 +117,7 @@ public class GrupoViewExtended extends GrupoView {
 							
 				this.enableBotonEditar();
 				this.disableBotonAceptar();
-				this.disableBotonAgregar();
+				this.disableBotonAgregarQuitar();
 			
 			}
 			else /*Si los campos no son válidos mostramos warning*/
@@ -188,7 +192,79 @@ public class GrupoViewExtended extends GrupoView {
 					Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 				}
 			});
-	
+			
+			/*Inicalizamos listener para boton de Quitar*/
+		this.btnQuitar.addClickListener(click -> {
+				
+			boolean esta = false;	
+			
+			
+			try {
+				
+				/*Verificamos que haya un formulario seleccionado para
+				 * eliminar*/
+				if(formSelecccionado != null)
+				{
+
+					/*Recorremos los formularios del grupo
+					 * y buscamos el seleccionarlo para quitarlo*/
+					int i = 0;
+					while(i < lstFormsVO.size() && !esta)
+					{
+						if(lstFormsVO.get(i).getCodigo().equals(formSelecccionado.getCodigo()))
+						{
+							/*Quitamos el formulario seleccionado de la lista*/
+							lstFormsVO.remove(lstFormsVO.get(i));
+							
+							esta = true;
+						}
+
+						i++;
+					}
+					
+					/*Si lo encontro en la grilla*/
+					if(esta)
+					{
+						/*Actualizamos el container y la grilla*/
+						container.removeAllItems();
+						container.addAll(lstFormsVO);
+						lstFormularios.setContainerDataSource(container);
+					}
+					
+				}
+				else /*De lo contrario mostramos mensaje que debe selcionar un formulario*/
+				{
+					Mensajes.mostrarMensajeError("Debe seleccionar un formulario para quitar");
+				}
+		
+				}catch(Exception e)
+				{
+					Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+				}
+			});
+			
+			/*Inicializamos el listener de la grilla de formularios*/
+			lstFormularios.addSelectionListener(new SelectionListener() {
+				
+			    @Override
+			    public void select(SelectionEvent event) {
+			       
+			    	try{
+			    	BeanItem<FormularioVO> item = container.getItem(lstFormularios.getSelectedRow());
+			    	formSelecccionado = item.getBean(); /*Seteamos el formulario
+			    	 									seleccionado para poder quitarlo*/
+
+						  
+			    	}catch(Exception e)
+			    	{
+			    		Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			    	}
+			      
+			    }
+			});
+			
+			
+	///////////////////
 	}
 
 	public  void inicializarForm(){
@@ -217,7 +293,7 @@ public class GrupoViewExtended extends GrupoView {
 					
 		}
 	}
-	
+
 
 	/**
 	 * Seteamos las validaciones del Formulario
@@ -262,7 +338,7 @@ public class GrupoViewExtended extends GrupoView {
 		 * deshabilitamos botn aceptar*/
 		this.enableBotonEditar();
 		this.disableBotonAceptar();
-		this.disableBotonAgregar();
+		this.disableBotonAgregarQuitar();
 		
 		/*No mostramos las validaciones*/
 		this.setearValidaciones(false);
@@ -300,7 +376,7 @@ public class GrupoViewExtended extends GrupoView {
 		/*Oculatamos Editar y mostramos el de guardar y de agregar formularios*/
 		this.enableBotonAceptar();
 		this.disableBotonEditar();
-		this.enableBotonAgregar();
+		this.enableBotonAgregarQuitar();
 		
 		/*Dejamos los textfields que se pueden editar
 		 * en readonly = false asi  se pueden editar*/
@@ -318,7 +394,7 @@ public class GrupoViewExtended extends GrupoView {
 	{
 		this.enableBotonAceptar();
 		this.disableBotonEditar();
-		this.enableBotonAgregar();
+		this.enableBotonAgregarQuitar();
 		this.lstFormsAgregar = new ArrayList<FormularioVO>();
 		this.lstFormsVO = new ArrayList<FormularioVO>();
 		
@@ -373,10 +449,13 @@ public class GrupoViewExtended extends GrupoView {
 	 * Habilitamos el boton editar
 	 *
 	 */
-	private void enableBotonAgregar()
+	private void enableBotonAgregarQuitar()
 	{
 		this.btnAgregar.setEnabled(true);
 		this.btnAgregar.setVisible(true);
+		
+		this.btnQuitar.setEnabled(true);
+		this.btnQuitar.setVisible(true);
 		
 	}
 	
@@ -384,10 +463,13 @@ public class GrupoViewExtended extends GrupoView {
 	 * Deshabilitamos el boton editar
 	 *
 	 */
-	private void disableBotonAgregar()
+	private void disableBotonAgregarQuitar()
 	{
 		this.btnAgregar.setEnabled(false);
 		this.btnAgregar.setVisible(false);
+		
+		this.btnQuitar.setEnabled(false);
+		this.btnQuitar.setVisible(false);
 	}
 	
 	/**
