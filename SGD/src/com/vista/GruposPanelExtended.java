@@ -32,10 +32,12 @@ public class GruposPanelExtended extends GruposPanel {
 	private BeanItemContainer<GrupoVO> container;
 	private GrupoControlador controlador;
 	
+	
 	public GruposPanelExtended(){
 		
 		controlador = new GrupoControlador();
 		this.lstGrupos = new ArrayList<GrupoVO>();
+		
 		
 		try {
 			
@@ -43,7 +45,7 @@ public class GruposPanelExtended extends GruposPanel {
 			
 			this.btnNuevo.addClickListener(click -> {
 				
-					MySub subGrupoView = new MySub();
+					MySub subGrupoView = new MySub("60%", "55%");
 					form = new GrupoViewExtended(Variables.OPERACION_NUEVO, this);
 					subGrupoView.setVista(form);
 					
@@ -99,7 +101,7 @@ public class GruposPanelExtended extends GruposPanel {
 		    	try{
 		    	BeanItem<GrupoVO> item = container.getItem(gridview.getSelectedRow());
 		
-					MySub sub = new MySub();
+					MySub sub = new MySub("60%", "55%");
 					form = new GrupoViewExtended(Variables.OPERACION_LECTURA, GruposPanelExtended.this);
 					//form.fieldGroup.setItemDataSource(item);
 					

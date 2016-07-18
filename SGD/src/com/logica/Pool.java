@@ -19,6 +19,7 @@ public class Pool {
 	private String user;
 	private String pass;
 	private String driver; 
+	private int cantConexiones;
 	
 	private static volatile Pool INSTANCE = null;
 	private static final Object lock = new Object();
@@ -70,7 +71,8 @@ public class Pool {
 			this.user = p.getProperty("user");
 			this.pass = p.getProperty("password");
 			this.url = p.getProperty("url");
-	        
+			this.cantConexiones = Integer.parseInt(p.getProperty("cantidad_conexiones"));
+
 	      }
 		}catch(Exception e)
 		{
@@ -89,7 +91,7 @@ public class Pool {
 			basicDataSurce.setUsername(user);
 			basicDataSurce.setPassword(pass);
 			basicDataSurce.setUrl(url);
-			basicDataSurce.setMaxTotal(50);
+			basicDataSurce.setMaxTotal(this.cantConexiones);
 			
 			this.dataSource = basicDataSurce;
 		}catch(Exception e)

@@ -72,8 +72,8 @@ public class GrupoVO extends AuditoriaVO{
 			for (FormularioVO frmVO : grpVO.getLstFormularios()) {
 				
 				formVO = new FormularioVO();		    
-			    formVO.setCodFormulario(frmVO.getCodFOrmulario()); 
-			    formVO.setNomFormulario(frmVO.getNomFormulario()); 
+			    formVO.setCodFormulario(frmVO.getCodigo()); 
+			    formVO.setNomFormulario(frmVO.getNombre()); 
 			  
 			    this.lstFormularios.add(formVO);
 				

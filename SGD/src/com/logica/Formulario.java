@@ -14,8 +14,8 @@ public class Formulario {
 	
 	public Formulario(FormularioVO form)
 	{
-		this.codFormulario = form.getCodFOrmulario();
-		this.nomFormulario = form.getNomFormulario();
+		this.codFormulario = form.getCodigo();
+		this.nomFormulario = form.getNombre();
 	}
 	
 	public String getCodFormulario() {

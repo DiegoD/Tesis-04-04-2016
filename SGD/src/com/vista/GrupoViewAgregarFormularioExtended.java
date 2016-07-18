@@ -25,7 +25,7 @@ public class GrupoViewAgregarFormularioExtended extends GrupoViewAgregarFormular
 		this.mainView = main;
 		this.lstFormularios.setSelectionMode(SelectionMode.MULTI);
 		
-		
+
 		this.btnAgregar.addClickListener(click -> {
 			
 			int i = 0;

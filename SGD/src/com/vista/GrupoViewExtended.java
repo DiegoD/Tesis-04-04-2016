@@ -49,7 +49,8 @@ public class GrupoViewExtended extends GrupoView {
 	 */
 	@SuppressWarnings("unchecked")
 	public GrupoViewExtended(String opera, GruposPanelExtended main){
-		
+	
+	
 	this.operacion = opera;
 	this.mainView = main;
 	
@@ -483,8 +484,7 @@ public class GrupoViewExtended extends GrupoView {
 				container.addBean(formVO);
 			}
 		}
-		
-		
+
 		lstFormularios.setContainerDataSource(container);
 		
 	}
@@ -504,8 +504,8 @@ public class GrupoViewExtended extends GrupoView {
 				/*Hacemos un nuevo objeto por bug de vaadin
 				 * de lo contrario no refresca la grilla*/
 				bean = new FormularioVO();
-		        bean.setCodFormulario(formVO.getCodFOrmulario());
-		        bean.setNomFormulario(formVO.getNomFormulario());
+		        bean.setCodFormulario(formVO.getCodigo());
+		        bean.setNomFormulario(formVO.getNombre());
 				
 		        /*Por ESTO*/
 			//	this.lstFormsVO.add(formVO);

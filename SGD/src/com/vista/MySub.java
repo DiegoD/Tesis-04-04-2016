@@ -15,13 +15,29 @@ public class MySub extends Window{
 		
 		center();
 		setClosable(true);
-		//setDraggable(true);
+		setDraggable(false);
 		//setModal(true);
 		setResizable(true);
 		//setScrollLeft(true);
 		
 		setHeight("70%");
-		setWidth("80%");
+		setWidth("55%");
+		
+	}
+	
+	public MySub(String height, String width){
+		
+		//setContent(new CotizacionesView());
+		
+		center();
+		setClosable(true);
+		setDraggable(true);
+		//setModal(true);
+		setResizable(true);
+		//setScrollLeft(true);
+		
+		setHeight(height);
+		setWidth(width);
 		
 	}
 	

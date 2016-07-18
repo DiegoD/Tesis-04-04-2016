@@ -17,13 +17,13 @@ public class FormularioVO {
 		
 	}
 	
-	public String getCodFOrmulario() {
+	public String getCodigo() {
 		return codFormulario;
 	}
-	public void setCodFormulario(String codFOrmulario) {
-		this.codFormulario = codFOrmulario;
+	public void setCodFormulario(String codFormulario) {
+		this.codFormulario = codFormulario;
 	}
-	public String getNomFormulario() {
+	public String getNombre() {
 		return nomFormulario;
 	}
 	public void setNomFormulario(String nomFormulario) {
