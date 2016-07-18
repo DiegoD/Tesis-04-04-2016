@@ -60,6 +60,10 @@ public class UsuarioViewExtended extends UsuarioView{
 					usuarioVO.setNombre(nombre.getValue().trim());
 					usuarioVO.setPass(pass.getValue().trim());
 					
+					usuarioVO.setOperacion(operacion);
+					usuarioVO.setActivo(activo.getValue());
+					usuarioVO.setUsuarioMod(getSession().getAttribute("usuario").toString());
+					
 					if(this.lstGruposAgregar.size() > 0)
 					{
 						for(GrupoVO g: this.lstGruposAgregar)
@@ -75,7 +79,8 @@ public class UsuarioViewExtended extends UsuarioView{
 						this.controlador.insertarUsuario(usuarioVO);
 						main.refreshGrilla(usuarioVO);
 						Mensajes.mostrarMensajeOK("Se ha guardado el Usuario");
-					
+						//UI.getCurrent().close();
+						
 					}
 					else if(this.operacion.equals(Variables.OPERACION_EDITAR))
 					{

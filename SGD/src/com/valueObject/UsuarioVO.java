@@ -7,7 +7,7 @@ import org.json.simple.JSONObject;
 
 import com.logica.Grupo;
 
-public class UsuarioVO {
+public class UsuarioVO extends AuditoriaVO{
 	
 	private String usuario;
 	private String pass;
@@ -81,7 +81,10 @@ public class UsuarioVO {
 	
 	public void copiar(UsuarioVO usuarioVO)
 	{
-
+		this.setUsuarioMod(usuarioVO.getUsuarioMod());
+		this.setFechaMod(usuarioVO.getFechaMod());
+		this.setOperacion(usuarioVO.getOperacion());
+		
 		this.usuario = usuarioVO.getUsuario();
 		this.nombre = usuarioVO.getNombre();
 		this.pass = usuarioVO.getPass();

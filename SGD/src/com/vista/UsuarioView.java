@@ -6,6 +6,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Link;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.declarative.Design;
@@ -28,6 +29,7 @@ public class UsuarioView extends FormLayout {
 	protected CheckBox activo;
 	protected Button aceptar;
 	protected Button btnEditar;
+	protected Link auditoria;
 	protected Grid grillaGrupos;
 	protected Button btnAgregar;
 

@@ -72,7 +72,9 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 		
 		gridUsuarios.removeColumn("activo");
 		gridUsuarios.removeColumn("lstGrupos");
-		
+		gridUsuarios.removeColumn("fechaMod");
+		gridUsuarios.removeColumn("usuarioMod");
+		gridUsuarios.removeColumn("operacion");
 		
 		
 		gridUsuarios.addSelectionListener(new SelectionListener() 
@@ -202,32 +204,45 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 	
 	private void filtroGrilla()
 	{
-		com.vaadin.ui.Grid.HeaderRow filterRow = gridUsuarios.appendHeaderRow();
-
-		// Set up a filter for all columns
-		for (Object pid: gridUsuarios.getContainerDataSource()
-		                     .getContainerPropertyIds()) 
+		try
 		{
-		    com.vaadin.ui.Grid.HeaderCell cell = filterRow.getCell(pid);
+		
+			com.vaadin.ui.Grid.HeaderRow filterRow = gridUsuarios.appendHeaderRow();
+	
+			// Set up a filter for all columns
+			for (Object pid: gridUsuarios.getContainerDataSource()
+			                     .getContainerPropertyIds()) 
+			{
+			    
+				com.vaadin.ui.Grid.HeaderCell cell = filterRow.getCell(pid);
+			    
+			    if(cell != null)
+				{
+				    // Have an input field to use for filter
+				    TextField filterField = new TextField();
+				    filterField.setImmediate(true);
+				    filterField.setWidth("100%");
+				    filterField.setHeight("80%");
+				    filterField.setInputPrompt("Filtro");
+				    // Update filter When the filter input is changed
+				    filterField.addTextChangeListener(change -> {
+				        // Can't modify filters so need to replace
+				    	this.container.removeContainerFilters(pid);
+		
+				        // (Re)create the filter if necessary
+				        if (! change.getText().isEmpty())
+				        	this.container.addContainerFilter(
+				                new SimpleStringFilter(pid,
+				                    change.getText(), true, false));
+				    });
 
-		    // Have an input field to use for filter
-		    TextField filterField = new TextField();
-		    filterField.setImmediate(true);
-		    filterField.setWidth("125px");
-		    filterField.setHeight("30px");
-		    filterField.setInputPrompt("Filtro");
-		    // Update filter When the filter input is changed
-		    filterField.addTextChangeListener(change -> {
-		        // Can't modify filters so need to replace
-		    	this.container.removeContainerFilters(pid);
-
-		        // (Re)create the filter if necessary
-		        if (! change.getText().isEmpty())
-		        	this.container.addContainerFilter(
-		                new SimpleStringFilter(pid,
-		                    change.getText(), true, false));
-		    });
-		    cell.setComponent(filterField);
+				    cell.setComponent(filterField);
+				}
+			}
+			
+		}catch(Exception e)
+		{
+			 System.out.println(e.getStackTrace());
 		}
 	}
 

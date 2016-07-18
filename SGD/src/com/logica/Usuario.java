@@ -31,6 +31,7 @@ public class Usuario extends Auditoria{
 	
 	public Usuario(UsuarioVO usuarioVO)
 	{
+		super(usuarioVO.getUsuarioMod(), usuarioVO.getFechaMod(), usuarioVO.getOperacion());
 		this.usuario = usuarioVO.getUsuario();
 		this.nombre = usuarioVO.getNombre();
 		this.pass = usuarioVO.getPass();
