@@ -34,13 +34,14 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 	private UsuarioViewExtended form;
 	private BeanItemContainer<UsuarioVO> container;
 	private ArrayList<UsuarioVO> lstUsuarios; 
-	MySub sub = new MySub();
+	private MySub sub; 
 	
 	public UsuariosPanelExtend() throws ClassNotFoundException, ObteniendoUsuariosException, ErrorInesperadoException, ObteniendoGruposException 
 	{
 		
 		controlador = new UsuarioControlador();
 		this.lstUsuarios = new ArrayList<UsuarioVO>();
+		sub = new MySub("60%", "65%");
 				
 		this.inicializarGrilla();
 		this.btnNuevoUsuario.addClickListener(click -> 

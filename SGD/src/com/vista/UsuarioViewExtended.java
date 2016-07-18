@@ -18,9 +18,11 @@ import com.excepciones.grupos.ObteniendoGruposException;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.valueObject.FormularioVO;
 import com.valueObject.GrupoNombreVO;
@@ -38,8 +40,8 @@ public class UsuarioViewExtended extends UsuarioView{
 	private UsuariosPanelExtend mainView;
 	private GrupoVO grupoSeleccionado; /*Variable utilizada cuando se selecciona
 	  									un grupo, para poder quitarlo de la lista*/
-	MySub sub = new MySub();
-	BeanItemContainer<GrupoVO> container;
+	private MySub sub; 
+	//BeanItemContainer<GrupoVO> container;
 	GrupoControlador controladorGrupo;
 	BeanItemContainer<GrupoVO> containerGrupo;
 	
@@ -49,6 +51,7 @@ public class UsuarioViewExtended extends UsuarioView{
 		operacion = opera;
 		this.mainView = main;
 		this.lstGruposAgregar = new ArrayList<GrupoVO>();
+		sub = new MySub();
 		
 		this.inicializarForm();
 		
@@ -251,7 +254,6 @@ public class UsuarioViewExtended extends UsuarioView{
 		{
 			/*Inicializamos al formulario como nuevo*/
 			this.iniFormNuevo();
-	
 		}
 		else if(this.operacion.equals(Variables.OPERACION_LECTURA))
 		{
@@ -272,6 +274,7 @@ public class UsuarioViewExtended extends UsuarioView{
 				containerGrupo.addBean(grupoVO);
 			}
 		}
+		
 		
 	}
 	
@@ -517,11 +520,13 @@ public class UsuarioViewExtended extends UsuarioView{
 		
 		
 		grillaGrupos.setContainerDataSource(containerGrupo);
+		this.filtroGrilla();
 		grillaGrupos.removeColumn("activo");
 		grillaGrupos.removeColumn("usuarioMod");
 		grillaGrupos.removeColumn("fechaMod");
 		grillaGrupos.removeColumn("operacion");
 		grillaGrupos.removeColumn("lstFormularios");
+		
 	}
 	
 	public void agregarGruposSeleccionados(ArrayList<GrupoVO> lstGrupos)
@@ -547,11 +552,54 @@ public class UsuarioViewExtended extends UsuarioView{
 		}
 		
 		grillaGrupos.setContainerDataSource(containerGrupo);
-
 	}
 	
 	public void cerrarVentana()
 	{
 		UI.getCurrent().removeWindow(sub);
+	}
+	
+	private void filtroGrilla()
+	{
+		try
+		{
+		
+			com.vaadin.ui.Grid.HeaderRow filterRow = grillaGrupos.appendHeaderRow();
+	
+			// Set up a filter for all columns
+			for (Object pid: grillaGrupos.getContainerDataSource()
+			                     .getContainerPropertyIds()) 
+			{
+			    
+				com.vaadin.ui.Grid.HeaderCell cell = filterRow.getCell(pid);
+			    
+			    if(cell != null)
+				{
+				    // Have an input field to use for filter
+				    TextField filterField = new TextField();
+				    filterField.setImmediate(true);
+				    filterField.setWidth("100%");
+				    filterField.setHeight("80%");
+				    filterField.setInputPrompt("Filtro");
+				    // Update filter When the filter input is changed
+				    filterField.addTextChangeListener(change -> {
+				        // Can't modify filters so need to replace
+				    	this.containerGrupo.removeContainerFilters(pid);
+		
+				        // (Re)create the filter if necessary
+				        if (! change.getText().isEmpty())
+				        	this.containerGrupo.addContainerFilter(
+				                new SimpleStringFilter(pid,
+				                    change.getText(), true, false));
+				    });
+
+				    cell.setComponent(filterField);
+				}
+			}
+			
+		}catch(Exception e)
+		{
+			 System.out.println(e.getStackTrace());
+		}
 	}
 }
