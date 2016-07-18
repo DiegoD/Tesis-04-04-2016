@@ -34,8 +34,8 @@ public class GruposPanelExtended extends GruposPanel {
 	private BeanItemContainer<GrupoVO> container;
 	private GrupoControlador controlador;
 	//private MySub subGrupoView = new MySub("60%", "55%");
-	private MySub subGrupoView = new MySub();
-	MySub sub = new MySub("60%", "55%");
+	private MySub subGrupoView;// = new MySub();
+	MySub sub;// = new MySub("60%", "55%");
 	
 	public GruposPanelExtended(){
 		
@@ -51,7 +51,7 @@ public class GruposPanelExtended extends GruposPanel {
 			
 			this.btnNuevo.addClickListener(click -> {
 				
-					
+				    subGrupoView = new MySub("60%","65%");
 					form = new GrupoViewExtended(Variables.OPERACION_NUEVO, this);
 					subGrupoView.setVista(form);
 					
@@ -115,6 +115,7 @@ public class GruposPanelExtended extends GruposPanel {
 					
 					form = new GrupoViewExtended(Variables.OPERACION_LECTURA, GruposPanelExtended.this);
 					//form.fieldGroup.setItemDataSource(item);
+					sub = new MySub("70%","65%");
 					
 					sub.setVista(form);
 					/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/

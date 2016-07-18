@@ -18,6 +18,7 @@ import com.excepciones.grupos.MemberGrupoException;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
@@ -27,6 +28,7 @@ import com.vaadin.shared.Position;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.valueObject.CotizacionVO;
 import com.valueObject.FormularioVO;
@@ -45,7 +47,7 @@ public class GrupoViewExtended extends GrupoView {
 	BeanItemContainer<FormularioVO> container;
 	private FormularioVO formSelecccionado; /*Variable utilizada cuando se selecciona
 	 										  un formulario, para poder quitarlo de la lista*/
-	MySub sub = new MySub();
+	MySub sub;// = new MySub();
 	/**
 	 * Constructor del formulario, conInfo indica
 	 * si hay que cargarle la info
@@ -163,10 +165,11 @@ public class GrupoViewExtended extends GrupoView {
 				
 				GrupoViewAgregarFormularioExtended form = new GrupoViewAgregarFormularioExtended(this);
 				
+				sub = new MySub("60%", "70%" );
 				
 				sub.setVista(form);
-				sub.setWidth("50%");
-				sub.setHeight("50%");
+				//sub.setWidth("50%");
+				//sub.setHeight("50%");
 				sub.center();
 				
 				String codGrupo;/*Codigo del grupo para obtener los forms del mismo*/
@@ -231,6 +234,7 @@ public class GrupoViewExtended extends GrupoView {
 						container.removeAllItems();
 						container.addAll(lstFormsVO);
 						lstFormularios.setContainerDataSource(container);
+						
 					}
 					
 				}
@@ -287,13 +291,19 @@ public class GrupoViewExtended extends GrupoView {
 		{
 			/*Inicializamos al formulario como nuevo*/
 			this.iniFormNuevo();
+			
+			/*Agregamos los filtros a la grilla*/
+			this.filtroGrilla();
 	
 		}else if(this.operacion.equals(Variables.OPERACION_LECTURA))
 		{
 			/*Inicializamos formulario como editar*/
 			this.iniFormLectura();
-					
-		}
+			
+			/*Agregamos los filtros a la grilla*/
+			this.filtroGrilla();
+		} 
+		/*LA OPERACION EDITAR ES DESDE EL DE LECTURA*/
 	}
 
 
@@ -363,6 +373,7 @@ public class GrupoViewExtended extends GrupoView {
 		
 		
 		lstFormularios.setContainerDataSource(container);
+		
 				
 	}
 	
@@ -605,6 +616,53 @@ public class GrupoViewExtended extends GrupoView {
 	public void cerrarVentana()
 	{
 		UI.getCurrent().removeWindow(sub);
+	}
+	
+	/*Agregamos filtro en la grilla de formularios*/
+	private void filtroGrilla()
+	{
+		try
+		{
+		
+			com.vaadin.ui.Grid.HeaderRow filterRow = lstFormularios.appendHeaderRow();
+	
+			// Set up a filter for all columns
+			for (Object pid: lstFormularios.getContainerDataSource()
+			                     .getContainerPropertyIds()) 
+			{
+			    
+				com.vaadin.ui.Grid.HeaderCell cell = filterRow.getCell(pid);
+			    
+			    if(cell != null)
+				{
+				    /*Agregar field para usar el filtro*/
+				    TextField filterField = new TextField();
+				    filterField.setImmediate(true);
+				    filterField.setWidth("100%");
+				    filterField.setHeight("80%");
+				    filterField.setInputPrompt("Filtro");
+				     /*Actualizar el filtro cuando este tenga un cambio en texto*/
+				    filterField.addTextChangeListener(change -> {
+				        
+				    	/*No se pueden modificar los filtros,
+				    	 * necesitamos reemplazarlos*/
+				    	this.container.removeContainerFilters(pid);
+		
+				    	/*Hacemos nuevamente el filtro si es necesario*/
+				        if (! change.getText().isEmpty())
+				        	this.container.addContainerFilter(
+				                new SimpleStringFilter(pid,
+				                    change.getText(), true, false));
+				    });
+
+				    cell.setComponent(filterField);
+				}
+			}
+			
+		}catch(Exception e)
+		{
+			 System.out.println(e.getStackTrace());
+		}
 	}
 }
 
