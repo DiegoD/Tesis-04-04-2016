@@ -45,7 +45,7 @@ public class GrupoViewExtended extends GrupoView {
 	BeanItemContainer<FormularioVO> container;
 	private FormularioVO formSelecccionado; /*Variable utilizada cuando se selecciona
 	 										  un formulario, para poder quitarlo de la lista*/
-	
+	MySub sub = new MySub();
 	/**
 	 * Constructor del formulario, conInfo indica
 	 * si hay que cargarle la info
@@ -163,7 +163,7 @@ public class GrupoViewExtended extends GrupoView {
 				
 				GrupoViewAgregarFormularioExtended form = new GrupoViewAgregarFormularioExtended(this);
 				
-				MySub sub = new MySub();
+				
 				sub.setVista(form);
 				sub.setWidth("50%");
 				sub.setHeight("50%");
@@ -602,6 +602,10 @@ public class GrupoViewExtended extends GrupoView {
 
 	}
 
+	public void cerrarVentana()
+	{
+		UI.getCurrent().removeWindow(sub);
+	}
 }
 
 

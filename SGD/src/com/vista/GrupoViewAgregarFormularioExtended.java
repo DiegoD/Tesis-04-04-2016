@@ -49,6 +49,7 @@ public class GrupoViewAgregarFormularioExtended extends GrupoViewAgregarFormular
 				}
 
 				mainView.agregarFormulariosSeleccionados(lstSeleccionados);
+				mainView.cerrarVentana();
 				
 				//((Window) this.getParent()).removeFromParent(this);
 
