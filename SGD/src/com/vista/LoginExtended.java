@@ -8,6 +8,7 @@ import com.excepciones.ConexionException;
 import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
 import com.excepciones.Login.LoginException;
+import com.excepciones.grupos.ObteniendoFormulariosException;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewDisplay;
@@ -58,10 +59,17 @@ public class LoginExtended extends Login implements ViewDisplay {
 			
 			if(usuarioValido){
 				
+				/*Inicializamos una variable de session para obtener los permisos
+				 * del usuario*/
+				PermisosUsuario permisos = new PermisosUsuario();
+				permisos.lstFormularios = this.controlador.getPermisosUsuario(loginVO.getUsuario());
+				
+				getSession().setAttribute("permisos", permisos);
+				
 				getSession().setAttribute("usuario", loginVO.getUsuario());
 				getSession().setAttribute("pass", loginVO.getPass());
 				
-				principal.setMenu();
+				principal.setMenu(permisos);
 			
 			}else{
 				
@@ -71,13 +79,9 @@ public class LoginExtended extends Login implements ViewDisplay {
 	                         .show(Page.getCurrent());
 			}
 					
-		} catch (LoginException | InicializandoException | ErrorInesperadoException | ConexionException e) {
+		} catch (LoginException | InicializandoException | ErrorInesperadoException | ConexionException | ObteniendoFormulariosException e) {
 			
-			 new Notification("Error",
-                     "<br/>" + e.getMessage(),
-                     Notification.Type.ERROR_MESSAGE, true)
-                         .show(Page.getCurrent());
-			
+			 Mensajes.mostrarMensajeError( e.getMessage());
 		} 
 	}
 

@@ -26,6 +26,7 @@ import com.excepciones.grupos.InsertandoGrupoException;
 import com.excepciones.grupos.MemberGrupoException;
 import com.excepciones.grupos.ModificandoGrupoException;
 import com.excepciones.grupos.NoExisteGrupoException;
+import com.excepciones.grupos.ObteniendoFormulariosException;
 import com.excepciones.grupos.ObteniendoGruposException;
 import com.valueObject.*;
 import com.persistencia.*;
@@ -154,14 +155,11 @@ public class Fachada {
     	
     	Impuesto impuesto = new Impuesto(impuestoVO.getCodImpuesto(), impuestoVO.getDescImpuesto(), impuestoVO.getPorcentaje());
     	
-    	System.out.println("estoy en fachada llamando a DAO");
-    	
     	this.daoImpuesto.insertImpuesto(impuesto);
     }
     
     public ArrayList<JSONObject> getImpuestosTodos() throws ClassNotFoundException{
     	
-    	System.out.println("estoy en fachada");
     	
     	return this.daoImpuesto.getImpuestosTodos();
     	
@@ -170,7 +168,8 @@ public class Fachada {
     
 /////////////////////////////////INI-LOGIN/////////////////////////////////
     
-    public boolean usuarioValido(LoginVO loginVO) throws LoginException, ConexionException{
+    public boolean usuarioValido(LoginVO loginVO) throws LoginException, ConexionException
+    {
     	
     	Connection con = null;
     	
@@ -195,7 +194,8 @@ public class Fachada {
     
 /////////////////////////////////INI-GUPOS/////////////////////////////////
     @SuppressWarnings("unchecked")
-	public ArrayList<GrupoVO> getGrupos() throws ObteniendoGruposException, ConexionException, ErrorInesperadoException {
+	public ArrayList<GrupoVO> getGrupos() throws ObteniendoGruposException, ConexionException 
+    {
     	
     	Connection con = null;
     	
@@ -235,19 +235,26 @@ public class Fachada {
     			
     			lstGruposVO.add(aux);
 			}
-    		
-   		
-    		return lstGruposVO;
-    		
-    	}catch(Exception e)
+	
+    	}catch(ObteniendoGruposException e)
     	{
-    		throw new ErrorInesperadoException();
-    	}
+    		throw e;
+    		
+    	} catch (ConexionException e) {
+			
+    		throw e;
+    		
+		} catch (ObteniendoFormulariosException e) {
+			
+			e.printStackTrace();
+		}
     	finally
     	{
     		this.pool.liberarConeccion(con);
     	}
-    	    	
+    	    
+    	
+    	return lstGruposVO;
     }
     
     public void insertarGrupo(GrupoVO grupoVO) throws InsertandoGrupoException, ConexionException 
@@ -364,6 +371,48 @@ public class Fachada {
 	    		this.pool.liberarConeccion(con);
 	    	}
 	    	
+	    	return lstFormSelVO;
+	    	    	
+	    }
+	 
+	 
+	 @SuppressWarnings("unchecked")
+		public ArrayList<FormularioVO> getFormulariosxUsuario(String usuario) throws ObteniendoFormulariosException, ConexionException 
+		
+	 	{
+	    	
+	    	Connection con = null;
+	    	
+	    	ArrayList<Formulario> lstFormularios = new ArrayList<Formulario>();
+	    	ArrayList<FormularioVO> lstFormSelVO = new ArrayList<FormularioVO>();
+
+	    	try {
+	    		con = this.pool.obtenerConeccion();
+	    		
+	    		
+					lstFormularios = this.usuarios.getFormulariosxUsuario(usuario, con);
+			
+	    		
+	    		/*Transformamos al VO */
+	    		FormularioVO formSelVO;
+	    		for (Formulario formulario : lstFormularios) {
+	    			formSelVO = new FormularioVO(formulario);
+	    			
+	    			lstFormSelVO.add(formSelVO);
+				}
+	    		
+	    	} catch (ObteniendoFormulariosException e) {
+	    		throw e;
+	    		
+			} catch (ConexionException e) {
+				
+				throw e;
+			}
+    		finally
+	    	{
+	    		this.pool.liberarConeccion(con);
+	    	}
+    	
 	    	return lstFormSelVO;
 	    	    	
 	    }

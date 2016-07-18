@@ -55,14 +55,16 @@ public class Principal extends UI {
 		
 	
 		
-		this.menu = new MenuExtended();
+		
 		
 		setContent(new LoginExtended(Principal.this));
 		
 		//setContent(menu);
 	}
 	
-	public void setMenu(){
+	public void setMenu(PermisosUsuario permisos){
+		
+		this.menu = new MenuExtended(permisos);
 		
 		setContent(this.menu);
 		

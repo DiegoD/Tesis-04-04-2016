@@ -1,5 +1,7 @@
 package com.vista;
 
+import java.util.ArrayList;
+
 import com.vaadin.server.Page;
 import com.vaadin.shared.Position;
 import com.vaadin.ui.Accordion;
@@ -8,19 +10,32 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
+import com.valueObject.FormularioVO;
 import com.vaadin.ui.TabSheet.Tab;
 
 public class MenuExtended extends Menu{
 	
 	private Component contentAnterior;
 	public static String nombre = "Menu";
+	PermisosUsuario permisos;
+	
+	private VerticalLayout tabMantenimientos;
 	
 	//Accordion acordion;
 
 	
-	public MenuExtended(){
+	public MenuExtended(PermisosUsuario permisosUsuario){
 		
+		this.permisos = permisosUsuario;
 	
+		
+		/*Primero deshabilitamos todas las funcionalidades*/
+		this.deshabilitarFuncionalidades();
+		
+		/*Habilitamos las funcionalidades dados los permisos*/
+		this.setearPermisosMenu();
+		
+		
 		// Have it take all space available in the layout.
 		Accordion accordion = new Accordion();
 
@@ -35,13 +50,9 @@ public class MenuExtended extends Menu{
 		Label l2 = new Label("There are no saved notes.");
 		Label l3 = new Label("There are currently no issues.");
 
-
-		VerticalLayout tab1 = new VerticalLayout();
-		//tab1.setSizeFull();
 		
-		tab1.addComponent(statusButton);
-		tab1.addComponent(inboxButton);
-		tab1.addComponent(gruposButton);
+
+
 		
 	
 		
@@ -54,7 +65,7 @@ public class MenuExtended extends Menu{
 		
 		//this.acordion.setSizeFull();
 				
-		this.acordion.addTab(tab1, "Mantenimientos", null);
+		
 		//this.acordion.addTab(statusButton, "Status", null);
 		this.acordion.addTab(l3, "Otros", null);
 		
@@ -95,8 +106,7 @@ public class MenuExtended extends Menu{
 				
 			} catch (Exception e) {
 				
-				mostrarMensajeError(e.getMessage());
-				
+				Mensajes.mostrarMensajeError(e.getMessage());
 			}
 		});
 		
@@ -130,60 +140,102 @@ public class MenuExtended extends Menu{
 	}
 	
 	
-////////////////////MENSAJES//////////////////////
-	
-	private void mostrarMensajeError(String msj){
-	
-		Notification notif = new Notification(
-		"Error",
-		"<br/>" + msj,
-		Notification.Type.ERROR_MESSAGE,
-		true); // Contains HTML
-		
-		
-		notif.setDelayMsec(20000);
-		notif.setPosition(Position.BOTTOM_RIGHT);
-		//notif.setStyleName("mystyle");
-		//notif.setIcon(new ThemeResource("img/reindeer-64px.png"));
-		
-		notif.show(Page.getCurrent());
-	
-	}
-	
-	private void mostrarMensajeOK(String msj){
-	
-		Notification notif = new Notification(
-		"OK",
-		"<br/>" + msj,
-		Notification.Type.HUMANIZED_MESSAGE,
-		true); // Contains HTML
-		
-		
-		notif.setDelayMsec(20000);
-		notif.setPosition(Position.BOTTOM_RIGHT);
-		//notif.setStyleName("mystyle");
-		//notif.setIcon(new ThemeResource("img/reindeer-64px.png"));
-		
-		notif.show(Page.getCurrent());
-	
-	}
-	
-	private void mostrarMensajeWarning(String msj){
-		
-		Notification notif = new Notification(
-		"Atención",
-		"<br/>" + msj,
-		Notification.Type.WARNING_MESSAGE,
-		true); // Contains HTML
-		
-		
-		notif.setDelayMsec(20000);
-		notif.setPosition(Position.BOTTOM_RIGHT);
-		//notif.setStyleName("mystyle");
-		//notif.setIcon(new ThemeResource("img/reindeer-64px.png"));
-		
-		notif.show(Page.getCurrent());
-	
-	}
+////////////////////PERMISOS//////////////////////
 
+	/**
+	 * Dado los permisos del usuario le damos acceso
+	 * a las distintas funcionalidades
+	 * 
+	 */
+	private void setearPermisosMenu()
+	{
+		/*Permisos del usuario para los mantenimientos*/
+		this.setearOpcionesMenuMantenimientos();
+	}
+	
+	
+	/**
+	 * Vemos los permisos del usuario para los mantenimientos
+	 * 
+	 */
+	private void setearOpcionesMenuMantenimientos()
+	{
+		ArrayList<FormularioVO> lstFormsMenuMant = new ArrayList<FormularioVO>();
+		
+		/*Buscamos los Formulairos correspondientes a este TAB*/
+		for (FormularioVO formularioVO : this.permisos.getLstFormularios()) {
+			
+			if(formularioVO.getCodigo().equals("Musuarios")
+				|| formularioVO.getCodigo().equals("MGrupos"))
+			{
+				lstFormsMenuMant.add(formularioVO);
+			}
+			
+		}
+		
+		/*Si hay formularios para el tab*/
+		if(lstFormsMenuMant.size()> 0)
+		{
+			
+			this.tabMantenimientos = new VerticalLayout();
+			
+			for (FormularioVO formularioVO : lstFormsMenuMant) {
+				
+				switch(formularioVO.getCodigo())
+				{
+					case "Musuarios" : this.habilitarUserButton();
+									 
+					break;
+					case "MGrupos" :  this.habilitarGrupoButton();
+					break;
+				}
+			}
+			
+						
+			this.acordion.addTab(tabMantenimientos, "Mantenimientos", null);
+			
+		}
+		
+	}
+	
+	/**
+	 * Deshabiiltamos todas las funcionalidades
+	 * 
+	 */
+	private void deshabilitarFuncionalidades()
+	{
+		this.userButton.setVisible(false);
+		this.userButton.setEnabled(false);
+		
+		this.gruposButton.setVisible(false);
+		this.gruposButton.setEnabled(false);
+		
+		this.statusButton.setVisible(false);
+		this.statusButton.setEnabled(false);
+		
+		this.inboxButton.setVisible(false);
+		this.inboxButton.setEnabled(false);
+		
+		
+	}
+	
+	
+	private void habilitarUserButton()
+	{
+		this.userButton.setVisible(true);
+		this.userButton.setEnabled(true);
+		
+		this.tabMantenimientos.addComponent(this.userButton);
+	}
+	
+	private void habilitarGrupoButton()
+	{
+		this.gruposButton.setVisible(true);
+		this.gruposButton.setEnabled(true);
+		
+		this.tabMantenimientos.addComponent(this.gruposButton);
+	}
+	
+	
+	
 }

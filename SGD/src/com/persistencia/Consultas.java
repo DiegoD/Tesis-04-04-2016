@@ -285,4 +285,22 @@ public class Consultas {
     
 ////////////////////////FIN-GRUPOS///////////////////////////////////////////////////
     
+	public String getFormulariosxUsuario()
+	{
+		StringBuilder sb = new StringBuilder();
+		
+		
+		
+		sb.append("SELECT g_formularios.formulario, g_formularios.nombre FROM  ");
+		sb.append("m_gruposxusu,  m_grupoxform, m_usuarios, g_formularios  ");
+		sb.append("WHERE m_usuarios.usuario = m_gruposxusu.usuario  ");
+		sb.append("AND m_grupoxform.cod_grupo = m_gruposxusu.cod_grupo  ");
+		sb.append("AND g_formularios.formulario = m_grupoxform.formulario  ");
+		sb.append("AND m_usuarios.usuario = ? ");   
+	
+		
+		return sb.toString();
+	}
+
+    
 }

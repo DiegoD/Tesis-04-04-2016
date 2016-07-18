@@ -303,6 +303,10 @@ public class DAOUsuarios implements IDAOUsuarios {
 		} 
 	}
 	
+	
+	/**
+	 * Dado el usuario eliminamos los grupos del mismo
+	 */
 	private void eliminarGruposxUsuario(String usuario, Connection con) throws ModificandoUsuarioException, ConexionException
 	{
 		ConsultasDD consultas = new ConsultasDD ();
@@ -323,6 +327,43 @@ public class DAOUsuarios implements IDAOUsuarios {
 			
 			throw new ModificandoUsuarioException();
 		}
+	}
+	
+	
+	/**
+	 * Nos retorna los formularios habilitados para el usuario
+	 */
+	public ArrayList<Formulario> getFormulariosxUsuario(String usuario, Connection con) throws ObteniendoFormulariosException 
+	{
+		ArrayList<Formulario> lstFormularios = new ArrayList<Formulario>();
+		try 
+		{
+			Consultas consultas = new Consultas();
+			String query = consultas.getFormulariosxUsuario();
+			
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			pstmt1.setString(1, usuario);
+			
+			ResultSet rs = pstmt1.executeQuery();
+			
+			Formulario form;
+			
+			while(rs.next ()) 
+			{
+				form = new Formulario();
+				form.setCodFormulario(rs.getString(1));
+				form.setNomFormulario(rs.getString(2));
+				lstFormularios.add(form);
+			}
+			rs.close();
+			pstmt1.close();
+		} 
+		catch (Exception e) 
+		{
+			throw new ObteniendoFormulariosException();
+		}
+		return lstFormularios;
+		
 	}
 	
 }
