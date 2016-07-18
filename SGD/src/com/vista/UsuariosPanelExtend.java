@@ -180,7 +180,16 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 	
 	public void refreshGrilla(UsuarioVO usuarioVO)
 	{
-		this.container.addBean(usuarioVO);
+		if(this.existeUsuarioLista(usuarioVO.getUsuario()))
+		{
+			this.actualizarUsuarioenLista(usuarioVO);
+		}
+		else
+		{
+			this.lstUsuarios.add(usuarioVO);
+		}
+		this.container.removeAllItems();
+		this.container.addAll(this.lstUsuarios);
 		this.gridUsuarios.setContainerDataSource(container);
 	}
 

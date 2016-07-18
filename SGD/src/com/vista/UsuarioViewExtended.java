@@ -81,7 +81,7 @@ public class UsuarioViewExtended extends UsuarioView{
 					{
 										
 						this.controlador.modificarUsuario(usuarioVO);
-						
+						main.refreshGrilla(usuarioVO);
 						Mensajes.mostrarMensajeOK("Se guardaron los cambios");
 						
 					}
