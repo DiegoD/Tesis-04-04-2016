@@ -34,6 +34,7 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 	private UsuarioViewExtended form;
 	private BeanItemContainer<UsuarioVO> container;
 	private ArrayList<UsuarioVO> lstUsuarios; 
+	MySub sub = new MySub();
 	
 	public UsuariosPanelExtend() throws ClassNotFoundException, ObteniendoUsuariosException, ErrorInesperadoException, ObteniendoGruposException 
 	{
@@ -45,11 +46,11 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 		this.btnNuevoUsuario.addClickListener(click -> 
 		{
 			
-			MySub subGrupoView = new MySub();
-			form = new UsuarioViewExtended(Variables.OPERACION_NUEVO, this);
-			subGrupoView.setVista(form);
 			
-			UI.getCurrent().addWindow(subGrupoView);
+			form = new UsuarioViewExtended(Variables.OPERACION_NUEVO, this);
+			sub.setVista(form);
+			
+			UI.getCurrent().addWindow(sub);
 				
 		});
 	}
@@ -88,7 +89,6 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 		    	{
 		    		BeanItem<UsuarioVO> item = container.getItem(gridUsuarios.getSelectedRow());
 		
-					MySub sub = new MySub();
 					form = new UsuarioViewExtended(Variables.OPERACION_LECTURA, UsuariosPanelExtend.this);
 					
 					sub.setVista(form);
@@ -246,4 +246,8 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 		}
 	}
 
+	public void cerrarVentana()
+	{
+		UI.getCurrent().removeWindow(sub);
+	}
 }

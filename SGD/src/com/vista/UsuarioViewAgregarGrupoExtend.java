@@ -33,6 +33,7 @@ public class UsuarioViewAgregarGrupoExtend extends UsuarioViewAgregarGrupo
 					lstSeleccionados.add(aux);
 				}
 				mainView.agregarGruposSeleccionados(lstSeleccionados);
+				mainView.cerrarVentana();
 			}
 			catch (Exception e) 
 			{

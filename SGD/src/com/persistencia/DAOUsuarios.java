@@ -160,7 +160,7 @@ public class DAOUsuarios implements IDAOUsuarios {
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
 			
-			this.insertarGruposxUsuario(user.getNombre(), user.getLstGrupos(), con);
+			this.insertarGruposxUsuario(user.getUsuario(), user.getLstGrupos(), con);
 		} 
     	catch (SQLException e) 
     	{

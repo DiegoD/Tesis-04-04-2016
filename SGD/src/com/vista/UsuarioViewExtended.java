@@ -38,7 +38,7 @@ public class UsuarioViewExtended extends UsuarioView{
 	private UsuariosPanelExtend mainView;
 	private GrupoVO grupoSeleccionado; /*Variable utilizada cuando se selecciona
 	  									un grupo, para poder quitarlo de la lista*/
-	
+	MySub sub = new MySub();
 	BeanItemContainer<GrupoVO> container;
 	GrupoControlador controladorGrupo;
 	BeanItemContainer<GrupoVO> containerGrupo;
@@ -83,7 +83,7 @@ public class UsuarioViewExtended extends UsuarioView{
 						this.controlador.insertarUsuario(usuarioVO);
 						main.refreshGrilla(usuarioVO);
 						Mensajes.mostrarMensajeOK("Se ha guardado el Usuario");
-						//UI.getCurrent().close();
+						main.cerrarVentana();
 						
 					}
 					else if(this.operacion.equals(Variables.OPERACION_EDITAR))
@@ -92,7 +92,7 @@ public class UsuarioViewExtended extends UsuarioView{
 						this.controlador.modificarUsuario(usuarioVO);
 						main.refreshGrilla(usuarioVO);
 						Mensajes.mostrarMensajeOK("Se guardaron los cambios");
-						
+						main.cerrarVentana();
 					}
 				}
 				else /*Si los campos no son válidos mostramos warning*/
@@ -132,7 +132,7 @@ public class UsuarioViewExtended extends UsuarioView{
 			try 
 			{
 				UsuarioViewAgregarGrupoExtend form = new UsuarioViewAgregarGrupoExtend(this);
-				MySub sub = new MySub();
+				
 				sub.setVista(form);
 				sub.setWidth("50%");
 				sub.setHeight("50%");
@@ -547,12 +547,11 @@ public class UsuarioViewExtended extends UsuarioView{
 		}
 		
 		grillaGrupos.setContainerDataSource(containerGrupo);
-		grillaGrupos.removeColumn("activo");
-		grillaGrupos.removeColumn("usuarioMod");
-		grillaGrupos.removeColumn("fechaMod");
-		grillaGrupos.removeColumn("operacion");
-		grillaGrupos.removeColumn("lstFormularios");
 
 	}
-
+	
+	public void cerrarVentana()
+	{
+		UI.getCurrent().removeWindow(sub);
+	}
 }
