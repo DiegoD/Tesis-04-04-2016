@@ -166,7 +166,7 @@ public class GrupoViewExtended extends GrupoView {
 				GrupoViewAgregarFormularioExtended form = new GrupoViewAgregarFormularioExtended(this);
 				
 				sub = new MySub("60%", "70%" );
-				
+				sub.setModal(true);
 				sub.setVista(form);
 				//sub.setWidth("50%");
 				//sub.setHeight("50%");

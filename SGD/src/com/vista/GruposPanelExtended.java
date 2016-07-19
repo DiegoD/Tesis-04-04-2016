@@ -53,6 +53,7 @@ public class GruposPanelExtended extends GruposPanel {
 				
 				    subGrupoView = new MySub("60%","65%");
 					form = new GrupoViewExtended(Variables.OPERACION_NUEVO, this);
+					subGrupoView.setModal(true);
 					subGrupoView.setVista(form);
 					
 					UI.getCurrent().addWindow(subGrupoView);
@@ -116,7 +117,7 @@ public class GruposPanelExtended extends GruposPanel {
 					form = new GrupoViewExtended(Variables.OPERACION_LECTURA, GruposPanelExtended.this);
 					//form.fieldGroup.setItemDataSource(item);
 					sub = new MySub("70%","65%");
-					
+					sub.setModal(true);
 					sub.setVista(form);
 					/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
 					form.setDataSourceFormulario(item);

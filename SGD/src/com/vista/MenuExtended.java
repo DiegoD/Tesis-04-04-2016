@@ -166,7 +166,8 @@ public class MenuExtended extends Menu{
 		for (FormularioVO formularioVO : this.permisos.getLstFormularios()) {
 			
 			if(formularioVO.getCodigo().equals("Musuarios")
-				|| formularioVO.getCodigo().equals("MGrupos"))
+				|| formularioVO.getCodigo().equals("MGrupos") 
+				|| formularioVO.getCodigo().equals("MUsuarios"))
 			{
 				lstFormsMenuMant.add(formularioVO);
 			}
@@ -185,6 +186,10 @@ public class MenuExtended extends Menu{
 				{
 					case "Musuarios" : this.habilitarUserButton();
 									 
+					break;
+					
+					case "MUsuarios" : this.habilitarUserButton();
+					 
 					break;
 					case "MGrupos" :  this.habilitarGrupoButton();
 					break;

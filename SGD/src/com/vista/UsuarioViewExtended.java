@@ -52,6 +52,8 @@ public class UsuarioViewExtended extends UsuarioView{
 		this.mainView = main;
 		this.lstGruposAgregar = new ArrayList<GrupoVO>();
 		sub = new MySub("60%", "70%");
+		
+		
 		this.inicializarForm();
 		
 		/*Inicializamos listener de boton aceptar*/
@@ -135,6 +137,7 @@ public class UsuarioViewExtended extends UsuarioView{
 			{
 				UsuarioViewAgregarGrupoExtend form = new UsuarioViewAgregarGrupoExtend(this);
 				
+				sub.setModal(true);
 				sub.setVista(form);
 				sub.center();
 				String usuario;
