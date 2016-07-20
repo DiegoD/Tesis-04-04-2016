@@ -14,17 +14,22 @@
      <vaadin-text-field caption="Usuario" _id="usuario"></vaadin-text-field> 
      <vaadin-password-field caption="Contraseña" _id="pass"></vaadin-password-field> 
      <vaadin-check-box caption="Activo" _id="activo"></vaadin-check-box> 
-     <vaadin-button style-name="primary tiny" plain-text _id="aceptar" :bottom>
-       Guardar 
-     </vaadin-button> 
-     <vaadin-button style-name="tiny primary" id="btnEditar" plain-text _id="btnEditar" :bottom>
-       Editar 
-     </vaadin-button> 
+     <vaadin-horizontal-layout width="57%" height-full :middle :right> 
+      <vaadin-button style-name="primary tiny" responsive plain-text _id="aceptar" :middle>
+        Guardar 
+      </vaadin-button> 
+      <vaadin-button style-name="primary tiny" responsive id="btnEditar" plain-text _id="btnEditar" :middle>
+        Editar 
+      </vaadin-button> 
+      <vaadin-button style-name="primary tiny" responsive id="btnCancelar" plain-text _id="btnCancelar" :middle>
+        Cancelar 
+      </vaadin-button> 
+     </vaadin-horizontal-layout> 
      <vaadin-link caption="Auditoria" _id="auditoria"></vaadin-link> 
     </vaadin-form-layout> 
     <vaadin-form-layout spacing="false" size-full> 
      <vaadin-grid id="grillaGrupos" responsive width-full height="267px" _id="grillaGrupos"></vaadin-grid> 
-     <vaadin-horizontal-layout style-name="v-formlayout" responsive width="60%" height-full :middle :right> 
+     <vaadin-horizontal-layout style-name="v-formlayout" responsive width="47.32%" height-full :middle :right> 
       <vaadin-button style-name="primary tiny" responsive id="btnAgregar" plain-text _id="btnAgregar" :middle>
         Agregar 
       </vaadin-button> 

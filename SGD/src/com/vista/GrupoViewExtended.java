@@ -102,7 +102,7 @@ public class GrupoViewExtended extends GrupoView {
 					this.mainView.actulaizarGrilla(grupoVO);
 					
 					Mensajes.mostrarMensajeOK("Se ha guardado el Grupo");
-					main.cerrarVentanaNuevo();
+					main.cerrarVentana();
 				
 				}else if(this.operacion.equals(Variables.OPERACION_EDITAR))
 				{
@@ -112,7 +112,7 @@ public class GrupoViewExtended extends GrupoView {
 					this.mainView.actulaizarGrilla(grupoVO);
 					
 					Mensajes.mostrarMensajeOK("Se ha modificado el Grupo");
-					main.cerrarVentanaEdicion();
+					main.cerrarVentana();
 					
 				}
 				
@@ -159,7 +159,7 @@ public class GrupoViewExtended extends GrupoView {
 		});
 		
 		/*Inicalizamos listener para boton de Agregar Formulario*/
-			this.btnAgregar.addClickListener(click -> {
+		this.btnAgregar.addClickListener(click -> {
 					
 			try {
 				
@@ -199,8 +199,11 @@ public class GrupoViewExtended extends GrupoView {
 				}
 			});
 			
+			this.cancelar.addClickListener(click -> {
+				main.cerrarVentana();
+			});
 			/*Inicalizamos listener para boton de Quitar*/
-		this.btnQuitar.addClickListener(click -> {
+			this.btnQuitar.addClickListener(click -> {
 				
 			boolean esta = false;	
 	

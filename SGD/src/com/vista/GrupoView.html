@@ -13,16 +13,21 @@
      <vaadin-text-field caption="Codigo" readonly _id="codGrupo"></vaadin-text-field> 
      <vaadin-text-field caption="Nombre" readonly _id="nomGrupo"></vaadin-text-field> 
      <vaadin-check-box caption="Activo" id="activo" responsive _id="activo"></vaadin-check-box> 
-     <vaadin-button style-name="primary tiny" plain-text _id="aceptar" :bottom>
-       Guardar 
-     </vaadin-button> 
-     <vaadin-button style-name="tiny primary" id="btnEditar" plain-text _id="btnEditar" :bottom>
-       Editar 
-     </vaadin-button> 
+     <vaadin-horizontal-layout width="187px"> 
+      <vaadin-button style-name="primary tiny" plain-text _id="aceptar" :middle>
+        Guardar 
+      </vaadin-button> 
+      <vaadin-button style-name="tiny primary" id="btnEditar" plain-text _id="btnEditar" :middle>
+        Editar 
+      </vaadin-button> 
+      <vaadin-button style-name="tiny primary" id="btnCancelar" plain-text _id="cancelar" :middle>
+        Cancelar 
+      </vaadin-button> 
+     </vaadin-horizontal-layout> 
     </vaadin-form-layout> 
     <vaadin-form-layout spacing="false" size-full> 
      <vaadin-grid id="lstFormularios" responsive width-full height="267px" _id="lstFormularios"></vaadin-grid> 
-     <vaadin-horizontal-layout style-name="v-formlayout" responsive width="60%" height-full :middle :right> 
+     <vaadin-horizontal-layout style-name="v-formlayout" responsive width="55.33%" height-full :middle :right> 
       <vaadin-button style-name="primary tiny" responsive id="btnAgregar" plain-text _id="btnAgregar" :middle>
         Agregar 
       </vaadin-button> 

@@ -42,6 +42,10 @@ public class UsuarioViewAgregarGrupoExtend extends UsuarioViewAgregarGrupo
 				// TODO: handle exception
 			}
 		});
+		
+		this.btnCancelar.addClickListener(click -> {
+			main.cerrarVentana();
+		});
 	}
 	
 	

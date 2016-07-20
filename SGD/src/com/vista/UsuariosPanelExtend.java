@@ -92,6 +92,7 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 		    		BeanItem<UsuarioVO> item = container.getItem(gridUsuarios.getSelectedRow());
 		
 					form = new UsuarioViewExtended(Variables.OPERACION_LECTURA, UsuariosPanelExtend.this);
+					sub.setDraggable(true);
 					sub.setModal(true);
 					sub.setVista(form);
 					/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/

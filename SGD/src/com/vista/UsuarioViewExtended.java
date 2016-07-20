@@ -48,11 +48,12 @@ public class UsuarioViewExtended extends UsuarioView{
 	public UsuarioViewExtended(String opera, UsuariosPanelExtend main)
 	{
 		
+		auditoria.setDescription("Digo Hoy");
+		
 		operacion = opera;
 		this.mainView = main;
 		this.lstGruposAgregar = new ArrayList<GrupoVO>();
 		sub = new MySub("60%", "70%");
-		
 		
 		this.inicializarForm();
 		
@@ -132,14 +133,21 @@ public class UsuarioViewExtended extends UsuarioView{
 			}
 		});
 		
+		this.btnCancelar.addClickListener(click ->
+		{
+			main.cerrarVentana();
+		});
+		
 		this.btnAgregar.addClickListener(click -> {
 			try 
 			{
 				UsuarioViewAgregarGrupoExtend form = new UsuarioViewAgregarGrupoExtend(this);
 				
-				sub.setModal(true);
+				sub.setModal(false);
 				sub.setVista(form);
 				sub.center();
+				sub.setDraggable(true);
+				
 				String usuario;
 				
 				if(this.operacion.equals(Variables.OPERACION_NUEVO) )
@@ -212,6 +220,7 @@ public class UsuarioViewExtended extends UsuarioView{
 					Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 				}
 			});
+		
 		
 		
 		grillaGrupos.addSelectionListener(new SelectionListener() 

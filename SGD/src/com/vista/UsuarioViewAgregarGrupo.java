@@ -21,6 +21,7 @@ import com.vaadin.ui.declarative.Design;
 public class UsuarioViewAgregarGrupo extends FormLayout {
 	protected Grid lstGrupos;
 	protected Button btnAgregar;
+	protected Button btnCancelar;
 
 	public UsuarioViewAgregarGrupo() {
 		Design.read(this);

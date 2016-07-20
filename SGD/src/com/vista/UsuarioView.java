@@ -29,6 +29,7 @@ public class UsuarioView extends FormLayout {
 	protected CheckBox activo;
 	protected Button aceptar;
 	protected Button btnEditar;
+	protected Button btnCancelar;
 	protected Link auditoria;
 	protected Grid grillaGrupos;
 	protected Button btnAgregar;

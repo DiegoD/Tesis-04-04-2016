@@ -34,7 +34,6 @@ public class GruposPanelExtended extends GruposPanel {
 	private BeanItemContainer<GrupoVO> container;
 	private GrupoControlador controlador;
 	//private MySub subGrupoView = new MySub("60%", "55%");
-	private MySub subGrupoView;// = new MySub();
 	MySub sub;// = new MySub("60%", "55%");
 	
 	public GruposPanelExtended(){
@@ -51,12 +50,12 @@ public class GruposPanelExtended extends GruposPanel {
 			
 			this.btnNuevo.addClickListener(click -> {
 				
-				    subGrupoView = new MySub("60%","65%");
+				    sub = new MySub("60%","65%");
 					form = new GrupoViewExtended(Variables.OPERACION_NUEVO, this);
-					subGrupoView.setModal(true);
-					subGrupoView.setVista(form);
+					sub.setModal(true);
+					sub.setVista(form);
 					
-					UI.getCurrent().addWindow(subGrupoView);
+					UI.getCurrent().addWindow(sub);
 				
 			});
 			
@@ -287,12 +286,7 @@ public class GruposPanelExtended extends GruposPanel {
 		}
 	}
 	
-	public void cerrarVentanaNuevo()
-	{
-		UI.getCurrent().removeWindow(subGrupoView);
-	}
-	
-	public void cerrarVentanaEdicion()
+	public void cerrarVentana()
 	{
 		UI.getCurrent().removeWindow(sub);
 	}

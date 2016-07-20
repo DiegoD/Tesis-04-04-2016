@@ -26,6 +26,7 @@ public class GrupoView extends FormLayout {
 	protected CheckBox activo;
 	protected Button aceptar;
 	protected Button btnEditar;
+	protected Button cancelar;
 	protected Grid lstFormularios;
 	protected Button btnAgregar;
 	protected Button btnQuitar;

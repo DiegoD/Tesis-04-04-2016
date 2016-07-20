@@ -61,6 +61,10 @@ public class GrupoViewAgregarFormularioExtended extends GrupoViewAgregarFormular
 			}
 
 		});
+		
+		this.cancelar.addClickListener(click -> {
+			main.cerrarVentana();
+		});
 	}
 	
 	
