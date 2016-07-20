@@ -91,9 +91,7 @@ public class DAOUsuarios implements IDAOUsuarios {
 			
 			while(rs.next ()) {
 				
-				Usuario usr = new Usuario(rs.getString(1), rs.getString(2), rs.getString(3), rs.getBoolean(4));
-				
-				System.out.println("Encontro usuario");
+				Usuario usr = new Usuario(rs.getString(1), rs.getString(2), rs.getString(3), rs.getBoolean(4), rs.getString(5), rs.getTimestamp(7), rs.getString(6));
 				
 				usr.setLstGrupos(this.getGruposxUsuario(usr.getUsuario(), con));
 				

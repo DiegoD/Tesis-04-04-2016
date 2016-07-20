@@ -41,15 +41,13 @@ public class UsuarioViewExtended extends UsuarioView{
 	private GrupoVO grupoSeleccionado; /*Variable utilizada cuando se selecciona
 	  									un grupo, para poder quitarlo de la lista*/
 	private MySub sub; 
+	private BeanFieldGroup<UsuarioVO> fieldGroupAudit;
 	//BeanItemContainer<GrupoVO> container;
 	GrupoControlador controladorGrupo;
 	BeanItemContainer<GrupoVO> containerGrupo;
 	
 	public UsuarioViewExtended(String opera, UsuariosPanelExtend main)
 	{
-		
-		auditoria.setDescription("Digo Hoy");
-		
 		operacion = opera;
 		this.mainView = main;
 		this.lstGruposAgregar = new ArrayList<GrupoVO>();
@@ -258,6 +256,7 @@ public class UsuarioViewExtended extends UsuarioView{
 		if(fieldGroup != null)
 			fieldGroup.buildAndBindMemberFields(this);
 		
+		
 		/*SI LA OPERACION NO ES NUEVO, OCULTAMOS BOTON ACEPTAR*/
 		if(this.operacion.equals(Variables.OPERACION_NUEVO))
 		{
@@ -302,6 +301,18 @@ public class UsuarioViewExtended extends UsuarioView{
 	public void setDataSourceFormulario(BeanItem<UsuarioVO> item)
 	{
 		this.fieldGroup.setItemDataSource(item);
+		
+		UsuarioVO usu = new UsuarioVO();
+		usu = fieldGroup.getItemDataSource().getBean();
+		
+		
+		
+		auditoria.setDescription(
+			    "<ul>"+
+			    "  <li> Modificado por: " + usu.getUsuarioMod() + "</li>"+
+			    "  <li> Fecha: " + usu.getFechaMod() + "</li>"+
+			    "  <li> Operación: " + usu.getOperacion() + "</li>"+
+			    "</ul>");
 		
 		/*SETEAMOS LA OPERACION EN MODO LECUTA
 		 * ES CUANDO LLAMAMOS ESTE METODO*/

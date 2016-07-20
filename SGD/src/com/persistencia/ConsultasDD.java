@@ -180,7 +180,7 @@ public class ConsultasDD {
     
     public String getUsuarios(){
     	StringBuilder sb = new StringBuilder();
-    	sb.append("SELECT usuario, pass, nombre, activo ");
+    	sb.append("SELECT usuario, pass, nombre, activo, usuario_mod, operacion, fecha_mod ");
     	sb.append("FROM m_usuarios ");
 
     	return sb.toString();

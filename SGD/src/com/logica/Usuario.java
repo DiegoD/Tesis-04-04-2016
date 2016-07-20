@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import org.json.simple.JSONObject;
 
+import com.sun.jna.platform.win32.Sspi.TimeStamp;
 import com.valueObject.FormularioVO;
 import com.valueObject.GrupoVO;
 import com.valueObject.UsuarioVO;
@@ -20,14 +21,19 @@ public class Usuario extends Auditoria{
 	public Usuario(){
 		this.lstGrupos = new ArrayList<Grupo>();
 	}
-	public Usuario(String usuario, String pass, String nombre, Boolean activo) {
+	public Usuario(String usuario, String pass, String nombre, Boolean activo, 
+				   String usuarioMod, Timestamp fechaMod, String operacion) {
 		
+		super(usuarioMod, fechaMod, operacion);
 		this.usuario = usuario;
 		this.pass = pass;
 		this.nombre = nombre;
 		this.activo = activo;
 		this.lstGrupos = new ArrayList<Grupo>();
+		this.setUsuarioMod(usuarioMod);
 	}
+	
+	
 	
 	public Usuario(UsuarioVO usuarioVO)
 	{
