@@ -33,6 +33,7 @@ import com.vaadin.ui.UI;
 import com.valueObject.CotizacionVO;
 import com.valueObject.FormularioVO;
 import com.valueObject.GrupoVO;
+import com.valueObject.UsuarioVO;
 
 
 
@@ -334,6 +335,18 @@ public class GrupoViewExtended extends GrupoView {
 	public void setDataSourceFormulario(BeanItem<GrupoVO> item)
 	{
 		this.fieldGroup.setItemDataSource(item);
+		
+		GrupoVO grupo = new GrupoVO();
+		grupo = fieldGroup.getItemDataSource().getBean();
+		
+		
+		
+		auditoria.setDescription(
+			    "<ul>"+
+			    "  <li> Modificado por: " + grupo.getUsuarioMod() + "</li>"+
+			    "  <li> Fecha: " + grupo.getFechaMod() + "</li>"+
+			    "  <li> Operación: " + grupo.getOperacion() + "</li>"+
+			    "</ul>");
 		
 		/*SETEAMOS LA OPERACION EN MODO LECUTA
 		 * ES CUANDO LLAMAMOS ESTE METODO*/

@@ -19,6 +19,9 @@ public class UsuarioVO extends AuditoriaVO{
 	{
 		this.lstGrupos = new ArrayList<GrupoVO>();
 	}
+	/**
+	 * Crea un objeto UsuarioVO dado un JSON con sus datos
+	 */
 	public UsuarioVO(JSONObject obj){
 		
 		this.usuario = (String) obj.get("usuario");
@@ -79,6 +82,7 @@ public class UsuarioVO extends AuditoriaVO{
 		this.nombre = nombre;
 	}
 	
+
 	public void copiar(UsuarioVO usuarioVO)
 	{
 		this.setUsuarioMod(usuarioVO.getUsuarioMod());

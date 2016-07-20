@@ -41,6 +41,10 @@ public class DAOUsuarios implements IDAOUsuarios {
     private ResultSet rs = null;
 	
 	@Override
+	/**
+	 * Valida un usuario en la base de datos
+	 *
+	 */
 	public boolean usuarioValido(LoginVO loginVO, Connection con) throws LoginException {
 		
 	   	boolean usuarioValido = false;
@@ -75,6 +79,9 @@ public class DAOUsuarios implements IDAOUsuarios {
 		
 	}
 
+	/**
+	 * Obtiene Array de todos lo usuarios existentes
+	 */
 	public ArrayList<Usuario> getUsuarios(Connection con) throws ObteniendoUsuariosException, ConexionException, ObteniendoGruposException{
 		
 		ArrayList<Usuario> lstUsuarios = new ArrayList<Usuario>();
@@ -110,6 +117,9 @@ public class DAOUsuarios implements IDAOUsuarios {
     	return lstUsuarios;
 	}
 
+	/**
+	 * Dado el usuario, valida si existe
+	 */
 	public boolean memberUsuario(String usuario, Connection con) throws ExisteUsuarioException, ConexionException{
 		
 		boolean existe = false;
@@ -140,6 +150,10 @@ public class DAOUsuarios implements IDAOUsuarios {
 		}
 	}
 
+	/**
+	 * Inserta un usuario en la base
+	 * Pre condición: El nombre de usuario no debe existir previamente
+	 */
 	public void insertarUsuario(Usuario user, Connection con) throws InsertandoUsuarioException, ConexionException {
 
 		ConsultasDD clts = new ConsultasDD();
@@ -171,6 +185,9 @@ public class DAOUsuarios implements IDAOUsuarios {
 		
 	}
 	
+	/**
+	 * Elimina un usuario de la base dado el usuario
+	 */
 	public void eliminarUsuario(Usuario user, Connection con) throws InsertandoUsuarioException, ConexionException, ModificandoUsuarioException {
 
 		ConsultasDD clts = new ConsultasDD();
@@ -201,6 +218,9 @@ public class DAOUsuarios implements IDAOUsuarios {
 		
 	}
 
+	/**
+	 * Obtiene los grupos asignados a un usuario
+	 */
 	public ArrayList<Grupo> getGruposxUsuario(String usuario, Connection con) throws ObteniendoGruposException
 	{
 		ArrayList<Grupo> lstGrupos = new ArrayList<Grupo>();
@@ -238,6 +258,9 @@ public class DAOUsuarios implements IDAOUsuarios {
 		return lstGrupos;
 	}
 
+	/**
+	 * OBtiene los grupos que un usuario no tiene asignados
+	 */
 	public ArrayList<GrupoVO> getGruposNoUsuario(String nombreUsurio, Connection con) throws ObteniendoUsuariosException, ObteniendoGruposException
 	{
 		ArrayList<GrupoVO> lstGrupo = new ArrayList<GrupoVO>();
@@ -272,9 +295,7 @@ public class DAOUsuarios implements IDAOUsuarios {
 	}
 	
 	/**
-	 * Insertamos grupo dado grupo,
-	 * PRECONDICION: El código del codigo no debe existir
-	 *
+	 * Insertamos un grupo para el usuario
 	 */
 	private void insertarGruposxUsuario(String usuario, ArrayList<Grupo> lstGrupos, Connection con) throws InsertandoUsuarioException, ConexionException 
 	{

@@ -4,10 +4,13 @@
   <meta charset="UTF-8" name="design-properties" content="{&quot;RULERS_VISIBLE&quot;:true,&quot;GUIDELINES_VISIBLE&quot;:false,&quot;SNAP_TO_OBJECTS&quot;:true,&quot;SNAP_TO_GRID&quot;:true,&quot;SNAPPING_DISTANCE&quot;:10,&quot;JAVA_SOURCES_ROOT&quot;:&quot;src&quot;,&quot;THEME&quot;:&quot;sgd&quot;}">
  </head> 
  <body> 
-  <vaadin-form-layout spacing="false" responsive size-full margin-left margin-right margin-bottom="false"> 
+  <vaadin-form-layout spacing="false" responsive id="auditoria" size-full margin-left margin-right margin-bottom="false"> 
    <vaadin-label style-name="colored h2" responsive plain-text :center>
      Grupo 
    </vaadin-label> 
+   <vaadin-horizontal-layout width-full> 
+    <vaadin-link caption="Auditoria" _id="auditoria" :middle :right></vaadin-link> 
+   </vaadin-horizontal-layout> 
    <vaadin-horizontal-layout responsive size-full> 
     <vaadin-form-layout size-full> 
      <vaadin-text-field caption="Codigo" readonly _id="codGrupo"></vaadin-text-field> 

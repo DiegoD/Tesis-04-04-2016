@@ -87,6 +87,9 @@ public class FachadaDD {
     
 /////////////////////////////////LISTADO DE USUARIOS/////////////////////////////////
     @SuppressWarnings({ "null", "resource" })
+    /**
+	 * Obtiene Array de todos lo usuarios existentes 
+	 */
 	public ArrayList<UsuarioVO> getUsuarios() throws ConexionException, ClassNotFoundException, ObteniendoUsuariosException, ErrorInesperadoException, ObteniendoGruposException {
     	
     	Connection con = null;
@@ -141,6 +144,9 @@ public class FachadaDD {
     	
     }
     
+    /**
+	 * Convierte un array en un array de JSON
+	 */
     public ArrayList<JSONObject> convertArray(ArrayList<Usuario> lstUsuarios)
     {
     	JSONObject json = null;
@@ -179,6 +185,9 @@ public class FachadaDD {
     
 /////////////////////////////////NUEVO/////////////////////////////////
     @SuppressWarnings("resource")
+    /**
+	 * Inserta un usuario en la base
+	 */
 	public void insertarUsuario(UsuarioVO usuarioVO) throws InsertandoUsuarioException, ConexionException, ExisteUsuarioException, ErrorInesperadoException
     {
     	Connection con = null;
@@ -214,6 +223,9 @@ public class FachadaDD {
     
 /////////////////////////////////NUEVO/////////////////////////////////
     @SuppressWarnings("resource")
+    /**
+	 * Modifica los datos de un usuario dado el VO con los nuevos datos
+	 */
 	public void modificarUsuario(UsuarioVO usuarioVO) throws InsertandoUsuarioException, ConexionException, ExisteUsuarioException, ErrorInesperadoException
 	{
 		Connection con = null;
@@ -239,6 +251,9 @@ public class FachadaDD {
 		}
 	}
     
+    /**
+	 * Obtiene los grupos que no tiene asignados un usuario
+	 */
     public ArrayList<GrupoVO> getGruposNoUsuario(String nombreUsuario) throws ErrorInesperadoException, ConexionException
     {
     	Connection con = null;
@@ -262,6 +277,9 @@ public class FachadaDD {
     	
     }
     
+    /**
+	 * VER
+	 */
     public ArrayList<EmpLoginVO> getUsuariosxEmp(String usuario) throws ConexionException, ObteniendoUsuariosxEmpExeption
     {
     	Connection con = null;
