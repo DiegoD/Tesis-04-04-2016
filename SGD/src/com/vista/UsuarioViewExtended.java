@@ -36,7 +36,7 @@ public class UsuarioViewExtended extends UsuarioView{
 	private UsuarioControlador controlador;
 	private String operacion;
 	private ArrayList<GrupoVO> lstGruposUsuario;
-	private ArrayList<GrupoVO> lstGruposAgregar; /*Lista de Formularios a agregar*/
+	private ArrayList<GrupoVO> lstGruposAgregar; /*Lista de Grupos a agregar*/
 	private UsuariosPanelExtend mainView;
 	private GrupoVO grupoSeleccionado; /*Variable utilizada cuando se selecciona
 	  									un grupo, para poder quitarlo de la lista*/
@@ -46,6 +46,10 @@ public class UsuarioViewExtended extends UsuarioView{
 	GrupoControlador controladorGrupo;
 	BeanItemContainer<GrupoVO> containerGrupo;
 	
+	/**
+	 * Constructor: recibe operación (nuevo, editar)
+	 * También recibe la vista que lo llamó por parametro
+	 */
 	public UsuarioViewExtended(String opera, UsuariosPanelExtend main)
 	{
 		operacion = opera;
