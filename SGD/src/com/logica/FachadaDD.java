@@ -108,6 +108,9 @@ public class FachadaDD {
 				aux.setNombre(usuario.getNombre());
 				aux.setPass(usuario.getPass());
 				aux.setActivo(usuario.isActivo());
+				aux.setFechaMod(usuario.getFechaMod());
+				aux.setUsuarioMod(usuario.getUsuarioMod());
+				aux.setOperacion(usuario.getOperacion());
 				
 				GrupoVO auxGrupo;
 				for (Grupo grupo: usuario.getLstGrupos())
