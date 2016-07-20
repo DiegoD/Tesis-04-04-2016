@@ -289,16 +289,27 @@ public class Consultas {
 	{
 		StringBuilder sb = new StringBuilder();
 		
-		
-		
 		sb.append("SELECT g_formularios.formulario, g_formularios.nombre FROM  ");
 		sb.append("m_gruposxusu,  m_grupoxform, m_usuarios, g_formularios  ");
 		sb.append("WHERE m_usuarios.usuario = m_gruposxusu.usuario  ");
 		sb.append("AND m_grupoxform.cod_grupo = m_gruposxusu.cod_grupo  ");
 		sb.append("AND g_formularios.formulario = m_grupoxform.formulario  ");
-		sb.append("AND m_usuarios.usuario = ? ");   
+		sb.append("AND m_grupoxform.cod_emp = m_grupoxform.cod_emp  ");
+		sb.append("AND m_usuarios.usuario = ? AND cod_emp = ? ");   
 	
 		
+		return sb.toString();
+	}
+	
+	
+	public String getUsuariosxEmp()
+	{
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT m_empresas.cod_emp, m_empresas.nom_emp  ");
+		sb.append("FROM m_usuariosxemp, m_empresas    ");
+		sb.append("WHERE usuario = ?  AND activo = 1");
+
 		return sb.toString();
 	}
 

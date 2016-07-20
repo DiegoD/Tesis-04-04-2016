@@ -15,6 +15,7 @@ import com.excepciones.Usuarios.ExisteUsuarioException;
 import com.excepciones.Usuarios.InsertandoUsuarioException;
 import com.excepciones.Usuarios.ModificandoUsuarioException;
 import com.excepciones.Usuarios.ObteniendoUsuariosException;
+import com.excepciones.Usuarios.ObteniendoUsuariosxEmpExeption;
 import com.excepciones.cotizaciones.MemberCotizacionException;
 import com.excepciones.grupos.InsertandoGrupoException;
 import com.excepciones.grupos.MemberGrupoException;
@@ -25,9 +26,12 @@ import com.logica.Formulario;
 import com.logica.Grupo;
 import com.logica.GruposUsuario;
 import com.logica.Usuario;
+import com.valueObject.EmpLoginVO;
+import com.valueObject.EmpresaVO;
 import com.valueObject.FormularioVO;
 import com.valueObject.GrupoVO;
 import com.valueObject.LoginVO;
+import com.valueObject.UsuarioVO;
 
 public class DAOUsuarios implements IDAOUsuarios {
 
@@ -333,7 +337,7 @@ public class DAOUsuarios implements IDAOUsuarios {
 	/**
 	 * Nos retorna los formularios habilitados para el usuario
 	 */
-	public ArrayList<Formulario> getFormulariosxUsuario(String usuario, Connection con) throws ObteniendoFormulariosException 
+	public ArrayList<Formulario> getFormulariosxUsuario(String usuario, String codEmp, Connection con) throws ObteniendoFormulariosException 
 	{
 		ArrayList<Formulario> lstFormularios = new ArrayList<Formulario>();
 		try 
@@ -343,6 +347,7 @@ public class DAOUsuarios implements IDAOUsuarios {
 			
 			PreparedStatement pstmt1 = con.prepareStatement(query);
 			pstmt1.setString(1, usuario);
+			pstmt1.setString(2, codEmp);
 			
 			ResultSet rs = pstmt1.executeQuery();
 			
@@ -363,6 +368,44 @@ public class DAOUsuarios implements IDAOUsuarios {
 			throw new ObteniendoFormulariosException();
 		}
 		return lstFormularios;
+		
+	}
+	
+	/**
+	 * Obtenemos las empresas para el usuario
+	 * 
+	 */
+	public ArrayList<EmpLoginVO> getUsuariosxEmp(String usuario, Connection con) throws ObteniendoUsuariosxEmpExeption 
+	{
+		ArrayList<EmpLoginVO> lstEmpresas = new ArrayList<EmpLoginVO>();
+		try 
+		{
+			Consultas consultas = new Consultas();
+			String query = consultas.getUsuariosxEmp();
+			
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			pstmt1.setString(1, usuario);
+			
+			ResultSet rs = pstmt1.executeQuery();
+			
+			EmpLoginVO empVO;
+			
+			while(rs.next ()) 
+			{
+				empVO = new EmpLoginVO();
+				empVO.setCodEmp(rs.getString(1));
+				empVO.setNomEmp(rs.getString(2));
+				
+				lstEmpresas.add(empVO);
+			}
+			rs.close();
+			pstmt1.close();
+		} 
+		catch (Exception e) 
+		{
+			throw new ObteniendoUsuariosxEmpExeption();
+		}
+		return lstEmpresas;
 		
 	}
 	

@@ -9,7 +9,18 @@ import com.valueObject.FormularioVO;
  */
 public class PermisosUsuario {
 	
+	private String codEmp;
+	
 	ArrayList<FormularioVO> lstFormularios;
+	
+	
+	public String getCodEmp() {
+		return codEmp;
+	}
+
+	public void setCodEmp(String codEmp) {
+		this.codEmp = codEmp;
+	}
 
 	public ArrayList<FormularioVO> getLstFormularios() {
 		return lstFormularios;

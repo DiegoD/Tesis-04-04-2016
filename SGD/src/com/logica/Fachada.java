@@ -377,7 +377,7 @@ public class Fachada {
 	 
 	 
 	 @SuppressWarnings("unchecked")
-		public ArrayList<FormularioVO> getFormulariosxUsuario(String usuario) throws ObteniendoFormulariosException, ConexionException 
+		public ArrayList<FormularioVO> getFormulariosxUsuario(String usuario, String codEmp) throws ObteniendoFormulariosException, ConexionException 
 		
 	 	{
 	    	
@@ -390,7 +390,7 @@ public class Fachada {
 	    		con = this.pool.obtenerConeccion();
 	    		
 	    		
-					lstFormularios = this.usuarios.getFormulariosxUsuario(usuario, con);
+					lstFormularios = this.usuarios.getFormulariosxUsuario(usuario, codEmp, con);
 			
 	    		
 	    		/*Transformamos al VO */
@@ -418,4 +418,5 @@ public class Fachada {
 	    }
 		
 /////////////////////////////////FIN-GUPOS/////////////////////////////////
+	 
 }

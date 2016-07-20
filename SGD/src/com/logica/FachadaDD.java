@@ -17,6 +17,7 @@ import com.excepciones.Login.LoginException;
 import com.excepciones.Usuarios.ExisteUsuarioException;
 import com.excepciones.Usuarios.InsertandoUsuarioException;
 import com.excepciones.Usuarios.ObteniendoUsuariosException;
+import com.excepciones.Usuarios.ObteniendoUsuariosxEmpExeption;
 import com.excepciones.cotizaciones.ExisteCotizacionException;
 import com.excepciones.cotizaciones.IngresandoCotizacionException;
 import com.excepciones.cotizaciones.MemberCotizacionException;
@@ -258,9 +259,28 @@ public class FachadaDD {
     	
     }
     
-    
-    
-    
+    public ArrayList<EmpLoginVO> getUsuariosxEmp(String usuario) throws ConexionException, ObteniendoUsuariosxEmpExeption
+    {
+    	Connection con = null;
+    	ArrayList<EmpLoginVO> lstEmpresas = new ArrayList<EmpLoginVO>();
+    	try 
+    	{
+			con = this.pool.obtenerConeccion();
+			lstEmpresas = this.usuarios.getUsuariosxEmp(usuario, con);
+			
+			
+		} 
+    	catch (ObteniendoUsuariosxEmpExeption | ConexionException e) 
+    	{
+    		throw e;
+		}
+    	finally
+    	{
+    		this.pool.liberarConeccion(con);
+    	}
+    	return lstEmpresas;
+    	
+    }
     
     
     

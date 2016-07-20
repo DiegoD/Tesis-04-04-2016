@@ -2,19 +2,24 @@ package com.vista;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import com.controladores.LoginControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
 import com.excepciones.Login.LoginException;
+import com.excepciones.Usuarios.ObteniendoUsuariosxEmpExeption;
 import com.excepciones.grupos.ObteniendoFormulariosException;
+import com.vaadin.event.FieldEvents.FocusEvent;
+import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewDisplay;
 import com.vaadin.server.Page;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
+import com.valueObject.EmpLoginVO;
 import com.valueObject.LoginVO;
 
 public class LoginExtended extends Login implements ViewDisplay {
@@ -22,6 +27,8 @@ public class LoginExtended extends Login implements ViewDisplay {
 	LoginControlador controlador;
 	Navigator navigator;
 	private Principal principal;
+	private ArrayList<EmpLoginVO> lstEmpresasUsu;
+
 	
 	public LoginExtended(Principal principal){
 		
@@ -29,6 +36,48 @@ public class LoginExtended extends Login implements ViewDisplay {
 		
 		controlador = new LoginControlador();
 		
+		ddlEmresa.addFocusListener(new FocusListener() {
+			
+			/*En el forcus de del combo de la empresa tomamos las empresas para el usario*/
+			public void focus(FocusEvent event) {
+								
+				boolean usuarioValido;
+						
+				try {
+					
+					LoginVO loginVO = new LoginVO();
+					
+					loginVO.setPass(tfPass.getValue());
+					loginVO.setUsuario(tfUsuario.getValue());
+					
+					usuarioValido = controlador.usuarioValido(loginVO);
+					
+					if(usuarioValido)
+					{
+						/*Obtenemos las empresas para el usuario y lo
+						 * desplegamos en el combo de empresas*/
+						lstEmpresasUsu = controlador.getUsuariosxEmp(loginVO.getUsuario());
+						
+						for (EmpLoginVO emp : lstEmpresasUsu) 
+						{
+							ddlEmresa.addItem(emp.getNomEmp());
+						}
+						
+												
+					}
+					else
+					{
+						Mensajes.mostrarMensajeError("Usuario y contraseña no válido");
+					}
+					
+				} catch (LoginException | InicializandoException | ErrorInesperadoException | ConexionException | ObteniendoUsuariosxEmpExeption e) {
+					
+					Mensajes.mostrarMensajeError(e.getMessage());
+				}
+
+			}
+           
+        });
 		
 		this.btnIngresar.addClickListener(click -> {
 			
@@ -37,9 +86,16 @@ public class LoginExtended extends Login implements ViewDisplay {
 			loginVO.setPass(this.tfPass.getValue());
 			loginVO.setUsuario(this.tfUsuario.getValue());
 			
-						
-			this.ingresarSistema(loginVO);
-			
+			if(this.ddlEmresa.getValue() != null)
+			{
+				loginVO.setCodEmp(this.obtenerCodEmpxNomEmp(this.ddlEmresa.getValue().toString().trim()));
+				this.ingresarSistema(loginVO);
+			}
+			else
+			{
+				Mensajes.mostrarMensajeError("Debe seleccionar una empresa");
+			}
+		
 		});
 		
 	}
@@ -57,26 +113,35 @@ public class LoginExtended extends Login implements ViewDisplay {
 			
 			usuarioValido = this.controlador.usuarioValido(loginVO);
 			
-			if(usuarioValido){
+			if(loginVO.getCodEmp() != null)
+			{
+				if(usuarioValido)
+				{
+					
+					/*Inicializamos una variable de session para obtener los permisos
+					 * del usuario*/
+					PermisosUsuario permisos = new PermisosUsuario();
+					permisos.lstFormularios = this.controlador.getPermisosUsuario(loginVO.getUsuario(), loginVO.getCodEmp());
+					
+					getSession().setAttribute("permisos", permisos);
+					
+					getSession().setAttribute("usuario", loginVO.getUsuario());
+					//getSession().setAttribute("pass", loginVO.getPass());
+					
+					permisos.setCodEmp(this.obtenerCodEmpxNomEmp(this.ddlEmresa.getValue().toString()));
+					
+					principal.setMenu(permisos);
 				
-				/*Inicializamos una variable de session para obtener los permisos
-				 * del usuario*/
-				PermisosUsuario permisos = new PermisosUsuario();
-				permisos.lstFormularios = this.controlador.getPermisosUsuario(loginVO.getUsuario());
+				}else{
+					
+					Mensajes.mostrarMensajeError("Usuario o contraseña no válidos");
+									
+				}
 				
-				getSession().setAttribute("permisos", permisos);
-				
-				getSession().setAttribute("usuario", loginVO.getUsuario());
-				getSession().setAttribute("pass", loginVO.getPass());
-				
-				principal.setMenu(permisos);
-			
-			}else{
-				
-				new Notification("Atención",
-	                     "<br/>" + "Usuario o contraseña no válidos",
-	                     Notification.Type.WARNING_MESSAGE, true)
-	                         .show(Page.getCurrent());
+			}
+			else
+			{
+				Mensajes.mostrarMensajeError("Debe seleccionar una empresa");
 			}
 					
 		} catch (LoginException | InicializandoException | ErrorInesperadoException | ConexionException | ObteniendoFormulariosException e) {
@@ -85,6 +150,32 @@ public class LoginExtended extends Login implements ViewDisplay {
 		} 
 	}
 
+	private String obtenerCodEmpxNomEmp(String nomEmp)
+	{
+		String codEmp = null;
+		
+		if(this.lstEmpresasUsu != null)
+		{
+			
+			boolean salir = false;
+			
+			int i =0;
+			while(i < this.lstEmpresasUsu.size() && !salir)
+			{
+				if(this.lstEmpresasUsu.get(i).getNomEmp().equals(nomEmp))
+				{
+					codEmp = this.lstEmpresasUsu.get(i).getCodEmp();
+					
+					salir = true;
+				}
+					
+				i++;
+			}
+		}
+		
+		return codEmp;
+	}
+	
 	@Override
 	public void showView(View view) {
 		// TODO Auto-generated method stub
