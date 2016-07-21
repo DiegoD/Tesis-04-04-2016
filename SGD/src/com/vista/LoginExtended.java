@@ -4,6 +4,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.apache.commons.codec.binary.Hex;
+
 import com.controladores.LoginControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.ErrorInesperadoException;
@@ -21,6 +23,8 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import com.valueObject.EmpLoginVO;
 import com.valueObject.LoginVO;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class LoginExtended extends Login implements ViewDisplay {
 	
@@ -47,6 +51,15 @@ public class LoginExtended extends Login implements ViewDisplay {
 					
 					LoginVO loginVO = new LoginVO();
 					
+					/*Convertimos el pass a MD5*/
+					String password = tfPass.getValue().toString().trim();
+					String passwordMd5;
+					
+					MessageDigest md = MessageDigest.getInstance("MD5");
+			    	byte[] bytes = md.digest(password.getBytes());
+			    	passwordMd5 = new String(Hex.encodeHex(bytes));
+					
+					
 					loginVO.setPass(tfPass.getValue());
 					loginVO.setUsuario(tfUsuario.getValue());
 					
@@ -70,7 +83,7 @@ public class LoginExtended extends Login implements ViewDisplay {
 						Mensajes.mostrarMensajeError("Usuario y contraseña no válido");
 					}
 					
-				} catch (LoginException | InicializandoException | ErrorInesperadoException | ConexionException | ObteniendoUsuariosxEmpExeption e) {
+				} catch (LoginException | InicializandoException | ErrorInesperadoException | ConexionException | ObteniendoUsuariosxEmpExeption | NoSuchAlgorithmException e) {
 					
 					Mensajes.mostrarMensajeError(e.getMessage());
 				}

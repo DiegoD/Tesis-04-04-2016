@@ -193,12 +193,8 @@ public class MenuExtended extends Menu{
 				switch(formularioVO.getCodigo())
 				{
 					case "MUsuarios" : this.habilitarUserButton();
-									 
 					break;
-					
-					case "MUsuarios" : this.habilitarUserButton();
-					 
-					break;
+										
 					case "MGrupos" :  this.habilitarGrupoButton();
 					break;
 				}
