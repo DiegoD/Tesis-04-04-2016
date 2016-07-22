@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import org.json.simple.JSONObject;
@@ -26,6 +27,7 @@ import com.logica.Formulario;
 import com.logica.Grupo;
 import com.logica.GruposUsuario;
 import com.logica.Usuario;
+import com.sun.jna.platform.win32.Sspi.TimeStamp;
 import com.valueObject.EmpLoginVO;
 import com.valueObject.EmpresaVO;
 import com.valueObject.FormularioVO;
@@ -88,7 +90,6 @@ public class DAOUsuarios implements IDAOUsuarios {
 	
 		try {
 			
-			System.out.println("estoy en DAO usuarios ");
 	    	ConsultasDD clts = new ConsultasDD();
 	    	String query = clts.getUsuarios();
 	    	PreparedStatement pstmt1 = con.prepareStatement(query);
@@ -97,6 +98,8 @@ public class DAOUsuarios implements IDAOUsuarios {
 			rs = pstmt1.executeQuery();
 			
 			while(rs.next ()) {
+				
+				Timestamp t = rs.getTimestamp(7);
 				
 				Usuario usr = new Usuario(rs.getString(1), rs.getString(2), rs.getString(3), rs.getBoolean(4), rs.getString(5), rs.getTimestamp(7), rs.getString(6));
 				

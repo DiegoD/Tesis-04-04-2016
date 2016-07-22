@@ -78,6 +78,7 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 		gridUsuarios.removeColumn("fechaMod");
 		gridUsuarios.removeColumn("usuarioMod");
 		gridUsuarios.removeColumn("operacion");
+		gridUsuarios.removeColumn("pass");
 		
 		
 		gridUsuarios.addSelectionListener(new SelectionListener() 

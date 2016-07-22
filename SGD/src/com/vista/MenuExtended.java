@@ -162,12 +162,7 @@ public class MenuExtended extends Menu{
 	{
 		ArrayList<FormularioVO> lstFormsMenuMant = new ArrayList<FormularioVO>();
 		
-		int cantidad = 0; /*Contamos la cantidad de botones para el usuario
-			para setear el tamaño del layout dentro del accordion*/
-		
-		int tamIconPx = 15;
-		int cantidadEnMantenimiento = 0;
-		
+	
 		
 		/*Buscamos los Formulairos correspondientes a este TAB*/
 		for (FormularioVO formularioVO : this.permisos.getLstFormularios()) {
@@ -199,23 +194,13 @@ public class MenuExtended extends Menu{
 					break;
 				}
 				
-				cantidadEnMantenimiento ++;
 			}
-			
-			int tam = tamIconPx * cantidadEnMantenimiento;
-			this.tabMantenimientos.setHeight(Integer.toString(tam) + "px");
-			
-			/*Sumamos a la variable de alto del accorion en gral*/
-			cantidad =+ cantidadEnMantenimiento;
 			
 			this.acordion.addTab(tabMantenimientos, "Mantenimientos", null);
 			
 		}
 		
-		int tamAccordion = tamIconPx * cantidad *3;
-		acordion.setHeight(Integer.toString(tamAccordion) + "px");
-		
-		acordion.setHeight("100%");
+		acordion.setHeight("75%"); /*Seteamos alto  del accordion*/
 		
 	}
 	
