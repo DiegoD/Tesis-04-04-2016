@@ -2,9 +2,9 @@ package com.vista;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.ArrayList;
 
-import org.apache.commons.codec.binary.Hex;
 
 import com.controladores.LoginControlador;
 import com.excepciones.ConexionException;
@@ -49,18 +49,15 @@ public class LoginExtended extends Login implements ViewDisplay {
 						
 				try {
 					
+					MD5 md5 = new MD5();
+					
 					LoginVO loginVO = new LoginVO();
 					
 					/*Convertimos el pass a MD5*/
 					String password = tfPass.getValue().toString().trim();
-					String passwordMd5;
-					
-					MessageDigest md = MessageDigest.getInstance("MD5");
-			    	byte[] bytes = md.digest(password.getBytes());
-			    	passwordMd5 = new String(Hex.encodeHex(bytes));
-					
-					
-					loginVO.setPass(tfPass.getValue());
+					String passwordMd5 = md5.getMD5Hash(password);
+
+					loginVO.setPass(passwordMd5);
 					loginVO.setUsuario(tfUsuario.getValue());
 					
 					usuarioValido = controlador.usuarioValido(loginVO);
@@ -76,14 +73,13 @@ public class LoginExtended extends Login implements ViewDisplay {
 							ddlEmresa.addItem(emp.getNomEmp());
 						}
 						
-												
 					}
 					else
 					{
 						Mensajes.mostrarMensajeError("Usuario y contraseña no válido");
 					}
 					
-				} catch (LoginException | InicializandoException | ErrorInesperadoException | ConexionException | ObteniendoUsuariosxEmpExeption | NoSuchAlgorithmException e) {
+				} catch (LoginException | InicializandoException | ErrorInesperadoException | ConexionException | ObteniendoUsuariosxEmpExeption | NoSuchAlgorithmException  e) {
 					
 					Mensajes.mostrarMensajeError(e.getMessage());
 				}
@@ -94,9 +90,15 @@ public class LoginExtended extends Login implements ViewDisplay {
 		
 		this.btnIngresar.addClickListener(click -> {
 			
+			MD5 md5 = new MD5();
+			
 			LoginVO loginVO = new LoginVO();
 			
-			loginVO.setPass(this.tfPass.getValue());
+			try {
+				String passwordMd5 = md5.getMD5Hash(this.tfPass.getValue().toString().trim());
+			
+			
+			loginVO.setPass(passwordMd5);
 			loginVO.setUsuario(this.tfUsuario.getValue());
 			
 			if(this.ddlEmresa.getValue() != null)
@@ -107,6 +109,11 @@ public class LoginExtended extends Login implements ViewDisplay {
 			else
 			{
 				Mensajes.mostrarMensajeError("Debe seleccionar una empresa");
+			}
+			
+			} catch (Exception e) {
+				
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 			}
 		
 		});
@@ -194,5 +201,8 @@ public class LoginExtended extends Login implements ViewDisplay {
 		// TODO Auto-generated method stub
 		
 	}
+	
+
+
 
 }
