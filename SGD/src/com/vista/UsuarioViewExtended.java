@@ -1,5 +1,6 @@
 package com.vista;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import org.json.simple.JSONObject;
@@ -69,7 +70,7 @@ public class UsuarioViewExtended extends UsuarioView{
 					usuarioVO.setUsuario(usuario.getValue().trim());
 					usuarioVO.setActivo(activo.getValue());
 					usuarioVO.setNombre(nombre.getValue().trim());
-					usuarioVO.setPass(pass.getValue().trim());
+					usuarioVO.setPass(md5.getMD5Hash(pass.getValue().trim()));
 					
 					usuarioVO.setOperacion(operacion);
 					usuarioVO.setActivo(activo.getValue());
@@ -308,13 +309,12 @@ public class UsuarioViewExtended extends UsuarioView{
 		
 		UsuarioVO usu = new UsuarioVO();
 		usu = fieldGroup.getItemDataSource().getBean();
-		
-		
+		String fecha = new SimpleDateFormat("dd/MM/yyyy").format(usu.getFechaMod());
 		
 		auditoria.setDescription(
 			    "<ul>"+
 			    "  <li> Modificado por: " + usu.getUsuarioMod() + "</li>"+
-			    "  <li> Fecha: " + usu.getFechaMod() + "</li>"+
+			    "  <li> Fecha: " + fecha + "</li>"+
 			    "  <li> Operación: " + usu.getOperacion() + "</li>"+
 			    "</ul>");
 		

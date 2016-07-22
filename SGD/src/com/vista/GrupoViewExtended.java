@@ -1,6 +1,7 @@
 package com.vista;
 
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -338,13 +339,13 @@ public class GrupoViewExtended extends GrupoView {
 		
 		GrupoVO grupo = new GrupoVO();
 		grupo = fieldGroup.getItemDataSource().getBean();
-		
+		String fecha = new SimpleDateFormat("dd/MM/yyyy").format(grupo.getFechaMod());
 		
 		
 		auditoria.setDescription(
 			    "<ul>"+
 			    "  <li> Modificado por: " + grupo.getUsuarioMod() + "</li>"+
-			    "  <li> Fecha: " + grupo.getFechaMod() + "</li>"+
+			    "  <li> Fecha: " + fecha + "</li>"+
 			    "  <li> Operación: " + grupo.getOperacion() + "</li>"+
 			    "</ul>");
 		
