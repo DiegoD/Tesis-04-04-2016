@@ -64,6 +64,8 @@ public class UsuarioViewExtended extends UsuarioView{
 		this.aceptar.addClickListener(click -> {
 			try 
 			{
+				MD5 md5 = new MD5(); /*Para encriptar la contrasena*/
+				
 				if(this.fieldsValidos())
 				{
 					UsuarioVO usuarioVO = new UsuarioVO();

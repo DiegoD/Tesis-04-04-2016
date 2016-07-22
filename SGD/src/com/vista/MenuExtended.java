@@ -215,6 +215,8 @@ public class MenuExtended extends Menu{
 		int tamAccordion = tamIconPx * cantidad *3;
 		acordion.setHeight(Integer.toString(tamAccordion) + "px");
 		
+		acordion.setHeight("100%");
+		
 	}
 	
 	/**
