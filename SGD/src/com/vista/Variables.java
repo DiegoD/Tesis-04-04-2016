@@ -13,4 +13,6 @@ public class Variables {
 	
 	public static final String OK_INGRESO = "Se han guardado los cambios";
 	
+	public static final String ERROR_USUARIO_YA_EXISTE = "El usuario ya existe";
+	
 }

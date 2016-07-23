@@ -15,6 +15,7 @@ import com.excepciones.Usuarios.ObteniendoUsuariosxEmpExeption;
 import com.excepciones.grupos.ObteniendoFormulariosException;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
+import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewDisplay;
@@ -39,6 +40,8 @@ public class LoginExtended extends Login implements ViewDisplay {
 		this.principal = principal;
 		
 		controlador = new LoginControlador();
+		this.tfUsuario.focus();
+		this.btnIngresar.setClickShortcut(KeyCode.ENTER);
 		
 		ddlEmresa.addFocusListener(new FocusListener() {
 			
