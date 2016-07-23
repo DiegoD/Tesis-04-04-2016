@@ -3,6 +3,7 @@ package com.controladores;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 import com.excepciones.ConexionException;
 import com.excepciones.ErrorInesperadoException;
@@ -26,7 +27,7 @@ public class LoginControlador {
 						
 	}
 	
-	public ArrayList<FormularioVO> getPermisosUsuario(String usuario, String codEmp) throws ObteniendoFormulariosException, ConexionException, InicializandoException
+	public Hashtable<String, FormularioVO> getPermisosUsuario(String usuario, String codEmp) throws ObteniendoFormulariosException, ConexionException, InicializandoException
 	{
 		return Fachada.getInstance().getFormulariosxUsuario(usuario, codEmp);
 	}

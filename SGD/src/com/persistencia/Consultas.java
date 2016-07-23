@@ -265,8 +265,8 @@ public class Consultas {
     {
     	StringBuilder sb = new StringBuilder();
 	
-    	sb.append("INSERT INTO vaadin.m_grupoxform (formulario, cod_grupo) ");
-    	sb.append("VALUES (?, ?) ");
+    	sb.append("INSERT INTO vaadin.m_grupoxform (formulario, cod_grupo, leer, nuevo_editar, borrar) ");
+    	sb.append("VALUES (?, ?, ?, ?, ?) ");
     	
     	return sb.toString();
     }
@@ -289,7 +289,8 @@ public class Consultas {
 	{
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("SELECT g_formularios.formulario, g_formularios.nombre  ");
+		sb.append("SELECT g_formularios.formulario, g_formularios.nombre,  ");
+		sb.append("m_grupoxform.leer,  m_grupoxform.nuevo_editar,  m_grupoxform.borrar  ");
 		sb.append("FROM g_formularios, m_grupoxform, m_gruposxusu ");
 		sb.append("WHERE m_grupoxform.formulario = g_formularios.formulario ");
 		sb.append("AND m_grupoxform.cod_grupo = m_gruposxusu.cod_grupo ");

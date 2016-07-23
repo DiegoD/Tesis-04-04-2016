@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -287,14 +288,13 @@ public class Fachada {
 	 
 	 
 	 @SuppressWarnings("unchecked")
-		public ArrayList<FormularioVO> getFormulariosxUsuario(String usuario, String codEmp) throws ObteniendoFormulariosException, ConexionException 
+		public Hashtable<String, FormularioVO> getFormulariosxUsuario(String usuario, String codEmp) throws ObteniendoFormulariosException, ConexionException 
 		
 	 	{
-	    	
 	    	Connection con = null;
 	    	
 	    	ArrayList<Formulario> lstFormularios = new ArrayList<Formulario>();
-	    	ArrayList<FormularioVO> lstFormSelVO = new ArrayList<FormularioVO>();
+	    	Hashtable<String, FormularioVO> hLstFormSelVO = new Hashtable<String, FormularioVO>();
 
 	    	try {
 	    		con = this.pool.obtenerConeccion();
@@ -308,7 +308,7 @@ public class Fachada {
 	    		for (Formulario formulario : lstFormularios) {
 	    			formSelVO = new FormularioVO(formulario);
 	    			
-	    			lstFormSelVO.add(formSelVO);
+	    			hLstFormSelVO.put(formSelVO.getCodigo(), formSelVO);
 				}
 	    		
 	    	} catch (ObteniendoFormulariosException e) {
@@ -323,7 +323,7 @@ public class Fachada {
 	    		this.pool.liberarConeccion(con);
 	    	}
     	
-	    	return lstFormSelVO;
+	    	return hLstFormSelVO;
 	    	    	
 	    }
 		

@@ -379,6 +379,9 @@ public class DAOUsuarios implements IDAOUsuarios {
 				form = new Formulario();
 				form.setCodFormulario(rs.getString(1));
 				form.setNomFormulario(rs.getString(2));
+				form.setLeer(rs.getBoolean(3));
+				form.setNuevoEditar(rs.getBoolean(4));
+				form.setBorrar(rs.getBoolean(5));
 				lstFormularios.add(form);
 			}
 			rs.close();

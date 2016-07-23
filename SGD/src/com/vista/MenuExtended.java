@@ -17,17 +17,13 @@ public class MenuExtended extends Menu{
 	
 	private Component contentAnterior;
 	public static String nombre = "Menu";
-	PermisosUsuario permisos;
-	
+		
 	private VerticalLayout tabMantenimientos;
 	
-	//Accordion acordion;
-
 	
-	public MenuExtended(PermisosUsuario permisosUsuario){
+	public MenuExtended(){
 		
-		this.permisos = permisosUsuario;
-	
+		
 		
 		/*Primero deshabilitamos todas las funcionalidades*/
 		this.deshabilitarFuncionalidades();
@@ -145,11 +141,10 @@ public class MenuExtended extends Menu{
 	
 		
 		/*Buscamos los Formulairos correspondientes a este TAB*/
-		for (FormularioVO formularioVO : this.permisos.getLstFormularios()) {
+		for (FormularioVO formularioVO : PermisosUsuario.getLstPermisos().values()) {
 			
-			if(formularioVO.getCodigo().equals("MUsuarios")
-				|| formularioVO.getCodigo().equals("MGrupos") 
-				|| formularioVO.getCodigo().equals("MUsuarios"))
+			if(formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_USUARIO)
+				|| formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_GRUPO))
 			{
 				lstFormsMenuMant.add(formularioVO);
 			}
@@ -167,10 +162,14 @@ public class MenuExtended extends Menu{
 				
 				switch(formularioVO.getCodigo())
 				{
-					case "MUsuarios" : this.habilitarUserButton();
+					case VariablesPermisos.FORMULARIO_USUARIO : 
+						if(PermisosUsuario.permisoEnFormulaior(VariablesPermisos.FORMULARIO_USUARIO, VariablesPermisos.OPERACION_LEER))
+							this.habilitarUserButton();
 					break;
 										
-					case "MGrupos" :  this.habilitarGrupoButton();
+					case VariablesPermisos.FORMULARIO_GRUPO :
+						if(PermisosUsuario.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GRUPO, VariablesPermisos.OPERACION_LEER))
+							this.habilitarGrupoButton();
 					break;
 				}
 				
@@ -221,6 +220,7 @@ public class MenuExtended extends Menu{
 		
 		this.tabMantenimientos.addComponent(this.gruposButton);
 	}
+	
 	
 	
 	

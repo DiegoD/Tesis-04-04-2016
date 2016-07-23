@@ -7,6 +7,7 @@ import java.util.Properties;
 import javax.servlet.annotation.WebServlet;
 
 import com.abstractFactory.AbstractFactoryBuilder;
+import com.excepciones.ErrorInesperadoException;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.Page;
@@ -58,11 +59,12 @@ public class Principal extends UI {
 		//setContent(menu);
 	}
 	
-	public void setMenu(PermisosUsuario permisos){
+	public void setMenu(){
 		
-		this.menu = new MenuExtended(permisos);
 		
+		this.menu = new MenuExtended();
 		setContent(this.menu);
+				
 		
 	}
 	

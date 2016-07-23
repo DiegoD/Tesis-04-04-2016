@@ -141,19 +141,22 @@ public class LoginExtended extends Login implements ViewDisplay {
 				if(usuarioValido)
 				{
 					
-					/*Inicializamos una variable de session para obtener los permisos
-					 * del usuario*/
-					PermisosUsuario permisos = new PermisosUsuario();
-					permisos.lstFormularios = this.controlador.getPermisosUsuario(loginVO.getUsuario(), loginVO.getCodEmp());
-					
-					getSession().setAttribute("permisos", permisos);
+					/*Seteamos la variable con los permisos para el usuario*/
+										
+					PermisosUsuario.setCodEmp(loginVO.getCodEmp());
+					PermisosUsuario.setUsuario(loginVO.getUsuario());
+					PermisosUsuario.setLstPermisos(this.controlador.getPermisosUsuario(loginVO.getUsuario(), loginVO.getCodEmp())); 
+									
 					
 					getSession().setAttribute("usuario", loginVO.getUsuario());
-					//getSession().setAttribute("pass", loginVO.getPass());
 					
-					permisos.setCodEmp(this.obtenerCodEmpxNomEmp(this.ddlEmresa.getValue().toString()));
 					
-					principal.setMenu(permisos);
+					PermisosUsuario permisos2 = (PermisosUsuario)getSession().getAttribute("permisos");
+					
+										
+					PermisosUsuario.setCodEmp(this.obtenerCodEmpxNomEmp(this.ddlEmresa.getValue().toString()));
+					
+					principal.setMenu();
 				
 				}else{
 					
