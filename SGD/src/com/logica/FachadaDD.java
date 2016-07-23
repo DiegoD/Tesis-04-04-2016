@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import org.json.simple.JSONArray;
@@ -177,6 +178,7 @@ public class FachadaDD {
     {
     	Connection con = null;
     	Usuario user = new Usuario(usuarioVO);
+    	boolean existe = false;
     	
     	try 
     	{
@@ -186,23 +188,31 @@ public class FachadaDD {
 			
     		if(!this.usuarios.memberUsuario(user.getUsuario(), con))
         	{
-        		System.out.println("voy a insertar");
         		this.usuarios.insertarUsuario(user, con);
         	}
         	else
         	{
-        		System.out.println("ya estaba");
-        		throw new ExisteUsuarioException();
+        		existe = true;
         	}
-		} 
-    	catch (Exception e) 
-    	{
-    		throw new ErrorInesperadoException();
 		}
+    	catch(Exception InsertandoUsuarioException){
+    		try {
+				con.rollback();
+				
+			} catch (SQLException e) {
+				
+				throw new InsertandoUsuarioException();
+			}
+    		
+    		throw new InsertandoUsuarioException();
+    	}
     	finally 
     	{
     		this.pool.liberarConeccion(con);
 		}
+    	
+    	if(existe)
+    		throw new ExisteUsuarioException();
     }
 ////////////////////////////////FIN NUEVO/////////////////////////////////   
     

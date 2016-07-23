@@ -112,7 +112,10 @@ public class UsuarioViewExtended extends UsuarioView{
 				}
 				
 			} 
-			catch (InsertandoUsuarioException| ConexionException| ExisteUsuarioException| InicializandoException e) {
+			catch(ExisteUsuarioException e){
+				Mensajes.mostrarMensajeError(Variables.ERROR_USUARIO_YA_EXISTE);
+			}
+  			catch (InsertandoUsuarioException| ConexionException| InicializandoException e) {
 			
 				Mensajes.mostrarMensajeError(e.getMessage());
 			
@@ -149,7 +152,7 @@ public class UsuarioViewExtended extends UsuarioView{
 			{
 				UsuarioViewAgregarGrupoExtend form = new UsuarioViewAgregarGrupoExtend(this);
 				
-				sub.setModal(false);
+				sub.setModal(true);
 				sub.setVista(form);
 				sub.center();
 				sub.setDraggable(true);

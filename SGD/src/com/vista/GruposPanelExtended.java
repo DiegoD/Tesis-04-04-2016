@@ -32,8 +32,7 @@ public class GruposPanelExtended extends GruposPanel {
 	private ArrayList<GrupoVO> lstGrupos; /*Lista con los grupos*/
 	private BeanItemContainer<GrupoVO> container;
 	private GrupoControlador controlador;
-	//private MySub subGrupoView = new MySub("60%", "55%");
-	MySub sub;// = new MySub("60%", "55%");
+	MySub sub = new MySub("65%", "65%");
 	
 	public GruposPanelExtended(){
 		
@@ -49,7 +48,7 @@ public class GruposPanelExtended extends GruposPanel {
 			
 			this.btnNuevo.addClickListener(click -> {
 				
-				    sub = new MySub("60%","65%");
+					sub = new MySub("65%", "65%");
 					form = new GrupoViewExtended(Variables.OPERACION_NUEVO, this);
 					sub.setModal(true);
 					sub.setVista(form);

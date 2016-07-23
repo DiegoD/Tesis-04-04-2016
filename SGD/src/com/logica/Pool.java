@@ -129,4 +129,21 @@ public class Pool {
 		}
 		
 	}
+	
+	public void liberarConeccionRollback(Connection con) throws ConexionException 
+	{
+		try {
+			if(con != null)
+			{
+				if(!con.isClosed()){
+					con.close();
+				}
+			}
+			
+		} catch (SQLException e) { 
+			
+			throw new ConexionException();
+		}
+		
+	}
 }

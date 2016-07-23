@@ -49,6 +49,7 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 			
 			
 			form = new UsuarioViewExtended(Variables.OPERACION_NUEVO, this);
+			sub.setModal(true);
 			sub.setVista(form);
 			
 			UI.getCurrent().addWindow(sub);

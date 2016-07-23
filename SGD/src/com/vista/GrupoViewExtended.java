@@ -426,7 +426,7 @@ public class GrupoViewExtended extends GrupoView {
 		this.enableBotonAgregarQuitar();
 		this.lstFormsAgregar = new ArrayList<FormularioVO>();
 		this.lstFormsVO = new ArrayList<FormularioVO>();
-		
+		this.activo.setValue(true);
 		/*Inicializamos el container*/
 		this.container = 
 				new BeanItemContainer<FormularioVO>(FormularioVO.class);
