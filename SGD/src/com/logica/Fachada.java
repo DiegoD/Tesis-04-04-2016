@@ -168,10 +168,11 @@ public class Fachada {
     	return lstGruposVO;
     }
     
-    public void insertarGrupo(GrupoVO grupoVO) throws InsertandoGrupoException, ConexionException 
+    public void insertarGrupo(GrupoVO grupoVO) throws InsertandoGrupoException, ConexionException, ExisteGrupoException 
     {
     	
     	Connection con = null;
+    	boolean existe = false;
     	
     	try 
     	{
@@ -186,8 +187,10 @@ public class Fachada {
 	    		
 	    		con.commit();
 	    	}
-	    	else
-	    		throw new ExisteGrupoException();
+	    	else{
+	    		existe = true;
+	    	}
+	    		
     	
     	}catch(Exception InsertandoGrupoException)
     	{
@@ -204,6 +207,9 @@ public class Fachada {
     	finally
     	{
     		pool.liberarConeccion(con);
+    	}
+    	if (existe){
+    		throw new ExisteGrupoException();
     	}
     }
     
