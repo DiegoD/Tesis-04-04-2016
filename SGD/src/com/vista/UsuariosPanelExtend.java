@@ -41,7 +41,7 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 		
 		controlador = new UsuarioControlador();
 		this.lstUsuarios = new ArrayList<UsuarioVO>();
-		sub = new MySub("60%", "65%");
+		sub = new MySub("65%", "65%");
 				
 		this.inicializarGrilla();
 		this.btnNuevoUsuario.addClickListener(click -> 

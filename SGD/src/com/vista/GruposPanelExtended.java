@@ -23,7 +23,6 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.valueObject.GrupoVO;
 import com.valueObject.UsuarioVO;
-import com.vista.CotizacionesPanelExtended.ItemGrilla;
 
 
 public class GruposPanelExtended extends GruposPanel {

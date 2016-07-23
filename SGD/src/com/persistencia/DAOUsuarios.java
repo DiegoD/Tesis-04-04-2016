@@ -17,7 +17,6 @@ import com.excepciones.Usuarios.InsertandoUsuarioException;
 import com.excepciones.Usuarios.ModificandoUsuarioException;
 import com.excepciones.Usuarios.ObteniendoUsuariosException;
 import com.excepciones.Usuarios.ObteniendoUsuariosxEmpExeption;
-import com.excepciones.cotizaciones.MemberCotizacionException;
 import com.excepciones.grupos.InsertandoGrupoException;
 import com.excepciones.grupos.MemberGrupoException;
 import com.excepciones.grupos.ModificandoGrupoException;

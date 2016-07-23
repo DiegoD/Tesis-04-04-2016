@@ -31,7 +31,6 @@ import com.vaadin.ui.Grid;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
-import com.valueObject.CotizacionVO;
 import com.valueObject.FormularioVO;
 import com.valueObject.GrupoVO;
 import com.valueObject.UsuarioVO;
@@ -167,7 +166,7 @@ public class GrupoViewExtended extends GrupoView {
 				
 				GrupoViewAgregarFormularioExtended form = new GrupoViewAgregarFormularioExtended(this);
 				
-				sub = new MySub("60%", "70%" );
+				sub = new MySub("70%", "60%" );
 				sub.setModal(true);
 				sub.setVista(form);
 				//sub.setWidth("50%");

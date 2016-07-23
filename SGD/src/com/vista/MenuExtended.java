@@ -110,26 +110,6 @@ public class MenuExtended extends Menu{
 			}
 		});
 		
-		this.statusButton.addClickListener(click -> {
-			
-			this.content.removeAllComponents();
-			this.content.addComponent(new ImpuestosView());
-		});
-		
-		this.inboxButton.addClickListener(click -> {
-			
-			this.content.removeAllComponents();
-			this.content.addComponent(new FacturaEj());
-		});
-		
-		this.archiveButton.addClickListener(click -> {
-			
-			this.content.removeAllComponents();
-			this.content.addComponent(new CotizacionViewExtended(true));
-			
-		});
-		
-		
 	}
 	
 	public  void setContent(Component comp)

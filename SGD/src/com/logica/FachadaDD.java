@@ -18,13 +18,6 @@ import com.excepciones.Usuarios.ExisteUsuarioException;
 import com.excepciones.Usuarios.InsertandoUsuarioException;
 import com.excepciones.Usuarios.ObteniendoUsuariosException;
 import com.excepciones.Usuarios.ObteniendoUsuariosxEmpExeption;
-import com.excepciones.cotizaciones.ExisteCotizacionException;
-import com.excepciones.cotizaciones.IngresandoCotizacionException;
-import com.excepciones.cotizaciones.MemberCotizacionException;
-import com.excepciones.cotizaciones.NoExisteCotizacionException;
-import com.excepciones.cotizaciones.ObteniendoCotizacionException;
-import com.excepciones.documentosAduaneros.IngresandoDocumentoAduaneroException;
-import com.excepciones.documentosAduaneros.ObteniendoDocumentoAduaneroException;
 import com.excepciones.grupos.ExisteGrupoException;
 import com.excepciones.grupos.InsertandoGrupoException;
 import com.excepciones.grupos.MemberGrupoException;
@@ -39,10 +32,6 @@ public class FachadaDD {
 	Pool pool;
 	
 	/*Esto es para abstract factory*/
-	private IDaoImpuesto daoImpuesto;
-	private IDAOCotizaciones cotizaciones;
-	private IDAOMonedas monedas;
-	private IDAODocumentosAduaneros docsAduaneros;
 	private IDAOUsuarios usuarios;
 	private IDAOGrupos grupos;
 	
@@ -57,10 +46,6 @@ public class FachadaDD {
         fabrica = AbstractFactoryBuilder.getInstancia();
 		fabricaConcreta = fabrica.getAbstractFactory();
 		
-        this.daoImpuesto = fabricaConcreta.crearDaoImpuestos();
-        this.cotizaciones = fabricaConcreta.crearDAOCotizaciones();
-        this.monedas = fabricaConcreta.crearDAOMonedas();
-        this.docsAduaneros = fabricaConcreta.crearDAODocumentosAduaneros();
         this.usuarios =  fabricaConcreta.crearDAOUsuarios();
         this.grupos = fabricaConcreta.crearDAOGrupos();
         
