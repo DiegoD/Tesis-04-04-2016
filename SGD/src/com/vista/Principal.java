@@ -52,11 +52,7 @@ public class Principal extends UI {
 	}
 	
 	public Principal(){
-		
-	
-		
-		
-		
+
 		setContent(new LoginExtended(Principal.this));
 		
 		//setContent(menu);
