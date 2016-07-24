@@ -99,8 +99,8 @@ public class LoginExtended extends Login implements ViewDisplay {
 			
 			/*Si la session es nulla dejamos ingresar
 			 * de lo contrario tiene una session y se debe desloguear primero*/
-			if(permisos == null)
-			{
+			//if(permisos == null)
+			//{
 				MD5 md5 = new MD5();
 				
 				LoginVO loginVO = new LoginVO();
@@ -127,11 +127,11 @@ public class LoginExtended extends Login implements ViewDisplay {
 					
 					Mensajes.mostrarMensajeWarning(Variables.ERROR_INESPERADO);
 				}
-			}
-			else{
+			//}
+			//else{
 				
-				Mensajes.mostrarMensajeError("Tiene una session iniciada, debe desloguearse");
-			}
+				//Mensajes.mostrarMensajeError("Tiene una session iniciada, debe desloguearse");
+			//}
 				
 		});
 		
