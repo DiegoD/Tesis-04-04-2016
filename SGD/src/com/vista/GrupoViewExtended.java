@@ -240,7 +240,8 @@ public class GrupoViewExtended extends GrupoView {
 						/*Actualizamos el container y la grilla*/
 						container.removeAllItems();
 						container.addAll(lstFormsVO);
-						lstFormularios.setContainerDataSource(container);
+						//lstFormularios.setContainerDataSource(container);
+						this.actualizarGrillaContainer(container);
 						
 					}
 					
@@ -460,7 +461,8 @@ public class GrupoViewExtended extends GrupoView {
 		}
 		
 		
-		lstFormularios.setContainerDataSource(container);
+		//lstFormularios.setContainerDataSource(container);
+		this.actualizarGrillaContainer(container);
 						
 	}
 	
@@ -680,7 +682,8 @@ public class GrupoViewExtended extends GrupoView {
 			}
 		}
 
-		lstFormularios.setContainerDataSource(container);
+		//lstFormularios.setContainerDataSource(container);
+		this.actualizarGrillaContainer(container);
 		
 	}
 	
@@ -711,7 +714,8 @@ public class GrupoViewExtended extends GrupoView {
 			}
 		}
 		
-		lstFormularios.setContainerDataSource(container);
+		//lstFormularios.setContainerDataSource(container);
+		this.actualizarGrillaContainer(container);
 
 	}
 	
@@ -795,7 +799,8 @@ public class GrupoViewExtended extends GrupoView {
 		this.container.removeAllItems();
 		this.container.addAll(lstFormsVO);
 		
-		this.lstFormularios.setContainerDataSource(container);
+		//this.lstFormularios.setContainerDataSource(container);
+		this.actualizarGrillaContainer(container);
 
 	}
 	
@@ -855,9 +860,19 @@ public class GrupoViewExtended extends GrupoView {
 		return esta;
 	}
 	
-	private void actualizarGrilla(BeanItemContainer<FormularioVO> container)
+	private void actualizarGrillaContainer(BeanItemContainer<FormularioVO> container)
 	{
 		lstFormularios.setContainerDataSource(container);
+		
+		//lstFormularios.getColumn("borrar").setHidable(true);
+		
+		lstFormularios.getColumn("borrar").setHidden(true);
+		lstFormularios.getColumn("leer").setHidden(true);
+		lstFormularios.getColumn("nuevoEditar").setHidden(true);
+		
+		//lstFormularios.removeColumn("borrar");
+		//lstFormularios.removeColumn("leer");
+		//lstFormularios.removeColumn("nuevoEditar");
 	}
 }
 
