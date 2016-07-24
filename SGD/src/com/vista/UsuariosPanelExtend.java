@@ -19,6 +19,7 @@ import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
+import com.vaadin.server.VaadinService;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.valueObject.GrupoVO;
@@ -39,23 +40,50 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 	public UsuariosPanelExtend() throws ClassNotFoundException, ObteniendoUsuariosException, ErrorInesperadoException, ObteniendoGruposException 
 	{
 		
-		controlador = new UsuarioControlador();
-		this.lstUsuarios = new ArrayList<UsuarioVO>();
-		sub = new MySub("65%", "65%");
+		PermisosUsuario permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
+		
+	    /*Verificamos que el usuario tenga permisos de lectura para mostrar la vista*/
+		boolean permisoLectura = permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_USUARIO, VariablesPermisos.OPERACION_LEER);
+		
+		/*Verificamos que el usuario tenga permisos de nuevo editar*/
+		boolean permisoNuevoEditar = permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_USUARIO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+			
+		
+		
+		if(permisoLectura){
+		
+			controlador = new UsuarioControlador();
+			this.lstUsuarios = new ArrayList<UsuarioVO>();
+			sub = new MySub("65%", "65%");
+					
+			this.inicializarGrilla();
+			
+			/*Si tiene permisos de nuevoEditrar inicializamos el boton nuevo*/
+			if(permisoNuevoEditar){
+				this.btnNuevoUsuario.addClickListener(click -> 
+				{
+					
+					form = new UsuarioViewExtended(Variables.OPERACION_NUEVO, this);
+					sub.setModal(true);
+					sub.setVista(form);
+					
+					UI.getCurrent().addWindow(sub);
+					
+						
+				});
+			}
+			else{ /*de lo contrario deshabilitamos el boton nuevo*/
 				
-		this.inicializarGrilla();
-		this.btnNuevoUsuario.addClickListener(click -> 
-		{
-			
-			
-			form = new UsuarioViewExtended(Variables.OPERACION_NUEVO, this);
-			sub.setModal(true);
-			sub.setVista(form);
-			
-			UI.getCurrent().addWindow(sub);
-			
+				this.btnNuevoUsuario.setEnabled(false);
+				this.btnNuevoUsuario.setVisible(false);
+			}
 				
-		});
+		
+		}else{
+			
+			/*Si no tiene permisos mostramos mensaje*/
+			Mensajes.mostrarMensajeError(Variables.USUSARIO_SIN_PERMISOS);
+		}
 	}
 	
 	private void inicializarGrilla() throws ClassNotFoundException, ObteniendoUsuariosException, ErrorInesperadoException, ObteniendoGruposException
@@ -254,5 +282,10 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 	public void cerrarVentana()
 	{
 		UI.getCurrent().removeWindow(sub);
+	}
+	
+	public void mostrarMensaje(String msj)
+	{
+		Mensajes.mostrarMensajeError(msj);
 	}
 }

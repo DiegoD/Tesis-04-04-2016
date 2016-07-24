@@ -23,6 +23,7 @@ import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
+import com.vaadin.server.VaadinService;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.valueObject.FormularioVO;
@@ -43,9 +44,10 @@ public class UsuarioViewExtended extends UsuarioView{
 	  									un grupo, para poder quitarlo de la lista*/
 	private MySub sub; 
 	private BeanFieldGroup<UsuarioVO> fieldGroupAudit;
-	//BeanItemContainer<GrupoVO> container;
+	
 	GrupoControlador controladorGrupo;
 	BeanItemContainer<GrupoVO> containerGrupo;
+	private PermisosUsuario permisos; /*Permisos del usuario*/
 	
 	/**
 	 * Constructor: recibe operación (nuevo, editar)
@@ -53,6 +55,9 @@ public class UsuarioViewExtended extends UsuarioView{
 	 */
 	public UsuarioViewExtended(String opera, UsuariosPanelExtend main)
 	{
+		/*Inicializamos los permisos para el usuario*/
+		this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
+		
 		operacion = opera;
 		this.mainView = main;
 		this.lstGruposAgregar = new ArrayList<GrupoVO>();
@@ -271,13 +276,40 @@ public class UsuarioViewExtended extends UsuarioView{
 		/*SI LA OPERACION NO ES NUEVO, OCULTAMOS BOTON ACEPTAR*/
 		if(this.operacion.equals(Variables.OPERACION_NUEVO))
 		{
-			/*Inicializamos al formulario como nuevo*/
-			this.iniFormNuevo();
+			/*Chequeamos si tiene permiso de editar*/
+			boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_USUARIO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+			
+			/*Si no tiene permisos de Nuevo Cerrmamos la ventana y mostramos mensaje*/
+			if(permisoNuevoEditar)
+			{
+				/*Inicializamos al formulario como nuevo*/
+				this.iniFormNuevo();
+			}
+			else{
+			
+				mainView.cerrarVentana();
+				mainView.mostrarMensaje(Variables.USUSARIO_SIN_PERMISOS);
+			
+			}
+				
 		}
 		else if(this.operacion.equals(Variables.OPERACION_LECTURA))
 		{
-			/*Inicializamos formulario como editar*/
-			this.iniFormLectura();
+			/*Chequeamos si tiene permiso de editar*/
+			boolean permisoLectura = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_USUARIO, VariablesPermisos.OPERACION_LEER);
+			
+			/*Si no tiene permisos de Nuevo Cerrmamos la ventana y mostramos mensaje*/
+			if(permisoLectura)
+			{
+				/*Inicializamos formulario como editar*/
+				this.iniFormLectura();
+				
+			}else{
+			
+				mainView.cerrarVentana();
+				mainView.mostrarMensaje(Variables.USUSARIO_SIN_PERMISOS);
+			
+			}
 					
 		}
 		
@@ -339,7 +371,6 @@ public class UsuarioViewExtended extends UsuarioView{
 	 */
 	private void iniFormNuevo()
 	{
-		
 		this.enableBotonAceptar();
 		this.disableBotonEditar();
 		this.lstGruposAgregar = new ArrayList<GrupoVO>();
@@ -351,6 +382,7 @@ public class UsuarioViewExtended extends UsuarioView{
 		/*Como es en operacion nuevo, dejamos todos los campos editabls*/
 		this.readOnlyFields(false);
 		this.activo.setValue(true);	
+
 	}
 	
 	/**
@@ -359,20 +391,32 @@ public class UsuarioViewExtended extends UsuarioView{
 	 */
 	private void iniFormEditar()
 	{
-		//setea operación
-		operacion = Variables.OPERACION_EDITAR;
+		/*Verificamos que tenga permisos*/
+		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_USUARIO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
-		/*Oculatamos Editar y mostramos el de guardar*/
-		this.enableBotonAceptar();
-		this.disableBotonEditar();
-		this.enableBotonAgregarQuitar();
+		if(permisoNuevoEditar){
 		
-		/*Dejamos los textfields que se pueden editar
-		 * en readonly = false asi  se pueden editar*/
-		this.setearFieldsEditar();
+			//setea operación
+			operacion = Variables.OPERACION_EDITAR;
+			
+			/*Oculatamos Editar y mostramos el de guardar*/
+			this.enableBotonAceptar();
+			this.disableBotonEditar();
+			this.enableBotonAgregarQuitar();
+			
+			/*Dejamos los textfields que se pueden editar
+			 * en readonly = false asi  se pueden editar*/
+			this.setearFieldsEditar();
+			
+			/*Seteamos las validaciones*/
+			this.setearValidaciones(true);
 		
-		/*Seteamos las validaciones*/
-		this.setearValidaciones(true);
+		}
+		else{
+			
+			/*Mostramos mensaje Sin permisos para operacion*/
+			Mensajes.mostrarMensajeError(Variables.USUSARIO_SIN_PERMISOS);
+		}
 	}
 	
 	/**

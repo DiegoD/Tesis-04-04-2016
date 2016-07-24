@@ -11,38 +11,38 @@ import com.valueObject.FormularioVO;
  */
 public class PermisosUsuario {
 	
-	private static String codEmp;
-	private static String usuario;
+	private String codEmp;
+	private String usuario;
 			
 	
 	/*Variable estaticas*/
 	
 
 
-	private static Hashtable<String, FormularioVO> lstFormularios;
+	private Hashtable<String, FormularioVO> lstFormularios;
 	
 	
-	public static Hashtable<String, FormularioVO> getLstPermisos() {
+	public  Hashtable<String, FormularioVO> getLstPermisos() {
 		return lstFormularios;
 	}
 
-	public static void setLstPermisos(Hashtable<String, FormularioVO> pLstPermisos) {
+	public void setLstPermisos(Hashtable<String, FormularioVO> pLstPermisos) {
 		lstFormularios = pLstPermisos;
 	}
 
-	public static String getCodEmp() {
+	public String getCodEmp() {
 		return codEmp;
 	}
 
-	public static void setCodEmp(String pCodEmp) {
+	public void setCodEmp(String pCodEmp) {
 		codEmp = pCodEmp;
 	}
 	
-	public static String getUsuario() {
+	public String getUsuario() {
 		return usuario;
 	}
 
-	public static void setUsuario(String pUsuario) {
+	public void setUsuario(String pUsuario) {
 		usuario = pUsuario;
 	}
 	
@@ -52,7 +52,7 @@ public class PermisosUsuario {
 	 * si tiene permisos
 	 * 
 	 */
-	public static boolean permisoEnFormulaior(String formulario, String operacion)
+	public boolean permisoEnFormulaior(String formulario, String operacion)
 	{
 		boolean tienePermiso = false;
 		

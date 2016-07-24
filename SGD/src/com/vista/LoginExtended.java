@@ -20,6 +20,7 @@ import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewDisplay;
 import com.vaadin.server.Page;
+import com.vaadin.server.VaadinService;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import com.valueObject.EmpLoginVO;
@@ -93,32 +94,45 @@ public class LoginExtended extends Login implements ViewDisplay {
 		
 		this.btnIngresar.addClickListener(click -> {
 			
-			MD5 md5 = new MD5();
-			
-			LoginVO loginVO = new LoginVO();
-			
-			try {
-				String passwordMd5 = md5.getMD5Hash(this.tfPass.getValue().toString().trim());
+			PermisosUsuario permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
 			
 			
-			loginVO.setPass(passwordMd5);
-			loginVO.setUsuario(this.tfUsuario.getValue());
-			
-			if(this.ddlEmresa.getValue() != null)
+			/*Si la session es nulla dejamos ingresar
+			 * de lo contrario tiene una session y se debe desloguear primero*/
+			if(permisos == null)
 			{
-				loginVO.setCodEmp(this.obtenerCodEmpxNomEmp(this.ddlEmresa.getValue().toString().trim()));
-				this.ingresarSistema(loginVO);
-			}
-			else
-			{
-				Mensajes.mostrarMensajeError("Debe seleccionar una empresa");
-			}
-			
-			} catch (Exception e) {
+				MD5 md5 = new MD5();
 				
-				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+				LoginVO loginVO = new LoginVO();
+				
+				try {
+					String passwordMd5 = md5.getMD5Hash(this.tfPass.getValue().toString().trim());
+				
+				
+					
+				loginVO.setPass(passwordMd5);
+				loginVO.setUsuario(this.tfUsuario.getValue());
+				
+				if(this.ddlEmresa.getValue() != null)
+				{
+					loginVO.setCodEmp(this.obtenerCodEmpxNomEmp(this.ddlEmresa.getValue().toString().trim()));
+					this.ingresarSistema(loginVO);
+				}
+				else
+				{
+					Mensajes.mostrarMensajeError("Debe seleccionar una empresa");
+				}
+				
+				} catch (Exception e) {
+					
+					Mensajes.mostrarMensajeWarning(Variables.ERROR_INESPERADO);
+				}
 			}
-		
+			else{
+				
+				Mensajes.mostrarMensajeError("Tiene una session iniciada, debe desloguearse");
+			}
+				
 		});
 		
 	}
@@ -142,19 +156,23 @@ public class LoginExtended extends Login implements ViewDisplay {
 				{
 					
 					/*Seteamos la variable con los permisos para el usuario*/
-										
-					PermisosUsuario.setCodEmp(loginVO.getCodEmp());
-					PermisosUsuario.setUsuario(loginVO.getUsuario());
-					PermisosUsuario.setLstPermisos(this.controlador.getPermisosUsuario(loginVO.getUsuario(), loginVO.getCodEmp())); 
+					PermisosUsuario permisos = new PermisosUsuario();
+					
+					//permisos.setCodEmp(loginVO.getCodEmp().toString());
+					permisos.setUsuario(loginVO.getUsuario());
+					permisos.setLstPermisos(this.controlador.getPermisosUsuario(loginVO.getUsuario(), loginVO.getCodEmp())); 
 									
 					
-					getSession().setAttribute("usuario", loginVO.getUsuario());
+					VaadinService.getCurrentRequest().getWrappedSession().setAttribute("usuario", loginVO.getUsuario());
+					//getSession().setAttribute("usuario", loginVO.getUsuario());
 					
+					VaadinService.getCurrentRequest().getWrappedSession().setAttribute("permisos", permisos);
+					//getSession().setAttribute("permisos", permisos);
 					
 					PermisosUsuario permisos2 = (PermisosUsuario)getSession().getAttribute("permisos");
 					
 										
-					PermisosUsuario.setCodEmp(this.obtenerCodEmpxNomEmp(this.ddlEmresa.getValue().toString()));
+					permisos.setCodEmp(this.obtenerCodEmpxNomEmp(this.ddlEmresa.getValue().toString()));
 					
 					principal.setMenu();
 				

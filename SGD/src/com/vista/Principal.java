@@ -62,7 +62,7 @@ public class Principal extends UI {
 	public void setMenu(){
 		
 		
-		this.menu = new MenuExtended();
+		this.menu = new MenuExtended(this);
 		setContent(this.menu);
 				
 		

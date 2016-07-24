@@ -19,6 +19,7 @@ import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.server.Page;
+import com.vaadin.server.VaadinService;
 import com.vaadin.shared.Position;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
@@ -41,8 +42,12 @@ public class GruposPanelExtended extends GruposPanel {
 		controlador = new GrupoControlador();
 		this.lstGrupos = new ArrayList<GrupoVO>();
 		
+		String usuario = (String)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("usuario");
+		PermisosUsuario permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
+		
+			
         /*Verificamos que el usuario tenga permisos de lectura para mostrar la vista*/
-		boolean permisoLectura = PermisosUsuario.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GRUPO, VariablesPermisos.OPERACION_LEER);
+		boolean permisoLectura = permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GRUPO, VariablesPermisos.OPERACION_LEER);
 		
 		if(permisoLectura){
         
@@ -51,7 +56,7 @@ public class GruposPanelExtended extends GruposPanel {
 				this.inicializarGrilla();
 				
 				/*Para el boton de nuevo, verificamos que tenga permisos de nuevoEditar*/
-				boolean permisoNuevoEditar = PermisosUsuario.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GRUPO, VariablesPermisos.OPERACION_LEER);
+				boolean permisoNuevoEditar = permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GRUPO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 				if(permisoNuevoEditar)
 				{
 				

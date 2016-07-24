@@ -3,6 +3,7 @@ package com.vista;
 import java.util.ArrayList;
 
 import com.vaadin.server.Page;
+import com.vaadin.server.VaadinService;
 import com.vaadin.shared.Position;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Component;
@@ -19,11 +20,13 @@ public class MenuExtended extends Menu{
 	public static String nombre = "Menu";
 		
 	private VerticalLayout tabMantenimientos;
+	private PermisosUsuario permisos;
+	private Principal mainPrincipal; /*Variable para poder desloguearse*/
 	
-	
-	public MenuExtended(){
+	public MenuExtended(Principal principalView){
 		
-		
+		this.mainPrincipal = principalView;
+		this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");;
 		
 		/*Primero deshabilitamos todas las funcionalidades*/
 		this.deshabilitarFuncionalidades();
@@ -41,16 +44,13 @@ public class MenuExtended extends Menu{
 		
 		//this.menuItems.addComponent(acordion);
 		
+		
+		
 		// Some components to put in the Accordion.
-		Label l1 = new Label("There are no previously saved actions.");
+		Label l1 = new Label("La session es: " + this.permisos.getUsuario());
 		Label l2 = new Label("There are no saved notes.");
 		Label l3 = new Label("There are currently no issues.");
 
-		
-
-
-		
-	
 		
 		// Add the components as tabs in the Accordion.
 		accordion.addTab(l1, "Saved actions", null);
@@ -106,6 +106,28 @@ public class MenuExtended extends Menu{
 			}
 		});
 		
+		this.logoutButton.addClickListener(click -> {
+			
+			setSizeFull();
+			
+			this.content.removeAllComponents();
+			try {
+				
+				/*Para desloguearnos matamos la session y vamos a login*/
+				VaadinService.getCurrentRequest().getWrappedSession().setAttribute("usuario", null);
+				VaadinService.getCurrentRequest().getWrappedSession().setAttribute("permisos", null);
+				
+				LoginExtended c = new LoginExtended(this.mainPrincipal);
+				this.mainPrincipal.setContent(c);
+				
+				
+				
+			} catch (Exception e) {
+				
+				Mensajes.mostrarMensajeError(e.getMessage());
+			}
+		});
+		
 	}
 	
 	public  void setContent(Component comp)
@@ -141,7 +163,7 @@ public class MenuExtended extends Menu{
 	
 		
 		/*Buscamos los Formulairos correspondientes a este TAB*/
-		for (FormularioVO formularioVO : PermisosUsuario.getLstPermisos().values()) {
+		for (FormularioVO formularioVO : this.permisos.getLstPermisos().values()) {
 			
 			if(formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_USUARIO)
 				|| formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_GRUPO))
@@ -163,12 +185,12 @@ public class MenuExtended extends Menu{
 				switch(formularioVO.getCodigo())
 				{
 					case VariablesPermisos.FORMULARIO_USUARIO : 
-						if(PermisosUsuario.permisoEnFormulaior(VariablesPermisos.FORMULARIO_USUARIO, VariablesPermisos.OPERACION_LEER))
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_USUARIO, VariablesPermisos.OPERACION_LEER))
 							this.habilitarUserButton();
 					break;
 										
 					case VariablesPermisos.FORMULARIO_GRUPO :
-						if(PermisosUsuario.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GRUPO, VariablesPermisos.OPERACION_LEER))
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GRUPO, VariablesPermisos.OPERACION_LEER))
 							this.habilitarGrupoButton();
 					break;
 				}
@@ -221,6 +243,10 @@ public class MenuExtended extends Menu{
 		this.tabMantenimientos.addComponent(this.gruposButton);
 	}
 	
+	public PermisosUsuario getPermisosUsuario()
+	{
+		return this.permisos;
+	}
 	
 	
 	

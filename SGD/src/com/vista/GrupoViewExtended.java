@@ -28,6 +28,7 @@ import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.server.Page;
 import com.vaadin.server.Page.Styles;
+import com.vaadin.server.VaadinService;
 import com.vaadin.shared.Position;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
@@ -55,7 +56,11 @@ public class GrupoViewExtended extends GrupoView {
 	 										  un formulario, para poder quitarlo de la lista*/
 	
 	private GrupoFormularioPermisos frmFormPermisos;
-	MySub sub;// = new MySub();
+	MySub sub;
+	private PermisosUsuario permisos; /*Variable con los permisos del usuario*/
+	
+	
+	
 	/**
 	 * Constructor del formulario, conInfo indica
 	 * si hay que cargarle la info
@@ -64,6 +69,8 @@ public class GrupoViewExtended extends GrupoView {
 	@SuppressWarnings("unchecked")
 	public GrupoViewExtended(String opera, GruposPanelExtended main){
 	
+	/*Inicializamos los permisos para el usuario*/
+	this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
 	
 	this.operacion = opera;
 	this.mainView = main;
@@ -484,7 +491,7 @@ public class GrupoViewExtended extends GrupoView {
 		
 		
 		/*Verificamos que tenga permisos*/
-		boolean permisoNuevoEditar = PermisosUsuario.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GRUPO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GRUPO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
 		if(permisoNuevoEditar){
 			
@@ -514,7 +521,7 @@ public class GrupoViewExtended extends GrupoView {
 	private void iniFormNuevo()
 	{
 		/*Chequeamos si tiene permiso de editar*/
-		boolean permisoNuevoEditar = PermisosUsuario.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GRUPO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GRUPO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
 		/*Si no tiene permisos de Nuevo Cerrmamos la ventana y mostramos mensaje*/
 		if(!permisoNuevoEditar)
