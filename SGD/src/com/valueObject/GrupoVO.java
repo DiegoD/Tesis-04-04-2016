@@ -113,6 +113,7 @@ public class GrupoVO extends AuditoriaVO{
 		for (FormularioVO formularioVO : lstFormularios) 
 		{
 			this.lstFormularios.add(formularioVO);
+						
 		}
 		
 	}

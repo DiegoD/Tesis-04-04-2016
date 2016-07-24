@@ -13,6 +13,7 @@ import com.excepciones.grupos.InsertandoGrupoException;
 import com.excepciones.grupos.MemberGrupoException;
 import com.excepciones.grupos.ModificandoGrupoException;
 import com.excepciones.grupos.NoExisteGrupoException;
+import com.excepciones.grupos.ObteniendoFormulariosException;
 import com.excepciones.grupos.ObteniendoGruposException;
 import com.logica.Fachada;
 import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
@@ -42,7 +43,7 @@ public class GrupoControlador {
 		Fachada.getInstance().insertarGrupo(grupoVO);
 	}
 		
-	public ArrayList<GrupoVO> getGrupos() throws ObteniendoGruposException, InicializandoException, ConexionException, ErrorInesperadoException 
+	public ArrayList<GrupoVO> getGrupos() throws ObteniendoGruposException, InicializandoException, ConexionException, ErrorInesperadoException, ObteniendoFormulariosException 
 	{
 		
 			return Fachada.getInstance().getGrupos();

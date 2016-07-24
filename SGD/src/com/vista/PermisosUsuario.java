@@ -17,7 +17,6 @@ public class PermisosUsuario {
 	
 	/*Variable estaticas*/
 	
-	
 
 
 	private static Hashtable<String, FormularioVO> lstFormularios;

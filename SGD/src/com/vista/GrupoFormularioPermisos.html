@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8" name="design-properties" content="{&quot;RULERS_VISIBLE&quot;:true,&quot;GUIDELINES_VISIBLE&quot;:false,&quot;SNAP_TO_OBJECTS&quot;:true,&quot;SNAP_TO_GRID&quot;:true,&quot;SNAPPING_DISTANCE&quot;:10,&quot;JAVA_SOURCES_ROOT&quot;:&quot;src&quot;,&quot;THEME&quot;:&quot;sgd&quot;}">
+ </head> 
+ <body> 
+  <vaadin-form-layout spacing="false" height="399px" margin> 
+   <vaadin-label style-name="colored h2" responsive plain-text :center>
+     Permisos 
+   </vaadin-label> 
+   <vaadin-label responsive id="lbDescripcion" plain-text _id="lbDescripcion" :center>
+     Permisos del grupo para el formulario 
+   </vaadin-label> 
+   <vaadin-check-box caption="Leer" _id="chkLeer"></vaadin-check-box> 
+   <vaadin-check-box caption="Nuevo/Editar" id="chkNuevoEditar" _id="chkNuevoEditar"></vaadin-check-box> 
+   <vaadin-check-box caption="Eliminar" id="chkEliminar" _id="chkEliminar"></vaadin-check-box> 
+   <vaadin-horizontal-layout width="177px"> 
+    <vaadin-button style-name="primary tiny" responsive id="btnAgregar" plain-text _id="btnAgregar">
+      Aceptar 
+    </vaadin-button> 
+    <vaadin-button style-name="primary tiny" responsive id="btncancelar" height="28px" plain-text _id="cancelar">
+      Cancelar 
+    </vaadin-button> 
+   </vaadin-horizontal-layout> 
+  </vaadin-form-layout>  
+ </body>
+</html>

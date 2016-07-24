@@ -12,7 +12,25 @@ public class FormularioVO {
 	private boolean nuevoEditar;
 	private boolean borrar;
 	
-	public FormularioVO(){}
+	public FormularioVO()
+	{
+	
+	}
+	
+	/**
+	 * Copiamos todos los datos del FormularioVO pasado
+	 * por parametro
+	 *
+	 */
+	public void copiar(FormularioVO frm){
+		
+		this.codFormulario = frm.getCodigo();
+		this.nomFormulario = frm.getNombre();
+		this.leer = frm.isLeer();
+		this.nuevoEditar = frm.isNuevoEditar();
+		this.borrar = frm.isBorrar();
+		
+	}
 	
 	public FormularioVO(Formulario f)
 	{

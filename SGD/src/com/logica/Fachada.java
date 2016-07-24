@@ -105,7 +105,7 @@ public class Fachada {
     
 /////////////////////////////////INI-GUPOS/////////////////////////////////
     @SuppressWarnings("unchecked")
-	public ArrayList<GrupoVO> getGrupos() throws ObteniendoGruposException, ConexionException 
+	public ArrayList<GrupoVO> getGrupos() throws ObteniendoGruposException, ConexionException,  ObteniendoFormulariosException
     {
     	
     	Connection con = null;
@@ -141,24 +141,24 @@ public class Fachada {
     				auxF.setCodFormulario(frm.getCodFormulario());
     				auxF.setNomFormulario(frm.getNomFormulario());
     				
+    				auxF.setLeer(frm.isLeer());
+    				auxF.setNuevoEditar(frm.isNuevoEditar());
+    				auxF.setBorrar(frm.isBorrar());
+    				
     				aux.getLstFormularios().add(auxF);
 				}
     			
     			lstGruposVO.add(aux);
 			}
 	
-    	}catch(ObteniendoGruposException e)
+    	}catch(ObteniendoGruposException | ObteniendoFormulariosException e)
     	{
     		throw e;
     		
     	} catch (ConexionException e) {
 			
     		throw e;
-    		
-		} catch (ObteniendoFormulariosException e) {
-			
-			e.printStackTrace();
-		}
+    	} 
     	finally
     	{
     		this.pool.liberarConeccion(con);
@@ -228,10 +228,8 @@ public class Fachada {
 		    	if(this.grupos.memberGrupo(grupo.getCodGrupo(), con))
 		    	{
 		    		/*Primero eliminamos el grupo*/
-		    		this.grupos.eliminarGrupo(grupo.getCodGrupo(), con);
-		    		
-		    		/*Luego lo volvemos a insertar*/
-		    		this.grupos.insertarGrupo(grupo, con);
+		    		this.grupos.actualizarGrupo(grupo, con);
+		    			    		
 		    		
 		    		con.commit();
 		    	}
@@ -239,7 +237,7 @@ public class Fachada {
 		    	else
 		    		throw new NoExisteGrupoException();
 	    	
-	    	}catch(InsertandoGrupoException| MemberGrupoException| ConexionException | SQLException | ModificandoGrupoException e)
+	    	}catch(MemberGrupoException| ConexionException | SQLException | ModificandoGrupoException e)
 	    	{
 	    		try {
 					con.rollback();

@@ -13,6 +13,7 @@ import org.json.simple.JSONObject;
 import com.controladores.GrupoControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.InicializandoException;
+import com.excepciones.ErrorInesperadoException;
 import com.excepciones.grupos.ExisteGrupoException;
 import com.excepciones.grupos.InsertandoGrupoException;
 import com.excepciones.grupos.MemberGrupoException;
@@ -34,6 +35,8 @@ import com.vaadin.ui.UI;
 import com.valueObject.FormularioVO;
 import com.valueObject.GrupoVO;
 import com.valueObject.UsuarioVO;
+import com.excepciones.grupos.ModificandoGrupoException;
+import com.excepciones.grupos.NoExisteGrupoException;
 
 
 
@@ -48,6 +51,8 @@ public class GrupoViewExtended extends GrupoView {
 	BeanItemContainer<FormularioVO> container;
 	private FormularioVO formSelecccionado; /*Variable utilizada cuando se selecciona
 	 										  un formulario, para poder quitarlo de la lista*/
+	
+	private GrupoFormularioPermisos frmFormPermisos;
 	MySub sub;// = new MySub();
 	/**
 	 * Constructor del formulario, conInfo indica
@@ -130,13 +135,10 @@ public class GrupoViewExtended extends GrupoView {
 				Mensajes.mostrarMensajeWarning(Variables.WARNING_CAMPOS_NO_VALIDOS);
 			}
 				
-			} catch (InsertandoGrupoException| MemberGrupoException| ExisteGrupoException| InicializandoException| ConexionException e) {
+			} catch (InsertandoGrupoException| MemberGrupoException| ExisteGrupoException| InicializandoException| ConexionException | ModificandoGrupoException | ErrorInesperadoException | NoExisteGrupoException e) {
 				
 				Mensajes.mostrarMensajeError(e.getMessage());
 				
-			}catch(Exception e)
-			{
-				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 			}
 			
 		});
@@ -203,6 +205,7 @@ public class GrupoViewExtended extends GrupoView {
 			this.cancelar.addClickListener(click -> {
 				main.cerrarVentana();
 			});
+			
 			/*Inicalizamos listener para boton de Quitar*/
 			this.btnQuitar.addClickListener(click -> {
 				
@@ -263,14 +266,83 @@ public class GrupoViewExtended extends GrupoView {
 			    	BeanItem<FormularioVO> item = container.getItem(lstFormularios.getSelectedRow());
 			    	formSelecccionado = item.getBean(); /*Seteamos el formulario
 			    	 									seleccionado para poder quitarlo*/
-
-						  
+			    	
+			    	
+			    							  
 			    	}catch(Exception e)
 			    	{
 			    		Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 			    	}
 			      
 			    }
+			});
+			
+			
+			
+			/*Listener boton editar de la grilla de formularios*/
+			this.btnEditarForm.addClickListener(click -> {
+				
+			boolean esta = false;	
+	
+			try {
+				
+				/*Verificamos que haya un formulario seleccionado para
+				 * eliminar*/
+				if(formSelecccionado != null)
+				{
+					
+					this.frmFormPermisos = new GrupoFormularioPermisosExtended(this, formSelecccionado, Variables.OPERACION_EDITAR);
+					
+					sub = new MySub("70%", "60%" );
+					sub.setModal(true);
+					sub.setVista(this.frmFormPermisos);
+					sub.center();
+					
+					UI.getCurrent().addWindow(sub);
+					
+				}
+				else /*De lo contrario mostramos mensaje que debe selcionar un formulario*/
+				{
+					Mensajes.mostrarMensajeError("Debe seleccionar un formulario para editar");
+				}
+		
+				}catch(Exception e)
+				{
+					Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+				}
+			});
+			
+			/*Listener boton permisos*/
+			this.btnVerPermisos.addClickListener(click -> {
+				
+			boolean esta = false;	
+	
+			try {
+				
+				/*Verificamos que haya un formulario seleccionado para
+				 * eliminar*/
+				if(formSelecccionado != null)
+				{
+					
+					this.frmFormPermisos = new GrupoFormularioPermisosExtended(this, formSelecccionado, Variables.OPERACION_LECTURA);
+					
+					sub = new MySub("70%", "60%" );
+					sub.setModal(true);
+					sub.setVista(this.frmFormPermisos);
+					sub.center();
+					
+					UI.getCurrent().addWindow(sub);
+					
+				}
+				else /*De lo contrario mostramos mensaje que debe selcionar un formulario*/
+				{
+					Mensajes.mostrarMensajeError("Debe seleccionar un formulario");
+				}
+		
+				}catch(Exception e)
+				{
+					Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+				}
 			});
 			
 			
@@ -364,7 +436,7 @@ public class GrupoViewExtended extends GrupoView {
 	{
 		/*Habilitamos el boton de editar,
 		 * deshabilitamos botn aceptar*/
-		this.enableBotonEditar();
+		this.enableBotonesLectura();
 		this.disableBotonAceptar();
 		this.disableBotonAgregarQuitar();
 		
@@ -389,8 +461,7 @@ public class GrupoViewExtended extends GrupoView {
 		
 		
 		lstFormularios.setContainerDataSource(container);
-		
-				
+						
 	}
 	
 	/**
@@ -404,7 +475,7 @@ public class GrupoViewExtended extends GrupoView {
 		
 		/*Oculatamos Editar y mostramos el de guardar y de agregar formularios*/
 		this.enableBotonAceptar();
-		this.disableBotonEditar();
+		this.disableBotonLectura();
 		this.enableBotonAgregarQuitar();
 		
 		/*Dejamos los textfields que se pueden editar
@@ -422,7 +493,7 @@ public class GrupoViewExtended extends GrupoView {
 	private void iniFormNuevo()
 	{
 		this.enableBotonAceptar();
-		this.disableBotonEditar();
+		this.disableBotonLectura();
 		this.enableBotonAgregarQuitar();
 		this.lstFormsAgregar = new ArrayList<FormularioVO>();
 		this.lstFormsVO = new ArrayList<FormularioVO>();
@@ -454,23 +525,29 @@ public class GrupoViewExtended extends GrupoView {
 	}
 	
 	/**
-	 * Deshabilitamos el boton editar
+	 * Deshabilitamos el boton editar y permisos
 	 *
 	 */
-	private void disableBotonEditar()
+	private void disableBotonLectura()
 	{
 		this.btnEditar.setEnabled(false);
 		this.btnEditar.setVisible(false);
+		
+		this.btnVerPermisos.setEnabled(false);
+		this.btnVerPermisos.setVisible(false);
 	}
 	
 	/**
-	 * Habilitamos el boton editar
+	 * Habilitamos el boton editar y permisos
 	 *
 	 */
-	private void enableBotonEditar()
+	private void enableBotonesLectura()
 	{
 		this.btnEditar.setEnabled(true);
 		this.btnEditar.setVisible(true);
+		
+		this.btnVerPermisos.setEnabled(true);
+		this.btnVerPermisos.setVisible(true);
 		
 	}
 	
@@ -486,6 +563,9 @@ public class GrupoViewExtended extends GrupoView {
 		this.btnQuitar.setEnabled(true);
 		this.btnQuitar.setVisible(true);
 		
+		this.btnEditarForm.setEnabled(true);
+		this.btnEditarForm.setVisible(true);
+		
 	}
 	
 	/**
@@ -499,6 +579,9 @@ public class GrupoViewExtended extends GrupoView {
 		
 		this.btnQuitar.setEnabled(false);
 		this.btnQuitar.setVisible(false);
+		
+		this.btnEditarForm.setEnabled(false);
+		this.btnEditarForm.setVisible(false);
 	}
 	
 	/**
@@ -552,6 +635,8 @@ public class GrupoViewExtended extends GrupoView {
 	}
 	
 	
+	
+	
 	/**
 	 * Nos retorna true si los campos
 	 * son válidos, se debe invocar antes
@@ -599,8 +684,9 @@ public class GrupoViewExtended extends GrupoView {
 		
 	}
 	
+
 	/**
-	 * Agregar Formularios seleccionados
+	 *Agregamos los formularios seleccionados
 	 */
 	public void agregarFormulariosSeleccionados(ArrayList<FormularioVO> lstForms)
 	{
@@ -628,7 +714,7 @@ public class GrupoViewExtended extends GrupoView {
 		lstFormularios.setContainerDataSource(container);
 
 	}
-
+	
 	public void cerrarVentana()
 	{
 		UI.getCurrent().removeWindow(sub);
@@ -679,6 +765,99 @@ public class GrupoViewExtended extends GrupoView {
 		{
 			 System.out.println(e.getStackTrace());
 		}
+	}
+	
+	
+	/////////////////////////////////////////////////NUEVOOOOOOOOOOOOOO
+	
+	
+	/**
+	 * Actualizamos Grilla si se agrega o modigfica un formulario y sus permisos
+	 * desde GrupoViewExtended
+	 * Es invocado desde las ventnas hijas
+	 *
+	 */
+	public void actulaizarGrilla(FormularioVO formularioVO)
+	{
+
+		/*Si esta el grupo en la lista, es una acutalizacion
+		 * y modificamos el objeto en la lista*/
+		if(this.existeFormularioenLista(formularioVO.getCodigo()))
+		{
+			this.actualizarFormularioLista(formularioVO);
+		}
+		else  /*De lo contrario es uno nuevo y lo agregamos a la lista*/
+		{
+			this.lstFormsVO.add(formularioVO);
+		}
+			
+		/*Actualizamos la grilla*/
+		this.container.removeAllItems();
+		this.container.addAll(lstFormsVO);
+		
+		this.lstFormularios.setContainerDataSource(container);
+
+	}
+	
+	
+	/**
+	 * Modificamos un grupoVO de la lista cuando
+	 * se hace una acutalizacion de un Grupo
+	 *
+	 */
+	private void actualizarFormularioLista(FormularioVO formularioVO)
+	{
+		int i =0;
+		boolean salir = false;
+		
+		FormularioVO formEnLista;
+		
+		while( i < this.lstFormsVO.size() && !salir)
+		{
+			formEnLista = this.lstFormsVO.get(i);
+			if(formularioVO.getCodigo().equals(formEnLista.getCodigo()))
+			{
+				//this.lstGrupos.get(i).setNomGrupo(grupoVO.getNomGrupo());
+				
+				this.lstFormsVO.get(i).copiar(formularioVO);
+
+				salir = true;
+			}
+			
+			i++;
+		}
+		
+	}
+	
+	/**
+	 * Retornanoms true si esta el grupoVO en la lista
+	 * de grupos de la vista
+	 *
+	 */
+	private boolean existeFormularioenLista(String codForm)
+	{
+		int i =0;
+		boolean esta = false;
+		
+		FormularioVO aux;
+		
+		while( i < this.lstFormsVO.size() && !esta)
+		{
+			aux = this.lstFormsVO.get(i);
+			if(codForm.equals(aux.getCodigo()))
+			{
+				esta = true;
+			}
+			
+			i++;
+		}
+		
+		return esta;
+	}
+	
+	private void actualizarGrilla(BeanItemContainer<FormularioVO> container)
+	{
+		lstFormularios.setContainerDataSource(container);
 	}
 }
 

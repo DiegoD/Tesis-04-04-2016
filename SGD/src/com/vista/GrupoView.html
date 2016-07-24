@@ -29,14 +29,20 @@
      </vaadin-horizontal-layout> 
     </vaadin-form-layout> 
     <vaadin-form-layout spacing="false" size-full> 
-     <vaadin-grid id="lstFormularios" responsive width-full height="267px" _id="lstFormularios"></vaadin-grid> 
-     <vaadin-horizontal-layout style-name="v-formlayout" responsive width="55.33%" height-full :middle :right> 
+     <vaadin-grid id="lstFormularios" responsive width-full height="267px" editable _id="lstFormularios"></vaadin-grid> 
+     <vaadin-horizontal-layout style-name="v-formlayout" responsive width="82%" height-full :middle :right> 
       <vaadin-button style-name="primary tiny" responsive id="btnAgregar" plain-text _id="btnAgregar" :middle>
         Agregar 
+      </vaadin-button> 
+      <vaadin-button style-name="primary tiny" responsive id="btnEditarForm" plain-text _id="btnEditarForm" :middle>
+        Editar 
       </vaadin-button> 
       <vaadin-button style-name="primary tiny" responsive id="btnQuitar" plain-text _id="btnQuitar" :middle>
         Quitar 
       </vaadin-button> 
+      <vaadin-button style-name="primary tiny" responsive id="btnVerPermisos" plain-text _id="btnVerPermisos" :middle>
+        Permisos 
+      </vaadin-button>
      </vaadin-horizontal-layout> 
     </vaadin-form-layout> 
    </vaadin-horizontal-layout> 

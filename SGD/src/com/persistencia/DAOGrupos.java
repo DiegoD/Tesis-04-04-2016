@@ -171,6 +171,50 @@ public class DAOGrupos implements IDAOGrupos {
 		
 	}
 
+	/**
+	 * Actualizamos grupo dado el codigo,
+	 * PRECONDICION: El código del codigo debe existir
+	 * PRECONDICION: Invocar dentro de una transaction
+	 * @throws ModificandoGrupoException 
+	 *
+	 */
+	public void actualizarGrupo(Grupo grupo, Connection con) throws ModificandoGrupoException
+	{
+		Consultas consultas = new Consultas ();
+		String update = consultas.getActualizarGrupo();
+		
+		PreparedStatement pstmt1;
+		
+		
+		try 
+		{
+			/*Primero eliminamos los formularios para luego volver a insertarlos*/
+			this.eliminarFormulariosxGrupo(grupo.getCodGrupo(), con);
+			
+			/*Volvemos a insertar los formularios modificados*/
+			this.insertarFormulariosxGrupo(grupo.getCodGrupo(), grupo.getLstFormularios(), con);
+			
+			/*Updateamos la info del grupo*/
+     		pstmt1 =  con.prepareStatement(update);
+			pstmt1.setString(1, grupo.getNomGrupo());
+			pstmt1.setString(2, grupo.getUsuarioMod());
+			pstmt1.setString(3, grupo.getOperacion());
+			pstmt1.setBoolean(4, grupo.isActivo());
+			pstmt1.setString(5, grupo.getCodGrupo());
+			
+			
+			pstmt1.executeUpdate ();
+			
+			pstmt1.close ();
+	
+			
+		} catch (SQLException | ModificandoGrupoException | ConexionException | InsertandoGrupoException e) {
+			
+			throw new ModificandoGrupoException();
+		}
+		
+		
+	}
 	
 	/**
 	 * Nos retorna los formularios activos para el grupo
@@ -198,6 +242,10 @@ public class DAOGrupos implements IDAOGrupos {
 
 				formulario.setCodFormulario(rs.getString(1));
 				formulario.setNomFormulario(rs.getString(2));
+				
+				formulario.setLeer(rs.getBoolean(3));
+				formulario.setNuevoEditar(rs.getBoolean(4));
+				formulario.setBorrar(rs.getBoolean(5));
 				
 				lstFormulario.add(formulario);
 			}
@@ -235,6 +283,10 @@ public class DAOGrupos implements IDAOGrupos {
 				
     			pstmt1.setString(1, formulario.getCodFormulario());
     			pstmt1.setString(2, codGrupo);
+    			
+    			pstmt1.setBoolean(3, formulario.isLeer());
+    			pstmt1.setBoolean(4, formulario.isNuevoEditar());
+    			pstmt1.setBoolean(5, formulario.isBorrar());
 
     			pstmt1.executeUpdate ();
 			}

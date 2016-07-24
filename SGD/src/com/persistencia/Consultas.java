@@ -238,13 +238,27 @@ public class Consultas {
       	 return sb.toString();
     }
     
-    
+    public String getActualizarGrupo(){
+    	
+    	StringBuilder sb = new StringBuilder();
+    	 
+       	sb.append("UPDATE vaadin.m_grupos ");
+      	sb.append("SET nombre = ?, ");
+  		sb.append("fecha_mod = NOW(), ");
+  		sb.append("usuario_mod = ?, ");
+  		sb.append("operacion = ?, ");
+  		sb.append("activo = ? ");
+  		sb.append("WHERE cod_grupo = ? ");
+      	 
+      	return sb.toString();
+    }
 
     public String getFormulariosxGrupo()
     {
     	StringBuilder sb = new StringBuilder();
     	
-    	sb.append("SELECT g_formularios.formulario, g_formularios.nombre ");
+    	sb.append("SELECT g_formularios.formulario, g_formularios.nombre,  ");
+    	sb.append("m_grupoxform.leer, m_grupoxform.nuevo_editar, m_grupoxform.borrar  ");
     	sb.append("FROM m_grupoxform, g_formularios "); 
 		sb.append("WHERE cod_grupo = ? ");
 		sb.append("AND m_grupoxform.formulario = g_formularios.formulario ");
@@ -290,11 +304,12 @@ public class Consultas {
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("SELECT g_formularios.formulario, g_formularios.nombre,  ");
-		sb.append("m_grupoxform.leer,  m_grupoxform.nuevo_editar,  m_grupoxform.borrar  ");
+		sb.append("MAX(m_grupoxform.leer) AS leer,  MAX(m_grupoxform.nuevo_editar) AS nuevo_editar,  MAX(m_grupoxform.borrar) AS borrar  ");
 		sb.append("FROM g_formularios, m_grupoxform, m_gruposxusu ");
 		sb.append("WHERE m_grupoxform.formulario = g_formularios.formulario ");
 		sb.append("AND m_grupoxform.cod_grupo = m_gruposxusu.cod_grupo ");
 		sb.append("AND m_gruposxusu.usuario = ? AND m_gruposxusu.cod_emp = ? ");
+		sb.append("GROUP BY g_formularios.formulario, g_formularios.nombre");
 		
 		return sb.toString();
 	}

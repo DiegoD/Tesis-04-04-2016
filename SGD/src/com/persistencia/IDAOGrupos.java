@@ -18,4 +18,5 @@ public interface IDAOGrupos {
 	public boolean memberGrupo(String codGrupo, Connection con) throws MemberGrupoException, ConexionException;
 	public void eliminarGrupo(String codGrupo, Connection con) throws ModificandoGrupoException, ConexionException;
 	public ArrayList<Formulario> getFormulariosNoGrupo(String codGrupo, Connection con) throws ObteniendoFormulariosException;
+	public void actualizarGrupo(Grupo grupo, Connection con) throws ModificandoGrupoException;
 }

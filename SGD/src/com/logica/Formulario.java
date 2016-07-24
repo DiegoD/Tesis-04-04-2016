@@ -19,6 +19,9 @@ public class Formulario {
 	{
 		this.codFormulario = form.getCodigo();
 		this.nomFormulario = form.getNombre();
+		this.leer = form.isLeer();
+		this.nuevoEditar = form.isNuevoEditar();
+		this.borrar = form.isBorrar();
 	}
 	
 	public String getCodFormulario() {
