@@ -41,33 +41,49 @@ public class GruposPanelExtended extends GruposPanel {
 		controlador = new GrupoControlador();
 		this.lstGrupos = new ArrayList<GrupoVO>();
 		
-        //layout.setSizeFull();
+        /*Verificamos que el usuario tenga permisos de lectura para mostrar la vista*/
+		boolean permisoLectura = PermisosUsuario.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GRUPO, VariablesPermisos.OPERACION_LEER);
+		
+		if(permisoLectura){
         
-		
-		try {
-			
-			this.inicializarGrilla();
-			
-			this.btnNuevo.addClickListener(click -> {
+			try {
 				
-					sub = new MySub("65%", "65%");
-					form = new GrupoViewExtended(Variables.OPERACION_NUEVO, this);
-					sub.setModal(true);
-					sub.setVista(form);
+				this.inicializarGrilla();
+				
+				/*Para el boton de nuevo, verificamos que tenga permisos de nuevoEditar*/
+				boolean permisoNuevoEditar = PermisosUsuario.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GRUPO, VariablesPermisos.OPERACION_LEER);
+				if(permisoNuevoEditar)
+				{
+				
+					this.btnNuevo.addClickListener(click -> {
+						
+							sub = new MySub("65%", "65%");
+							form = new GrupoViewExtended(Variables.OPERACION_NUEVO, this);
+							sub.setModal(true);
+							sub.setVista(form);
+							
+							UI.getCurrent().addWindow(sub);
+						
+					});
+				}else{
+					/*Si no tiene permisos ocultamos boton de nuevo*/
+					this.deshabilitarBotonNuevo();
+				}
 					
-					UI.getCurrent().addWindow(sub);
 				
-			});
+			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+				
+				Mensajes.mostrarMensajeError("Ha ocurrido un error inesperado");
+				
+			} catch(Exception e)
+			{
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}
+		}else {
 			
-		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
-			
-			Mensajes.mostrarMensajeError("Ha ocurrido un error inesperado");
-			
-		} catch(Exception e)
-		{
-			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			/*Si no tiene permisos mostramos mensaje*/
+			Mensajes.mostrarMensajeError(Variables.USUSARIO_SIN_PERMISOS);
 		}
-		
 	}
 	
 	private void inicializarGrilla() throws InstantiationException, IllegalAccessException, ClassNotFoundException, FileNotFoundException, IOException{
@@ -291,9 +307,21 @@ public class GruposPanelExtended extends GruposPanel {
 		}
 	}
 	
+	private void deshabilitarBotonNuevo()
+	{
+		this.btnNuevo.setVisible(false);
+		this.btnNuevo.setEnabled(false);
+	}
+	
+	
 	public void cerrarVentana()
 	{
 		UI.getCurrent().removeWindow(sub);
+	}
+	
+	public void mostrarMensaje(String msj)
+	{
+		Mensajes.mostrarMensajeError(msj);
 	}
 	
 }

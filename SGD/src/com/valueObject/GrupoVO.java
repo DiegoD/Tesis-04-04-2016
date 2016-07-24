@@ -75,6 +75,10 @@ public class GrupoVO extends AuditoriaVO{
 			    formVO.setCodFormulario(frmVO.getCodigo()); 
 			    formVO.setNomFormulario(frmVO.getNombre()); 
 			  
+			    formVO.setLeer(frmVO.isLeer());
+			    formVO.setNuevoEditar(frmVO.isNuevoEditar());
+			    formVO.setBorrar(frmVO.isBorrar());
+			    
 			    this.lstFormularios.add(formVO);
 				
 			}

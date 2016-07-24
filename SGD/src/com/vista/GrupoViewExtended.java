@@ -7,7 +7,9 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Hashtable;
 
+import org.apache.commons.digester.substitution.VariableSubstitutor;
 import org.json.simple.JSONObject;
 
 import com.controladores.GrupoControlador;
@@ -94,7 +96,10 @@ public class GrupoViewExtended extends GrupoView {
 				if(this.lstFormsAgregar.size() > 0)
 				{
 					for (FormularioVO f : this.lstFormsAgregar) {
-						this.lstFormsVO.add(f);
+						
+						/*Si no esta lo agregamos*/
+						if(!this.existeFormularioenLista(f.getCodigo()))
+							this.lstFormsVO.add(f);
 					}
 				}
 					
@@ -142,6 +147,8 @@ public class GrupoViewExtended extends GrupoView {
 			}
 			
 		});
+	
+
 	
 	/*Inicalizamos listener para boton de Editar*/
 		this.btnEditar.addClickListener(click -> {
@@ -475,17 +482,29 @@ public class GrupoViewExtended extends GrupoView {
 		/*Seteamos el form en editar*/
 		this.operacion = Variables.OPERACION_EDITAR;
 		
-		/*Oculatamos Editar y mostramos el de guardar y de agregar formularios*/
-		this.enableBotonAceptar();
-		this.disableBotonLectura();
-		this.enableBotonAgregarQuitar();
 		
-		/*Dejamos los textfields que se pueden editar
-		 * en readonly = false asi  se pueden editar*/
-		this.setearFieldsEditar();
+		/*Verificamos que tenga permisos*/
+		boolean permisoNuevoEditar = PermisosUsuario.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GRUPO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
-		/*Seteamos las validaciones*/
-		this.setearValidaciones(true);
+		if(permisoNuevoEditar){
+			
+			/*Oculatamos Editar y mostramos el de guardar y de agregar formularios*/
+			this.enableBotonAceptar();
+			this.disableBotonLectura();
+			this.enableBotonAgregarQuitar();
+			
+			/*Dejamos los textfields que se pueden editar
+			 * en readonly = false asi  se pueden editar*/
+			this.setearFieldsEditar();
+			
+			/*Seteamos las validaciones*/
+			this.setearValidaciones(true);
+		}
+		else{
+			
+			/*Mostramos mensaje Sin permisos para operacion*/
+			Mensajes.mostrarMensajeError(Variables.USUSARIO_SIN_PERMISOS);
+		}
 	}
 	
 	/**
@@ -494,6 +513,16 @@ public class GrupoViewExtended extends GrupoView {
 	 */
 	private void iniFormNuevo()
 	{
+		/*Chequeamos si tiene permiso de editar*/
+		boolean permisoNuevoEditar = PermisosUsuario.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GRUPO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		
+		/*Si no tiene permisos de Nuevo Cerrmamos la ventana y mostramos mensaje*/
+		if(!permisoNuevoEditar)
+		{
+			mainView.cerrarVentana();
+			mainView.mostrarMensaje(Variables.USUSARIO_SIN_PERMISOS);
+		}
+		
 		this.enableBotonAceptar();
 		this.disableBotonLectura();
 		this.enableBotonAgregarQuitar();
@@ -511,7 +540,9 @@ public class GrupoViewExtended extends GrupoView {
 		/*Como es en operacion nuevo, dejamos todos los campos editabls*/
 		this.readOnlyFields(false);
 		
-	
+		
+		
+		
 	}
 	
 	/**
@@ -696,8 +727,32 @@ public class GrupoViewExtended extends GrupoView {
 
         FormularioVO bean = new FormularioVO();
         
+        /*Hacemos un hash auxiliar por si se agrega mas de una vez
+         * dejamos el ultimo agregado*/
+        Hashtable<String, FormularioVO> hForms = new Hashtable<String, FormularioVO>();
+        
 		if(lstForms.size() > 0)
 		{
+			
+
+			/*Si esta lo eliminamos y lo volvemos a ingresar, para
+			 * que queden los ultimos cambios hechos*/
+			/*
+			for (FormularioVO formVO : lstForms) {
+				
+				if(hForms.containsKey(formVO.getCodigo())){
+					
+					hForms.remove(formVO.getCodigo());
+					
+				}
+								
+		        hForms.put(formVO.getCodigo(),formVO);
+				
+			}
+			*/
+			
+			/*Recorremos hash e isertamos en lista de forms a agregar*/
+			/*para no duplicar formularios*/
 			for (FormularioVO formVO : lstForms) {
 				
 				/*Hacemos un nuevo objeto por bug de vaadin
@@ -711,10 +766,14 @@ public class GrupoViewExtended extends GrupoView {
 				
 		        /*Por ESTO*/
 			//	this.lstFormsVO.add(formVO);
+		        boolean saco = this.lstFormsAgregar.remove(formVO);
+		        this.lstFormsVO.add(formVO);
 		        this.lstFormsAgregar.add(formVO);
+		        
 				
 				this.container.addBean(bean);
 			}
+			
 		}
 		
 		//lstFormularios.setContainerDataSource(container);
