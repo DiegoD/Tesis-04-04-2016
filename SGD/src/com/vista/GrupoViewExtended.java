@@ -294,7 +294,7 @@ public class GrupoViewExtended extends GrupoView {
 					
 					this.frmFormPermisos = new GrupoFormularioPermisosExtended(this, formSelecccionado, Variables.OPERACION_EDITAR);
 					
-					sub = new MySub("70%", "60%" );
+					sub = new MySub("53%", "40%" );
 					sub.setModal(true);
 					sub.setVista(this.frmFormPermisos);
 					sub.center();
@@ -327,7 +327,7 @@ public class GrupoViewExtended extends GrupoView {
 					
 					this.frmFormPermisos = new GrupoFormularioPermisosExtended(this, formSelecccionado, Variables.OPERACION_LECTURA);
 					
-					sub = new MySub("70%", "60%" );
+					sub = new MySub("53%", "40%" );
 					sub.setModal(true);
 					sub.setVista(this.frmFormPermisos);
 					sub.center();
@@ -705,6 +705,9 @@ public class GrupoViewExtended extends GrupoView {
 				bean = new FormularioVO();
 		        bean.setCodFormulario(formVO.getCodigo());
 		        bean.setNomFormulario(formVO.getNombre());
+		        bean.setNuevoEditar(formVO.isNuevoEditar());
+		        bean.setLeer(formVO.isLeer());
+		        bean.setBorrar(formVO.isBorrar());
 				
 		        /*Por ESTO*/
 			//	this.lstFormsVO.add(formVO);

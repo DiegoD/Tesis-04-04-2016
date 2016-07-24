@@ -2,6 +2,7 @@ package com.vista;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import org.json.simple.JSONObject;
@@ -110,7 +111,12 @@ public class GruposPanelExtended extends GruposPanel {
 		       
 		    	try{
 		    	BeanItem<GrupoVO> item = container.getItem(gridview.getSelectedRow());
-		
+		    	
+		    	/*Puede ser null si accedemos luego de haberlo agregado, ya que no va a la base*/
+		    	if(item.getBean().getFechaMod() == null)
+		    	{
+		    		item.getBean().setFechaMod(new Timestamp(System.currentTimeMillis()));
+		    	}
 					
 					form = new GrupoViewExtended(Variables.OPERACION_LECTURA, GruposPanelExtended.this);
 					//form.fieldGroup.setItemDataSource(item);

@@ -46,6 +46,7 @@ public class GrupoViewAgregarFormularioExtended extends GrupoViewAgregarFormular
 				for (Object object : col) {
 					aux = (FormularioVO)object;
 					
+										
 					lstSeleccionados.add(aux);
 					
 				}

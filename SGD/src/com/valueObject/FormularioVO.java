@@ -14,7 +14,9 @@ public class FormularioVO {
 	
 	public FormularioVO()
 	{
-	
+		this.borrar = false;
+		this.nuevoEditar = false;
+		this.borrar = false;
 	}
 	
 	/**
