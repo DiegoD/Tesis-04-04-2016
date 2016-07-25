@@ -13,6 +13,7 @@ import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.Page;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
@@ -54,8 +55,19 @@ public class Principal extends UI {
 	
 	public Principal(){
 
-		setContent(new LoginExtended(Principal.this));
 		
+		PermisosUsuario permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
+		
+		/*Si no hay session iniciada va a login*/
+		if(permisos== null)
+		{
+			setContent(new LoginExtended(Principal.this));
+		}
+		else { /*de lo contrario vamos al menu*/
+			
+			this.menu = new MenuExtended(this);
+			setContent(this.menu);
+		}
 		//setContent(menu);
 	}
 	
