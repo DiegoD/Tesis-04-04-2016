@@ -35,37 +35,6 @@ public class MenuExtended extends Menu{
 		this.setearPermisosMenu();
 		
 		
-		// Have it take all space available in the layout.
-		Accordion accordion = new Accordion();
-
-		//acordion = new Accordion();
-		
-		//acordion.setHeight("300px");
-		
-		//this.menuItems.addComponent(acordion);
-		
-		
-		
-		// Some components to put in the Accordion.
-		Label l1 = new Label("La session es: " + this.permisos.getUsuario());
-		Label l2 = new Label("There are no saved notes.");
-		Label l3 = new Label("There are currently no issues.");
-
-		
-		// Add the components as tabs in the Accordion.
-		accordion.addTab(l1, "Saved actions", null);
-		//accordion.addTab(tab1, "Notes", null);
-		//accordion.addTab(inboxButton, "Issues", null);
-		
-		content.addComponent(accordion);
-		
-		//this.acordion.setSizeFull();
-				
-		
-		//this.acordion.addTab(statusButton, "Status", null);
-		this.acordion.addTab(l3, "Otros", null);
-		
-		//this.content.addComponent(acordion);
 		
 		this.userButton.addClickListener(click -> {
 			
@@ -74,15 +43,11 @@ public class MenuExtended extends Menu{
 			this.content.removeAllComponents();
 			try {
 				
-				//CotizacionesPanelExtended c = new CotizacionesPanelExtended();
-				//c.setMenu(this);
-				
 				UsuariosPanelExtend u = new UsuariosPanelExtend();
 				this.content.addComponent(u);
 				
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 			}
 		});
 		
@@ -119,7 +84,6 @@ public class MenuExtended extends Menu{
 				
 				LoginExtended c = new LoginExtended(this.mainPrincipal);
 				this.mainPrincipal.setContent(c);
-				
 				
 				
 			} catch (Exception e) {
@@ -217,13 +181,7 @@ public class MenuExtended extends Menu{
 		this.gruposButton.setVisible(false);
 		this.gruposButton.setEnabled(false);
 		
-		this.statusButton.setVisible(false);
-		this.statusButton.setEnabled(false);
-		
-		this.inboxButton.setVisible(false);
-		this.inboxButton.setEnabled(false);
-		
-		
+				
 	}
 	
 	

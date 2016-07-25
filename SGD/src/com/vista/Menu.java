@@ -28,10 +28,6 @@ public class Menu extends HorizontalLayout {
 	protected CssLayout menuItems;
 	protected Button userButton;
 	protected Button gruposButton;
-	protected Button statusButton;
-	protected Button inboxButton;
-	protected Button archiveButton;
-	protected Button settingsButton;
 	protected Button logoutButton;
 	protected Accordion acordion;
 	protected VerticalLayout content;
