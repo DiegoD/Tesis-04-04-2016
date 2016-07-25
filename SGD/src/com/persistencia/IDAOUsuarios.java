@@ -29,7 +29,7 @@ public interface IDAOUsuarios {
 
 	public boolean memberUsuario(String usuario, Connection con) throws ExisteUsuarioException, ConexionException;
 	
-	public void insertarUsuario(Usuario user, Connection con) throws InsertandoUsuarioException, ConexionException;
+	public void insertarUsuario(Usuario user, String empresa, Connection con) throws InsertandoUsuarioException, ConexionException;
 	
 	public void eliminarUsuario(Usuario user, Connection con) throws InsertandoUsuarioException, ConexionException, ModificandoUsuarioException;
 	
@@ -38,4 +38,6 @@ public interface IDAOUsuarios {
 	public ArrayList<Formulario> getFormulariosxUsuario(String usuario, String codemp, Connection con) throws ObteniendoFormulariosException;
 	
 	public ArrayList<EmpLoginVO> getUsuariosxEmp(String usuario, Connection con) throws ObteniendoUsuariosxEmpExeption;
+	
+	public void modificarUsuario(Usuario user, String empresa, Connection con) throws ModificandoUsuarioException;
 }

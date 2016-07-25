@@ -49,6 +49,8 @@ public class UsuarioViewExtended extends UsuarioView{
 	BeanItemContainer<GrupoVO> containerGrupo;
 	private PermisosUsuario permisos; /*Permisos del usuario*/
 	
+	String passOld;
+	
 	/**
 	 * Constructor: recibe operación (nuevo, editar)
 	 * También recibe la vista que lo llamó por parametro
@@ -79,10 +81,10 @@ public class UsuarioViewExtended extends UsuarioView{
 					usuarioVO.setActivo(activo.getValue());
 					usuarioVO.setNombre(nombre.getValue().trim());
 					usuarioVO.setPass(md5.getMD5Hash(pass.getValue().trim()));
-					
 					usuarioVO.setOperacion(operacion);
 					usuarioVO.setActivo(activo.getValue());
-					usuarioVO.setUsuarioMod(getSession().getAttribute("usuario").toString());
+					usuarioVO.setUsuarioMod(this.permisos.getUsuario());
+					String empresa = this.permisos.getCodEmp();
 					
 					if(this.lstGruposAgregar.size() > 0)
 					{
@@ -96,7 +98,7 @@ public class UsuarioViewExtended extends UsuarioView{
 					
 					if(this.operacion.equals(Variables.OPERACION_NUEVO))	
 					{	
-						this.controlador.insertarUsuario(usuarioVO);
+						this.controlador.insertarUsuario(usuarioVO, empresa);
 						main.refreshGrilla(usuarioVO);
 						Mensajes.mostrarMensajeOK("Se ha guardado el Usuario");
 						main.cerrarVentana();
@@ -104,8 +106,12 @@ public class UsuarioViewExtended extends UsuarioView{
 					}
 					else if(this.operacion.equals(Variables.OPERACION_EDITAR))
 					{
-										
-						this.controlador.modificarUsuario(usuarioVO);
+						
+						if(passOld.trim() == pass.getValue().trim()){
+							usuarioVO.setPass(pass.getValue().trim());
+						}
+						
+						this.controlador.modificarUsuario(usuarioVO, empresa);
 						main.refreshGrilla(usuarioVO);
 						Mensajes.mostrarMensajeOK("Se guardaron los cambios");
 						main.cerrarVentana();
@@ -138,6 +144,7 @@ public class UsuarioViewExtended extends UsuarioView{
 			try
 			{
 				/*Inicializamos el Form en modo Edicion*/
+				passOld = this.pass.getValue().trim();
 				this.iniFormEditar();
 	
 			}
@@ -326,7 +333,6 @@ public class UsuarioViewExtended extends UsuarioView{
 			}
 		}
 		
-		
 	}
 	
 	private void setearValidaciones(boolean setear){
@@ -486,7 +492,6 @@ public class UsuarioViewExtended extends UsuarioView{
 		
 		/*Dejamos todods los campos readonly*/
 		this.readOnlyFields(true);
-		
 	}
 	
 	/**

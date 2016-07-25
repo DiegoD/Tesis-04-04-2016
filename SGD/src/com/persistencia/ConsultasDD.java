@@ -294,8 +294,8 @@ public class ConsultasDD {
     {
     	StringBuilder sb = new StringBuilder();
 	
-    	sb.append("INSERT INTO vaadin.m_gruposxusu (cod_grupo, usuario) ");
-    	sb.append("VALUES (?, ?) ");
+    	sb.append("INSERT INTO vaadin.m_gruposxusu (cod_grupo, usuario, cod_emp) ");
+    	sb.append("VALUES (?, ?, ?) ");
     	
     	return sb.toString();
     }
@@ -308,8 +308,32 @@ public class ConsultasDD {
 
     	return sb.toString();
     }
-    
 	
+	public String getActualizarUsuario(){
+    	
+    	StringBuilder sb = new StringBuilder();
+    	 
+       	sb.append("UPDATE vaadin.m_usuarios ");
+      	sb.append("SET nombre = ?, ");
+      	sb.append("pass = ?, ");
+  		sb.append("fecha_mod = NOW(), ");
+  		sb.append("usuario_mod = ?, ");
+  		sb.append("operacion = ?, ");
+  		sb.append("activo = ? ");
+  		sb.append("WHERE usuario = ? ");
+      	 
+      	return sb.toString();
+    }
+    
+	public String insertarUsuarioxEmp()
+    {
+    	StringBuilder sb = new StringBuilder();
+	
+    	sb.append("INSERT INTO vaadin.m_usuariosxemp (cod_emp, usuario) ");
+    	sb.append("VALUES (?, ? ) ");
+    	
+    	return sb.toString();
+    }
 	
 	
 	

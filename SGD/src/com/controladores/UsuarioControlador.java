@@ -31,17 +31,17 @@ public class UsuarioControlador {
 	/**
 	 * Inserta un usuario dado su VO
 	 */
-	public void insertarUsuario(UsuarioVO usuarioVO) throws InsertandoUsuarioException, ConexionException, ExisteUsuarioException, InicializandoException, ErrorInesperadoException
+	public void insertarUsuario(UsuarioVO usuarioVO, String empresa) throws InsertandoUsuarioException, ConexionException, ExisteUsuarioException, InicializandoException, ErrorInesperadoException
 	{
-		FachadaDD.getInstance().insertarUsuario(usuarioVO);
+		FachadaDD.getInstance().insertarUsuario(usuarioVO, empresa);
 	}
 	
 	/**
 	 * Modifica los datos de un usuario dado el VO con las modificaciones
 	 */
-	public void modificarUsuario(UsuarioVO usuarioVO) throws InsertandoUsuarioException, ConexionException, ExisteUsuarioException, ErrorInesperadoException, InicializandoException
+	public void modificarUsuario(UsuarioVO usuarioVO, String empresa) throws InsertandoUsuarioException, ConexionException, ExisteUsuarioException, ErrorInesperadoException, InicializandoException
 	{
-		FachadaDD.getInstance().modificarUsuario(usuarioVO);
+		FachadaDD.getInstance().modificarUsuario(usuarioVO, empresa);
 	}
 	
 	/**

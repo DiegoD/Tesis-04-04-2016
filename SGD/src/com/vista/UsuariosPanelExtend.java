@@ -1,6 +1,7 @@
 package com.vista;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import org.json.simple.JSONObject;
@@ -120,6 +121,12 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 		    	try
 		    	{
 		    		BeanItem<UsuarioVO> item = container.getItem(gridUsuarios.getSelectedRow());
+		    		
+		    		/*Puede ser null si accedemos luego de haberlo agregado, ya que no va a la base*/
+			    	if(item.getBean().getFechaMod() == null)
+			    	{
+			    		item.getBean().setFechaMod(new Timestamp(System.currentTimeMillis()));
+			    	}
 		
 					form = new UsuarioViewExtended(Variables.OPERACION_LECTURA, UsuariosPanelExtend.this);
 					sub.setDraggable(true);
@@ -129,7 +136,7 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 					form.setDataSourceFormulario(item);
 					form.setLstGruposUsuario(item.getBean().getLstGrupos());					
 					
-					 UI.getCurrent().addWindow(sub);
+					UI.getCurrent().addWindow(sub);
 					  
 		    	}
 		    	catch(Exception e)

@@ -72,6 +72,7 @@ public class GrupoViewExtended extends GrupoView {
 	/*Inicializamos los permisos para el usuario*/
 	this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
 	
+	
 	this.operacion = opera;
 	this.mainView = main;
 	
@@ -96,7 +97,9 @@ public class GrupoViewExtended extends GrupoView {
 				
 				grupoVO.setOperacion(operacion);
 				grupoVO.setActivo(activo.getValue());
-				grupoVO.setUsuarioMod(getSession().getAttribute("usuario").toString());
+				
+				grupoVO.setUsuarioMod(this.permisos.getUsuario());
+				
 				
 				/*Si hay algun formulario nuevo agregado
 				 * lo agregamos a la lista del formulario*/

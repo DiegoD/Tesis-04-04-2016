@@ -156,7 +156,7 @@ public class DAOUsuarios implements IDAOUsuarios {
 	 * Inserta un usuario en la base
 	 * Pre condición: El nombre de usuario no debe existir previamente
 	 */
-	public void insertarUsuario(Usuario user, Connection con) throws InsertandoUsuarioException, ConexionException {
+	public void insertarUsuario(Usuario user, String empresa, Connection con) throws InsertandoUsuarioException, ConexionException {
 
 		ConsultasDD clts = new ConsultasDD();
     	
@@ -178,7 +178,9 @@ public class DAOUsuarios implements IDAOUsuarios {
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
 			
-			this.insertarGruposxUsuario(user.getUsuario(), user.getLstGrupos(), con);
+			this.insertarGruposxUsuario(user.getUsuario(), user.getLstGrupos(), empresa, con);
+			
+			this.insertarUsuarioxEmp(user.getUsuario(), empresa, con);
 		} 
     	catch (SQLException e) 
     	{
@@ -299,7 +301,7 @@ public class DAOUsuarios implements IDAOUsuarios {
 	/**
 	 * Insertamos un grupo para el usuario
 	 */
-	private void insertarGruposxUsuario(String usuario, ArrayList<Grupo> lstGrupos, Connection con) throws InsertandoUsuarioException, ConexionException 
+	private void insertarGruposxUsuario(String usuario, ArrayList<Grupo> lstGrupos, String empresa, Connection con) throws InsertandoUsuarioException, ConexionException 
 	{
 
 		ConsultasDD clts = new ConsultasDD();
@@ -316,6 +318,7 @@ public class DAOUsuarios implements IDAOUsuarios {
 				
     			pstmt1.setString(1, grupo.getCodGrupo());
     			pstmt1.setString(2, usuario);
+    			pstmt1.setString(3, empresa);
 
     			pstmt1.executeUpdate ();
 			}
@@ -349,6 +352,39 @@ public class DAOUsuarios implements IDAOUsuarios {
 	
 			
 		} catch (SQLException e) {
+			
+			throw new ModificandoUsuarioException();
+		}
+	}
+	
+	
+	public void modificarUsuario(Usuario user, String empresa, Connection con) throws ModificandoUsuarioException{
+		
+		ConsultasDD consultas = new ConsultasDD();
+		String update = consultas.getActualizarUsuario();
+		PreparedStatement pstmt1;
+		
+		try {
+			this.eliminarGruposxUsuario(user.getUsuario(), con);
+			this.insertarGruposxUsuario(user.getUsuario(), user.getLstGrupos(), empresa, con);
+			
+			/*Updateamos la info del usuario*/
+     		pstmt1 =  con.prepareStatement(update);
+			pstmt1.setString(1, user.getNombre());
+			pstmt1.setString(2, user.getPass());
+			pstmt1.setString(3, user.getUsuarioMod());
+			pstmt1.setString(4, user.getOperacion());
+			pstmt1.setBoolean(5, user.isActivo());
+			pstmt1.setString(6, user.getUsuario());
+			
+			
+			pstmt1.executeUpdate ();
+			
+			pstmt1.close ();
+	
+		} 
+		
+		catch (SQLException | ModificandoUsuarioException | ConexionException | InsertandoUsuarioException e) {
 			
 			throw new ModificandoUsuarioException();
 		}
@@ -431,6 +467,32 @@ public class DAOUsuarios implements IDAOUsuarios {
 		}
 		return lstEmpresas;
 		
+	}
+	
+	private void insertarUsuarioxEmp(String usuario, String empresa, Connection con) throws InsertandoUsuarioException, ConexionException 
+	{
+
+		ConsultasDD clts = new ConsultasDD();
+    	
+    	String insert = clts.insertarUsuarioxEmp();
+    	
+    	PreparedStatement pstmt1;
+  	
+    	try {
+    		
+			pstmt1 =  con.prepareStatement(insert);
+    		
+			pstmt1.setString(1, empresa);
+			pstmt1.setString(2, usuario);
+
+			pstmt1.executeUpdate ();
+    		
+			pstmt1.close ();
+	
+		} catch (SQLException e) {
+			
+			throw new InsertandoUsuarioException();
+		} 
 	}
 	
 }

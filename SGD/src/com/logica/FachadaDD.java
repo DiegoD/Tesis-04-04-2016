@@ -174,7 +174,7 @@ public class FachadaDD {
     /**
 	 * Inserta un usuario en la base
 	 */
-	public void insertarUsuario(UsuarioVO usuarioVO) throws InsertandoUsuarioException, ConexionException, ExisteUsuarioException, ErrorInesperadoException
+	public void insertarUsuario(UsuarioVO usuarioVO, String empresa) throws InsertandoUsuarioException, ConexionException, ExisteUsuarioException, ErrorInesperadoException
     {
     	Connection con = null;
     	Usuario user = new Usuario(usuarioVO);
@@ -188,7 +188,7 @@ public class FachadaDD {
 			
     		if(!this.usuarios.memberUsuario(user.getUsuario(), con))
         	{
-        		this.usuarios.insertarUsuario(user, con);
+        		this.usuarios.insertarUsuario(user, empresa, con);
         	}
         	else
         	{
@@ -221,7 +221,7 @@ public class FachadaDD {
     /**
 	 * Modifica los datos de un usuario dado el VO con los nuevos datos
 	 */
-	public void modificarUsuario(UsuarioVO usuarioVO) throws InsertandoUsuarioException, ConexionException, ExisteUsuarioException, ErrorInesperadoException
+	public void modificarUsuario(UsuarioVO usuarioVO, String empresa) throws InsertandoUsuarioException, ConexionException, ExisteUsuarioException, ErrorInesperadoException
 	{
 		Connection con = null;
 		Usuario user = new Usuario(usuarioVO);
@@ -231,9 +231,7 @@ public class FachadaDD {
 			
 			con = this.pool.obtenerConeccion();
 			con.setAutoCommit(false);
-			System.out.println("voy a insertar");
-			this.usuarios.eliminarUsuario(user, con);
-			this.usuarios.insertarUsuario(user, con);
+			this.usuarios.modificarUsuario(user, empresa, con);
 			con.commit();
 		} 
 		catch (Exception e) 
