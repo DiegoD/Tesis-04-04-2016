@@ -16,13 +16,14 @@ public class Usuario extends Auditoria{
 	private String pass;
 	private String nombre;
 	private boolean activo;
+	private String mail;
 	private ArrayList<Grupo> lstGrupos;
 	
 	public Usuario(){
 		this.lstGrupos = new ArrayList<Grupo>();
 	}
 	public Usuario(String usuario, String pass, String nombre, Boolean activo, 
-				   String usuarioMod, Timestamp fechaMod, String operacion) {
+				   String usuarioMod, Timestamp fechaMod, String operacion, String mail) {
 		
 		super(usuarioMod, fechaMod, operacion);
 		this.usuario = usuario;
@@ -31,6 +32,7 @@ public class Usuario extends Auditoria{
 		this.activo = activo;
 		this.lstGrupos = new ArrayList<Grupo>();
 		this.setUsuarioMod(usuarioMod);
+		this.mail = mail;
 	}
 	
 	
@@ -43,6 +45,7 @@ public class Usuario extends Auditoria{
 		this.pass = usuarioVO.getPass();
 		this.activo = usuarioVO.isActivo();
 		this.lstGrupos = new ArrayList<Grupo>();
+		this.mail = usuarioVO.getMail();
 		Grupo aux;
 		for (GrupoVO grupoVO : usuarioVO.getLstGrupos()) {
 			
@@ -51,6 +54,7 @@ public class Usuario extends Auditoria{
 		}
 	
 	}
+	
 	public Usuario(JSONObject jsonUsuario)
 	{
 		super(((String)jsonUsuario.get("usuarioMod")),((Timestamp)jsonUsuario.get("fechaMod")), ((String)jsonUsuario.get("operacion")));
@@ -91,6 +95,13 @@ public class Usuario extends Auditoria{
 	}
 	public void setLstGrupos(ArrayList<Grupo> lstGrupos) {
 		this.lstGrupos = lstGrupos;
+	}
+	
+	public String getMail() {
+		return mail;
+	}
+	public void setMail(String mail) {
+		this.mail = mail;
 	}
 
 }

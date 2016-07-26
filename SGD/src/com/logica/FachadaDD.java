@@ -100,6 +100,7 @@ public class FachadaDD {
 				aux.setFechaMod(usuario.getFechaMod());
 				aux.setUsuarioMod(usuario.getUsuarioMod());
 				aux.setOperacion(usuario.getOperacion());
+				aux.setMail(usuario.getMail());
 				
 				GrupoVO auxGrupo;
 				for (Grupo grupo: usuario.getLstGrupos())
@@ -230,9 +231,9 @@ public class FachadaDD {
 		{
 			
 			con = this.pool.obtenerConeccion();
-			con.setAutoCommit(false);
+			//con.setAutoCommit(false);
 			this.usuarios.modificarUsuario(user, empresa, con);
-			con.commit();
+			//con.commit();
 		} 
 		catch (Exception e) 
 		{

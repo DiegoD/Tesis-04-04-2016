@@ -20,6 +20,7 @@ import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.filter.SimpleStringFilter;
+import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
@@ -84,6 +85,7 @@ public class UsuarioViewExtended extends UsuarioView{
 					usuarioVO.setOperacion(operacion);
 					usuarioVO.setActivo(activo.getValue());
 					usuarioVO.setUsuarioMod(this.permisos.getUsuario());
+					usuarioVO.setMail(mail.getValue());
 					String empresa = this.permisos.getCodEmp();
 					
 					if(this.lstGruposAgregar.size() > 0)
@@ -253,14 +255,13 @@ public class UsuarioViewExtended extends UsuarioView{
 		       
 		    	try
 		    	{
-		    		BeanItem<GrupoVO> item = containerGrupo.getItem(grillaGrupos.getSelectedRow());
-			    	grupoSeleccionado = item.getBean(); /*Seteamos el formulario
-			    	 									seleccionado para poder quitarlo*/
-
-					  
+		    		if(grillaGrupos.getSelectedRow() != null){
+		    			BeanItem<GrupoVO> item = containerGrupo.getItem(grillaGrupos.getSelectedRow());
+				    	grupoSeleccionado = item.getBean(); /*Seteamos el formulario
+				    	 									seleccionado para poder quitarlo*/
+		    		}
 		    	}
-		    	catch(Exception e)
-		    	{
+		    	catch(Exception e){
 		    		Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 		    	}
 		      
@@ -279,6 +280,7 @@ public class UsuarioViewExtended extends UsuarioView{
 		if(fieldGroup != null)
 			fieldGroup.buildAndBindMemberFields(this);
 		
+		this.agregarFieldsValidaciones();
 		
 		/*SI LA OPERACION NO ES NUEVO, OCULTAMOS BOTON ACEPTAR*/
 		if(this.operacion.equals(Variables.OPERACION_NUEVO))
@@ -345,6 +347,9 @@ public class UsuarioViewExtended extends UsuarioView{
 		
 		this.pass.setRequired(setear);
 		this.pass.setRequiredError("Es requerido");
+		
+		this.mail.setRequired(setear);
+		this.mail.setRequiredError("Es requerido");
 	}
 	
 	public void setDataSourceFormulario(BeanItem<UsuarioVO> item)
@@ -457,6 +462,7 @@ public class UsuarioViewExtended extends UsuarioView{
 		this.usuario.setReadOnly(setear);
 		this.pass.setReadOnly(setear);
 		this.activo.setReadOnly(setear);
+		this.mail.setReadOnly(setear);
 				
 	}
 	
@@ -472,6 +478,7 @@ public class UsuarioViewExtended extends UsuarioView{
 		this.nombre.setReadOnly(false);
 		this.pass.setReadOnly(false);
 		this.activo.setReadOnly(false);
+		this.mail.setReadOnly(false);
 	}
 	
 	/**
@@ -551,6 +558,8 @@ public class UsuarioViewExtended extends UsuarioView{
                 new StringLengthValidator(
                         " 20 caracteres máximo", 1, 255, false));
         
+        this.mail.addValidator(new EmailValidator("Mail no válido"));
+        
 	}
 	
 	
@@ -566,7 +575,7 @@ public class UsuarioViewExtended extends UsuarioView{
 		
 		try
 		{
-			if(this.nombre.isValid() && this.usuario.isValid() && this.pass.isValid())
+			if(this.nombre.isValid() && this.usuario.isValid() && this.pass.isValid() && this.mail.isValid())
 				valido = true;
 			
 		}catch(Exception e)

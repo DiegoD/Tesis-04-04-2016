@@ -93,6 +93,9 @@ public class GrupoViewAgregarFormularioExtended extends GrupoViewAgregarFormular
 		}
 				
 		this.lstFormularios.setContainerDataSource(container);
+		this.lstFormularios.removeColumn("leer");
+		this.lstFormularios.removeColumn("nuevoEditar");
+		this.lstFormularios.removeColumn("borrar");
 		/*Agregamos los filtros de la grilla*/
 		this.filtroGrilla();
 		

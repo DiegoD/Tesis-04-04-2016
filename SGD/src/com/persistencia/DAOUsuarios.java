@@ -100,7 +100,7 @@ public class DAOUsuarios implements IDAOUsuarios {
 				
 				Timestamp t = rs.getTimestamp(7);
 				
-				Usuario usr = new Usuario(rs.getString(1), rs.getString(2), rs.getString(3), rs.getBoolean(4), rs.getString(5), rs.getTimestamp(7), rs.getString(6));
+				Usuario usr = new Usuario(rs.getString(1), rs.getString(2), rs.getString(3), rs.getBoolean(4), rs.getString(5), rs.getTimestamp(7), rs.getString(6), rs.getString(8));
 				
 				usr.setLstGrupos(this.getGruposxUsuario(usr.getUsuario(), con));
 				
@@ -174,6 +174,7 @@ public class DAOUsuarios implements IDAOUsuarios {
 			pstmt1.setString(4, user.getUsuarioMod());
 			pstmt1.setString(5, user.getOperacion());
 			pstmt1.setBoolean(6, user.isActivo());
+			pstmt1.setString(7, user.getMail());
 			
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
@@ -207,9 +208,6 @@ public class DAOUsuarios implements IDAOUsuarios {
     		
 			pstmt1 =  con.prepareStatement(eliminar);
 			pstmt1.setString(1, user.getUsuario());
-			
-			//pstmt1.setString(6, nuevo);
-			System.out.println("voy a eliminar " + user.getUsuario());
 			
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
@@ -375,7 +373,8 @@ public class DAOUsuarios implements IDAOUsuarios {
 			pstmt1.setString(3, user.getUsuarioMod());
 			pstmt1.setString(4, user.getOperacion());
 			pstmt1.setBoolean(5, user.isActivo());
-			pstmt1.setString(6, user.getUsuario());
+			pstmt1.setString(6, user.getMail());
+			pstmt1.setString(7, user.getUsuario());
 			
 			
 			pstmt1.executeUpdate ();

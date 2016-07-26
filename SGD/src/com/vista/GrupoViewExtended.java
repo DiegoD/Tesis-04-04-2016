@@ -281,14 +281,13 @@ public class GrupoViewExtended extends GrupoView {
 			    public void select(SelectionEvent event) {
 			       
 			    	try{
-			    	BeanItem<FormularioVO> item = container.getItem(lstFormularios.getSelectedRow());
-			    	formSelecccionado = item.getBean(); /*Seteamos el formulario
-			    	 									seleccionado para poder quitarlo*/
-			    	
-			    	
-			    							  
-			    	}catch(Exception e)
-			    	{
+			    		if(lstFormularios.getSelectedRow() != null){
+			    			BeanItem<FormularioVO> item = container.getItem(lstFormularios.getSelectedRow());
+					    	formSelecccionado = item.getBean(); /*Seteamos el formulario
+				    	 									seleccionado para poder quitarlo*/
+			    		}
+			    	}
+			    	catch(Exception e){
 			    		Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 			    	}
 			      

@@ -120,24 +120,28 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 		       
 		    	try
 		    	{
-		    		BeanItem<UsuarioVO> item = container.getItem(gridUsuarios.getSelectedRow());
+		    		if(gridUsuarios.getSelectedRow() != null) {
 		    		
-		    		/*Puede ser null si accedemos luego de haberlo agregado, ya que no va a la base*/
-			    	if(item.getBean().getFechaMod() == null)
-			    	{
-			    		item.getBean().setFechaMod(new Timestamp(System.currentTimeMillis()));
-			    	}
-		
-					form = new UsuarioViewExtended(Variables.OPERACION_LECTURA, UsuariosPanelExtend.this);
-					sub.setDraggable(true);
-					sub.setModal(true);
-					sub.setVista(form);
-					/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
-					form.setDataSourceFormulario(item);
-					form.setLstGruposUsuario(item.getBean().getLstGrupos());					
-					
-					UI.getCurrent().addWindow(sub);
-					  
+		    			BeanItem<UsuarioVO> item = container.getItem(gridUsuarios.getSelectedRow());
+		    			
+		    			System.out.println(item.getBean());
+		    			
+		    			/*Puede ser null si accedemos luego de haberlo agregado, ya que no va a la base*/
+				    	if(item.getBean().getFechaMod() == null)
+				    	{
+				    		item.getBean().setFechaMod(new Timestamp(System.currentTimeMillis()));
+				    	}
+			
+						form = new UsuarioViewExtended(Variables.OPERACION_LECTURA, UsuariosPanelExtend.this);
+						sub.setDraggable(true);
+						sub.setModal(true);
+						sub.setVista(form);
+						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
+						form.setDataSourceFormulario(item);
+						form.setLstGruposUsuario(item.getBean().getLstGrupos());					
+						
+						UI.getCurrent().addWindow(sub);
+		    		}
 		    	}
 		    	catch(Exception e)
 		    	{

@@ -180,7 +180,7 @@ public class ConsultasDD {
     
     public String getUsuarios(){
     	StringBuilder sb = new StringBuilder();
-    	sb.append("SELECT usuario, pass, nombre, activo, usuario_mod, operacion, fecha_mod ");
+    	sb.append("SELECT usuario, pass, nombre, activo, usuario_mod, operacion, fecha_mod, mail ");
     	sb.append("FROM m_usuarios ");
 
     	return sb.toString();
@@ -239,8 +239,8 @@ public class ConsultasDD {
 	   	
 	   	StringBuilder sb = new StringBuilder();
 	   	 
-	   	sb.append("INSERT INTO vaadin.m_usuarios (usuario, nombre, pass, usuario_mod, operacion, fecha_mod, activo)");
-	  	 	sb.append("VALUES (?, ?, ?, ?, ?, NOW(), ?) ");
+	   	sb.append("INSERT INTO vaadin.m_usuarios (usuario, nombre, pass, usuario_mod, operacion, fecha_mod, activo, mail)");
+	  	 	sb.append("VALUES (?, ?, ?, ?, ?, NOW(), ?, ?) ");
 	
 	   	return sb.toString();
 	}
@@ -319,7 +319,8 @@ public class ConsultasDD {
   		sb.append("fecha_mod = NOW(), ");
   		sb.append("usuario_mod = ?, ");
   		sb.append("operacion = ?, ");
-  		sb.append("activo = ? ");
+  		sb.append("activo = ?, ");
+  		sb.append("mail = ?");
   		sb.append("WHERE usuario = ? ");
       	 
       	return sb.toString();

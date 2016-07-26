@@ -27,6 +27,7 @@ public class UsuarioView extends FormLayout {
 	protected TextField nombre;
 	protected TextField usuario;
 	protected PasswordField pass;
+	protected TextField mail;
 	protected CheckBox activo;
 	protected Button aceptar;
 	protected Button btnEditar;

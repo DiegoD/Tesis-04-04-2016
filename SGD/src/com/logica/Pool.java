@@ -61,7 +61,6 @@ public class Pool {
 	    	throw new ConexionException();
 	    } 
 	    else {
-	    	System.out.println("encontro");
 	        Properties p = new Properties();
 	        
 	        
@@ -72,7 +71,7 @@ public class Pool {
 			this.pass = p.getProperty("password");
 			this.url = p.getProperty("url");
 			this.cantConexiones = Integer.parseInt(p.getProperty("cantidad_conexiones"));
-
+			
 	      }
 		}catch(Exception e)
 		{

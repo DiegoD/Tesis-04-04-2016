@@ -13,6 +13,7 @@ public class UsuarioVO extends AuditoriaVO{
 	private String pass;
 	private String nombre;
 	private boolean activo;
+	private String mail;
 	private ArrayList<GrupoVO> lstGrupos;
 
 	public UsuarioVO()
@@ -82,6 +83,12 @@ public class UsuarioVO extends AuditoriaVO{
 		this.nombre = nombre;
 	}
 	
+	public String getMail() {
+		return mail;
+	}
+	public void setMail(String mail) {
+		this.mail = mail;
+	}
 
 	public void copiar(UsuarioVO usuarioVO)
 	{
@@ -93,6 +100,7 @@ public class UsuarioVO extends AuditoriaVO{
 		this.nombre = usuarioVO.getNombre();
 		this.pass = usuarioVO.getPass();
 		this.activo = usuarioVO.isActivo();
+		this.mail = usuarioVO.mail;
 		
 		this.lstGrupos = new ArrayList<GrupoVO>();
 		
@@ -114,5 +122,6 @@ public class UsuarioVO extends AuditoriaVO{
 		}
 		
 	}
+	
 	
 }

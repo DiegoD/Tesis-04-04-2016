@@ -131,29 +131,33 @@ public class GruposPanelExtended extends GruposPanel {
 		    public void select(SelectionEvent event) {
 		       
 		    	try{
-		    	BeanItem<GrupoVO> item = container.getItem(gridview.getSelectedRow());
+		    		
+		    		if(gridview.getSelectedRow() != null){
+		    			BeanItem<GrupoVO> item = container.getItem(gridview.getSelectedRow());
+				    	
+				    	/*Puede ser null si accedemos luego de haberlo agregado, ya que no va a la base*/
+				    	if(item.getBean().getFechaMod() == null)
+				    	{
+				    		item.getBean().setFechaMod(new Timestamp(System.currentTimeMillis()));
+				    	}
+							
+						form = new GrupoViewExtended(Variables.OPERACION_LECTURA, GruposPanelExtended.this);
+						//form.fieldGroup.setItemDataSource(item);
+						sub = new MySub("70%","65%");
+						sub.setModal(true);
+						sub.setVista(form);
+						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
+						form.setDataSourceFormulario(item);
+						form.setLstFormularios(item.getBean().getLstFormularios());
+						
+						UI.getCurrent().addWindow(sub);
+		    		}
+			    	
+				}
 		    	
-		    	/*Puede ser null si accedemos luego de haberlo agregado, ya que no va a la base*/
-		    	if(item.getBean().getFechaMod() == null)
-		    	{
-		    		item.getBean().setFechaMod(new Timestamp(System.currentTimeMillis()));
-		    	}
-					
-					form = new GrupoViewExtended(Variables.OPERACION_LECTURA, GruposPanelExtended.this);
-					//form.fieldGroup.setItemDataSource(item);
-					sub = new MySub("70%","65%");
-					sub.setModal(true);
-					sub.setVista(form);
-					/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
-					form.setDataSourceFormulario(item);
-					form.setLstFormularios(item.getBean().getLstFormularios());
-					
-					 UI.getCurrent().addWindow(sub);
-					  
-		    	}catch(Exception e)
-		    	{
-		    		Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
-		    	}
+		    	catch(Exception e){
+			    	Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			    }
 		      
 		    }
 		});
