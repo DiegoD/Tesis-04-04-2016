@@ -7,20 +7,6 @@ public class ConsultasDD {
     protected final static String DRIVER = "com.mysql.jdbc.Driver";
     protected final static String PASS  = "root";
     
-    ////////////////////////<MONEDAS>/////////////////////////////////////////////////////
-    
-    public String getMonedas(){
-        
-        StringBuilder sb = new StringBuilder();
-        
-        sb.append("SELECT cod_moneda, nom_moneda, simbolo_moneda FROM ct_monedas ");
-                
-        return sb.toString();
-    }
-	
-   
-    ////////////////////////<MONEDAS/>/////////////////////////////////////////////////////
-    
     
     ////////////////////////<COTIZACIONES>/////////////////////////////////////////////////
     
@@ -66,105 +52,9 @@ public class ConsultasDD {
    }
     
    ////////////////////////<COTIZACIONES/>/////////////////////////////////////////////////
-    
-    
-   ////////////////////////<DOCUMENTO ADUANERO>///////////////////////////////////////////
-    
-    
-    public String memberDocumentoAduanero(){
-    	
-      	 StringBuilder sb = new StringBuilder();
-      	      	 
-      	 sb.append("SELECT cod_docum, nom_docum, activo, usuario_mod, fecha_mod ");
-      	 sb.append("FROM ct_documaduan WHERE nom_docum = ? ");
 
-      	 return sb.toString();
-      }
     
-    public String insertDocumentoAduanero(){
-    	
-   	 StringBuilder sb = new StringBuilder();
-   	 
-   	 sb.append("INSERT INTO ct_documaduan (nom_docum, activo, usuario_mod, fecha_mod) ");
-   	 sb.append("VALUES (?, ?, ?, NOW()) ");
-   	 
-   	 return sb.toString();
-   }
-    
-    public String getDocumentosAduanerosActivos(){
-    	
-    	 StringBuilder sb = new StringBuilder();
-    	 
-    	 sb.append("SELECT cod_docum, nom_docum, activo, usuario_mod, fecha_mod ");
-    	 sb.append("FROM ct_documaduan WHERE activo = 1 ");
 
-    	 return sb.toString();
-    }
-   
-    public String getDocumentosAduanerosTodos(){
-    	
-   	 StringBuilder sb = new StringBuilder();
-   	 
-   	 sb.append("SELECT cod_docum, nom_docum, activo, usuario_mod, fecha_mod ");
-   	 sb.append("FROM ct_documaduan ");
-
-   	 return sb.toString();
-   }
-    
-    public String getDocumentoAduanero(){
-   	
-     	 StringBuilder sb = new StringBuilder();
-     	 
-     	 sb.append("SELECT cod_docum, nom_docum, activo, usuario_mod, fecha_mod ");
-     	 sb.append("FROM ct_documaduan WHERE cod_docum = ?  ");
-
-     	 return sb.toString();
-     }
-    
-   ////////////////////////<DOCUMENTO ADUANERO/>//////////////////////////////////////////
-    
-    
-    
-    ////////////////////////<EMPRESAS>////////////////////////////////////////////////////
-    
-    
-    public String memberEmpresa(){
-    	
-     	 StringBuilder sb = new StringBuilder();
-     	      	 
-     	 sb.append("SELECT cod_emp, nom_emp, activo, usuario_mod, fecha_mod ");
-     	 sb.append("FROM ct_empresas WHERE nom_emp = ? ");
-
-     	 return sb.toString();
-     }
-   
-   
-    
-    
-    ////////////////////////<EMPRESAS/>///////////////////////////////////////////////////
-    
-    ////////////////////////<IMPUESTOS>///////////////////////////////////////////////////
-    public String insertImpuesto(){
-    	
-      	 StringBuilder sb = new StringBuilder();
-      	 
-      	 sb.append("INSERT INTO ct_impuestos (cod_impuesto, desc_impuesto, porcentaje_impuesto) ");
-      	 sb.append("VALUES (?, ?, ?)");
-      	 
-      	 return sb.toString();
-    }
-    
-    public String getImpuestosTodos(){
-    	 StringBuilder sb = new StringBuilder();
-      	 
-      	 sb.append("SELECT cod_impuesto, desc_impuesto, porcentaje_impuesto ");
-      	 sb.append("FROM ct_impuestos ");
-
-      	 return sb.toString();
-    }
-    
-    
-    ////////////////////////<IMPUESTOS/>///////////////////////////////////////////////////
     
 ////////////////////////INI-USUARIOS///////////////////////////////////////////////////
     
@@ -336,10 +226,281 @@ public class ConsultasDD {
     	return sb.toString();
     }
 	
+////////////////////////INI-IMPUESTOS///////////////////////////////////////////////////
+    
+	public String getImpuestos(){
 	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_impuesto, descripcion, porcentaje, activo, fecha_mod, usuario_mod, operacion ");
+		sb.append("FROM m_impuestos ");
+		
+		return sb.toString();
+	}
 	
+	public String insertarImpuesto()
+    {
+    	
+    	StringBuilder sb = new StringBuilder();
+    	 
+    	 sb.append("INSERT INTO vaadin.m_impuestos (cod_impuesto, descripcion, porcentaje, activo, fecha_mod, usuario_mod, operacion )");
+    	 sb.append("VALUES (?, ?, ?, ?, NOW(), ?, ?) ");
+
+    	 return sb.toString();
+    	
+    }
+    
+    public String memberImpuesto()
+    {
+    	
+      	 StringBuilder sb = new StringBuilder();
+        	 
+      	 sb.append("SELECT cod_impuesto ");
+      	 sb.append("FROM m_impuestos  ");
+      	 sb.append("WHERE cod_impuesto = ? ");
+
+      	 return sb.toString();
+      }
+    
+    public String eliminarImpuesto()
+    {
+    	 StringBuilder sb = new StringBuilder();
+    	 
+      	 sb.append("DELETE ");
+      	 sb.append("FROM m_impuesto  ");
+      	 sb.append("WHERE cod_impuesto = ? ");
+      	 
+      	 return sb.toString();
+    }
+    
+    public String actualizarImpuesto(){
+    	
+    	StringBuilder sb = new StringBuilder();
+    	 
+       	sb.append("UPDATE vaadin.m_impuestos ");
+      	sb.append("SET descripcion = ?, ");
+      	sb.append("porcentaje = ?, ");
+      	sb.append("activo = ?, ");
+  		sb.append("fecha_mod = NOW(), ");
+  		sb.append("usuario_mod = ?, ");
+  		sb.append("operacion = ? ");
+  		sb.append("WHERE cod_impuesto = ? ");
+      	 
+      	return sb.toString();
+    }
 	
+////////////////////////INI-MONEDAS///////////////////////////////////////////////////
+    
+	public String getMonedas(){
 	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_moneda, descripcion, acepta_cotizacion, activo, fecha_mod, usuario_mod, operacion ");
+		sb.append("FROM m_monedas ");
+		
+		return sb.toString();
+	}
+
+	public String insertarMoneda()
+	{
 	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO vaadin.m_monedas (cod_moneda, descripcion, acepta_cotizacion, activo, fecha_mod, usuario_mod, operacion )");
+		sb.append("VALUES (?, ?, ?, ?, NOW(), ?, ?) ");
+		
+		return sb.toString();
 	
+	}
+
+	public String memberMoneda()
+	{
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_moneda ");
+		sb.append("FROM m_monedas  ");
+		sb.append("WHERE cod_moneda = ? ");
+		
+		return sb.toString();
+	}
+
+	public String eliminarMoneda()
+	{
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("DELETE ");
+		sb.append("FROM m_moneda  ");
+		sb.append("WHERE cod_moneda = ? ");
+		
+		return sb.toString();
+	}
+
+	public String actualizarMoneda(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("UPDATE vaadin.m_monedas ");
+		sb.append("SET descripcion = ?, ");
+		sb.append("acepta_cotizacion = ?, ");
+		sb.append("activo = ?, ");
+		sb.append("fecha_mod = NOW(), ");
+		sb.append("usuario_mod = ?, ");
+		sb.append("operacion = ? ");
+		sb.append("WHERE cod_moneda = ? ");
+		
+		return sb.toString();
+	}
+    
+////////////////////////INI-EMPRESAS///////////////////////////////////////////////////
+    
+	public String getEmpresas(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_emp, nom_emp, fecha_mod, usuario_mod, operacion, activo ");
+		sb.append("FROM m_empresas ");
+		
+		return sb.toString();
+	}
+
+	public String insertarEmpresa()
+	{
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO vaadin.m_empresas (cod_emp, nom_emp, fecha_mod, usuario_mod, operacion, activo )");
+		sb.append("VALUES (?, ?, NOW(), ?, ?, ? ) ");
+		
+		return sb.toString();
+	
+	}
+
+    public String memberEmpresa(){
+    	
+    	 StringBuilder sb = new StringBuilder();
+    	      	 
+    	 sb.append("SELECT cod_emp, nom_emp, activo, usuario_mod, fecha_mod ");
+    	 sb.append("FROM m_empresas WHERE cod_emp = ? ");
+
+    	 return sb.toString();
+    }
+
+
+	public String actualizarEmpresa(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("UPDATE vaadin.m_empresas ");
+		sb.append("SET nom_emp = ?, ");
+		sb.append("activo = ?, ");
+		sb.append("fecha_mod = NOW(), ");
+		sb.append("usuario_mod = ?, ");
+		sb.append("operacion = ? ");
+		sb.append("WHERE cod_emp = ? ");
+		
+		return sb.toString();
+	}
+
+////////////////////////INI-RUBROS///////////////////////////////////////////////////
+    
+	public String getRubros(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_rubro, descripcion, activo, fecha_mod, usuario_mod, operacion ");
+		sb.append("FROM m_rubro ");
+		
+		return sb.toString();
+	}
+
+	public String insertarRubro()
+	{
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO vaadin.m_rubros (cod_rubro, descripcion, activo, fecha_mod, usuario_mod, operacion )");
+		sb.append("VALUES (?, ?, ?, NOW(), ?, ? ) ");
+		
+		return sb.toString();
+	
+	}
+
+	public String memberRubro(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_rubro ");
+		sb.append("FROM m_rubros WHERE cod_rubro = ? ");
+		
+		return sb.toString();
+	}
+
+
+	public String actualizarRubro(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("UPDATE vaadin.m_rubros ");
+		sb.append("SET descripcion = ?, ");
+		sb.append("activo = ?, ");
+		sb.append("fecha_mod = NOW(), ");
+		sb.append("usuario_mod = ?, ");
+		sb.append("operacion = ? ");
+		sb.append("WHERE cod_rubro = ? ");
+		
+		return sb.toString();
+	}
+
+
+////////////////////////INI-DOCUEMNTOS///////////////////////////////////////////////////
+
+	public String getDocumentos(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_documento, descripcion, activo, fecha_mod, usuario_mod, operacion ");
+		sb.append("FROM m_documentos ");
+		
+		return sb.toString();
+	}
+
+	public String insertarDocumento()
+	{
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO vaadin.m_documentos (cod_documento, descripcion, activo, fecha_mod, usuario_mod, operacion )");
+		sb.append("VALUES (?, ?, ?, NOW(), ?, ? ) ");
+		
+		return sb.toString();
+	
+	}
+
+	public String memberDocumento(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_documento ");
+		sb.append("FROM m_documentos WHERE cod_documento = ? ");
+		
+		return sb.toString();
+	}
+
+
+	public String actualizarDocumento(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("UPDATE vaadin.m_documentos ");
+		sb.append("SET descripcion = ?, ");
+		sb.append("activo = ?, ");
+		sb.append("fecha_mod = NOW(), ");
+		sb.append("usuario_mod = ?, ");
+		sb.append("operacion = ? ");
+		sb.append("WHERE cod_documento = ? ");
+		
+		return sb.toString();
+	}
+    
 }

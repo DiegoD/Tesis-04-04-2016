@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8" name="design-properties" content="{&quot;RULERS_VISIBLE&quot;:true,&quot;GUIDELINES_VISIBLE&quot;:false,&quot;SNAP_TO_OBJECTS&quot;:true,&quot;SNAP_TO_GRID&quot;:true,&quot;SNAPPING_DISTANCE&quot;:10,&quot;JAVA_SOURCES_ROOT&quot;:&quot;src&quot;,&quot;THEME&quot;:&quot;sgd&quot;}">
+ </head> 
+ <body> 
+  <vaadin-form-layout spacing="false" responsive id="auditoria" size-full margin-left margin-right margin-bottom="false"> 
+   <vaadin-label style-name="colored h2" responsive plain-text :center>
+     Empresa 
+   </vaadin-label> 
+   <vaadin-horizontal-layout width-full> 
+    <vaadin-link caption="Auditoria" _id="auditoria" :middle :right></vaadin-link> 
+   </vaadin-horizontal-layout> 
+   <vaadin-horizontal-layout responsive size-full> 
+    <vaadin-form-layout size-full> 
+     <vaadin-text-field caption="Codigo" readonly _id="cod_emp"></vaadin-text-field> 
+     <vaadin-text-field caption="Nombre" readonly _id="nom_emp"></vaadin-text-field> 
+     <vaadin-check-box caption="Activo" id="activo" responsive _id="activo"></vaadin-check-box> 
+     <vaadin-horizontal-layout width="187px"> 
+      <vaadin-button style-name="primary tiny" plain-text _id="aceptar" :middle>
+        Guardar 
+      </vaadin-button> 
+      <vaadin-button style-name="tiny primary" id="btnEditar" plain-text _id="btnEditar" :middle>
+        Editar 
+      </vaadin-button> 
+      <vaadin-button style-name="tiny primary" id="btnCancelar" plain-text _id="cancelar" :middle>
+        Cancelar 
+      </vaadin-button> 
+     </vaadin-horizontal-layout> 
+    </vaadin-form-layout> 
+   </vaadin-horizontal-layout> 
+  </vaadin-form-layout>  
+ </body>
+</html>

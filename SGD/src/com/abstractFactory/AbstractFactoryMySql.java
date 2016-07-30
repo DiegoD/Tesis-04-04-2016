@@ -17,4 +17,33 @@ public class AbstractFactoryMySql implements IAbstractFactory
 		return new DAOGrupos();
 	}
 
+	@Override
+	public IDAOImpuestos crearDAOImpuestos() {
+		
+		return new DAOImpuestos();
+	}
+	
+	@Override
+	public IDAOMonedas crearDAOMonedas() {
+		
+		return new DAOMonedas();
+	}
+	
+	@Override
+	public IDAOEmpresas crearDAOEmpresas() {
+		
+		return new DAOEmpresas();
+	}
+	
+	@Override
+	public IDAORubros crearDAORubros() {
+		
+		return new DAORubros();
+	}
+	
+	@Override
+	public IDAODocumentos crearDAODocumentos() {
+		
+		return new DAODocumentos();
+	}
 }

@@ -1,46 +1,50 @@
-package com.logica;
+package com.valueObject;
 
 import java.util.ArrayList;
 
-import com.valueObject.GrupoVO;
-import com.valueObject.ImpuestoVO;
-
-public class Impuesto extends Auditoria{
+public class ImpuestoVO extends AuditoriaVO{
 	
-	private String cod_impuesto;
+	private String codImpuesto;
 	private String descripcion;
 	private float porcentaje;
 	private boolean activo;
 	
-	public Impuesto(){
+	public ImpuestoVO(){
 		
 	}
 	
-	public Impuesto(String cod_imp, String descripcion, float porcentaje, boolean activo) {
-		
+	public ImpuestoVO(String codImpuesto, String descripcion, float porcentaje, boolean activo) {
 		super();
-		this.cod_impuesto = cod_imp;
+		this.codImpuesto = codImpuesto;
 		this.descripcion = descripcion;
 		this.porcentaje = porcentaje;
 		this.activo = activo;
 	}
-	
-	public Impuesto(ImpuestoVO impuestoVO){
+
+	/**
+	 * Copiamos todos los datos del ImpuestoVO pasado
+	 * por parametro
+	 *
+	 */
+	public void copiar(ImpuestoVO impuestoVO){
+
+		this.setUsuarioMod(impuestoVO.getUsuarioMod());
+		this.setFechaMod(impuestoVO.getFechaMod());
+		this.setOperacion(impuestoVO.getOperacion());
 		
-		super(impuestoVO.getUsuarioMod(), impuestoVO.getFechaMod(), impuestoVO.getOperacion());
-		
-		this.cod_impuesto = impuestoVO.getcodImpuesto();
+		this.codImpuesto = impuestoVO.getcodImpuesto();
 		this.descripcion = impuestoVO.getDescripcion();
-		this.activo = impuestoVO.isActivo();
+		this.activo = 	impuestoVO.isActivo();
 		this.porcentaje = impuestoVO.getPorcentaje();
+		
+	}
+	
+	public String getcodImpuesto() {
+		return codImpuesto;
 	}
 
-	public String getCod_imp() {
-		return cod_impuesto;
-	}
-
-	public void setCod_imp(String cod_imp) {
-		this.cod_impuesto = cod_imp;
+	public void setcodImpuesto(String codImpuesto) {
+		this.codImpuesto = codImpuesto;
 	}
 
 	public String getDescripcion() {
@@ -66,8 +70,5 @@ public class Impuesto extends Auditoria{
 	public void setActivo(boolean activo) {
 		this.activo = activo;
 	}
-	
-	
-	
 	
 }

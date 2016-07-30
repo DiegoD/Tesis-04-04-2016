@@ -71,6 +71,25 @@ public class MenuExtended extends Menu{
 			}
 		});
 		
+		this.impuestoButton.addClickListener(click -> {
+			
+			setSizeFull();
+			
+			this.content.removeAllComponents();
+			try {
+				
+				ImpuestosPanelExtended c = new ImpuestosPanelExtended();
+				c.setSizeFull();
+				this.content.setSizeFull();
+				
+				this.content.addComponent(c);
+				
+			} catch (Exception e) {
+				
+				Mensajes.mostrarMensajeError(e.getMessage());
+			}
+		});
+		
 		this.logoutButton.addClickListener(click -> {
 			
 			setSizeFull();
@@ -130,7 +149,8 @@ public class MenuExtended extends Menu{
 		for (FormularioVO formularioVO : this.permisos.getLstPermisos().values()) {
 			
 			if(formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_USUARIO)
-				|| formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_GRUPO))
+				|| formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_GRUPO) || 
+				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_IMPUESTO))
 			{
 				lstFormsMenuMant.add(formularioVO);
 			}
@@ -157,6 +177,11 @@ public class MenuExtended extends Menu{
 						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GRUPO, VariablesPermisos.OPERACION_LEER))
 							this.habilitarGrupoButton();
 					break;
+					
+					case VariablesPermisos.FORMULARIO_IMPUESTO :
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_IMPUESTO, VariablesPermisos.OPERACION_LEER))
+							this.habilitarImpuestoButton();
+					break;
 				}
 				
 			}
@@ -166,7 +191,6 @@ public class MenuExtended extends Menu{
 		}
 		
 		acordion.setHeight("75%"); /*Seteamos alto  del accordion*/
-		
 	}
 	
 	/**
@@ -181,6 +205,8 @@ public class MenuExtended extends Menu{
 		this.gruposButton.setVisible(false);
 		this.gruposButton.setEnabled(false);
 		
+		this.impuestoButton.setVisible(false);
+		this.impuestoButton.setEnabled(false);
 				
 	}
 	
@@ -199,6 +225,14 @@ public class MenuExtended extends Menu{
 		this.gruposButton.setEnabled(true);
 		
 		this.tabMantenimientos.addComponent(this.gruposButton);
+	}
+	
+	private void habilitarImpuestoButton()
+	{
+		this.impuestoButton.setVisible(true);
+		this.impuestoButton.setEnabled(true);
+		
+		this.tabMantenimientos.addComponent(this.impuestoButton);
 	}
 	
 	public PermisosUsuario getPermisosUsuario()
