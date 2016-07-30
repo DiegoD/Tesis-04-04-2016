@@ -12,6 +12,11 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.valueObject.FormularioVO;
+import com.vista.Empresas.EmpresasPanelExtended;
+import com.vista.Grupos.GruposPanelExtended;
+import com.vista.Impuestos.ImpuestosPanelExtended;
+import com.vista.Login.LoginExtended;
+import com.vista.Monedas.MonedasPanelExtended;
 import com.vista.Usuarios.UsuariosPanelExtend;
 import com.vaadin.ui.TabSheet.Tab;
 

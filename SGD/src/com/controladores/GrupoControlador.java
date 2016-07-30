@@ -19,7 +19,7 @@ import com.logica.Fachada;
 import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 import com.valueObject.FormularioVO;
 import com.valueObject.GrupoVO;
-import com.vista.GrupoViewExtended;
+import com.vista.Grupos.GrupoViewExtended;
 
 public class GrupoControlador {
 
