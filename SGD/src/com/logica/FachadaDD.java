@@ -881,13 +881,13 @@ public class FachadaDD {
 	* Obtiene todos los documentos existentes
 	*/
 	@SuppressWarnings("unchecked")
-	public ArrayList<DocumentoVO> getDocumentos() throws ObteniendoDocumentosException, ConexionException
+	public ArrayList<DocumentoAduaneroVO> getDocumentos() throws ObteniendoDocumentosException, ConexionException
 	{
 	
 		Connection con = null;
 		
-		ArrayList<Documento> lstDocumentos;
-		ArrayList<DocumentoVO> lstDocumentosVO = new ArrayList<DocumentoVO>();
+		ArrayList<DocumentoAduanero> lstDocumentos;
+		ArrayList<DocumentoAduaneroVO> lstDocumentosVO = new ArrayList<DocumentoAduaneroVO>();
 		
 		try
 		{
@@ -896,10 +896,10 @@ public class FachadaDD {
 			lstDocumentos = this.documentos.getDocumentos(con);
 			
 			
-			DocumentoVO aux;
-			for (Documento documento : lstDocumentos) 
+			DocumentoAduaneroVO aux;
+			for (DocumentoAduanero documento : lstDocumentos) 
 			{
-				aux = new DocumentoVO();
+				aux = new DocumentoAduaneroVO();
 				
 				aux.setCod_docucmento(documento.getCod_docucmento());
 				aux.setDescirpcion(documento.getDescirpcion());
@@ -933,7 +933,7 @@ public class FachadaDD {
 	* Valida que no exista un documento con el mismo código
 	* @throws ExisteEmpresaException 
 	*/
-	public void insertarDocumento(DocumentoVO documentoVO) throws InsertandoDocumentoException, ConexionException, ExisteDocumentoException 
+	public void insertarDocumento(DocumentoAduaneroVO documentoVO) throws InsertandoDocumentoException, ConexionException, ExisteDocumentoException 
 	{
 	
 		Connection con = null;
@@ -944,7 +944,7 @@ public class FachadaDD {
 			con = this.pool.obtenerConeccion();
 			con.setAutoCommit(false);
 			
-			Documento documento = new Documento(documentoVO); 
+			DocumentoAduanero documento = new DocumentoAduanero(documentoVO); 
 		
 			if(!this.documentos.memberDocumento(documento.getCod_docucmento(), con)) 	{
 			
@@ -982,7 +982,7 @@ public class FachadaDD {
 	* Actualiza los datos de un documento dado su código
 	* valida que exista el código 
 	*/
-	public void actualizarDocumento(DocumentoVO documentoVO) throws ConexionException, NoExisteDocumentoException, ModificandoDocumentoException, ExisteDocumentoException  
+	public void actualizarDocumento(DocumentoAduaneroVO documentoVO) throws ConexionException, NoExisteDocumentoException, ModificandoDocumentoException, ExisteDocumentoException  
 	{
 	
 		Connection con = null;
@@ -992,7 +992,7 @@ public class FachadaDD {
 			con = this.pool.obtenerConeccion();
 			con.setAutoCommit(false);
 		
-			Documento documento = new Documento(documentoVO);
+			DocumentoAduanero documento = new DocumentoAduanero(documentoVO);
 		
 		if(this.documentos.memberDocumento(documento.getCod_docucmento(), con))	{
 			this.documentos.actualizarDocumento(documento, con);
