@@ -15,6 +15,11 @@ import com.abstractFactory.AbstractFactoryBuilder;
 import com.abstractFactory.IAbstractFactory;
 import com.excepciones.*;
 import com.excepciones.Login.LoginException;
+import com.excepciones.Usuarios.ExisteUsuarioException;
+import com.excepciones.clientes.ExisteClienteExeption;
+import com.excepciones.clientes.InsertandoClienteException;
+import com.excepciones.clientes.ModificandoClienteException;
+import com.excepciones.clientes.ObteniendoClientesException;
 import com.excepciones.grupos.ExisteGrupoException;
 import com.excepciones.grupos.InsertandoGrupoException;
 import com.excepciones.grupos.MemberGrupoException;
@@ -23,6 +28,7 @@ import com.excepciones.grupos.NoExisteGrupoException;
 import com.excepciones.grupos.ObteniendoFormulariosException;
 import com.excepciones.grupos.ObteniendoGruposException;
 import com.valueObject.*;
+import com.valueObject.cliente.ClienteVO;
 import com.persistencia.*;
 
 public class Fachada {
@@ -36,6 +42,7 @@ public class Fachada {
 	/*Esto es para abstract factory*/
 	private IDAOUsuarios usuarios;
 	private IDAOGrupos grupos;
+	private IDAOClientes clientes;
 	
 	private AbstractFactoryBuilder fabrica;
 	private IAbstractFactory fabricaConcreta;
@@ -332,5 +339,212 @@ public class Fachada {
 	    }
 		
 /////////////////////////////////FIN-GUPOS/////////////////////////////////
+	 
+/////////////////////////////////CLIENTES/////////////////////////////////
+	 
+	 
+		/**
+		 *Nos retorna todos los clientes para la empresa
+		 *
+		 */
+	 @SuppressWarnings("unchecked")
+		public ArrayList<ClienteVO> getClientesTodos(String codEmp) throws ObteniendoClientesException, ConexionException {
+	    	
+	    	Connection con = null;
+	    	
+	    	ArrayList<Cliente> lstClientes;
+	    	ArrayList<ClienteVO> lstClientesVO = new ArrayList<ClienteVO>();
+	    	    	
+	    	try
+	    	{
+	    		con = this.pool.obtenerConeccion();
+	    		
+	    		lstClientes = this.clientes.getClientesTodos(con, codEmp);
+	    		
+	    		
+	    		ClienteVO aux;
+	    		for (Cliente cliente : lstClientes) 
+				{
+	    			aux = new ClienteVO();
+	    			
+	    			aux.setRazonSocial(cliente.getRazonSocial());
+	    			aux.setNombre(cliente.getNombre());
+	    			aux.setNombreDoc(cliente.getDocumento().getNombre());
+	    			aux.setCodigoDoc(cliente.getDocumento().getCodigo());
+	    			aux.setNumeroDoc(cliente.getDocumento().getNumero());
+	    			aux.setCodigo(cliente.getCodigo());
+	    			aux.setNombre(cliente.getNombre());
+	    			aux.setTel(cliente.getTel());
+	    			aux.setDireccion(cliente.getDireccion());
+	    			aux.setFechaMod(cliente.getFechaMod());
+	    			
+	    			
+	    			lstClientesVO.add(aux);
+				}
+		
+	    	}catch(ObteniendoClientesException  e)
+	    	{
+	    		throw e;
+	    		
+	    	} catch (ConexionException e) {
+				
+	    		throw e;
+	    	} 
+	    	finally
+	    	{
+	    		this.pool.liberarConeccion(con);
+	    	}
+	    	    
+	    	
+	    	return lstClientesVO;
+	    }	 
+	 
+	 
+		/**
+		 * Nos retorna todos los clientes activos para la empresa
+		 *
+		 */
+	 @SuppressWarnings("unchecked")
+		public ArrayList<ClienteVO> getClientesActivos(String codEmp) throws ObteniendoClientesException, ConexionException {
+	    	
+	    	Connection con = null;
+	    	
+	    	ArrayList<Cliente> lstClientes;
+	    	ArrayList<ClienteVO> lstClientesVO = new ArrayList<ClienteVO>();
+	    	    	
+	    	try
+	    	{
+	    		con = this.pool.obtenerConeccion();
+	    		
+	    		lstClientes = this.clientes.getClientesActivos(con, codEmp);
+	    		
+	    		
+	    		ClienteVO aux;
+	    		for (Cliente cliente : lstClientes) 
+				{
+	    			aux = new ClienteVO();
+	    			
+	    			aux.setRazonSocial(cliente.getRazonSocial());
+	    			aux.setNombre(cliente.getNombre());
+	    			aux.setNombreDoc(cliente.getDocumento().getNombre());
+	    			aux.setCodigoDoc(cliente.getDocumento().getCodigo());
+	    			aux.setNumeroDoc(cliente.getDocumento().getNumero());
+	    			aux.setCodigo(cliente.getCodigo());
+	    			aux.setNombre(cliente.getNombre());
+	    			aux.setTel(cliente.getTel());
+	    			aux.setDireccion(cliente.getDireccion());
+	    			aux.setFechaMod(cliente.getFechaMod());
+	    			
+	    			
+	    			lstClientesVO.add(aux);
+				}
+		
+	    	}catch(ObteniendoClientesException  e)
+	    	{
+	    		throw e;
+	    		
+	    	} catch (ConexionException e) {
+				
+	    		throw e;
+	    	} 
+	    	finally
+	    	{
+	    		this.pool.liberarConeccion(con);
+	    	}
+	    	    
+	    	
+	    	return lstClientesVO;
+	    }	 
+
+	 
+	 public void insertarCliente(ClienteVO clienteVO, String codEmp) throws InsertandoClienteException, ConexionException, ExisteClienteExeption  
+	    {
+	    	
+	    	Connection con = null;
+	    	boolean existe = false;
+	    	
+	    	try 
+	    	{
+				con = this.pool.obtenerConeccion();
+				con.setAutoCommit(false);
+				
+		    	Cliente cliente = new Cliente(clienteVO); 
+		    	
+		    	if(!this.clientes.memberCliente(cliente.getCodigo(), codEmp, con))
+		    	{
+		    		this.clientes.insertarCliente(cliente, codEmp, con);
+		    		
+		    		con.commit();
+		    	}
+		    	else{
+		    		existe = true;
+		    	}
+		    		
+	    	
+	    	}catch(Exception InsertandoGrupoException)
+	    	{
+	    		try {
+					con.rollback();
+					
+				} catch (SQLException e) {
+					
+					throw new InsertandoClienteException();
+				}
+	    		
+	    		throw new InsertandoClienteException();
+	    	}
+	    	finally
+	    	{
+	    		pool.liberarConeccion(con);
+	    	}
+	    	if (existe){
+	    		throw new ExisteClienteExeption();
+	    	}
+	    }
+	 
+	 public void editarCliente(ClienteVO clienteVO, String codEmp) throws  ConexionException, ModificandoClienteException     
+		{
+		    	
+		    	Connection con = null;
+		    	
+		    	try 
+		    	{
+					con = this.pool.obtenerConeccion();
+					con.setAutoCommit(false);
+					
+					Cliente cliente = new Cliente(clienteVO);
+			    	
+			    	if(this.clientes.memberCliente(cliente.getCodigo(), codEmp, con))
+			    	{
+			    		/*Primero eliminamos el grupo*/
+			    		this.clientes.modificarCliente(cliente, codEmp, con);
+			    			    		
+			    		
+			    		con.commit();
+			    	}
+			    	
+			    	else
+			    		throw new ModificandoClienteException();
+		    	
+		    	}catch(ModificandoClienteException| ExisteClienteExeption| ConexionException | SQLException  e)
+		    	{
+		    		try {
+						con.rollback();
+						
+					} catch (SQLException e1) {
+						
+						throw new ConexionException();
+					}
+		    		throw new ModificandoClienteException();
+		    	}
+		    	finally
+		    	{
+		    		pool.liberarConeccion(con);
+		    	}
+		    }
+	 
+/////////////////////////////////FIN-CLIENTES/////////////////////////////////
+	 
+	 
 	 
 }

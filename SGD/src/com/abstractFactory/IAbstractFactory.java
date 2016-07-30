@@ -1,5 +1,6 @@
 package com.abstractFactory;
 
+import com.persistencia.IDAOClientes;
 import com.persistencia.IDAODocumentos;
 import com.persistencia.IDAOEmpresas;
 import com.persistencia.IDAOGrupos;
@@ -14,7 +15,10 @@ public interface IAbstractFactory
 	public IDAOUsuarios crearDAOUsuarios();
 	
 	public IDAOGrupos crearDAOGrupos();
+
 	
+	public IDAOClientes crearDAOClientes();
+
 	public IDAOImpuestos crearDAOImpuestos();
 	
 	public IDAOMonedas crearDAOMonedas();
@@ -24,4 +28,5 @@ public interface IAbstractFactory
 	public IDAORubros crearDAORubros();
 	
 	public IDAODocumentos crearDAODocumentos();
+
 }

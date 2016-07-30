@@ -18,6 +18,13 @@ public class AbstractFactoryMySql implements IAbstractFactory
 	}
 
 	@Override
+	public IDAOClientes crearDAOClientes() {
+		
+		return new DAOClientes();
+	}
+	
+
+	@Override
 	public IDAOImpuestos crearDAOImpuestos() {
 		
 		return new DAOImpuestos();
@@ -46,4 +53,5 @@ public class AbstractFactoryMySql implements IAbstractFactory
 		
 		return new DAODocumentos();
 	}
+
 }

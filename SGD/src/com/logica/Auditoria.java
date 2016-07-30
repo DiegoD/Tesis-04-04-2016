@@ -2,7 +2,7 @@ package com.logica;
 
 import java.sql.Timestamp;
 
-public class Auditoria {
+public abstract class Auditoria {
 
 	private Timestamp fechaMod;
 	private String usuarioMod;

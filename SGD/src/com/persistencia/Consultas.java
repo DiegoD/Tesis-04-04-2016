@@ -327,6 +327,79 @@ public class Consultas {
 
 		return sb.toString();
 	}
+	
+////////////////////////CLIENTES////////////////////////////////////////////////////////
+	
+	/**/
+	public String getInsertCliente()
+	{
+		StringBuilder sb = new StringBuilder();
+		
+	 	sb.append("INSERT INTO m_clientes (cod_tit, nom_tit, cod_emp, razon_social, tel, nro_dgi, cod_docdgi ");
+	 	sb.append(", direccion, mail, activo, usuario_mod, operacion, fecha_mod) ");
+		sb.append("VALUES (?, ?, , ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+			
+		return sb.toString();
+	}
+	
+	public String getActualizarCliente()
+	{
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("UPDATE m_clientes ");
+		sb.append("SET  ");
+			sb.append("nom_tit = ?,  ");
+			sb.append("razon_social = ?, ");
+			sb.append("tel = ?, ");
+			sb.append("nro_dgi = ?, ");
+			sb.append("cod_docdgi = ?, ");
+			sb.append("direccion = ?, ");
+			sb.append("mail = ?, ");
+			sb.append("activo = ?, ");
+			sb.append("usuario_mod = ?, ");
+			sb.append("operacion = ?, ");
+			sb.append("fecha_mod = ? ");
+			sb.append("WHERE cod_tit = ? AND cod_emp = ? ");
+
+		return sb.toString();
+	}
+	
+	/**/
+	public String getClientesTodos()
+	{
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_tit, nom_tit, cod_emp, razon_social, tel, nro_dgi, m_documdgi.cod_docdgi, m_documdgi.nombre AS nomDoc , direccion, mail ");
+		sb.append(", activo, usuario_mod, operacion, fecha_mod ");
+		sb.append("FROM m_clientes, m_documdgi WHERE m_clientes.cod_docdgi = m_documdgi.cod_docdgi WHERE cod_emp = ? ");
+
+		return sb.toString();
+	}
+	
+	public String getClientesActivos()
+	{
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_tit, nom_tit, cod_emp, razon_social, tel, nro_dgi, cod_docdgi, direccion, mail ");
+		sb.append(", activo, usuario_mod, operacion, fecha_mod ");
+		sb.append("FROM m_clientes WHERE activo = 1 AND cod_emp = ?");
+
+		return sb.toString();
+	}
+	
+	/**/
+	public String getMemberCliente()
+	{
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_tit, nom_tit ");
+		sb.append("FROM m_clientes WHERE cod_tit = ? AND cod_emp = ?");
+
+		return sb.toString();
+	}
+	
+	
+////////////////////////FIN-CLIENTES///////////////////////////////////////////////////
 
     
 }
