@@ -3,23 +3,18 @@ package com.vista;
 import java.text.SimpleDateFormat;
 
 import com.controladores.DocumentoControlador;
-import com.controladores.EmpresaControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
 import com.excepciones.Documentos.ExisteDocumentoException;
+import com.excepciones.Documentos.InsertandoDocumentoException;
 import com.excepciones.Documentos.ModificandoDocumentoException;
 import com.excepciones.Documentos.NoExisteDocumentoException;
-import com.excepciones.Empresas.ExisteEmpresaException;
-import com.excepciones.Empresas.InsertandoEmpresaException;
-import com.excepciones.Empresas.ModificandoEmpresaException;
-import com.excepciones.Empresas.NoExisteEmpresaException;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.server.VaadinService;
 import com.valueObject.DocumentoVO;
-import com.valueObject.EmpresaVO;
 
 public class DocumentoViewExtended extends DocumentoView{
 
@@ -87,7 +82,7 @@ public class DocumentoViewExtended extends DocumentoView{
 				
 			} 
 			catch (ConexionException | NoExisteDocumentoException | ModificandoDocumentoException | ExisteDocumentoException | 
-					 InicializandoException | InsertandoEmpresaException |
+					 InicializandoException | InsertandoDocumentoException |
 					 ErrorInesperadoException e) {
 				
 				Mensajes.mostrarMensajeError(e.getMessage());
@@ -149,11 +144,11 @@ public class DocumentoViewExtended extends DocumentoView{
 	 */
 	private void setearValidaciones(boolean setear){
 		
-		this.cod_emp.setRequired(setear);
-		this.cod_emp.setRequiredError("Es requerido");
+		this.cod_documento.setRequired(setear);
+		this.cod_documento.setRequiredError("Es requerido");
 		
-		this.nom_emp.setRequired(setear);
-		this.nom_emp.setRequiredError("Es requerido");
+		this.descripcion.setRequired(setear);
+		this.descripcion.setRequiredError("Es requerido");
 		
 	}
 	
@@ -161,20 +156,20 @@ public class DocumentoViewExtended extends DocumentoView{
 	 * Dado un item ImpuestoVO seteamos la info del formulario
 	 *
 	 */
-	public void setDataSourceFormulario(BeanItem<EmpresaVO> item)
+	public void setDataSourceFormulario(BeanItem<DocumentoVO> item)
 	{
 		this.fieldGroup.setItemDataSource(item);
 		
-		EmpresaVO empresa = new EmpresaVO();
-		empresa = fieldGroup.getItemDataSource().getBean();
-		String fecha = new SimpleDateFormat("dd/MM/yyyy").format(empresa.getFechaMod());
+		DocumentoVO documento = new DocumentoVO();
+		documento = fieldGroup.getItemDataSource().getBean();
+		String fecha = new SimpleDateFormat("dd/MM/yyyy").format(documento.getFechaMod());
 		
 		
 		auditoria.setDescription(
 			    "<ul>"+
-			    "  <li> Modificado por: " + empresa.getUsuarioMod() + "</li>"+
+			    "  <li> Modificado por: " + documento.getUsuarioMod() + "</li>"+
 			    "  <li> Fecha: " + fecha + "</li>"+
-			    "  <li> Operación: " + empresa.getOperacion() + "</li>"+
+			    "  <li> Operación: " + documento.getOperacion() + "</li>"+
 			    "</ul>");
 		
 		/*SETEAMOS LA OPERACION EN MODO LECUTA
@@ -214,7 +209,7 @@ public class DocumentoViewExtended extends DocumentoView{
 		
 		
 		/*Verificamos que tenga permisos*/
-		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GRUPO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_DOCUMENTOS, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
 		if(permisoNuevoEditar){
 			
@@ -243,7 +238,7 @@ public class DocumentoViewExtended extends DocumentoView{
 	private void iniFormNuevo()
 	{
 		/*Chequeamos si tiene permiso de editar*/
-		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GRUPO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_DOCUMENTOS, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
 		/*Si no tiene permisos de Nuevo Cerrmamos la ventana y mostramos mensaje*/
 		if(!permisoNuevoEditar)
@@ -273,7 +268,7 @@ public class DocumentoViewExtended extends DocumentoView{
 	 */
 	private void setearFieldsEditar()
 	{
-		this.nom_emp.setReadOnly(false);
+		this.cod_documento.setReadOnly(false);
 		this.activo.setReadOnly(false);
 	}
 	
@@ -327,8 +322,8 @@ public class DocumentoViewExtended extends DocumentoView{
 	 */
 	private void readOnlyFields(boolean setear)
 	{
-		this.cod_emp.setReadOnly(setear);
-		this.nom_emp.setReadOnly(setear);
+		this.cod_documento.setReadOnly(setear);
+		this.descripcion.setReadOnly(setear);
 		this.activo.setReadOnly(setear);
 				
 	}
@@ -340,11 +335,11 @@ public class DocumentoViewExtended extends DocumentoView{
 	 */
 	private void agregarFieldsValidaciones()
 	{
-        this.cod_emp.addValidator(
+        this.cod_documento.addValidator(
                 new StringLengthValidator(
                      " 20 caracteres máximo", 1, 20, false));
         
-        this.nom_emp.addValidator(
+        this.descripcion.addValidator(
                 new StringLengthValidator(
                         " 255 caracteres máximo", 1, 255, false));
         
@@ -362,7 +357,7 @@ public class DocumentoViewExtended extends DocumentoView{
 		
 		try
 		{
-			if(this.cod_emp.isValid() && this.nom_emp.isValid() )
+			if(this.cod_documento.isValid() && this.descripcion.isValid() )
 				valido = true;
 			
 		}catch(Exception e)

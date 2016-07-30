@@ -22,8 +22,8 @@ import com.vaadin.ui.declarative.Design;
 @SuppressWarnings("serial")
 public class EmpresaView extends FormLayout {
 	protected Link auditoria;
-	protected TextField cod_emp;
-	protected TextField nom_emp;
+	protected TextField codEmp;
+	protected TextField nomEmp;
 	protected CheckBox activo;
 	protected Button aceptar;
 	protected Button btnEditar;

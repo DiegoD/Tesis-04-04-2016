@@ -2,8 +2,8 @@ package com.valueObject;
 
 public class EmpresaVO extends AuditoriaVO {
 
-	private String cod_emp;
-	private String nom_emp;
+	private String codEmp;
+	private String nomEmp;
 	private boolean activo;
 	
 	
@@ -12,8 +12,8 @@ public class EmpresaVO extends AuditoriaVO {
 	}
 	public EmpresaVO(String cod_emp, String nom_emp, boolean activo) {
 		super();
-		this.cod_emp = cod_emp;
-		this.nom_emp = nom_emp;
+		this.codEmp = cod_emp;
+		this.nomEmp = nom_emp;
 		this.activo = activo;
 	}
 	
@@ -28,22 +28,22 @@ public class EmpresaVO extends AuditoriaVO {
 		this.setFechaMod(empresaVO.getFechaMod());
 		this.setOperacion(empresaVO.getOperacion());
 		
-		this.cod_emp = empresaVO.getCodEmp();
-		this.nom_emp = empresaVO.getNomEmp();
+		this.codEmp = empresaVO.getCodEmp();
+		this.nomEmp = empresaVO.getNomEmp();
 		this.activo = 	empresaVO.isActivo();
 	}
 	
 	public String getCodEmp() {
-		return cod_emp;
+		return codEmp;
 	}
 	public void setCodEmp(String codEmp) {
-		this.cod_emp = codEmp;
+		this.codEmp = codEmp;
 	}
 	public String getNomEmp() {
-		return nom_emp;
+		return nomEmp;
 	}
 	public void setNomEmp(String nomEmp) {
-		this.nom_emp = nomEmp;
+		this.nomEmp = nomEmp;
 	}
 	public boolean isActivo() {
 		return activo;

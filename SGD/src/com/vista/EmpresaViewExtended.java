@@ -55,8 +55,8 @@ public class EmpresaViewExtended extends EmpresaView{
 									
 					EmpresaVO empresaVO = new EmpresaVO();		
 					
-					empresaVO.setCodEmp(cod_emp.getValue().trim());
-					empresaVO.setNomEmp(nom_emp.getValue().trim());
+					empresaVO.setCodEmp(codEmp.getValue().trim());
+					empresaVO.setNomEmp(nomEmp.getValue().trim());
 					empresaVO.setActivo(activo.getValue());
 					empresaVO.setUsuarioMod(this.permisos.getUsuario());
 					
@@ -151,11 +151,11 @@ public class EmpresaViewExtended extends EmpresaView{
 	 */
 	private void setearValidaciones(boolean setear){
 		
-		this.cod_emp.setRequired(setear);
-		this.cod_emp.setRequiredError("Es requerido");
+		this.codEmp.setRequired(setear);
+		this.codEmp.setRequiredError("Es requerido");
 		
-		this.nom_emp.setRequired(setear);
-		this.nom_emp.setRequiredError("Es requerido");
+		this.nomEmp.setRequired(setear);
+		this.nomEmp.setRequiredError("Es requerido");
 		
 	}
 	
@@ -275,7 +275,7 @@ public class EmpresaViewExtended extends EmpresaView{
 	 */
 	private void setearFieldsEditar()
 	{
-		this.nom_emp.setReadOnly(false);
+		this.nomEmp.setReadOnly(false);
 		this.activo.setReadOnly(false);
 	}
 	
@@ -329,8 +329,8 @@ public class EmpresaViewExtended extends EmpresaView{
 	 */
 	private void readOnlyFields(boolean setear)
 	{
-		this.cod_emp.setReadOnly(setear);
-		this.nom_emp.setReadOnly(setear);
+		this.codEmp.setReadOnly(setear);
+		this.nomEmp.setReadOnly(setear);
 		this.activo.setReadOnly(setear);
 				
 	}
@@ -342,11 +342,11 @@ public class EmpresaViewExtended extends EmpresaView{
 	 */
 	private void agregarFieldsValidaciones()
 	{
-        this.cod_emp.addValidator(
+        this.codEmp.addValidator(
                 new StringLengthValidator(
                      " 20 caracteres máximo", 1, 20, false));
         
-        this.nom_emp.addValidator(
+        this.nomEmp.addValidator(
                 new StringLengthValidator(
                         " 255 caracteres máximo", 1, 255, false));
         
@@ -364,7 +364,7 @@ public class EmpresaViewExtended extends EmpresaView{
 		
 		try
 		{
-			if(this.cod_emp.isValid() && this.nom_emp.isValid() )
+			if(this.codEmp.isValid() && this.nomEmp.isValid() )
 				valido = true;
 			
 		}catch(Exception e)

@@ -32,7 +32,7 @@ public class DocumentosPanelExtended extends DocumentosPanel{
 	
 	public DocumentosPanelExtended(){
 		
-		controlador = new EmpresaControlador();
+		controlador = new DocumentoControlador();
 		this.lstDocumentos = new ArrayList<DocumentoVO>();
 		
 		String usuario = (String)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("usuario");
@@ -185,7 +185,7 @@ public class DocumentosPanelExtended extends DocumentosPanel{
 
 		/*Si esta el documento en la lista, es una acutalizacion
 		 * y modificamos el objeto en la lista*/
-		if(this.existeEmpresaenLista(documentoVO.getCod_docucmento()))
+		if(this.existeDocumentoenLista(documentoVO.getCod_docucmento()))
 		{
 			this.actualizarDocumentoenLista(documentoVO);
 		}
