@@ -12,6 +12,7 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.valueObject.FormularioVO;
+import com.vista.Usuarios.UsuariosPanelExtend;
 import com.vaadin.ui.TabSheet.Tab;
 
 public class MenuExtended extends Menu{
@@ -111,6 +112,63 @@ public class MenuExtended extends Menu{
 			}
 		});
 		
+		this.empresaButton.addClickListener(click -> {
+			
+			setSizeFull();
+			
+			this.content.removeAllComponents();
+			try {
+				
+				EmpresasPanelExtended c = new EmpresasPanelExtended();
+				c.setSizeFull();
+				this.content.setSizeFull();
+				
+				this.content.addComponent(c);
+				
+			} catch (Exception e) {
+				
+				Mensajes.mostrarMensajeError(e.getMessage());
+			}
+		});
+		
+		/*this.documentosButton.addClickListener(click -> {
+			
+			setSizeFull();
+			
+			this.content.removeAllComponents();
+			try {
+				
+				DocumentosPanelExtended c = new DocumentosPanelExtended();
+				c.setSizeFull();
+				this.content.setSizeFull();
+				
+				this.content.addComponent(c);
+				
+			} catch (Exception e) {
+				
+				Mensajes.mostrarMensajeError(e.getMessage());
+			}
+		});*/
+		
+		this.monedasButton.addClickListener(click -> {
+			
+			setSizeFull();
+			
+			this.content.removeAllComponents();
+			try {
+				
+				MonedasPanelExtended c = new MonedasPanelExtended();
+				c.setSizeFull();
+				this.content.setSizeFull();
+				
+				this.content.addComponent(c);
+				
+			} catch (Exception e) {
+				
+				Mensajes.mostrarMensajeError(e.getMessage());
+			}
+		});
+		
 	}
 	
 	public  void setContent(Component comp)
@@ -150,7 +208,8 @@ public class MenuExtended extends Menu{
 			
 			if(formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_USUARIO)
 				|| formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_GRUPO) || 
-				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_IMPUESTO))
+				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_IMPUESTO) ||
+				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_EMPRESAS))
 			{
 				lstFormsMenuMant.add(formularioVO);
 			}
@@ -182,6 +241,11 @@ public class MenuExtended extends Menu{
 						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_IMPUESTO, VariablesPermisos.OPERACION_LEER))
 							this.habilitarImpuestoButton();
 					break;
+					
+					case VariablesPermisos.FORMULARIO_EMPRESAS :
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_EMPRESAS, VariablesPermisos.OPERACION_LEER))
+							this.habilitarEmpresaButton();
+					break;
 				}
 				
 			}
@@ -207,6 +271,9 @@ public class MenuExtended extends Menu{
 		
 		this.impuestoButton.setVisible(false);
 		this.impuestoButton.setEnabled(false);
+		
+		this.empresaButton.setVisible(false);
+		this.empresaButton.setEnabled(false);
 				
 	}
 	
@@ -233,6 +300,14 @@ public class MenuExtended extends Menu{
 		this.impuestoButton.setEnabled(true);
 		
 		this.tabMantenimientos.addComponent(this.impuestoButton);
+	}
+	
+	private void habilitarEmpresaButton()
+	{
+		this.empresaButton.setVisible(true);
+		this.empresaButton.setEnabled(true);
+		
+		this.tabMantenimientos.addComponent(this.empresaButton);
 	}
 	
 	public PermisosUsuario getPermisosUsuario()

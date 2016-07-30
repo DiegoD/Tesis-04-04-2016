@@ -1,4 +1,4 @@
-package com.vista;
+package com.vista.Usuarios;
 
 import java.util.ArrayList;
 import java.util.Collection;

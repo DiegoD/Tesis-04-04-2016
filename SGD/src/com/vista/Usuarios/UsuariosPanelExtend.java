@@ -1,4 +1,4 @@
-package com.vista;
+package com.vista.Usuarios;
 
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -25,6 +25,11 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.valueObject.GrupoVO;
 import com.valueObject.UsuarioVO;
+import com.vista.Mensajes;
+import com.vista.MySub;
+import com.vista.PermisosUsuario;
+import com.vista.Variables;
+import com.vista.VariablesPermisos;
 
 public class UsuariosPanelExtend extends UsuariosPanel{
 	

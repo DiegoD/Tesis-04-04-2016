@@ -1,4 +1,4 @@
-package com.vista;
+package com.vista.Usuarios;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -31,6 +31,12 @@ import com.valueObject.FormularioVO;
 import com.valueObject.GrupoNombreVO;
 import com.valueObject.GrupoVO;
 import com.valueObject.UsuarioVO;
+import com.vista.MD5;
+import com.vista.Mensajes;
+import com.vista.MySub;
+import com.vista.PermisosUsuario;
+import com.vista.Variables;
+import com.vista.VariablesPermisos;
 
 public class UsuarioViewExtended extends UsuarioView{
 
