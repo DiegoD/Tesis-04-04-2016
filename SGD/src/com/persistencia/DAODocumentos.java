@@ -14,16 +14,16 @@ import com.excepciones.Empresas.ExisteEmpresaException;
 import com.excepciones.Empresas.InsertandoEmpresaException;
 import com.excepciones.Empresas.ModificandoEmpresaException;
 import com.excepciones.Empresas.ObteniendoEmpresasException;
-import com.logica.Documento;
+import com.logica.DocumentoAduanero;
 import com.logica.Empresa;
 import java.sql.Connection;
 
 public class DAODocumentos implements IDAODocumentos{
 
 	@Override
-	public ArrayList<Documento> getDocumentos(Connection con) throws ObteniendoDocumentosException, ConexionException {
+	public ArrayList<DocumentoAduanero> getDocumentos(Connection con) throws ObteniendoDocumentosException, ConexionException {
 		// TODO Auto-generated method stub
-		ArrayList<Documento> lstDocumentos = new ArrayList<Documento>();
+		ArrayList<DocumentoAduanero> lstDocumentos = new ArrayList<DocumentoAduanero>();
 		
 		try
 		{
@@ -35,11 +35,11 @@ public class DAODocumentos implements IDAODocumentos{
 			
 			ResultSet rs = pstmt1.executeQuery();
 			
-			Documento documento;
+			DocumentoAduanero documento;
 			
 			while(rs.next ()) {
 
-				documento = new Documento();
+				documento = new DocumentoAduanero();
 				
 				documento.setCod_docucmento(rs.getString(1));
 				documento.setDescirpcion(rs.getString(2));
@@ -71,7 +71,7 @@ public class DAODocumentos implements IDAODocumentos{
 	 * Pre condición: El código de documento no debe existir previamente
 	 */
 	@Override
-	public void insertarDocumento(Documento documento, Connection con)
+	public void insertarDocumento(DocumentoAduanero documento, Connection con)
 			throws InsertandoDocumentoException, ConexionException {
 		ConsultasDD clts = new ConsultasDD();
     	
@@ -135,7 +135,7 @@ public class DAODocumentos implements IDAODocumentos{
 	}
 
 	@Override
-	public void actualizarDocumento(Documento documento, Connection con)
+	public void actualizarDocumento(DocumentoAduanero documento, Connection con)
 			throws ModificandoDocumentoException, ConexionException {
 		
 		ConsultasDD consultas = new ConsultasDD();

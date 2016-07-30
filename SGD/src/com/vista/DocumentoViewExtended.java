@@ -14,11 +14,11 @@ import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.server.VaadinService;
-import com.valueObject.DocumentoVO;
+import com.valueObject.DocumentoAduaneroVO;
 
 public class DocumentoViewExtended extends DocumentoView{
 
-	private BeanFieldGroup<DocumentoVO> fieldGroup;
+	private BeanFieldGroup<DocumentoAduaneroVO> fieldGroup;
 	private DocumentoControlador controlador;
 	private String operacion;
 	private DocumentosPanelExtended mainView;
@@ -46,7 +46,7 @@ public class DocumentoViewExtended extends DocumentoView{
 			if(this.fieldsValidos())
 			{
 						
-				DocumentoVO documentoVO = new DocumentoVO();		
+				DocumentoAduaneroVO documentoVO = new DocumentoAduaneroVO();		
 				
 				documentoVO.setCod_docucmento(cod_documento.getValue().trim());
 				documentoVO.setDescirpcion(descripcion.getValue().trim());
@@ -112,7 +112,7 @@ public class DocumentoViewExtended extends DocumentoView{
 		
 		this.controlador = new DocumentoControlador();
 					
-		this.fieldGroup =  new BeanFieldGroup<DocumentoVO>(DocumentoVO.class);
+		this.fieldGroup =  new BeanFieldGroup<DocumentoAduaneroVO>(DocumentoAduaneroVO.class);
 		
 		//Seteamos info del form si es requerido
 		if(fieldGroup != null)
@@ -156,11 +156,11 @@ public class DocumentoViewExtended extends DocumentoView{
 	 * Dado un item ImpuestoVO seteamos la info del formulario
 	 *
 	 */
-	public void setDataSourceFormulario(BeanItem<DocumentoVO> item)
+	public void setDataSourceFormulario(BeanItem<DocumentoAduaneroVO> item)
 	{
 		this.fieldGroup.setItemDataSource(item);
 		
-		DocumentoVO documento = new DocumentoVO();
+		DocumentoAduaneroVO documento = new DocumentoAduaneroVO();
 		documento = fieldGroup.getItemDataSource().getBean();
 		String fecha = new SimpleDateFormat("dd/MM/yyyy").format(documento.getFechaMod());
 		

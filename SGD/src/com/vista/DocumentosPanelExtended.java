@@ -19,21 +19,21 @@ import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
-import com.valueObject.DocumentoVO;
+import com.valueObject.DocumentoAduaneroVO;
 import com.valueObject.EmpresaVO;
 
 public class DocumentosPanelExtended extends DocumentosPanel{
 
 	private DocumentoViewExtended form; 
-	private ArrayList<DocumentoVO> lstDocumentos; /*Lista con los documentos*/
-	private BeanItemContainer<DocumentoVO> container;
+	private ArrayList<DocumentoAduaneroVO> lstDocumentos; /*Lista con los documentos*/
+	private BeanItemContainer<DocumentoAduaneroVO> container;
 	private DocumentoControlador controlador;
 	MySub sub = new MySub("65%", "65%");
 	
 	public DocumentosPanelExtended(){
 		
 		controlador = new DocumentoControlador();
-		this.lstDocumentos = new ArrayList<DocumentoVO>();
+		this.lstDocumentos = new ArrayList<DocumentoAduaneroVO>();
 		
 		String usuario = (String)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("usuario");
 		PermisosUsuario permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
@@ -89,7 +89,7 @@ public class DocumentosPanelExtended extends DocumentosPanel{
 		
 		
 		this.container = 
-				new BeanItemContainer<DocumentoVO>(DocumentoVO.class);
+				new BeanItemContainer<DocumentoAduaneroVO>(DocumentoAduaneroVO.class);
 		
 		//Obtenemos lista de empresas del sistema
 		try {
@@ -99,7 +99,7 @@ public class DocumentosPanelExtended extends DocumentosPanel{
 			e1.printStackTrace();
 		}
 		
-		for (DocumentoVO documentoVO : lstDocumentos) {
+		for (DocumentoAduaneroVO documentoVO : lstDocumentos) {
 			container.addBean(documentoVO);
 		}
 		
@@ -123,7 +123,7 @@ public class DocumentosPanelExtended extends DocumentosPanel{
 		    	try{
 		    		
 		    		if(gridDocumentos.getSelectedRow() != null){
-		    			BeanItem<DocumentoVO> item = container.getItem(gridDocumentos.getSelectedRow());
+		    			BeanItem<DocumentoAduaneroVO> item = container.getItem(gridDocumentos.getSelectedRow());
 				    	
 				    	/*Puede ser null si accedemos luego de haberlo agregado, ya que no va a la base*/
 				    	if(item.getBean().getFechaMod() == null)
@@ -157,9 +157,9 @@ public class DocumentosPanelExtended extends DocumentosPanel{
 	 * @throws Exception 
 	 *
 	 */
-	private ArrayList<DocumentoVO> getDocumentos() throws Exception  {
+	private ArrayList<DocumentoAduaneroVO> getDocumentos() throws Exception  {
 		
-		ArrayList<DocumentoVO> lstDocumentos = new ArrayList<DocumentoVO>();
+		ArrayList<DocumentoAduaneroVO> lstDocumentos = new ArrayList<DocumentoAduaneroVO>();
 
 		try {
 			
@@ -180,7 +180,7 @@ public class DocumentosPanelExtended extends DocumentosPanel{
 	 * desde DocumentoViewExtended
 	 *
 	 */
-	public void actulaizarGrilla(DocumentoVO documentoVO)
+	public void actulaizarGrilla(DocumentoAduaneroVO documentoVO)
 	{
 
 		/*Si esta el documento en la lista, es una acutalizacion
@@ -207,12 +207,12 @@ public class DocumentosPanelExtended extends DocumentosPanel{
 	 * se hace una acutalizacion de un documento
 	 *
 	 */
-	private void actualizarDocumentoenLista(DocumentoVO documentoVO)
+	private void actualizarDocumentoenLista(DocumentoAduaneroVO documentoVO)
 	{
 		int i =0;
 		boolean salir = false;
 		
-		DocumentoVO documentoEnLista;
+		DocumentoAduaneroVO documentoEnLista;
 		
 		while( i < this.lstDocumentos.size() && !salir)
 		{
@@ -238,7 +238,7 @@ public class DocumentosPanelExtended extends DocumentosPanel{
 		int i =0;
 		boolean esta = false;
 		
-		DocumentoVO aux;
+		DocumentoAduaneroVO aux;
 		
 		while( i < this.lstDocumentos.size() && !esta)
 		{

@@ -30,6 +30,9 @@ public class Menu extends HorizontalLayout {
 	protected Button gruposButton;
 	protected Button logoutButton;
 	protected Button impuestoButton;
+	protected Button empresaButton;
+	protected Button monedasButton;
+	protected Button documentoButton;
 	protected Accordion acordion;
 	protected VerticalLayout content;
 

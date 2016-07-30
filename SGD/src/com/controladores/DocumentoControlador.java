@@ -11,7 +11,7 @@ import com.excepciones.Documentos.ModificandoDocumentoException;
 import com.excepciones.Documentos.NoExisteDocumentoException;
 import com.excepciones.Documentos.ObteniendoDocumentosException;
 import com.logica.FachadaDD;
-import com.valueObject.DocumentoVO;
+import com.valueObject.DocumentoAduaneroVO;
 
 public class DocumentoControlador {
 	
@@ -22,7 +22,7 @@ public class DocumentoControlador {
 	/**
 	 * Obtiene array list de VO de todos los documentos
 	 */
-	public ArrayList<DocumentoVO> getDocumentos() throws ObteniendoDocumentosException, ConexionException, InicializandoException {
+	public ArrayList<DocumentoAduaneroVO> getDocumentos() throws ObteniendoDocumentosException, ConexionException, InicializandoException {
 		
 			return FachadaDD.getInstance().getDocumentos();
 	}
@@ -30,7 +30,7 @@ public class DocumentoControlador {
 	/**
 	 * Inserta un nuevo documento
 	 */
-	public void insertarDocumento(DocumentoVO documentoVO) throws InsertandoDocumentoException, ExisteDocumentoException, InicializandoException, ConexionException, ErrorInesperadoException
+	public void insertarDocumento(DocumentoAduaneroVO documentoVO) throws InsertandoDocumentoException, ExisteDocumentoException, InicializandoException, ConexionException, ErrorInesperadoException
 	{
 		FachadaDD.getInstance().insertarDocumento(documentoVO);
 	}
@@ -39,7 +39,7 @@ public class DocumentoControlador {
 	/**
 	 * Actualiza los datos de un documento
 	 */
-	public void actualizarDocumento(DocumentoVO documentoVO) throws ConexionException, NoExisteDocumentoException, ModificandoDocumentoException, ExisteDocumentoException, InicializandoException {
+	public void actualizarDocumento(DocumentoAduaneroVO documentoVO) throws ConexionException, NoExisteDocumentoException, ModificandoDocumentoException, ExisteDocumentoException, InicializandoException {
 		FachadaDD.getInstance().actualizarDocumento(documentoVO);
 	}
 }
