@@ -25,7 +25,7 @@ public class MonedaView extends FormLayout {
 	protected TextField cod_moneda;
 	protected TextField descripcion;
 	protected TextField simbolo;
-	protected CheckBox acepta_cotizacion;
+	protected CheckBox aceptaCotizacion;
 	protected CheckBox activo;
 	protected Button aceptar;
 	protected Button btnEditar;

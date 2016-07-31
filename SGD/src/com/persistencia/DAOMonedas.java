@@ -85,10 +85,11 @@ public class DAOMonedas implements IDAOMonedas{
 			pstmt1 =  con.prepareStatement(insert);
 			pstmt1.setString(1, moneda.getCod_moneda());
 			pstmt1.setString(2, moneda.getDescripcion());
-			pstmt1.setBoolean(3, moneda.isAcepta_cotizacion());
-			pstmt1.setBoolean(4, moneda.isActivo());
-			pstmt1.setString(5, moneda.getUsuarioMod());
-			pstmt1.setString(6, moneda.getOperacion());
+			pstmt1.setString(3, moneda.getSimbolo());
+			pstmt1.setBoolean(4, moneda.isAcepta_cotizacion());
+			pstmt1.setBoolean(5, moneda.isActivo());
+			pstmt1.setString(6, moneda.getUsuarioMod());
+			pstmt1.setString(7, moneda.getOperacion());
 			
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
@@ -153,11 +154,12 @@ public class DAOMonedas implements IDAOMonedas{
      		pstmt1 =  con.prepareStatement(update);
      		
 			pstmt1.setString(1, moneda.getDescripcion());
-			pstmt1.setBoolean(2, moneda.isAcepta_cotizacion());
-			pstmt1.setBoolean(3, moneda.isActivo());
-			pstmt1.setString(4, moneda.getUsuarioMod());
-			pstmt1.setString(5, moneda.getOperacion());
-			pstmt1.setString(6, moneda.getCod_moneda());
+			pstmt1.setString(2, moneda.getSimbolo());
+			pstmt1.setBoolean(3, moneda.isAcepta_cotizacion());
+			pstmt1.setBoolean(4, moneda.isActivo());
+			pstmt1.setString(5, moneda.getUsuarioMod());
+			pstmt1.setString(6, moneda.getOperacion());
+			pstmt1.setString(7, moneda.getCod_moneda());
 			
 			pstmt1.executeUpdate ();
 			

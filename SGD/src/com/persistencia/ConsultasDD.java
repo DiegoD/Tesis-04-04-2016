@@ -295,7 +295,7 @@ public class ConsultasDD {
 	
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("SELECT cod_moneda, descripcion, acepta_cotizacion, activo, fecha_mod, usuario_mod, operacion ");
+		sb.append("SELECT cod_moneda, descripcion, simbolo, acepta_cotizacion, activo, fecha_mod, usuario_mod, operacion ");
 		sb.append("FROM m_monedas ");
 		
 		return sb.toString();
@@ -306,7 +306,7 @@ public class ConsultasDD {
 	
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("INSERT INTO vaadin.m_monedas (cod_moneda, descripcion, acepta_cotizacion, activo, fecha_mod, usuario_mod, operacion )");
+		sb.append("INSERT INTO vaadin.m_monedas (cod_moneda, descripcion, simbolo, acepta_cotizacion, activo, fecha_mod, usuario_mod, operacion )");
 		sb.append("VALUES (?, ?, ?, ?, NOW(), ?, ?) ");
 		
 		return sb.toString();
@@ -342,6 +342,7 @@ public class ConsultasDD {
 		
 		sb.append("UPDATE vaadin.m_monedas ");
 		sb.append("SET descripcion = ?, ");
+		sb.append("SET simbolo = ?, ");
 		sb.append("acepta_cotizacion = ?, ");
 		sb.append("activo = ?, ");
 		sb.append("fecha_mod = NOW(), ");

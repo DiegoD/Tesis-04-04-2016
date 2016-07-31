@@ -28,9 +28,10 @@ public class Moneda extends Auditoria{
 		
 		super(monedaVO.getUsuarioMod(), monedaVO.getFechaMod(), monedaVO.getOperacion());
 		
-		this.cod_moneda = monedaVO.getCod_moneda();
+		this.cod_moneda = monedaVO.getCodMoneda();
 		this.descripcion = monedaVO.getDescripcion();
-		this.acepta_cotizacion = monedaVO.isAcepta_cotizacion();
+		this.simbolo = monedaVO.getSimbolo();
+		this.acepta_cotizacion = monedaVO.isAceptaCotizacion();
 		this.activo = monedaVO.isActivo();
 
 	}

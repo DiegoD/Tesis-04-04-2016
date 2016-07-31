@@ -2,10 +2,10 @@ package com.valueObject;
 
 public class MonedaVO extends AuditoriaVO{
 	
-	private String cod_moneda;
+	private String codMoneda;
 	private String descripcion;
 	private String simbolo;
-	private boolean acepta_cotizacion;
+	private boolean aceptaCotizacion;
 	private boolean activo;
 	
 	public MonedaVO(){
@@ -14,10 +14,10 @@ public class MonedaVO extends AuditoriaVO{
 
 	public MonedaVO(String cod_moneda, String descripcion, String simbolo, boolean acepta_cotizacion, boolean activo) {
 		super();
-		this.cod_moneda = cod_moneda;
+		this.codMoneda = cod_moneda;
 		this.descripcion = descripcion;
 		this.simbolo = simbolo;
-		this.acepta_cotizacion = acepta_cotizacion;
+		this.aceptaCotizacion = acepta_cotizacion;
 		this.activo = activo;
 	}
 	
@@ -28,9 +28,9 @@ public class MonedaVO extends AuditoriaVO{
 	 */
 	public void copiar(MonedaVO monedaVO){
 		
-		this.setCod_moneda(monedaVO.getCod_moneda());
+		this.setCodMoneda(monedaVO.getCodMoneda());
 		this.setDescripcion(monedaVO.getDescripcion());
-		this.setAcepta_cotizacion(monedaVO.isAcepta_cotizacion());
+		this.setAceptaCotizacion(monedaVO.isAceptaCotizacion());
 		this.setActivo(monedaVO.isActivo());
 		
 		this.setUsuarioMod(monedaVO.getUsuarioMod());
@@ -39,12 +39,12 @@ public class MonedaVO extends AuditoriaVO{
 
 	}
 
-	public String getCod_moneda() {
-		return cod_moneda;
+	public String getCodMoneda() {
+		return codMoneda;
 	}
 
-	public void setCod_moneda(String cod_moneda) {
-		this.cod_moneda = cod_moneda;
+	public void setCodMoneda(String cod_moneda) {
+		this.codMoneda = cod_moneda;
 	}
 
 	public String getDescripcion() {
@@ -63,12 +63,12 @@ public class MonedaVO extends AuditoriaVO{
 		this.simbolo = simbolo;
 	}
 
-	public boolean isAcepta_cotizacion() {
-		return acepta_cotizacion;
+	public boolean isAceptaCotizacion() {
+		return aceptaCotizacion;
 	}
 
-	public void setAcepta_cotizacion(boolean acepta_cotizacion) {
-		this.acepta_cotizacion = acepta_cotizacion;
+	public void setAceptaCotizacion(boolean acepta_cotizacion) {
+		this.aceptaCotizacion = acepta_cotizacion;
 	}
 
 	public boolean isActivo() {

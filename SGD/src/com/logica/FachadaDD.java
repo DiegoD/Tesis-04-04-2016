@@ -466,9 +466,10 @@ public class FachadaDD {
 			{
     			aux = new MonedaVO();
     			
-    			aux.setCod_moneda(moneda.getCod_moneda());
+    			aux.setCodMoneda(moneda.getCod_moneda());
     			aux.setDescripcion(moneda.getDescripcion());
-    			aux.setAcepta_cotizacion(moneda.isAcepta_cotizacion());
+    			aux.setSimbolo(moneda.getSimbolo());
+    			aux.setAceptaCotizacion(moneda.isAcepta_cotizacion());
     			aux.setActivo(moneda.isActivo());
     			aux.setFechaMod(moneda.getFechaMod());
     			aux.setOperacion(moneda.getOperacion());

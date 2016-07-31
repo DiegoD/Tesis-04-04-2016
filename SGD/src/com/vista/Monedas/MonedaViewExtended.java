@@ -49,12 +49,13 @@ public class MonedaViewExtended extends MonedaView{
 									
 					MonedaVO monedaVO = new MonedaVO();		
 					
-					monedaVO.setCod_moneda(cod_moneda.getValue().trim());
+					monedaVO.setCodMoneda(cod_moneda.getValue().trim());
 					monedaVO.setDescripcion(descripcion.getValue().trim());
 					monedaVO.setSimbolo(simbolo.getValue().trim());
-					monedaVO.setAcepta_cotizacion(acepta_cotizacion.getValue());
+					monedaVO.setAceptaCotizacion(aceptaCotizacion.getValue());
 					monedaVO.setActivo(activo.getValue());
 					monedaVO.setUsuarioMod(this.permisos.getUsuario());
+					monedaVO.setOperacion(opera);
 					
 					if(this.operacion.equals(Variables.OPERACION_NUEVO)) {	
 		
@@ -254,7 +255,7 @@ public class MonedaViewExtended extends MonedaView{
 		this.enableBotonAceptar();
 		this.disableBotonLectura();
 		this.activo.setValue(true);
-		this.acepta_cotizacion.setValue(true);
+		this.aceptaCotizacion.setValue(true);
 		
 		/*Seteamos validaciones en nuevo, cuando es editar
 		 * solamente cuando apreta el boton editar*/
@@ -275,7 +276,7 @@ public class MonedaViewExtended extends MonedaView{
 	{
 		this.descripcion.setReadOnly(false);
 		this.simbolo.setReadOnly(false);
-		this.acepta_cotizacion.setReadOnly(false);
+		this.aceptaCotizacion.setReadOnly(false);
 		this.activo.setReadOnly(false);
 	}
 	
@@ -332,7 +333,7 @@ public class MonedaViewExtended extends MonedaView{
 		this.cod_moneda.setReadOnly(setear);
 		this.descripcion.setReadOnly(setear);
 		this.simbolo.setReadOnly(setear);
-		this.acepta_cotizacion.setReadOnly(setear);
+		this.aceptaCotizacion.setReadOnly(setear);
 		this.activo.setReadOnly(setear);
 				
 	}

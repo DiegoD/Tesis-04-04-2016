@@ -117,6 +117,7 @@ public class MonedasPanelExtended extends MonedasPanel{
 		gridMonedas.removeColumn("fechaMod");
 		gridMonedas.removeColumn("usuarioMod");
 		gridMonedas.removeColumn("operacion");
+		gridMonedas.removeColumn("aceptaCotizacion");
 		
 		/*Agregamos los filtros a la grilla*/
 		this.filtroGrilla();
@@ -192,7 +193,7 @@ public class MonedasPanelExtended extends MonedasPanel{
 
 		/*Si esta el impuesto en la lista, es una acutalizacion
 		 * y modificamos el objeto en la lista*/
-		if(this.existeMonedaenLista(monedaVO.getCod_moneda()))
+		if(this.existeMonedaenLista(monedaVO.getCodMoneda()))
 		{
 			this.actualizarMonedaenLista(monedaVO);
 		}
@@ -225,7 +226,7 @@ public class MonedasPanelExtended extends MonedasPanel{
 		{
 			monedaEnLista = this.lstMonedas.get(i);
 			
-			if(monedaVO.getCod_moneda().equals(monedaEnLista.getCod_moneda())){
+			if(monedaVO.getCodMoneda().equals(monedaEnLista.getCodMoneda())){
 				
 				this.lstMonedas.get(i).copiar(monedaVO);
 				salir = true;
@@ -250,7 +251,7 @@ public class MonedasPanelExtended extends MonedasPanel{
 		while( i < this.lstMonedas.size() && !esta)
 		{
 			aux = this.lstMonedas.get(i);
-			if(cod_moneda.equals(aux.getCod_moneda()))
+			if(cod_moneda.equals(aux.getCodMoneda()))
 			{
 				esta = true;
 			}
