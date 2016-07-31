@@ -22,7 +22,7 @@ import com.vaadin.ui.declarative.Design;
 @SuppressWarnings("serial")
 public class DocumentoView extends FormLayout {
 	protected Link auditoria;
-	protected TextField cod_documento;
+	protected TextField codDocumento;
 	protected TextField descripcion;
 	protected CheckBox activo;
 	protected Button aceptar;

@@ -55,7 +55,7 @@ public class MonedaViewExtended extends MonedaView{
 					monedaVO.setAceptaCotizacion(aceptaCotizacion.getValue());
 					monedaVO.setActivo(activo.getValue());
 					monedaVO.setUsuarioMod(this.permisos.getUsuario());
-					monedaVO.setOperacion(opera);
+					monedaVO.setOperacion(operacion);
 					
 					if(this.operacion.equals(Variables.OPERACION_NUEVO)) {	
 		
@@ -242,6 +242,7 @@ public class MonedaViewExtended extends MonedaView{
 	 */
 	private void iniFormNuevo()
 	{
+		this.operacion = Variables.OPERACION_NUEVO;
 		/*Chequeamos si tiene permiso de editar*/
 		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_MONEDAS, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		

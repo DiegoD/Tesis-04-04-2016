@@ -31,7 +31,7 @@ import com.vista.Impuestos.ImpuestosPanelExtended;
 
 public class ClientesPanelExtended extends ClientesPanel{
 
-	private ClienteViewExtended form; 
+	//private ClienteViewExtended form; 
 	private ArrayList<ClienteVO> lstClientes; /*Lista con los impuestos*/
 	private BeanItemContainer<ClienteVO> container;
 	private ClienteControlador controlador;
@@ -62,13 +62,13 @@ public class ClientesPanelExtended extends ClientesPanel{
 				
 					this.btnNuevo.addClickListener(click -> {
 						
-						sub = new MySub("65%", "65%");
+						/*sub = new MySub("65%", "65%");
 						form = new ClienteViewExtended(Variables.OPERACION_NUEVO, this);
 						sub.setModal(true);
 						sub.setVista(form);
 						
 						UI.getCurrent().addWindow(sub);
-						
+						*/
 					});
 				}
 				else{
@@ -139,12 +139,12 @@ public class ClientesPanelExtended extends ClientesPanel{
 				    		item.getBean().setFechaMod(new Timestamp(System.currentTimeMillis()));
 				    	}
 							
-				    	form = new ClienteViewExtended(Variables.OPERACION_LECTURA, ClientesPanelExtended.this);
+				    	/*form = new ClienteViewExtended(Variables.OPERACION_LECTURA, ClientesPanelExtended.this);
 						sub = new MySub("70%","65%");
 						sub.setModal(true);
-						sub.setVista(form);
+						sub.setVista(form);*/
 						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
-						form.setDataSourceFormulario(item);
+						//form.setDataSourceFormulario(item);
 						
 						UI.getCurrent().addWindow(sub);
 		    		}

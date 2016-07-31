@@ -43,11 +43,12 @@ public class DAOMonedas implements IDAOMonedas{
 				
 				moneda.setCod_moneda(rs.getString(1));
 				moneda.setDescripcion(rs.getString(2));
-				moneda.setAcepta_cotizacion(rs.getBoolean(3));
-				moneda.setActivo(rs.getBoolean(4));
-				moneda.setFechaMod(rs.getTimestamp(5));
-				moneda.setUsuarioMod(rs.getString(6));
-				moneda.setOperacion(rs.getString(7));
+				moneda.setSimbolo(rs.getString(3));
+				moneda.setAcepta_cotizacion(rs.getBoolean(4));
+				moneda.setActivo(rs.getBoolean(5));
+				moneda.setFechaMod(rs.getTimestamp(6));
+				moneda.setUsuarioMod(rs.getString(7));
+				moneda.setOperacion(rs.getString(8));
 				
 				lstMonedas.add(moneda);
 			}

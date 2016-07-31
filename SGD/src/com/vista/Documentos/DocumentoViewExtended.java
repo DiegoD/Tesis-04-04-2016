@@ -53,10 +53,11 @@ public class DocumentoViewExtended extends DocumentoView{
 						
 				DocumentoAduaneroVO documentoVO = new DocumentoAduaneroVO();		
 				
-				documentoVO.setCod_docucmento(cod_documento.getValue().trim());
-				documentoVO.setDescirpcion(descripcion.getValue().trim());
+				documentoVO.setcodDocumento(codDocumento.getValue().trim());
+				documentoVO.setdescripcion(descripcion.getValue().trim());
 				documentoVO.setActivo(activo.getValue());
 				documentoVO.setUsuarioMod(this.permisos.getUsuario());
+				documentoVO.setOperacion(operacion);
 				
 									
 				if(this.operacion.equals(Variables.OPERACION_NUEVO)) {	
@@ -149,8 +150,8 @@ public class DocumentoViewExtended extends DocumentoView{
 	 */
 	private void setearValidaciones(boolean setear){
 		
-		this.cod_documento.setRequired(setear);
-		this.cod_documento.setRequiredError("Es requerido");
+		this.codDocumento.setRequired(setear);
+		this.codDocumento.setRequiredError("Es requerido");
 		
 		this.descripcion.setRequired(setear);
 		this.descripcion.setRequiredError("Es requerido");
@@ -242,6 +243,8 @@ public class DocumentoViewExtended extends DocumentoView{
 	 */
 	private void iniFormNuevo()
 	{
+		/*Seteamos el form en editar*/
+		this.operacion = Variables.OPERACION_NUEVO;
 		/*Chequeamos si tiene permiso de editar*/
 		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_DOCUMENTOS, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
@@ -273,7 +276,7 @@ public class DocumentoViewExtended extends DocumentoView{
 	 */
 	private void setearFieldsEditar()
 	{
-		this.cod_documento.setReadOnly(false);
+		this.descripcion.setReadOnly(false);
 		this.activo.setReadOnly(false);
 	}
 	
@@ -327,7 +330,7 @@ public class DocumentoViewExtended extends DocumentoView{
 	 */
 	private void readOnlyFields(boolean setear)
 	{
-		this.cod_documento.setReadOnly(setear);
+		this.codDocumento.setReadOnly(setear);
 		this.descripcion.setReadOnly(setear);
 		this.activo.setReadOnly(setear);
 				
@@ -340,7 +343,7 @@ public class DocumentoViewExtended extends DocumentoView{
 	 */
 	private void agregarFieldsValidaciones()
 	{
-        this.cod_documento.addValidator(
+        this.codDocumento.addValidator(
                 new StringLengthValidator(
                      " 20 caracteres máximo", 1, 20, false));
         
@@ -362,7 +365,7 @@ public class DocumentoViewExtended extends DocumentoView{
 		
 		try
 		{
-			if(this.cod_documento.isValid() && this.descripcion.isValid() )
+			if(this.codDocumento.isValid() && this.descripcion.isValid() )
 				valido = true;
 			
 		}catch(Exception e)

@@ -190,7 +190,7 @@ public class DocumentosPanelExtended extends DocumentosPanel{
 
 		/*Si esta el documento en la lista, es una acutalizacion
 		 * y modificamos el objeto en la lista*/
-		if(this.existeDocumentoenLista(documentoVO.getCod_docucmento()))
+		if(this.existeDocumentoenLista(documentoVO.getcodDocumento()))
 		{
 			this.actualizarDocumentoenLista(documentoVO);
 		}
@@ -223,7 +223,7 @@ public class DocumentosPanelExtended extends DocumentosPanel{
 		{
 			documentoEnLista = this.lstDocumentos.get(i);
 			
-			if(documentoVO.getCod_docucmento().equals(documentoEnLista.getCod_docucmento())){
+			if(documentoVO.getcodDocumento().equals(documentoEnLista.getcodDocumento())){
 				
 				this.lstDocumentos.get(i).copiar(documentoVO);
 				salir = true;
@@ -248,7 +248,7 @@ public class DocumentosPanelExtended extends DocumentosPanel{
 		while( i < this.lstDocumentos.size() && !esta)
 		{
 			aux = this.lstDocumentos.get(i);
-			if(cod_documento.equals(aux.getCod_docucmento()))
+			if(cod_documento.equals(aux.getcodDocumento()))
 			{
 				esta = true;
 			}

@@ -71,7 +71,7 @@ public class ImpuestoViewExtended extends ImpuestoView{
 					impuestoVO.setPorcentaje(Float.valueOf(porcentaje.getValue()));
 					impuestoVO.setActivo(activo.getValue());
 					impuestoVO.setUsuarioMod(this.permisos.getUsuario());
-					
+					impuestoVO.setOperacion(operacion);
 										
 					if(this.operacion.equals(Variables.OPERACION_NUEVO)) {	
 		
@@ -263,6 +263,7 @@ public class ImpuestoViewExtended extends ImpuestoView{
 	 */
 	private void iniFormNuevo()
 	{
+		this.operacion = Variables.OPERACION_NUEVO;
 		/*Chequeamos si tiene permiso de editar*/
 		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GRUPO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		

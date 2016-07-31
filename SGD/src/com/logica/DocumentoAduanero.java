@@ -23,8 +23,8 @@ public class DocumentoAduanero extends Auditoria {
 		
 		super(documentoVO.getUsuarioMod(), documentoVO.getFechaMod(), documentoVO.getOperacion());
 		
-		this.cod_docucmento = documentoVO.getCod_docucmento();
-		this.descirpcion = documentoVO.getDescirpcion();
+		this.cod_docucmento = documentoVO.getcodDocumento();
+		this.descirpcion = documentoVO.getdescripcion();
 		this.activo = documentoVO.isActivo();
 	} 
 

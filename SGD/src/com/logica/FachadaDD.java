@@ -902,8 +902,8 @@ public class FachadaDD {
 			{
 				aux = new DocumentoAduaneroVO();
 				
-				aux.setCod_docucmento(documento.getCod_docucmento());
-				aux.setDescirpcion(documento.getDescirpcion());
+				aux.setcodDocumento(documento.getCod_docucmento());
+				aux.setdescripcion(documento.getDescirpcion());
 				aux.setActivo(documento.isActivo());
 				aux.setFechaMod(documento.getFechaMod());
 				aux.setOperacion(documento.getOperacion());

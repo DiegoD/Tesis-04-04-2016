@@ -64,6 +64,7 @@ public class EmpresaViewExtended extends EmpresaView{
 					empresaVO.setNomEmp(nomEmp.getValue().trim());
 					empresaVO.setActivo(activo.getValue());
 					empresaVO.setUsuarioMod(this.permisos.getUsuario());
+					empresaVO.setOperacion(operacion);
 					
 										
 					if(this.operacion.equals(Variables.OPERACION_NUEVO)) {	
@@ -249,6 +250,7 @@ public class EmpresaViewExtended extends EmpresaView{
 	 */
 	private void iniFormNuevo()
 	{
+		this.operacion = Variables.OPERACION_NUEVO;
 		/*Chequeamos si tiene permiso de editar*/
 		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GRUPO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		

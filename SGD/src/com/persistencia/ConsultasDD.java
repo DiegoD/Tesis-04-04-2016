@@ -307,7 +307,7 @@ public class ConsultasDD {
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("INSERT INTO vaadin.m_monedas (cod_moneda, descripcion, simbolo, acepta_cotizacion, activo, fecha_mod, usuario_mod, operacion )");
-		sb.append("VALUES (?, ?, ?, ?, NOW(), ?, ?) ");
+		sb.append("VALUES (?, ?, ?, ?, ?, NOW(), ?, ?) ");
 		
 		return sb.toString();
 	
@@ -342,17 +342,19 @@ public class ConsultasDD {
 		
 		sb.append("UPDATE vaadin.m_monedas ");
 		sb.append("SET descripcion = ?, ");
-		sb.append("SET simbolo = ?, ");
+		sb.append("simbolo = ?, ");
 		sb.append("acepta_cotizacion = ?, ");
 		sb.append("activo = ?, ");
 		sb.append("fecha_mod = NOW(), ");
 		sb.append("usuario_mod = ?, ");
-		sb.append("operacion = ? ");
+		sb.append("operacion = ?");
 		sb.append("WHERE cod_moneda = ? ");
 		
 		return sb.toString();
 	}
     
+	
+
 ////////////////////////INI-EMPRESAS///////////////////////////////////////////////////
     
 	public String getEmpresas(){
@@ -461,7 +463,7 @@ public class ConsultasDD {
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("SELECT cod_documento, descripcion, activo, fecha_mod, usuario_mod, operacion ");
-		sb.append("FROM m_documentos ");
+		sb.append("FROM m_documentos_aduaneros ");
 		
 		return sb.toString();
 	}
@@ -471,7 +473,7 @@ public class ConsultasDD {
 	
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("INSERT INTO vaadin.m_documentos (cod_documento, descripcion, activo, fecha_mod, usuario_mod, operacion )");
+		sb.append("INSERT INTO vaadin.m_documentos_aduaneros (cod_documento, descripcion, activo, fecha_mod, usuario_mod, operacion )");
 		sb.append("VALUES (?, ?, ?, NOW(), ?, ? ) ");
 		
 		return sb.toString();
@@ -483,7 +485,7 @@ public class ConsultasDD {
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("SELECT cod_documento ");
-		sb.append("FROM m_documentos WHERE cod_documento = ? ");
+		sb.append("FROM m_documentos_aduaneros WHERE cod_documento = ? ");
 		
 		return sb.toString();
 	}
@@ -493,7 +495,7 @@ public class ConsultasDD {
 	
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("UPDATE vaadin.m_documentos ");
+		sb.append("UPDATE vaadin.m_documentos_aduaneros ");
 		sb.append("SET descripcion = ?, ");
 		sb.append("activo = ?, ");
 		sb.append("fecha_mod = NOW(), ");
