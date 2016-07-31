@@ -12,6 +12,8 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.valueObject.FormularioVO;
+import com.vista.Clientes.ClienteView;
+import com.vista.Clientes.ClientesPanelExtended;
 import com.vista.Empresas.EmpresasPanelExtended;
 import com.vista.Grupos.GruposPanelExtended;
 import com.vista.Impuestos.ImpuestosPanelExtended;
@@ -174,7 +176,28 @@ public class MenuExtended extends Menu{
 			}
 		});
 		
+		this.clientesButton.addClickListener(click -> {
+			
+			setSizeFull();
+			
+			this.content.removeAllComponents();
+			try {
+				
+				ClientesPanelExtended c = new ClientesPanelExtended();
+				c.setSizeFull();
+				this.content.setSizeFull();
+				
+				this.content.addComponent(c);
+				
+			} catch (Exception e) {
+				
+				Mensajes.mostrarMensajeError(e.getMessage());
+			}
+		});
+		
 	}
+	
+	
 	
 	public  void setContent(Component comp)
 	{

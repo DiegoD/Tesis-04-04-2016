@@ -58,16 +58,18 @@ public class PermisosUsuario {
 		
 		FormularioVO frm = lstFormularios.get(formulario);
 		
-		switch(operacion)
+		if(frm != null)
 		{
-			case VariablesPermisos.OPERACION_LEER : tienePermiso = frm.isLeer();
-			break;
-			case VariablesPermisos.OPERACION_NUEVO_EDITAR : tienePermiso = frm.isNuevoEditar();
-			break;
-			case VariablesPermisos.OPERACION_BORRAR : tienePermiso = frm.isBorrar();
-			break;
+			switch(operacion)
+			{
+				case VariablesPermisos.OPERACION_LEER : tienePermiso = frm.isLeer();
+				break;
+				case VariablesPermisos.OPERACION_NUEVO_EDITAR : tienePermiso = frm.isNuevoEditar();
+				break;
+				case VariablesPermisos.OPERACION_BORRAR : tienePermiso = frm.isBorrar();
+				break;
+			}
 		}
-		
 		return tienePermiso;
 	}
 

@@ -20,7 +20,7 @@ import com.vaadin.ui.declarative.Design;
 @SuppressWarnings("serial")
 public class ClientesPanel extends VerticalLayout {
 	protected Grid gridClientes;
-	protected Button btnNuevoImpuesto;
+	protected Button btnNuevo;
 
 	public ClientesPanel() {
 		Design.read(this);

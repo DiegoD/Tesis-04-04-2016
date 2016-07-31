@@ -4,7 +4,6 @@ import com.logica.Documento;
 
 public class TitularVO extends AuditoriaVO{
 
-private DocumentoVO documento;
 	
 	private int codigo;
 	private String nombre;
@@ -12,14 +11,26 @@ private DocumentoVO documento;
 	private String direccion;
 	private String mail;
 	private boolean activo;
+	
+	private String codigoDoc;
+	private String nombreDoc;
+	private String numeroDoc;
+	
+	public void copiar(TitularVO t){
 		
+		this.codigo = t.getCodigo();
+		this.nombre = t.getNombre();
+		this.tel = t.getTel();
+		this.direccion = t.getDireccion();
+		this.mail = t.getMail();
+		this.activo = t.isActivo();
+		this.codigoDoc = t.getCodigoDoc();
+		this.nombreDoc = t.getNombreDoc();
+		this.numeroDoc = t.getNumeroDoc();
+		
+	}
 
-	public DocumentoVO getDocumento() {
-		return documento;
-	}
-	public void setDocumento(DocumentoVO documento) {
-		this.documento = documento;
-	}
+
 	public int getCodigo() {
 		return codigo;
 	}
@@ -56,6 +67,28 @@ private DocumentoVO documento;
 	public void setActivo(boolean activo) {
 		this.activo = activo;
 	}
-	
+	public String getCodigoDoc() {
+		return codigoDoc;
+	}
+
+	public void setCodigoDoc(String codigoDoc) {
+		this.codigoDoc = codigoDoc;
+	}
+
+	public String getNombreDoc() {
+		return nombreDoc;
+	}
+
+	public void setNombreDoc(String nombreDoc) {
+		this.nombreDoc = nombreDoc;
+	}
+
+	public String getNumeroDoc() {
+		return numeroDoc;
+	}
+
+	public void setNumeroDoc(String numeroDoc) {
+		this.numeroDoc = numeroDoc;
+	}
 	
 }

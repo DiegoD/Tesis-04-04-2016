@@ -57,6 +57,7 @@ public class Fachada {
 		
         this.usuarios =  fabricaConcreta.crearDAOUsuarios();
         this.grupos = fabricaConcreta.crearDAOGrupos();
+        this.clientes = fabricaConcreta.crearDAOClientes();
         
     }
     
@@ -377,6 +378,10 @@ public class Fachada {
 	    			aux.setTel(cliente.getTel());
 	    			aux.setDireccion(cliente.getDireccion());
 	    			aux.setFechaMod(cliente.getFechaMod());
+	    			aux.setOperacion(cliente.getOperacion());
+	    			aux.setUsuarioMod(cliente.getUsuarioMod());
+	    			aux.setMail(cliente.getMail());
+
 	    			
 	    			
 	    			lstClientesVO.add(aux);
@@ -434,8 +439,10 @@ public class Fachada {
 	    			aux.setTel(cliente.getTel());
 	    			aux.setDireccion(cliente.getDireccion());
 	    			aux.setFechaMod(cliente.getFechaMod());
-	    			
-	    			
+	    			aux.setOperacion(cliente.getOperacion());
+	    			aux.setUsuarioMod(cliente.getUsuarioMod());
+	    			aux.setMail(cliente.getMail());
+
 	    			lstClientesVO.add(aux);
 				}
 		

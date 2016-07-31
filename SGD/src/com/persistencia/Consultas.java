@@ -370,8 +370,8 @@ public class Consultas {
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("SELECT cod_tit, nom_tit, cod_emp, razon_social, tel, nro_dgi, m_documdgi.cod_docdgi, m_documdgi.nombre AS nomDoc , direccion, mail ");
-		sb.append(", activo, usuario_mod, operacion, fecha_mod ");
-		sb.append("FROM m_clientes, m_documdgi WHERE m_clientes.cod_docdgi = m_documdgi.cod_docdgi WHERE cod_emp = ? ");
+		sb.append(", m_clientes.activo, m_clientes.usuario_mod, m_clientes.operacion, m_clientes.fecha_mod ");
+		sb.append("FROM m_clientes, m_documdgi WHERE m_clientes.cod_docdgi = m_documdgi.cod_docdgi AND cod_emp = ? ");
 
 		return sb.toString();
 	}
@@ -380,9 +380,10 @@ public class Consultas {
 	{
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("SELECT cod_tit, nom_tit, cod_emp, razon_social, tel, nro_dgi, cod_docdgi, direccion, mail ");
-		sb.append(", activo, usuario_mod, operacion, fecha_mod ");
-		sb.append("FROM m_clientes WHERE activo = 1 AND cod_emp = ?");
+		sb.append("SELECT cod_tit, nom_tit, cod_emp, razon_social, tel, nro_dgi, m_documdgi.cod_docdgi, m_documdgi.nombre AS nomDoc , direccion, mail ");
+		sb.append(", m_clientes.activo, m_clientes.usuario_mod, m_clientes.operacion, m_clientes.fecha_mod ");
+		sb.append("FROM m_clientes, m_documdgi WHERE m_clientes.cod_docdgi = m_documdgi.cod_docdgi AND cod_emp = ? AND m_clientes.activo = 1");
+
 
 		return sb.toString();
 	}

@@ -61,7 +61,7 @@ public class ClienteControlador {
 	 * @throws ModificandoClienteException 
 	 * @throws ConexionException 
 	 */
-	public void modificarUsuario(ClienteVO clienteVO, String empresa) throws ConexionException, ModificandoClienteException, InicializandoException 
+	public void modificarCliente(ClienteVO clienteVO, String empresa) throws ConexionException, ModificandoClienteException, InicializandoException 
 	{
 		Fachada.getInstance().editarCliente(clienteVO, empresa);
 	}

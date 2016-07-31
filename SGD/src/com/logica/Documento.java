@@ -12,6 +12,7 @@ public class Documento {
 		
 		this.codigo =codigo;
 		this.nombre = nombre;
+		this.numero = numero;
 	}
 	
 	public String getCodigo() {
