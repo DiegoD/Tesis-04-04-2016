@@ -22,7 +22,7 @@ public class Rubro extends Auditoria{
 	public Rubro(RubroVO rubroVO){
 		super(rubroVO.getUsuarioMod(), rubroVO.getFechaMod(), rubroVO.getOperacion());
 		
-		this.cod_rubro = rubroVO.getCod_rubro();
+		this.cod_rubro = rubroVO.getcodRubro();
 		this.descripcion = rubroVO.getDescripcion();
 		this.activo = rubroVO.isActivo();
 	}

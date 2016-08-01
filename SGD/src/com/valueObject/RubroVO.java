@@ -4,7 +4,7 @@ import com.logica.Auditoria;
 
 public class RubroVO extends Auditoria{
 	
-	private String cod_rubro;
+	private String codRubro;
 	private String descripcion;
 	private boolean activo;
 	
@@ -13,7 +13,7 @@ public class RubroVO extends Auditoria{
 	
 	public RubroVO(String cod_rubro, String descripcion, boolean activo) {
 		super();
-		this.cod_rubro = cod_rubro;
+		this.codRubro = cod_rubro;
 		this.descripcion = descripcion;
 		this.activo = activo;
 	}
@@ -29,16 +29,16 @@ public class RubroVO extends Auditoria{
 		this.setFechaMod(rubroVO.getFechaMod());
 		this.setOperacion(rubroVO.getOperacion());
 		
-		this.cod_rubro = rubroVO.getCod_rubro();
+		this.codRubro = rubroVO.getcodRubro();
 		this.descripcion = rubroVO.getDescripcion();
 		this.activo = 	rubroVO.isActivo();
 	}
 	
-	public String getCod_rubro() {
-		return cod_rubro;
+	public String getcodRubro() {
+		return codRubro;
 	}
-	public void setCod_rubro(String cod_rubro) {
-		this.cod_rubro = cod_rubro;
+	public void setcodRubro(String cod_rubro) {
+		this.codRubro = cod_rubro;
 	}
 	public String getDescripcion() {
 		return descripcion;

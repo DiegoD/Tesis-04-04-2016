@@ -53,5 +53,11 @@ public class AbstractFactoryMySql implements IAbstractFactory
 		
 		return new DAODocumentos();
 	}
+	
+	@Override
+	public IDAOCodigosGeneralizados crearDAOCodigosGeneralizados () {
+		
+		return new DAOCodigoGeneralizado();
+	}
 
 }

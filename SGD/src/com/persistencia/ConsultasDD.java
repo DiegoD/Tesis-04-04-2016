@@ -412,7 +412,7 @@ public class ConsultasDD {
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("SELECT cod_rubro, descripcion, activo, fecha_mod, usuario_mod, operacion ");
-		sb.append("FROM m_rubro ");
+		sb.append("FROM m_rubros ");
 		
 		return sb.toString();
 	}
@@ -506,4 +506,64 @@ public class ConsultasDD {
 		return sb.toString();
 	}
     
+////////////////////////INI-CÓDIGOS GENERALIZADOS///////////////////////////////////////////////////
+
+	public String getCodigosGeneralizados(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT codigo, valor, descripcion, fecha_mod, usuario_mod, operacion ");
+		sb.append("FROM m_codigos_generalizados ");
+		
+		return sb.toString();
+	}
+
+	public String insertarCodigoGeneralizado()
+	{
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO vaadin.m_codigos_generalizados (codigo, valor, descripcion, fecha_mod, usuario_mod, operacion )");
+		sb.append("VALUES (?, ?, ?, NOW(), ?, ? ) ");
+		
+		return sb.toString();
+	
+	}
+
+	public String memberCodigoGeneralizado(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT codigo, valor ");
+		sb.append("FROM m_codigos_generalizados WHERE codigo = ? AND valor = ? ");
+		
+		return sb.toString();
+	}
+
+
+	public String actualizarCodigoGeneralizado(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("UPDATE vaadin.m_codigos_generalizados ");
+		sb.append("SET descripcion = ?, ");
+		sb.append("fecha_mod = NOW(), ");
+		sb.append("usuario_mod = ?, ");
+		sb.append("operacion = ? ");
+		sb.append("WHERE codigo = ? AND valor = ? ");
+		
+		return sb.toString();
+	}
+
+	public String eliminarCodigoGeneralizado()
+    {
+    	 StringBuilder sb = new StringBuilder();
+    	 
+      	 sb.append("DELETE ");
+      	 sb.append("FROM m_codigos_generalizados  ");
+      	 sb.append("WHERE codigo = ? AND valor = ? ");
+      	 
+      	 return sb.toString();
+    }
+	    
 }

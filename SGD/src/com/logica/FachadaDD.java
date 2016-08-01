@@ -14,6 +14,12 @@ import org.json.simple.parser.JSONParser;
 import com.abstractFactory.AbstractFactoryBuilder;
 import com.abstractFactory.IAbstractFactory;
 import com.excepciones.*;
+import com.excepciones.CodigosGeneralizados.EliminandoCodigoGeneralizadoException;
+import com.excepciones.CodigosGeneralizados.ExisteCodigoException;
+import com.excepciones.CodigosGeneralizados.InsertandoCodigoException;
+import com.excepciones.CodigosGeneralizados.ModificandoCodigoException;
+import com.excepciones.CodigosGeneralizados.NoExisteCodigoException;
+import com.excepciones.CodigosGeneralizados.ObteniendoCodigosException;
 import com.excepciones.Documentos.ExisteDocumentoException;
 import com.excepciones.Documentos.InsertandoDocumentoException;
 import com.excepciones.Documentos.ModificandoDocumentoException;
@@ -68,6 +74,7 @@ public class FachadaDD {
 	private IDAOEmpresas empresas;
 	private IDAORubros rubros;
 	private IDAODocumentos documentos;
+	private IDAOCodigosGeneralizados codigosGeneralizados;
 	
 	private AbstractFactoryBuilder fabrica;
 	private IAbstractFactory fabricaConcreta;
@@ -87,6 +94,7 @@ public class FachadaDD {
         this.empresas = fabricaConcreta.crearDAOEmpresas();
         this.rubros = fabricaConcreta.crearDAORubros();
         this.documentos = fabricaConcreta.crearDAODocumentos();
+        this.codigosGeneralizados = fabricaConcreta.crearDAOCodigosGeneralizados();
     }
     
     public static FachadaDD getInstance() throws InicializandoException {
@@ -757,7 +765,7 @@ public class FachadaDD {
 			{
     			aux = new RubroVO();
     			
-    			aux.setCod_rubro(rubro.getCod_rubro());
+    			aux.setcodRubro(rubro.getCod_rubro());
     			aux.setDescripcion(rubro.getDescripcion());
     			aux.setActivo(rubro.isActivo());
     			aux.setFechaMod(rubro.getFechaMod());
@@ -1018,6 +1026,198 @@ public class FachadaDD {
 		}
 		finally	{
 			pool.liberarConeccion(con);
+		}
+	}
+	
+///////////////////////////////////////////////////////////////////CÓDIGOS GENERALIZADOS////////////////////////////////////////////////////////////////////////////////////////////
+	/**
+	* Obtiene todos los documentos existentes
+	*/
+	@SuppressWarnings("unchecked")
+	public ArrayList<CodigoGeneralizadoVO> getCodigosGeneralizados() throws ObteniendoCodigosException, ConexionException
+	{
+	
+		Connection con = null;
+		
+		ArrayList<CodigoGeneralizado> lstCodigos;
+		ArrayList<CodigoGeneralizadoVO> lstCodigosVO = new ArrayList<CodigoGeneralizadoVO>();
+		
+		try
+		{
+			con = this.pool.obtenerConeccion();
+			
+			lstCodigos = this.codigosGeneralizados.getCodigosGeneralizados(con);
+			
+			
+			CodigoGeneralizadoVO aux;
+			for (CodigoGeneralizado codigoGeneralizado : lstCodigos) 
+			{
+				aux = new CodigoGeneralizadoVO();
+				
+				aux.setCodigo(codigoGeneralizado.getCodigo());
+				aux.setValor(codigoGeneralizado.getValor());
+				aux.setDescripcion(codigoGeneralizado.getDescripcion());
+				aux.setFechaMod(codigoGeneralizado.getFechaMod());
+				aux.setOperacion(codigoGeneralizado.getOperacion());
+				aux.setUsuarioMod(codigoGeneralizado.getUsuarioMod());
+				
+				lstCodigosVO.add(aux);
+			}
+		
+		}
+		catch(ObteniendoCodigosException e){
+			throw e;
+		
+		} 
+		catch (ConexionException e) {
+		
+			throw e;
+		} 
+		finally	{
+			this.pool.liberarConeccion(con);
+		}
+		
+		
+		return lstCodigosVO;
+	}
+
+	/**
+	* Inserta un nuevo codigo generalizado en la base
+	* @throws ExisteEmpresaException 
+	*/
+	public void insertarCodigoGeneralizado(CodigoGeneralizadoVO codigoGeneralizadoVO) throws InsertandoCodigoException, ConexionException, ExisteCodigoException 
+	{
+	
+		Connection con = null;
+		boolean existe = false;
+		
+		try 
+		{
+			con = this.pool.obtenerConeccion();
+			con.setAutoCommit(false);
+			
+			CodigoGeneralizado codigoGeneralizado = new CodigoGeneralizado(codigoGeneralizadoVO); 
+			
+			if(!this.codigosGeneralizados.memberCodigoGeneralizado(codigoGeneralizado.getCodigo(), codigoGeneralizado.getValor(), con)){
+			
+				this.codigosGeneralizados.insertarCodigoGeneralizado(codigoGeneralizado, con);
+				con.commit();
+			}
+			else{
+				existe = true;
+			}
+		
+		
+		}
+		
+		catch(Exception InsertandoRubroException)  	{
+			try {
+				con.rollback();
+			
+			} 
+			catch (SQLException e) {
+			
+				throw new InsertandoCodigoException();
+			}
+		
+			throw new InsertandoCodigoException();
+		}
+		finally	{
+			pool.liberarConeccion(con);
+		}
+		if (existe){
+			throw new ExisteCodigoException();
+		}
+	}
+
+	/**
+	* Actualiza los datos de un codigo dado su código y valor
+	* valida que exista el código 
+	*/
+	public void actualizarCodigoGeneralizado(CodigoGeneralizadoVO codigoGeneralizadoVO) throws ConexionException, NoExisteCodigoException, ModificandoCodigoException, ExisteCodigoException  
+	{
+	
+		Connection con = null;
+		
+		try 
+		{
+			con = this.pool.obtenerConeccion();
+			con.setAutoCommit(false);
+			
+			CodigoGeneralizado codigoGeneralizado = new CodigoGeneralizado(codigoGeneralizadoVO);
+			
+			if(this.codigosGeneralizados.memberCodigoGeneralizado(codigoGeneralizado.getCodigo(), codigoGeneralizado.getValor(), con)){
+				this.codigosGeneralizados.actualizarCodigoGeneralizado(codigoGeneralizado, con);
+				con.commit();
+			}
+		
+			else
+				throw new NoExisteCodigoException();
+		
+		}
+		catch(ConexionException | SQLException | ModificandoCodigoException e){
+			try {
+				con.rollback();
+			
+			} 
+			catch (SQLException e1) {
+			
+				throw new ConexionException();
+			}
+		
+			throw new ModificandoCodigoException();
+		}
+		finally	{
+			pool.liberarConeccion(con);
+		}
+	}
+	
+	/**
+	* Elimina un codigo generalizado en la base
+	 * @throws NoExisteCodigoException 
+	*/
+	public void eliminarCodigoGeneralizado(CodigoGeneralizadoVO codigoGeneralizadoVO) throws EliminandoCodigoGeneralizadoException, ConexionException, NoExisteCodigoException
+	{
+	
+		Connection con = null;
+		boolean existe = false;
+		
+		try 
+		{
+			con = this.pool.obtenerConeccion();
+			con.setAutoCommit(false);
+			
+			CodigoGeneralizado codigoGeneralizado = new CodigoGeneralizado(codigoGeneralizadoVO); 
+			
+			if(this.codigosGeneralizados.memberCodigoGeneralizado(codigoGeneralizado.getCodigo(), codigoGeneralizado.getValor(), con)){
+			
+				this.codigosGeneralizados.eliminarCodigoGeneralizado(codigoGeneralizado.getCodigo(), codigoGeneralizado.getValor(), con);
+				con.commit();
+			}
+			else{
+				existe = false;
+			}
+		
+		
+		}
+		
+		catch(Exception EliminandoCodigoGeneralizadoException)  {
+			try {
+				con.rollback();
+			
+			} 
+			catch (SQLException e) {
+			
+				throw new EliminandoCodigoGeneralizadoException();
+			}
+		
+			throw new EliminandoCodigoGeneralizadoException();
+		}
+		finally	{
+			pool.liberarConeccion(con);
+		}
+		if (!existe){
+			throw new NoExisteCodigoException();
 		}
 	}
 }

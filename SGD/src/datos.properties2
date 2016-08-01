@@ -1,0 +1,17 @@
+ipServidor = localhost
+puertoServidor = 1099
+url = jdbc:mysql://localhost:3306/vaadin
+user = root
+password = root
+driver=com.mysql.jdbc.Driver
+abstractFactory = com.abstractFactory.AbstractFactoryMySql
+cantidad_conexiones=50
+
+ipServidor = localhost
+puertoServidor = 1099
+url = jdbc:mysql://node172488-Tesis.jelastic.servint.net/vaadin
+user = root
+password = CMTcno20216
+driver=com.mysql.jdbc.Driver
+abstractFactory = com.abstractFactory.AbstractFactoryMySql
+cantidad_conexiones=50
