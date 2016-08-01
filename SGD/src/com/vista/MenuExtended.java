@@ -12,13 +12,16 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.valueObject.FormularioVO;
-import com.vista.Clientes.ClienteView;
+import com.vista.Documentos.DocumentosPanelExtended;
+//import com.vista.Clientes.ClienteView;
 import com.vista.Clientes.ClientesPanelExtended;
+import com.vista.CodigosGeneralizados.CodigosGeneralizadosPanelExtended;
 import com.vista.Empresas.EmpresasPanelExtended;
 import com.vista.Grupos.GruposPanelExtended;
 import com.vista.Impuestos.ImpuestosPanelExtended;
 import com.vista.Login.LoginExtended;
 import com.vista.Monedas.MonedasPanelExtended;
+import com.vista.Rubros.RubrosPanelExtended;
 import com.vista.Usuarios.UsuariosPanelExtend;
 import com.vaadin.ui.TabSheet.Tab;
 
@@ -138,7 +141,7 @@ public class MenuExtended extends Menu{
 			}
 		});
 		
-		/*this.documentosButton.addClickListener(click -> {
+		this.documentosButton.addClickListener(click -> {
 			
 			setSizeFull();
 			
@@ -155,7 +158,7 @@ public class MenuExtended extends Menu{
 				
 				Mensajes.mostrarMensajeError(e.getMessage());
 			}
-		});*/
+		});
 		
 		this.monedasButton.addClickListener(click -> {
 			
@@ -192,6 +195,40 @@ public class MenuExtended extends Menu{
 			} catch (Exception e) {
 				
 				Mensajes.mostrarMensajeError(e.getMessage());
+			}
+		});
+		
+		this.codigosGeneralizados.addClickListener(click -> {
+			
+			setSizeFull();
+			
+			this.content.removeAllComponents();
+			try {
+				
+				CodigosGeneralizadosPanelExtended c = new CodigosGeneralizadosPanelExtended();
+				c.setSizeFull();
+				this.content.setSizeFull();
+				
+				this.content.addComponent(c);
+				
+			} catch (Exception e) {
+				
+				Mensajes.mostrarMensajeError(e.getMessage());
+			}
+		});
+		
+		this.rubros.addClickListener(click -> {
+			
+			setSizeFull();
+			
+			this.content.removeAllComponents();
+			try {
+				
+				RubrosPanelExtended u = new RubrosPanelExtended();
+				this.content.addComponent(u);
+				
+			} catch (Exception e) {
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 			}
 		});
 		
@@ -237,7 +274,11 @@ public class MenuExtended extends Menu{
 			if(formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_USUARIO)
 				|| formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_GRUPO) || 
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_IMPUESTO) ||
-				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_EMPRESAS))
+				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_EMPRESAS) ||
+				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_CODIGOS_GENERALIZADOS) ||
+				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_DOCUMENTOS) || 
+				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_MONEDAS) || 
+				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_RUBROS))
 			{
 				lstFormsMenuMant.add(formularioVO);
 			}
@@ -274,6 +315,26 @@ public class MenuExtended extends Menu{
 						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_EMPRESAS, VariablesPermisos.OPERACION_LEER))
 							this.habilitarEmpresaButton();
 					break;
+					
+					case VariablesPermisos.FORMULARIO_CODIGOS_GENERALIZADOS :
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_CODIGOS_GENERALIZADOS, VariablesPermisos.OPERACION_LEER))
+							this.habilitarCodigosGeneralizadosButton();
+					break;
+					
+					case VariablesPermisos.FORMULARIO_DOCUMENTOS:
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_DOCUMENTOS, VariablesPermisos.OPERACION_LEER))
+							this.habilitarDocumentosButton();
+					break;
+					
+					case VariablesPermisos.FORMULARIO_MONEDAS:
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_MONEDAS, VariablesPermisos.OPERACION_LEER))
+							this.habilitarMonedasButton();
+					break;
+					
+					case VariablesPermisos.FORMULARIO_RUBROS:
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_RUBROS, VariablesPermisos.OPERACION_LEER))
+							this.habilitarRubros();
+					break;
 				}
 				
 			}
@@ -302,7 +363,19 @@ public class MenuExtended extends Menu{
 		
 		this.empresaButton.setVisible(false);
 		this.empresaButton.setEnabled(false);
-				
+		
+		this.monedasButton.setVisible(false);
+		this.monedasButton.setEnabled(false);
+		
+		this.rubros.setVisible(false);
+		this.rubros.setEnabled(false);
+		
+		this.codigosGeneralizados.setVisible(false);
+		this.codigosGeneralizados.setEnabled(false);
+		
+		this.documentosButton.setVisible(false);
+		this.documentosButton.setEnabled(false);
+		
 	}
 	
 	
@@ -336,6 +409,33 @@ public class MenuExtended extends Menu{
 		this.empresaButton.setEnabled(true);
 		
 		this.tabMantenimientos.addComponent(this.empresaButton);
+	}
+	
+	private void habilitarCodigosGeneralizadosButton()
+	{
+		this.codigosGeneralizados.setVisible(true);
+		this.codigosGeneralizados.setEnabled(true);
+		
+		this.tabMantenimientos.addComponent(this.codigosGeneralizados);
+	}
+	
+	private void habilitarDocumentosButton(){
+		this.documentosButton.setVisible(true);
+		this.documentosButton.setEnabled(true);
+		
+		this.tabMantenimientos.addComponent(documentosButton);
+	}
+	
+	private void habilitarMonedasButton(){
+		this.monedasButton.setVisible(true);
+		this.monedasButton.setEnabled(true);
+		this.tabMantenimientos.addComponent(monedasButton);
+	}
+	
+	private void habilitarRubros(){
+		this.rubros.setVisible(true);
+		this.rubros.setEnabled(true);
+		this.tabMantenimientos.addComponent(rubros);
 	}
 	
 	public PermisosUsuario getPermisosUsuario()
