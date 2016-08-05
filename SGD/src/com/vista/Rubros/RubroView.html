@@ -15,6 +15,10 @@
     <vaadin-form-layout size-full> 
      <vaadin-text-field caption="Codigo" readonly _id="codRubro"></vaadin-text-field> 
      <vaadin-text-field caption="Descripción" readonly _id="descripcion"></vaadin-text-field> 
+     <vaadin-horizontal-layout width="369px"> 
+      <vaadin-text-field immediate _id="descripcionImpuesto" :middle></vaadin-text-field> 
+      <vaadin-button icon="fonticon://FontAwesome/f055" width="48px" plain-text _id="impuesto" :middle></vaadin-button> 
+     </vaadin-horizontal-layout> 
      <vaadin-check-box caption="Activo" id="activo" responsive _id="activo"></vaadin-check-box> 
      <vaadin-horizontal-layout width="187px"> 
       <vaadin-button style-name="primary tiny" plain-text _id="aceptar" :middle>

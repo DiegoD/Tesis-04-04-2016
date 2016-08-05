@@ -771,6 +771,9 @@ public class FachadaDD {
     			aux.setFechaMod(rubro.getFechaMod());
     			aux.setOperacion(rubro.getOperacion());
     			aux.setUsuarioMod(rubro.getUsuarioMod());
+    			aux.setCod_impuesto(rubro.getImpuesto().getCod_imp());
+    			aux.setDescripcionImpuesto(rubro.getImpuesto().getDescripcion());
+    			aux.setPorcentajeImpuesto(rubro.getImpuesto().getPorcentaje());
     			
     			lstRubrosVO.add(aux);
 			}
@@ -810,6 +813,8 @@ public class FachadaDD {
 			con.setAutoCommit(false);
 			
 	    	Rubro rubro = new Rubro(rubroVO); 
+	    	Impuesto impuesto = new Impuesto(rubro.getImpuesto().getCod_imp());
+	    	rubro.setImpuesto(impuesto);
 	    	
 	    	if(!this.rubros.memberRubro(rubro.getCod_rubro(), con)) 	{
 	    		

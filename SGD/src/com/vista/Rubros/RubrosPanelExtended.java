@@ -10,6 +10,7 @@ import com.controladores.RubroControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.InicializandoException;
 import com.excepciones.Empresas.ObteniendoEmpresasException;
+import com.excepciones.Impuestos.ObteniendoImpuestosException;
 import com.excepciones.Rubros.ObteniendoRubrosException;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
@@ -37,7 +38,7 @@ public class RubrosPanelExtended extends RubrosPanel{
 	private RubroControlador controlador;
 	MySub sub = new MySub("65%", "65%");
 	
-	public RubrosPanelExtended(){
+	public RubrosPanelExtended() throws InicializandoException, ConexionException, ObteniendoImpuestosException{
 		controlador = new RubroControlador();
 		this.lstRubros = new ArrayList<RubroVO>();
 		
@@ -61,7 +62,12 @@ public class RubrosPanelExtended extends RubrosPanel{
 					this.btnNuevoRubro.addClickListener(click -> {
 						
 						sub = new MySub("65%", "65%");
-						form = new RubroViewExtended(Variables.OPERACION_NUEVO, this);
+						try {
+							form = new RubroViewExtended(Variables.OPERACION_NUEVO, this);
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						sub.setModal(true);
 						sub.setVista(form);
 						
@@ -116,6 +122,7 @@ public class RubrosPanelExtended extends RubrosPanel{
 		gridRubros.removeColumn("fechaMod");
 		gridRubros.removeColumn("usuarioMod");
 		gridRubros.removeColumn("operacion");
+		gridRubros.removeColumn("activoImpuesto");
 		
 		/*Agregamos los filtros a la grilla*/
 		this.filtroGrilla();

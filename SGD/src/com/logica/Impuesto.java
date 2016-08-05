@@ -16,6 +16,15 @@ public class Impuesto extends Auditoria{
 		
 	}
 	
+	public Impuesto(String cod_imp){
+		this.cod_impuesto = cod_imp;
+	}
+	public Impuesto(String cod_imp, String descripcion, float porcentaje){
+		this.cod_impuesto = cod_imp;
+		this.descripcion = descripcion;
+		this.porcentaje = porcentaje;
+	}
+	
 	public Impuesto(String cod_imp, String descripcion, float porcentaje, boolean activo) {
 		
 		super();

@@ -289,6 +289,14 @@ public class ConsultasDD {
       	return sb.toString();
     }
 	
+    public String getImpuesto(){
+     	 StringBuilder sb = new StringBuilder();
+    	 
+     	 sb.append("SELECT cod_impuesto, descripcion, porcentaje, activo, fecha_mod, usuario_mod, operacion ");
+     	 sb.append("FROM m_impuestos  ");
+     	 sb.append("WHERE cod_impuesto = ? ");
+     	 return sb.toString();
+    }
 ////////////////////////INI-MONEDAS///////////////////////////////////////////////////
     
 	public String getMonedas(){
@@ -411,7 +419,7 @@ public class ConsultasDD {
 	
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("SELECT cod_rubro, descripcion, activo, fecha_mod, usuario_mod, operacion ");
+		sb.append("SELECT cod_rubro, descripcion, activo, fecha_mod, usuario_mod, operacion, cod_impuesto ");
 		sb.append("FROM m_rubros ");
 		
 		return sb.toString();
@@ -422,8 +430,8 @@ public class ConsultasDD {
 	
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("INSERT INTO vaadin.m_rubros (cod_rubro, descripcion, activo, fecha_mod, usuario_mod, operacion )");
-		sb.append("VALUES (?, ?, ?, NOW(), ?, ? ) ");
+		sb.append("INSERT INTO vaadin.m_rubros (cod_rubro, descripcion, activo, fecha_mod, usuario_mod, operacion, cod_impuesto )");
+		sb.append("VALUES (?, ?, ?, NOW(), ?, ?, ? ) ");
 		
 		return sb.toString();
 	
@@ -449,12 +457,14 @@ public class ConsultasDD {
 		sb.append("activo = ?, ");
 		sb.append("fecha_mod = NOW(), ");
 		sb.append("usuario_mod = ?, ");
-		sb.append("operacion = ? ");
+		sb.append("operacion = ?, ");
+		sb.append("cod_impuesto = ? ");
 		sb.append("WHERE cod_rubro = ? ");
 		
 		return sb.toString();
 	}
 
+	
 
 ////////////////////////INI-DOCUEMNTOS///////////////////////////////////////////////////
 

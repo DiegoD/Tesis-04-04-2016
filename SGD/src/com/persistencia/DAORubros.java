@@ -16,30 +16,37 @@ import com.excepciones.Rubros.InsertandoRubroException;
 import com.excepciones.Rubros.ModificandoRubroException;
 import com.excepciones.Rubros.ObteniendoRubrosException;
 import com.logica.Empresa;
+import com.logica.Impuesto;
 import com.logica.Rubro;
 
 public class DAORubros implements IDAORubros{
 
+	DAOImpuestos impuestos = new DAOImpuestos();
+	
 	@Override
 	public ArrayList<Rubro> getRubros(Connection con) throws ObteniendoRubrosException, ConexionException {
 		// TODO Auto-generated method stub
-		ArrayList<Rubro> lstEmpresas = new ArrayList<Rubro>();
+		ArrayList<Rubro> lstRubros = new ArrayList<Rubro>();
 		
 		try
 		{
 			ConsultasDD consultas = new ConsultasDD ();
 			String query = consultas.getRubros();
+			String queryImpuesto = consultas.getImpuesto();
+			String codImpuesto;
+			
 			
 			PreparedStatement pstmt1 = con.prepareStatement(query);
-			
+			PreparedStatement pstmt2 = con.prepareStatement(queryImpuesto);
 			
 			ResultSet rs = pstmt1.executeQuery();
 			
 			Rubro rubro;
-			
+			Impuesto impuesto;
 			while(rs.next ()) {
 
 				rubro = new Rubro();
+				
 				
 				rubro.setCod_rubro(rs.getString(1));
 				rubro.setDescripcion(rs.getString(2));
@@ -47,8 +54,28 @@ public class DAORubros implements IDAORubros{
 				rubro.setFechaMod(rs.getTimestamp(4));
 				rubro.setUsuarioMod(rs.getString(5));
 				rubro.setOperacion(rs.getString(6));
+				codImpuesto = rs.getString(7);
 				
-				lstEmpresas.add(rubro);
+				pstmt2.setString(1, codImpuesto);
+				
+				ResultSet rs2 = pstmt2.executeQuery();
+				
+				while(rs2.next()){
+					
+					impuesto = new Impuesto();
+					impuesto.setCod_imp(rs2.getString(1));
+					impuesto.setDescripcion(rs2.getString(2));
+					impuesto.setPorcentaje(rs2.getFloat(3));
+					impuesto.setActivo(rs2.getBoolean(4));
+					impuesto.setFechaMod(rs2.getTimestamp(5));
+					impuesto.setUsuarioMod(rs2.getString(6));
+					impuesto.setOperacion(rs2.getString(7));
+					
+					
+					rubro.setImpuesto(impuesto);
+				}
+				
+				lstRubros.add(rubro);
 			}
 			
 			rs.close ();
@@ -59,7 +86,7 @@ public class DAORubros implements IDAORubros{
 			throw new ObteniendoRubrosException();
 		}
 			
-		return lstEmpresas;
+		return lstRubros;
 	}
 
 	@Override
@@ -82,9 +109,9 @@ public class DAORubros implements IDAORubros{
 			pstmt1.setString(1, rubro.getCod_rubro());
 			pstmt1.setString(2, rubro.getDescripcion());
 			pstmt1.setBoolean(3, rubro.isActivo());
-			pstmt1.setString(4, rubro.getOperacion());
-			pstmt1.setBoolean(5, rubro.isActivo());
-			
+			pstmt1.setString(4, rubro.getUsuarioMod());
+			pstmt1.setString(5, rubro.getOperacion());
+			pstmt1.setString(6, rubro.getImpuesto().getCod_imp());
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
 			
@@ -148,7 +175,9 @@ public class DAORubros implements IDAORubros{
 			pstmt1.setBoolean(2, rubro.isActivo());
 			pstmt1.setString(3, rubro.getUsuarioMod());
 			pstmt1.setString(4, rubro.getOperacion());
-			pstmt1.setString(5, rubro.getCod_rubro());
+			pstmt1.setString(5, rubro.getImpuesto().getCod_imp());
+			pstmt1.setString(6, rubro.getCod_rubro());
+			
 			
 			pstmt1.executeUpdate ();
 			
