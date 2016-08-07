@@ -335,9 +335,9 @@ public class Consultas {
 	{
 		StringBuilder sb = new StringBuilder();
 		
-	 	sb.append("INSERT INTO m_clientes (cod_tit, nom_tit, cod_emp, razon_social, tel, nro_dgi, cod_docdgi ");
+	 	sb.append("INSERT INTO m_clientes ( nom_tit, cod_emp, razon_social, tel, nro_dgi, cod_docdgi ");
 	 	sb.append(", direccion, mail, activo, usuario_mod, operacion, fecha_mod) ");
-		sb.append("VALUES (?, ?, , ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+		sb.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
 			
 		return sb.toString();
 	}
@@ -401,6 +401,58 @@ public class Consultas {
 	
 	
 ////////////////////////FIN-CLIENTES///////////////////////////////////////////////////
+	
+////////////////////////DOCUMENTOS-DGI//////////////////////////////////////////////////
+	
+	public String getDocumentos(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_docdgi, nombre, activo, fecha_mod, usuario_mod, operacion ");
+		sb.append("FROM m_documentos_aduaneros ");
+		
+		return sb.toString();
+	}
+
+	public String insertarDocumento()
+	{
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO vaadin.m_documentos_aduaneros (cod_docdgi, nombre, activo, fecha_mod, usuario_mod, operacion )");
+		sb.append("VALUES (?, ?, ?, NOW(), ?, ? ) ");
+		
+		return sb.toString();
+	
+	}
+
+	public String memberDocumento(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_docdgi ");
+		sb.append("FROM m_documentos_aduaneros WHERE cod_documento = ? ");
+		
+		return sb.toString();
+	}
+
+
+	public String actualizarDocumento(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("UPDATE vaadin.m_documentos_aduaneros ");
+		sb.append("SET nombre = ?, ");
+		sb.append("activo = ?, ");
+		sb.append("fecha_mod = NOW(), ");
+		sb.append("usuario_mod = ?, ");
+		sb.append("operacion = ? ");
+		sb.append("WHERE cod_documento = ? ");
+		
+		return sb.toString();
+	}
+	
+////////////////////////FIN-DOCUMENTOS-DGI//////////////////////////////////////////////
 
     
 }

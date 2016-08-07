@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.excepciones.ConexionException;
 import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
+import com.excepciones.Documentos.ObteniendoDocumentosException;
 import com.excepciones.Usuarios.ExisteUsuarioException;
 import com.excepciones.Usuarios.InsertandoUsuarioException;
 import com.excepciones.Usuarios.ObteniendoUsuariosException;
@@ -14,6 +15,7 @@ import com.excepciones.clientes.ModificandoClienteException;
 import com.excepciones.clientes.ObteniendoClientesException;
 import com.excepciones.grupos.ObteniendoGruposException;
 import com.logica.Fachada;
+import com.valueObject.DocumDGIVO;
 import com.valueObject.GrupoVO;
 import com.valueObject.UsuarioVO;
 import com.valueObject.cliente.ClienteVO;
@@ -50,9 +52,13 @@ public class ClienteControlador {
 	 * @throws ConexionException 
 	 * @throws InsertandoClienteException 
 	 */
-	public void insertarCliente(ClienteVO clienteVO, String empresa) throws InsertandoClienteException, ConexionException, ExisteClienteExeption, InicializandoException 
+	public int insertarCliente(ClienteVO clienteVO, String empresa) throws InsertandoClienteException, ConexionException, ExisteClienteExeption, InicializandoException 
 	{
-		Fachada.getInstance().insertarCliente(clienteVO, empresa);
+		int codigo = 0;
+		
+		codigo = Fachada.getInstance().insertarCliente(clienteVO, empresa);
+		
+		return codigo;
 	}
 	
 	/**
@@ -66,6 +72,9 @@ public class ClienteControlador {
 		Fachada.getInstance().editarCliente(clienteVO, empresa);
 	}
 	
-
+	public ArrayList<DocumDGIVO> obtnerDocumentosDgi() throws ObteniendoDocumentosException, ConexionException, InicializandoException
+	{
+		return Fachada.getInstance().getDocumentosDGI();
+	}
 	
 }

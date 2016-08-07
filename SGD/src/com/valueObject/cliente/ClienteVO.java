@@ -13,8 +13,7 @@ public class ClienteVO extends TitularVO{
 		super.copiar((TitularVO)c);
 		
 		this.razonSocial = c.getRazonSocial();
-		
-		
+				
 	}
 
 	public String getRazonSocial() {

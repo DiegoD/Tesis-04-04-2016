@@ -1,6 +1,8 @@
 package com.vista.Clientes;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 import com.controladores.ClienteControlador;
 import com.controladores.ImpuestoControlador;
@@ -17,9 +19,14 @@ import com.excepciones.clientes.ModificandoClienteException;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.StringLengthValidator;
+import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinService;
+import com.vaadin.ui.UI;
+import com.valueObject.DocumDGIVO;
 import com.valueObject.ImpuestoVO;
 import com.valueObject.cliente.ClienteVO;
+import com.vista.BusquedaViewExtended;
+import com.vista.IBusqueda;
 import com.vista.Mensajes;
 import com.vista.MySub;
 import com.vista.PermisosUsuario;
@@ -27,7 +34,7 @@ import com.vista.Variables;
 import com.vista.VariablesPermisos;
 import com.vista.Impuestos.ImpuestosPanelExtended;
 
-public class ClienteViewExtended extends ClienteView{
+public class ClienteViewExtended extends ClienteView implements IBusqueda{
 	
 	private BeanFieldGroup<ClienteVO> fieldGroup;
 	private ClienteControlador controlador;
@@ -46,6 +53,8 @@ public class ClienteViewExtended extends ClienteView{
 		this.operacion = opera;
 		this.mainView = main;
 		
+	
+		
 		this.inicializarForm();
 		
 		/*Inicializamos listener de boton aceptar*/
@@ -57,15 +66,21 @@ public class ClienteViewExtended extends ClienteView{
 				if(this.fieldsValidos())
 				{
 									
-					ClienteVO clienteVO; 				
-					clienteVO = fieldGroup.getItemDataSource().getBean();
+					ClienteVO clienteVO;
+										
 					/*Ver si hay que poner campo a campo...*/
 					
 					
 										
 					if(this.operacion.equals(Variables.OPERACION_NUEVO)) {	
-		
-						this.controlador.insertarCliente(clienteVO, this.permisos.getCodEmp());
+						
+						/*Obtenemos los datos del cliente de los fields del formulario*/
+						clienteVO = this.obtenerDatosClienteFormulario(Variables.OPERACION_NUEVO);
+						
+						int codigo = controlador.insertarCliente(clienteVO, this.permisos.getCodEmp());
+						
+						/*Seteamos el nuevo codigo del cliente*/
+						clienteVO.setCodigo(codigo);
 						
 						this.mainView.actulaizarGrilla(clienteVO);
 						
@@ -74,6 +89,9 @@ public class ClienteViewExtended extends ClienteView{
 					
 					}
 					else if(this.operacion.equals(Variables.OPERACION_EDITAR))	{
+						
+						/*Obrenemos los campos del BeanItem*/
+						clienteVO = this.obtenerDatosClienteFormulario(Variables.OPERACION_EDITAR);
 						
 						this.controlador.modificarCliente(clienteVO, this.permisos.getCodEmp());
 						
@@ -112,6 +130,46 @@ public class ClienteViewExtended extends ClienteView{
 			
 			this.cancelar.addClickListener(click -> {
 				main.cerrarVentana();
+			});
+			
+			this.btnBuscarDoc.addClickListener(click -> {
+				
+				//ImpuestosHelpExtended form = new ImpuestosHelpExtended(this);
+				
+				BusquedaViewExtended form = new BusquedaViewExtended(this, new DocumDGIVO());
+				ArrayList<Object> lst = new ArrayList<Object>();
+				ArrayList<DocumDGIVO> lstDocumDgi = new ArrayList<DocumDGIVO>();
+				
+				try {
+					lstDocumDgi = this.controlador.obtnerDocumentosDgi();
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				Object obj;
+				for (DocumDGIVO i: lstDocumDgi) {
+					obj = new Object();
+					obj = (Object)i;
+					lst.add(obj);
+				}
+				try {
+					form.inicializarGrilla(lst);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				
+				
+				sub = new MySub("60%", "60%" );
+				sub.setModal(true);
+				sub.center();
+				sub.setModal(true);
+				sub.setVista(form);
+				sub.center();
+				sub.setDraggable(true);
+				UI.getCurrent().addWindow(sub);
+				
 			});
 		
 	}
@@ -171,10 +229,7 @@ public class ClienteViewExtended extends ClienteView{
 		this.numeroDoc.setRequired(setear);
 		this.numeroDoc.setRequiredError("Es requerido");
 				
-		
-		this.activo.setRequired(setear);
-		this.activo.setRequiredError("Es requerido");
-		
+				
 	}
 	
 	/**
@@ -210,6 +265,10 @@ public class ClienteViewExtended extends ClienteView{
 	 */
 	private void iniFormLectura()
 	{
+		
+		/*Deshabilitamos boton de busqueda de documento*/
+		this.disableBotonBusquedaDoc();
+		
 		/*Habilitamos el boton de editar,
 		 * deshabilitamos botn aceptar*/
 		this.enableBotonesLectura();
@@ -220,6 +279,8 @@ public class ClienteViewExtended extends ClienteView{
 		
 		/*Dejamos todods los campos readonly*/
 		this.readOnlyFields(true);
+		
+		/*Dejamos como read*/
 		
 	}
 	
@@ -232,6 +293,8 @@ public class ClienteViewExtended extends ClienteView{
 		/*Seteamos el form en editar*/
 		this.operacion = Variables.OPERACION_EDITAR;
 		
+		/*Habilitamos boton de busqueda de documento*/
+		this.enableBotonBusquedaDoc();
 		
 		/*Verificamos que tenga permisos*/
 		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GRUPO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
@@ -248,6 +311,9 @@ public class ClienteViewExtended extends ClienteView{
 			
 			/*Seteamos las validaciones*/
 			this.setearValidaciones(true);
+			
+			/**/
+			
 		}
 		else{
 			
@@ -262,6 +328,9 @@ public class ClienteViewExtended extends ClienteView{
 	 */
 	private void iniFormNuevo()
 	{
+		/*Habilitamos boton busquedad de documento*/
+		this.enableBotonBusquedaDoc();
+		
 		/*Chequeamos si tiene permiso de editar*/
 		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GRUPO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
@@ -272,6 +341,8 @@ public class ClienteViewExtended extends ClienteView{
 			mainView.mostrarMensaje(Variables.USUSARIO_SIN_PERMISOS);
 		}
 		
+		
+		
 		this.enableBotonAceptar();
 		this.disableBotonLectura();
 		this.activo.setValue(true);
@@ -279,6 +350,13 @@ public class ClienteViewExtended extends ClienteView{
 		/*Seteamos validaciones en nuevo, cuando es editar
 		 * solamente cuando apreta el boton editar*/
 		this.setearValidaciones(true);
+		
+		/*Ocultamos el Codigo del cliente ya que es autogenerado*/
+		this.codigo.setVisible(false);
+		this.codigo.setRequired(false); /*Lo dejamos no requerido ya que es autogenerado*/
+		
+		/*Aumentamos el tamaño del texfield del Nombre del cliente*/
+		this.nombre.setWidth("305px");
 		
 		/*Como es en operacion nuevo, dejamos todos los campos editabls*/
 		this.readOnlyFields(false);
@@ -294,7 +372,6 @@ public class ClienteViewExtended extends ClienteView{
 	private void setearFieldsEditar()
 	{
 		this.razonSocial.setReadOnly(false);
-		this.codigoDoc.setReadOnly(false);
 		this.nombreDoc.setReadOnly(false);
 		this.numeroDoc.setReadOnly(false);
 		this.nombre.setReadOnly(false);
@@ -302,6 +379,13 @@ public class ClienteViewExtended extends ClienteView{
 		this.direccion.setReadOnly(false);
 		this.mail.setReadOnly(false);
 		this.activo.setReadOnly(false);
+		
+		/*Codigo y nombre de documento no los dejamos editar*/
+		this.codigoDoc.setReadOnly(true);
+		this.nombreDoc.setReadOnly(true);
+		
+		/*El codigo del cliente tampodo lo dejamos editar*/
+		this.codigo.setReadOnly(true); 
 	}
 	
 	
@@ -348,15 +432,35 @@ public class ClienteViewExtended extends ClienteView{
 	}
 	
 	/**
+	 * Deshabilitamos el boton busqueda documento
+	 *
+	 */
+	private void disableBotonBusquedaDoc()
+	{
+		this.btnBuscarDoc.setEnabled(false);
+		this.btnBuscarDoc.setVisible(false);
+	}
+	
+	/**
+	 * habilitamos el boton busqueda documento
+	 *
+	 */
+	private void enableBotonBusquedaDoc()
+	{
+		this.btnBuscarDoc.setEnabled(true);
+		this.btnBuscarDoc.setVisible(true);
+	}
+	
+	
+	/**
 	 * Dejamos todos los Fields readonly o no,
 	 * dado el boolenao pasado por parametro
 	 *
 	 */
 	private void readOnlyFields(boolean setear)
 	{
-		this.codigo.setReadOnly(setear);
+		this.codigo.setReadOnly(true); /*Codigo siempre true*/
 		this.razonSocial.setReadOnly(setear);
-		this.codigoDoc.setReadOnly(setear);
 		this.nombreDoc.setReadOnly(setear);
 		this.numeroDoc.setReadOnly(setear);
 		this.nombre.setReadOnly(setear);
@@ -399,7 +503,6 @@ public class ClienteViewExtended extends ClienteView{
                         " 100 caracteres máximo", 1, 100, false));
         
         
-        
 	}
 	
 	/**
@@ -414,9 +517,19 @@ public class ClienteViewExtended extends ClienteView{
 		
 		try
 		{
+			boolean a = this.codigo.isValid();
+			boolean b = this.razonSocial.isValid();
+			boolean vc = this.codigoDoc.isValid();
+			boolean c = this.nombreDoc.isValid();
+			boolean x = this.numeroDoc.isValid();
+			boolean za = this.nombre.isValid();
+			boolean q = this.tel.isValid();
+			boolean ty = this.direccion.isValid();
+			boolean yy = this.mail.isValid();
+			
 			if(this.codigo.isValid() &&
 				this.razonSocial.isValid() &&
-				this.codigoDoc.isValid() &&
+				//this.codigoDoc.isValid() &&
 				this.nombreDoc.isValid() &&
 				this.numeroDoc.isValid() &&
 				this.nombre.isValid() &&
@@ -437,5 +550,90 @@ public class ClienteViewExtended extends ClienteView{
 		return valido;
 	}
 	
+	/**
+	 * Nos retorna retorna un clienteVO
+	 * nuevo con todos los datos ingresados en el formulario
+	 * Le pasamos la operacion por parametro (Nuevo o Editar)
+	 */
+	private ClienteVO obtenerDatosClienteFormulario(String operacion)
+	{
+		
+		
+		ClienteVO cliente = new ClienteVO();
+		int codigo = 0;
+		
+		try
+		{
+			if(operacion.equals(Variables.OPERACION_EDITAR))
+				codigo = Integer.parseInt(this.codigo.getValue().toString().trim());
+			
+			String nombre = this.nombre.getValue().toString().trim();
+			String tel = this.tel.getValue().toString().trim();
+			String direccion = this.direccion.getValue().toString().trim();
+			String mail = this.mail.getValue().toString().trim();
+			boolean activo = this.activo.getValue().booleanValue();
+			String codigoDoc = this.codigoDoc.getValue().toString().trim();
+			
+					
+			
+			String nombreDoc = this.nombreDoc.getValue().toString().trim();
+			String numeroDoc = this.numeroDoc.getValue().toString().trim();
+			String razonSocial = this.razonSocial.getValue().toString().trim();
+			
+			String usuarioMod = (String)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("usuario"); 
+			//String operacion = Variables.OPERACION_NUEVO;
+			
+			cliente.setNombre(nombre);
+			cliente.setTel(tel);
+			cliente.setDireccion(direccion);
+			cliente.setMail(mail);
+			cliente.setActivo(activo);
+			cliente.setCodigoDoc(codigoDoc);
+			cliente.setNombreDoc(nombreDoc);
+			cliente.setNumeroDoc(numeroDoc);
+			cliente.setRazonSocial(razonSocial);
+			
+			cliente.setFechaMod(new Timestamp(System.currentTimeMillis()));
+			
+			cliente.setUsuarioMod(usuarioMod);
+			cliente.setOperacion(operacion);
+			
+			if(operacion.equals(Variables.OPERACION_EDITAR))
+				cliente.setCodigo(codigo);
+		
+		}catch(Exception e){
+			
+			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+		}
+		
+		
+		return cliente;
+	}
+
+	@Override
+	public void setInfo(Object datos) {
+		
+		if(datos instanceof DocumDGIVO){
+			DocumDGIVO documDgi = (DocumDGIVO) datos;
+			
+			/*Seteamos readOnly en false para que no de error al querer modificarlos*/
+			this.codigoDoc.setReadOnly(false);
+			this.nombreDoc.setReadOnly(false);
+			
+			this.codigoDoc.setValue(documDgi.getcodDocumento());
+			this.nombreDoc.setValue(documDgi.getdescripcion());
+			
+			/*Volvemos a setearlos como readOnly*/
+			this.codigoDoc.setReadOnly(true);
+			this.nombreDoc.setReadOnly(true);
+		}
+		
+	}
+
+	@Override
+	public void cerrarVentana() {
+		
+		UI.getCurrent().removeWindow(sub);
+	}
 
 }

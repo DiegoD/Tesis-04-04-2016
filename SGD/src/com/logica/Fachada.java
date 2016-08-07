@@ -14,6 +14,12 @@ import org.json.simple.JSONObject;
 import com.abstractFactory.AbstractFactoryBuilder;
 import com.abstractFactory.IAbstractFactory;
 import com.excepciones.*;
+import com.excepciones.Documentos.ExisteDocumentoException;
+import com.excepciones.Documentos.InsertandoDocumentoException;
+import com.excepciones.Documentos.ModificandoDocumentoException;
+import com.excepciones.Documentos.NoExisteDocumentoException;
+import com.excepciones.Documentos.ObteniendoDocumentosException;
+import com.excepciones.Empresas.ExisteEmpresaException;
 import com.excepciones.Login.LoginException;
 import com.excepciones.Usuarios.ExisteUsuarioException;
 import com.excepciones.clientes.ExisteClienteExeption;
@@ -43,6 +49,7 @@ public class Fachada {
 	private IDAOUsuarios usuarios;
 	private IDAOGrupos grupos;
 	private IDAOClientes clientes;
+	private IDAODocumDgi documentosDGI;
 	
 	private AbstractFactoryBuilder fabrica;
 	private IAbstractFactory fabricaConcreta;
@@ -58,6 +65,7 @@ public class Fachada {
         this.usuarios =  fabricaConcreta.crearDAOUsuarios();
         this.grupos = fabricaConcreta.crearDAOGrupos();
         this.clientes = fabricaConcreta.crearDAOClientes();
+        this.documentosDGI = fabricaConcreta.crearDAODocumDgi();
         
     }
     
@@ -381,6 +389,7 @@ public class Fachada {
 	    			aux.setOperacion(cliente.getOperacion());
 	    			aux.setUsuarioMod(cliente.getUsuarioMod());
 	    			aux.setMail(cliente.getMail());
+	    			aux.setActivo(cliente.isActivo());
 
 	    			
 	    			
@@ -429,19 +438,7 @@ public class Fachada {
 				{
 	    			aux = new ClienteVO();
 	    			
-	    			aux.setRazonSocial(cliente.getRazonSocial());
-	    			aux.setNombre(cliente.getNombre());
-	    			aux.setNombreDoc(cliente.getDocumento().getNombre());
-	    			aux.setCodigoDoc(cliente.getDocumento().getCodigo());
-	    			aux.setNumeroDoc(cliente.getDocumento().getNumero());
-	    			aux.setCodigo(cliente.getCodigo());
-	    			aux.setNombre(cliente.getNombre());
-	    			aux.setTel(cliente.getTel());
-	    			aux.setDireccion(cliente.getDireccion());
-	    			aux.setFechaMod(cliente.getFechaMod());
-	    			aux.setOperacion(cliente.getOperacion());
-	    			aux.setUsuarioMod(cliente.getUsuarioMod());
-	    			aux.setMail(cliente.getMail());
+	    			aux = cliente.retornarClienteVO();
 
 	    			lstClientesVO.add(aux);
 				}
@@ -464,11 +461,12 @@ public class Fachada {
 	    }	 
 
 	 
-	 public void insertarCliente(ClienteVO clienteVO, String codEmp) throws InsertandoClienteException, ConexionException, ExisteClienteExeption  
+	 public int insertarCliente(ClienteVO clienteVO, String codEmp) throws InsertandoClienteException, ConexionException, ExisteClienteExeption  
 	    {
 	    	
 	    	Connection con = null;
 	    	boolean existe = false;
+	    	int codigo = 0;
 	    	
 	    	try 
 	    	{
@@ -477,9 +475,10 @@ public class Fachada {
 				
 		    	Cliente cliente = new Cliente(clienteVO); 
 		    	
+		    	
 		    	if(!this.clientes.memberCliente(cliente.getCodigo(), codEmp, con))
 		    	{
-		    		this.clientes.insertarCliente(cliente, codEmp, con);
+		    		codigo = this.clientes.insertarCliente(cliente, codEmp, con);
 		    		
 		    		con.commit();
 		    	}
@@ -507,6 +506,8 @@ public class Fachada {
 	    	if (existe){
 	    		throw new ExisteClienteExeption();
 	    	}
+	    	
+	    	return codigo;
 	    }
 	 
 	 public void editarCliente(ClienteVO clienteVO, String codEmp) throws  ConexionException, ModificandoClienteException     
@@ -552,6 +553,150 @@ public class Fachada {
 	 
 /////////////////////////////////FIN-CLIENTES/////////////////////////////////
 	 
-	 
+/////////////////////////////////DOCUMENTOS-DGI/////////////////////////////////	 
+	 /**
+		* Obtiene todos los documentos existentes
+		*/
+		@SuppressWarnings("unchecked")
+		public ArrayList<DocumDGIVO> getDocumentosDGI() throws ObteniendoDocumentosException, ConexionException
+		{
+		
+			Connection con = null;
+			
+			ArrayList<DocumDGI> lstDocumentos;
+			ArrayList<DocumDGIVO> lstDocumentosVO = new ArrayList<DocumDGIVO>();
+			
+			try
+			{
+				con = this.pool.obtenerConeccion();
+				
+				lstDocumentos = this.documentosDGI.getDocumentos(con);
+				
+				
+				DocumDGIVO aux;
+				for (DocumDGI documento : lstDocumentos) 
+				{
+					aux = new DocumDGIVO();
+					
+					aux.setcodDocumento(documento.getCod_docucmento());
+					aux.setdescripcion(documento.getDescirpcion());
+					aux.setActivo(documento.isActivo());
+					aux.setFechaMod(documento.getFechaMod());
+					aux.setOperacion(documento.getOperacion());
+					aux.setUsuarioMod(documento.getUsuarioMod());
+					
+					lstDocumentosVO.add(aux);
+				}
+			
+			}
+			catch(ObteniendoDocumentosException e){
+				throw e;
+			
+			} 
+			catch (ConexionException e) {
+			
+				throw e;
+			} 
+			finally	{
+				this.pool.liberarConeccion(con);
+			}
+			
+			
+			return lstDocumentosVO;
+		}
+
+		/**
+		* Inserta un nuevo documento en la base
+		* Valida que no exista un documento con el mismo código
+		* @throws ExisteEmpresaException 
+		*/
+		public void insertarDocumentoDGI(DocumDGIVO documentoVO) throws InsertandoDocumentoException, ConexionException, ExisteDocumentoException 
+		{
+		
+			Connection con = null;
+			boolean existe = false;
+			
+			try 
+			{
+				con = this.pool.obtenerConeccion();
+				con.setAutoCommit(false);
+				
+				DocumDGI documento = new DocumDGI(documentoVO); 
+			
+				if(!this.documentosDGI.memberDocumento(documento.getCod_docucmento(), con)) 	{
+				
+					this.documentosDGI.insertarDocumento(documento, con);
+					con.commit();
+				}
+				else{
+					existe = true;
+				}
+			
+			
+			}
+			
+			catch(Exception InsertandoRubroException)  	{
+				try {
+				con.rollback();
+				
+				} 
+				catch (SQLException e) {
+				
+					throw new InsertandoDocumentoException();
+				}
+			
+				throw new InsertandoDocumentoException();
+			}
+			finally	{
+				pool.liberarConeccion(con);
+			}
+			if (existe){
+				throw new ExisteDocumentoException();
+			}
+		}
+
+		/**
+		* Actualiza los datos de un documento dado su código
+		* valida que exista el código 
+		*/
+		public void actualizarDocumentoDGI(DocumDGIVO documentoVO) throws ConexionException, NoExisteDocumentoException, ModificandoDocumentoException, ExisteDocumentoException  
+		{
+		
+			Connection con = null;
+			
+			try 
+			{
+				con = this.pool.obtenerConeccion();
+				con.setAutoCommit(false);
+			
+				DocumDGI documento = new DocumDGI(documentoVO);
+			
+			if(this.documentosDGI.memberDocumento(documento.getCod_docucmento(), con))	{
+				this.documentosDGI.actualizarDocumento(documento, con);
+				con.commit();
+			}
+			
+			else
+				throw new NoExisteDocumentoException();
+			
+			}
+			catch(ConexionException | SQLException | ModificandoDocumentoException e){
+				try {
+					con.rollback();
+				
+				} 
+				catch (SQLException e1) {
+				
+					throw new ConexionException();
+				}
+				
+				throw new ModificandoDocumentoException();
+			}
+			finally	{
+				pool.liberarConeccion(con);
+			}
+		}
+
+/////////////////////////////////FIN-DOCUMENTOS-DGI/////////////////////////////////	
 	 
 }

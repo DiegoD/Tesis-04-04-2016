@@ -38,6 +38,7 @@ public class ClientesPanelExtended extends ClientesPanel{
 	MySub sub = new MySub("65%", "65%");
 	private PermisosUsuario permisos;
 	
+	
 	public ClientesPanelExtended() {
 		
 		controlador = new ClienteControlador();
@@ -62,13 +63,13 @@ public class ClientesPanelExtended extends ClientesPanel{
 				
 					this.btnNuevo.addClickListener(click -> {
 						
-						/*sub = new MySub("65%", "65%");
-						form = new ClienteViewExtended(Variables.OPERACION_NUEVO, this);
+						sub = new MySub("85%", "65%");
+						ClienteViewExtended form = new ClienteViewExtended(Variables.OPERACION_NUEVO, this);
 						sub.setModal(true);
 						sub.setVista(form);
 						
 						UI.getCurrent().addWindow(sub);
-						*/
+						
 					});
 				}
 				else{
@@ -119,6 +120,14 @@ public class ClientesPanelExtended extends ClientesPanel{
 		gridClientes.removeColumn("usuarioMod");
 		gridClientes.removeColumn("operacion");
 		
+		gridClientes.removeColumn("codigoDoc");
+		gridClientes.removeColumn("direccion");
+		gridClientes.removeColumn("mail");
+		gridClientes.removeColumn("nombreDoc");
+		gridClientes.removeColumn("numeroDoc");
+		gridClientes.removeColumn("tel");
+		
+		
 		/*Agregamos los filtros a la grilla*/
 		this.filtroGrilla();
 		
@@ -139,12 +148,12 @@ public class ClientesPanelExtended extends ClientesPanel{
 				    		item.getBean().setFechaMod(new Timestamp(System.currentTimeMillis()));
 				    	}
 							
-				    	/*form = new ClienteViewExtended(Variables.OPERACION_LECTURA, ClientesPanelExtended.this);
-						sub = new MySub("70%","65%");
+				    	ClienteViewExtended form = new ClienteViewExtended(Variables.OPERACION_LECTURA, ClientesPanelExtended.this);
+						sub = new MySub("85%","65%");
 						sub.setModal(true);
-						sub.setVista(form);*/
+						sub.setVista(form);
 						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
-						//form.setDataSourceFormulario(item);
+						form.setDataSourceFormulario(item);
 						
 						UI.getCurrent().addWindow(sub);
 		    		}

@@ -16,6 +16,6 @@ public interface IDAOClientes {
 	public ArrayList<Cliente> getClientesTodos(Connection con, String codEmp) throws ObteniendoClientesException, ConexionException ;
 	public ArrayList<Cliente> getClientesActivos(Connection con, String codEmp) throws ObteniendoClientesException, ConexionException;
 	public boolean memberCliente(int codCliente, String codEmp, Connection con) throws ExisteClienteExeption, ConexionException;
-	public void insertarCliente(Cliente cliente, String empresa, Connection con) throws MemberClienteException, ConexionException;
+	public int insertarCliente(Cliente cliente, String empresa, Connection con) throws MemberClienteException, ConexionException;
 	public void modificarCliente(Cliente cliente, String empresa, Connection con) throws ModificandoClienteException;
 }

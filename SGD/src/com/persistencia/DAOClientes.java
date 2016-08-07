@@ -25,6 +25,7 @@ import com.logica.Documento;
 import com.logica.Formulario;
 import com.logica.Grupo;
 import com.logica.Usuario;
+import com.mysql.jdbc.Statement;
 import com.valueObject.EmpLoginVO;
 import com.valueObject.GrupoVO;
 import com.valueObject.LoginVO;
@@ -162,7 +163,7 @@ public class DAOClientes implements IDAOClientes{
 			PreparedStatement pstmt1 = con.prepareStatement(query);
 			
 			pstmt1.setInt(1, codCliente);
-			pstmt1.setString(1, codEmp);
+			pstmt1.setString(2, codEmp);
 			
 			ResultSet rs = pstmt1.executeQuery();
 			
@@ -181,26 +182,28 @@ public class DAOClientes implements IDAOClientes{
 	}
 
 	/**
-	 * Inserta un cliente en la base
+	 * Inserta un cliente en la base, nos retrorna un entero que es el codigo del cliente insertado
 	 * 
 	 */
-	public void insertarCliente(Cliente cliente, String codEmp, Connection con) throws MemberClienteException, ConexionException {
+	public int insertarCliente(Cliente cliente, String codEmp, Connection con) throws MemberClienteException, ConexionException {
 
 		Consultas clts = new Consultas();
     	
     	String insert = clts.getInsertCliente();
     	
+    	
     	PreparedStatement pstmt1;
-    	    	
+    	int codigo =0;	
     	
     	try {
     		
-			pstmt1 =  con.prepareStatement(insert);
+			pstmt1 =  con.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
 			
-					
-			pstmt1.setInt(1, cliente.getCodigo());
-			pstmt1.setString(2, cliente.getNombre());
+			//pstmt1.setInt(1, cliente.getCodigo());
+			pstmt1.setString(1, cliente.getNombre());
+			pstmt1.setString(2, codEmp);
 			pstmt1.setString(3, cliente.getRazonSocial());
+			
 			pstmt1.setString(4, cliente.getTel());
 			pstmt1.setString(5, cliente.getDocumento().getNumero());
 			pstmt1.setString(6, cliente.getDocumento().getCodigo());
@@ -211,10 +214,17 @@ public class DAOClientes implements IDAOClientes{
 			pstmt1.setString(10, cliente.getUsuarioMod());
 			pstmt1.setString(11, cliente.getOperacion());
 			pstmt1.setTimestamp(12, cliente.getFechaMod());
-			pstmt1.setString(13, codEmp);
 			
+			//codigo = pstmt1.executeUpdate(Statement.RETURN_GENERATED_KEYS);
 			
 			pstmt1.executeUpdate ();
+			
+			/*Obtenemos el codigo del cliente insertado*/
+			ResultSet rs = pstmt1.getGeneratedKeys();
+			if (rs.next()){
+			    codigo=rs.getInt(1);
+			}
+			
 			pstmt1.close ();
 					
 		} 
@@ -223,6 +233,7 @@ public class DAOClientes implements IDAOClientes{
 			throw new MemberClienteException();
 		} 
 		
+    	return codigo;
 	}
 	
 	
@@ -231,6 +242,7 @@ public class DAOClientes implements IDAOClientes{
 		Consultas consultas = new Consultas();
 		String update = consultas.getActualizarCliente();
 		PreparedStatement pstmt1;
+		
 		
 		try {
 			
@@ -248,8 +260,8 @@ public class DAOClientes implements IDAOClientes{
 			pstmt1.setString(9, cliente.getUsuarioMod());
 			pstmt1.setString(10, cliente.getOperacion());
 			pstmt1.setTimestamp(11, cliente.getFechaMod());
-			pstmt1.setInt(11, cliente.getCodigo());
-			pstmt1.setString(11, codEmp);
+			pstmt1.setInt(12, cliente.getCodigo());
+			pstmt1.setString(13, codEmp);
 			
 			pstmt1.executeUpdate ();
 			

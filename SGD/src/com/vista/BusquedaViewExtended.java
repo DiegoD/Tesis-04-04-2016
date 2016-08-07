@@ -13,6 +13,7 @@ import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.ui.TextField;
+import com.valueObject.DocumDGIVO;
 import com.valueObject.ImpuestoVO;
 import com.vista.Rubros.RubroViewExtended;
 
@@ -20,6 +21,7 @@ public class BusquedaViewExtended extends BusquedaView{
 	
 	private ArrayList<Object> lst;
 	BeanItemContainer<ImpuestoVO> containerImpuesto;
+	BeanItemContainer<DocumDGIVO> containerDocumentosDgi;
 	Object seleccionado;
 	IBusqueda main;
 	
@@ -31,9 +33,14 @@ public class BusquedaViewExtended extends BusquedaView{
 			this.lblNombre.setValue("Impuestos");
 			this.seleccionado = new ImpuestoVO();
 			
+		}else if(obj instanceof DocumDGIVO){
+			
+			this.containerDocumentosDgi = new BeanItemContainer<DocumDGIVO>(DocumDGIVO.class);
+			this.lblNombre.setValue("Documentos");
+			this.seleccionado = new DocumDGIVO();
 		}
 		
-		gridImpuestos.addSelectionListener(new SelectionListener() 
+		grid.addSelectionListener(new SelectionListener() 
 		{
 			
 		    @Override
@@ -43,9 +50,17 @@ public class BusquedaViewExtended extends BusquedaView{
 		    	try
 		    	{
 		    		if(seleccionado instanceof ImpuestoVO){
-			    		if(gridImpuestos.getSelectedRow() != null){
+			    		if(grid.getSelectedRow() != null){
 			    			
-			    			BeanItem<ImpuestoVO> item = containerImpuesto.getItem(gridImpuestos.getSelectedRow());
+			    			BeanItem<ImpuestoVO> item = containerImpuesto.getItem(grid.getSelectedRow());
+					    	seleccionado = item.getBean(); 
+					    	main.setInfo(seleccionado);	
+					    	main.cerrarVentana();
+					    }
+		    		} else if(seleccionado instanceof DocumDGIVO){
+			    		if(grid.getSelectedRow() != null){
+			    			
+			    			BeanItem<DocumDGIVO> item = containerDocumentosDgi.getItem(grid.getSelectedRow());
 					    	seleccionado = item.getBean(); 
 					    	main.setInfo(seleccionado);	
 					    	main.cerrarVentana();
@@ -78,14 +93,33 @@ public class BusquedaViewExtended extends BusquedaView{
 			}
 			
 			this.containerImpuesto.addAll(lstImp);
-			this.gridImpuestos.setContainerDataSource(containerImpuesto);
+			this.grid.setContainerDataSource(containerImpuesto);
 			
-			gridImpuestos.removeColumn("activo");
-			gridImpuestos.removeColumn("fechaMod");
-			gridImpuestos.removeColumn("usuarioMod");
-			gridImpuestos.removeColumn("operacion");
+			grid.removeColumn("activo");
+			grid.removeColumn("fechaMod");
+			grid.removeColumn("usuarioMod");
+			grid.removeColumn("operacion");
 		}
 		
+		if(seleccionado instanceof DocumDGIVO){
+			
+			ArrayList<DocumDGIVO> lstDoc = new ArrayList<>();
+			
+			DocumDGIVO i;
+			for (Object o : lst) {
+				
+				i = (DocumDGIVO) o;
+				lstDoc.add(i);
+			}
+			
+			this.containerDocumentosDgi.addAll(lstDoc);
+			this.grid.setContainerDataSource(containerDocumentosDgi);
+			
+			grid.removeColumn("activo");
+			grid.removeColumn("fechaMod");
+			grid.removeColumn("usuarioMod");
+			grid.removeColumn("operacion");
+		}
 		
 		
 		
@@ -96,13 +130,14 @@ public class BusquedaViewExtended extends BusquedaView{
 		try
 		{
 			 
-			if(seleccionado instanceof ImpuestoVO)
+			/*if(seleccionado instanceof ImpuestoVO)
 				containerImpuesto.addContainerProperty(ImpuestoVO.class, ImpuestoVO.class, ImpuestoVO.class);
+			VER CON DIEGO */
 			
-			com.vaadin.ui.Grid.HeaderRow filterRow = gridImpuestos.appendHeaderRow();
+			com.vaadin.ui.Grid.HeaderRow filterRow = grid.appendHeaderRow();
 	
 			// Set up a filter for all columns
-			for (Object pid: gridImpuestos.getContainerDataSource()
+			for (Object pid: grid.getContainerDataSource()
 			                     .getContainerPropertyIds()) 
 			{
 			    
@@ -118,14 +153,29 @@ public class BusquedaViewExtended extends BusquedaView{
 				    filterField.setInputPrompt("Filtro");
 				    // Update filter When the filter input is changed
 				    filterField.addTextChangeListener(change -> {
-				        // Can't modify filters so need to replace
-				    	this.containerImpuesto.removeContainerFilters(pid);
-		
-				        // (Re)create the filter if necessary
-				        if (! change.getText().isEmpty())
-				        	this.containerImpuesto.addContainerFilter(
-				                new SimpleStringFilter(pid,
-				                    change.getText(), true, false));
+				        
+				    	if(seleccionado instanceof ImpuestoVO) /*PARA IMPUESTOS*/
+				    	{
+					    	// Can't modify filters so need to replace
+					    	this.containerImpuesto.removeContainerFilters(pid);
+			
+					        // (Re)create the filter if necessary
+					        if (! change.getText().isEmpty())
+					        	this.containerImpuesto.addContainerFilter(
+					                new SimpleStringFilter(pid,
+					                    change.getText(), true, false));
+					        
+				    	}else if(seleccionado instanceof DocumDGIVO) /*PARA DOCUMENTOS GDI*/
+				    	{
+					    	// Can't modify filters so need to replace
+					    	this.containerDocumentosDgi.removeContainerFilters(pid);
+			
+					        // (Re)create the filter if necessary
+					        if (! change.getText().isEmpty())
+					        	this.containerDocumentosDgi.addContainerFilter(
+					                new SimpleStringFilter(pid,
+					                    change.getText(), true, false));
+				    	}
 				    });
 
 				    cell.setComponent(filterField);

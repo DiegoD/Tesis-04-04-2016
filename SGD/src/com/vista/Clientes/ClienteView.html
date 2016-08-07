@@ -4,21 +4,26 @@
   <meta charset="UTF-8" name="design-properties" content="{&quot;RULERS_VISIBLE&quot;:true,&quot;GUIDELINES_VISIBLE&quot;:false,&quot;SNAP_TO_OBJECTS&quot;:true,&quot;SNAP_TO_GRID&quot;:true,&quot;SNAPPING_DISTANCE&quot;:10,&quot;JAVA_SOURCES_ROOT&quot;:&quot;src&quot;,&quot;THEME&quot;:&quot;sgd&quot;}">
  </head> 
  <body> 
-  <vaadin-form-layout spacing="false" responsive id="auditoria" size-full margin-left margin-right margin-bottom="false"> 
-   <vaadin-label style-name="colored h2" responsive plain-text :center>
-     Cliente 
-   </vaadin-label> 
-   <vaadin-horizontal-layout width-full> 
-    <vaadin-link caption="Auditoria" _id="auditoria" :middle :right></vaadin-link> 
-   </vaadin-horizontal-layout> 
-   <vaadin-horizontal-layout responsive size-full> 
-    <vaadin-form-layout size-full> 
-     <vaadin-text-field caption="Codigo" readonly _id="codigo"></vaadin-text-field> 
-     <vaadin-text-field caption="Nombre" readonly _id="nombre"></vaadin-text-field> 
-     <vaadin-text-field caption="Razon Social" readonly _id="razonSocial"></vaadin-text-field> 
-     <vaadin-text-field caption="CodDoc" readonly _id="codigoDoc"></vaadin-text-field> 
-     <vaadin-text-field caption="Nombre Doc" readonly _id="nombreDoc"></vaadin-text-field> 
-     <vaadin-text-field caption="Numero Doc" readonly _id="numeroDoc"></vaadin-text-field> 
+  <vaadin-css-layout style-name="root-layout form-template-vaadin" responsive _id="root_layout"> 
+   <vaadin-css-layout style-name="main-content-wrapper" width-full _id="main_content_wrapper"> 
+    <vaadin-form-layout style-name="billing-formlayout" size-full margin _id="billing_form"> 
+     <vaadin-label style-name="colored h2" responsive plain-text>
+       Cliente 
+     </vaadin-label> 
+     <vaadin-horizontal-layout width-full> 
+      <vaadin-link caption="Auditoria" _id="auditoria" :middle :right></vaadin-link> 
+     </vaadin-horizontal-layout> 
+     <vaadin-horizontal-layout caption="Cliente" style-name="name-wrapper" spacing _id="name_wrapper"> 
+      <vaadin-text-field style-name="form-textfield" width="108px" readonly _id="codigo"></vaadin-text-field> 
+      <vaadin-text-field style-name="form-textfield" _id="nombre"></vaadin-text-field> 
+     </vaadin-horizontal-layout> 
+     <vaadin-text-field caption="Razon Social" width="305px" readonly _id="razonSocial"></vaadin-text-field> 
+     <vaadin-horizontal-layout caption="Documento" style-name="name-wrapper" spacing _id="documento_wrapper"> 
+      <vaadin-text-field id="codigoDoc" visible="false" style-name="form-textfield" width="108px" _id="codigoDoc"></vaadin-text-field> 
+      <vaadin-text-field style-name="form-textfield" width="108px" readonly _id="nombreDoc"></vaadin-text-field> 
+      <vaadin-text-field style-name="form-textfield" _id="numeroDoc"></vaadin-text-field> 
+      <vaadin-button icon="fonticon://FontAwesome/f002" primary-style-name="valo-menu-item" _id="btnBuscarDoc"></vaadin-button> 
+     </vaadin-horizontal-layout> 
      <vaadin-text-field caption="Tel" readonly _id="tel"></vaadin-text-field> 
      <vaadin-text-field caption="Dirección" readonly _id="direccion"></vaadin-text-field> 
      <vaadin-text-field caption="Mail" readonly _id="mail"></vaadin-text-field> 
@@ -35,7 +40,7 @@
       </vaadin-button> 
      </vaadin-horizontal-layout> 
     </vaadin-form-layout> 
-   </vaadin-horizontal-layout> 
-  </vaadin-form-layout>  
+   </vaadin-css-layout> 
+  </vaadin-css-layout>  
  </body>
 </html>

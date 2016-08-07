@@ -27,6 +27,27 @@ public class Cliente extends Titular{
 		
 	}
 	
+	public ClienteVO retornarClienteVO(){
+		
+		ClienteVO aux = new ClienteVO();
+		
+		aux.setRazonSocial(this.getRazonSocial());
+		aux.setNombre(this.getNombre());
+		aux.setNombreDoc(this.getDocumento().getNombre());
+		aux.setCodigoDoc(this.getDocumento().getCodigo());
+		aux.setNumeroDoc(this.getDocumento().getNumero());
+		aux.setCodigo(this.getCodigo());
+		aux.setNombre(this.getNombre());
+		aux.setTel(this.getTel());
+		aux.setDireccion(this.getDireccion());
+		aux.setFechaMod(this.getFechaMod());
+		aux.setOperacion(this.getOperacion());
+		aux.setUsuarioMod(this.getUsuarioMod());
+		aux.setMail(this.getMail());
+		
+		return aux;
+	}
+	
 	private String razonSocial;
 	
 	public String getRazonSocial() {

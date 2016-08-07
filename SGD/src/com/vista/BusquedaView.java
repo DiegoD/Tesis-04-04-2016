@@ -20,7 +20,7 @@ import com.vaadin.ui.declarative.Design;
 @SuppressWarnings("serial")
 public class BusquedaView extends VerticalLayout {
 	protected Label lblNombre;
-	protected Grid gridImpuestos;
+	protected Grid grid;
 
 	public BusquedaView() {
 		Design.read(this);
