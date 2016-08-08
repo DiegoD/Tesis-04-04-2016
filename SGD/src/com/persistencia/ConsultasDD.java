@@ -575,5 +575,14 @@ public class ConsultasDD {
       	 
       	 return sb.toString();
     }
-	    
+	  
+	public String getCodigosGeneralizadosxCodigo(){
+		 
+	  StringBuilder sb = new StringBuilder();
+	  
+	  sb.append("SELECT codigo, valor, descripcion, fecha_mod, usuario_mod, operacion ");
+	  sb.append("FROM m_codigos_generalizados WHERE codigo = ? ");
+	  
+	  return sb.toString();
+	}
 }
