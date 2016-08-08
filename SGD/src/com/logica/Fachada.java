@@ -26,6 +26,10 @@ import com.excepciones.clientes.ExisteClienteExeption;
 import com.excepciones.clientes.InsertandoClienteException;
 import com.excepciones.clientes.ModificandoClienteException;
 import com.excepciones.clientes.ObteniendoClientesException;
+import com.excepciones.funcionarios.ExisteFuncionarioException;
+import com.excepciones.funcionarios.InsertendoFuncionarioException;
+import com.excepciones.funcionarios.ModificandoFuncionarioException;
+import com.excepciones.funcionarios.ObteniendoFuncionariosException;
 import com.excepciones.grupos.ExisteGrupoException;
 import com.excepciones.grupos.InsertandoGrupoException;
 import com.excepciones.grupos.MemberGrupoException;
@@ -49,6 +53,7 @@ public class Fachada {
 	private IDAOUsuarios usuarios;
 	private IDAOGrupos grupos;
 	private IDAOClientes clientes;
+	private IDAOFuncionarios funcionarios;
 	private IDAODocumDgi documentosDGI;
 	
 	private AbstractFactoryBuilder fabrica;
@@ -65,6 +70,7 @@ public class Fachada {
         this.usuarios =  fabricaConcreta.crearDAOUsuarios();
         this.grupos = fabricaConcreta.crearDAOGrupos();
         this.clientes = fabricaConcreta.crearDAOClientes();
+        this.funcionarios = fabricaConcreta.crearDAOFuncionarios();
         this.documentosDGI = fabricaConcreta.crearDAODocumDgi();
         
     }
@@ -698,5 +704,214 @@ public class Fachada {
 		}
 
 /////////////////////////////////FIN-DOCUMENTOS-DGI/////////////////////////////////	
+		
+/////////////////////////////////FUNCIONARIOS/////////////////////////////////
+		 
+		 
+	/**
+	*Nos retorna todos los funcionarios para la empresa
+	*
+	*/
+	@SuppressWarnings("unchecked")
+	public ArrayList<FuncionarioVO> getFuncionariosTodos(String codEmp) throws ObteniendoFuncionariosException, ConexionException {
+	
+		Connection con = null;
+		
+		ArrayList<Funcionario> lstFuncionarios;
+		ArrayList<FuncionarioVO> lstFuncionariosVO = new ArrayList<FuncionarioVO>();
+		
+		try
+		{
+		con = this.pool.obtenerConeccion();
+		
+		lstFuncionarios = this.funcionarios.getFuncionariosTodos(con, codEmp);
+		
+		
+		FuncionarioVO aux;
+		for (Funcionario func : lstFuncionarios) 
+		{
+		aux = new FuncionarioVO();
+		
+		aux.setNombre(func.getNombre());
+		aux.setNombreDoc(func.getDocumento().getNombre());
+		aux.setCodigoDoc(func.getDocumento().getCodigo());
+		aux.setNumeroDoc(func.getDocumento().getNumero());
+		aux.setCodigo(func.getCodigo());
+		aux.setNombre(func.getNombre());
+		aux.setTel(func.getTel());
+		aux.setDireccion(func.getDireccion());
+		aux.setFechaMod(func.getFechaMod());
+		aux.setOperacion(func.getOperacion());
+		aux.setUsuarioMod(func.getUsuarioMod());
+		aux.setMail(func.getMail());
+		aux.setActivo(func.isActivo());
+		
+		
+		
+		lstFuncionariosVO.add(aux);
+	}
+
+	}catch(ObteniendoFuncionariosException  e)
+	{
+		throw e;
+	
+	} catch (ConexionException e) {
+	
+		throw e;
+	} 
+	finally
+	{
+		this.pool.liberarConeccion(con);
+	}
+	
+	
+	return lstFuncionariosVO;
+}	 
+
+	
+	/**
+	* Nos retorna todos los funcionarios activos para la empresa
+	*
+	*/
+	@SuppressWarnings("unchecked")
+	public ArrayList<FuncionarioVO> getFuncionariosActivos(String codEmp) throws ObteniendoFuncionariosException, ConexionException {
+	
+		Connection con = null;
+		
+		ArrayList<Funcionario> lstFuncionarios;
+		ArrayList<FuncionarioVO> lstFuncionariosVO = new ArrayList<FuncionarioVO>();
+		
+		try
+		{
+		con = this.pool.obtenerConeccion();
+		
+		lstFuncionarios = this.funcionarios.getFuncionariosActivos(con, codEmp);
+		
+		
+		FuncionarioVO aux;
+		for (Funcionario cliente : lstFuncionarios) 
+		{
+			aux = new FuncionarioVO();
+			
+			aux = cliente.retornarFuncionarioVO();
+		
+		lstFuncionariosVO.add(aux);
+		}
+		
+		}catch(ObteniendoFuncionariosException  e)
+		{
+			throw e;
+		
+		} catch (ConexionException e) {
+		
+			throw e;
+		} 
+		finally
+		{
+			this.pool.liberarConeccion(con);
+		}
+		
+		
+		return lstFuncionariosVO;
+	}	 
+
+	
+	/**
+	*Ingresa un funcionario al sistema
+	*
+	*/	
+	public int insertarFuncionario(FuncionarioVO funcionarioVO, String codEmp) throws InsertendoFuncionarioException, ConexionException, ExisteFuncionarioException  
+	{
+	
+		Connection con = null;
+		boolean existe = false;
+		int codigo = 0;
+		
+		try 
+		{
+			con = this.pool.obtenerConeccion();
+			con.setAutoCommit(false);
+			
+			Funcionario funcionario = new Funcionario(funcionarioVO); 
+			
+			if(!this.funcionarios.memberFuncionario(funcionario.getCodigo(), codEmp, con))
+			{
+				codigo = this.funcionarios.insertarFuncionario(funcionario, codEmp, con);
+			
+				con.commit();
+			}
+			else{
+				existe = true;
+			}
+		
+		
+		}catch(Exception InsertandoGrupoException)
+		{
+			try {
+				con.rollback();
+			
+			} catch (SQLException e) {
+			
+				throw new InsertendoFuncionarioException();
+			}
+		
+			throw new InsertendoFuncionarioException();
+		}
+		finally
+		{
+			pool.liberarConeccion(con);
+		}
+		if (existe){
+			throw new ExisteFuncionarioException();
+		}
+		
+		return codigo;
+	}
+	
+	/**
+	*	Modificamos un funcionario al sistema
+	*
+	*/	
+	public void editarFuncionario(FuncionarioVO funcionarioVO, String codEmp) throws  ConexionException, ModificandoFuncionarioException, ExisteFuncionarioException     
+	{
+	
+		Connection con = null;
+		
+		try 
+		{
+			con = this.pool.obtenerConeccion();
+			con.setAutoCommit(false);
+			
+			Funcionario funcionario = new Funcionario(funcionarioVO);
+			
+			if(this.funcionarios.memberFuncionario(funcionario.getCodigo(), codEmp, con))
+			{
+				/*Primero eliminamos el grupo*/
+				this.funcionarios.modificarFuncionario(funcionario, codEmp, con);
+				    		
+			
+				con.commit();
+			}
+			
+			else
+				throw new ModificandoClienteException();
+		
+		}catch(ModificandoClienteException| ExisteFuncionarioException| ConexionException | SQLException  e)	{
+			try {
+				con.rollback();
+				
+			} catch (SQLException e1) {
+			
+				throw new ConexionException();
+			}
+			throw new ModificandoFuncionarioException();
+		}
+		finally
+		{
+			pool.liberarConeccion(con);
+		}
+	}
+
+/////////////////////////////////FIN-FUNCIONARIOS/////////////////////////////////
 	 
 }

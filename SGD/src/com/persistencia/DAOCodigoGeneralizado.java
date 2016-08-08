@@ -25,7 +25,7 @@ public class DAOCodigoGeneralizado implements IDAOCodigosGeneralizados{
 	@Override
 	public ArrayList<CodigoGeneralizado> getCodigosGeneralizados(Connection con)
 			throws ObteniendoCodigosException, ConexionException {
-		// TODO Auto-generated method stub
+
 		ArrayList<CodigoGeneralizado> lstCodigos = new ArrayList<CodigoGeneralizado>();
 		
 		try
@@ -66,7 +66,54 @@ public class DAOCodigoGeneralizado implements IDAOCodigosGeneralizados{
 			
 		return lstCodigos;
 	}
+	
+	@Override
+	public ArrayList<CodigoGeneralizado> getCodigosGeneralizadosxCodigo(String codigo, Connection con)
+			throws ObteniendoCodigosException, ConexionException {
 
+		ArrayList<CodigoGeneralizado> lstCodigos = new ArrayList<CodigoGeneralizado>();
+		
+		try
+		{
+			ConsultasDD consultas = new ConsultasDD ();
+			String query = consultas.getCodigosGeneralizadosxCodigo();
+			
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			
+			pstmt1.setString(1, codigo);
+			
+			ResultSet rs = pstmt1.executeQuery();
+			
+			CodigoGeneralizado codigoGeneralizado;
+			
+			while(rs.next ()) {
+
+				codigoGeneralizado = new CodigoGeneralizado();
+				
+				codigoGeneralizado.setCodigo(rs.getString(1));
+				codigoGeneralizado.setValor(rs.getString(2));
+				codigoGeneralizado.setDescripcion(rs.getString(3));
+				codigoGeneralizado.setFechaMod(rs.getTimestamp(4));
+				codigoGeneralizado.setUsuarioMod(rs.getString(5));
+				codigoGeneralizado.setOperacion(rs.getString(6));
+				
+				lstCodigos.add(codigoGeneralizado);
+			}
+			
+			
+			
+			rs.close ();
+			pstmt1.close ();
+		}
+		catch (SQLException e) {
+			
+			throw new ObteniendoCodigosException();
+		}
+			
+		return lstCodigos;
+	}
+	
+	
 	/**
 	 * Inserta un codigo generalizado en la base
 	 * Pre condición: El código y el valor no deben existir previamente

@@ -21,5 +21,5 @@ public interface IDAOCodigosGeneralizados {
 	public boolean memberCodigoGeneralizado(String codigo, String valor, Connection con) throws ExisteCodigoException, ConexionException;
 	public void actualizarCodigoGeneralizado(CodigoGeneralizado codigoGeneralizado, Connection con) throws ModificandoCodigoException, ConexionException;
 	public void eliminarCodigoGeneralizado(String codigo, String valor, Connection con) throws EliminandoCodigoGeneralizadoException, ConexionException;
-
+	public ArrayList<CodigoGeneralizado> getCodigosGeneralizadosxCodigo(String codigo, Connection con) throws ObteniendoCodigosException, ConexionException;	
 }

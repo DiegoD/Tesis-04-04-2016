@@ -66,4 +66,10 @@ public class AbstractFactoryMySql implements IAbstractFactory
 		return new DAODocumDGI();
 	}
 
+	@Override
+	public IDAOFuncionarios crearDAOFuncionarios() {
+		
+		return new DAOFuncionarios();
+	}
+
 }
