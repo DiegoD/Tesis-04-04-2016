@@ -191,16 +191,16 @@ public class DAOFuncionarios implements IDAOFuncionarios{
 			pstmt1.setString(1, funcionario.getNombre());
 			pstmt1.setString(2, empresa);
 			
-			pstmt1.setString(4, funcionario.getTel());
-			pstmt1.setString(5, funcionario.getDocumento().getNumero());
-			pstmt1.setString(6, funcionario.getDocumento().getCodigo());
-			pstmt1.setString(7, funcionario.getDireccion());
-			pstmt1.setString(8, funcionario.getMail());
-			pstmt1.setBoolean(9, funcionario.isActivo());
+			pstmt1.setString(3, funcionario.getTel());
+			pstmt1.setString(4, funcionario.getDocumento().getNumero());
+			pstmt1.setString(5, funcionario.getDocumento().getCodigo());
+			pstmt1.setString(6, funcionario.getDireccion());
+			pstmt1.setString(7, funcionario.getMail());
+			pstmt1.setBoolean(8, funcionario.isActivo());
 			
-			pstmt1.setString(10, funcionario.getUsuarioMod());
-			pstmt1.setString(11, funcionario.getOperacion());
-			pstmt1.setTimestamp(12, funcionario.getFechaMod());
+			pstmt1.setString(9, funcionario.getUsuarioMod());
+			pstmt1.setString(10, funcionario.getOperacion());
+			pstmt1.setTimestamp(11, funcionario.getFechaMod());
 			
 			//codigo = pstmt1.executeUpdate(Statement.RETURN_GENERATED_KEYS);
 			
@@ -237,17 +237,17 @@ public class DAOFuncionarios implements IDAOFuncionarios{
      		pstmt1 =  con.prepareStatement(update);
      		
 			pstmt1.setString(1, funcionario.getNombre());
-			pstmt1.setString(3, funcionario.getTel());
-			pstmt1.setString(4, funcionario.getDocumento().getNumero());
-			pstmt1.setString(5, funcionario.getDocumento().getCodigo());
-			pstmt1.setString(6, funcionario.getDireccion());
-			pstmt1.setString(7, funcionario.getMail());
-			pstmt1.setBoolean(8, funcionario.isActivo());
-			pstmt1.setString(9, funcionario.getUsuarioMod());
-			pstmt1.setString(10, funcionario.getOperacion());
-			pstmt1.setTimestamp(11, funcionario.getFechaMod());
-			pstmt1.setInt(12, funcionario.getCodigo());
-			pstmt1.setString(13, empresa);
+			pstmt1.setString(2, funcionario.getTel());
+			pstmt1.setString(3, funcionario.getDocumento().getNumero());
+			pstmt1.setString(4, funcionario.getDocumento().getCodigo());
+			pstmt1.setString(5, funcionario.getDireccion());
+			pstmt1.setString(6, funcionario.getMail());
+			pstmt1.setBoolean(7, funcionario.isActivo());
+			pstmt1.setString(8, funcionario.getUsuarioMod());
+			pstmt1.setString(9, funcionario.getOperacion());
+			pstmt1.setTimestamp(10, funcionario.getFechaMod());
+			pstmt1.setInt(11, funcionario.getCodigo());
+			pstmt1.setString(12, empresa);
 			
 			pstmt1.executeUpdate ();
 			

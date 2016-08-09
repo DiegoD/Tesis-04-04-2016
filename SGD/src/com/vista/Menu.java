@@ -27,6 +27,7 @@ public class Menu extends HorizontalLayout {
 	protected Button menuToggle;
 	protected CssLayout menuItems;
 	protected Button userButton;
+	protected Button funcionariosButton;
 	protected Button gruposButton;
 	protected Button logoutButton;
 	protected Button impuestoButton;

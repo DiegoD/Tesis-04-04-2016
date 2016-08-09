@@ -1,30 +1,23 @@
-package com.vista.Clientes;
+package com.vista.Funcionarios;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-import com.controladores.ClienteControlador;
-import com.controladores.ImpuestoControlador;
+import com.controladores.FuncionarioControlador;
 import com.excepciones.ConexionException;
-import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
-import com.excepciones.Impuestos.ExisteImpuestoException;
-import com.excepciones.Impuestos.InsertandoImpuestoException;
-import com.excepciones.Impuestos.ModificandoImpuestoException;
-import com.excepciones.Impuestos.NoExisteImpuestoException;
-import com.excepciones.clientes.ExisteClienteExeption;
-import com.excepciones.clientes.InsertandoClienteException;
-import com.excepciones.clientes.ModificandoClienteException;
+import com.excepciones.funcionarios.ExisteFuncionarioException;
+import com.excepciones.funcionarios.InsertendoFuncionarioException;
+import com.excepciones.funcionarios.MemberFuncionarioException;
+import com.excepciones.funcionarios.ModificandoFuncionarioException;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.StringLengthValidator;
-import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.UI;
 import com.valueObject.DocumDGIVO;
-import com.valueObject.ImpuestoVO;
-import com.valueObject.cliente.ClienteVO;
+import com.valueObject.FuncionarioVO;
 import com.vista.BusquedaViewExtended;
 import com.vista.IBusqueda;
 import com.vista.Mensajes;
@@ -32,14 +25,13 @@ import com.vista.MySub;
 import com.vista.PermisosUsuario;
 import com.vista.Variables;
 import com.vista.VariablesPermisos;
-import com.vista.Impuestos.ImpuestosPanelExtended;
 
-public class ClienteViewExtended extends ClienteView implements IBusqueda{
-	
-	private BeanFieldGroup<ClienteVO> fieldGroup;
-	private ClienteControlador controlador;
+public class FuncionarioViewExtended extends FuncionarioView implements IBusqueda{
+
+	private BeanFieldGroup<FuncionarioVO> fieldGroup;
+	private FuncionarioControlador controlador;
 	private String operacion;
-	private ClientesPanelExtended mainView;
+	private FuncionariosPanelExtended mainView;
 	MySub sub;
 	private PermisosUsuario permisos;
 	
@@ -47,7 +39,7 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 	 * Constructor del formulario
 	 * Con operación y la vista que lo llamo
 	 */
-	public ClienteViewExtended(String opera, ClientesPanelExtended main){
+	public FuncionarioViewExtended(String opera, FuncionariosPanelExtended main){
 		
 		this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
 		this.operacion = opera;
@@ -66,7 +58,7 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 				if(this.fieldsValidos())
 				{
 									
-					ClienteVO clienteVO;
+					FuncionarioVO funcionarioVO;
 										
 					/*Ver si hay que poner campo a campo...*/
 					
@@ -75,14 +67,14 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 					if(this.operacion.equals(Variables.OPERACION_NUEVO)) {	
 						
 						/*Obtenemos los datos del cliente de los fields del formulario*/
-						clienteVO = this.obtenerDatosClienteFormulario(Variables.OPERACION_NUEVO);
+						funcionarioVO = this.obtenerDatosClienteFormulario(Variables.OPERACION_NUEVO);
 						
-						int codigo = controlador.insertarCliente(clienteVO, this.permisos.getCodEmp());
+						int codigo = controlador.insertarFuncionario(funcionarioVO, this.permisos.getCodEmp());
 						
 						/*Seteamos el nuevo codigo del cliente*/
-						clienteVO.setCodigo(codigo);
+						funcionarioVO.setCodigo(codigo);
 						
-						this.mainView.actulaizarGrilla(clienteVO);
+						this.mainView.actulaizarGrilla(funcionarioVO);
 						
 						Mensajes.mostrarMensajeOK("Se ha guardado el Cliente");
 						main.cerrarVentana();
@@ -91,11 +83,11 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 					else if(this.operacion.equals(Variables.OPERACION_EDITAR))	{
 						
 						/*Obrenemos los campos del BeanItem*/
-						clienteVO = this.obtenerDatosClienteFormulario(Variables.OPERACION_EDITAR);
+						funcionarioVO = this.obtenerDatosClienteFormulario(Variables.OPERACION_EDITAR);
 						
-						this.controlador.modificarCliente(clienteVO, this.permisos.getCodEmp());
+						this.controlador.modificarFuncionario(funcionarioVO, this.permisos.getCodEmp());
 						
-						this.mainView.actulaizarGrilla(clienteVO);
+						this.mainView.actulaizarGrilla(funcionarioVO);
 						
 						Mensajes.mostrarMensajeOK("Se ha modificado Cliente");
 						main.cerrarVentana();
@@ -108,7 +100,7 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 				}
 					
 				} 
-				catch (InsertandoClienteException| ConexionException| ExisteClienteExeption| InicializandoException| ModificandoClienteException e) {
+				catch (ConexionException| InicializandoException| InsertendoFuncionarioException| ModificandoFuncionarioException| ExisteFuncionarioException e) {
 					
 					Mensajes.mostrarMensajeError(e.getMessage());
 				}
@@ -176,9 +168,9 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 
 	public  void inicializarForm(){
 		
-		this.controlador = new ClienteControlador();
+		this.controlador = new FuncionarioControlador();
 					
-		this.fieldGroup =  new BeanFieldGroup<ClienteVO>(ClienteVO.class);
+		this.fieldGroup =  new BeanFieldGroup<FuncionarioVO>(FuncionarioVO.class);
 		
 		//Seteamos info del form si es requerido
 		if(fieldGroup != null)
@@ -217,9 +209,6 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 		this.nombre.setRequired(setear);
 		this.nombre.setRequiredError("Es requerido");
 		
-		this.razonSocial.setRequired(setear);
-		this.razonSocial.setRequiredError("Es requerido");
-		
 		this.codigoDoc.setRequired(setear);
 		this.codigoDoc.setRequiredError("Es requerido");
 		
@@ -236,11 +225,11 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 	 * Dado un item ImpuestoVO seteamos la info del formulario
 	 *
 	 */
-	public void setDataSourceFormulario(BeanItem<ClienteVO> item)
+	public void setDataSourceFormulario(BeanItem<FuncionarioVO> item)
 	{
 		this.fieldGroup.setItemDataSource(item);
 		
-		ClienteVO clienteVO = new ClienteVO();
+		FuncionarioVO clienteVO = new FuncionarioVO();
 		clienteVO = fieldGroup.getItemDataSource().getBean();
 		String fecha = new SimpleDateFormat("dd/MM/yyyy").format(clienteVO.getFechaMod());
 		
@@ -371,7 +360,6 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 	 */
 	private void setearFieldsEditar()
 	{
-		this.razonSocial.setReadOnly(false);
 		this.nombreDoc.setReadOnly(false);
 		this.numeroDoc.setReadOnly(false);
 		this.nombre.setReadOnly(false);
@@ -460,7 +448,6 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 	private void readOnlyFields(boolean setear)
 	{
 		this.codigo.setReadOnly(true); /*Codigo siempre true*/
-		this.razonSocial.setReadOnly(setear);
 		this.nombreDoc.setReadOnly(true); /*Nombre doc siempre true*/
 		this.numeroDoc.setReadOnly(setear);
 		this.nombre.setReadOnly(setear);
@@ -478,10 +465,6 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 	 */
 	private void agregarFieldsValidaciones()
 	{
-        this.razonSocial.addValidator(
-                new StringLengthValidator(
-                     " 45 caracteres máximo", 1, 45, false));
-        
         this.nombre.addValidator(
                 new StringLengthValidator(
                      " 45 caracteres máximo", 1, 45, false));
@@ -518,7 +501,6 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 		try
 		{
 			boolean a = this.codigo.isValid();
-			boolean b = this.razonSocial.isValid();
 			boolean vc = this.codigoDoc.isValid();
 			boolean c = this.nombreDoc.isValid();
 			boolean x = this.numeroDoc.isValid();
@@ -528,7 +510,6 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 			boolean yy = this.mail.isValid();
 			
 			if(this.codigo.isValid() &&
-				this.razonSocial.isValid() &&
 				//this.codigoDoc.isValid() &&
 				this.nombreDoc.isValid() &&
 				this.numeroDoc.isValid() &&
@@ -555,11 +536,11 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 	 * nuevo con todos los datos ingresados en el formulario
 	 * Le pasamos la operacion por parametro (Nuevo o Editar)
 	 */
-	private ClienteVO obtenerDatosClienteFormulario(String operacion)
+	private FuncionarioVO obtenerDatosClienteFormulario(String operacion)
 	{
 		
 		
-		ClienteVO cliente = new ClienteVO();
+		FuncionarioVO funcionario = new FuncionarioVO();
 		int codigo = 0;
 		
 		try
@@ -578,28 +559,26 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 			
 			String nombreDoc = this.nombreDoc.getValue().toString().trim();
 			String numeroDoc = this.numeroDoc.getValue().toString().trim();
-			String razonSocial = this.razonSocial.getValue().toString().trim();
 			
 			String usuarioMod = (String)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("usuario"); 
 			//String operacion = Variables.OPERACION_NUEVO;
 			
-			cliente.setNombre(nombre);
-			cliente.setTel(tel);
-			cliente.setDireccion(direccion);
-			cliente.setMail(mail);
-			cliente.setActivo(activo);
-			cliente.setCodigoDoc(codigoDoc);
-			cliente.setNombreDoc(nombreDoc);
-			cliente.setNumeroDoc(numeroDoc);
-			cliente.setRazonSocial(razonSocial);
+			funcionario.setNombre(nombre);
+			funcionario.setTel(tel);
+			funcionario.setDireccion(direccion);
+			funcionario.setMail(mail);
+			funcionario.setActivo(activo);
+			funcionario.setCodigoDoc(codigoDoc);
+			funcionario.setNombreDoc(nombreDoc);
+			funcionario.setNumeroDoc(numeroDoc);
 			
-			cliente.setFechaMod(new Timestamp(System.currentTimeMillis()));
+			funcionario.setFechaMod(new Timestamp(System.currentTimeMillis()));
 			
-			cliente.setUsuarioMod(usuarioMod);
-			cliente.setOperacion(operacion);
+			funcionario.setUsuarioMod(usuarioMod);
+			funcionario.setOperacion(operacion);
 			
 			if(operacion.equals(Variables.OPERACION_EDITAR))
-				cliente.setCodigo(codigo);
+				funcionario.setCodigo(codigo);
 		
 		}catch(Exception e){
 			
@@ -607,7 +586,7 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 		}
 		
 		
-		return cliente;
+		return funcionario;
 	}
 
 	@Override
@@ -635,5 +614,4 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 		
 		UI.getCurrent().removeWindow(sub);
 	}
-
 }

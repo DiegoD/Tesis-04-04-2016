@@ -409,9 +409,9 @@ public class Consultas {
 	{
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("INSERT INTO m_funcionarios ( nom_tit, cod_emp, razon_social, tel, nro_dgi, cod_docdgi ");
+		sb.append("INSERT INTO m_funcionarios ( nom_tit, cod_emp, tel, nro_dgi, cod_docdgi ");
 		sb.append(", direccion, mail, activo, usuario_mod, operacion, fecha_mod) ");
-		sb.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+		sb.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
 		
 		return sb.toString();
 	}
@@ -423,7 +423,6 @@ public class Consultas {
 		sb.append("UPDATE m_funcionarios ");
 		sb.append("SET  ");
 		sb.append("nom_tit = ?,  ");
-		sb.append("razon_social = ?, ");
 		sb.append("tel = ?, ");
 		sb.append("nro_dgi = ?, ");
 		sb.append("cod_docdgi = ?, ");
@@ -443,9 +442,9 @@ public class Consultas {
 	{
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("SELECT cod_tit, nom_tit, cod_emp, razon_social, tel, nro_dgi, m_documdgi.cod_docdgi, m_documdgi.nombre AS nomDoc , direccion, mail ");
-		sb.append(", m_clientes.activo, m_clientes.usuario_mod, m_clientes.operacion, m_clientes.fecha_mod ");
-		sb.append("FROM m_funcionarios, m_documdgi WHERE m_clientes.cod_docdgi = m_documdgi.cod_docdgi AND cod_emp = ? ");
+		sb.append("SELECT cod_tit, nom_tit, cod_emp, tel, nro_dgi, m_documdgi.cod_docdgi, m_documdgi.nombre AS nomDoc , direccion, mail ");
+		sb.append(", m_funcionarios.activo, m_funcionarios.usuario_mod, m_funcionarios.operacion, m_funcionarios.fecha_mod ");
+		sb.append("FROM m_funcionarios, m_documdgi WHERE m_funcionarios.cod_docdgi = m_documdgi.cod_docdgi AND cod_emp = ? ");
 		
 		return sb.toString();
 	}
@@ -454,9 +453,9 @@ public class Consultas {
 	{
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("SELECT cod_tit, nom_tit, cod_emp, razon_social, tel, nro_dgi, m_documdgi.cod_docdgi, m_documdgi.nombre AS nomDoc , direccion, mail ");
-		sb.append(", m_clientes.activo, m_clientes.usuario_mod, m_clientes.operacion, m_clientes.fecha_mod ");
-		sb.append("FROM m_funcionarios, m_documdgi WHERE m_clientes.cod_docdgi = m_documdgi.cod_docdgi AND cod_emp = ? AND m_clientes.activo = 1");
+		sb.append("SELECT cod_tit, nom_tit, cod_emp, tel, nro_dgi, m_documdgi.cod_docdgi, m_documdgi.nombre AS nomDoc , direccion, mail ");
+		sb.append(", m_funcionarios.activo, m_funcionarios.usuario_mod, m_funcionarios.operacion, m_funcionarios.fecha_mod ");
+		sb.append("FROM m_funcionarios, m_documdgi WHERE m_funcionarios.cod_docdgi = m_documdgi.cod_docdgi AND cod_emp = ? AND m_clientes.activo = 1");
 		
 		
 		return sb.toString();

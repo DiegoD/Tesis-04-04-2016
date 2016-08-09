@@ -24,7 +24,7 @@ public class FuncionarioControlador {
 	 * Obtiene todos los clientes del sistema
 	 * @throws ObteniendoFuncionariosException 
 	 */
-	public ArrayList<FuncionarioVO> getClientesTodos(String codEmp) throws ConexionException, InicializandoException, ObteniendoFuncionariosException  
+	public ArrayList<FuncionarioVO> getFuncionariosTodos(String codEmp) throws ConexionException, InicializandoException, ObteniendoFuncionariosException  
 	{
 		return Fachada.getInstance().getFuncionariosTodos(codEmp);
     }
@@ -33,7 +33,7 @@ public class FuncionarioControlador {
 	 * Obtiene todos los clientes del sistema
 	 * @throws ObteniendoFuncionariosException 
 	 */
-	public ArrayList<FuncionarioVO> getFuncionariossAvtivos(String codEmp) throws ConexionException, InicializandoException, ObteniendoFuncionariosException  
+	public ArrayList<FuncionarioVO> getFuncionariosAvtivos(String codEmp) throws ConexionException, InicializandoException, ObteniendoFuncionariosException  
 	{
 		return Fachada.getInstance().getFuncionariosActivos(codEmp);
     }

@@ -17,6 +17,7 @@ import com.vista.Documentos.DocumentosPanelExtended;
 import com.vista.Clientes.ClientesPanelExtended;
 import com.vista.CodigosGeneralizados.CodigosGeneralizadosPanelExtended;
 import com.vista.Empresas.EmpresasPanelExtended;
+import com.vista.Funcionarios.FuncionariosPanelExtended;
 import com.vista.Grupos.GruposPanelExtended;
 import com.vista.Impuestos.ImpuestosPanelExtended;
 import com.vista.Login.LoginExtended;
@@ -187,6 +188,25 @@ public class MenuExtended extends Menu{
 			try {
 				
 				ClientesPanelExtended c = new ClientesPanelExtended();
+				c.setSizeFull();
+				this.content.setSizeFull();
+				
+				this.content.addComponent(c);
+				
+			} catch (Exception e) {
+				
+				Mensajes.mostrarMensajeError(e.getMessage());
+			}
+		});
+		
+		this.funcionariosButton.addClickListener(click -> {
+			
+			setSizeFull();
+			
+			this.content.removeAllComponents();
+			try {
+				
+				FuncionariosPanelExtended c = new FuncionariosPanelExtended();
 				c.setSizeFull();
 				this.content.setSizeFull();
 				
