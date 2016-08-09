@@ -32,6 +32,7 @@ public class MenuExtended extends Menu{
 	public static String nombre = "Menu";
 		
 	private VerticalLayout tabMantenimientos;
+	private VerticalLayout tabAdministracion;
 	private PermisosUsuario permisos;
 	private Principal mainPrincipal; /*Variable para poder desloguearse*/
 	
@@ -275,11 +276,12 @@ public class MenuExtended extends Menu{
 	{
 		/*Permisos del usuario para los mantenimientos*/
 		this.setearOpcionesMenuMantenimientos();
+		this.setearOpcionesMenuAdministracion();
 	}
-	
 	
 	/**
 	 * Vemos los permisos del usuario para los mantenimientos
+	 * y lo agregamos al TAB de Mantenimientos
 	 * 
 	 */
 	private void setearOpcionesMenuMantenimientos()
@@ -291,8 +293,8 @@ public class MenuExtended extends Menu{
 		/*Buscamos los Formulairos correspondientes a este TAB*/
 		for (FormularioVO formularioVO : this.permisos.getLstPermisos().values()) {
 			
-			if(formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_USUARIO)
-				|| formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_GRUPO) || 
+			if(formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_CLIENTES)
+				|| formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_FUNCIONARIOS) || 
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_IMPUESTO) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_EMPRESAS) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_CODIGOS_GENERALIZADOS) ||
@@ -316,16 +318,7 @@ public class MenuExtended extends Menu{
 				
 				switch(formularioVO.getCodigo())
 				{
-					case VariablesPermisos.FORMULARIO_USUARIO : 
-						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_USUARIO, VariablesPermisos.OPERACION_LEER))
-							this.habilitarUserButton();
-					break;
 										
-					case VariablesPermisos.FORMULARIO_GRUPO :
-						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GRUPO, VariablesPermisos.OPERACION_LEER))
-							this.habilitarGrupoButton();
-					break;
-					
 					case VariablesPermisos.FORMULARIO_IMPUESTO :
 						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_IMPUESTO, VariablesPermisos.OPERACION_LEER))
 							this.habilitarImpuestoButton();
@@ -354,12 +347,75 @@ public class MenuExtended extends Menu{
 					case VariablesPermisos.FORMULARIO_RUBROS:
 						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_RUBROS, VariablesPermisos.OPERACION_LEER))
 							this.habilitarRubros();
+						
+					case VariablesPermisos.FORMULARIO_CLIENTES:
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_CLIENTES, VariablesPermisos.OPERACION_LEER))
+							this.habilitarClientes();
+						
+					case VariablesPermisos.FORMULARIO_FUNCIONARIOS:
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_FUNCIONARIOS, VariablesPermisos.OPERACION_LEER))
+							this.habilitarFuncionarios();
+						
 					break;
 				}
 				
 			}
 			
 			this.acordion.addTab(tabMantenimientos, "Mantenimientos", null);
+			
+		}
+		
+		acordion.setHeight("75%"); /*Seteamos alto  del accordion*/
+	}
+	
+	
+	
+	/**
+	 * Vemos los permisos del usuario para los mantenimientos
+	 * y lo agregamos al TAB de Mantenimientos
+	 * 
+	 */
+	private void setearOpcionesMenuAdministracion()
+	{
+		ArrayList<FormularioVO> lstFormsMenuAdmin = new ArrayList<FormularioVO>();
+		
+		/*Buscamos los Formulairos correspondientes a este TAB*/
+		for (FormularioVO formularioVO : this.permisos.getLstPermisos().values()) {
+			
+			if(formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_USUARIO)
+				|| formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_GRUPO))
+			{
+				lstFormsMenuAdmin.add(formularioVO);
+			}
+			
+		}
+		
+		/*Si hay formularios para el tab*/
+		if(lstFormsMenuAdmin.size()> 0)
+		{
+
+			this.tabAdministracion = new VerticalLayout();
+			
+			
+			for (FormularioVO formularioVO : lstFormsMenuAdmin) {
+				
+				switch(formularioVO.getCodigo())
+				{
+					case VariablesPermisos.FORMULARIO_USUARIO : 
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_USUARIO, VariablesPermisos.OPERACION_LEER))
+							this.habilitarUserButton();
+					break;
+										
+					case VariablesPermisos.FORMULARIO_GRUPO :
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GRUPO, VariablesPermisos.OPERACION_LEER))
+							this.habilitarGrupoButton();
+					break;
+					
+				}
+				
+			}
+			
+			this.acordion.addTab(tabAdministracion, "Administración", null);
 			
 		}
 		
@@ -396,6 +452,13 @@ public class MenuExtended extends Menu{
 		this.documentosButton.setVisible(false);
 		this.documentosButton.setEnabled(false);
 		
+		this.clientesButton.setVisible(false);
+		this.clientesButton.setEnabled(false);
+		
+		this.funcionariosButton.setVisible(false);
+		this.funcionariosButton.setEnabled(false);
+		
+		
 	}
 	
 	
@@ -404,7 +467,7 @@ public class MenuExtended extends Menu{
 		this.userButton.setVisible(true);
 		this.userButton.setEnabled(true);
 		
-		this.tabMantenimientos.addComponent(this.userButton);
+		this.tabAdministracion.addComponent(this.userButton);
 	}
 	
 	private void habilitarGrupoButton()
@@ -412,7 +475,7 @@ public class MenuExtended extends Menu{
 		this.gruposButton.setVisible(true);
 		this.gruposButton.setEnabled(true);
 		
-		this.tabMantenimientos.addComponent(this.gruposButton);
+		this.tabAdministracion.addComponent(this.gruposButton);
 	}
 	
 	private void habilitarImpuestoButton()
@@ -456,6 +519,18 @@ public class MenuExtended extends Menu{
 		this.rubros.setVisible(true);
 		this.rubros.setEnabled(true);
 		this.tabMantenimientos.addComponent(rubros);
+	}
+	
+	private void habilitarClientes(){
+		this.clientesButton.setVisible(true);
+		this.clientesButton.setEnabled(true);
+		this.tabMantenimientos.addComponent(clientesButton);
+	}
+	
+	private void habilitarFuncionarios(){
+		this.funcionariosButton.setVisible(true);
+		this.funcionariosButton.setEnabled(true);
+		this.tabMantenimientos.addComponent(funcionariosButton);
 	}
 	
 	public PermisosUsuario getPermisosUsuario()

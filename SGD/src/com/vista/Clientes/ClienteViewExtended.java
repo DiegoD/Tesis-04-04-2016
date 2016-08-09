@@ -9,10 +9,12 @@ import com.controladores.ImpuestoControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
+import com.excepciones.Documentos.ObteniendoDocumentosException;
 import com.excepciones.Impuestos.ExisteImpuestoException;
 import com.excepciones.Impuestos.InsertandoImpuestoException;
 import com.excepciones.Impuestos.ModificandoImpuestoException;
 import com.excepciones.Impuestos.NoExisteImpuestoException;
+import com.excepciones.Impuestos.ObteniendoImpuestosException;
 import com.excepciones.clientes.ExisteClienteExeption;
 import com.excepciones.clientes.InsertandoClienteException;
 import com.excepciones.clientes.ModificandoClienteException;
@@ -141,10 +143,12 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 				ArrayList<DocumDGIVO> lstDocumDgi = new ArrayList<DocumDGIVO>();
 				
 				try {
+					
 					lstDocumDgi = this.controlador.obtnerDocumentosDgi();
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					
+				} catch (ObteniendoDocumentosException| ConexionException| InicializandoException e) {
+					
+					Mensajes.mostrarMensajeError(e.getMessage());
 				}
 				Object obj;
 				for (DocumDGIVO i: lstDocumDgi) {
@@ -154,12 +158,11 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 				}
 				try {
 					form.inicializarGrilla(lst);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				
+				} catch (ObteniendoImpuestosException| ConexionException| InicializandoException e) {
+					
+					Mensajes.mostrarMensajeError(e.getMessage());
 				}
-				
-				
 				
 				sub = new MySub("60%", "60%" );
 				sub.setModal(true);
@@ -297,7 +300,7 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 		this.enableBotonBusquedaDoc();
 		
 		/*Verificamos que tenga permisos*/
-		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GRUPO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_CLIENTES, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
 		if(permisoNuevoEditar){
 			
@@ -332,7 +335,7 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 		this.enableBotonBusquedaDoc();
 		
 		/*Chequeamos si tiene permiso de editar*/
-		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GRUPO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_CLIENTES, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
 		/*Si no tiene permisos de Nuevo Cerrmamos la ventana y mostramos mensaje*/
 		if(!permisoNuevoEditar)

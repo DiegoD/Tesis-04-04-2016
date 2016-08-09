@@ -45,7 +45,7 @@ public class FuncionariosPanelExtended extends FuncionariosPanel {
 			this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
 			
 			/*Verificamos que el usuario tenga permisos de lectura para mostrar la vista*/
-			boolean permisoLectura = permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_CLIENTES, VariablesPermisos.OPERACION_LEER);
+			boolean permisoLectura = permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_FUNCIONARIOS, VariablesPermisos.OPERACION_LEER);
 			
 			if(permisoLectura){
 		        
@@ -54,7 +54,7 @@ public class FuncionariosPanelExtended extends FuncionariosPanel {
 					this.inicializarGrilla();
 					
 					/*Para el boton de nuevo, verificamos que tenga permisos de nuevoEditar*/
-					boolean permisoNuevoEditar = permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_CLIENTES, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+					boolean permisoNuevoEditar = permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_FUNCIONARIOS, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 					
 					if(permisoNuevoEditar){
 					

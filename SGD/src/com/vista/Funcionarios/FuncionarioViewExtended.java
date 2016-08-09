@@ -286,7 +286,7 @@ public class FuncionarioViewExtended extends FuncionarioView implements IBusqued
 		this.enableBotonBusquedaDoc();
 		
 		/*Verificamos que tenga permisos*/
-		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GRUPO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_FUNCIONARIOS, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
 		if(permisoNuevoEditar){
 			
@@ -321,7 +321,7 @@ public class FuncionarioViewExtended extends FuncionarioView implements IBusqued
 		this.enableBotonBusquedaDoc();
 		
 		/*Chequeamos si tiene permiso de editar*/
-		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GRUPO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_FUNCIONARIOS, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
 		/*Si no tiene permisos de Nuevo Cerrmamos la ventana y mostramos mensaje*/
 		if(!permisoNuevoEditar)

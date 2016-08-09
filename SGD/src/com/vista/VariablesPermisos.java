@@ -11,6 +11,7 @@ public final class VariablesPermisos {
 	public static final String FORMULARIO_MONEDAS = "MMonedas";
 	public static final String FORMULARIO_DOCUMENTOS = "MDocumentos";
 	public static final String FORMULARIO_CLIENTES = "MClientes";
+	public static final String FORMULARIO_FUNCIONARIOS = "MFuncionarios";
 	public static final String FORMULARIO_CODIGOS_GENERALIZADOS = "MCodGen";
 	public static final String FORMULARIO_RUBROS = "MRubros";
 	
