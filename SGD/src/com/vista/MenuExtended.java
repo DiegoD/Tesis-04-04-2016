@@ -41,6 +41,7 @@ public class MenuExtended extends Menu{
 		this.mainPrincipal = principalView;
 		this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");;
 		
+		
 		/*Primero deshabilitamos todas las funcionalidades*/
 		this.deshabilitarFuncionalidades();
 		
@@ -312,7 +313,7 @@ public class MenuExtended extends Menu{
 		{
 
 			this.tabMantenimientos = new VerticalLayout();
-			
+			//this.tabMantenimientos.setMargin(true);
 			
 			for (FormularioVO formularioVO : lstFormsMenuMant) {
 				
@@ -395,6 +396,7 @@ public class MenuExtended extends Menu{
 		{
 
 			this.tabAdministracion = new VerticalLayout();
+			//this.tabAdministracion.setMargin(true);
 			
 			
 			for (FormularioVO formularioVO : lstFormsMenuAdmin) {
