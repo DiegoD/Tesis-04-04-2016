@@ -102,7 +102,7 @@ public class BusquedaViewExtended extends BusquedaView{
 			grid.removeColumn("usuarioMod");
 			grid.removeColumn("operacion");
 			
-			this.acomodarGrilla();
+			this.arreglarGrilla();
 		}
 		
 		if(seleccionado instanceof DocumDGIVO){
@@ -125,7 +125,7 @@ public class BusquedaViewExtended extends BusquedaView{
 			grid.removeColumn("operacion");
 			
 		
-			this.acomodarGrilla();
+			this.arreglarGrilla();
 			
 		}
 		
@@ -133,7 +133,7 @@ public class BusquedaViewExtended extends BusquedaView{
 		
 	}
 	
-	private void acomodarGrilla()
+	private void arreglarGrilla()
 	{
 		List<Column> lstColumn = grid.getColumns();
 		
