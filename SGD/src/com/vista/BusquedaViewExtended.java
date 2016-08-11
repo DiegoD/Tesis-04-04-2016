@@ -1,6 +1,7 @@
 package com.vista;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.controladores.ImpuestoControlador;
 import com.excepciones.ConexionException;
@@ -12,6 +13,7 @@ import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
+import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.TextField;
 import com.valueObject.DocumDGIVO;
 import com.valueObject.ImpuestoVO;
@@ -99,6 +101,8 @@ public class BusquedaViewExtended extends BusquedaView{
 			grid.removeColumn("fechaMod");
 			grid.removeColumn("usuarioMod");
 			grid.removeColumn("operacion");
+			
+			this.acomodarGrilla();
 		}
 		
 		if(seleccionado instanceof DocumDGIVO){
@@ -119,10 +123,23 @@ public class BusquedaViewExtended extends BusquedaView{
 			grid.removeColumn("fechaMod");
 			grid.removeColumn("usuarioMod");
 			grid.removeColumn("operacion");
+			
+		
+			this.acomodarGrilla();
+			
 		}
 		
 		
 		
+	}
+	
+	private void acomodarGrilla()
+	{
+		List<Column> lstColumn = grid.getColumns();
+		
+		lstColumn.get(0).setWidth(200);
+		lstColumn.get(0).setHeaderCaption("Código");
+		lstColumn.get(1).setHeaderCaption("Nombre");
 	}
 	
 	private void filtroGrilla()
