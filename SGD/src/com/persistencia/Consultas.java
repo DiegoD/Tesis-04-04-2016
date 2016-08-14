@@ -299,6 +299,7 @@ public class Consultas {
     
 ////////////////////////FIN-GRUPOS///////////////////////////////////////////////////
     
+    /*Consulta permisos para todos los formularios del usuario*/
 	public String getFormulariosxUsuario()
 	{
 		StringBuilder sb = new StringBuilder();
@@ -310,6 +311,25 @@ public class Consultas {
 		sb.append("WHERE m_grupoxform.formulario = g_formularios.formulario ");
 		sb.append("AND m_grupoxform.cod_grupo = m_gruposxusu.cod_grupo ");
 		sb.append("AND m_gruposxusu.usuario = ? AND m_gruposxusu.cod_emp = ? ");
+		sb.append("GROUP BY g_formularios.formulario, g_formularios.nombre");
+		sb.append(" )Aux ");
+		
+		return sb.toString();
+	}
+	
+	/*Consulta permisos para un solo formulario*/
+	public String getFormularioOperacionxUsuario()
+	{
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT formulario, nombre, (CASE WHEN nuevo_editar = 1 THEN 1 ELSE leer END)leer, nuevo_editar, borrar FROM ( ");
+		sb.append("SELECT g_formularios.formulario, g_formularios.nombre,  ");
+		sb.append("MAX(m_grupoxform.leer) AS leer,  MAX(m_grupoxform.nuevo_editar) AS nuevo_editar,  MAX(m_grupoxform.borrar) AS borrar  ");
+		sb.append("FROM g_formularios, m_grupoxform, m_gruposxusu ");
+		sb.append("WHERE m_grupoxform.formulario = g_formularios.formulario ");
+		sb.append("AND m_grupoxform.cod_grupo = m_gruposxusu.cod_grupo ");
+		sb.append("AND m_gruposxusu.usuario = ? AND m_gruposxusu.cod_emp = ? ");
+		sb.append("AND g_formularios.formulario = ? ");
 		sb.append("GROUP BY g_formularios.formulario, g_formularios.nombre");
 		sb.append(" )Aux ");
 		

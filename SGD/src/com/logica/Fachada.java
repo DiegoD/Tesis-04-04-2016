@@ -42,6 +42,7 @@ import com.excepciones.grupos.ObteniendoFormulariosException;
 import com.excepciones.grupos.ObteniendoGruposException;
 import com.valueObject.*;
 import com.valueObject.cliente.ClienteVO;
+import com.vista.VariablesPermisos;
 import com.persistencia.*;
 
 public class Fachada {
@@ -939,5 +940,53 @@ public class Fachada {
 	}
 
 /////////////////////////////////FIN-FUNCIONARIOS/////////////////////////////////
-	 
+	
+/////////////////////////////////PERMISOS/////////////////////////////////
+	/**
+	 * Dado una operacion y formulario retorna true
+	 * si tiene permisos
+	 * @throws ConexionException 
+	 * 
+	 */
+	public boolean permisoEnFormulario(UsuarioPermisosVO permisosForm) throws ObteniendoPermisosException, ConexionException
+	{
+		
+		Connection con = null;
+		
+		boolean tienePermiso = false;
+		
+		//FormularioVO frm = lstFormularios.get(formulario);
+		
+		try 
+		{
+			con = this.pool.obtenerConeccion();
+			
+			
+			
+		Formulario form = this.usuarios.getPermisoFormularioOperacionUsuario(permisosForm.getUsuario(), permisosForm.getCodEmp(), permisosForm.getFormulario(), con);
+		
+		if(form != null)
+		{
+			switch(permisosForm.getOperacion())
+			{
+				case VariablesPermisos.OPERACION_LEER : tienePermiso = form.isLeer();
+				break;
+				case VariablesPermisos.OPERACION_NUEVO_EDITAR : tienePermiso = form.isNuevoEditar();
+				break;
+				case VariablesPermisos.OPERACION_BORRAR : tienePermiso = form.isBorrar();
+				break;
+			}
+		}
+		
+		
+		}catch(ObteniendoPermisosException e)
+		{
+			throw e;
+			
+		}finally{
+			pool.liberarConeccion(con);
+		}
+		
+		return tienePermiso;
+	}
 }

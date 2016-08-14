@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import org.json.simple.JSONObject;
 
 import com.excepciones.ConexionException;
+import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Login.LoginException;
 import com.excepciones.Usuarios.ExisteUsuarioException;
 import com.excepciones.Usuarios.InsertandoUsuarioException;
@@ -427,6 +428,47 @@ public class DAOUsuarios implements IDAOUsuarios {
 			throw new ObteniendoFormulariosException();
 		}
 		return lstFormularios;
+		
+	}
+	
+	/**
+	 * Nos retorna los permisos para el formulario usuario empresa
+	 */
+	public Formulario getPermisoFormularioOperacionUsuario(String usuario, String codEmp, String formulario, Connection con) throws ObteniendoPermisosException 
+	{
+		Formulario form = null;
+		
+		try 
+		{
+			Consultas consultas = new Consultas();
+			String query = consultas.getFormularioOperacionxUsuario();
+			
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			pstmt1.setString(1, usuario);
+			pstmt1.setString(2, codEmp);
+			pstmt1.setString(3, formulario);
+			
+			ResultSet rs = pstmt1.executeQuery();
+			
+			
+			while(rs.next ()) 
+			{
+				form = new Formulario();
+				form.setCodFormulario(rs.getString(1));
+				form.setNomFormulario(rs.getString(2));
+				form.setLeer(rs.getBoolean(3));
+				form.setNuevoEditar(rs.getBoolean(4));
+				form.setBorrar(rs.getBoolean(5));
+				
+			}
+			rs.close();
+			pstmt1.close();
+		} 
+		catch (Exception e) 
+		{
+			throw new ObteniendoPermisosException();
+		}
+		return form;
 		
 	}
 	

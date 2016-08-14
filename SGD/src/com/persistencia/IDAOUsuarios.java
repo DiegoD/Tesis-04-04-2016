@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.json.simple.JSONObject;
 
 import com.excepciones.ConexionException;
+import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Login.LoginException;
 import com.excepciones.Usuarios.ExisteUsuarioException;
 import com.excepciones.Usuarios.InsertandoUsuarioException;
@@ -40,4 +41,7 @@ public interface IDAOUsuarios {
 	public ArrayList<EmpLoginVO> getUsuariosxEmp(String usuario, Connection con) throws ObteniendoUsuariosxEmpExeption;
 	
 	public void modificarUsuario(Usuario user, String empresa, Connection con) throws ModificandoUsuarioException;
+	
+	public Formulario getPermisoFormularioOperacionUsuario(String usuario, String codEmp, String formulario,
+			Connection con)throws ObteniendoPermisosException;
 }

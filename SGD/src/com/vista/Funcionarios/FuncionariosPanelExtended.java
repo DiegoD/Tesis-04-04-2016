@@ -8,8 +8,11 @@ import java.util.ArrayList;
 import com.controladores.FuncionarioControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.InicializandoException;
+import com.excepciones.NoTienePermisosException;
+import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.clientes.ObteniendoClientesException;
 import com.excepciones.funcionarios.ObteniendoFuncionariosException;
+import com.excepciones.grupos.ObteniendoFormulariosException;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.filter.SimpleStringFilter;
@@ -19,6 +22,7 @@ import com.vaadin.server.VaadinService;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.valueObject.FuncionarioVO;
+import com.valueObject.UsuarioPermisosVO;
 import com.vista.Mensajes;
 import com.vista.MySub;
 import com.vista.PermisosUsuario;
@@ -174,13 +178,22 @@ public class FuncionariosPanelExtended extends FuncionariosPanel {
 		private ArrayList<FuncionarioVO> getFuncionarios() {
 			
 			ArrayList<FuncionarioVO> lstClientes = new ArrayList<FuncionarioVO>();
-
+			//boolean permisoNuevoEditar = permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_FUNCIONARIOS, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+			
+			/*Inicializamos VO de permisos para el usuario, formulario y operacion
+			 * para confirmar los permisos del usuario*/
+			UsuarioPermisosVO permisoAux = 
+					new UsuarioPermisosVO(this.permisos.getCodEmp(),
+							this.permisos.getUsuario(),
+							VariablesPermisos.FORMULARIO_FUNCIONARIOS,
+							VariablesPermisos.OPERACION_LEER);
+			
 			try {
 				
-					lstClientes = controlador.getFuncionariosTodos(this.permisos.getCodEmp());
+					lstClientes = controlador.getFuncionariosTodos(permisoAux);
 				
 			} 
-			catch ( InicializandoException | ConexionException | ObteniendoFuncionariosException e) {
+			catch ( InicializandoException | ConexionException | ObteniendoPermisosException | NoTienePermisosException | ObteniendoFuncionariosException e) {
 				
 				Mensajes.mostrarMensajeError(e.getMessage());
 			}

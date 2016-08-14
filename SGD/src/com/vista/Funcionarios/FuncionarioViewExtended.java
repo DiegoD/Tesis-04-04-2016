@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import com.controladores.FuncionarioControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.InicializandoException;
+import com.excepciones.NoTienePermisosException;
+import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.funcionarios.ExisteFuncionarioDocumetnoException;
 import com.excepciones.funcionarios.ExisteFuncionarioException;
 import com.excepciones.funcionarios.InsertendoFuncionarioException;
@@ -19,6 +21,7 @@ import com.vaadin.server.VaadinService;
 import com.vaadin.ui.UI;
 import com.valueObject.DocumDGIVO;
 import com.valueObject.FuncionarioVO;
+import com.valueObject.UsuarioPermisosVO;
 import com.vista.BusquedaViewExtended;
 import com.vista.IBusqueda;
 import com.vista.Mensajes;
@@ -64,7 +67,14 @@ public class FuncionarioViewExtended extends FuncionarioView implements IBusqued
 									
 					FuncionarioVO funcionarioVO;
 										
-					/*Ver si hay que poner campo a campo...*/
+
+					/*Inicializamos VO de permisos para el usuario, formulario y operacion
+					 * para confirmar los permisos del usuario*/
+					UsuarioPermisosVO permisoAux = 
+							new UsuarioPermisosVO(this.permisos.getCodEmp(),
+									this.permisos.getUsuario(),
+									VariablesPermisos.FORMULARIO_FUNCIONARIOS,
+									VariablesPermisos.OPERACION_NUEVO_EDITAR);
 					
 					
 										
@@ -73,7 +83,8 @@ public class FuncionarioViewExtended extends FuncionarioView implements IBusqued
 						/*Obtenemos los datos del cliente de los fields del formulario*/
 						funcionarioVO = this.obtenerDatosClienteFormulario(Variables.OPERACION_NUEVO);
 						
-						int codigo = controlador.insertarFuncionario(funcionarioVO, this.permisos.getCodEmp());
+						
+						int codigo = controlador.insertarFuncionario(funcionarioVO, permisoAux);
 						
 						/*Seteamos el nuevo codigo del cliente*/
 						funcionarioVO.setCodigo(codigo);
@@ -89,7 +100,9 @@ public class FuncionarioViewExtended extends FuncionarioView implements IBusqued
 						/*Obrenemos los campos del BeanItem*/
 						funcionarioVO = this.obtenerDatosClienteFormulario(Variables.OPERACION_EDITAR);
 						
-						this.controlador.modificarFuncionario(funcionarioVO, this.permisos.getCodEmp());
+					
+						this.controlador.modificarFuncionario(funcionarioVO, permisoAux);
+							
 						
 						this.mainView.actulaizarGrilla(funcionarioVO);
 						
@@ -104,7 +117,10 @@ public class FuncionarioViewExtended extends FuncionarioView implements IBusqued
 				}
 					
 				} 
-				catch (ConexionException| InicializandoException| InsertendoFuncionarioException| ModificandoFuncionarioException| ExisteFuncionarioException| ExisteFuncionarioDocumetnoException e) {
+				catch (ConexionException| InicializandoException| InsertendoFuncionarioException
+						| ModificandoFuncionarioException| ExisteFuncionarioException
+						| ExisteFuncionarioDocumetnoException|ObteniendoPermisosException 
+						| NoTienePermisosException  e) {
 					
 					Mensajes.mostrarMensajeError(e.getMessage());
 				}
