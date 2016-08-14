@@ -9,7 +9,9 @@ import com.excepciones.clientes.ExisteClienteExeption;
 import com.excepciones.clientes.MemberClienteException;
 import com.excepciones.clientes.ModificandoClienteException;
 import com.excepciones.clientes.ObteniendoClientesException;
+import com.excepciones.clientes.VerificandoClienteException;
 import com.logica.Cliente;
+import com.logica.Documento;
 
 public interface IDAOClientes {
 
@@ -18,4 +20,6 @@ public interface IDAOClientes {
 	public boolean memberCliente(int codCliente, String codEmp, Connection con) throws ExisteClienteExeption, ConexionException;
 	public int insertarCliente(Cliente cliente, String empresa, Connection con) throws MemberClienteException, ConexionException;
 	public void modificarCliente(Cliente cliente, String empresa, Connection con) throws ModificandoClienteException;
+	public boolean memberClienteDocumentoEditar(Documento doc, int codCliente, String codEmp, Connection con) throws VerificandoClienteException, ConexionException;
+	public boolean memberClienteDocumentoNuevo(Documento doc, String codEmp, Connection con) throws VerificandoClienteException, ConexionException;
 }

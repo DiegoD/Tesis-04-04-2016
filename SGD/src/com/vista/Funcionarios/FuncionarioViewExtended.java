@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import com.controladores.FuncionarioControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.InicializandoException;
+import com.excepciones.funcionarios.ExisteFuncionarioDocumetnoException;
 import com.excepciones.funcionarios.ExisteFuncionarioException;
 import com.excepciones.funcionarios.InsertendoFuncionarioException;
 import com.excepciones.funcionarios.MemberFuncionarioException;
@@ -54,6 +55,9 @@ public class FuncionarioViewExtended extends FuncionarioView implements IBusqued
 				
 			try {
 				
+				/*Agregamos las validaciones para luego controlarlas*/
+				this.agregarFieldsValidaciones();
+				
 				/*Validamos los campos antes de invocar al controlador*/
 				if(this.fieldsValidos())
 				{
@@ -100,7 +104,7 @@ public class FuncionarioViewExtended extends FuncionarioView implements IBusqued
 				}
 					
 				} 
-				catch (ConexionException| InicializandoException| InsertendoFuncionarioException| ModificandoFuncionarioException| ExisteFuncionarioException e) {
+				catch (ConexionException| InicializandoException| InsertendoFuncionarioException| ModificandoFuncionarioException| ExisteFuncionarioException| ExisteFuncionarioDocumetnoException e) {
 					
 					Mensajes.mostrarMensajeError(e.getMessage());
 				}
@@ -177,7 +181,7 @@ public class FuncionarioViewExtended extends FuncionarioView implements IBusqued
 			fieldGroup.buildAndBindMemberFields(this);
 		
 		/*Seteamos las validaciones de los fields*/
-		this.agregarFieldsValidaciones();
+		//this.agregarFieldsValidaciones();
 		
 		/*SI LA OPERACION NO ES NUEVO, OCULTAMOS BOTON ACEPTAR*/
 		if(this.operacion.equals(Variables.OPERACION_NUEVO))
@@ -475,15 +479,15 @@ public class FuncionarioViewExtended extends FuncionarioView implements IBusqued
         
         this.tel.addValidator(
                 new StringLengthValidator(
-                        " 20 caracteres máximo", 1, 20, false));
+                        " 20 caracteres máximo", 0, 20, false));
         
         this.direccion.addValidator(
                 new StringLengthValidator(
-                        " 100 caracteres máximo", 1, 100, false));
+                        " 100 caracteres máximo", 0, 100, false));
         
         this.mail.addValidator(
                 new StringLengthValidator(
-                        " 100 caracteres máximo", 1, 100, false));
+                        " 100 caracteres máximo", 0, 100, false));
         
         
 	}

@@ -9,6 +9,7 @@ import com.excepciones.clientes.ExisteClienteExeption;
 import com.excepciones.clientes.InsertandoClienteException;
 import com.excepciones.clientes.ModificandoClienteException;
 import com.excepciones.clientes.ObteniendoClientesException;
+import com.excepciones.funcionarios.ExisteFuncionarioDocumetnoException;
 import com.excepciones.funcionarios.ExisteFuncionarioException;
 import com.excepciones.funcionarios.InsertendoFuncionarioException;
 import com.excepciones.funcionarios.ModificandoFuncionarioException;
@@ -41,8 +42,9 @@ public class FuncionarioControlador {
 	
 	/**
 	 * Inserta un funcionario dado su VO
+	 * @throws ExisteFuncionarioDocumetnoException 
 	 */
-	public int insertarFuncionario(FuncionarioVO funcionarioVO, String empresa) throws ConexionException, InicializandoException, InsertendoFuncionarioException, ExisteFuncionarioException 
+	public int insertarFuncionario(FuncionarioVO funcionarioVO, String empresa) throws ConexionException, InicializandoException, InsertendoFuncionarioException, ExisteFuncionarioException, ExisteFuncionarioDocumetnoException 
 	{
 		int codigo = 0;
 		
@@ -53,8 +55,9 @@ public class FuncionarioControlador {
 	
 	/**
 	 * Modifica los datos de un funcionario dado el VO con las modificaciones
+	 * @throws ExisteFuncionarioDocumetnoException 
 	 */
-	public void modificarFuncionario(FuncionarioVO funcionarioVO, String empresa) throws ConexionException, InicializandoException, ModificandoFuncionarioException, ExisteFuncionarioException 
+	public void modificarFuncionario(FuncionarioVO funcionarioVO, String empresa) throws ConexionException, InicializandoException, ModificandoFuncionarioException, ExisteFuncionarioException, ExisteFuncionarioDocumetnoException 
 	{
 		Fachada.getInstance().editarFuncionario(funcionarioVO, empresa);
 	}

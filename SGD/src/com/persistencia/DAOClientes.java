@@ -18,6 +18,7 @@ import com.excepciones.clientes.ExisteClienteExeption;
 import com.excepciones.clientes.MemberClienteException;
 import com.excepciones.clientes.ModificandoClienteException;
 import com.excepciones.clientes.ObteniendoClientesException;
+import com.excepciones.clientes.VerificandoClienteException;
 import com.excepciones.grupos.ObteniendoFormulariosException;
 import com.excepciones.grupos.ObteniendoGruposException;
 import com.logica.Cliente;
@@ -180,9 +181,85 @@ public class DAOClientes implements IDAOClientes{
 			throw new ExisteClienteExeption();
 		}
 	}
+	
+	/**
+	 * Dado el codigo del cliente y empresa, nos retorna true si ya existe
+	 * un cliente, solo para la operacion de nuevo.
+	 */
+	public boolean memberClienteDocumentoNuevo(Documento doc, String codEmp, Connection con) throws VerificandoClienteException, ConexionException{
+		
+		boolean existe = false;
+		
+		try{
+			
+			
+			Consultas consultas = new Consultas();
+			String query = consultas.getMemberClienteDocumentoNuevo();
+			
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			
+			pstmt1.setString(1, codEmp);
+			pstmt1.setString(2, doc.getCodigo());
+			pstmt1.setString(3, doc.getNumero());
+			
+			ResultSet rs = pstmt1.executeQuery();
+			
+			if (rs.next ()) 
+				existe = true;
+						
+			rs.close ();
+			pstmt1.close ();
+			
+			return existe;
+			
+		}catch(SQLException e){
+			
+			throw new VerificandoClienteException();
+		}
+	}
+	
+	/**
+	 * Dado el codigo del cliente y empresa, nos retorna true si ya existe
+	 * un cliente, solo para la operacion de Editar, ya que verificamos que 
+	 * no exista exluyendo su mismo codigo.
+	 */
+	public boolean memberClienteDocumentoEditar(Documento doc, int codCliente, String codEmp, Connection con) throws VerificandoClienteException, ConexionException{
+		
+		boolean existe = false;
+		
+		try{
+			
+			
+			Consultas consultas = new Consultas();
+			String query = consultas.getMemberClienteDocumentoEditar();
+			
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			
+			pstmt1.setInt(1, codCliente);
+			pstmt1.setString(2, codEmp);
+			pstmt1.setString(3, doc.getCodigo());
+			pstmt1.setString(4, doc.getNumero());
+			
+			ResultSet rs = pstmt1.executeQuery();
+			
+			if (rs.next ()) 
+				existe = true;
+						
+			rs.close ();
+			pstmt1.close ();
+			
+			return existe;
+			
+		}catch(SQLException e){
+			
+			throw new VerificandoClienteException();
+		}
+	}
+
 
 	/**
 	 * Inserta un cliente en la base, nos retrorna un entero que es el codigo del cliente insertado
+	 * PRECONDICION: NO EXISTE OTRO CLIENTE EN EL SISTEMA CON EL MISMO DOCUMENTO
 	 * 
 	 */
 	public int insertarCliente(Cliente cliente, String codEmp, Connection con) throws MemberClienteException, ConexionException {
@@ -236,7 +313,12 @@ public class DAOClientes implements IDAOClientes{
     	return codigo;
 	}
 	
-	
+	/**
+	 * MOdificamos cliente
+	 *  PRECONDICION: EXISTE CODIGO DE CLIENTE EN EL SISTEMA
+	 * PRECONDICION: NO EXISTE OTRO CLIENTE EN EL SISTEMA CON EL MISMO DOCUMENTO
+	 * 
+	 */
 	public void modificarCliente(Cliente cliente, String codEmp, Connection con) throws ModificandoClienteException{
 		
 		Consultas consultas = new Consultas();

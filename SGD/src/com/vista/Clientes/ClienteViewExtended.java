@@ -16,8 +16,10 @@ import com.excepciones.Impuestos.ModificandoImpuestoException;
 import com.excepciones.Impuestos.NoExisteImpuestoException;
 import com.excepciones.Impuestos.ObteniendoImpuestosException;
 import com.excepciones.clientes.ExisteClienteExeption;
+import com.excepciones.clientes.ExisteDocumentoClienteException;
 import com.excepciones.clientes.InsertandoClienteException;
 import com.excepciones.clientes.ModificandoClienteException;
+import com.excepciones.clientes.VerificandoClienteException;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.StringLengthValidator;
@@ -63,6 +65,8 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 		this.aceptar.addClickListener(click -> {
 				
 			try {
+				/*Agregamos las validaciones de los campos para luego chequearlas*/
+				this.agregarFieldsValidaciones();
 				
 				/*Validamos los campos antes de invocar al controlador*/
 				if(this.fieldsValidos())
@@ -95,7 +99,8 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 						/*Obrenemos los campos del BeanItem*/
 						clienteVO = this.obtenerDatosClienteFormulario(Variables.OPERACION_EDITAR);
 						
-						this.controlador.modificarCliente(clienteVO, this.permisos.getCodEmp());
+							this.controlador.modificarCliente(clienteVO, this.permisos.getCodEmp());
+						
 						
 						this.mainView.actulaizarGrilla(clienteVO);
 						
@@ -110,7 +115,7 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 				}
 					
 				} 
-				catch (InsertandoClienteException| ConexionException| ExisteClienteExeption| InicializandoException| ModificandoClienteException e) {
+				catch (InsertandoClienteException| ConexionException| ExisteClienteExeption| InicializandoException| ModificandoClienteException| ExisteDocumentoClienteException | VerificandoClienteException e) {
 					
 					Mensajes.mostrarMensajeError(e.getMessage());
 				}
@@ -188,7 +193,7 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 			fieldGroup.buildAndBindMemberFields(this);
 		
 		/*Seteamos las validaciones de los fields*/
-		this.agregarFieldsValidaciones();
+		//this.agregarFieldsValidaciones(); LO AGREGAMOS AL DAR ACPETAR
 		
 		/*SI LA OPERACION NO ES NUEVO, OCULTAMOS BOTON ACEPTAR*/
 		if(this.operacion.equals(Variables.OPERACION_NUEVO))
@@ -495,15 +500,15 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
         
         this.tel.addValidator(
                 new StringLengthValidator(
-                        " 20 caracteres máximo", 1, 20, false));
+                        " 20 caracteres máximo", 0, 20, false));
         
         this.direccion.addValidator(
                 new StringLengthValidator(
-                        " 100 caracteres máximo", 1, 100, false));
+                        " 100 caracteres máximo", 0, 100, false));
         
         this.mail.addValidator(
                 new StringLengthValidator(
-                        " 100 caracteres máximo", 1, 100, false));
+                        " 100 caracteres máximo", 0, 100, false));
         
         
 	}

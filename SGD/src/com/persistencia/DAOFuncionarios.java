@@ -168,9 +168,82 @@ public class DAOFuncionarios implements IDAOFuncionarios{
 			throw new ExisteFuncionarioException();
 		}
 	}
+	
+	/**
+	 * Dado el codigo del funcionario, retorna true si existe
+	 * otro funcionario con el mismo documento
+	 */
+	public boolean memberFuncionarioDocumentoNuevo(Documento doc, String codEmp, Connection con) throws ExisteFuncionarioException, ConexionException{
+		
+		boolean existe = false;
+		
+		try{
+			
+			Consultas consultas = new Consultas();
+			String query = consultas.getMemberFuncionarioDocumentoNuevo();
+			
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			
+			pstmt1.setString(1, codEmp);
+			pstmt1.setString(2, doc.getCodigo());
+			pstmt1.setString(3, doc.getNumero());
+			
+			ResultSet rs = pstmt1.executeQuery();
+			
+			if (rs.next ()) 
+				existe = true;
+						
+			rs.close ();
+			pstmt1.close ();
+			
+			return existe;
+			
+		}catch(SQLException e){
+			
+			throw new ExisteFuncionarioException();
+		}
+	}
+	
+	/**
+	 * Dado el codigo del funcionario, retorna true si existe
+	 * otro funcionario con el mismo documento
+	 */
+	public boolean memberFuncionarioDocumentoEditar(Documento doc, int codFuncionario, String codEmp, Connection con) throws ExisteFuncionarioException, ConexionException{
+		
+		boolean existe = false;
+		
+		try{
+			
+			Consultas consultas = new Consultas();
+			String query = consultas.getMemberFuncionarioDocumentoEditar();
+			
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			
+			pstmt1.setInt(1, codFuncionario);
+			pstmt1.setString(2, codEmp);
+			pstmt1.setString(3, doc.getCodigo());
+			pstmt1.setString(4, doc.getNumero());
+			
+			
+			ResultSet rs = pstmt1.executeQuery();
+			
+			if (rs.next ()) 
+				existe = true;
+						
+			rs.close ();
+			pstmt1.close ();
+			
+			return existe;
+			
+		}catch(SQLException e){
+			
+			throw new ExisteFuncionarioException();
+		}
+	}
 
 	/**
 	 * Inserta un funcionario en la base, nos retrorna un entero que es el codigo del cliente insertado
+	 *  PRECONDICION: NO EXISTE OTRO FUNCIONARIO CON EL MISMO DOCUMENTO
 	 * 
 	 */
 	public int insertarFuncionario(Funcionario funcionario, String empresa, Connection con) throws InsertendoFuncionarioException, ConexionException {

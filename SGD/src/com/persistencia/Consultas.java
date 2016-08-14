@@ -399,6 +399,27 @@ public class Consultas {
 		return sb.toString();
 	}
 	
+	/**/
+	public String getMemberClienteDocumentoNuevo()
+	{
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_tit, nom_tit ");
+		sb.append("FROM m_clientes WHERE cod_emp = ? AND cod_docdgi = ? AND nro_dgi = ?");
+
+		return sb.toString();
+	}
+	
+	/**/
+	public String getMemberClienteDocumentoEditar()
+	{
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_tit, nom_tit ");
+		sb.append("FROM m_clientes WHERE cod_tit <> ? AND cod_emp = ? AND cod_docdgi = ? AND nro_dgi = ?");
+
+		return sb.toString();
+	}
 	
 ////////////////////////FIN-CLIENTES///////////////////////////////////////////////////
 
@@ -472,6 +493,25 @@ public class Consultas {
 		return sb.toString();
 	}
 
+	public String getMemberFuncionarioDocumentoNuevo()
+	{
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_tit, nom_tit ");
+		sb.append("FROM m_funcionarios WHERE  cod_emp = ? AND cod_docdgi = ? AND nro_dgi = ? ");
+		
+		return sb.toString();
+	}
+	
+	public String getMemberFuncionarioDocumentoEditar()
+	{
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_tit, nom_tit ");
+		sb.append("FROM m_funcionarios WHERE cod_tit <> ? cod_emp = ? AND cod_docdgi = ? AND nro_dgi = ? ");
+		
+		return sb.toString();
+	}
 
 ////////////////////////FIN-FUNCIONARIOS///////////////////////////////////////////////////
 	

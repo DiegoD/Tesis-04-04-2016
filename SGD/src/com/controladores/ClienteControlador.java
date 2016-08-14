@@ -10,9 +10,11 @@ import com.excepciones.Usuarios.ExisteUsuarioException;
 import com.excepciones.Usuarios.InsertandoUsuarioException;
 import com.excepciones.Usuarios.ObteniendoUsuariosException;
 import com.excepciones.clientes.ExisteClienteExeption;
+import com.excepciones.clientes.ExisteDocumentoClienteException;
 import com.excepciones.clientes.InsertandoClienteException;
 import com.excepciones.clientes.ModificandoClienteException;
 import com.excepciones.clientes.ObteniendoClientesException;
+import com.excepciones.clientes.VerificandoClienteException;
 import com.excepciones.grupos.ObteniendoGruposException;
 import com.logica.Fachada;
 import com.valueObject.DocumDGIVO;
@@ -51,8 +53,9 @@ public class ClienteControlador {
 	 * @throws ExisteClienteExeption 
 	 * @throws ConexionException 
 	 * @throws InsertandoClienteException 
+	 * @throws ExisteDocumentoClienteException 
 	 */
-	public int insertarCliente(ClienteVO clienteVO, String empresa) throws InsertandoClienteException, ConexionException, ExisteClienteExeption, InicializandoException 
+	public int insertarCliente(ClienteVO clienteVO, String empresa) throws InsertandoClienteException, ConexionException, ExisteClienteExeption, InicializandoException, ExisteDocumentoClienteException 
 	{
 		int codigo = 0;
 		
@@ -66,8 +69,10 @@ public class ClienteControlador {
 	 * @throws InicializandoException 
 	 * @throws ModificandoClienteException 
 	 * @throws ConexionException 
+	 * @throws ExisteDocumentoClienteException 
+	 * @throws VerificandoClienteException 
 	 */
-	public void modificarCliente(ClienteVO clienteVO, String empresa) throws ConexionException, ModificandoClienteException, InicializandoException 
+	public void modificarCliente(ClienteVO clienteVO, String empresa) throws ConexionException, ModificandoClienteException, InicializandoException, VerificandoClienteException, ExisteDocumentoClienteException 
 	{
 		Fachada.getInstance().editarCliente(clienteVO, empresa);
 	}

@@ -23,9 +23,12 @@ import com.excepciones.Empresas.ExisteEmpresaException;
 import com.excepciones.Login.LoginException;
 import com.excepciones.Usuarios.ExisteUsuarioException;
 import com.excepciones.clientes.ExisteClienteExeption;
+import com.excepciones.clientes.ExisteDocumentoClienteException;
 import com.excepciones.clientes.InsertandoClienteException;
 import com.excepciones.clientes.ModificandoClienteException;
 import com.excepciones.clientes.ObteniendoClientesException;
+import com.excepciones.clientes.VerificandoClienteException;
+import com.excepciones.funcionarios.ExisteFuncionarioDocumetnoException;
 import com.excepciones.funcionarios.ExisteFuncionarioException;
 import com.excepciones.funcionarios.InsertendoFuncionarioException;
 import com.excepciones.funcionarios.ModificandoFuncionarioException;
@@ -467,7 +470,7 @@ public class Fachada {
 	    }	 
 
 	 
-	 public int insertarCliente(ClienteVO clienteVO, String codEmp) throws InsertandoClienteException, ConexionException, ExisteClienteExeption  
+	 public int insertarCliente(ClienteVO clienteVO, String codEmp) throws InsertandoClienteException, ConexionException, ExisteDocumentoClienteException  
 	    {
 	    	
 	    	Connection con = null;
@@ -481,8 +484,8 @@ public class Fachada {
 				
 		    	Cliente cliente = new Cliente(clienteVO); 
 		    	
-		    	
-		    	if(!this.clientes.memberCliente(cliente.getCodigo(), codEmp, con))
+		    	/*Verificamos que no exista un cliente con el mismo documento*/
+		    	if(!this.clientes.memberClienteDocumentoNuevo(cliente.getDocumento(), codEmp, con))
 		    	{
 		    		codigo = this.clientes.insertarCliente(cliente, codEmp, con);
 		    		
@@ -510,13 +513,13 @@ public class Fachada {
 	    		pool.liberarConeccion(con);
 	    	}
 	    	if (existe){
-	    		throw new ExisteClienteExeption();
+	    		throw new ExisteDocumentoClienteException();
 	    	}
 	    	
 	    	return codigo;
 	    }
 	 
-	 public void editarCliente(ClienteVO clienteVO, String codEmp) throws  ConexionException, ModificandoClienteException     
+	 public void editarCliente(ClienteVO clienteVO, String codEmp) throws  ConexionException, ModificandoClienteException, VerificandoClienteException, ExisteDocumentoClienteException     
 		{
 		    	
 		    	Connection con = null;
@@ -528,10 +531,17 @@ public class Fachada {
 					
 					Cliente cliente = new Cliente(clienteVO);
 			    	
+					/*Verificamos que exista el codigo del cliente*/
 			    	if(this.clientes.memberCliente(cliente.getCodigo(), codEmp, con))
 			    	{
-			    		/*Primero eliminamos el grupo*/
-			    		this.clientes.modificarCliente(cliente, codEmp, con);
+			    		/*Verificamos que otro cliente no tenga el mismo documento*/
+			    		if(!this.clientes.memberClienteDocumentoEditar(cliente.getDocumento(), cliente.getCodigo(), codEmp, con)){
+			    			/*Modificamos el cliente*/
+				    		this.clientes.modificarCliente(cliente, codEmp, con);
+			    		}
+			    		else /*Si existe otro cliente con el mismo documento retornamos exception*/
+			    			throw new ExisteDocumentoClienteException();
+			    		
 			    			    		
 			    		
 			    		con.commit();
@@ -820,7 +830,7 @@ public class Fachada {
 	*Ingresa un funcionario al sistema
 	*
 	*/	
-	public int insertarFuncionario(FuncionarioVO funcionarioVO, String codEmp) throws InsertendoFuncionarioException, ConexionException, ExisteFuncionarioException  
+	public int insertarFuncionario(FuncionarioVO funcionarioVO, String codEmp) throws InsertendoFuncionarioException, ConexionException, ExisteFuncionarioException, ExisteFuncionarioDocumetnoException  
 	{
 	
 		Connection con = null;
@@ -836,9 +846,16 @@ public class Fachada {
 			
 			if(!this.funcionarios.memberFuncionario(funcionario.getCodigo(), codEmp, con))
 			{
-				codigo = this.funcionarios.insertarFuncionario(funcionario, codEmp, con);
-			
-				con.commit();
+				/*Chequeamos que no haya un otro funcionario con el mismo documento*/
+				if(!this.funcionarios.memberFuncionarioDocumentoNuevo(funcionario.getDocumento(),codEmp, con)){
+					
+					codigo = this.funcionarios.insertarFuncionario(funcionario, codEmp, con);
+					
+					con.commit();
+				}
+				else /*Si existe otro funcionario con el documento retornamos exception*/
+					throw new ExisteFuncionarioDocumetnoException();
+						
 			}
 			else{
 				existe = true;
@@ -870,9 +887,10 @@ public class Fachada {
 	
 	/**
 	*	Modificamos un funcionario al sistema
+	 * @throws ExisteFuncionarioDocumetnoException 
 	*
 	*/	
-	public void editarFuncionario(FuncionarioVO funcionarioVO, String codEmp) throws  ConexionException, ModificandoFuncionarioException, ExisteFuncionarioException     
+	public void editarFuncionario(FuncionarioVO funcionarioVO, String codEmp) throws  ConexionException, ModificandoFuncionarioException, ExisteFuncionarioException, ExisteFuncionarioDocumetnoException     
 	{
 	
 		Connection con = null;
@@ -886,11 +904,19 @@ public class Fachada {
 			
 			if(this.funcionarios.memberFuncionario(funcionario.getCodigo(), codEmp, con))
 			{
-				/*Primero eliminamos el grupo*/
-				this.funcionarios.modificarFuncionario(funcionario, codEmp, con);
+				/*Verificamos que no exista otro funcionario con el mismo documento*/
+				if(!this.funcionarios.memberFuncionarioDocumentoEditar(funcionario.getDocumento(), funcionario.getCodigo(), codEmp, con)){
+					
+					this.funcionarios.modificarFuncionario(funcionario, codEmp, con);
+					con.commit();
+				}
+				else{ /*Si existe otro funcionario con el documento retornamos exception*/
+					
+					throw new ExisteFuncionarioDocumetnoException();
+				}
 				    		
 			
-				con.commit();
+				
 			}
 			
 			else
