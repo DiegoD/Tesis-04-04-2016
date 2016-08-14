@@ -89,7 +89,7 @@ public class LoginExtended extends Login implements ViewDisplay {
 						Mensajes.mostrarMensajeError("Usuario y contraseña no válido");
 					}
 					
-				} catch (LoginException | InicializandoException | ErrorInesperadoException | ConexionException | ObteniendoUsuariosxEmpExeption | NoSuchAlgorithmException  e) {
+				} catch (LoginException | InicializandoException | ErrorInesperadoException | ConexionException | ObteniendoUsuariosxEmpExeption  e) {
 					
 					Mensajes.mostrarMensajeError(e.getMessage());
 				}

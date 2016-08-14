@@ -9,6 +9,8 @@ import com.controladores.ClienteControlador;
 import com.controladores.ImpuestoControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.InicializandoException;
+import com.excepciones.NoTienePermisosException;
+import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Impuestos.ObteniendoImpuestosException;
 import com.excepciones.clientes.ObteniendoClientesException;
 import com.vaadin.data.util.BeanItem;
@@ -20,6 +22,7 @@ import com.vaadin.server.VaadinService;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.valueObject.ImpuestoVO;
+import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.cliente.ClienteVO;
 import com.vista.Mensajes;
 import com.vista.MySub;
@@ -180,15 +183,23 @@ public class ClientesPanelExtended extends ClientesPanel{
 
 		try {
 			
-				lstClientes = controlador.getClientesTodos(this.permisos.getCodEmp());
+			/*Inicializamos VO de permisos para el usuario, formulario y operacion
+			 * para confirmar los permisos del usuario*/
+			UsuarioPermisosVO permisoAux = 
+					new UsuarioPermisosVO(this.permisos.getCodEmp(),
+							this.permisos.getUsuario(),
+							VariablesPermisos.FORMULARIO_CLIENTES,
+							VariablesPermisos.OPERACION_LEER);
+
+			
+			lstClientes = controlador.getClientesTodos(permisoAux);
 			
 		} 
-		catch ( InicializandoException | ConexionException | ObteniendoClientesException e) {
+		catch ( InicializandoException | ConexionException | ObteniendoClientesException | ObteniendoPermisosException | NoTienePermisosException e) {
 			
 			Mensajes.mostrarMensajeError(e.getMessage());
 		}
 		
-			
 		return lstClientes;
 	}
 	

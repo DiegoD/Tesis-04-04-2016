@@ -6,6 +6,8 @@ import com.controladores.DocumentoControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
+import com.excepciones.NoTienePermisosException;
+import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Documentos.ExisteDocumentoException;
 import com.excepciones.Documentos.InsertandoDocumentoException;
 import com.excepciones.Documentos.ModificandoDocumentoException;
@@ -15,6 +17,7 @@ import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.server.VaadinService;
 import com.valueObject.DocumentoAduaneroVO;
+import com.valueObject.UsuarioPermisosVO;
 import com.vista.Mensajes;
 import com.vista.MySub;
 import com.vista.PermisosUsuario;
@@ -50,6 +53,14 @@ public class DocumentoViewExtended extends DocumentoView{
 			/*Validamos los campos antes de invocar al controlador*/
 			if(this.fieldsValidos())
 			{
+				/*Inicializamos VO de permisos para el usuario, formulario y operacion
+				 * para confirmar los permisos del usuario*/
+				UsuarioPermisosVO permisoAux = 
+						new UsuarioPermisosVO(this.permisos.getCodEmp(),
+								this.permisos.getUsuario(),
+								VariablesPermisos.FORMULARIO_DOCUMENTOS,
+								VariablesPermisos.OPERACION_NUEVO_EDITAR);
+				
 						
 				DocumentoAduaneroVO documentoVO = new DocumentoAduaneroVO();		
 				
@@ -62,7 +73,7 @@ public class DocumentoViewExtended extends DocumentoView{
 									
 				if(this.operacion.equals(Variables.OPERACION_NUEVO)) {	
 	
-					this.controlador.insertarDocumento(documentoVO);
+					this.controlador.insertarDocumento(documentoVO, permisoAux);
 					
 					this.mainView.actulaizarGrilla(documentoVO);
 					
@@ -72,7 +83,7 @@ public class DocumentoViewExtended extends DocumentoView{
 				}
 				else if(this.operacion.equals(Variables.OPERACION_EDITAR))	{
 					
-					this.controlador.actualizarDocumento(documentoVO);
+					this.controlador.actualizarDocumento(documentoVO, permisoAux);
 					
 					this.mainView.actulaizarGrilla(documentoVO);
 					
@@ -89,7 +100,7 @@ public class DocumentoViewExtended extends DocumentoView{
 			} 
 			catch (ConexionException | NoExisteDocumentoException | ModificandoDocumentoException | ExisteDocumentoException | 
 					 InicializandoException | InsertandoDocumentoException |
-					 ErrorInesperadoException e) {
+					 ErrorInesperadoException| ObteniendoPermisosException| NoTienePermisosException e) {
 				
 				Mensajes.mostrarMensajeError(e.getMessage());
 			}

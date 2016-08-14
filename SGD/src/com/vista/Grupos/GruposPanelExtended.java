@@ -11,6 +11,8 @@ import com.controladores.GrupoControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
+import com.excepciones.NoTienePermisosException;
+import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.grupos.ObteniendoFormulariosException;
 import com.excepciones.grupos.ObteniendoGruposException;
 import com.vaadin.data.util.BeanItem;
@@ -25,6 +27,7 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.valueObject.GrupoVO;
+import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.UsuarioVO;
 import com.vista.Mensajes;
 import com.vista.MySub;
@@ -40,6 +43,7 @@ public class GruposPanelExtended extends GruposPanel {
 	private ArrayList<GrupoVO> lstGrupos; /*Lista con los grupos*/
 	private BeanItemContainer<GrupoVO> container;
 	private GrupoControlador controlador;
+	PermisosUsuario permisos;
 	MySub sub = new MySub("65%", "65%");
 	
 	public GruposPanelExtended(){
@@ -48,11 +52,11 @@ public class GruposPanelExtended extends GruposPanel {
 		this.lstGrupos = new ArrayList<GrupoVO>();
 		
 		String usuario = (String)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("usuario");
-		PermisosUsuario permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
+		this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
 		
 			
         /*Verificamos que el usuario tenga permisos de lectura para mostrar la vista*/
-		boolean permisoLectura = permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GRUPO, VariablesPermisos.OPERACION_LEER);
+		boolean permisoLectura = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GRUPO, VariablesPermisos.OPERACION_LEER);
 		
 		if(permisoLectura){
         
@@ -61,7 +65,7 @@ public class GruposPanelExtended extends GruposPanel {
 				this.inicializarGrilla();
 				
 				/*Para el boton de nuevo, verificamos que tenga permisos de nuevoEditar*/
-				boolean permisoNuevoEditar = permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GRUPO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+				boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GRUPO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 				if(permisoNuevoEditar)
 				{
 				
@@ -114,13 +118,7 @@ public class GruposPanelExtended extends GruposPanel {
 		
 		
 		//Quitamos las columnas de la grilla de auditoria
-		gridview.removeColumn("fechaMod");
-		gridview.removeColumn("usuarioMod");
-		gridview.removeColumn("operacion");
-		gridview.removeColumn("activo");
-		gridview.removeColumn("lstFormularios");
-		
-		
+		this.ocultarColumnasGrilla();
 		
 		/*Agregamos los filtros a la grilla*/
 		this.filtroGrilla();
@@ -181,9 +179,18 @@ public class GruposPanelExtended extends GruposPanel {
 
 		try {
 			
-			lstGrupos = controlador.getGrupos();
+			/*Inicializamos VO de permisos para el usuario, formulario y operacion
+			 * para confirmar los permisos del usuario*/
+			UsuarioPermisosVO permisoAux = 
+					new UsuarioPermisosVO(this.permisos.getCodEmp(),
+							this.permisos.getUsuario(),
+							VariablesPermisos.FORMULARIO_GRUPO,
+							VariablesPermisos.OPERACION_LEER);
 
-		} catch (ObteniendoGruposException | InicializandoException | ConexionException | ErrorInesperadoException | ObteniendoFormulariosException e) {
+			
+			lstGrupos = controlador.getGrupos(permisoAux);
+
+		} catch (ObteniendoGruposException | InicializandoException | ConexionException | ErrorInesperadoException | ObteniendoFormulariosException | ObteniendoPermisosException | NoTienePermisosException e) {
 			
 			Mensajes.mostrarMensajeError(e.getMessage());
 		}
@@ -336,6 +343,15 @@ public class GruposPanelExtended extends GruposPanel {
 	public void mostrarMensaje(String msj)
 	{
 		Mensajes.mostrarMensajeError(msj);
+	}
+	
+	private void ocultarColumnasGrilla()
+	{
+		gridview.getColumn("fechaMod").setHidden(true);
+		gridview.getColumn("usuarioMod").setHidden(true);
+		gridview.getColumn("operacion").setHidden(true);
+		gridview.getColumn("activo").setHidden(true);
+		gridview.getColumn("lstFormularios").setHidden(true);
 	}
 	
 }

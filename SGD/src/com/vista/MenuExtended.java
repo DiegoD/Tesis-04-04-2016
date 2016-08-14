@@ -300,6 +300,7 @@ public class MenuExtended extends Menu{
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_EMPRESAS) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_CODIGOS_GENERALIZADOS) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_DOCUMENTOS) || 
+				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_DOCUMENTOS_DGI) || 
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_MONEDAS) || 
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_RUBROS))
 			{

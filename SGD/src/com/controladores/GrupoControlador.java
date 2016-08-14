@@ -8,6 +8,8 @@ import org.json.simple.JSONObject;
 import com.excepciones.ConexionException;
 import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
+import com.excepciones.NoTienePermisosException;
+import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.grupos.ExisteGrupoException;
 import com.excepciones.grupos.InsertandoGrupoException;
 import com.excepciones.grupos.MemberGrupoException;
@@ -19,6 +21,7 @@ import com.logica.Fachada;
 import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 import com.valueObject.FormularioVO;
 import com.valueObject.GrupoVO;
+import com.valueObject.UsuarioPermisosVO;
 import com.vista.Grupos.GrupoViewExtended;
 
 public class GrupoControlador {
@@ -35,24 +38,32 @@ public class GrupoControlador {
 		
 	}
 	
-	public void insertarGrupo(GrupoVO grupoVO) throws InsertandoGrupoException, MemberGrupoException, ExisteGrupoException, InicializandoException, ConexionException, ErrorInesperadoException
+	public void insertarGrupo(GrupoVO grupoVO, UsuarioPermisosVO permisos) throws InsertandoGrupoException, MemberGrupoException, ExisteGrupoException, InicializandoException, ConexionException, ErrorInesperadoException, NoTienePermisosException, ObteniendoPermisosException
 	{
-		
-		//VEr si retornamos a la vista un objeto con Error = true o false y el mensaje
-		//en vez de mandar la exception para arriba
-		Fachada.getInstance().insertarGrupo(grupoVO);
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			Fachada.getInstance().insertarGrupo(grupoVO);
+		else
+			throw new NoTienePermisosException();
 	}
 		
-	public ArrayList<GrupoVO> getGrupos() throws ObteniendoGruposException, InicializandoException, ConexionException, ErrorInesperadoException, ObteniendoFormulariosException 
+	public ArrayList<GrupoVO> getGrupos(UsuarioPermisosVO permisos) throws ObteniendoGruposException, InicializandoException, ConexionException, ErrorInesperadoException, ObteniendoFormulariosException, ObteniendoPermisosException, NoTienePermisosException 
 	{
-		
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
 			return Fachada.getInstance().getGrupos();
+		else
+			throw new NoTienePermisosException();
 	
 	}
 	
-	public void editarGrupo(GrupoVO grupoVO) throws InsertandoGrupoException, MemberGrupoException, NoExisteGrupoException, ConexionException, ErrorInesperadoException, InicializandoException, ModificandoGrupoException
+	public void editarGrupo(GrupoVO grupoVO, UsuarioPermisosVO permisos) throws InsertandoGrupoException, MemberGrupoException, NoExisteGrupoException, ConexionException, ErrorInesperadoException, InicializandoException, ModificandoGrupoException, ObteniendoPermisosException, NoTienePermisosException
 	{
-		Fachada.getInstance().editarGrupo(grupoVO);
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			Fachada.getInstance().editarGrupo(grupoVO);
+		else
+			throw new NoTienePermisosException();
 	}
 	
 	public ArrayList<FormularioVO> getFormulariosNoGrupo(String codGrupo) throws ObteniendoGruposException, ConexionException, ErrorInesperadoException, InicializandoException {

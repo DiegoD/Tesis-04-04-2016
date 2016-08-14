@@ -9,6 +9,8 @@ import com.controladores.CodigoGeneralizadoControlador;
 import com.controladores.EmpresaControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.InicializandoException;
+import com.excepciones.NoTienePermisosException;
+import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.CodigosGeneralizados.ObteniendoCodigosException;
 import com.excepciones.Empresas.ObteniendoEmpresasException;
 import com.vaadin.data.util.BeanItem;
@@ -21,6 +23,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.valueObject.CodigoGeneralizadoVO;
 import com.valueObject.EmpresaVO;
+import com.valueObject.UsuarioPermisosVO;
 import com.vista.Mensajes;
 import com.vista.MySub;
 import com.vista.PermisosUsuario;
@@ -35,6 +38,7 @@ public class CodigosGeneralizadosPanelExtended extends CodigosGeneralizadosPanel
 	private ArrayList<CodigoGeneralizadoVO> lstCodigos; /*Lista con los códigos generalizados*/
 	private BeanItemContainer<CodigoGeneralizadoVO> container;
 	private CodigoGeneralizadoControlador controlador;
+	PermisosUsuario permisos;
 	MySub sub = new MySub("65%", "65%");
 	
 	public CodigosGeneralizadosPanelExtended() {
@@ -43,10 +47,10 @@ public class CodigosGeneralizadosPanelExtended extends CodigosGeneralizadosPanel
 		this.lstCodigos = new ArrayList<CodigoGeneralizadoVO>();
 		
 		String usuario = (String)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("usuario");
-		PermisosUsuario permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
+		this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
 		
 		/*Verificamos que el usuario tenga permisos de lectura para mostrar la vista*/
-		boolean permisoLectura = permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_CODIGOS_GENERALIZADOS, VariablesPermisos.OPERACION_LEER);
+		boolean permisoLectura = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_CODIGOS_GENERALIZADOS, VariablesPermisos.OPERACION_LEER);
 		
 		if(permisoLectura){
 	        
@@ -55,7 +59,7 @@ public class CodigosGeneralizadosPanelExtended extends CodigosGeneralizadosPanel
 				this.inicializarGrilla();
 				
 				/*Para el boton de nuevo, verificamos que tenga permisos de nuevoEditar*/
-				boolean permisoNuevoEditar = permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_CODIGOS_GENERALIZADOS, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+				boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_CODIGOS_GENERALIZADOS, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 				
 				if(permisoNuevoEditar){
 				
@@ -170,10 +174,19 @@ public class CodigosGeneralizadosPanelExtended extends CodigosGeneralizadosPanel
 
 		try {
 			
-			lstCodigos = controlador.getCodigosGeneralizados();
+			/*Inicializamos VO de permisos para el usuario, formulario y operacion
+			 * para confirmar los permisos del usuario*/
+			UsuarioPermisosVO permisoAux = 
+					new UsuarioPermisosVO(this.permisos.getCodEmp(),
+							this.permisos.getUsuario(),
+							VariablesPermisos.FORMULARIO_CODIGOS_GENERALIZADOS,
+							VariablesPermisos.OPERACION_LEER);
+
+			
+			lstCodigos = controlador.getCodigosGeneralizados(permisoAux);
 			
 		} 
-		catch (ObteniendoCodigosException | InicializandoException | ConexionException e) {
+		catch (ObteniendoCodigosException | InicializandoException | ConexionException| ObteniendoPermisosException| NoTienePermisosException e) {
 			
 			Mensajes.mostrarMensajeError(e.getMessage());
 		}

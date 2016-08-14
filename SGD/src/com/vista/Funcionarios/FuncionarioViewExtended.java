@@ -9,6 +9,8 @@ import com.excepciones.ConexionException;
 import com.excepciones.InicializandoException;
 import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
+import com.excepciones.Documentos.ObteniendoDocumentosException;
+import com.excepciones.Impuestos.ObteniendoImpuestosException;
 import com.excepciones.funcionarios.ExisteFuncionarioDocumetnoException;
 import com.excepciones.funcionarios.ExisteFuncionarioException;
 import com.excepciones.funcionarios.InsertendoFuncionarioException;
@@ -80,25 +82,25 @@ public class FuncionarioViewExtended extends FuncionarioView implements IBusqued
 										
 					if(this.operacion.equals(Variables.OPERACION_NUEVO)) {	
 						
-						/*Obtenemos los datos del cliente de los fields del formulario*/
-						funcionarioVO = this.obtenerDatosClienteFormulario(Variables.OPERACION_NUEVO);
+						/*Obtenemos los datos del Funcionario de los fields del formulario*/
+						funcionarioVO = this.obtenerDatosFuncionarioFormulario(Variables.OPERACION_NUEVO);
 						
 						
 						int codigo = controlador.insertarFuncionario(funcionarioVO, permisoAux);
 						
-						/*Seteamos el nuevo codigo del cliente*/
+						/*Seteamos el nuevo codigo del funcionario*/
 						funcionarioVO.setCodigo(codigo);
 						
 						this.mainView.actulaizarGrilla(funcionarioVO);
 						
-						Mensajes.mostrarMensajeOK("Se ha guardado el Cliente");
+						Mensajes.mostrarMensajeOK("Se ha guardado el funcionario");
 						main.cerrarVentana();
 					
 					}
 					else if(this.operacion.equals(Variables.OPERACION_EDITAR))	{
 						
 						/*Obrenemos los campos del BeanItem*/
-						funcionarioVO = this.obtenerDatosClienteFormulario(Variables.OPERACION_EDITAR);
+						funcionarioVO = this.obtenerDatosFuncionarioFormulario(Variables.OPERACION_EDITAR);
 						
 					
 						this.controlador.modificarFuncionario(funcionarioVO, permisoAux);
@@ -106,7 +108,7 @@ public class FuncionarioViewExtended extends FuncionarioView implements IBusqued
 						
 						this.mainView.actulaizarGrilla(funcionarioVO);
 						
-						Mensajes.mostrarMensajeOK("Se ha modificado Cliente");
+						Mensajes.mostrarMensajeOK("Se ha modificado funcionario");
 						main.cerrarVentana();
 						
 					}
@@ -153,25 +155,23 @@ public class FuncionarioViewExtended extends FuncionarioView implements IBusqued
 				ArrayList<DocumDGIVO> lstDocumDgi = new ArrayList<DocumDGIVO>();
 				
 				try {
+					
 					lstDocumDgi = this.controlador.obtnerDocumentosDgi();
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				
 				Object obj;
 				for (DocumDGIVO i: lstDocumDgi) {
 					obj = new Object();
 					obj = (Object)i;
 					lst.add(obj);
 				}
-				try {
+					
 					form.inicializarGrilla(lst);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					
+				
+				} catch (ObteniendoDocumentosException| ObteniendoImpuestosException| ConexionException| InicializandoException e) {
+					
+					Mensajes.mostrarMensajeError(e.getMessage());
 				}
-				
-				
 				
 				sub = new MySub("60%", "60%" );
 				sub.setModal(true);
@@ -249,16 +249,16 @@ public class FuncionarioViewExtended extends FuncionarioView implements IBusqued
 	{
 		this.fieldGroup.setItemDataSource(item);
 		
-		FuncionarioVO clienteVO = new FuncionarioVO();
-		clienteVO = fieldGroup.getItemDataSource().getBean();
-		String fecha = new SimpleDateFormat("dd/MM/yyyy").format(clienteVO.getFechaMod());
+		FuncionarioVO funcionarioVO = new FuncionarioVO();
+		funcionarioVO = fieldGroup.getItemDataSource().getBean();
+		String fecha = new SimpleDateFormat("dd/MM/yyyy").format(funcionarioVO.getFechaMod());
 		
 		
 		auditoria.setDescription(
 			    "<ul>"+
-			    "  <li> Modificado por: " + clienteVO.getUsuarioMod() + "</li>"+
+			    "  <li> Modificado por: " + funcionarioVO.getUsuarioMod() + "</li>"+
 			    "  <li> Fecha: " + fecha + "</li>"+
-			    "  <li> Operación: " + clienteVO.getOperacion() + "</li>"+
+			    "  <li> Operación: " + funcionarioVO.getOperacion() + "</li>"+
 			    "</ul>");
 		
 		/*SETEAMOS LA OPERACION EN MODO LECUTA
@@ -360,11 +360,11 @@ public class FuncionarioViewExtended extends FuncionarioView implements IBusqued
 		 * solamente cuando apreta el boton editar*/
 		this.setearValidaciones(true);
 		
-		/*Ocultamos el Codigo del cliente ya que es autogenerado*/
+		/*Ocultamos el Codigo del funcionario ya que es autogenerado*/
 		this.codigo.setVisible(false);
 		this.codigo.setRequired(false); /*Lo dejamos no requerido ya que es autogenerado*/
 		
-		/*Aumentamos el tamaño del texfield del Nombre del cliente*/
+		/*Aumentamos el tamaño del texfield del Nombre del funcionario*/
 		this.nombre.setWidth("305px");
 		
 		/*Como es en operacion nuevo, dejamos todos los campos editabls*/
@@ -392,7 +392,7 @@ public class FuncionarioViewExtended extends FuncionarioView implements IBusqued
 		this.codigoDoc.setReadOnly(true);
 		this.nombreDoc.setReadOnly(true);
 		
-		/*El codigo del cliente tampodo lo dejamos editar*/
+		/*El codigo del funcionario tampodo lo dejamos editar*/
 		this.codigo.setReadOnly(true); 
 	}
 	
@@ -552,11 +552,11 @@ public class FuncionarioViewExtended extends FuncionarioView implements IBusqued
 	}
 	
 	/**
-	 * Nos retorna retorna un clienteVO
+	 * Nos retorna retorna un funcionarioVO
 	 * nuevo con todos los datos ingresados en el formulario
 	 * Le pasamos la operacion por parametro (Nuevo o Editar)
 	 */
-	private FuncionarioVO obtenerDatosClienteFormulario(String operacion)
+	private FuncionarioVO obtenerDatosFuncionarioFormulario(String operacion)
 	{
 		
 		

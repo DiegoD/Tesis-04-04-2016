@@ -7,6 +7,8 @@ import org.json.simple.JSONObject;
 import com.excepciones.ConexionException;
 import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
+import com.excepciones.NoTienePermisosException;
+import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Usuarios.ExisteUsuarioException;
 import com.excepciones.Usuarios.InsertandoUsuarioException;
 import com.excepciones.Usuarios.ObteniendoUsuariosException;
@@ -15,6 +17,7 @@ import com.logica.Fachada;
 import com.logica.FachadaDD;
 import com.valueObject.FormularioVO;
 import com.valueObject.GrupoVO;
+import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.UsuarioVO;
 
 public class UsuarioControlador {
@@ -22,26 +25,44 @@ public class UsuarioControlador {
 	
 	/**
 	 * Obtiene los usuarios existentes en base
+	 * @throws ObteniendoPermisosException 
+	 * @throws NoTienePermisosException 
 	 */
-	public ArrayList<UsuarioVO> getUsuarios() throws ObteniendoUsuariosException, InicializandoException, ClassNotFoundException, ConexionException, ErrorInesperadoException, ObteniendoGruposException 
+	public ArrayList<UsuarioVO> getUsuarios(UsuarioPermisosVO permisos) throws ObteniendoUsuariosException, InicializandoException, ClassNotFoundException, ConexionException, ErrorInesperadoException, ObteniendoGruposException, ObteniendoPermisosException, NoTienePermisosException 
 	{
-		return FachadaDD.getInstance().getUsuarios();
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			return FachadaDD.getInstance().getUsuarios();
+		else
+			throw new NoTienePermisosException();
     }
 	
 	/**
 	 * Inserta un usuario dado su VO
+	 * @throws NoTienePermisosException 
+	 * @throws ObteniendoPermisosException 
 	 */
-	public void insertarUsuario(UsuarioVO usuarioVO, String empresa) throws InsertandoUsuarioException, ConexionException, ExisteUsuarioException, InicializandoException, ErrorInesperadoException
+	public void insertarUsuario(UsuarioVO usuarioVO, UsuarioPermisosVO permisos) throws InsertandoUsuarioException, ConexionException, ExisteUsuarioException, InicializandoException, ErrorInesperadoException, ObteniendoPermisosException, NoTienePermisosException
 	{
-		FachadaDD.getInstance().insertarUsuario(usuarioVO, empresa);
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			FachadaDD.getInstance().insertarUsuario(usuarioVO, permisos.getCodEmp());
+		else
+			throw new NoTienePermisosException();
 	}
 	
 	/**
 	 * Modifica los datos de un usuario dado el VO con las modificaciones
+	 * @throws NoTienePermisosException 
+	 * @throws ObteniendoPermisosException 
 	 */
-	public void modificarUsuario(UsuarioVO usuarioVO, String empresa) throws InsertandoUsuarioException, ConexionException, ExisteUsuarioException, ErrorInesperadoException, InicializandoException
+	public void modificarUsuario(UsuarioVO usuarioVO, UsuarioPermisosVO permisos) throws InsertandoUsuarioException, ConexionException, ExisteUsuarioException, ErrorInesperadoException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException
 	{
-		FachadaDD.getInstance().modificarUsuario(usuarioVO, empresa);
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			FachadaDD.getInstance().modificarUsuario(usuarioVO, permisos.getCodEmp());
+		else
+			throw new NoTienePermisosException();
 	}
 	
 	/**

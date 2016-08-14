@@ -7,6 +7,8 @@ import com.controladores.EmpresaControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
+import com.excepciones.NoTienePermisosException;
+import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.CodigosGeneralizados.ExisteCodigoException;
 import com.excepciones.CodigosGeneralizados.InsertandoCodigoException;
 import com.excepciones.CodigosGeneralizados.ModificandoCodigoException;
@@ -21,6 +23,7 @@ import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.server.VaadinService;
 import com.valueObject.CodigoGeneralizadoVO;
 import com.valueObject.EmpresaVO;
+import com.valueObject.UsuarioPermisosVO;
 import com.vista.Mensajes;
 import com.vista.MySub;
 import com.vista.PermisosUsuario;
@@ -58,6 +61,16 @@ public class CodigoGeneralizadoViewExtended extends CodigoGeneralizadoView{
 				if(this.fieldsValidos())
 				{
 									
+					/*Inicializamos VO de permisos para el usuario, formulario y operacion
+					 * para confirmar los permisos del usuario*/
+					UsuarioPermisosVO permisoAux = 
+							new UsuarioPermisosVO(this.permisos.getCodEmp(),
+									this.permisos.getUsuario(),
+									VariablesPermisos.FORMULARIO_CODIGOS_GENERALIZADOS,
+									VariablesPermisos.OPERACION_NUEVO_EDITAR);
+
+					
+					
 					CodigoGeneralizadoVO codigoGeneralizadoVO = new CodigoGeneralizadoVO();		
 					
 					codigoGeneralizadoVO.setCodigo(codigo.getValue().trim());
@@ -69,7 +82,7 @@ public class CodigoGeneralizadoViewExtended extends CodigoGeneralizadoView{
 										
 					if(this.operacion.equals(Variables.OPERACION_NUEVO)) {	
 		
-						this.controlador.insertarCodigoGeneralizado(codigoGeneralizadoVO);
+						this.controlador.insertarCodigoGeneralizado(codigoGeneralizadoVO, permisoAux);
 						
 						this.mainView.actulaizarGrilla(codigoGeneralizadoVO);
 						
@@ -79,7 +92,7 @@ public class CodigoGeneralizadoViewExtended extends CodigoGeneralizadoView{
 					}
 					else if(this.operacion.equals(Variables.OPERACION_EDITAR))	{
 						
-						this.controlador.actualizarCodigoGeneralizado(codigoGeneralizadoVO);
+						this.controlador.actualizarCodigoGeneralizado(codigoGeneralizadoVO, permisoAux);
 						
 						this.mainView.actulaizarGrilla(codigoGeneralizadoVO);
 						
@@ -94,9 +107,9 @@ public class CodigoGeneralizadoViewExtended extends CodigoGeneralizadoView{
 				}
 				
 			} 
-			catch (ConexionException | NoExisteCodigoException | ModificandoCodigoException | ExisteCodigoException | 
-					 InicializandoException | InsertandoCodigoException |
-					 ErrorInesperadoException e) {
+			catch (ConexionException | NoExisteCodigoException | ModificandoCodigoException | 
+					ExisteCodigoException | InicializandoException | InsertandoCodigoException |
+					 ErrorInesperadoException| ObteniendoPermisosException| NoTienePermisosException e) {
 				
 				Mensajes.mostrarMensajeError(e.getMessage());
 			}

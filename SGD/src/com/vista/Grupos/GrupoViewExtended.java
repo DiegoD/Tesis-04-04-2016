@@ -15,6 +15,8 @@ import org.json.simple.JSONObject;
 import com.controladores.GrupoControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.InicializandoException;
+import com.excepciones.NoTienePermisosException;
+import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.ErrorInesperadoException;
 import com.excepciones.grupos.ExisteGrupoException;
 import com.excepciones.grupos.InsertandoGrupoException;
@@ -37,6 +39,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.valueObject.FormularioVO;
 import com.valueObject.GrupoVO;
+import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.UsuarioVO;
 import com.vista.Mensajes;
 import com.vista.MySub;
@@ -95,7 +98,15 @@ public class GrupoViewExtended extends GrupoView {
 			/*Validamos los campos antes de invocar al controlador*/
 			if(this.fieldsValidos())
 			{
-								
+				/*Inicializamos VO de permisos para el usuario, formulario y operacion
+				 * para confirmar los permisos del usuario*/
+				UsuarioPermisosVO permisoAux = 
+						new UsuarioPermisosVO(this.permisos.getCodEmp(),
+								this.permisos.getUsuario(),
+								VariablesPermisos.FORMULARIO_GRUPO,
+								VariablesPermisos.OPERACION_NUEVO_EDITAR);				
+				
+				
 				GrupoVO grupoVO = new GrupoVO();				
 				grupoVO.setCodGrupo(codGrupo.getValue().trim());
 				grupoVO.setNomGrupo(nomGrupo.getValue().trim());
@@ -123,7 +134,7 @@ public class GrupoViewExtended extends GrupoView {
 				if(this.operacion.equals(Variables.OPERACION_NUEVO))	
 				{	
 	
-					this.controlador.insertarGrupo(grupoVO);
+					this.controlador.insertarGrupo(grupoVO, permisoAux);
 					
 					this.mainView.actulaizarGrilla(grupoVO);
 					
@@ -133,7 +144,7 @@ public class GrupoViewExtended extends GrupoView {
 				}else if(this.operacion.equals(Variables.OPERACION_EDITAR))
 				{
 					/*VER DE IMPLEMENTAR PARA EDITAR BORRO TODO E INSERTO NUEVAMENTE*/
-					this.controlador.editarGrupo(grupoVO);
+					this.controlador.editarGrupo(grupoVO, permisoAux);
 					
 					this.mainView.actulaizarGrilla(grupoVO);
 					
@@ -142,20 +153,13 @@ public class GrupoViewExtended extends GrupoView {
 					
 				}
 				
-				/*Mensaje de que se han guardado los cambios 
-				 * oculatamos el boton de guardar y mostramos el de editar*/
-							
-				//this.enableBotonEditar();
-				//this.disableBotonAceptar();
-				//this.disableBotonAgregarQuitar();
-			
 			}
 			else /*Si los campos no son válidos mostramos warning*/
 			{
 				Mensajes.mostrarMensajeWarning(Variables.WARNING_CAMPOS_NO_VALIDOS);
 			}
 				
-			} catch (InsertandoGrupoException| MemberGrupoException| ExisteGrupoException| InicializandoException| ConexionException | ModificandoGrupoException | ErrorInesperadoException | NoExisteGrupoException e) {
+			} catch (InsertandoGrupoException| MemberGrupoException| ExisteGrupoException| InicializandoException| ConexionException | ModificandoGrupoException | ErrorInesperadoException | NoExisteGrupoException| NoTienePermisosException| ObteniendoPermisosException e) {
 				
 				Mensajes.mostrarMensajeError(e.getMessage());
 				

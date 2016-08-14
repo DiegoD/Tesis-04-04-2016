@@ -2,6 +2,7 @@ package com.vista.Usuarios;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.json.simple.JSONObject;
 
@@ -10,6 +11,8 @@ import com.controladores.UsuarioControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
+import com.excepciones.NoTienePermisosException;
+import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Usuarios.ExisteUsuarioException;
 import com.excepciones.Usuarios.InsertandoUsuarioException;
 import com.excepciones.grupos.ExisteGrupoException;
@@ -25,11 +28,13 @@ import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.server.VaadinService;
+import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.valueObject.FormularioVO;
 import com.valueObject.GrupoNombreVO;
 import com.valueObject.GrupoVO;
+import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.UsuarioVO;
 import com.vista.MD5;
 import com.vista.Mensajes;
@@ -79,6 +84,15 @@ public class UsuarioViewExtended extends UsuarioView{
 		this.aceptar.addClickListener(click -> {
 			try 
 			{
+				/*Inicializamos VO de permisos para el usuario, formulario y operacion
+				 * para confirmar los permisos del usuario*/
+				UsuarioPermisosVO permisoAux = 
+						new UsuarioPermisosVO(this.permisos.getCodEmp(),
+								this.permisos.getUsuario(),
+								VariablesPermisos.FORMULARIO_USUARIO,
+								VariablesPermisos.OPERACION_NUEVO_EDITAR);
+				
+				
 				MD5 md5 = new MD5(); /*Para encriptar la contrasena*/
 				
 				if(this.fieldsValidos())
@@ -106,7 +120,7 @@ public class UsuarioViewExtended extends UsuarioView{
 					
 					if(this.operacion.equals(Variables.OPERACION_NUEVO))	
 					{	
-						this.controlador.insertarUsuario(usuarioVO, empresa);
+						this.controlador.insertarUsuario(usuarioVO, permisoAux);
 						main.refreshGrilla(usuarioVO);
 						Mensajes.mostrarMensajeOK("Se ha guardado el Usuario");
 						main.cerrarVentana();
@@ -119,7 +133,7 @@ public class UsuarioViewExtended extends UsuarioView{
 							usuarioVO.setPass(pass.getValue().trim());
 						}
 						
-						this.controlador.modificarUsuario(usuarioVO, empresa);
+						this.controlador.modificarUsuario(usuarioVO, permisoAux);
 						main.refreshGrilla(usuarioVO);
 						Mensajes.mostrarMensajeOK("Se guardaron los cambios");
 						main.cerrarVentana();
@@ -131,18 +145,12 @@ public class UsuarioViewExtended extends UsuarioView{
 				}
 				
 			} 
-			catch(ExisteUsuarioException e){
-				Mensajes.mostrarMensajeError(Variables.ERROR_USUARIO_YA_EXISTE);
-			}
-  			catch (InsertandoUsuarioException| ConexionException| InicializandoException e) {
-			
+			catch (  ExisteUsuarioException | ErrorInesperadoException| InsertandoUsuarioException| ConexionException| InicializandoException| ObteniendoPermisosException | NoTienePermisosException e) {
+				
 				Mensajes.mostrarMensajeError(e.getMessage());
 			
 			}
-			catch(Exception e)
-			{
-				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
-			}
+			
 			
 			
 		});
@@ -615,12 +623,17 @@ public class UsuarioViewExtended extends UsuarioView{
 		
 		grillaGrupos.setContainerDataSource(containerGrupo);
 		this.filtroGrilla();
-		grillaGrupos.removeColumn("activo");
-		grillaGrupos.removeColumn("usuarioMod");
-		grillaGrupos.removeColumn("fechaMod");
-		grillaGrupos.removeColumn("operacion");
-		grillaGrupos.removeColumn("lstFormularios");
 		
+		/*Ocultamos columna de la grilla de grupos*/
+		this.ocultarColumnasGrillaGrupos();
+		
+		/*
+			grillaGrupos.removeColumn("activo");
+			grillaGrupos.removeColumn("usuarioMod");
+			grillaGrupos.removeColumn("fechaMod");
+			grillaGrupos.removeColumn("operacion");
+			grillaGrupos.removeColumn("lstFormularios");
+		*/
 	}
 	
 	public void agregarGruposSeleccionados(ArrayList<GrupoVO> lstGrupos)
@@ -637,8 +650,7 @@ public class UsuarioViewExtended extends UsuarioView{
 				bean = new GrupoVO();
 		        bean.setCodGrupo(grupoVO.getCodGrupo());
 				bean.setNomGrupo(grupoVO.getNomGrupo());
-		        /*Por ESTO*/
-			//	this.lstFormsVO.add(formVO);
+
 				this.lstGruposAgregar.add(grupoVO);
 		        this.containerGrupo.addBean(bean);
 				
@@ -646,6 +658,9 @@ public class UsuarioViewExtended extends UsuarioView{
 		}
 		
 		grillaGrupos.setContainerDataSource(containerGrupo);
+		
+		/*Ocultamos columna de la grilla de grupos*/
+		this.ocultarColumnasGrillaGrupos();
 	}
 	
 	public void cerrarVentana()
@@ -695,5 +710,26 @@ public class UsuarioViewExtended extends UsuarioView{
 		{
 			 System.out.println(e.getStackTrace());
 		}
+	}
+	
+	/**
+	 * Ocultamos las columnas de auditoria de la grilla de grupos
+	 */
+	private void ocultarColumnasGrillaGrupos()
+	{
+	
+		try{
+			
+			grillaGrupos.getColumn("activo").setHidden(true);
+			grillaGrupos.getColumn("usuarioMod").setHidden(true);
+			grillaGrupos.getColumn("fechaMod").setHidden(true);
+			grillaGrupos.getColumn("operacion").setHidden(true);
+			grillaGrupos.getColumn("lstFormularios").setHidden(true);
+			
+		}catch(Exception e)
+		{
+			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+		}
+		
 	}
 }

@@ -11,6 +11,8 @@ import com.controladores.UsuarioControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
+import com.excepciones.NoTienePermisosException;
+import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Usuarios.ObteniendoUsuariosException;
 import com.excepciones.grupos.ObteniendoGruposException;
 import com.vaadin.client.ui.VScrollTable.HeaderCell;
@@ -24,6 +26,7 @@ import com.vaadin.server.VaadinService;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.valueObject.GrupoVO;
+import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.UsuarioVO;
 import com.vista.Mensajes;
 import com.vista.MySub;
@@ -167,10 +170,18 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 		
 		try 
 		{
-			lstUsuarios = controlador.getUsuarios();
+			/*Inicializamos VO de permisos para el usuario, formulario y operacion
+			 * para confirmar los permisos del usuario*/
+			UsuarioPermisosVO permisoAux = 
+					new UsuarioPermisosVO(this.permisos.getCodEmp(),
+							this.permisos.getUsuario(),
+							VariablesPermisos.FORMULARIO_USUARIO,
+							VariablesPermisos.OPERACION_LEER);
+			
+			lstUsuarios = controlador.getUsuarios(permisoAux);
 
 		} 
-		catch (InicializandoException|ConexionException e) 
+		catch (InicializandoException|ConexionException | ObteniendoPermisosException | NoTienePermisosException e) 
 		{
 			Mensajes.mostrarMensajeError(e.getMessage());
 		}

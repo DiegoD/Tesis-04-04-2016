@@ -15,7 +15,7 @@ public class UsuarioPermisosVO {
 	
 	public UsuarioPermisosVO(){}
 	
-	public UsuarioPermisosVO(String emp, String form, String usu, String op){
+	public UsuarioPermisosVO(String emp, String usu, String form, String op){
 		
 		this.codEmp = emp;
 		this.formulario = form;

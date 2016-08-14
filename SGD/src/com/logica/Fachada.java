@@ -836,6 +836,7 @@ public class Fachada {
 	
 		Connection con = null;
 		boolean existe = false;
+		boolean existeDocumento = false;
 		int codigo = 0;
 		
 		try 
@@ -854,16 +855,17 @@ public class Fachada {
 					
 					con.commit();
 				}
-				else /*Si existe otro funcionario con el documento retornamos exception*/
-					throw new ExisteFuncionarioDocumetnoException();
-						
+				else {/*Si existe otro funcionario con el documento, setemos variable 
+				 		en true para retornar la exception*/
+					existeDocumento = true;
+				}		
 			}
 			else{
 				existe = true;
 			}
 		
 		
-		}catch(Exception InsertandoGrupoException)
+		}catch(Exception InsertendoFuncionarioException)
 		{
 			try {
 				con.rollback();
@@ -881,6 +883,9 @@ public class Fachada {
 		}
 		if (existe){
 			throw new ExisteFuncionarioException();
+		}else if(existeDocumento){ /*Si existe el documento en otro funcionario retornamos
+		 							exception*/
+			throw new ExisteFuncionarioDocumetnoException();
 		}
 		
 		return codigo;
@@ -915,8 +920,6 @@ public class Fachada {
 					
 					throw new ExisteFuncionarioDocumetnoException();
 				}
-				    		
-			
 				
 			}
 			

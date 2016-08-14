@@ -7,6 +7,8 @@ import com.controladores.ImpuestoControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
+import com.excepciones.NoTienePermisosException;
+import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Empresas.ExisteEmpresaException;
 import com.excepciones.Empresas.InsertandoEmpresaException;
 import com.excepciones.Empresas.ModificandoEmpresaException;
@@ -21,6 +23,7 @@ import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.server.VaadinService;
 import com.valueObject.EmpresaVO;
 import com.valueObject.ImpuestoVO;
+import com.valueObject.UsuarioPermisosVO;
 import com.vista.Mensajes;
 import com.vista.MySub;
 import com.vista.PermisosUsuario;
@@ -57,7 +60,16 @@ public class EmpresaViewExtended extends EmpresaView{
 				/*Validamos los campos antes de invocar al controlador*/
 				if(this.fieldsValidos())
 				{
-									
+					/*Inicializamos VO de permisos para el usuario, formulario y operacion
+					 * para confirmar los permisos del usuario*/
+					UsuarioPermisosVO permisoAux = 
+							new UsuarioPermisosVO(this.permisos.getCodEmp(),
+									this.permisos.getUsuario(),
+									VariablesPermisos.FORMULARIO_EMPRESAS,
+									VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		
+					
+					
 					EmpresaVO empresaVO = new EmpresaVO();		
 					
 					empresaVO.setCodEmp(codEmp.getValue().trim());
@@ -69,7 +81,7 @@ public class EmpresaViewExtended extends EmpresaView{
 										
 					if(this.operacion.equals(Variables.OPERACION_NUEVO)) {	
 		
-						this.controlador.insertarEmpresa(empresaVO);
+						this.controlador.insertarEmpresa(empresaVO, permisoAux);
 						
 						this.mainView.actulaizarGrilla(empresaVO);
 						
@@ -79,7 +91,7 @@ public class EmpresaViewExtended extends EmpresaView{
 					}
 					else if(this.operacion.equals(Variables.OPERACION_EDITAR))	{
 						
-						this.controlador.actualizarEmpresa(empresaVO);
+						this.controlador.actualizarEmpresa(empresaVO, permisoAux);
 						
 						this.mainView.actulaizarGrilla(empresaVO);
 						
@@ -94,9 +106,9 @@ public class EmpresaViewExtended extends EmpresaView{
 				}
 					
 				} 
-				catch (ConexionException | NoExisteEmpresaException | ModificandoEmpresaException | ExisteEmpresaException | 
-						 InicializandoException | InsertandoEmpresaException |
-						 ErrorInesperadoException e) {
+				catch (ConexionException | NoExisteEmpresaException | ModificandoEmpresaException | 
+						ExisteEmpresaException | InicializandoException | InsertandoEmpresaException |
+						 ErrorInesperadoException| ObteniendoPermisosException| NoTienePermisosException e) {
 					
 					Mensajes.mostrarMensajeError(e.getMessage());
 				}

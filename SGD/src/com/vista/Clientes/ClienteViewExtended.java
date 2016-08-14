@@ -9,6 +9,8 @@ import com.controladores.ImpuestoControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
+import com.excepciones.NoTienePermisosException;
+import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Documentos.ObteniendoDocumentosException;
 import com.excepciones.Impuestos.ExisteImpuestoException;
 import com.excepciones.Impuestos.InsertandoImpuestoException;
@@ -28,6 +30,7 @@ import com.vaadin.server.VaadinService;
 import com.vaadin.ui.UI;
 import com.valueObject.DocumDGIVO;
 import com.valueObject.ImpuestoVO;
+import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.cliente.ClienteVO;
 import com.vista.BusquedaViewExtended;
 import com.vista.IBusqueda;
@@ -71,11 +74,18 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 				/*Validamos los campos antes de invocar al controlador*/
 				if(this.fieldsValidos())
 				{
-									
+					/*Inicializamos VO de permisos para el usuario, formulario y operacion
+					 * para confirmar los permisos del usuario*/
+					UsuarioPermisosVO permisoAux = 
+							new UsuarioPermisosVO(this.permisos.getCodEmp(),
+									this.permisos.getUsuario(),
+									VariablesPermisos.FORMULARIO_CLIENTES,
+									VariablesPermisos.OPERACION_NUEVO_EDITAR);
+					
+					
 					ClienteVO clienteVO;
 										
 					/*Ver si hay que poner campo a campo...*/
-					
 					
 										
 					if(this.operacion.equals(Variables.OPERACION_NUEVO)) {	
@@ -83,7 +93,7 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 						/*Obtenemos los datos del cliente de los fields del formulario*/
 						clienteVO = this.obtenerDatosClienteFormulario(Variables.OPERACION_NUEVO);
 						
-						int codigo = controlador.insertarCliente(clienteVO, this.permisos.getCodEmp());
+						int codigo = controlador.insertarCliente(clienteVO, permisoAux);
 						
 						/*Seteamos el nuevo codigo del cliente*/
 						clienteVO.setCodigo(codigo);
@@ -99,7 +109,7 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 						/*Obrenemos los campos del BeanItem*/
 						clienteVO = this.obtenerDatosClienteFormulario(Variables.OPERACION_EDITAR);
 						
-							this.controlador.modificarCliente(clienteVO, this.permisos.getCodEmp());
+							this.controlador.modificarCliente(clienteVO, permisoAux);
 						
 						
 						this.mainView.actulaizarGrilla(clienteVO);
@@ -115,7 +125,7 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 				}
 					
 				} 
-				catch (InsertandoClienteException| ConexionException| ExisteClienteExeption| InicializandoException| ModificandoClienteException| ExisteDocumentoClienteException | VerificandoClienteException e) {
+				catch (InsertandoClienteException| ConexionException| ExisteClienteExeption| InicializandoException| ModificandoClienteException| ExisteDocumentoClienteException | VerificandoClienteException| ObteniendoPermisosException| NoTienePermisosException e) {
 					
 					Mensajes.mostrarMensajeError(e.getMessage());
 				}
@@ -274,12 +284,25 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 	private void iniFormLectura()
 	{
 		
+		/*Verificamos que tenga permisos para editar*/
+		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_CLIENTES, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		
+		/*Si tiene permisos de editar habilitamos el boton de 
+		 * edicion*/
+		if(permisoNuevoEditar){
+			
+			this.enableBotonesLectura();
+			
+		}else{ /*de lo contrario lo deshabilitamos*/
+			
+			this.disableBotonLectura();
+		}
+		
 		/*Deshabilitamos boton de busqueda de documento*/
 		this.disableBotonBusquedaDoc();
 		
-		/*Habilitamos el boton de editar,
-		 * deshabilitamos botn aceptar*/
-		this.enableBotonesLectura();
+		
+		/*Deshabilitamos boton de aceptar*/
 		this.disableBotonAceptar();
 		
 		/*No mostramos las validaciones*/

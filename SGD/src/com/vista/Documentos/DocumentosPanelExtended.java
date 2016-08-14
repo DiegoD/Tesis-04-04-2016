@@ -9,6 +9,8 @@ import com.controladores.DocumentoControlador;
 import com.controladores.EmpresaControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.InicializandoException;
+import com.excepciones.NoTienePermisosException;
+import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Documentos.ObteniendoDocumentosException;
 import com.excepciones.Empresas.ObteniendoEmpresasException;
 import com.vaadin.data.util.BeanItem;
@@ -21,6 +23,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.valueObject.DocumentoAduaneroVO;
 import com.valueObject.EmpresaVO;
+import com.valueObject.UsuarioPermisosVO;
 import com.vista.Mensajes;
 import com.vista.MySub;
 import com.vista.PermisosUsuario;
@@ -33,6 +36,7 @@ public class DocumentosPanelExtended extends DocumentosPanel{
 	private ArrayList<DocumentoAduaneroVO> lstDocumentos; /*Lista con los documentos*/
 	private BeanItemContainer<DocumentoAduaneroVO> container;
 	private DocumentoControlador controlador;
+	PermisosUsuario permisos;
 	MySub sub = new MySub("65%", "65%");
 	
 	public DocumentosPanelExtended(){
@@ -41,10 +45,10 @@ public class DocumentosPanelExtended extends DocumentosPanel{
 		this.lstDocumentos = new ArrayList<DocumentoAduaneroVO>();
 		
 		String usuario = (String)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("usuario");
-		PermisosUsuario permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
+		this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
 		
 		/*Verificamos que el usuario tenga permisos de lectura para mostrar la vista*/
-		boolean permisoLectura = permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_DOCUMENTOS, VariablesPermisos.OPERACION_LEER);
+		boolean permisoLectura = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_DOCUMENTOS, VariablesPermisos.OPERACION_LEER);
 		
 		if(permisoLectura){
 	        
@@ -53,7 +57,7 @@ public class DocumentosPanelExtended extends DocumentosPanel{
 				this.inicializarGrilla();
 				
 				/*Para el boton de nuevo, verificamos que tenga permisos de nuevoEditar*/
-				boolean permisoNuevoEditar = permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_DOCUMENTOS, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+				boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_DOCUMENTOS, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 				
 				if(permisoNuevoEditar){
 				
@@ -168,10 +172,20 @@ public class DocumentosPanelExtended extends DocumentosPanel{
 
 		try {
 			
-			lstDocumentos = controlador.getDocumentos();
+			/*Inicializamos VO de permisos para el usuario, formulario y operacion
+			 * para confirmar los permisos del usuario*/
+			UsuarioPermisosVO permisoAux = 
+					new UsuarioPermisosVO(this.permisos.getCodEmp(),
+							this.permisos.getUsuario(),
+							VariablesPermisos.FORMULARIO_DOCUMENTOS,
+							VariablesPermisos.OPERACION_LEER);
+
+			
+			lstDocumentos = controlador.getDocumentos(permisoAux);
 			
 		} 
-		catch (ObteniendoDocumentosException | InicializandoException | ConexionException e) {
+		catch (ObteniendoDocumentosException | InicializandoException | ConexionException|
+				ObteniendoPermisosException| NoTienePermisosException e) {
 			
 			Mensajes.mostrarMensajeError(e.getMessage());
 		}

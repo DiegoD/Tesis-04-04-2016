@@ -528,7 +528,7 @@ public class Consultas {
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("SELECT cod_tit, nom_tit ");
-		sb.append("FROM m_funcionarios WHERE cod_tit <> ? cod_emp = ? AND cod_docdgi = ? AND nro_dgi = ? ");
+		sb.append("FROM m_funcionarios WHERE cod_tit <> ? AND cod_emp = ? AND cod_docdgi = ? AND nro_dgi = ? ");
 		
 		return sb.toString();
 	}
