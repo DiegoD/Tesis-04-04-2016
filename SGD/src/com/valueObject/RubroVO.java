@@ -7,10 +7,12 @@ public class RubroVO extends Auditoria{
 	private String codRubro;
 	private String descripcion;
 	private boolean activo;
-	private String cod_impuesto;
+	private String codigoImpuesto;
 	private String descripcionImpuesto;
 	private float porcentajeImpuesto;
 	private boolean activoImpuesto;
+	private String tipoRubro;
+	private String codTipoRubro;
 	
 	public RubroVO(){
 		
@@ -18,15 +20,17 @@ public class RubroVO extends Auditoria{
 	
 
 	public RubroVO(String codRubro, String descripcion, boolean activo, String cod_impuesto, String descripcionImpuesto,
-			float porcentajeImpuesto, boolean activoImpuesto) {
+			float porcentajeImpuesto, boolean activoImpuesto, String tipoRubro) {
 		super();
 		this.codRubro = codRubro;
 		this.descripcion = descripcion;
 		this.activo = activo;
-		this.cod_impuesto = cod_impuesto;
+		this.codigoImpuesto = cod_impuesto;
 		this.descripcionImpuesto = descripcionImpuesto;
 		this.porcentajeImpuesto = porcentajeImpuesto;
 		this.activoImpuesto = activoImpuesto;
+		this.tipoRubro = tipoRubro;
+		this.codTipoRubro = tipoRubro;
 	}
 
 
@@ -44,10 +48,12 @@ public class RubroVO extends Auditoria{
 		this.codRubro = rubroVO.getcodRubro();
 		this.descripcion = rubroVO.getDescripcion();
 		this.activo = 	rubroVO.isActivo();
-		this.cod_impuesto = rubroVO.getCod_impuesto();
+		this.codigoImpuesto = rubroVO.getCodigoImpuesto();
 		this.descripcionImpuesto = rubroVO.getDescripcionImpuesto();
 		this.porcentajeImpuesto = rubroVO.getPorcentajeImpuesto();
 		this.activoImpuesto = rubroVO.isActivoImpuesto();
+		this.tipoRubro = rubroVO.getTipoRubro();
+		this.codTipoRubro = rubroVO.getCodTipoRubro();
 		
 	}
 
@@ -82,13 +88,13 @@ public class RubroVO extends Auditoria{
 	}
 
 
-	public String getCod_impuesto() {
-		return cod_impuesto;
+	public String getCodigoImpuesto() {
+		return codigoImpuesto;
 	}
 
 
-	public void setCod_impuesto(String cod_impuesto) {
-		this.cod_impuesto = cod_impuesto;
+	public void setCodigoImpuesto(String cod_impuesto) {
+		this.codigoImpuesto = cod_impuesto;
 	}
 
 
@@ -119,6 +125,35 @@ public class RubroVO extends Auditoria{
 
 	public void setActivoImpuesto(boolean activoImpuesto) {
 		this.activoImpuesto = activoImpuesto;
+	}
+	
+	public String getCodRubro() {
+		return codRubro;
+	}
+
+
+	public void setCodRubro(String codRubro) {
+		this.codRubro = codRubro;
+	}
+
+
+	public String getTipoRubro() {
+		return tipoRubro;
+	}
+
+
+	public void setTipoRubro(String tipoRubro) {
+		this.tipoRubro = tipoRubro;
+	}
+
+
+	public String getCodTipoRubro() {
+		return codTipoRubro;
+	}
+
+
+	public void setCodTipoRubro(String codTipoRubro) {
+		this.codTipoRubro = codTipoRubro;
 	}
 	
 	

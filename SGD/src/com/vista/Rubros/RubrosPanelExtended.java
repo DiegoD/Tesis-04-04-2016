@@ -123,6 +123,9 @@ public class RubrosPanelExtended extends RubrosPanel{
 		gridRubros.removeColumn("usuarioMod");
 		gridRubros.removeColumn("operacion");
 		gridRubros.removeColumn("activoImpuesto");
+		gridRubros.removeColumn("tipoRubro");
+		gridRubros.removeColumn("codigoImpuesto");
+		gridRubros.removeColumn("codTipoRubro");
 		
 		/*Agregamos los filtros a la grilla*/
 		this.filtroGrilla();

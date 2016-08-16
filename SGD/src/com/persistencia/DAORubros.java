@@ -55,6 +55,9 @@ public class DAORubros implements IDAORubros{
 				rubro.setUsuarioMod(rs.getString(5));
 				rubro.setOperacion(rs.getString(6));
 				codImpuesto = rs.getString(7);
+				rubro.setTipo_rubro(rs.getString(8));
+				rubro.setCod_tipo_rubro(rs.getString(9));
+				
 				
 				pstmt2.setString(1, codImpuesto);
 				
@@ -112,6 +115,8 @@ public class DAORubros implements IDAORubros{
 			pstmt1.setString(4, rubro.getUsuarioMod());
 			pstmt1.setString(5, rubro.getOperacion());
 			pstmt1.setString(6, rubro.getImpuesto().getCod_imp());
+			pstmt1.setString(7,  rubro.getTipo_rubro());
+			pstmt1.setString(8, rubro.getCod_tipo_rubro());
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
 			
@@ -176,7 +181,10 @@ public class DAORubros implements IDAORubros{
 			pstmt1.setString(3, rubro.getUsuarioMod());
 			pstmt1.setString(4, rubro.getOperacion());
 			pstmt1.setString(5, rubro.getImpuesto().getCod_imp());
-			pstmt1.setString(6, rubro.getCod_rubro());
+			pstmt1.setString(6, rubro.getTipo_rubro());
+			pstmt1.setString(7, rubro.getCod_tipo_rubro());
+			pstmt1.setString(8, rubro.getCod_rubro());
+			
 			
 			
 			pstmt1.executeUpdate ();

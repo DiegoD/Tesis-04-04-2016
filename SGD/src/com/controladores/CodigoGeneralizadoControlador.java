@@ -44,6 +44,14 @@ public class CodigoGeneralizadoControlador {
 	}
 	
 	/**
+	 * Obtiene array list de VO de todos los códigos generalizados dado un código
+	 */
+	public ArrayList<CodigoGeneralizadoVO> getCodigosGeneralizadosxCodigo(String codigo) throws ObteniendoCodigosException, ConexionException, InicializandoException {
+		
+			return FachadaDD.getInstance().getCodigosGeneralizadosxCodigo(codigo);
+	}
+	
+	/**
 	 * Inserta un nuevo codigo generalizado
 	 * @throws NoTienePermisosException 
 	 * @throws ObteniendoPermisosException 

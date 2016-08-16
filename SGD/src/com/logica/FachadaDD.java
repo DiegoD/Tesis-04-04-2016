@@ -771,9 +771,11 @@ public class FachadaDD {
     			aux.setFechaMod(rubro.getFechaMod());
     			aux.setOperacion(rubro.getOperacion());
     			aux.setUsuarioMod(rubro.getUsuarioMod());
-    			aux.setCod_impuesto(rubro.getImpuesto().getCod_imp());
+    			aux.setCodigoImpuesto(rubro.getImpuesto().getCod_imp());
     			aux.setDescripcionImpuesto(rubro.getImpuesto().getDescripcion());
     			aux.setPorcentajeImpuesto(rubro.getImpuesto().getPorcentaje());
+    			aux.setTipoRubro(rubro.getTipo_rubro());
+    			aux.setCodTipoRubro(rubro.getCod_tipo_rubro());
     			
     			lstRubrosVO.add(aux);
 			}
@@ -1086,6 +1088,57 @@ public class FachadaDD {
 		return lstCodigosVO;
 	}
 
+	/**
+	* Obtiene todos los códigos generalizados para un código dado
+	*/
+	@SuppressWarnings("unchecked")
+	public ArrayList<CodigoGeneralizadoVO> getCodigosGeneralizadosxCodigo(String codigo) throws ObteniendoCodigosException, ConexionException
+	{
+	
+		Connection con = null;
+		
+		ArrayList<CodigoGeneralizado> lstCodigos;
+		ArrayList<CodigoGeneralizadoVO> lstCodigosVO = new ArrayList<CodigoGeneralizadoVO>();
+		
+		try
+		{
+			con = this.pool.obtenerConeccion();
+			
+			lstCodigos = this.codigosGeneralizados.getCodigosGeneralizadosxCodigo(codigo, con);
+			
+			
+			CodigoGeneralizadoVO aux;
+			for (CodigoGeneralizado codigoGeneralizado : lstCodigos) 
+			{
+				aux = new CodigoGeneralizadoVO();
+				
+				aux.setCodigo(codigoGeneralizado.getCodigo());
+				aux.setValor(codigoGeneralizado.getValor());
+				aux.setDescripcion(codigoGeneralizado.getDescripcion());
+				aux.setFechaMod(codigoGeneralizado.getFechaMod());
+				aux.setOperacion(codigoGeneralizado.getOperacion());
+				aux.setUsuarioMod(codigoGeneralizado.getUsuarioMod());
+				
+				lstCodigosVO.add(aux);
+			}
+		
+		}
+		catch(ObteniendoCodigosException e){
+			throw e;
+		
+		} 
+		catch (ConexionException e) {
+		
+			throw e;
+		} 
+		finally	{
+			this.pool.liberarConeccion(con);
+		}
+		
+		
+		return lstCodigosVO;
+	}
+	
 	/**
 	* Inserta un nuevo codigo generalizado en la base
 	* @throws ExisteEmpresaException 

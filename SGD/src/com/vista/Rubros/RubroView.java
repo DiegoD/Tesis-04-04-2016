@@ -24,8 +24,12 @@ public class RubroView extends FormLayout {
 	protected Link auditoria;
 	protected TextField codRubro;
 	protected TextField descripcion;
+	protected TextField codigoImpuesto;
 	protected TextField descripcionImpuesto;
-	protected Button impuesto;
+	protected Button btnBuscarImpuesto;
+	protected TextField codTipoRubro;
+	protected TextField tipoRubro;
+	protected Button btnBuscarTipoRubro;
 	protected CheckBox activo;
 	protected Button aceptar;
 	protected Button btnEditar;

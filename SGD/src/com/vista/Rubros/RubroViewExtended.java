@@ -3,6 +3,7 @@ package com.vista.Rubros;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+import com.controladores.CodigoGeneralizadoControlador;
 import com.controladores.EmpresaControlador;
 import com.controladores.ImpuestoControlador;
 import com.controladores.RubroControlador;
@@ -24,6 +25,7 @@ import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.UI;
+import com.valueObject.CodigoGeneralizadoVO;
 import com.valueObject.EmpLoginVO;
 import com.valueObject.EmpresaVO;
 import com.valueObject.ImpuestoVO;
@@ -45,6 +47,7 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 	private BeanFieldGroup<RubroVO> fieldGroup;
 	private RubroControlador controlador;
 	private ImpuestoControlador controladorImpuestos;
+	private CodigoGeneralizadoControlador controladorTipoRubro;
 	private String operacion;
 	private RubrosPanelExtended mainView;
 	private BeanItemContainer<ImpuestoVO> containerImpuestos;
@@ -52,6 +55,7 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 	private PermisosUsuario permisos;
 	ArrayList<ImpuestoVO> lstImpuestos = new ArrayList<ImpuestoVO>();
 	private String codigoImp;
+	private float porcentajeImpuesto;
 	
 	
 	/**
@@ -87,7 +91,11 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 					rubroVO.setActivo(activo.getValue());
 					rubroVO.setUsuarioMod(this.permisos.getUsuario());
 					rubroVO.setOperacion(operacion);
-					rubroVO.setCod_impuesto(codigoImp);
+					rubroVO.setCodigoImpuesto(codigoImpuesto.getValue());
+					rubroVO.setDescripcionImpuesto(descripcionImpuesto.getValue().trim());
+					rubroVO.setPorcentajeImpuesto(porcentajeImpuesto);
+					rubroVO.setTipoRubro(tipoRubro.getValue().trim());
+					rubroVO.setCodTipoRubro(codTipoRubro.getValue().trim());
 					
 										
 					if(this.operacion.equals(Variables.OPERACION_NUEVO)) {	
@@ -138,9 +146,7 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 			}
 		});
 			
-		this.impuesto.addClickListener(click -> {
-			
-			//ImpuestosHelpExtended form = new ImpuestosHelpExtended(this);
+		this.btnBuscarImpuesto.addClickListener(click -> {
 			
 			BusquedaViewExtended form = new BusquedaViewExtended(this, new ImpuestoVO());
 			ArrayList<Object> lst = new ArrayList<Object>();
@@ -167,7 +173,44 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 			
 			
 			
-			sub = new MySub("60%", "60%" );
+			sub = new MySub("65%", "65%" );
+			sub.setModal(true);
+			sub.center();
+			sub.setModal(true);
+			sub.setVista(form);
+			sub.center();
+			sub.setDraggable(true);
+			UI.getCurrent().addWindow(sub);
+			
+		});
+		
+		this.btnBuscarTipoRubro.addClickListener(click -> {
+			BusquedaViewExtended form = new BusquedaViewExtended(this, new CodigoGeneralizadoVO());
+			ArrayList<Object> lst = new ArrayList<Object>();
+			ArrayList<CodigoGeneralizadoVO> lstTipoRubro = new ArrayList<CodigoGeneralizadoVO>();
+			controladorTipoRubro = new CodigoGeneralizadoControlador();
+			try {
+				lstTipoRubro = this.controladorTipoRubro.getCodigosGeneralizadosxCodigo("tipo_rubro");
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			Object obj;
+			for (CodigoGeneralizadoVO i: lstTipoRubro) {
+				obj = new Object();
+				obj = (Object)i;
+				lst.add(obj);
+			}
+			try {
+				form.inicializarGrilla(lst);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			
+			
+			sub = new MySub("65%", "65%" );
 			sub.setModal(true);
 			sub.center();
 			sub.setModal(true);
@@ -238,7 +281,7 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 		RubroVO rubro = new RubroVO();
 		rubro = fieldGroup.getItemDataSource().getBean();
 		String fecha = new SimpleDateFormat("dd/MM/yyyy").format(rubro.getFechaMod());
-		this.codigoImp = rubro.getCod_impuesto();
+		//this.codigoImp = rubro.getCod_impuesto();
 		
 		auditoria.setDescription(
 			    "<ul>"+
@@ -270,6 +313,8 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 		
 		/*Dejamos todods los campos readonly*/
 		this.readOnlyFields(true);
+		
+		
 		
 	}
 	
@@ -346,6 +391,12 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 	{
 		this.descripcion.setReadOnly(false);
 		this.activo.setReadOnly(false);
+		this.descripcionImpuesto.setReadOnly(false);
+		this.tipoRubro.setReadOnly(false);
+		this.codigoImpuesto.setReadOnly(false);
+		this.descripcionImpuesto.setEnabled(false);
+		this.codigoImpuesto.setEnabled(false);
+		this.tipoRubro.setEnabled(false);
 	}
 	
 	
@@ -378,6 +429,10 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 	{
 		this.aceptar.setEnabled(false);
 		this.aceptar.setVisible(false);
+		this.btnBuscarImpuesto.setEnabled(false);
+		this.btnBuscarImpuesto.setVisible(false);
+		this.btnBuscarTipoRubro.setEnabled(false);
+		this.btnBuscarTipoRubro.setVisible(false);
 	}
 	
 	/**
@@ -388,7 +443,10 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 	{
 		this.aceptar.setEnabled(true);
 		this.aceptar.setVisible(true);
-		
+		this.btnBuscarImpuesto.setEnabled(true);
+		this.btnBuscarImpuesto.setVisible(true);
+		this.btnBuscarTipoRubro.setEnabled(true);
+		this.btnBuscarTipoRubro.setVisible(true);
 	}
 	
 	/**
@@ -401,7 +459,9 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 		this.codRubro.setReadOnly(setear);
 		this.descripcion.setReadOnly(setear);
 		this.activo.setReadOnly(setear);
-				
+		this.descripcionImpuesto.setReadOnly(setear);	
+		this.tipoRubro.setReadOnly(setear);
+		this.codigoImpuesto.setReadOnly(setear);
 	}
 	
 	/**
@@ -430,14 +490,28 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 	private boolean fieldsValidos()
 	{
 		boolean valido = false;
+		controladorImpuestos = new ImpuestoControlador();
 		
 		try
 		{
 			if(this.codRubro.isValid() && this.descripcion.isValid() )
 				valido = true;
 			
-		}catch(Exception e)
-		{
+			if(valido){
+				valido = false;
+				if(this.lstImpuestos.size() == 0)
+					this.lstImpuestos = this.controladorImpuestos.getImpuestos();
+				
+				for (ImpuestoVO i: lstImpuestos) {
+					System.out.println(this.descripcionImpuesto.getValue().trim());
+					if(i.getDescripcion().equals(this.descripcionImpuesto.getValue().trim())){
+						valido = true;
+					}
+				}
+			}
+			
+		}
+		catch(Exception e){
 			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 		}
 		
@@ -451,7 +525,7 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 	 */
 	private ArrayList<ImpuestoVO> getImpuestos() throws Exception  {
 		
-		ArrayList<ImpuestoVO> lstImpuestos = new ArrayList<ImpuestoVO>();
+		this.lstImpuestos = new ArrayList<ImpuestoVO>();
 
 		try {
 			
@@ -469,7 +543,7 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 	
 	public void setImpuesto(ImpuestoVO impuesto){
 		this.descripcionImpuesto.setValue(impuesto.getDescripcion());
-		this.codigoImp = impuesto.getcodImpuesto();
+		this.codigoImpuesto.setValue(impuesto.getcodImpuesto());
 	}
 	
 	public void cerrarVentana()
@@ -483,7 +557,15 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 		if(datos instanceof ImpuestoVO){
 			ImpuestoVO impuestoVO = (ImpuestoVO) datos;
 			this.descripcionImpuesto.setValue(impuestoVO.getDescripcion());
-			this.codigoImp = impuestoVO.getcodImpuesto();
+			this.codigoImpuesto.setValue(impuestoVO.getcodImpuesto());
+			this.porcentajeImpuesto = impuestoVO.getPorcentaje();
+			
+		}
+		
+		if(datos instanceof CodigoGeneralizadoVO){
+			CodigoGeneralizadoVO tipoRubro = (CodigoGeneralizadoVO) datos;
+			this.tipoRubro.setValue(tipoRubro.getValor());
+			this.codTipoRubro.setValue(tipoRubro.getCodigo());
 		}
 		
 		

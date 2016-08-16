@@ -15,6 +15,7 @@ import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.TextField;
+import com.valueObject.CodigoGeneralizadoVO;
 import com.valueObject.DocumDGIVO;
 import com.valueObject.ImpuestoVO;
 import com.vista.Rubros.RubroViewExtended;
@@ -24,6 +25,7 @@ public class BusquedaViewExtended extends BusquedaView{
 	private ArrayList<Object> lst;
 	BeanItemContainer<ImpuestoVO> containerImpuesto;
 	BeanItemContainer<DocumDGIVO> containerDocumentosDgi;
+	BeanItemContainer<CodigoGeneralizadoVO> containerCodigoGeneralizado;
 	Object seleccionado;
 	IBusqueda main;
 	
@@ -35,11 +37,18 @@ public class BusquedaViewExtended extends BusquedaView{
 			this.lblNombre.setValue("Impuestos");
 			this.seleccionado = new ImpuestoVO();
 			
-		}else if(obj instanceof DocumDGIVO){
+		}
+		else if(obj instanceof DocumDGIVO){
 			
 			this.containerDocumentosDgi = new BeanItemContainer<DocumDGIVO>(DocumDGIVO.class);
 			this.lblNombre.setValue("Documentos");
 			this.seleccionado = new DocumDGIVO();
+		}
+		else if(obj instanceof CodigoGeneralizadoVO){
+	
+			this.containerCodigoGeneralizado = new BeanItemContainer<CodigoGeneralizadoVO>(CodigoGeneralizadoVO.class);
+			this.lblNombre.setValue("Tipo Rubro");
+			this.seleccionado = new CodigoGeneralizadoVO();
 		}
 		
 		grid.addSelectionListener(new SelectionListener() 
@@ -59,7 +68,8 @@ public class BusquedaViewExtended extends BusquedaView{
 					    	main.setInfo(seleccionado);	
 					    	main.cerrarVentana();
 					    }
-		    		} else if(seleccionado instanceof DocumDGIVO){
+		    		} 
+		    		else if(seleccionado instanceof DocumDGIVO){
 			    		if(grid.getSelectedRow() != null){
 			    			
 			    			BeanItem<DocumDGIVO> item = containerDocumentosDgi.getItem(grid.getSelectedRow());
@@ -69,6 +79,15 @@ public class BusquedaViewExtended extends BusquedaView{
 					    }
 		    		}
 		    		
+		    		else if(seleccionado instanceof CodigoGeneralizadoVO){
+			    		if(grid.getSelectedRow() != null){
+			    			
+			    			BeanItem<CodigoGeneralizadoVO> item = containerCodigoGeneralizado.getItem(grid.getSelectedRow());
+					    	seleccionado = item.getBean(); 
+					    	main.setInfo(seleccionado);	
+					    	main.cerrarVentana();
+					    }
+		    		}
 		    		
 		    		
 		    		
@@ -120,6 +139,29 @@ public class BusquedaViewExtended extends BusquedaView{
 			this.grid.setContainerDataSource(containerDocumentosDgi);
 			
 			grid.removeColumn("activo");
+			grid.removeColumn("fechaMod");
+			grid.removeColumn("usuarioMod");
+			grid.removeColumn("operacion");
+			
+		
+			this.arreglarGrilla();
+			
+		}
+		
+		if(seleccionado instanceof CodigoGeneralizadoVO){
+			
+			ArrayList<CodigoGeneralizadoVO> lstDoc = new ArrayList<>();
+			
+			CodigoGeneralizadoVO i;
+			for (Object o : lst) {
+				
+				i = (CodigoGeneralizadoVO) o;
+				lstDoc.add(i);
+			}
+			
+			this.containerCodigoGeneralizado.addAll(lstDoc);
+			this.grid.setContainerDataSource(containerCodigoGeneralizado);
+			
 			grid.removeColumn("fechaMod");
 			grid.removeColumn("usuarioMod");
 			grid.removeColumn("operacion");
@@ -182,7 +224,8 @@ public class BusquedaViewExtended extends BusquedaView{
 					                new SimpleStringFilter(pid,
 					                    change.getText(), true, false));
 					        
-				    	}else if(seleccionado instanceof DocumDGIVO) /*PARA DOCUMENTOS GDI*/
+				    	}
+				    	else if(seleccionado instanceof DocumDGIVO) /*PARA DOCUMENTOS GDI*/
 				    	{
 					    	// Can't modify filters so need to replace
 					    	this.containerDocumentosDgi.removeContainerFilters(pid);
@@ -190,6 +233,18 @@ public class BusquedaViewExtended extends BusquedaView{
 					        // (Re)create the filter if necessary
 					        if (! change.getText().isEmpty())
 					        	this.containerDocumentosDgi.addContainerFilter(
+					                new SimpleStringFilter(pid,
+					                    change.getText(), true, false));
+				    	}
+				    	
+				    	else if(seleccionado instanceof CodigoGeneralizadoVO) /*PARA DOCUMENTOS GDI*/
+				    	{
+					    	// Can't modify filters so need to replace
+					    	this.containerCodigoGeneralizado.removeContainerFilters(pid);
+			
+					        // (Re)create the filter if necessary
+					        if (! change.getText().isEmpty())
+					        	this.containerCodigoGeneralizado.addContainerFilter(
 					                new SimpleStringFilter(pid,
 					                    change.getText(), true, false));
 				    	}

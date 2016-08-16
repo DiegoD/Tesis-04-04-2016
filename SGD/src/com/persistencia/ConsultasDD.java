@@ -419,19 +419,20 @@ public class ConsultasDD {
 	
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("SELECT cod_rubro, descripcion, activo, fecha_mod, usuario_mod, operacion, cod_impuesto ");
+		sb.append("SELECT cod_rubro, descripcion, activo, fecha_mod, usuario_mod, operacion, cod_impuesto, tipo_rubro, cod_tipo_rubro ");
 		sb.append("FROM m_rubros ");
 		
 		return sb.toString();
 	}
 
+	
 	public String insertarRubro()
 	{
 	
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("INSERT INTO vaadin.m_rubros (cod_rubro, descripcion, activo, fecha_mod, usuario_mod, operacion, cod_impuesto )");
-		sb.append("VALUES (?, ?, ?, NOW(), ?, ?, ? ) ");
+		sb.append("INSERT INTO vaadin.m_rubros (cod_rubro, descripcion, activo, fecha_mod, usuario_mod, operacion, cod_impuesto, tipo_rubro, cod_tipo_rubro )");
+		sb.append("VALUES (?, ?, ?, NOW(), ?, ?, ?, ?, ? ) ");
 		
 		return sb.toString();
 	
@@ -458,7 +459,9 @@ public class ConsultasDD {
 		sb.append("fecha_mod = NOW(), ");
 		sb.append("usuario_mod = ?, ");
 		sb.append("operacion = ?, ");
-		sb.append("cod_impuesto = ? ");
+		sb.append("cod_impuesto = ?, ");
+		sb.append("tipo_rubro = ?, ");
+		sb.append("cod_tipo_rubro = ? ");
 		sb.append("WHERE cod_rubro = ? ");
 		
 		return sb.toString();
