@@ -21,7 +21,6 @@ import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.filter.SimpleStringFilter;
-import com.vaadin.data.validator.DoubleValidator;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.TextField;
@@ -69,7 +68,7 @@ public class ImpuestoViewExtended extends ImpuestoView{
 					
 					impuestoVO.setcodImpuesto(codImpuesto.getValue().trim());
 					impuestoVO.setDescripcion(descripcion.getValue().trim());
-					impuestoVO.setPorcentaje(Float.valueOf(porcentaje.getValue()));
+					impuestoVO.setPorcentaje(Float.parseFloat(porcentaje.getValue()));
 					impuestoVO.setActivo(activo.getValue());
 					impuestoVO.setUsuarioMod(this.permisos.getUsuario());
 					impuestoVO.setOperacion(operacion);
@@ -372,10 +371,6 @@ public class ImpuestoViewExtended extends ImpuestoView{
         this.descripcion.addValidator(
                 new StringLengthValidator(
                         " 255 caracteres máximo", 1, 255, false));
-        
-        float m =0; float mm = 100;
-        this.porcentaje.addValidator(new DoubleValidator("no valido paap"));
-        
 	}
 	
 	/**
@@ -390,17 +385,37 @@ public class ImpuestoViewExtended extends ImpuestoView{
 		
 		try
 		{
-			if(this.codImpuesto.isValid() && this.descripcion.isValid() && this.porcentaje.isValid())
+			if(this.codImpuesto.isValid() && this.descripcion.isValid() && this.porcentaje.isValid() && this.validarPorcentaje())
 				valido = true;
 			
 		}catch(Exception e)
 		{
-			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			Mensajes.mostrarMensajeError(Variables.WARNING_CAMPOS_NO_VALIDOS);
 		}
+		
+		
 		
 		return valido;
 	}
 	
+	private boolean validarPorcentaje(){
+		
+		boolean ok = true;
+		
+		float aux = 0;
+		
+		String s = this.porcentaje.getValue().replace(",", ".");
+		
+		try{
+		aux = Float.parseFloat(s);
+		this.porcentaje.setValue(s);
+				
+		}catch(Exception e){
+			ok = false;
+		}
+		
+		return ok;
+	}
 	
 	
 	
