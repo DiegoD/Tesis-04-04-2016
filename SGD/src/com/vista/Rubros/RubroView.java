@@ -27,6 +27,7 @@ public class RubroView extends FormLayout {
 	protected TextField codigoImpuesto;
 	protected TextField descripcionImpuesto;
 	protected Button btnBuscarImpuesto;
+	protected TextField porcentajeImpuesto;
 	protected TextField codTipoRubro;
 	protected TextField tipoRubro;
 	protected Button btnBuscarTipoRubro;

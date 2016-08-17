@@ -55,7 +55,6 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 	private PermisosUsuario permisos;
 	ArrayList<ImpuestoVO> lstImpuestos = new ArrayList<ImpuestoVO>();
 	private String codigoImp;
-	private float porcentajeImpuesto;
 	
 	
 	/**
@@ -93,7 +92,7 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 					rubroVO.setOperacion(operacion);
 					rubroVO.setCodigoImpuesto(codigoImpuesto.getValue());
 					rubroVO.setDescripcionImpuesto(descripcionImpuesto.getValue().trim());
-					rubroVO.setPorcentajeImpuesto(porcentajeImpuesto);
+					rubroVO.setPorcentajeImpuesto(Float.parseFloat(porcentajeImpuesto.getValue()));
 					rubroVO.setTipoRubro(tipoRubro.getValue().trim());
 					rubroVO.setCodTipoRubro(codTipoRubro.getValue().trim());
 					
@@ -558,8 +557,9 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 			ImpuestoVO impuestoVO = (ImpuestoVO) datos;
 			this.descripcionImpuesto.setValue(impuestoVO.getDescripcion());
 			this.codigoImpuesto.setValue(impuestoVO.getcodImpuesto());
-			this.porcentajeImpuesto = impuestoVO.getPorcentaje();
-			
+			//this.porcentajeImpuesto.setValue(Float.toString(impuestoVO.getPorcentaje()));
+			//this.porcentajeImpuesto.setValue(String.valueOf(impuestoVO.getPorcentaje()));
+			this.porcentajeImpuesto.setValue(String.format("%.2f",impuestoVO.getPorcentaje()));
 		}
 		
 		if(datos instanceof CodigoGeneralizadoVO){

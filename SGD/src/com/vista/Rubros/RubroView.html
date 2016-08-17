@@ -18,12 +18,13 @@
      <vaadin-horizontal-layout caption="Impuesto" spacing> 
       <vaadin-text-field immediate width="108px" _id="codigoImpuesto" :middle></vaadin-text-field> 
       <vaadin-text-field _id="descripcionImpuesto"></vaadin-text-field> 
-      <vaadin-button icon="fonticon://FontAwesome/f002" primary-style-name="valo-menu-item" _id="btnBuscarImpuesto"></vaadin-button> 
+      <vaadin-button icon="fonticon://FontAwesome/f002" style-name="icon-only borderless quiet" _id="btnBuscarImpuesto"></vaadin-button> 
+      <vaadin-text-field visible="false" _id="porcentajeImpuesto"></vaadin-text-field> 
      </vaadin-horizontal-layout> 
      <vaadin-horizontal-layout caption="Tipo" spacing> 
       <vaadin-text-field visible="false" immediate width="108px" _id="codTipoRubro"></vaadin-text-field> 
       <vaadin-text-field width="305px" _id="tipoRubro"></vaadin-text-field> 
-      <vaadin-button icon="fonticon://FontAwesome/f002" primary-style-name="valo-menu-item" _id="btnBuscarTipoRubro"></vaadin-button> 
+      <vaadin-button icon="fonticon://FontAwesome/f002" style-name="icon-only borderless quiet" _id="btnBuscarTipoRubro"></vaadin-button> 
      </vaadin-horizontal-layout> 
      <vaadin-check-box caption="Activo" id="activo" responsive _id="activo"></vaadin-check-box> 
      <vaadin-horizontal-layout width="187px"> 
