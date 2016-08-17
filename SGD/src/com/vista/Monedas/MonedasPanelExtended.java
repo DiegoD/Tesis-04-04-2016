@@ -45,7 +45,7 @@ public class MonedasPanelExtended extends MonedasPanel{
 		PermisosUsuario permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
 		
 		/*Verificamos que el usuario tenga permisos de lectura para mostrar la vista*/
-		boolean permisoLectura = permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_EMPRESAS, VariablesPermisos.OPERACION_LEER);
+		boolean permisoLectura = permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_MONEDAS, VariablesPermisos.OPERACION_LEER);
 		
 		if(permisoLectura){
 	        
@@ -54,7 +54,7 @@ public class MonedasPanelExtended extends MonedasPanel{
 				this.inicializarGrilla();
 				
 				/*Para el boton de nuevo, verificamos que tenga permisos de nuevoEditar*/
-				boolean permisoNuevoEditar = permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_EMPRESAS, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+				boolean permisoNuevoEditar = permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_MONEDAS, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 				
 				if(permisoNuevoEditar){
 				

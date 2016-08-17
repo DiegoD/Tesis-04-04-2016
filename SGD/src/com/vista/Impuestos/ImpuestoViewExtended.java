@@ -21,7 +21,9 @@ import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.filter.SimpleStringFilter;
+import com.vaadin.data.validator.DoubleValidator;
 import com.vaadin.data.validator.StringLengthValidator;
+import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
@@ -68,7 +70,9 @@ public class ImpuestoViewExtended extends ImpuestoView{
 					
 					impuestoVO.setcodImpuesto(codImpuesto.getValue().trim());
 					impuestoVO.setDescripcion(descripcion.getValue().trim());
-					impuestoVO.setPorcentaje(Float.parseFloat(porcentaje.getValue()));
+					
+					String aux = porcentaje.getValue().toString().trim().replace(",", ".");
+					impuestoVO.setPorcentaje(Float.parseFloat(aux));
 					impuestoVO.setActivo(activo.getValue());
 					impuestoVO.setUsuarioMod(this.permisos.getUsuario());
 					impuestoVO.setOperacion(operacion);
@@ -371,6 +375,8 @@ public class ImpuestoViewExtended extends ImpuestoView{
         this.descripcion.addValidator(
                 new StringLengthValidator(
                         " 255 caracteres máximo", 1, 255, false));
+        
+     
 	}
 	
 	/**
@@ -401,7 +407,7 @@ public class ImpuestoViewExtended extends ImpuestoView{
 	private boolean validarPorcentaje(){
 		
 		boolean ok = true;
-		
+		/*
 		float aux = 0;
 		
 		String s = this.porcentaje.getValue().replace(",", ".");
@@ -413,7 +419,7 @@ public class ImpuestoViewExtended extends ImpuestoView{
 		}catch(Exception e){
 			ok = false;
 		}
-		
+		*/
 		return ok;
 	}
 	
