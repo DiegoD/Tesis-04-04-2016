@@ -18,6 +18,7 @@ import com.excepciones.funcionarios.MemberFuncionarioException;
 import com.excepciones.funcionarios.ModificandoFuncionarioException;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
+import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.UI;
@@ -504,6 +505,10 @@ public class FuncionarioViewExtended extends FuncionarioView implements IBusqued
         this.mail.addValidator(
                 new StringLengthValidator(
                         " 100 caracteres máximo", 0, 100, false));
+        
+        this.mail.addValidator(
+                new EmailValidator(
+                        " mail no válido"));
         
         
 	}
