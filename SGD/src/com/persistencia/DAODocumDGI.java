@@ -23,7 +23,7 @@ public class DAODocumDGI implements IDAODocumDgi{
 		
 		try
 		{
-			ConsultasDD consultas = new ConsultasDD();
+			Consultas consultas = new Consultas();
 			String query = consultas.getDocumentos();
 			
 			PreparedStatement pstmt1 = con.prepareStatement(query);

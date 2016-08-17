@@ -543,8 +543,8 @@ public class Consultas {
 		
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("SELECT cod_docdgi, nombre, activo, fecha_mod, usuario_mod, operacion ");
-		sb.append("FROM m_documentos_aduaneros ");
+		sb.append("SELECT cod_docdgi AS cod_documento, nombre AS descripcion, activo, fecha_mod, usuario_mod, operacion ");
+		sb.append("FROM m_documdgi ");
 		
 		return sb.toString();
 	}
@@ -554,7 +554,7 @@ public class Consultas {
 	
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("INSERT INTO vaadin.m_documentos_aduaneros (cod_docdgi, nombre, activo, fecha_mod, usuario_mod, operacion )");
+		sb.append("INSERT INTO m_documdgi (cod_docdgi, nombre, activo, fecha_mod, usuario_mod, operacion )");
 		sb.append("VALUES (?, ?, ?, NOW(), ?, ? ) ");
 		
 		return sb.toString();
@@ -566,7 +566,7 @@ public class Consultas {
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("SELECT cod_docdgi ");
-		sb.append("FROM m_documentos_aduaneros WHERE cod_documento = ? ");
+		sb.append("FROM m_documdgi WHERE cod_documento = ? ");
 		
 		return sb.toString();
 	}
@@ -576,13 +576,13 @@ public class Consultas {
 	
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("UPDATE vaadin.m_documentos_aduaneros ");
+		sb.append("UPDATE m_documdgi ");
 		sb.append("SET nombre = ?, ");
 		sb.append("activo = ?, ");
 		sb.append("fecha_mod = NOW(), ");
 		sb.append("usuario_mod = ?, ");
 		sb.append("operacion = ? ");
-		sb.append("WHERE cod_documento = ? ");
+		sb.append("WHERE m_documdgi = ? ");
 		
 		return sb.toString();
 	}

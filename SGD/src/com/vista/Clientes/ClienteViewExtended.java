@@ -24,6 +24,9 @@ import com.excepciones.clientes.ModificandoClienteException;
 import com.excepciones.clientes.VerificandoClienteException;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
+import com.vaadin.data.validator.DoubleValidator;
+import com.vaadin.data.validator.EmailValidator;
+import com.vaadin.data.validator.FloatRangeValidator;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinService;
@@ -533,7 +536,11 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
                 new StringLengthValidator(
                         " 100 caracteres máximo", 0, 100, false));
         
+        this.mail.addValidator(
+                new EmailValidator(
+                        " mail no válido"));
         
+       
 	}
 	
 	/**
@@ -548,16 +555,6 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 		
 		try
 		{
-			boolean a = this.codigo.isValid();
-			boolean b = this.razonSocial.isValid();
-			boolean vc = this.codigoDoc.isValid();
-			boolean c = this.nombreDoc.isValid();
-			boolean x = this.numeroDoc.isValid();
-			boolean za = this.nombre.isValid();
-			boolean q = this.tel.isValid();
-			boolean ty = this.direccion.isValid();
-			boolean yy = this.mail.isValid();
-			
 			if(this.codigo.isValid() &&
 				this.razonSocial.isValid() &&
 				//this.codigoDoc.isValid() &&

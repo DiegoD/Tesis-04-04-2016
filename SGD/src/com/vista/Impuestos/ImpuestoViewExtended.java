@@ -21,6 +21,7 @@ import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.filter.SimpleStringFilter;
+import com.vaadin.data.validator.DoubleValidator;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.TextField;
@@ -371,6 +372,9 @@ public class ImpuestoViewExtended extends ImpuestoView{
         this.descripcion.addValidator(
                 new StringLengthValidator(
                         " 255 caracteres máximo", 1, 255, false));
+        
+        float m =0; float mm = 100;
+        this.porcentaje.addValidator(new DoubleValidator("no valido paap"));
         
 	}
 	
