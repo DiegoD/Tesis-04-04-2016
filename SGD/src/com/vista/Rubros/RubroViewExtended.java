@@ -453,10 +453,14 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 		this.codRubro.setReadOnly(setear);
 		this.descripcion.setReadOnly(setear);
 		this.activo.setReadOnly(setear);
-		this.descripcionImpuesto.setReadOnly(setear);	
-		this.tipoRubro.setReadOnly(setear);
+		this.descripcionImpuesto.setReadOnly(false);	
+		this.descripcionImpuesto.setEnabled(false);
+		this.tipoRubro.setReadOnly(false);
+		this.tipoRubro.setEnabled(false);
 		this.codigoImpuesto.setReadOnly(false);
-		this.codigoImpuesto.setEnabled(true);
+		this.codigoImpuesto.setEnabled(false);
+		
+		
 	}
 	
 	/**
