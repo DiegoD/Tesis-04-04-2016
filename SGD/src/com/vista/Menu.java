@@ -24,12 +24,12 @@ import com.vaadin.ui.declarative.Design;
 public class Menu extends HorizontalLayout {
 	protected HorizontalLayout menuTitle;
 	protected Label menuTitleLabel;
+	protected Button logoutButton;
 	protected Button menuToggle;
 	protected CssLayout menuItems;
 	protected Button userButton;
 	protected Button funcionariosButton;
 	protected Button gruposButton;
-	protected Button logoutButton;
 	protected Button impuestoButton;
 	protected Button empresaButton;
 	protected Button monedasButton;

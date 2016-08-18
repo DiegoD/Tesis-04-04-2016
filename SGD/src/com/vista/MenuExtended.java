@@ -41,6 +41,12 @@ public class MenuExtended extends Menu{
 		this.mainPrincipal = principalView;
 		this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");;
 		
+		menuTitleLabel.setValue(
+				
+				this.permisos.getUsuario()
+				
+				);
+		this.logoutButton.setDescription("Logout");
 		
 		/*Primero deshabilitamos todas las funcionalidades*/
 		this.deshabilitarFuncionalidades();
