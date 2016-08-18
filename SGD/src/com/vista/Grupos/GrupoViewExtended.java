@@ -385,9 +385,6 @@ public class GrupoViewExtended extends GrupoView {
 		if(fieldGroup != null)
 			fieldGroup.buildAndBindMemberFields(this);
 		
-		/*Seteamos las validaciones de los fields*/
-		this.agregarFieldsValidaciones();
-		
 		/*SI LA OPERACION NO ES NUEVO, OCULTAMOS BOTON ACEPTAR*/
 		if(this.operacion.equals(Variables.OPERACION_NUEVO))
 		{
@@ -681,7 +678,7 @@ public class GrupoViewExtended extends GrupoView {
         
         this.nomGrupo.addValidator(
                 new StringLengthValidator(
-                        " 255 caracteres máximo", 1, 255, false));
+                        " 45 caracteres máximo", 1, 45, false));
         
 	}
 	
@@ -697,7 +694,8 @@ public class GrupoViewExtended extends GrupoView {
 	private boolean fieldsValidos()
 	{
 		boolean valido = false;
-		
+		//Agregamos validaciones a los campos para luego controlarlos
+		this.agregarFieldsValidaciones();
 		try
 		{
 			if(this.codGrupo.isValid() && this.nomGrupo.isValid())

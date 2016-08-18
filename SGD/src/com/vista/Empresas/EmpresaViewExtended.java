@@ -143,9 +143,6 @@ public class EmpresaViewExtended extends EmpresaView{
 		if(fieldGroup != null)
 			fieldGroup.buildAndBindMemberFields(this);
 		
-		/*Seteamos las validaciones de los fields*/
-		this.agregarFieldsValidaciones();
-		
 		/*SI LA OPERACION NO ES NUEVO, OCULTAMOS BOTON ACEPTAR*/
 		if(this.operacion.equals(Variables.OPERACION_NUEVO))
 		{
@@ -363,11 +360,11 @@ public class EmpresaViewExtended extends EmpresaView{
 	{
         this.codEmp.addValidator(
                 new StringLengthValidator(
-                     " 20 caracteres máximo", 1, 20, false));
+                     " 15 caracteres máximo", 1, 15, false));
         
         this.nomEmp.addValidator(
                 new StringLengthValidator(
-                        " 255 caracteres máximo", 1, 255, false));
+                        " 45 caracteres máximo", 1, 45, false));
         
 	}
 	
@@ -380,7 +377,9 @@ public class EmpresaViewExtended extends EmpresaView{
 	private boolean fieldsValidos()
 	{
 		boolean valido = false;
-		
+		//Agregamos validaciones a los campos para luego controlarlos
+		this.agregarFieldsValidaciones();
+				
 		try
 		{
 			if(this.codEmp.isValid() && this.nomEmp.isValid() )

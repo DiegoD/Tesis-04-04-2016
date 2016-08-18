@@ -61,8 +61,6 @@ public class FuncionarioViewExtended extends FuncionarioView implements IBusqued
 				
 			try {
 				
-				/*Agregamos las validaciones para luego controlarlas*/
-				this.agregarFieldsValidaciones();
 				
 				/*Validamos los campos antes de invocar al controlador*/
 				if(this.fieldsValidos())
@@ -196,9 +194,6 @@ public class FuncionarioViewExtended extends FuncionarioView implements IBusqued
 		//Seteamos info del form si es requerido
 		if(fieldGroup != null)
 			fieldGroup.buildAndBindMemberFields(this);
-		
-		/*Seteamos las validaciones de los fields*/
-		//this.agregarFieldsValidaciones();
 		
 		/*SI LA OPERACION NO ES NUEVO, OCULTAMOS BOTON ACEPTAR*/
 		if(this.operacion.equals(Variables.OPERACION_NUEVO))
@@ -522,7 +517,9 @@ public class FuncionarioViewExtended extends FuncionarioView implements IBusqued
 	private boolean fieldsValidos()
 	{
 		boolean valido = false;
-		
+		//Agregamos validaciones a los campos para luego controlarlos
+		this.agregarFieldsValidaciones();
+				
 		try
 		{
 			boolean a = this.codigo.isValid();

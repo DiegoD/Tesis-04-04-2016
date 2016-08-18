@@ -205,9 +205,6 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 		if(fieldGroup != null)
 			fieldGroup.buildAndBindMemberFields(this);
 		
-		/*Seteamos las validaciones de los fields*/
-		//this.agregarFieldsValidaciones(); LO AGREGAMOS AL DAR ACPETAR
-		
 		/*SI LA OPERACION NO ES NUEVO, OCULTAMOS BOTON ACEPTAR*/
 		if(this.operacion.equals(Variables.OPERACION_NUEVO))
 		{
@@ -552,7 +549,8 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 	private boolean fieldsValidos()
 	{
 		boolean valido = false;
-		
+		//Agregamos validaciones a los campos para luego controlarlos
+		this.agregarFieldsValidaciones();
 		try
 		{
 			if(this.codigo.isValid() &&

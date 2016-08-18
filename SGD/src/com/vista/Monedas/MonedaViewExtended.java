@@ -121,9 +121,6 @@ public class MonedaViewExtended extends MonedaView{
 		if(fieldGroup != null)
 			fieldGroup.buildAndBindMemberFields(this);
 		
-		/*Seteamos las validaciones de los fields*/
-		this.agregarFieldsValidaciones();
-		
 		/*SI LA OPERACION NO ES NUEVO, OCULTAMOS BOTON ACEPTAR*/
 		if(this.operacion.equals(Variables.OPERACION_NUEVO))
 		{
@@ -352,7 +349,7 @@ public class MonedaViewExtended extends MonedaView{
         
         this.descripcion.addValidator(
                 new StringLengthValidator(
-                        " 255 caracteres máximo", 1, 255, false));
+                        " 45 caracteres máximo", 1, 255, false));
         this.simbolo.addValidator(
                 new StringLengthValidator(
                         " 3 caracteres máximo", 1, 3, false));
@@ -369,7 +366,9 @@ public class MonedaViewExtended extends MonedaView{
 	private boolean fieldsValidos()
 	{
 		boolean valido = false;
-		
+		//Agregamos validaciones a los campos para luego controlarlos
+		this.agregarFieldsValidaciones();
+				
 		try
 		{
 			if(this.cod_moneda.isValid() && this.descripcion.isValid() && this.simbolo.isValid())

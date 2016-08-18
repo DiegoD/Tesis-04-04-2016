@@ -34,9 +34,9 @@ public class FuncionarioView extends CssLayout {
 	protected TextField nombreDoc;
 	protected TextField numeroDoc;
 	protected Button btnBuscarDoc;
-	protected TextField tel;
 	protected TextField direccion;
 	protected TextField mail;
+	protected TextField tel;
 	protected CheckBox activo;
 	protected Button aceptar;
 	protected Button btnEditar;

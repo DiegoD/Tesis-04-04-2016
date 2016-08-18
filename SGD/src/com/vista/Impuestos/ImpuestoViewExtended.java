@@ -142,9 +142,6 @@ public class ImpuestoViewExtended extends ImpuestoView{
 		if(fieldGroup != null)
 			fieldGroup.buildAndBindMemberFields(this);
 		
-		/*Seteamos las validaciones de los fields*/
-		this.agregarFieldsValidaciones();
-		
 		/*SI LA OPERACION NO ES NUEVO, OCULTAMOS BOTON ACEPTAR*/
 		if(this.operacion.equals(Variables.OPERACION_NUEVO))
 		{
@@ -374,7 +371,7 @@ public class ImpuestoViewExtended extends ImpuestoView{
         
         this.descripcion.addValidator(
                 new StringLengthValidator(
-                        " 255 caracteres máximo", 1, 255, false));
+                        " 45 caracteres máximo", 1, 45, false));
         
      
 	}
@@ -388,7 +385,9 @@ public class ImpuestoViewExtended extends ImpuestoView{
 	private boolean fieldsValidos()
 	{
 		boolean valido = false;
-		
+		//Agregamos validaciones a los campos para luego controlarlos
+		this.agregarFieldsValidaciones();
+				
 		try
 		{
 			if(this.codImpuesto.isValid() && this.descripcion.isValid() && this.porcentaje.isValid() && this.validarPorcentaje())

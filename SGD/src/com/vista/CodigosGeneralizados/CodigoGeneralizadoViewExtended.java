@@ -144,9 +144,6 @@ public class CodigoGeneralizadoViewExtended extends CodigoGeneralizadoView{
 		if(fieldGroup != null)
 			fieldGroup.buildAndBindMemberFields(this);
 		
-		/*Seteamos las validaciones de los fields*/
-		this.agregarFieldsValidaciones();
-		
 		/*SI LA OPERACION NO ES NUEVO, OCULTAMOS BOTON ACEPTAR*/
 		if(this.operacion.equals(Variables.OPERACION_NUEVO))
 		{
@@ -386,7 +383,8 @@ public class CodigoGeneralizadoViewExtended extends CodigoGeneralizadoView{
 	private boolean fieldsValidos()
 	{
 		boolean valido = false;
-		
+		//Agregamos validaciones a los campos para luego controlarlos
+		this.agregarFieldsValidaciones();
 		try
 		{
 			if(this.codigo.isValid() && this.valor.isValid() && this.descripcion.isValid())

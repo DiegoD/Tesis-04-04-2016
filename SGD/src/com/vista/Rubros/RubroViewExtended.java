@@ -39,7 +39,6 @@ import com.vista.PermisosUsuario;
 import com.vista.Variables;
 import com.vista.VariablesPermisos;
 import com.vista.Empresas.EmpresasPanelExtended;
-import com.vista.Impuestos.ImpuestosHelpExtended;
 import com.vista.Usuarios.UsuarioViewAgregarGrupoExtend;
 
 public class RubroViewExtended extends RubroView implements IBusqueda{
@@ -92,7 +91,8 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 					rubroVO.setOperacion(operacion);
 					rubroVO.setCodigoImpuesto(codigoImpuesto.getValue());
 					rubroVO.setDescripcionImpuesto(descripcionImpuesto.getValue().trim());
-					rubroVO.setPorcentajeImpuesto(Float.parseFloat(porcentajeImpuesto.getValue()));
+					String aux = porcentajeImpuesto.getValue().toString().trim().replace(",", ".");
+					rubroVO.setPorcentajeImpuesto(Float.parseFloat(aux));
 					rubroVO.setTipoRubro(tipoRubro.getValue().trim());
 					rubroVO.setCodTipoRubro(codTipoRubro.getValue().trim());
 					
@@ -234,9 +234,6 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 		//Seteamos info del form si es requerido
 		if(fieldGroup != null)
 			fieldGroup.buildAndBindMemberFields(this);
-		
-		/*Seteamos las validaciones de los fields*/
-		this.agregarFieldsValidaciones();
 		
 		/*SI LA OPERACION NO ES NUEVO, OCULTAMOS BOTON ACEPTAR*/
 		if(this.operacion.equals(Variables.OPERACION_NUEVO))
@@ -477,7 +474,7 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
         
         this.descripcion.addValidator(
                 new StringLengthValidator(
-                        " 255 caracteres máximo", 1, 255, false));
+                        " 45 caracteres máximo", 1, 45, false));
         
 	}
 	
@@ -490,31 +487,13 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 	private boolean fieldsValidos()
 	{
 		boolean valido = false;
-		controladorImpuestos = new ImpuestoControlador();
 		
-		try
-		{
-			if(this.codRubro.isValid() && this.descripcion.isValid() )
-				valido = true;
-			
-			if(valido){
-				valido = false;
-				if(this.lstImpuestos.size() == 0)
-					this.lstImpuestos = this.controladorImpuestos.getImpuestos();
-				
-				for (ImpuestoVO i: lstImpuestos) {
-					System.out.println(this.descripcionImpuesto.getValue().trim());
-					if(i.getDescripcion().equals(this.descripcionImpuesto.getValue().trim())){
-						valido = true;
-					}
-				}
-			}
-			
-		}
-		catch(Exception e){
-			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
-		}
+		//Agregamos validaciones a los campos para luego controlarlos
+		this.agregarFieldsValidaciones();
 		
+		if(this.codRubro.isValid() && this.descripcion.isValid() )
+			valido = true;
+			
 		return valido;
 	}
 	
