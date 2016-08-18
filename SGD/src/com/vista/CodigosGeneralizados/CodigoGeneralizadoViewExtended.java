@@ -192,11 +192,10 @@ public class CodigoGeneralizadoViewExtended extends CodigoGeneralizadoView{
 		
 		
 		auditoria.setDescription(
-			    "<ul>"+
-			    "  <li> Modificado por: " + codigoGeneralizado.getUsuarioMod() + "</li>"+
-			    "  <li> Fecha: " + fecha + "</li>"+
-			    "  <li> Operación: " + codigoGeneralizado.getOperacion() + "</li>"+
-			    "</ul>");
+			
+			"Usuario: " + codigoGeneralizado.getUsuarioMod() + "<br>" +
+		    "Fecha: " + fecha + "<br>" +
+		    "Operación: " + codigoGeneralizado.getOperacion());
 		
 		/*SETEAMOS LA OPERACION EN MODO LECUTA
 		 * ES CUANDO LLAMAMOS ESTE METODO*/

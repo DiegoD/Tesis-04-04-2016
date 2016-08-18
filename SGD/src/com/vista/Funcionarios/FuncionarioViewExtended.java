@@ -251,11 +251,10 @@ public class FuncionarioViewExtended extends FuncionarioView implements IBusqued
 		
 		
 		auditoria.setDescription(
-			    "<ul>"+
-			    "  <li> Modificado por: " + funcionarioVO.getUsuarioMod() + "</li>"+
-			    "  <li> Fecha: " + fecha + "</li>"+
-			    "  <li> Operación: " + funcionarioVO.getOperacion() + "</li>"+
-			    "</ul>");
+			  
+			"Usuario: " + funcionarioVO.getUsuarioMod() + "<br>" +
+		    "Fecha: " + fecha + "<br>" +
+		    "Operación: " + funcionarioVO.getOperacion());
 		
 		/*SETEAMOS LA OPERACION EN MODO LECUTA
 		 * ES CUANDO LLAMAMOS ESTE METODO*/

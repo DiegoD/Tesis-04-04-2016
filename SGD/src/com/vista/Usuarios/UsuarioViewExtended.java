@@ -375,11 +375,11 @@ public class UsuarioViewExtended extends UsuarioView{
 		String fecha = new SimpleDateFormat("dd/MM/yyyy").format(usu.getFechaMod());
 		
 		auditoria.setDescription(
-			    "<ul>"+
-			    "  <li> Modificado por: " + usu.getUsuarioMod() + "</li>"+
-			    "  <li> Fecha: " + fecha + "</li>"+
-			    "  <li> Operación: " + usu.getOperacion() + "</li>"+
-			    "</ul>");
+			  
+		
+			"Usuario: " + usu.getUsuarioMod() + "<br>" +
+			"Fecha: " + fecha + "<br>" +
+			"Operación: " + usu.getOperacion());
 		
 		/*SETEAMOS LA OPERACION EN MODO LECUTA
 		 * ES CUANDO LLAMAMOS ESTE METODO*/

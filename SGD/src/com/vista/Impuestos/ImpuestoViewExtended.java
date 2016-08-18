@@ -193,11 +193,10 @@ public class ImpuestoViewExtended extends ImpuestoView{
 		
 		
 		auditoria.setDescription(
-			    "<ul>"+
-			    "  <li> Modificado por: " + impuesto.getUsuarioMod() + "</li>"+
-			    "  <li> Fecha: " + fecha + "</li>"+
-			    "  <li> Operación: " + impuesto.getOperacion() + "</li>"+
-			    "</ul>");
+			
+				"Usuario: " + impuesto.getUsuarioMod() + "<br>" +
+				"Fecha: " + fecha + "<br>" +
+				"Operación: " + impuesto.getOperacion());
 		
 		/*SETEAMOS LA OPERACION EN MODO LECUTA
 		 * ES CUANDO LLAMAMOS ESTE METODO*/

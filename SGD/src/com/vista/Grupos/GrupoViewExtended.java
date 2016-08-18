@@ -437,11 +437,10 @@ public class GrupoViewExtended extends GrupoView {
 		
 		
 		auditoria.setDescription(
-			    "<ul>"+
-			    "  <li> Modificado por: " + grupo.getUsuarioMod() + "</li>"+
-			    "  <li> Fecha: " + fecha + "</li>"+
-			    "  <li> Operación: " + grupo.getOperacion() + "</li>"+
-			    "</ul>");
+			
+			"Usuario: " + grupo.getUsuarioMod() + "<br>" +
+		    "Fecha: " + fecha + "<br>" +
+		    "Operación: " + grupo.getOperacion());
 		
 		/*SETEAMOS LA OPERACION EN MODO LECUTA
 		 * ES CUANDO LLAMAMOS ESTE METODO*/

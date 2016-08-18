@@ -264,11 +264,10 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 		
 		
 		auditoria.setDescription(
-			    "<ul>"+
-			    "  <li> Modificado por: " + clienteVO.getUsuarioMod() + "</li>"+
-			    "  <li> Fecha: " + fecha + "</li>"+
-			    "  <li> Operación: " + clienteVO.getOperacion() + "</li>"+
-			    "</ul>");
+		
+			"Usuario: " + clienteVO.getUsuarioMod() + "<br>" +
+		    "Fecha: " + fecha + "<br>" +
+		    "Operación: " + clienteVO.getOperacion());
 		
 		/*SETEAMOS LA OPERACION EN MODO LECUTA
 		 * ES CUANDO LLAMAMOS ESTE METODO*/
