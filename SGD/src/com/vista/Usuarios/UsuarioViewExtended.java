@@ -294,7 +294,7 @@ public class UsuarioViewExtended extends UsuarioView{
 		if(fieldGroup != null)
 			fieldGroup.buildAndBindMemberFields(this);
 		
-		this.agregarFieldsValidaciones();
+		
 		
 		/*SI LA OPERACION NO ES NUEVO, OCULTAMOS BOTON ACEPTAR*/
 		if(this.operacion.equals(Variables.OPERACION_NUEVO))
@@ -562,7 +562,7 @@ public class UsuarioViewExtended extends UsuarioView{
 	{
         this.nombre.addValidator(
                 new StringLengthValidator(
-                     " 20 caracteres máximo", 1, 20, false));
+                     " 45 caracteres máximo", 1, 45, false));
         
         this.usuario.addValidator(
                 new StringLengthValidator(
@@ -570,7 +570,11 @@ public class UsuarioViewExtended extends UsuarioView{
         
         this.pass.addValidator(
                 new StringLengthValidator(
-                        " 20 caracteres máximo", 1, 255, false));
+                        " 45 caracteres máximo", 1, 45, false));
+        
+        this.mail.addValidator(
+                new StringLengthValidator(
+                        " 100 caracteres máximo", 1, 100, false));
         
         this.mail.addValidator(new EmailValidator("Mail no válido"));
         
@@ -586,6 +590,8 @@ public class UsuarioViewExtended extends UsuarioView{
 	private boolean fieldsValidos()
 	{
 		boolean valido = false;
+		//Agregamos validaciones a los campos para luego controlarlos
+		this.agregarFieldsValidaciones();
 		
 		try
 		{
