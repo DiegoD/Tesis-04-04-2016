@@ -280,11 +280,9 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 		//this.codigoImp = rubro.getCod_impuesto();
 		
 		auditoria.setDescription(
-			    "<ul>"+
-			    "  <li> Modificado por: " + rubro.getUsuarioMod() + "</li>"+
-			    "  <li> Fecha: " + fecha + "</li>"+
-			    "  <li> Operación: " + rubro.getOperacion() + "</li>"+
-			    "</ul>");
+				"Usuario: " + rubro.getUsuarioMod() + "<br>" +
+			    "Fecha: " + fecha + "<br>" +
+			    "Operación: " + rubro.getOperacion());
 		
 		/*SETEAMOS LA OPERACION EN MODO LECUTA
 		 * ES CUANDO LLAMAMOS ESTE METODO*/

@@ -188,11 +188,9 @@ public class EmpresaViewExtended extends EmpresaView{
 		
 		
 		auditoria.setDescription(
-			    "<ul>"+
-			    "  <li> Modificado por: " + empresa.getUsuarioMod() + "</li>"+
-			    "  <li> Fecha: " + fecha + "</li>"+
-			    "  <li> Operación: " + empresa.getOperacion() + "</li>"+
-			    "</ul>");
+				"Usuario: " + empresa.getUsuarioMod() + "<br>" +
+			    "Fecha: " + fecha + "<br>" +
+			    "Operación: " + empresa.getOperacion());
 		
 		/*SETEAMOS LA OPERACION EN MODO LECUTA
 		 * ES CUANDO LLAMAMOS ESTE METODO*/

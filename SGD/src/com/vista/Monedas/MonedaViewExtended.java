@@ -168,11 +168,9 @@ public class MonedaViewExtended extends MonedaView{
 		
 		
 		auditoria.setDescription(
-			    "<ul>"+
-			    "  <li> Modificado por: " + moneda.getUsuarioMod() + "</li>"+
-			    "  <li> Fecha: " + fecha + "</li>"+
-			    "  <li> Operación: " + moneda.getOperacion() + "</li>"+
-			    "</ul>");
+				"Usuario: " + moneda.getUsuarioMod() + "<br>" +
+			    "Fecha: " + fecha + "<br>" +
+			    "Operación: " + moneda.getOperacion());
 		
 		/*SETEAMOS LA OPERACION EN MODO LECUTA
 		 * ES CUANDO LLAMAMOS ESTE METODO*/

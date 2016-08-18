@@ -180,11 +180,9 @@ public class DocumentoViewExtended extends DocumentoView{
 		
 		
 		auditoria.setDescription(
-			    "<ul>"+
-			    "  <li> Modificado por: " + documento.getUsuarioMod() + "</li>"+
-			    "  <li> Fecha: " + fecha + "</li>"+
-			    "  <li> Operación: " + documento.getOperacion() + "</li>"+
-			    "</ul>");
+				"Usuario: " + documento.getUsuarioMod() + "<br>" +
+			    "Fecha: " + fecha + "<br>" +
+			    "Operación: " + documento.getOperacion());
 		
 		/*SETEAMOS LA OPERACION EN MODO LECUTA
 		 * ES CUANDO LLAMAMOS ESTE METODO*/
