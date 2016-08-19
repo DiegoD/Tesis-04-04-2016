@@ -8,49 +8,49 @@ public class ConsultasDD {
     protected final static String PASS  = "root";
     
     
-    ////////////////////////<COTIZACIONES>/////////////////////////////////////////////////
-    
-    public String getCotizaciones(){
-    	
-     	 StringBuilder sb = new StringBuilder();
-     	 
-     	 sb.append("SELECT fec_cotizacion, cod_moneda, imp_venta, imp_compra, usuario_mod, fecha_mod ");
-     	 sb.append("FROM ct_cotizaciones ");
-
-     	 return sb.toString();
-     }
-    
-    public String getCotizacion(){
-    	
-      	 StringBuilder sb = new StringBuilder();
-      	 
-      	 sb.append("SELECT fec_cotizacion, cod_moneda, imp_venta, imp_compra, usuario_mod, fecha_mod ");
-      	 sb.append("FROM ct_cotizaciones WHERE fec_cotizacion = ? AND cod_moneda = ? ");
-
-      	 return sb.toString();
-      }
-    
-    
-    public String insertCotizacion(){
-    	
-    	 StringBuilder sb = new StringBuilder();
-    	 
-    	 sb.append("INSERT INTO ct_cotizaciones (fec_cotizacion, cod_moneda, imp_venta, imp_compra, usuario_mod, fecha_mod) ");
-    	 sb.append("VALUES (?, ?, ?, ?, ?, NOW())");
-    	 
-    	 return sb.toString();
-    }
-
-    public String memberCotizacion(){
-    	
-   	 StringBuilder sb = new StringBuilder();
-   	 
-   	 sb.append("SELECT fec_cotizacion, cod_moneda ");
-   	 sb.append("FROM ct_cotizaciones WHERE fec_cotizacion = ? AND cod_moneda = ? ");
-
-   	 return sb.toString();
-   }
-    
+//    ////////////////////////<COTIZACIONES>/////////////////////////////////////////////////
+//    
+//    public String getCotizaciones(){
+//    	
+//     	 StringBuilder sb = new StringBuilder();
+//     	 
+//     	 sb.append("SELECT fec_cotizacion, cod_moneda, imp_venta, imp_compra, usuario_mod, fecha_mod ");
+//     	 sb.append("FROM ct_cotizaciones ");
+//
+//     	 return sb.toString();
+//     }
+//    
+//    public String getCotizacion(){
+//    	
+//      	 StringBuilder sb = new StringBuilder();
+//      	 
+//      	 sb.append("SELECT fec_cotizacion, cod_moneda, imp_venta, imp_compra, usuario_mod, fecha_mod ");
+//      	 sb.append("FROM ct_cotizaciones WHERE fec_cotizacion = ? AND cod_moneda = ? ");
+//
+//      	 return sb.toString();
+//      }
+//    
+//    
+//    public String insertCotizacion(){
+//    	
+//    	 StringBuilder sb = new StringBuilder();
+//    	 
+//    	 sb.append("INSERT INTO ct_cotizaciones (fec_cotizacion, cod_moneda, imp_venta, imp_compra, usuario_mod, fecha_mod) ");
+//    	 sb.append("VALUES (?, ?, ?, ?, ?, NOW())");
+//    	 
+//    	 return sb.toString();
+//    }
+//
+//    public String memberCotizacion(){
+//    	
+//   	 StringBuilder sb = new StringBuilder();
+//   	 
+//   	 sb.append("SELECT fec_cotizacion, cod_moneda ");
+//   	 sb.append("FROM ct_cotizaciones WHERE fec_cotizacion = ? AND cod_moneda = ? ");
+//
+//   	 return sb.toString();
+//   }
+//    
    ////////////////////////<COTIZACIONES/>/////////////////////////////////////////////////
 
     
@@ -588,4 +588,55 @@ public class ConsultasDD {
 	  
 	  return sb.toString();
 	}
+	
+////////////////////////INI-COTIZACIONES///////////////////////////////////////////////////
+
+	public String getCotizaciones(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_moneda, fecha, fecha_mod, usuario_mod, operacion ");
+		sb.append("FROM m_cotizaciones ");
+		
+		return sb.toString();
+	}
+
+	public String insertarCotizacion()
+	{
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO vaadin.m_cotizaciones (cod_moneda, fecha, cotizacion, fecha_mod, usuario_mod, operacion )");
+		sb.append("VALUES (?, ?, ?, NOW(), ?, ? ) ");
+		
+		return sb.toString();
+	
+	}
+
+	public String memberCotizacion(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_moneda ");
+		sb.append("FROM m_cotizaciones WHERE cod_moneda = ? and fecha = ? ");
+		
+		return sb.toString();
+	}
+
+
+	public String actualizarCotizacion(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("UPDATE vaadin.m_cotizaciones ");
+		sb.append("SET cotizacion = ?, ");
+		sb.append("fecha_mod = NOW(), ");
+		sb.append("usuario_mod = ?, ");
+		sb.append("operacion = ? ");
+		sb.append("WHERE cod_moneda = ? and fecha = ? ");
+		
+		return sb.toString();
+	}
+
+////////////////////////INI-CÓDIGOS GENERALIZADOS///////////////////////////////////////////////////
 }

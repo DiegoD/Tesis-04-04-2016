@@ -129,6 +129,9 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 				
 				Mensajes.mostrarMensajeError(e.getMessage());
 			}
+			catch(NumberFormatException e){
+				Mensajes.mostrarMensajeError("Impuesto no válido");
+			}
 				
 		});
 		
@@ -263,6 +266,15 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 		
 		this.descripcion.setRequired(setear);
 		this.descripcion.setRequiredError("Es requerido");
+		
+		this.descripcionImpuesto.setRequired(setear);
+		this.descripcionImpuesto.setRequiredError("Es requerido");
+		
+		this.codTipoRubro.setRequired(setear);
+		this.codTipoRubro.setRequiredError("Es requerido");
+		
+		this.tipoRubro.setRequired(setear);
+		this.tipoRubro.setRequiredError("Es requerido");
 		
 	}
 	
@@ -493,7 +505,7 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 		//Agregamos validaciones a los campos para luego controlarlos
 		this.agregarFieldsValidaciones();
 		
-		if(this.codRubro.isValid() && this.descripcion.isValid() )
+		if(this.codRubro.isValid() && this.descripcion.isValid() && this.codigoImpuesto.isValid() && this.codRubro.isValid() && this.tipoRubro.isValid())
 			valido = true;
 			
 		return valido;
