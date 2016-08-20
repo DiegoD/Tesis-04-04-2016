@@ -9,6 +9,8 @@ import com.controladores.ImpuestoControlador;
 import com.controladores.MonedaControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.InicializandoException;
+import com.excepciones.NoTienePermisosException;
+import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Impuestos.ObteniendoImpuestosException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
 import com.vaadin.data.util.BeanItem;
@@ -22,6 +24,7 @@ import com.vaadin.ui.UI;
 import com.valueObject.EmpresaVO;
 import com.valueObject.ImpuestoVO;
 import com.valueObject.MonedaVO;
+import com.valueObject.UsuarioPermisosVO;
 import com.vista.Mensajes;
 import com.vista.MySub;
 import com.vista.PermisosUsuario;
@@ -35,6 +38,7 @@ public class MonedasPanelExtended extends MonedasPanel{
 	private BeanItemContainer<MonedaVO> container;
 	private MonedaControlador controlador;
 	MySub sub = new MySub("65%", "65%");
+	PermisosUsuario permisos;
 	
 	public MonedasPanelExtended(){
 		
@@ -42,7 +46,7 @@ public class MonedasPanelExtended extends MonedasPanel{
 		this.lstMonedas = new ArrayList<MonedaVO>();
 		
 		String usuario = (String)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("usuario");
-		PermisosUsuario permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
+		this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
 		
 		/*Verificamos que el usuario tenga permisos de lectura para mostrar la vista*/
 		boolean permisoLectura = permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_MONEDAS, VariablesPermisos.OPERACION_LEER);
@@ -171,10 +175,19 @@ public class MonedasPanelExtended extends MonedasPanel{
 
 		try {
 			
-			lstMonedas = controlador.getMonedas();
+			/*Inicializamos VO de permisos para el usuario, formulario y operacion
+			 * para confirmar los permisos del usuario*/
+			UsuarioPermisosVO permisoAux = 
+					new UsuarioPermisosVO(this.permisos.getCodEmp(),
+							this.permisos.getUsuario(),
+							VariablesPermisos.FORMULARIO_MONEDAS,
+							VariablesPermisos.OPERACION_LEER);
+			
+			lstMonedas = controlador.getMonedas(permisoAux);
 			
 		} 
-		catch (ObteniendoMonedaException | InicializandoException | ConexionException e) {
+		catch (ObteniendoMonedaException | InicializandoException | ConexionException
+				| ObteniendoPermisosException| NoTienePermisosException e) {
 			
 			Mensajes.mostrarMensajeError(e.getMessage());
 		}

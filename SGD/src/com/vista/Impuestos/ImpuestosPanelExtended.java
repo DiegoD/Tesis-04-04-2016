@@ -9,6 +9,8 @@ import com.controladores.ImpuestoControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
+import com.excepciones.NoTienePermisosException;
+import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Impuestos.ObteniendoImpuestosException;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
@@ -19,6 +21,7 @@ import com.vaadin.server.VaadinService;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.valueObject.ImpuestoVO;
+import com.valueObject.UsuarioPermisosVO;
 import com.vista.Mensajes;
 import com.vista.MySub;
 import com.vista.PermisosUsuario;
@@ -32,6 +35,7 @@ public class ImpuestosPanelExtended extends ImpuestosPanel{
 	private BeanItemContainer<ImpuestoVO> container;
 	private ImpuestoControlador controlador;
 	MySub sub = new MySub("65%", "65%");
+	PermisosUsuario permisos;
 	
 	public ImpuestosPanelExtended() {
 		
@@ -39,7 +43,7 @@ public class ImpuestosPanelExtended extends ImpuestosPanel{
 		this.lstImpuestos = new ArrayList<ImpuestoVO>();
 		
 		String usuario = (String)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("usuario");
-		PermisosUsuario permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
+		this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
 		
 		/*Verificamos que el usuario tenga permisos de lectura para mostrar la vista*/
 		boolean permisoLectura = permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_IMPUESTO, VariablesPermisos.OPERACION_LEER);
@@ -166,10 +170,19 @@ public class ImpuestosPanelExtended extends ImpuestosPanel{
 
 		try {
 			
-				lstImpuestos = controlador.getImpuestos();
+			/*Inicializamos VO de permisos para el usuario, formulario y operacion
+			 * para confirmar los permisos del usuario*/
+			UsuarioPermisosVO permisoAux = 
+					new UsuarioPermisosVO(this.permisos.getCodEmp(),
+							this.permisos.getUsuario(),
+							VariablesPermisos.FORMULARIO_IMPUESTO,
+							VariablesPermisos.OPERACION_LEER);
+			
+				lstImpuestos = controlador.getImpuestos(permisoAux);
 			
 		} 
-		catch (ObteniendoImpuestosException | InicializandoException | ConexionException e) {
+		catch (ObteniendoImpuestosException | InicializandoException | ConexionException
+				| ObteniendoPermisosException| NoTienePermisosException e) {
 			
 			Mensajes.mostrarMensajeError(e.getMessage());
 		}

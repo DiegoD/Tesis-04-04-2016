@@ -6,6 +6,8 @@ import com.controladores.MonedaControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
+import com.excepciones.NoTienePermisosException;
+import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Monedas.ExisteMonedaException;
 import com.excepciones.Monedas.InsertandoMonedaException;
 import com.excepciones.Monedas.ModificandoMonedaException;
@@ -15,6 +17,7 @@ import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.server.VaadinService;
 import com.valueObject.MonedaVO;
+import com.valueObject.UsuarioPermisosVO;
 import com.vista.Mensajes;
 import com.vista.MySub;
 import com.vista.PermisosUsuario;
@@ -46,6 +49,13 @@ public class MonedaViewExtended extends MonedaView{
 				/*Validamos los campos antes de invocar al controlador*/
 				if(this.fieldsValidos())
 				{
+					/*Inicializamos VO de permisos para el usuario, formulario y operacion
+					 * para confirmar los permisos del usuario*/
+					UsuarioPermisosVO permisoAux = 
+							new UsuarioPermisosVO(this.permisos.getCodEmp(),
+									this.permisos.getUsuario(),
+									VariablesPermisos.FORMULARIO_MONEDAS,
+									VariablesPermisos.OPERACION_NUEVO_EDITAR);
 									
 					MonedaVO monedaVO = new MonedaVO();		
 					
@@ -59,7 +69,7 @@ public class MonedaViewExtended extends MonedaView{
 					
 					if(this.operacion.equals(Variables.OPERACION_NUEVO)) {	
 		
-						this.controlador.insertarMoneda(monedaVO);
+						this.controlador.insertarMoneda(monedaVO, permisoAux);
 						
 						this.mainView.actulaizarGrilla(monedaVO);
 						
@@ -69,7 +79,7 @@ public class MonedaViewExtended extends MonedaView{
 					}
 					else if(this.operacion.equals(Variables.OPERACION_EDITAR))	{
 						
-						this.controlador.actualizarMoneda(monedaVO);
+						this.controlador.actualizarMoneda(monedaVO, permisoAux);
 						
 						this.mainView.actulaizarGrilla(monedaVO);
 						
@@ -86,7 +96,7 @@ public class MonedaViewExtended extends MonedaView{
 				} 
 				catch (ConexionException | ModificandoMonedaException | ExisteMonedaException | 
 						 InicializandoException | InsertandoMonedaException | NoExisteMonedaException |
-						 ErrorInesperadoException e) {
+						 ErrorInesperadoException| ObteniendoPermisosException| NoTienePermisosException e) {
 					
 					Mensajes.mostrarMensajeError(e.getMessage());
 				}
@@ -185,9 +195,22 @@ public class MonedaViewExtended extends MonedaView{
 	 */
 	private void iniFormLectura()
 	{
-		/*Habilitamos el boton de editar,
-		 * deshabilitamos botn aceptar*/
-		this.enableBotonesLectura();
+		/*Verificamos que tenga permisos para editar*/
+		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_MONEDAS, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		
+		
+		/*Si tiene permisos de editar habilitamos el boton de 
+		 * edicion*/
+		if(permisoNuevoEditar){
+			
+			this.enableBotonesLectura();
+			
+		}else{ /*de lo contrario lo deshabilitamos*/
+			
+			this.disableBotonLectura();
+		}
+		
+		/*Deshabilitamos botn aceptar*/
 		this.disableBotonAceptar();
 		
 		/*No mostramos las validaciones*/

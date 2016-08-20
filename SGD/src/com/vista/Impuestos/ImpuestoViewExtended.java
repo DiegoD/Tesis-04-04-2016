@@ -8,6 +8,8 @@ import com.controladores.ImpuestoControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
+import com.excepciones.NoTienePermisosException;
+import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Impuestos.ExisteImpuestoException;
 import com.excepciones.Impuestos.InsertandoImpuestoException;
 import com.excepciones.Impuestos.ModificandoImpuestoException;
@@ -30,6 +32,7 @@ import com.vaadin.ui.UI;
 import com.valueObject.FormularioVO;
 import com.valueObject.GrupoVO;
 import com.valueObject.ImpuestoVO;
+import com.valueObject.UsuarioPermisosVO;
 import com.vista.Mensajes;
 import com.vista.MySub;
 import com.vista.PermisosUsuario;
@@ -65,6 +68,14 @@ public class ImpuestoViewExtended extends ImpuestoView{
 				/*Validamos los campos antes de invocar al controlador*/
 				if(this.fieldsValidos())
 				{
+					
+					/*Inicializamos VO de permisos para el usuario, formulario y operacion
+					 * para confirmar los permisos del usuario*/
+					UsuarioPermisosVO permisoAux = 
+							new UsuarioPermisosVO(this.permisos.getCodEmp(),
+									this.permisos.getUsuario(),
+									VariablesPermisos.FORMULARIO_IMPUESTO,
+									VariablesPermisos.OPERACION_NUEVO_EDITAR);
 									
 					ImpuestoVO impuestoVO = new ImpuestoVO();		
 					
@@ -79,7 +90,7 @@ public class ImpuestoViewExtended extends ImpuestoView{
 										
 					if(this.operacion.equals(Variables.OPERACION_NUEVO)) {	
 		
-						this.controlador.insertarImpuesto(impuestoVO);
+						this.controlador.insertarImpuesto(impuestoVO, permisoAux);
 						
 						this.mainView.actulaizarGrilla(impuestoVO);
 						
@@ -89,7 +100,7 @@ public class ImpuestoViewExtended extends ImpuestoView{
 					}
 					else if(this.operacion.equals(Variables.OPERACION_EDITAR))	{
 						
-						this.controlador.actualizarImpuesto(impuestoVO);
+						this.controlador.actualizarImpuesto(impuestoVO, permisoAux);
 						
 						this.mainView.actulaizarGrilla(impuestoVO);
 						
@@ -106,7 +117,7 @@ public class ImpuestoViewExtended extends ImpuestoView{
 				} 
 				catch (ConexionException | NoExisteImpuestoException | ModificandoImpuestoException | ExisteImpuestoException | 
 						 InicializandoException | InsertandoImpuestoException |
-						 ErrorInesperadoException e) {
+						 ErrorInesperadoException| ObteniendoPermisosException| NoTienePermisosException e) {
 					
 					Mensajes.mostrarMensajeError(e.getMessage());
 				}
@@ -211,9 +222,21 @@ public class ImpuestoViewExtended extends ImpuestoView{
 	 */
 	private void iniFormLectura()
 	{
-		/*Habilitamos el boton de editar,
-		 * deshabilitamos botn aceptar*/
-		this.enableBotonesLectura();
+		/*Verificamos que tenga permisos para editar*/
+		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_IMPUESTO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		
+		/*Si tiene permisos de editar habilitamos el boton de 
+		 * edicion*/
+		if(permisoNuevoEditar){
+			
+			this.enableBotonesLectura();
+			
+		}else{ /*de lo contrario lo deshabilitamos*/
+			
+			this.disableBotonLectura();
+		}
+		
+		/*Deshabilitamos botn aceptar*/
 		this.disableBotonAceptar();
 		
 		/*No mostramos las validaciones*/

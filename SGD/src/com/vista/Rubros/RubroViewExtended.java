@@ -10,6 +10,8 @@ import com.controladores.RubroControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
+import com.excepciones.NoTienePermisosException;
+import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Empresas.ExisteEmpresaException;
 import com.excepciones.Empresas.InsertandoEmpresaException;
 import com.excepciones.Empresas.ModificandoEmpresaException;
@@ -30,6 +32,7 @@ import com.valueObject.EmpLoginVO;
 import com.valueObject.EmpresaVO;
 import com.valueObject.ImpuestoVO;
 import com.valueObject.RubroVO;
+import com.valueObject.UsuarioPermisosVO;
 import com.vista.BusquedaView;
 import com.vista.BusquedaViewExtended;
 import com.vista.IBusqueda;
@@ -45,7 +48,7 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 	
 	private BeanFieldGroup<RubroVO> fieldGroup;
 	private RubroControlador controlador;
-	private ImpuestoControlador controladorImpuestos;
+	//private ImpuestoControlador controladorImpuestos;
 	private CodigoGeneralizadoControlador controladorTipoRubro;
 	private String operacion;
 	private RubrosPanelExtended mainView;
@@ -81,6 +84,13 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 				/*Validamos los campos antes de invocar al controlador*/
 				if(this.fieldsValidos())
 				{
+					 /* para confirmar los permisos del usuario*/
+					UsuarioPermisosVO permisoAux = 
+							new UsuarioPermisosVO(this.permisos.getCodEmp(),
+									this.permisos.getUsuario(),
+									VariablesPermisos.FORMULARIO_RUBROS,
+									VariablesPermisos.OPERACION_NUEVO_EDITAR);
+					
 									
 					RubroVO rubroVO = new RubroVO();		
 					
@@ -99,7 +109,7 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 										
 					if(this.operacion.equals(Variables.OPERACION_NUEVO)) {	
 		
-						this.controlador.insertarRubro(rubroVO);
+						this.controlador.insertarRubro(rubroVO, permisoAux);
 						
 						this.mainView.actulaizarGrilla(rubroVO);
 						
@@ -109,7 +119,7 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 					}
 					else if(this.operacion.equals(Variables.OPERACION_EDITAR))	{
 						
-						this.controlador.actualizarRubro(rubroVO);
+						this.controlador.actualizarRubro(rubroVO, permisoAux);
 						
 						this.mainView.actulaizarGrilla(rubroVO);
 						
@@ -125,7 +135,8 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 					
 			} 
 			catch (ConexionException | NoExisteRubroException | ModificandoRubroException | ExisteRubroException | 
-					 InicializandoException | InsertandoRubroException | ErrorInesperadoException e) {
+					 InicializandoException | InsertandoRubroException | ErrorInesperadoException 
+					 | ObteniendoPermisosException| NoTienePermisosException e) {
 				
 				Mensajes.mostrarMensajeError(e.getMessage());
 			}
@@ -153,12 +164,14 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 			BusquedaViewExtended form = new BusquedaViewExtended(this, new ImpuestoVO());
 			ArrayList<Object> lst = new ArrayList<Object>();
 			ArrayList<ImpuestoVO> lstImpuesto = new ArrayList<ImpuestoVO>();
-			controladorImpuestos = new ImpuestoControlador();
+			//controladorImpuestos = new ImpuestoControlador();
 			try {
-				lstImpuesto = this.controladorImpuestos.getImpuestos();
-			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				lstImpuesto = this.controlador.getImpuestos();
+				
+			} catch (ObteniendoImpuestosException | InicializandoException | ConexionException
+					| ObteniendoPermisosException| NoTienePermisosException e) {
+
+				Mensajes.mostrarMensajeError(e.getMessage());
 			}
 			Object obj;
 			for (ImpuestoVO i: lstImpuesto) {
@@ -167,10 +180,12 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 				lst.add(obj);
 			}
 			try {
+				
 				form.inicializarGrilla(lst);
+				
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 			}
 			
 			
@@ -309,9 +324,21 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 	 */
 	private void iniFormLectura()
 	{
-		/*Habilitamos el boton de editar,
-		 * deshabilitamos botn aceptar*/
-		this.enableBotonesLectura();
+		/*Verificamos que tenga permisos para editar*/
+		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_RUBROS, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		
+		/*Si tiene permisos de editar habilitamos el boton de 
+		 * edicion*/
+		if(permisoNuevoEditar){
+			
+			this.enableBotonesLectura();
+			
+		}else{ /*de lo contrario lo deshabilitamos*/
+			
+			this.disableBotonLectura();
+		}
+		
+		/*Deshabilitamos botn aceptar*/
 		this.disableBotonAceptar();
 		
 		/*No mostramos las validaciones*/
@@ -522,10 +549,11 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 
 		try {
 			
-				lstImpuestos = controladorImpuestos.getImpuestos();
+				lstImpuestos = this.controlador.getImpuestos();
 			
 		} 
-		catch (ObteniendoImpuestosException | InicializandoException | ConexionException e) {
+		catch (ObteniendoImpuestosException | InicializandoException | ConexionException
+				| ObteniendoPermisosException| NoTienePermisosException e) {
 			
 			Mensajes.mostrarMensajeError(e.getMessage());
 		}

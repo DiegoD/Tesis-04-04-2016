@@ -9,6 +9,8 @@ import com.controladores.EmpresaControlador;
 import com.controladores.RubroControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.InicializandoException;
+import com.excepciones.NoTienePermisosException;
+import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Empresas.ObteniendoEmpresasException;
 import com.excepciones.Impuestos.ObteniendoImpuestosException;
 import com.excepciones.Rubros.ObteniendoRubrosException;
@@ -22,6 +24,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.valueObject.EmpresaVO;
 import com.valueObject.RubroVO;
+import com.valueObject.UsuarioPermisosVO;
 import com.vista.Mensajes;
 import com.vista.MySub;
 import com.vista.PermisosUsuario;
@@ -36,6 +39,7 @@ public class RubrosPanelExtended extends RubrosPanel{
 	private ArrayList<RubroVO> lstRubros; /*Lista con los rubros*/
 	private BeanItemContainer<RubroVO> container;
 	private RubroControlador controlador;
+	PermisosUsuario permisos;
 	MySub sub = new MySub("65%", "65%");
 	
 	public RubrosPanelExtended() throws InicializandoException, ConexionException, ObteniendoImpuestosException{
@@ -43,7 +47,7 @@ public class RubrosPanelExtended extends RubrosPanel{
 		this.lstRubros = new ArrayList<RubroVO>();
 		
 		String usuario = (String)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("usuario");
-		PermisosUsuario permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
+		this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
 		
 		/*Verificamos que el usuario tenga permisos de lectura para mostrar la vista*/
 		boolean permisoLectura = permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_RUBROS, VariablesPermisos.OPERACION_LEER);
@@ -178,11 +182,18 @@ public class RubrosPanelExtended extends RubrosPanel{
 		ArrayList<RubroVO> lstRubros = new ArrayList<RubroVO>();
 
 		try {
+			 /* para confirmar los permisos del usuario*/
+				UsuarioPermisosVO permisoAux = 
+						new UsuarioPermisosVO(this.permisos.getCodEmp(),
+								this.permisos.getUsuario(),
+								VariablesPermisos.FORMULARIO_RUBROS,
+								VariablesPermisos.OPERACION_LEER);
 			
-			lstRubros = controlador.getRubros();
+			lstRubros = controlador.getRubros(permisoAux);
 			
 		} 
-		catch (ObteniendoRubrosException | InicializandoException | ConexionException e) {
+		catch (ObteniendoRubrosException | InicializandoException | ConexionException
+				| ObteniendoPermisosException| NoTienePermisosException e) {
 			
 			Mensajes.mostrarMensajeError(e.getMessage());
 		}

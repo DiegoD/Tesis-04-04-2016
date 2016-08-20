@@ -205,9 +205,22 @@ public class EmpresaViewExtended extends EmpresaView{
 	 */
 	private void iniFormLectura()
 	{
-		/*Habilitamos el boton de editar,
-		 * deshabilitamos botn aceptar*/
-		this.enableBotonesLectura();
+		
+		/*Verificamos que tenga permisos para editar*/
+		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_EMPRESAS, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		
+		/*Si tiene permisos de editar habilitamos el boton de 
+		 * edicion*/
+		if(permisoNuevoEditar){
+			
+			this.enableBotonesLectura();
+			
+		}else{ /*de lo contrario lo deshabilitamos*/
+			
+			this.disableBotonLectura();
+		}
+		
+		/*Deshabilitamos botn aceptar*/
 		this.disableBotonAceptar();
 		
 		/*No mostramos las validaciones*/

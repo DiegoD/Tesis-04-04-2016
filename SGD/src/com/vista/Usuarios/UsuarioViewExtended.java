@@ -502,9 +502,21 @@ public class UsuarioViewExtended extends UsuarioView{
 	private void iniFormLectura()
 	{
 		
-		/*Habilitamos el boton de editar,
-		 * deshabilitamos botn aceptar*/
-		this.enableBotonEditar();
+		/*Verificamos que tenga permisos para editar*/
+		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_USUARIO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		
+		/*Si tiene permisos de editar habilitamos el boton de 
+		 * edicion*/
+		if(permisoNuevoEditar){
+			
+			this.enableBotonEditar();
+			
+		}else{ /*de lo contrario lo deshabilitamos*/
+			
+			this.disableBotonEditar();
+		}
+		
+		/*Deshabilitamos botn aceptar*/
 		this.disableBotonAceptar();
 		this.disableBotonAgregarQuitar();
 		

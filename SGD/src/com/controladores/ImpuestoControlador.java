@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import com.excepciones.ConexionException;
 import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
+import com.excepciones.NoTienePermisosException;
+import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Impuestos.ExisteImpuestoException;
 import com.excepciones.Impuestos.InsertandoImpuestoException;
 import com.excepciones.Impuestos.ModificandoImpuestoException;
@@ -21,6 +23,7 @@ import com.logica.Fachada;
 import com.logica.FachadaDD;
 import com.valueObject.GrupoVO;
 import com.valueObject.ImpuestoVO;
+import com.valueObject.UsuarioPermisosVO;
 
 public class ImpuestoControlador {
 	
@@ -30,26 +33,45 @@ public class ImpuestoControlador {
 	
 	/**
 	 * Obtiene array list de VO de todos los impuestos
+	 * @throws ObteniendoPermisosException 
+	 * @throws NoTienePermisosException 
 	 */
-	public ArrayList<ImpuestoVO> getImpuestos() throws ObteniendoImpuestosException, ConexionException, InicializandoException {
+	public ArrayList<ImpuestoVO> getImpuestos(UsuarioPermisosVO permisos) throws ObteniendoImpuestosException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException {
 		
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
 			return FachadaDD.getInstance().getImpuestos();
+		else
+			throw new NoTienePermisosException();
 	}
 	
 	/**
 	 * Inserta un nuevo impuesto
+	 * @throws NoTienePermisosException 
+	 * @throws ObteniendoPermisosException 
 	 */
-	public void insertarImpuesto(ImpuestoVO impuestoVO) throws InsertandoImpuestoException, ExisteImpuestoException, InicializandoException, ConexionException, ErrorInesperadoException
+	public void insertarImpuesto(ImpuestoVO impuestoVO, UsuarioPermisosVO permisos) throws InsertandoImpuestoException, ExisteImpuestoException, InicializandoException, ConexionException, ErrorInesperadoException, ObteniendoPermisosException, NoTienePermisosException
 	{
-		FachadaDD.getInstance().insertarImpuesto(impuestoVO);
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			FachadaDD.getInstance().insertarImpuesto(impuestoVO);
+		else
+			throw new NoTienePermisosException();
 	}
 	
 	
 	/**
 	 * Actualiza los datos de un impuesto
+	 * @throws NoTienePermisosException 
+	 * @throws ObteniendoPermisosException 
 	 */
-	public void actualizarImpuesto(ImpuestoVO impuestoVO) throws ConexionException, NoExisteImpuestoException, ModificandoImpuestoException, ExisteImpuestoException, InicializandoException {
-		FachadaDD.getInstance().actualizarImpuesto(impuestoVO);
+	public void actualizarImpuesto(ImpuestoVO impuestoVO, UsuarioPermisosVO permisos) throws ConexionException, NoExisteImpuestoException, ModificandoImpuestoException, ExisteImpuestoException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException {
+		
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			FachadaDD.getInstance().actualizarImpuesto(impuestoVO);
+		else
+			throw new NoTienePermisosException();
 	}
 	
 	
