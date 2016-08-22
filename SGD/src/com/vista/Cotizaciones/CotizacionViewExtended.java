@@ -84,6 +84,8 @@ public class CotizacionViewExtended extends CotizacionView implements IBusqueda{
 					cotizacionVO.setCodMoneda(codMoneda.getValue().trim());
 					cotizacionVO.setDescripcionMoneda(descripcionMoneda.getValue().trim());
 					
+					cotizacionVO.setUsuarioMod(this.permisos.getUsuario());
+					cotizacionVO.setOperacion(operacion);
 										
 					if(this.operacion.equals(Variables.OPERACION_NUEVO)) {	
 		
@@ -144,6 +146,12 @@ public class CotizacionViewExtended extends CotizacionView implements IBusqueda{
 			ArrayList<MonedaVO> lstMonedas = new ArrayList<MonedaVO>();
 			//controladorImpuestos = new ImpuestoControlador();
 			try {
+				 /* para confirmar los permisos del usuario*/
+				permisoAux = 
+						new UsuarioPermisosVO(this.permisos.getCodEmp(),
+								this.permisos.getUsuario(),
+								VariablesPermisos.FORMULARIO_COTIZACIONES,
+								VariablesPermisos.OPERACION_NUEVO_EDITAR);
 				lstMonedas = this.controlador.getMonedas(permisoAux);
 				
 			} catch (ConexionException | InicializandoException | ObteniendoPermisosException | NoTienePermisosException e) {
@@ -366,6 +374,10 @@ public class CotizacionViewExtended extends CotizacionView implements IBusqueda{
 		this.fecha.setReadOnly(false);
 		this.cotizacionCompra.setReadOnly(false);
 		this.cotizacionVenta.setReadOnly(false);
+		this.codMoneda.setReadOnly(false);
+		this.descripcionMoneda.setReadOnly(false);
+		this.codMoneda.setEnabled(true);
+		this.descripcionMoneda.setEnabled(true);
 		
 	}
 	

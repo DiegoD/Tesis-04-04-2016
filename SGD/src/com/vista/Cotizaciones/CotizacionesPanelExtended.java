@@ -114,7 +114,6 @@ public class CotizacionesPanelExtended extends CotizacionesPanel{
 		
 		this.gridCotizaciones.setContainerDataSource(container);
 		
-		gridCotizaciones.removeColumn("activo");
 		gridCotizaciones.removeColumn("fechaMod");
 		gridCotizaciones.removeColumn("usuarioMod");
 		gridCotizaciones.removeColumn("operacion");

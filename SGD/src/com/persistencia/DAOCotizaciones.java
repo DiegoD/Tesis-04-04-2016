@@ -155,6 +155,8 @@ public class DAOCotizaciones implements IDAOCotizaciones{
     		pstmt1.setString(4, cotizacion.getOperacion());
     		pstmt1.setString(5, cotizacion.getMoneda().getCod_moneda());
     		pstmt1.setTimestamp(6, cotizacion.getFecha());
+    		
+    		System.out.println(update);
 			pstmt1.executeUpdate ();
 			
 			pstmt1.close ();
