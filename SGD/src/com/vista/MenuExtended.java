@@ -16,6 +16,7 @@ import com.vista.Documentos.DocumentosPanelExtended;
 //import com.vista.Clientes.ClienteView;
 import com.vista.Clientes.ClientesPanelExtended;
 import com.vista.CodigosGeneralizados.CodigosGeneralizadosPanelExtended;
+import com.vista.Cotizaciones.CotizacionesPanelExtended;
 import com.vista.Empresas.EmpresasPanelExtended;
 import com.vista.Funcionarios.FuncionariosPanelExtended;
 import com.vista.Grupos.GruposPanelExtended;
@@ -260,6 +261,22 @@ public class MenuExtended extends Menu{
 			}
 		});
 		
+		this.cotizaciones.addClickListener(click -> {
+			
+			setSizeFull();
+			
+			this.content.removeAllComponents();
+			try {
+				
+				CotizacionesPanelExtended u = new CotizacionesPanelExtended();
+				this.content.addComponent(u);
+				
+			} catch (Exception e) {
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}
+		});
+		
+		
 	}
 	
 	
@@ -308,6 +325,7 @@ public class MenuExtended extends Menu{
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_DOCUMENTOS) || 
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_DOCUMENTOS_DGI) || 
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_MONEDAS) || 
+				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_COTIZACIONES) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_RUBROS))
 			{
 				lstFormsMenuMant.add(formularioVO);
@@ -363,6 +381,12 @@ public class MenuExtended extends Menu{
 					case VariablesPermisos.FORMULARIO_FUNCIONARIOS:
 						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_FUNCIONARIOS, VariablesPermisos.OPERACION_LEER))
 							this.habilitarFuncionarios();
+						
+					break;
+					
+					case VariablesPermisos.FORMULARIO_COTIZACIONES:
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_COTIZACIONES, VariablesPermisos.OPERACION_LEER))
+							this.habilitarCotizaciones();
 						
 					break;
 				}
@@ -467,7 +491,8 @@ public class MenuExtended extends Menu{
 		this.funcionariosButton.setVisible(false);
 		this.funcionariosButton.setEnabled(false);
 		
-		
+		this.cotizaciones.setVisible(false);
+		this.cotizaciones.setEnabled(false);
 	}
 	
 	
@@ -540,6 +565,12 @@ public class MenuExtended extends Menu{
 		this.funcionariosButton.setVisible(true);
 		this.funcionariosButton.setEnabled(true);
 		this.tabMantenimientos.addComponent(funcionariosButton);
+	}
+	
+	private void habilitarCotizaciones(){
+		this.cotizaciones.setVisible(true);
+		this.cotizaciones.setEnabled(true);
+		this.tabMantenimientos.addComponent(cotizaciones);
 	}
 	
 	public PermisosUsuario getPermisosUsuario()

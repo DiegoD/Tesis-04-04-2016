@@ -2,22 +2,29 @@ package com.valueObject.Cotizacion;
 
 import java.sql.Timestamp;
 import com.valueObject.AuditoriaVO;
+import com.valueObject.EmpresaVO;
 
 public class CotizacionVO extends AuditoriaVO{
 	
 	private Timestamp fecha;
-	private float cotizacion;
+	private float cotizacionCompra;
+	private float cotizacionVenta;
 	private String codMoneda;
 	private String descripcionMoneda;
 	private String simboloMoneda;
 	private boolean aceptaCotizacionMoneda;
 	private boolean activoMoneda;
 	
-	public CotizacionVO(Timestamp fecha, float cotizacion, String codMoneda, String descripcionMoneda,
-			String simboloMoneda, boolean aceptaCotizacionMoneda, boolean activoMoneda) {
+	public CotizacionVO(){
+		
+	}
+	
+	public CotizacionVO(Timestamp fecha, float cotizacion_compra, float cotizacion_venta, String codMoneda, 
+			String descripcionMoneda, String simboloMoneda, boolean aceptaCotizacionMoneda, boolean activoMoneda) {
 		super();
 		this.fecha = fecha;
-		this.cotizacion = cotizacion;
+		this.cotizacionCompra = cotizacion_compra;
+		this.cotizacionVenta = cotizacion_venta;
 		this.codMoneda = codMoneda;
 		this.descripcionMoneda = descripcionMoneda;
 		this.simboloMoneda = simboloMoneda;
@@ -25,20 +32,33 @@ public class CotizacionVO extends AuditoriaVO{
 		this.activoMoneda = activoMoneda;
 	}
 
+	/**
+	 * Copiamos todos los datos de la cotización pasado
+	 * por parametro
+	 *
+	 */
+	public void copiar(CotizacionVO cotizacionVO){
+
+		this.setFecha(cotizacionVO.getFecha());
+		this.setCotizacionCompra(cotizacionVO.getCotizacionCompra());
+		this.setCotizacionVenta(cotizacionVO.getCotizacionVenta());
+		this.setFechaMod(cotizacionVO.getFechaMod());
+		this.setUsuarioMod(cotizacionVO.getUsuarioMod());
+		this.setOperacion(cotizacionVO.getOperacion());
+		this.setCodMoneda(cotizacionVO.getCodMoneda());
+		this.setDescripcionMoneda(cotizacionVO.getDescripcionMoneda());
+		this.setSimboloMoneda(cotizacionVO.getSimboloMoneda());
+		this.setAceptaCotizacionMoneda(cotizacionVO.isAceptaCotizacionMoneda());
+		this.setActivoMoneda(cotizacionVO.isActivoMoneda());
+		
+	}
+	
 	public Timestamp getFecha() {
 		return fecha;
 	}
 
 	public void setFecha(Timestamp fecha) {
 		this.fecha = fecha;
-	}
-
-	public float getCotizacion() {
-		return cotizacion;
-	}
-
-	public void setCotizacion(float cotizacion) {
-		this.cotizacion = cotizacion;
 	}
 
 	public String getCodMoneda() {
@@ -79,6 +99,22 @@ public class CotizacionVO extends AuditoriaVO{
 
 	public void setActivoMoneda(boolean activoMoneda) {
 		this.activoMoneda = activoMoneda;
+	}
+
+	public float getCotizacionCompra() {
+		return cotizacionCompra;
+	}
+
+	public void setCotizacionCompra(float cotizacion_compra) {
+		this.cotizacionCompra = cotizacion_compra;
+	}
+
+	public float getCotizacionVenta() {
+		return cotizacionVenta;
+	}
+
+	public void setCotizacionVenta(float cotizacion_venta) {
+		this.cotizacionVenta = cotizacion_venta;
 	}
 	
 }

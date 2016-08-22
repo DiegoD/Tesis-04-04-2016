@@ -18,6 +18,7 @@ import com.vaadin.ui.TextField;
 import com.valueObject.CodigoGeneralizadoVO;
 import com.valueObject.DocumDGIVO;
 import com.valueObject.ImpuestoVO;
+import com.valueObject.MonedaVO;
 import com.vista.Rubros.RubroViewExtended;
 
 public class BusquedaViewExtended extends BusquedaView{
@@ -26,6 +27,7 @@ public class BusquedaViewExtended extends BusquedaView{
 	BeanItemContainer<ImpuestoVO> containerImpuesto;
 	BeanItemContainer<DocumDGIVO> containerDocumentosDgi;
 	BeanItemContainer<CodigoGeneralizadoVO> containerCodigoGeneralizado;
+	BeanItemContainer<MonedaVO> containerMoneda;
 	Object seleccionado;
 	IBusqueda main;
 	
@@ -49,6 +51,13 @@ public class BusquedaViewExtended extends BusquedaView{
 			this.containerCodigoGeneralizado = new BeanItemContainer<CodigoGeneralizadoVO>(CodigoGeneralizadoVO.class);
 			this.lblNombre.setValue("Tipo Rubro");
 			this.seleccionado = new CodigoGeneralizadoVO();
+		}
+		
+		else if(obj instanceof MonedaVO){
+			
+			this.containerMoneda = new BeanItemContainer<MonedaVO>(MonedaVO.class);
+			this.lblNombre.setValue("Monedas");
+			this.seleccionado = new MonedaVO();
 		}
 		
 		grid.addSelectionListener(new SelectionListener() 
@@ -89,7 +98,15 @@ public class BusquedaViewExtended extends BusquedaView{
 					    }
 		    		}
 		    		
-		    		
+		    		else if(seleccionado instanceof MonedaVO){
+			    		if(grid.getSelectedRow() != null){
+			    			
+			    			BeanItem<MonedaVO> item = containerMoneda.getItem(grid.getSelectedRow());
+					    	seleccionado = item.getBean(); 
+					    	main.setInfo(seleccionado);	
+					    	main.cerrarVentana();
+					    }
+		    		}
 		    		
 		    	}
 		    	catch(Exception e){
@@ -161,6 +178,29 @@ public class BusquedaViewExtended extends BusquedaView{
 			
 			this.containerCodigoGeneralizado.addAll(lstDoc);
 			this.grid.setContainerDataSource(containerCodigoGeneralizado);
+			
+			grid.removeColumn("fechaMod");
+			grid.removeColumn("usuarioMod");
+			grid.removeColumn("operacion");
+			
+		
+			this.arreglarGrilla();
+			
+		}
+		
+		if(seleccionado instanceof MonedaVO){
+			
+			ArrayList<MonedaVO> lstDoc = new ArrayList<>();
+			
+			MonedaVO i;
+			for (Object o : lst) {
+				
+				i = (MonedaVO) o;
+				lstDoc.add(i);
+			}
+			
+			this.containerMoneda.addAll(lstDoc);
+			this.grid.setContainerDataSource(containerMoneda);
 			
 			grid.removeColumn("fechaMod");
 			grid.removeColumn("usuarioMod");
@@ -245,6 +285,18 @@ public class BusquedaViewExtended extends BusquedaView{
 					        // (Re)create the filter if necessary
 					        if (! change.getText().isEmpty())
 					        	this.containerCodigoGeneralizado.addContainerFilter(
+					                new SimpleStringFilter(pid,
+					                    change.getText(), true, false));
+				    	}
+				    	
+				    	else if(seleccionado instanceof MonedaVO) /*PARA MONEDAS*/
+				    	{
+					    	// Can't modify filters so need to replace
+					    	this.containerMoneda.removeContainerFilters(pid);
+			
+					        // (Re)create the filter if necessary
+					        if (! change.getText().isEmpty())
+					        	this.containerMoneda.addContainerFilter(
 					                new SimpleStringFilter(pid,
 					                    change.getText(), true, false));
 				    	}

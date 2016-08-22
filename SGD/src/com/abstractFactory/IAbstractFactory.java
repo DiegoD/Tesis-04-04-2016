@@ -2,6 +2,7 @@ package com.abstractFactory;
 
 import com.persistencia.IDAOClientes;
 import com.persistencia.IDAOCodigosGeneralizados;
+import com.persistencia.IDAOCotizaciones;
 import com.persistencia.IDAODocumDgi;
 //import com.persistencia.IDAODocumDgi;
 import com.persistencia.IDAODocumentos;
@@ -38,5 +39,7 @@ public interface IAbstractFactory
 	public IDAOFuncionarios crearDAOFuncionarios();
 	
 	public IDAOCodigosGeneralizados crearDAOCodigosGeneralizados ();
+	
+	public IDAOCotizaciones crearDAOCotizaciones();
 
 }

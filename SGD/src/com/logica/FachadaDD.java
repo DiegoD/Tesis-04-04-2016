@@ -20,6 +20,11 @@ import com.excepciones.CodigosGeneralizados.InsertandoCodigoException;
 import com.excepciones.CodigosGeneralizados.ModificandoCodigoException;
 import com.excepciones.CodigosGeneralizados.NoExisteCodigoException;
 import com.excepciones.CodigosGeneralizados.ObteniendoCodigosException;
+import com.excepciones.Cotizaciones.ExisteCotizacionException;
+import com.excepciones.Cotizaciones.InsertandoCotizacionException;
+import com.excepciones.Cotizaciones.ModificandoCotizacionException;
+import com.excepciones.Cotizaciones.NoExisteCotizacionException;
+import com.excepciones.Cotizaciones.ObteniendoCotizacionesException;
 import com.excepciones.Documentos.ExisteDocumentoException;
 import com.excepciones.Documentos.InsertandoDocumentoException;
 import com.excepciones.Documentos.ModificandoDocumentoException;
@@ -58,6 +63,7 @@ import com.excepciones.grupos.NoExisteGrupoException;
 import com.excepciones.grupos.ObteniendoFormulariosException;
 import com.excepciones.grupos.ObteniendoGruposException;
 import com.valueObject.*;
+import com.valueObject.Cotizacion.CotizacionVO;
 import com.persistencia.*;
 
 public class FachadaDD {
@@ -75,6 +81,7 @@ public class FachadaDD {
 	private IDAORubros rubros;
 	private IDAODocumentos documentos;
 	private IDAOCodigosGeneralizados codigosGeneralizados;
+	private IDAOCotizaciones cotizaciones;
 	
 	private AbstractFactoryBuilder fabrica;
 	private IAbstractFactory fabricaConcreta;
@@ -95,6 +102,7 @@ public class FachadaDD {
         this.rubros = fabricaConcreta.crearDAORubros();
         this.documentos = fabricaConcreta.crearDAODocumentos();
         this.codigosGeneralizados = fabricaConcreta.crearDAOCodigosGeneralizados();
+        this.cotizaciones = fabricaConcreta.crearDAOCotizaciones();
     }
     
     public static FachadaDD getInstance() throws InicializandoException {
@@ -1276,6 +1284,155 @@ public class FachadaDD {
 		}
 		if (!existe){
 			throw new NoExisteCodigoException();
+		}
+	}
+	
+///////////////////////////////////////////////////////////////////COTIZACIONES////////////////////////////////////////////////////////////////////////////////////////////
+	/**
+	* Obtiene todas las cotizaciones existentes
+	*/
+	@SuppressWarnings("unchecked")
+	public ArrayList<CotizacionVO> getCotizaciones() throws ObteniendoCotizacionesException, ConexionException
+	{
+	
+		Connection con = null;
+		
+		ArrayList<Cotizacion> lstCotizaciones;
+		ArrayList<CotizacionVO> lstCotizacionesVO = new ArrayList<CotizacionVO>();
+		
+		try
+		{
+			con = this.pool.obtenerConeccion();
+			
+			lstCotizaciones = this.cotizaciones.getCotizaciones(con);
+			
+			CotizacionVO aux;
+			for (Cotizacion cotizacion : lstCotizaciones) 
+			{
+				aux = new CotizacionVO();
+				
+				
+				aux.setFecha(cotizacion.getFecha());
+				aux.setCotizacionCompra(cotizacion.getCotizacion_compra());
+				aux.setCotizacionVenta(cotizacion.getCotizacion_venta());
+				aux.setFechaMod(cotizacion.getFechaMod());
+				aux.setUsuarioMod(cotizacion.getUsuarioMod());
+				aux.setOperacion(cotizacion.getOperacion());
+				
+				aux.setCodMoneda(cotizacion.getMoneda().getCod_moneda());
+				aux.setDescripcionMoneda(cotizacion.getMoneda().getDescripcion());
+				aux.setSimboloMoneda(cotizacion.getMoneda().getSimbolo());
+				aux.setAceptaCotizacionMoneda(cotizacion.getMoneda().isAcepta_cotizacion());
+				aux.setActivoMoneda(cotizacion.getMoneda().isActivo());
+				
+				lstCotizacionesVO.add(aux);
+			}
+		
+		}
+		catch(ObteniendoCotizacionesException e){
+			throw e;
+		
+		} 
+		catch (ConexionException e) {
+		
+			throw e;
+		} 
+		finally	{
+			this.pool.liberarConeccion(con);
+		}
+		
+		
+		return lstCotizacionesVO;
+	}
+
+	/**
+	* Inserta una nueva cotización en la base
+	* Valida que no exista una cotización para moneda/fecha
+	* @throws ExisteEmpresaException 
+	*/
+	public void insertarCotizacion(CotizacionVO cotizacionVO) throws InsertandoCotizacionException, ConexionException, 
+		ExisteCotizacionException{
+	
+		Connection con = null;
+		boolean existe = false;
+		
+		try 
+		{
+			con = this.pool.obtenerConeccion();
+			con.setAutoCommit(false);
+			
+			Cotizacion cotizacion = new Cotizacion(cotizacionVO); 
+			
+			if(!this.cotizaciones.memberCotizacion(cotizacionVO.getCodMoneda(), cotizacionVO.getFecha(), con)) 	{
+			
+				this.cotizaciones.insertarCotizacion(cotizacion, con);
+				con.commit();
+			}
+			else{
+				existe = true;
+			}
+		}
+		catch(Exception InsertandoCotizacionException)  	{
+			try {
+			con.rollback();
+			
+			} 
+			catch (SQLException e) {
+			
+				throw new InsertandoCotizacionException();
+			}
+		
+			throw new InsertandoCotizacionException();
+		}
+		finally	{
+			pool.liberarConeccion(con);
+		}
+		if (existe){
+			throw new ExisteCotizacionException();
+		}
+	}
+
+	/**
+	* Actualiza los datos de una cotizacion dada la moneda y la fecha
+	* valida que exista el código 
+	*/
+	public void actualizarCotizacion(CotizacionVO cotizacionVO) throws ConexionException, NoExisteCotizacionException,
+		ModificandoCotizacionException, ExisteCotizacionException  
+	{
+	
+		Connection con = null;
+		
+		try 
+		{
+			con = this.pool.obtenerConeccion();
+			con.setAutoCommit(false);
+			
+			Cotizacion cotizacion = new Cotizacion(cotizacionVO);
+			
+			if(this.cotizaciones.memberCotizacion(cotizacion.getMoneda().getCod_moneda(), cotizacion.getFecha(), con)){
+				
+				this.cotizaciones.actualizarCotizacion(cotizacion, con);
+				con.commit();
+			}
+		
+			else
+				throw new NoExisteCotizacionException();
+		
+		}
+		catch(ConexionException | SQLException | ModificandoCotizacionException e){
+			try {
+			con.rollback();
+			
+			} 
+			catch (SQLException e1) {
+		
+				throw new ConexionException();
+			}
+		
+			throw new ModificandoCotizacionException();
+		}
+		finally	{
+			pool.liberarConeccion(con);
 		}
 	}
 }

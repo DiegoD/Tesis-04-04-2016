@@ -9,13 +9,19 @@ public class Cotizacion extends Auditoria{
 	
 	private Moneda moneda;
 	private Timestamp fecha;
-	private float cotizacion;
+	private float cotizacion_compra;
+	private float cotizacion_venta;
 	
-	public Cotizacion(Moneda moneda, Timestamp fecha, float cotizacion) {
+	public Cotizacion(){
+		
+	}
+	
+	public Cotizacion(Moneda moneda, Timestamp fecha, float cotizacion_compra, float cotizacion_venta) {
 		super();
 		this.moneda = moneda;
 		this.fecha = fecha;
-		this.cotizacion = cotizacion;
+		this.cotizacion_compra = cotizacion_compra;
+		this.cotizacion_venta = cotizacion_venta;
 	}
 	
 	public Cotizacion (CotizacionVO cotizacionVO){
@@ -31,7 +37,8 @@ public class Cotizacion extends Auditoria{
 		this.moneda.setActivo(cotizacionVO.isActivoMoneda());
 		
 		this.fecha = cotizacionVO.getFecha();
-		this.cotizacion = cotizacionVO.getCotizacion();
+		this.cotizacion_compra = cotizacionVO.getCotizacionCompra();
+		this.cotizacion_venta = cotizacionVO.getCotizacionVenta();
 	}
 	
 	public Moneda getMoneda() {
@@ -50,12 +57,20 @@ public class Cotizacion extends Auditoria{
 		this.fecha = fecha;
 	}
 
-	public float getCotizacion() {
-		return cotizacion;
+	public float getCotizacion_compra() {
+		return cotizacion_compra;
 	}
 
-	public void setCotizacion(float cotizacion) {
-		this.cotizacion = cotizacion;
+	public void setCotizacion_compra(float cotizacion_compra) {
+		this.cotizacion_compra = cotizacion_compra;
+	}
+
+	public float getCotizacion_venta() {
+		return cotizacion_venta;
+	}
+
+	public void setCotizacion_venta(float cotizacion_venta) {
+		this.cotizacion_venta = cotizacion_venta;
 	}
 	
 }

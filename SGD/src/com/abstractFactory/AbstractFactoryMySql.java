@@ -71,5 +71,11 @@ public class AbstractFactoryMySql implements IAbstractFactory
 		
 		return new DAOFuncionarios();
 	}
+	
+	@Override
+	public IDAOCotizaciones crearDAOCotizaciones() {
+		
+		return new DAOCotizaciones();
+	}
 
 }
