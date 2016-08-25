@@ -73,7 +73,8 @@ public class CotizacionViewExtended extends CotizacionView implements IBusqueda{
 
 					java.util.Date fechaCotiz = new java.util.Date();
 					fechaCotiz = fecha.getValue();
-					cotizacionVO.setFecha(new java.sql.Timestamp(fechaCotiz.getTime()));
+					//cotizacionVO.setFecha(new java.sql.Timestamp(fechaCotiz.getTime()));
+					cotizacionVO.setFecha(new java.sql.Timestamp(fecha.getValue().getTime()));
 					
 					String aux = cotizacionCompra.getValue().toString().trim().replace(",", ".");
 					cotizacionVO.setCotizacionCompra(Float.parseFloat(aux));

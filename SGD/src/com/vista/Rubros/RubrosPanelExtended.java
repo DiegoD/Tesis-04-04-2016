@@ -65,7 +65,7 @@ public class RubrosPanelExtended extends RubrosPanel{
 				
 					this.btnNuevoRubro.addClickListener(click -> {
 						
-						sub = new MySub("65%", "65%");
+						sub = new MySub("55%", "45%");
 						try {
 							form = new RubroViewExtended(Variables.OPERACION_NUEVO, this);
 						} catch (Exception e) {
@@ -152,7 +152,7 @@ public class RubrosPanelExtended extends RubrosPanel{
 				    	}
 							
 				    	form = new RubroViewExtended(Variables.OPERACION_LECTURA, RubrosPanelExtended.this);
-						sub = new MySub("70%","65%");
+						sub = new MySub("55%","45%");
 						sub.setModal(true);
 						sub.setVista(form);
 						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/

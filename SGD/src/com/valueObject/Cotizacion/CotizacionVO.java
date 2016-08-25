@@ -30,6 +30,7 @@ public class CotizacionVO extends AuditoriaVO{
 		this.simboloMoneda = simboloMoneda;
 		this.aceptaCotizacionMoneda = aceptaCotizacionMoneda;
 		this.activoMoneda = activoMoneda;
+		
 	}
 
 	/**

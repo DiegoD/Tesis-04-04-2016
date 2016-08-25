@@ -20,8 +20,8 @@ public class MySub extends Window{
 		setResizable(true);
 		//setScrollLeft(true);
 		
-		setHeight("70%");
-		setWidth("55%");
+		//setHeight("70%");
+		//setWidth("55%");
 		
 	}
 	
@@ -44,6 +44,13 @@ public class MySub extends Window{
 	public void setVista(Component component){
 				
 		setContent(component);
+		
+	}
+	
+	public void setTam(String height, String width){
+		
+		setHeight(height);
+		setWidth(width);
 		
 	}
 

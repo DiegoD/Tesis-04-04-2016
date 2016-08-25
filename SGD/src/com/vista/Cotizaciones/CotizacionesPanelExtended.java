@@ -60,7 +60,7 @@ public class CotizacionesPanelExtended extends CotizacionesPanel{
 				
 					this.btnNuevaCotizacion.addClickListener(click -> {
 						
-						sub = new MySub("65%", "65%");
+						sub = new MySub("60%","45%");
 						form = new CotizacionViewExtended(Variables.OPERACION_NUEVO, this);
 						sub.setModal(true);
 						sub.setVista(form);
@@ -117,6 +117,10 @@ public class CotizacionesPanelExtended extends CotizacionesPanel{
 		gridCotizaciones.removeColumn("fechaMod");
 		gridCotizaciones.removeColumn("usuarioMod");
 		gridCotizaciones.removeColumn("operacion");
+		gridCotizaciones.removeColumn("codMoneda");
+		gridCotizaciones.removeColumn("simboloMoneda");
+		gridCotizaciones.removeColumn("aceptaCotizacionMoneda");
+		gridCotizaciones.removeColumn("activoMoneda");
 		
 		/*Agregamos los filtros a la grilla*/
 		this.filtroGrilla();
@@ -139,7 +143,7 @@ public class CotizacionesPanelExtended extends CotizacionesPanel{
 				    	}
 							
 				    	form = new CotizacionViewExtended(Variables.OPERACION_LECTURA, CotizacionesPanelExtended.this);
-						sub = new MySub("70%","65%");
+						sub = new MySub("60%","45%");
 						sub.setModal(true);
 						sub.setVista(form);
 						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/

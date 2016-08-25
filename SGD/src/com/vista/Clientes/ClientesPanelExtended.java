@@ -38,7 +38,7 @@ public class ClientesPanelExtended extends ClientesPanel{
 	private ArrayList<ClienteVO> lstClientes; /*Lista con los impuestos*/
 	private BeanItemContainer<ClienteVO> container;
 	private ClienteControlador controlador;
-	MySub sub = new MySub("65%", "65%");
+	MySub sub = new MySub("65%", "35%");
 	private PermisosUsuario permisos;
 	
 	
@@ -66,7 +66,7 @@ public class ClientesPanelExtended extends ClientesPanel{
 				
 					this.btnNuevo.addClickListener(click -> {
 						
-						sub = new MySub("85%", "65%");
+						sub = new MySub("83%","52%");
 						ClienteViewExtended form = new ClienteViewExtended(Variables.OPERACION_NUEVO, this);
 						sub.setModal(true);
 						sub.setVista(form);
@@ -152,7 +152,7 @@ public class ClientesPanelExtended extends ClientesPanel{
 				    	}
 							
 				    	ClienteViewExtended form = new ClienteViewExtended(Variables.OPERACION_LECTURA, ClientesPanelExtended.this);
-						sub = new MySub("85%","65%");
+				    	sub = new MySub("83%","52%");
 						sub.setModal(true);
 						sub.setVista(form);
 						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/

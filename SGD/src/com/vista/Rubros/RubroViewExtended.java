@@ -235,7 +235,6 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 			sub.center();
 			sub.setDraggable(true);
 			UI.getCurrent().addWindow(sub);
-			
 		});
 		
 		this.cancelar.addClickListener(click -> {
