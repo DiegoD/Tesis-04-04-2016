@@ -1,4 +1,6 @@
-package com.valueObject;
+package com.valueObject.empresa;
+
+import com.valueObject.AuditoriaVO;
 
 public class EmpresaVO extends AuditoriaVO {
 
