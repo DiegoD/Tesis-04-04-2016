@@ -3,19 +3,12 @@ package com.vista.Rubros;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-import com.controladores.CodigoGeneralizadoControlador;
-import com.controladores.EmpresaControlador;
-import com.controladores.ImpuestoControlador;
 import com.controladores.RubroControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
 import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
-import com.excepciones.Empresas.ExisteEmpresaException;
-import com.excepciones.Empresas.InsertandoEmpresaException;
-import com.excepciones.Empresas.ModificandoEmpresaException;
-import com.excepciones.Empresas.NoExisteEmpresaException;
 import com.excepciones.Impuestos.ObteniendoImpuestosException;
 import com.excepciones.Rubros.ExisteRubroException;
 import com.excepciones.Rubros.InsertandoRubroException;
@@ -29,9 +22,14 @@ import com.vaadin.server.VaadinService;
 import com.vaadin.ui.UI;
 import com.valueObject.CodigoGeneralizadoVO;
 import com.valueObject.EmpLoginVO;
+import com.valueObject.empresa.EmpresaVO;
+import com.valueObject.CodigoGeneralizadoVO;
+import com.valueObject.EmpLoginVO;
 import com.valueObject.ImpuestoVO;
 import com.valueObject.RubroVO;
 import com.valueObject.UsuarioPermisosVO;
+import com.valueObject.TipoRubro.TipoRubroVO;
+import com.vista.BusquedaView;
 import com.valueObject.empresa.EmpresaVO;
 import com.vista.BusquedaView;
 import com.vista.BusquedaViewExtended;
@@ -41,15 +39,12 @@ import com.vista.MySub;
 import com.vista.PermisosUsuario;
 import com.vista.Variables;
 import com.vista.VariablesPermisos;
-import com.vista.Empresas.EmpresasPanelExtended;
-import com.vista.Usuarios.UsuarioViewAgregarGrupoExtend;
 
 public class RubroViewExtended extends RubroView implements IBusqueda{
 	
 	private BeanFieldGroup<RubroVO> fieldGroup;
 	private RubroControlador controlador;
 	//private ImpuestoControlador controladorImpuestos;
-	private CodigoGeneralizadoControlador controladorTipoRubro;
 	private String operacion;
 	private RubrosPanelExtended mainView;
 	private BeanItemContainer<ImpuestoVO> containerImpuestos;
@@ -103,13 +98,13 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 					rubroVO.setDescripcionImpuesto(descripcionImpuesto.getValue().trim());
 					String aux = porcentajeImpuesto.getValue().toString().trim().replace(",", ".");
 					rubroVO.setPorcentajeImpuesto(Float.parseFloat(aux));
-					rubroVO.setTipoRubro(tipoRubro.getValue().trim());
 					rubroVO.setCodTipoRubro(codTipoRubro.getValue().trim());
+					rubroVO.setDescripcionTipoRubro(descripcionTipoRubro.getValue().trim());
 					
-										
+					
 					if(this.operacion.equals(Variables.OPERACION_NUEVO)) {	
 		
-						this.controlador.insertarRubro(rubroVO, permisoAux);
+						this.controlador.insertarRubro(rubroVO, permisoAux.getCodEmp(), permisoAux);
 						
 						this.mainView.actulaizarGrilla(rubroVO);
 						
@@ -119,7 +114,7 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 					}
 					else if(this.operacion.equals(Variables.OPERACION_EDITAR))	{
 						
-						this.controlador.actualizarRubro(rubroVO, permisoAux);
+						this.controlador.actualizarRubro(rubroVO, permisoAux.getCodEmp(), permisoAux);
 						
 						this.mainView.actulaizarGrilla(rubroVO);
 						
@@ -164,7 +159,7 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 			BusquedaViewExtended form = new BusquedaViewExtended(this, new ImpuestoVO());
 			ArrayList<Object> lst = new ArrayList<Object>();
 			ArrayList<ImpuestoVO> lstImpuesto = new ArrayList<ImpuestoVO>();
-			//controladorImpuestos = new ImpuestoControlador();
+			//controlador = new ImpuestoControlador();
 			try {
 				lstImpuesto = this.controlador.getImpuestos();
 				
@@ -202,18 +197,17 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 		});
 		
 		this.btnBuscarTipoRubro.addClickListener(click -> {
-			BusquedaViewExtended form = new BusquedaViewExtended(this, new CodigoGeneralizadoVO());
+			BusquedaViewExtended form = new BusquedaViewExtended(this, new TipoRubroVO());
 			ArrayList<Object> lst = new ArrayList<Object>();
-			ArrayList<CodigoGeneralizadoVO> lstTipoRubro = new ArrayList<CodigoGeneralizadoVO>();
-			controladorTipoRubro = new CodigoGeneralizadoControlador();
+			ArrayList<TipoRubroVO> lstTipoRubro = new ArrayList<TipoRubroVO>();
 			try {
-				lstTipoRubro = this.controladorTipoRubro.getCodigosGeneralizadosxCodigo("tipo_rubro");
+				lstTipoRubro = this.controlador.getTipoRubros(permisos.getCodEmp()); 
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			Object obj;
-			for (CodigoGeneralizadoVO i: lstTipoRubro) {
+			for (TipoRubroVO i: lstTipoRubro) {
 				obj = new Object();
 				obj = (Object)i;
 				lst.add(obj);
@@ -263,6 +257,8 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 			/*Inicializamos formulario como editar*/
 			this.iniFormLectura();
 		} 
+		
+		
 	}
 	
 	/**
@@ -287,8 +283,8 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 		this.codTipoRubro.setRequired(setear);
 		this.codTipoRubro.setRequiredError("Es requerido");
 		
-		this.tipoRubro.setRequired(setear);
-		this.tipoRubro.setRequiredError("Es requerido");
+		this.descripcionTipoRubro.setRequired(setear);
+		this.descripcionTipoRubro.setRequiredError("Es requerido");
 		
 	}
 	
@@ -424,11 +420,11 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 		this.descripcion.setReadOnly(false);
 		this.activo.setReadOnly(false);
 		this.descripcionImpuesto.setReadOnly(false);
-		this.tipoRubro.setReadOnly(false);
+		this.descripcionTipoRubro.setReadOnly(false);
 		this.codigoImpuesto.setReadOnly(false);
 		this.descripcionImpuesto.setEnabled(false);
 		this.codigoImpuesto.setEnabled(false);
-		this.tipoRubro.setEnabled(false);
+		this.descripcionTipoRubro.setEnabled(false);
 	}
 	
 	
@@ -493,8 +489,8 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 		this.activo.setReadOnly(setear);
 		this.descripcionImpuesto.setReadOnly(false);	
 		this.descripcionImpuesto.setEnabled(false);
-		this.tipoRubro.setReadOnly(false);
-		this.tipoRubro.setEnabled(false);
+		this.descripcionTipoRubro.setReadOnly(false);
+		this.descripcionTipoRubro.setEnabled(false);
 		this.codigoImpuesto.setReadOnly(false);
 		this.codigoImpuesto.setEnabled(false);
 		
@@ -531,7 +527,7 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 		//Agregamos validaciones a los campos para luego controlarlos
 		this.agregarFieldsValidaciones();
 		
-		if(this.codRubro.isValid() && this.descripcion.isValid() && this.codigoImpuesto.isValid() && this.codRubro.isValid() && this.tipoRubro.isValid())
+		if(this.codRubro.isValid() && this.descripcion.isValid() && this.codigoImpuesto.isValid() && this.codRubro.isValid() && this.descripcionTipoRubro.isValid())
 			valido = true;
 			
 		return valido;
@@ -583,10 +579,10 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 			this.porcentajeImpuesto.setValue(String.format("%.2f",impuestoVO.getPorcentaje()));
 		}
 		
-		if(datos instanceof CodigoGeneralizadoVO){
-			CodigoGeneralizadoVO tipoRubro = (CodigoGeneralizadoVO) datos;
-			this.tipoRubro.setValue(tipoRubro.getValor());
-			this.codTipoRubro.setValue(tipoRubro.getCodigo());
+		if(datos instanceof TipoRubroVO){
+			TipoRubroVO tipoRubro = (TipoRubroVO) datos;
+			this.descripcionTipoRubro.setValue(tipoRubro.getDescripcion());
+			this.codTipoRubro.setValue(tipoRubro.getCodTipoRubro());
 		}
 		
 		
