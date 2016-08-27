@@ -29,11 +29,11 @@ import com.logica.GruposUsuario;
 import com.logica.Usuario;
 import com.sun.jna.platform.win32.Sspi.TimeStamp;
 import com.valueObject.EmpLoginVO;
-import com.valueObject.EmpresaVO;
 import com.valueObject.FormularioVO;
 import com.valueObject.GrupoVO;
 import com.valueObject.LoginVO;
 import com.valueObject.UsuarioVO;
+import com.valueObject.empresa.EmpresaVO;
 
 public class DAOUsuarios implements IDAOUsuarios {
 
@@ -476,9 +476,10 @@ public class DAOUsuarios implements IDAOUsuarios {
 	 * Obtenemos las empresas para el usuario
 	 * 
 	 */
-	public ArrayList<EmpLoginVO> getUsuariosxEmp(String usuario, Connection con) throws ObteniendoUsuariosxEmpExeption 
+	public EmpLoginVO getEmpresaUsuario(String usuario, Connection con) throws ObteniendoUsuariosxEmpExeption 
 	{
-		ArrayList<EmpLoginVO> lstEmpresas = new ArrayList<EmpLoginVO>();
+		EmpLoginVO empVO = null;
+		
 		try 
 		{
 			Consultas consultas = new Consultas();
@@ -489,15 +490,13 @@ public class DAOUsuarios implements IDAOUsuarios {
 			
 			ResultSet rs = pstmt1.executeQuery();
 			
-			EmpLoginVO empVO;
-			
 			while(rs.next ()) 
 			{
 				empVO = new EmpLoginVO();
 				empVO.setCodEmp(rs.getString(1));
 				empVO.setNomEmp(rs.getString(2));
 				
-				lstEmpresas.add(empVO);
+				
 			}
 			rs.close();
 			pstmt1.close();
@@ -506,7 +505,7 @@ public class DAOUsuarios implements IDAOUsuarios {
 		{
 			throw new ObteniendoUsuariosxEmpExeption();
 		}
-		return lstEmpresas;
+		return empVO;
 		
 	}
 	

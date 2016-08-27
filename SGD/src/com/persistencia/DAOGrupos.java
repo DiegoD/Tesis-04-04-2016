@@ -66,6 +66,48 @@ public class DAOGrupos implements IDAOGrupos {
 		return lstGrupos;
 	}
 
+	public Grupo getGrupo(Connection con, String codGrupo) throws ObteniendoGruposException, ObteniendoFormulariosException
+	{
+		Grupo grupo = null;
+		try
+		{
+			Consultas consultas = new Consultas ();
+			String query = consultas.getGrupo();
+			
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			pstmt1.setString(1, codGrupo);
+			
+			ResultSet rs = pstmt1.executeQuery();
+			
+			
+			
+			while(rs.next ()) {
+
+				grupo = new Grupo();
+
+				grupo.setCodGrupo(rs.getString(1));
+				grupo.setNomGrupo(rs.getString(2));
+				grupo.setFechaMod(rs.getTimestamp(3));
+				grupo.setUsuarioMod(rs.getString(4));
+				grupo.setOperacion(rs.getString(5));
+				grupo.setActivo(rs.getBoolean(6));
+				
+				/*Obtenemos los formularios del grupo*/
+				grupo.setLstFormularios(this.getFormulariosxGrupo(grupo.getCodGrupo(), con));
+
+			}
+			
+			rs.close ();
+			pstmt1.close ();
+		}
+		catch (SQLException e) {
+			
+			throw new ObteniendoGruposException();
+		}
+			
+		return grupo;
+	}
+	
 
 	/**
 	 * Insertamos grupo dado grupo,

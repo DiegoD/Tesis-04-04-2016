@@ -17,11 +17,14 @@ import com.excepciones.Impuestos.InsertandoImpuestoException;
 import com.excepciones.Impuestos.ModificandoImpuestoException;
 import com.excepciones.Impuestos.NoExisteImpuestoException;
 import com.excepciones.Impuestos.ObteniendoImpuestosException;
+import com.excepciones.Usuarios.ExisteUsuarioException;
 import com.logica.Fachada;
 import com.logica.FachadaDD;
-import com.valueObject.EmpresaVO;
 import com.valueObject.ImpuestoVO;
 import com.valueObject.UsuarioPermisosVO;
+import com.valueObject.UsuarioVO;
+import com.valueObject.empresa.EmpresaUsuVO;
+import com.valueObject.empresa.EmpresaVO;
 
 public class EmpresaControlador {
 	
@@ -47,12 +50,16 @@ public class EmpresaControlador {
 	 * Inserta una nueva empresa
 	 * @throws NoTienePermisosException 
 	 * @throws ObteniendoPermisosException 
+	 * @throws ExisteUsuarioException 
 	 */
-	public void insertarEmpresa(EmpresaVO empresaVO, UsuarioPermisosVO permisos) throws InsertandoEmpresaException, ExisteEmpresaException, InicializandoException, ConexionException, ErrorInesperadoException, ObteniendoPermisosException, NoTienePermisosException
+	public void insertarEmpresa(EmpresaUsuVO empresaVO, UsuarioPermisosVO permisos) throws InsertandoEmpresaException, ExisteEmpresaException, InicializandoException, ConexionException, ErrorInesperadoException, ObteniendoPermisosException, NoTienePermisosException, ExisteUsuarioException
 	{
 		/*Primero se verifican los permisos*/
-		if(Fachada.getInstance().permisoEnFormulario(permisos))
+		if(Fachada.getInstance().permisoEnFormulario(permisos)){
+			
 			FachadaDD.getInstance().insertarEmprea(empresaVO);
+			
+		}
 		else
 			throw new NoTienePermisosException();
 	}

@@ -17,13 +17,17 @@ import com.excepciones.Impuestos.ExisteImpuestoException;
 import com.excepciones.Impuestos.InsertandoImpuestoException;
 import com.excepciones.Impuestos.ModificandoImpuestoException;
 import com.excepciones.Impuestos.NoExisteImpuestoException;
+import com.excepciones.Usuarios.ExisteUsuarioException;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.server.VaadinService;
-import com.valueObject.EmpresaVO;
 import com.valueObject.ImpuestoVO;
 import com.valueObject.UsuarioPermisosVO;
+import com.valueObject.UsuarioVO;
+import com.valueObject.empresa.EmpresaUsuVO;
+import com.valueObject.empresa.EmpresaVO;
+import com.vista.MD5;
 import com.vista.Mensajes;
 import com.vista.MySub;
 import com.vista.PermisosUsuario;
@@ -32,7 +36,7 @@ import com.vista.VariablesPermisos;
 
 public class EmpresaViewExtended extends EmpresaView{
 
-	private BeanFieldGroup<EmpresaVO> fieldGroup;
+	private BeanFieldGroup<EmpresaUsuVO> fieldGroup;
 	private EmpresaControlador controlador;
 	private String operacion;
 	private EmpresasPanelExtended mainView;
@@ -70,20 +74,26 @@ public class EmpresaViewExtended extends EmpresaView{
 		
 					
 					
-					EmpresaVO empresaVO = new EmpresaVO();		
+					EmpresaUsuVO empresaUsuVO = new EmpresaUsuVO();		
 					
-					empresaVO.setCodEmp(codEmp.getValue().trim());
-					empresaVO.setNomEmp(nomEmp.getValue().trim());
-					empresaVO.setActivo(activo.getValue());
-					empresaVO.setUsuarioMod(this.permisos.getUsuario());
-					empresaVO.setOperacion(operacion);
+					empresaUsuVO.setCodEmp(codEmp.getValue().trim());
+					empresaUsuVO.setNomEmp(nomEmp.getValue().trim());
+					empresaUsuVO.setActivo(activo.getValue());
+					empresaUsuVO.setUsuarioMod(this.permisos.getUsuario());
+					empresaUsuVO.setOperacion(operacion);
+					
+					/*Datos del usuario administrador*/
+					MD5 md5 = new MD5(); /*Para encriptar la contrasena*/
+					empresaUsuVO.setUsuario(usuario.getValue().trim());
+					empresaUsuVO.setPass(md5.getMD5Hash(pass.getValue().trim()));
+					
 					
 										
 					if(this.operacion.equals(Variables.OPERACION_NUEVO)) {	
 		
-						this.controlador.insertarEmpresa(empresaVO, permisoAux);
+						this.controlador.insertarEmpresa(empresaUsuVO, permisoAux);
 						
-						this.mainView.actulaizarGrilla(empresaVO);
+						this.mainView.actulaizarGrilla(empresaUsuVO);
 						
 						Mensajes.mostrarMensajeOK("Se ha guardado la empresa");
 						main.cerrarVentana();
@@ -91,9 +101,9 @@ public class EmpresaViewExtended extends EmpresaView{
 					}
 					else if(this.operacion.equals(Variables.OPERACION_EDITAR))	{
 						
-						this.controlador.actualizarEmpresa(empresaVO, permisoAux);
+						this.controlador.actualizarEmpresa(empresaUsuVO, permisoAux);
 						
-						this.mainView.actulaizarGrilla(empresaVO);
+						this.mainView.actulaizarGrilla(empresaUsuVO);
 						
 						Mensajes.mostrarMensajeOK("Se ha modificado la empresa");
 						main.cerrarVentana();
@@ -108,7 +118,7 @@ public class EmpresaViewExtended extends EmpresaView{
 				} 
 				catch (ConexionException | NoExisteEmpresaException | ModificandoEmpresaException | 
 						ExisteEmpresaException | InicializandoException | InsertandoEmpresaException |
-						 ErrorInesperadoException| ObteniendoPermisosException| NoTienePermisosException e) {
+						 ErrorInesperadoException| ObteniendoPermisosException|  NoTienePermisosException| ExisteUsuarioException e) {
 					
 					Mensajes.mostrarMensajeError(e.getMessage());
 				}
@@ -137,7 +147,7 @@ public class EmpresaViewExtended extends EmpresaView{
 		
 		this.controlador = new EmpresaControlador();
 					
-		this.fieldGroup =  new BeanFieldGroup<EmpresaVO>(EmpresaVO.class);
+		this.fieldGroup =  new BeanFieldGroup<EmpresaUsuVO>(EmpresaUsuVO.class);
 		
 		//Seteamos info del form si es requerido
 		if(fieldGroup != null)
@@ -175,14 +185,39 @@ public class EmpresaViewExtended extends EmpresaView{
 	}
 	
 	/**
+	 * Seteamos las validaciones del Formulario en modo Nuevo
+	 * Este requiere tambien los campos del usuario
+	 * pasamos un booleano para activarlos y desactivarlos
+	 * EN modo LEER: las deshabilitamos (para que no aparezcan los asteriscos, etc)
+	 * EN modo NUEVO: las habilitamos
+	 * EN modo EDITAR: las habilitamos
+	 *
+	 */
+	private void setearValidacionesNuevo(boolean setear){
+		
+		this.codEmp.setRequired(setear);
+		this.codEmp.setRequiredError("Es requerido");
+		
+		this.nomEmp.setRequired(setear);
+		this.nomEmp.setRequiredError("Es requerido");
+		
+		this.usuario.setRequired(true);
+		this.usuario.setRequiredError("Es requerido");
+		
+		this.pass.setRequired(true);
+		this.pass.setRequiredError("Es requerido");
+		
+	}
+	
+	/**
 	 * Dado un item ImpuestoVO seteamos la info del formulario
 	 *
 	 */
-	public void setDataSourceFormulario(BeanItem<EmpresaVO> item)
+	public void setDataSourceFormulario(BeanItem<EmpresaUsuVO> item)
 	{
 		this.fieldGroup.setItemDataSource(item);
 		
-		EmpresaVO empresa = new EmpresaVO();
+		EmpresaUsuVO empresa = new EmpresaUsuVO();
 		empresa = fieldGroup.getItemDataSource().getBean();
 		String fecha = new SimpleDateFormat("dd/MM/yyyy").format(empresa.getFechaMod());
 		
@@ -229,6 +264,9 @@ public class EmpresaViewExtended extends EmpresaView{
 		/*Dejamos todods los campos readonly*/
 		this.readOnlyFields(true);
 		
+		/*Deshabilitamos fields de usuario*/
+		this.disableFieldsUsuario();
+		
 	}
 	
 	/**
@@ -256,6 +294,9 @@ public class EmpresaViewExtended extends EmpresaView{
 			
 			/*Seteamos las validaciones*/
 			this.setearValidaciones(true);
+			
+			/*Deshabilitamos fields de usuario*/
+			this.disableFieldsUsuario();
 		}
 		else{
 			
@@ -285,9 +326,12 @@ public class EmpresaViewExtended extends EmpresaView{
 		this.disableBotonLectura();
 		this.activo.setValue(true);
 		
+		/*Habilitamos los campos del usuario administrador*/
+		this.enableFieldsUsuario();
+		
 		/*Seteamos validaciones en nuevo, cuando es editar
 		 * solamente cuando apreta el boton editar*/
-		this.setearValidaciones(true);
+		this.setearValidacionesNuevo(true);
 		
 		/*Como es en operacion nuevo, dejamos todos los campos editabls*/
 		this.readOnlyFields(false);
@@ -402,5 +446,23 @@ public class EmpresaViewExtended extends EmpresaView{
 		}
 		
 		return valido;
+	}
+	
+	private void disableFieldsUsuario()
+	{
+		this.usuario.setEnabled(false);
+		this.usuario.setVisible(false);
+		
+		this.pass.setEnabled(false);
+		this.pass.setVisible(false);
+	}
+	
+	private void enableFieldsUsuario()
+	{
+		this.usuario.setEnabled(true);
+		this.usuario.setVisible(true);
+		
+		this.pass.setEnabled(true);
+		this.pass.setVisible(true);
 	}
 }

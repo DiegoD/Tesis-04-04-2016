@@ -21,9 +21,10 @@ import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
-import com.valueObject.EmpresaVO;
 import com.valueObject.ImpuestoVO;
 import com.valueObject.UsuarioPermisosVO;
+import com.valueObject.empresa.EmpresaUsuVO;
+import com.valueObject.empresa.EmpresaVO;
 import com.vista.Mensajes;
 import com.vista.MySub;
 import com.vista.PermisosUsuario;
@@ -62,7 +63,7 @@ public class EmpresasPanelExtended extends EmpresasPanel{
 				
 					this.btnNuevaEmpresa.addClickListener(click -> {
 						
-						sub = new MySub("50%","32%");
+						sub = new MySub("60%","37%");
 						form = new EmpresaViewExtended(Variables.OPERACION_NUEVO, this);
 						sub.setModal(true);
 						sub.setVista(form);
@@ -138,13 +139,23 @@ public class EmpresasPanelExtended extends EmpresasPanel{
 				    	{
 				    		item.getBean().setFechaMod(new Timestamp(System.currentTimeMillis()));
 				    	}
-							
+						
+				    	/*Creamos este VO para pasarselo al view ya que es su feildGroup*/
+				    	EmpresaUsuVO empUsu = new EmpresaUsuVO(item.getBean().getCodEmp(),
+				    											item.getBean().getNomEmp(), 
+				    											item.getBean().isActivo());
+				    	empUsu.setFechaMod(item.getBean().getFechaMod());
+				    	empUsu.setOperacion(item.getBean().getOperacion());
+				    	empUsu.setUsuarioMod(item.getBean().getUsuarioMod());
+				    	
+				    	BeanItem<EmpresaUsuVO> item2 = new BeanItem<EmpresaUsuVO>(empUsu);
+				    	
 				    	form = new EmpresaViewExtended(Variables.OPERACION_LECTURA, EmpresasPanelExtended.this);
 				    	sub = new MySub("50%","32%");
 						sub.setModal(true);
 						sub.setVista(form);
 						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
-						form.setDataSourceFormulario(item);
+						form.setDataSourceFormulario(item2);
 						
 						UI.getCurrent().addWindow(sub);
 		    		}

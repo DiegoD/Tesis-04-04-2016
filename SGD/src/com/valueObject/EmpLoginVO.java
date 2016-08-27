@@ -3,6 +3,8 @@ package com.valueObject;
 public class EmpLoginVO 
 {
 	private String codEmp;
+	private String nomEmp;
+	
 	public String getCodEmp() {
 		return codEmp;
 	}
@@ -15,6 +17,6 @@ public class EmpLoginVO
 	public void setNomEmp(String nomEmp) {
 		this.nomEmp = nomEmp;
 	}
-	private String nomEmp;
+	
 
 }

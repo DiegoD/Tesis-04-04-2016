@@ -32,9 +32,9 @@ public class LoginControlador {
 		return Fachada.getInstance().getFormulariosxUsuario(usuario, codEmp);
 	}
 	
-	public ArrayList<EmpLoginVO> getUsuariosxEmp(String usuario) throws ConexionException, InicializandoException, ObteniendoUsuariosxEmpExeption
+	public EmpLoginVO getEmpresaUsuario(String usuario) throws ConexionException, InicializandoException, ObteniendoUsuariosxEmpExeption
 	{
-		return FachadaDD.getInstance().getUsuariosxEmp(usuario);
+		return FachadaDD.getInstance().getEmpresaUsuario(usuario);
 	}
 	
 }

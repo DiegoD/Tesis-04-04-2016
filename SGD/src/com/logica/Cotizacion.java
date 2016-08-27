@@ -2,8 +2,8 @@ package com.logica;
 
 import java.sql.Timestamp;
 
-import com.valueObject.EmpresaVO;
 import com.valueObject.Cotizacion.CotizacionVO;
+import com.valueObject.empresa.EmpresaVO;
 
 public class Cotizacion extends Auditoria{
 	

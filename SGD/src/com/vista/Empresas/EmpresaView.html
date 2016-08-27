@@ -12,9 +12,11 @@
     <vaadin-link caption="Auditoria" _id="auditoria" :middle :right></vaadin-link> 
    </vaadin-horizontal-layout> 
    <vaadin-horizontal-layout responsive size-full> 
-    <vaadin-form-layout size-full> 
+    <vaadin-form-layout size-full margin-bottom="false"> 
      <vaadin-text-field caption="Codigo" readonly _id="codEmp"></vaadin-text-field> 
      <vaadin-text-field caption="Nombre" readonly _id="nomEmp"></vaadin-text-field> 
+     <vaadin-text-field caption="Usuario Admin" _id="usuario"></vaadin-text-field> 
+     <vaadin-password-field caption="Contraseña" id="pass" _id="pass"></vaadin-password-field> 
      <vaadin-check-box caption="Activo" id="activo" responsive _id="activo"></vaadin-check-box> 
      <vaadin-horizontal-layout width="187px"> 
       <vaadin-button style-name="primary tiny" plain-text _id="aceptar" :middle>

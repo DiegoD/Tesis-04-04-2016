@@ -75,9 +75,6 @@ public class DAOClientes implements IDAOClientes{
 				aux.setOperacion(rs.getString("operacion"));
 				aux.setFechaMod(rs.getTimestamp("fecha_mod"));
 				
-				String s = rs.getString("operacion");
-				String r = rs.getString("usuario_mod");
-				
 				lstClientes.add(aux);
 				
 			}

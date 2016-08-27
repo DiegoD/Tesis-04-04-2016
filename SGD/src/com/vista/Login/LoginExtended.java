@@ -50,13 +50,14 @@ public class LoginExtended extends Login implements ViewDisplay {
 		this.tfUsuario.focus();
 		this.btnIngresar.setClickShortcut(KeyCode.ENTER);
 		
-		ddlEmresa.addFocusListener(new FocusListener() {
+		
+		this.btnIngresar.addClickListener(click -> {
 			
-			/*En el forcus de del combo de la empresa tomamos las empresas para el usario*/
-			public void focus(FocusEvent event) {
-								
+			PermisosUsuario permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
+			
+			
 				boolean usuarioValido;
-						
+				
 				try {
 					
 					MD5 md5 = new MD5();
@@ -74,14 +75,11 @@ public class LoginExtended extends Login implements ViewDisplay {
 					
 					if(usuarioValido)
 					{
-						/*Obtenemos las empresas para el usuario y lo
-						 * desplegamos en el combo de empresas*/
-						lstEmpresasUsu = controlador.getUsuariosxEmp(loginVO.getUsuario());
+						/*Obtenemos la empresa para el usuario*/
+						EmpLoginVO emp = controlador.getEmpresaUsuario(loginVO.getUsuario());
+						loginVO.setCodEmp(emp.getCodEmp());
 						
-						for (EmpLoginVO emp : lstEmpresasUsu) 
-						{
-							ddlEmresa.addItem(emp.getNomEmp());
-						}
+						this.ingresarSistema(loginVO);
 						
 					}
 					else
@@ -94,50 +92,6 @@ public class LoginExtended extends Login implements ViewDisplay {
 					Mensajes.mostrarMensajeError(e.getMessage());
 				}
 
-			}
-           
-        });
-		
-		this.btnIngresar.addClickListener(click -> {
-			
-			PermisosUsuario permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
-			
-			
-			/*Si la session es nulla dejamos ingresar
-			 * de lo contrario tiene una session y se debe desloguear primero*/
-			//if(permisos == null)
-			//{
-				MD5 md5 = new MD5();
-				
-				LoginVO loginVO = new LoginVO();
-				
-				try {
-					String passwordMd5 = md5.getMD5Hash(this.tfPass.getValue().toString().trim());
-				
-				
-					
-				loginVO.setPass(passwordMd5);
-				loginVO.setUsuario(this.tfUsuario.getValue());
-				
-				if(this.ddlEmresa.getValue() != null)
-				{
-					loginVO.setCodEmp(this.obtenerCodEmpxNomEmp(this.ddlEmresa.getValue().toString().trim()));
-					this.ingresarSistema(loginVO);
-				}
-				else
-				{
-					Mensajes.mostrarMensajeError("Debe seleccionar una empresa");
-				}
-				
-				} catch (Exception e) {
-					
-					Mensajes.mostrarMensajeWarning(Variables.ERROR_INESPERADO);
-				}
-			//}
-			//else{
-				
-				//Mensajes.mostrarMensajeError("Tiene una session iniciada, debe desloguearse");
-			//}
 				
 		});
 		
@@ -178,7 +132,7 @@ public class LoginExtended extends Login implements ViewDisplay {
 					PermisosUsuario permisos2 = (PermisosUsuario)getSession().getAttribute("permisos");
 					
 										
-					permisos.setCodEmp(this.obtenerCodEmpxNomEmp(this.ddlEmresa.getValue().toString()));
+					permisos.setCodEmp(loginVO.getCodEmp());
 					
 					principal.setMenu();
 				
@@ -200,31 +154,6 @@ public class LoginExtended extends Login implements ViewDisplay {
 		} 
 	}
 
-	private String obtenerCodEmpxNomEmp(String nomEmp)
-	{
-		String codEmp = null;
-		
-		if(this.lstEmpresasUsu != null)
-		{
-			
-			boolean salir = false;
-			
-			int i =0;
-			while(i < this.lstEmpresasUsu.size() && !salir)
-			{
-				if(this.lstEmpresasUsu.get(i).getNomEmp().equals(nomEmp))
-				{
-					codEmp = this.lstEmpresasUsu.get(i).getCodEmp();
-					
-					salir = true;
-				}
-					
-				i++;
-			}
-		}
-		
-		return codEmp;
-	}
 	
 	@Override
 	public void showView(View view) {

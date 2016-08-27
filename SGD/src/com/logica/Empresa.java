@@ -1,6 +1,6 @@
 package com.logica;
 
-import com.valueObject.EmpresaVO;
+import com.valueObject.empresa.EmpresaVO;
 
 public class Empresa extends Auditoria{
 	

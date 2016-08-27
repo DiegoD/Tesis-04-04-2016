@@ -2,7 +2,7 @@ package com.valueObject.Cotizacion;
 
 import java.sql.Timestamp;
 import com.valueObject.AuditoriaVO;
-import com.valueObject.EmpresaVO;
+import com.valueObject.empresa.EmpresaVO;
 
 public class CotizacionVO extends AuditoriaVO{
 	

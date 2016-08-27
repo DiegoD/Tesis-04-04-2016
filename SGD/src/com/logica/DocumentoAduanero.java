@@ -1,7 +1,7 @@
 package com.logica;
 
 import com.valueObject.DocumentoAduaneroVO;
-import com.valueObject.EmpresaVO;
+import com.valueObject.empresa.EmpresaVO;
 
 public class DocumentoAduanero extends Auditoria {
 	private String cod_docucmento;

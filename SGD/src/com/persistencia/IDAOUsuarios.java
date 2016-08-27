@@ -38,7 +38,7 @@ public interface IDAOUsuarios {
 	
 	public ArrayList<Formulario> getFormulariosxUsuario(String usuario, String codemp, Connection con) throws ObteniendoFormulariosException;
 	
-	public ArrayList<EmpLoginVO> getUsuariosxEmp(String usuario, Connection con) throws ObteniendoUsuariosxEmpExeption;
+	public EmpLoginVO getEmpresaUsuario(String usuario, Connection con) throws ObteniendoUsuariosxEmpExeption;
 	
 	public void modificarUsuario(Usuario user, String empresa, Connection con) throws ModificandoUsuarioException;
 	

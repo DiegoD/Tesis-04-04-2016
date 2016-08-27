@@ -20,8 +20,8 @@ import com.excepciones.Empresas.ObteniendoEmpresasException;
 import com.logica.Fachada;
 import com.logica.FachadaDD;
 import com.valueObject.CodigoGeneralizadoVO;
-import com.valueObject.EmpresaVO;
 import com.valueObject.UsuarioPermisosVO;
+import com.valueObject.empresa.EmpresaVO;
 
 public class CodigoGeneralizadoControlador {
 	

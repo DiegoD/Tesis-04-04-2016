@@ -64,6 +64,8 @@ import com.excepciones.grupos.ObteniendoFormulariosException;
 import com.excepciones.grupos.ObteniendoGruposException;
 import com.valueObject.*;
 import com.valueObject.Cotizacion.CotizacionVO;
+import com.valueObject.empresa.EmpresaUsuVO;
+import com.valueObject.empresa.EmpresaVO;
 import com.persistencia.*;
 
 public class FachadaDD {
@@ -289,17 +291,16 @@ public class FachadaDD {
     }
     
     /**
-	 * VER
+	 * Nos retorna la empresa para el usuario
 	 */
-    public ArrayList<EmpLoginVO> getUsuariosxEmp(String usuario) throws ConexionException, ObteniendoUsuariosxEmpExeption
+    public EmpLoginVO getEmpresaUsuario(String usuario) throws ConexionException, ObteniendoUsuariosxEmpExeption
     {
     	Connection con = null;
-    	ArrayList<EmpLoginVO> lstEmpresas = new ArrayList<EmpLoginVO>();
+    	EmpLoginVO empLogin = null;
     	try 
     	{
 			con = this.pool.obtenerConeccion();
-			lstEmpresas = this.usuarios.getUsuariosxEmp(usuario, con);
-			
+			empLogin = this.usuarios.getEmpresaUsuario(usuario, con);
 			
 		} 
     	catch (ObteniendoUsuariosxEmpExeption | ConexionException e) 
@@ -310,7 +311,7 @@ public class FachadaDD {
     	{
     		this.pool.liberarConeccion(con);
     	}
-    	return lstEmpresas;
+    	return empLogin;
     	
     }
     
@@ -661,28 +662,59 @@ public class FachadaDD {
 	 * Valida que no exista una empresa con el mismo código
      * @throws ExisteEmpresaException 
 	 */
-    public void insertarEmprea(EmpresaVO empresaVO) throws InsertandoEmpresaException, ConexionException, ExisteEmpresaException 
+    public void insertarEmprea(EmpresaUsuVO empresaUsuVO) throws InsertandoEmpresaException, ConexionException, ExisteEmpresaException, ExisteUsuarioException 
     {
     	
     	Connection con = null;
     	boolean existe = false;
+    	boolean existeUsu = false;
     	
     	try 
     	{
 			con = this.pool.obtenerConeccion();
 			con.setAutoCommit(false);
 			
-	    	Empresa empresa = new Empresa(empresaVO); 
+	    	Empresa empresa = new Empresa(empresaUsuVO); 
 	    	
 	    	if(!this.empresas.memberEmpresa(empresa.getCod_emp(), con)) 	{
 	    		
 	    		this.empresas.insertarEmpresa(empresa, con);
-	    		con.commit();
+	    		
+	    		//FachadaDD.getInstance().insertarUsuario(usuarioVO, empresa);
+	    		
+	    		Usuario usu = new Usuario();
+	    		usu.setUsuario(empresaUsuVO.getUsuario());
+	    		usu.setPass(empresaUsuVO.getPass());
+	    		usu.setNombre(empresaUsuVO.getUsuario() + "-" + empresaUsuVO.getNomEmp());
+	    		usu.setActivo(true);
+	    		usu.setMail("");
+	    		
+	    		usu.setUsuarioMod(empresaUsuVO.getUsuarioMod());
+	    		usu.setOperacion(empresaUsuVO.getOperacion());
+	    		
+	    		/*Obtenemos el grupo admin para otorgale los permisos al usuario*/
+	    		Grupo g = this.grupos.getGrupo(con, "Adm");
+	    		ArrayList<Grupo> grupos = new ArrayList<Grupo>();
+	    		grupos.add(g);
+	    		    		
+	    		usu.setLstGrupos(grupos);
+	    		
+	    		if(!this.usuarios.memberUsuario(usu.getUsuario(), con))
+	        	{
+	        		this.usuarios.insertarUsuario(usu, empresa.getCod_emp(), con);
+	        	}
+	        	else
+	        	{
+	        		existeUsu = true;
+	        	}
+	    		    		
 	    	}
 	    	else{
 	    		existe = true;
 	    	}
-	    		
+	    	
+    		if(!existe && !existeUsu) /*Si no existe la empresa y el usuario commiteamos*/
+    			con.commit();
     	
     	}
     	catch(Exception InsertandoEmpresaException)  	{
@@ -702,6 +734,9 @@ public class FachadaDD {
     	}
     	if (existe){
     		throw new ExisteEmpresaException();
+    	}
+    	if (existeUsu){
+    		throw new ExisteUsuarioException();
     	}
     }
 

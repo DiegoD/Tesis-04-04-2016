@@ -203,6 +203,17 @@ public class Consultas {
     	 return sb.toString();
     }
     
+    public String getGrupo()
+    {
+    	
+    	 StringBuilder sb = new StringBuilder();
+    	 
+    	 sb.append("SELECT cod_grupo, nombre, fecha_mod, usuario_mod, operacion, activo ");
+    	 sb.append("FROM m_grupos WHERE cod_grupo = ?");
+
+    	 return sb.toString();
+    }
+    
     public String insertarGrupo()
     {
     	
@@ -262,6 +273,7 @@ public class Consultas {
     	sb.append("FROM m_grupoxform, g_formularios "); 
 		sb.append("WHERE cod_grupo = ? ");
 		sb.append("AND m_grupoxform.formulario = g_formularios.formulario ");
+				//+ "AND (g_formularios <> 'MEmpresas' OR usuario = 'AppAdmin')");
     	
     	return sb.toString();
     }
@@ -311,6 +323,7 @@ public class Consultas {
 		sb.append("WHERE m_grupoxform.formulario = g_formularios.formulario ");
 		sb.append("AND m_grupoxform.cod_grupo = m_gruposxusu.cod_grupo ");
 		sb.append("AND m_gruposxusu.usuario = ? AND m_gruposxusu.cod_emp = ? ");
+		sb.append("AND (m_grupoxform.formulario <> 'MEmpresas' OR m_gruposxusu.usuario = 'AppAdmin')");
 		sb.append("GROUP BY g_formularios.formulario, g_formularios.nombre");
 		sb.append(" )Aux ");
 		
@@ -343,7 +356,8 @@ public class Consultas {
 		
 		sb.append("SELECT m_empresas.cod_emp, m_empresas.nom_emp  ");
 		sb.append("FROM m_usuariosxemp, m_empresas    ");
-		sb.append("WHERE usuario = ?  AND activo = 1");
+		sb.append("WHERE usuario = ?  AND activo = 1 " );
+		sb.append("AND m_usuariosxemp.cod_emp = m_empresas.cod_emp ");
 
 		return sb.toString();
 	}
@@ -589,5 +603,87 @@ public class Consultas {
 	
 ////////////////////////FIN-DOCUMENTOS-DGI//////////////////////////////////////////////
 
+////////////////////////PROCESOS//////////////////////////////////////////////////
+
+public String getProcesos(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_proceso, cod_cliente, m_clientes.nom_tit, fec_doc, nro_mega ");
+		sb.append(", cod_docum, nro_docum, fec_docum, carpeta ");
+		sb.append(", m_monedas.cod_moneda, m_monedas.descripcion AS nomMoneda, m_monedas.simbolo  ");
+		sb.append(", imp_mo, tc_mov, imp_mn, imp_tr, kilos, marca, medio ");
+		sb.append(", descripcion, observaciones, fecha_mod, usuario_mod ");
+		sb.append(", operacion, activo  ");
+		sb.append("FROM c_procesos , m_clientes, m_monedas  ");
+		sb.append("WHERE c_procesos.cod_cliente = m_clientes.cod_tit   ");
+		sb.append("AND c_procesos.cod_moneda = m_monedas.cod_moneda  ");
+		sb.append("AND cod_emp = ? ");
+		
+		
+		return sb.toString();
+	}
+
+public String getProcesosActivos(){
+	
+	StringBuilder sb = new StringBuilder();
+	
+	sb.append("SELECT cod_proceso, cod_cliente, m_clientes.nom_tit, fec_doc, nro_mega ");
+	sb.append(", cod_docum, nro_docum, fec_docum, carpeta ");
+	sb.append(", m_monedas.cod_moneda, m_monedas.descripcion AS nomMoneda, m_monedas.simbolo  ");
+	sb.append(", imp_mo, tc_mov, imp_mn, imp_tr, kilos, marca, medio ");
+	sb.append(", descripcion, observaciones, fecha_mod, usuario_mod ");
+	sb.append(", operacion, activo  ");
+	sb.append("FROM c_procesos , m_clientes, m_monedas  ");
+	sb.append("WHERE c_procesos.cod_cliente = m_clientes.cod_tit   ");
+	sb.append("AND c_procesos.cod_moneda = m_monedas.cod_moneda  ");
+	sb.append("AND cod_emp = ? AND activo = 1");
+	
+	
+	return sb.toString();
+}
+
+	public String insertarProceso()
+	{
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO c_procesos ( cod_cliente, fec_doc, nro_mega ");
+		sb.append(", cod_docum, nro_docum, fec_docum, carpeta, cod_moneda, imp_mo, tc_mov, imp_mn ");
+		sb.append(", imp_tr, kilos, marca, medio, descripcion, observaciones, fecha_mod, usuario_mod, operacion, activo) ");
+		sb.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?) ");
+	
+		
+		return sb.toString();
+	}
+
+	public String memberProceso(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_proceso ");
+		sb.append("FROM c_procesos WHERE cod_proceso = ? AND cod_emp = ? ");
+		
+		return sb.toString();
+	}
+
+
+	public String actualizarProceso(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("UPDATE c_procesos");
+		sb.append("SET cod_cliente = ?, fec_doc = ?,nro_mega = ?,cod_docum = ?,nro_docum = ?,fec_docum = ?,");
+		sb.append("carpeta = ?,cod_moneda = ?,imp_mo = ?,tc_mov = ?,imp_mn = ?,imp_tr = ?,kilos = ?,");
+		sb.append("marca = ?,medio = ?,descripcion = ?,observaciones = ?,fecha_mod = NOW(),usuario_mod = ?, ");
+		sb.append("operacion = ?,activo = ? ");
+		sb.append("WHERE cod_proceso = ? ");
+		
+		
+		return sb.toString();
+	}
+	
+////////////////////////FIN PROCESOS//////////////////////////////////////////////
+	
     
 }
