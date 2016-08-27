@@ -18,13 +18,14 @@ import com.excepciones.Rubros.ObteniendoRubrosException;
 import com.logica.Empresa;
 import com.logica.Impuesto;
 import com.logica.Rubro;
+import com.logica.TipoRubro;
 
 public class DAORubros implements IDAORubros{
 
 	DAOImpuestos impuestos = new DAOImpuestos();
 	
 	@Override
-	public ArrayList<Rubro> getRubros(Connection con) throws ObteniendoRubrosException, ConexionException {
+	public ArrayList<Rubro> getRubros(String cod_emp, Connection con) throws ObteniendoRubrosException, ConexionException {
 		// TODO Auto-generated method stub
 		ArrayList<Rubro> lstRubros = new ArrayList<Rubro>();
 		
@@ -33,16 +34,21 @@ public class DAORubros implements IDAORubros{
 			ConsultasDD consultas = new ConsultasDD ();
 			String query = consultas.getRubros();
 			String queryImpuesto = consultas.getImpuesto();
+			String queryTipoRubro = consultas.getTipoRubro();
 			String codImpuesto;
+			String codTipoRubro;
 			
 			
 			PreparedStatement pstmt1 = con.prepareStatement(query);
 			PreparedStatement pstmt2 = con.prepareStatement(queryImpuesto);
+			PreparedStatement pstmt3 = con.prepareStatement(queryTipoRubro);
 			
+			pstmt1.setString(1, cod_emp);
 			ResultSet rs = pstmt1.executeQuery();
 			
 			Rubro rubro;
 			Impuesto impuesto;
+			TipoRubro tipoRubro;
 			while(rs.next ()) {
 
 				rubro = new Rubro();
@@ -55,8 +61,7 @@ public class DAORubros implements IDAORubros{
 				rubro.setUsuarioMod(rs.getString(5));
 				rubro.setOperacion(rs.getString(6));
 				codImpuesto = rs.getString(7);
-				rubro.setTipo_rubro(rs.getString(8));
-				rubro.setCod_tipo_rubro(rs.getString(9));
+				codTipoRubro = rs.getString(8);
 				
 				
 				pstmt2.setString(1, codImpuesto);
@@ -78,6 +83,25 @@ public class DAORubros implements IDAORubros{
 					rubro.setImpuesto(impuesto);
 				}
 				
+				pstmt3.setString(1, codTipoRubro);
+				pstmt3.setString(2, cod_emp);
+				
+				ResultSet rs3 = pstmt3.executeQuery();
+				
+				while(rs3.next()){
+					
+					tipoRubro = new TipoRubro();
+					tipoRubro.setCod_tipoRubro(rs3.getString(1));
+					tipoRubro.setDescripcion(rs3.getString(2));
+					tipoRubro.setFechaMod(rs3.getTimestamp(3));
+					tipoRubro.setUsuarioMod(rs3.getString(4));
+					tipoRubro.setOperacion(rs3.getString(5));
+					tipoRubro.setActivo(rs3.getBoolean(6));
+					tipoRubro.setCod_emp(rs3.getString(7));
+					
+					rubro.setTipoRubro(tipoRubro);
+				}
+				
 				lstRubros.add(rubro);
 			}
 			
@@ -97,7 +121,7 @@ public class DAORubros implements IDAORubros{
 	 * Inserta un rubro en la base
 	 * Pre condición: El código de rubro no debe existir previamente
 	 */
-	public void insertarRubro(Rubro rubro, Connection con) throws InsertandoRubroException, ConexionException {
+	public void insertarRubro(Rubro rubro, String cod_emp, Connection con) throws InsertandoRubroException, ConexionException {
 		// TODO Auto-generated method stub
 		ConsultasDD clts = new ConsultasDD();
     	
@@ -115,8 +139,8 @@ public class DAORubros implements IDAORubros{
 			pstmt1.setString(4, rubro.getUsuarioMod());
 			pstmt1.setString(5, rubro.getOperacion());
 			pstmt1.setString(6, rubro.getImpuesto().getCod_imp());
-			pstmt1.setString(7,  rubro.getTipo_rubro());
-			pstmt1.setString(8, rubro.getCod_tipo_rubro());
+			pstmt1.setString(7,  rubro.getTipoRubro().getCod_tipoRubro());
+			pstmt1.setString(8,  cod_emp);
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
 			
@@ -131,7 +155,7 @@ public class DAORubros implements IDAORubros{
 	/**
 	 * Dado el codigo de rubro, valida si existe
 	 */
-	public boolean memberRubro(String cod_rubro, Connection con) throws ExisteRubroException, ConexionException {
+	public boolean memberRubro(String cod_rubro, String cod_emp, Connection con) throws ExisteRubroException, ConexionException {
 		// TODO Auto-generated method stub
 		boolean existe = false;
 		
@@ -144,6 +168,7 @@ public class DAORubros implements IDAORubros{
 			PreparedStatement pstmt1 = con.prepareStatement(query);
 			
 			pstmt1.setString(1, cod_rubro);
+			pstmt1.setString(2, cod_emp);
 			
 			ResultSet rs = pstmt1.executeQuery();
 			
@@ -166,7 +191,7 @@ public class DAORubros implements IDAORubros{
 	 * PRECONDICION: El código del rubro debe existir
 	 */
 	@Override
-	public void actualizarRubro(Rubro rubro, Connection con) throws ModificandoRubroException, ConexionException {
+	public void actualizarRubro(Rubro rubro, String cod_emp, Connection con) throws ModificandoRubroException, ConexionException {
 		// TODO Auto-generated method stub
 		ConsultasDD consultas = new ConsultasDD();
 		String update = consultas.actualizarRubro();
@@ -181,9 +206,9 @@ public class DAORubros implements IDAORubros{
 			pstmt1.setString(3, rubro.getUsuarioMod());
 			pstmt1.setString(4, rubro.getOperacion());
 			pstmt1.setString(5, rubro.getImpuesto().getCod_imp());
-			pstmt1.setString(6, rubro.getTipo_rubro());
-			pstmt1.setString(7, rubro.getCod_tipo_rubro());
-			pstmt1.setString(8, rubro.getCod_rubro());
+			pstmt1.setString(6, rubro.getTipoRubro().getCod_tipoRubro());
+			pstmt1.setString(7, rubro.getCod_rubro());
+			pstmt1.setString(8, cod_emp);
 			
 			
 			

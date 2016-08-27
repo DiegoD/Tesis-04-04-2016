@@ -41,6 +41,7 @@ public class EmpresasPanelExtended extends EmpresasPanel{
 	MySub sub = new MySub("65%", "65%");
 	
 	public EmpresasPanelExtended(){
+		
 		controlador = new EmpresaControlador();
 		this.lstEmpresas = new ArrayList<EmpresaVO>();
 		

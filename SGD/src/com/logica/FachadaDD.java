@@ -51,6 +51,11 @@ import com.excepciones.Rubros.InsertandoRubroException;
 import com.excepciones.Rubros.ModificandoRubroException;
 import com.excepciones.Rubros.NoExisteRubroException;
 import com.excepciones.Rubros.ObteniendoRubrosException;
+import com.excepciones.TipoRubro.ExisteTipoRubroException;
+import com.excepciones.TipoRubro.InsertandoTipoRubroException;
+import com.excepciones.TipoRubro.ModificandoTipoRubroException;
+import com.excepciones.TipoRubro.NoExisteTipoRubroException;
+import com.excepciones.TipoRubro.ObteniendoTipoRubroException;
 import com.excepciones.Usuarios.ExisteUsuarioException;
 import com.excepciones.Usuarios.InsertandoUsuarioException;
 import com.excepciones.Usuarios.ObteniendoUsuariosException;
@@ -64,6 +69,7 @@ import com.excepciones.grupos.ObteniendoFormulariosException;
 import com.excepciones.grupos.ObteniendoGruposException;
 import com.valueObject.*;
 import com.valueObject.Cotizacion.CotizacionVO;
+import com.valueObject.TipoRubro.TipoRubroVO;
 import com.valueObject.empresa.EmpresaUsuVO;
 import com.valueObject.empresa.EmpresaVO;
 import com.persistencia.*;
@@ -84,6 +90,7 @@ public class FachadaDD {
 	private IDAODocumentos documentos;
 	private IDAOCodigosGeneralizados codigosGeneralizados;
 	private IDAOCotizaciones cotizaciones;
+	private IDAOTipoRubro tipoRubros;
 	
 	private AbstractFactoryBuilder fabrica;
 	private IAbstractFactory fabricaConcreta;
@@ -105,6 +112,7 @@ public class FachadaDD {
         this.documentos = fabricaConcreta.crearDAODocumentos();
         this.codigosGeneralizados = fabricaConcreta.crearDAOCodigosGeneralizados();
         this.cotizaciones = fabricaConcreta.crearDAOCotizaciones();
+        this.tipoRubros = fabricaConcreta.crearDAOTipoRubro();
     }
     
     public static FachadaDD getInstance() throws InicializandoException {
@@ -788,7 +796,7 @@ public class FachadaDD {
 	 * Obtiene todos los rubros existentes
 	 */
     @SuppressWarnings("unchecked")
-	public ArrayList<RubroVO> getRubros() throws ObteniendoRubrosException, ConexionException
+	public ArrayList<RubroVO> getRubros(String cod_emp) throws ObteniendoRubrosException, ConexionException
     {
     	
     	Connection con = null;
@@ -800,7 +808,7 @@ public class FachadaDD {
     	{
     		con = this.pool.obtenerConeccion();
     		
-    		lstRubros = this.rubros.getRubros(con);
+    		lstRubros = this.rubros.getRubros(cod_emp, con);
     		
     		
     		RubroVO aux;
@@ -817,8 +825,8 @@ public class FachadaDD {
     			aux.setCodigoImpuesto(rubro.getImpuesto().getCod_imp());
     			aux.setDescripcionImpuesto(rubro.getImpuesto().getDescripcion());
     			aux.setPorcentajeImpuesto(rubro.getImpuesto().getPorcentaje());
-    			aux.setTipoRubro(rubro.getTipo_rubro());
-    			aux.setCodTipoRubro(rubro.getCod_tipo_rubro());
+    			aux.setDescripcionTipoRubro(rubro.getTipoRubro().getDescripcion());
+    			aux.setCodTipoRubro(rubro.getTipoRubro().getCod_tipoRubro());
     			
     			lstRubrosVO.add(aux);
 			}
@@ -846,7 +854,7 @@ public class FachadaDD {
 	 * Valida que no exista un rubro con el mismo código
      * @throws ExisteEmpresaException 
 	 */
-    public void insertarRubro(RubroVO rubroVO) throws InsertandoRubroException, ConexionException, ExisteRubroException 
+    public void insertarRubro(RubroVO rubroVO, String cod_emp) throws InsertandoRubroException, ConexionException, ExisteRubroException 
     {
     	
     	Connection con = null;
@@ -861,9 +869,9 @@ public class FachadaDD {
 	    	Impuesto impuesto = new Impuesto(rubro.getImpuesto().getCod_imp());
 	    	rubro.setImpuesto(impuesto);
 	    	
-	    	if(!this.rubros.memberRubro(rubro.getCod_rubro(), con)) 	{
+	    	if(!this.rubros.memberRubro(rubro.getCod_rubro(), cod_emp, con)) 	{
 	    		
-	    		this.rubros.insertarRubro(rubro, con);
+	    		this.rubros.insertarRubro(rubro, cod_emp, con);
 	    		con.commit();
 	    	}
 	    	else{
@@ -896,7 +904,7 @@ public class FachadaDD {
 	 * Actualiza los datos de un rubro dado su código
 	 * valida que exista el código 
 	 */
-    public void actualizarRubro(RubroVO rubroVO) throws ConexionException, NoExisteRubroException, ModificandoRubroException, ExisteRubroException  
+    public void actualizarRubro(RubroVO rubroVO, String cod_emp) throws ConexionException, NoExisteRubroException, ModificandoRubroException, ExisteRubroException  
 	{
 	    	
 	    	Connection con = null;
@@ -908,9 +916,9 @@ public class FachadaDD {
 				
 				Rubro rubro = new Rubro(rubroVO);
 		    	
-		    	if(this.rubros.memberRubro(rubro.getCod_rubro(), con))
+		    	if(this.rubros.memberRubro(rubro.getCod_rubro(), cod_emp, con))
 		    	{
-		    		this.rubros.actualizarRubro(rubro, con);
+		    		this.rubros.actualizarRubro(rubro, cod_emp, con);
 		    		con.commit();
 		    	}
 		    	
@@ -1469,5 +1477,149 @@ public class FachadaDD {
 		finally	{
 			pool.liberarConeccion(con);
 		}
+	}
+	
+	 ///////////////////////////////////////////////////////////////////TIPO RUBROS////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+	 * Obtiene todos los tipos de rubro existentes
+	 */
+    @SuppressWarnings("unchecked")
+	public ArrayList<TipoRubroVO> getTipoRubros(String cod_emp) throws ObteniendoTipoRubroException, ConexionException
+    {
+    	
+    	Connection con = null;
+    	
+    	ArrayList<TipoRubro> lstTipoRubros;
+    	ArrayList<TipoRubroVO> lstTipoRubrosVO = new ArrayList<TipoRubroVO>();
+    	    	
+    	try
+    	{
+    		con = this.pool.obtenerConeccion();
+    		
+    		lstTipoRubros = this.tipoRubros.getTipoRubros(con, cod_emp); 
+    		
+    		TipoRubroVO aux;
+    		for (TipoRubro tipoRubro : lstTipoRubros) 
+			{
+    			aux = new TipoRubroVO();
+    			
+    			aux.setCodTipoRubro(tipoRubro.getCod_tipoRubro());
+    			aux.setDescripcion(tipoRubro.getDescripcion());
+    			aux.setActivo(tipoRubro.isActivo());
+    			aux.setFechaMod(tipoRubro.getFechaMod());
+    			aux.setOperacion(tipoRubro.getOperacion());
+    			aux.setUsuarioMod(tipoRubro.getUsuarioMod());
+    			
+    			lstTipoRubrosVO.add(aux);
+			}
+	
+    	}
+    	catch(ObteniendoTipoRubroException e){
+    		throw e;
+    		
+    	} 
+    	catch (ConexionException e) {
+			
+    		throw e;
+    	} 
+    	finally
+    	{
+    		this.pool.liberarConeccion(con);
+    	}
+    	    
+    	
+    	return lstTipoRubrosVO;
+    }
+    
+    /**
+	 * Inserta un nuevo tipo rubro en la base
+	 * Valida que no exista un tipo rubro con el mismo código para la misma empresa
+     * @throws ExisteEmpresaException 
+	 */
+    public void insertarTipoRubro(TipoRubroVO tipoRubroVO, String cod_emp) throws InsertandoTipoRubroException, ConexionException, ExisteTipoRubroException 
+    {
+    	
+    	Connection con = null;
+    	boolean existe = false;
+    	
+    	try 
+    	{
+			con = this.pool.obtenerConeccion();
+			con.setAutoCommit(false);
+			
+	    	TipoRubro tipoRubro = new TipoRubro(tipoRubroVO); 
+	    	
+	    	if(!this.tipoRubros.memberTipoRubro(tipoRubro.getCod_tipoRubro(), cod_emp, con)){
+	    		
+	    		this.tipoRubros.insertarTipoRubro(tipoRubro, cod_emp, con);
+	    		con.commit();
+	    	}
+	    	else{
+	    		existe = true;
+	    	}
+	    		
+    	
+    	}
+    	catch(Exception InsertandoTipoRubroException)  	{
+    		try {
+				con.rollback();
+				
+			} catch (SQLException e) {
+				
+				throw new InsertandoTipoRubroException();
+			}
+    		
+    		throw new InsertandoTipoRubroException();
+    	}
+    	finally
+    	{
+    		pool.liberarConeccion(con);
+    	}
+    	if (existe){
+    		throw new ExisteTipoRubroException();
+    	}
+    }
+
+    /**
+	 * Actualiza los datos de un tipo de rubro dado su código y la empresa
+	 * valida que exista el código 
+	 */
+    public void actualizarTipoRubro(TipoRubroVO tipoRubroVO, String cod_emp) throws ConexionException, NoExisteTipoRubroException, ModificandoTipoRubroException, ExisteTipoRubroException  
+	{
+	    	
+    	Connection con = null;
+    	
+    	try 
+    	{
+			con = this.pool.obtenerConeccion();
+			con.setAutoCommit(false);
+			
+			TipoRubro tipoRubro= new TipoRubro(tipoRubroVO);
+	    	
+			if(this.tipoRubros.memberTipoRubro(tipoRubro.getCod_tipoRubro(), cod_emp, con))
+	    	{
+				this.tipoRubros.actualizarTipoRubro(tipoRubro, cod_emp, con);
+	    		con.commit();
+	    	}
+	    	
+	    	else
+	    		throw new NoExisteTipoRubroException();
+    	
+    	}
+    	catch(NoExisteTipoRubroException| ConexionException | SQLException | ModificandoTipoRubroException e){
+    		try {
+				con.rollback();
+				
+			} 
+    		catch (SQLException e1) {
+				
+				throw new ConexionException();
+			}
+    		throw new ModificandoTipoRubroException();
+    	}
+    	finally
+    	{
+    		pool.liberarConeccion(con);
+    	}
 	}
 }

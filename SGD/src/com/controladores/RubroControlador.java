@@ -13,11 +13,13 @@ import com.excepciones.Rubros.InsertandoRubroException;
 import com.excepciones.Rubros.ModificandoRubroException;
 import com.excepciones.Rubros.NoExisteRubroException;
 import com.excepciones.Rubros.ObteniendoRubrosException;
+import com.excepciones.TipoRubro.ObteniendoTipoRubroException;
 import com.logica.Fachada;
 import com.logica.FachadaDD;
 import com.valueObject.ImpuestoVO;
 import com.valueObject.RubroVO;
 import com.valueObject.UsuarioPermisosVO;
+import com.valueObject.TipoRubro.TipoRubroVO;
 
 public class RubroControlador {
 	
@@ -30,11 +32,11 @@ public class RubroControlador {
 	 * @throws NoTienePermisosException 
 	 * @throws ObteniendoPermisosException 
 	 */
-	public ArrayList<RubroVO> getRubros(UsuarioPermisosVO permisos) throws ObteniendoRubrosException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException {
+	public ArrayList<RubroVO> getRubros(UsuarioPermisosVO permisos, String cod_emp) throws ObteniendoRubrosException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException {
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))	
-			return FachadaDD.getInstance().getRubros();
+			return FachadaDD.getInstance().getRubros(cod_emp);
 		else
 			throw new NoTienePermisosException();
 	}
@@ -44,11 +46,11 @@ public class RubroControlador {
 	 * @throws NoTienePermisosException 
 	 * @throws ObteniendoPermisosException 
 	 */
-	public void insertarRubro(RubroVO rubroVO, UsuarioPermisosVO permisos) throws InsertandoRubroException, ExisteRubroException, InicializandoException, ConexionException, ErrorInesperadoException, ObteniendoPermisosException, NoTienePermisosException
+	public void insertarRubro(RubroVO rubroVO, String cod_emp, UsuarioPermisosVO permisos) throws InsertandoRubroException, ExisteRubroException, InicializandoException, ConexionException, ErrorInesperadoException, ObteniendoPermisosException, NoTienePermisosException
 	{
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))	
-			FachadaDD.getInstance().insertarRubro(rubroVO);
+			FachadaDD.getInstance().insertarRubro(rubroVO, cod_emp);
 		else
 			throw new NoTienePermisosException();
 	}
@@ -59,11 +61,11 @@ public class RubroControlador {
 	 * @throws NoTienePermisosException 
 	 * @throws ObteniendoPermisosException 
 	 */
-	public void actualizarRubro(RubroVO rubroVO, UsuarioPermisosVO permisos) throws ConexionException, NoExisteRubroException, ModificandoRubroException, ExisteRubroException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException {
+	public void actualizarRubro(RubroVO rubroVO, String cod_emp, UsuarioPermisosVO permisos) throws ConexionException, NoExisteRubroException, ModificandoRubroException, ExisteRubroException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException {
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			FachadaDD.getInstance().actualizarRubro(rubroVO);
+			FachadaDD.getInstance().actualizarRubro(rubroVO, cod_emp);
 		else
 			throw new NoTienePermisosException();
 	}
@@ -78,4 +80,7 @@ public class RubroControlador {
 		return FachadaDD.getInstance().getImpuestos();
 	}
 
+	public ArrayList<TipoRubroVO> getTipoRubros(String cod_emp) throws ObteniendoTipoRubroException, ConexionException, InicializandoException {
+		return FachadaDD.getInstance().getTipoRubros(cod_emp);
+	}
 }

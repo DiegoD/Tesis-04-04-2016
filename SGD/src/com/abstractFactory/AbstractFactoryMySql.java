@@ -77,5 +77,11 @@ public class AbstractFactoryMySql implements IAbstractFactory
 		
 		return new DAOCotizaciones();
 	}
+	
+	@Override
+	public IDAOTipoRubro crearDAOTipoRubro() {
+		
+		return new DAOTipoRubro();
+	}
 
 }

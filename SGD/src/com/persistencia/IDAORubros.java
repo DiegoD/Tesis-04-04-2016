@@ -12,9 +12,9 @@ import com.logica.Rubro;
 
 public interface IDAORubros {
 	
-	public ArrayList<Rubro> getRubros(Connection con) throws ObteniendoRubrosException, ConexionException;
-	public void insertarRubro(Rubro rubro, Connection con) throws  InsertandoRubroException, ConexionException ;
-	public boolean memberRubro(String cod_rubro, Connection con) throws ExisteRubroException, ConexionException;
-	public void actualizarRubro(Rubro rubro, Connection con) throws ModificandoRubroException, ConexionException;
+	public ArrayList<Rubro> getRubros(String cod_emp, Connection con) throws ObteniendoRubrosException, ConexionException;
+	public void insertarRubro(Rubro rubro, String cod_emp, Connection con) throws  InsertandoRubroException, ConexionException ;
+	public boolean memberRubro(String cod_rubro, String cod_emp, Connection con) throws ExisteRubroException, ConexionException;
+	public void actualizarRubro(Rubro rubro, String cod_emp, Connection con) throws ModificandoRubroException, ConexionException;
 
 }

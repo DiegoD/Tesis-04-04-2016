@@ -11,7 +11,7 @@ public class RubroVO extends Auditoria{
 	private String descripcionImpuesto;
 	private float porcentajeImpuesto;
 	private boolean activoImpuesto;
-	private String tipoRubro;
+	private String descripcionTipoRubro;
 	private String codTipoRubro;
 	
 	public RubroVO(){
@@ -20,7 +20,7 @@ public class RubroVO extends Auditoria{
 	
 
 	public RubroVO(String codRubro, String descripcion, boolean activo, String cod_impuesto, String descripcionImpuesto,
-			float porcentajeImpuesto, boolean activoImpuesto, String tipoRubro) {
+			float porcentajeImpuesto, boolean activoImpuesto, String tipoRubro, String descripcionTipoRubro) {
 		super();
 		this.codRubro = codRubro;
 		this.descripcion = descripcion;
@@ -29,7 +29,7 @@ public class RubroVO extends Auditoria{
 		this.descripcionImpuesto = descripcionImpuesto;
 		this.porcentajeImpuesto = porcentajeImpuesto;
 		this.activoImpuesto = activoImpuesto;
-		this.tipoRubro = tipoRubro;
+		this.descripcionTipoRubro = descripcionTipoRubro;
 		this.codTipoRubro = tipoRubro;
 	}
 
@@ -52,7 +52,7 @@ public class RubroVO extends Auditoria{
 		this.descripcionImpuesto = rubroVO.getDescripcionImpuesto();
 		this.porcentajeImpuesto = rubroVO.getPorcentajeImpuesto();
 		this.activoImpuesto = rubroVO.isActivoImpuesto();
-		this.tipoRubro = rubroVO.getTipoRubro();
+		this.descripcionTipoRubro = rubroVO.getDescripcionTipoRubro();
 		this.codTipoRubro = rubroVO.getCodTipoRubro();
 		
 	}
@@ -137,16 +137,6 @@ public class RubroVO extends Auditoria{
 	}
 
 
-	public String getTipoRubro() {
-		return tipoRubro;
-	}
-
-
-	public void setTipoRubro(String tipoRubro) {
-		this.tipoRubro = tipoRubro;
-	}
-
-
 	public String getCodTipoRubro() {
 		return codTipoRubro;
 	}
@@ -154,6 +144,16 @@ public class RubroVO extends Auditoria{
 
 	public void setCodTipoRubro(String codTipoRubro) {
 		this.codTipoRubro = codTipoRubro;
+	}
+
+
+	public String getDescripcionTipoRubro() {
+		return descripcionTipoRubro;
+	}
+
+
+	public void setDescripcionTipoRubro(String descripcionTipoRubro) {
+		this.descripcionTipoRubro = descripcionTipoRubro;
 	}
 	
 	

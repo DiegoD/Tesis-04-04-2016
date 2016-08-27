@@ -16,6 +16,7 @@ public final class VariablesPermisos {
 	public static final String FORMULARIO_CODIGOS_GENERALIZADOS = "MCodGen";
 	public static final String FORMULARIO_RUBROS = "MRubros";
 	public static final String FORMULARIO_COTIZACIONES = "MCotizaciones";
+	public static final String FORMULARIO_TIPORUBROS = "MTipoRubros";
 	
 	/*Variables para las operaciones*/
 	public static final String OPERACION_NUEVO_EDITAR = "NUEVO_EDITAR";

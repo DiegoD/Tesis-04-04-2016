@@ -1,4 +1,4 @@
-package com.vista.Rubros;
+package com.vista.TipoRubro;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -6,14 +6,13 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import com.controladores.EmpresaControlador;
-import com.controladores.RubroControlador;
+import com.controladores.TipoRubroControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.InicializandoException;
 import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Empresas.ObteniendoEmpresasException;
-import com.excepciones.Impuestos.ObteniendoImpuestosException;
-import com.excepciones.Rubros.ObteniendoRubrosException;
+import com.excepciones.TipoRubro.ObteniendoTipoRubroException;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.filter.SimpleStringFilter;
@@ -22,9 +21,10 @@ import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
+import com.valueObject.empresa.EmpresaVO;
 import com.valueObject.RubroVO;
 import com.valueObject.UsuarioPermisosVO;
-import com.valueObject.empresa.EmpresaVO;
+import com.valueObject.TipoRubro.TipoRubroVO;
 import com.vista.Mensajes;
 import com.vista.MySub;
 import com.vista.PermisosUsuario;
@@ -33,24 +33,25 @@ import com.vista.VariablesPermisos;
 import com.vista.Empresas.EmpresaViewExtended;
 import com.vista.Empresas.EmpresasPanelExtended;
 
-public class RubrosPanelExtended extends RubrosPanel{
+public class TipoRubrosPanelExtended extends TipoRubrosPanel{
 	
-	private RubroViewExtended form; 
-	private ArrayList<RubroVO> lstRubros; /*Lista con los rubros*/
-	private BeanItemContainer<RubroVO> container;
-	private RubroControlador controlador;
+	private TipoRubroViewExtended form; 
+	private ArrayList<TipoRubroVO> lstTipoRubros; /*Lista con los tipos rubros*/
+	private BeanItemContainer<TipoRubroVO> container;
+	private TipoRubroControlador controlador;
 	PermisosUsuario permisos;
 	MySub sub = new MySub("65%", "65%");
 	
-	public RubrosPanelExtended() throws InicializandoException, ConexionException, ObteniendoImpuestosException{
-		controlador = new RubroControlador();
-		this.lstRubros = new ArrayList<RubroVO>();
+	public TipoRubrosPanelExtended(){
+		
+		controlador = new TipoRubroControlador();
+		this.lstTipoRubros = new ArrayList<TipoRubroVO>();
 		
 		String usuario = (String)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("usuario");
 		this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
 		
 		/*Verificamos que el usuario tenga permisos de lectura para mostrar la vista*/
-		boolean permisoLectura = permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_RUBROS, VariablesPermisos.OPERACION_LEER);
+		boolean permisoLectura = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_TIPORUBROS, VariablesPermisos.OPERACION_LEER);
 		
 		if(permisoLectura){
 	        
@@ -59,19 +60,14 @@ public class RubrosPanelExtended extends RubrosPanel{
 				this.inicializarGrilla();
 				
 				/*Para el boton de nuevo, verificamos que tenga permisos de nuevoEditar*/
-				boolean permisoNuevoEditar = permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_RUBROS, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+				boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_TIPORUBROS, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 				
 				if(permisoNuevoEditar){
 				
-					this.btnNuevoRubro.addClickListener(click -> {
+					this.btnNuevoTipoRubro.addClickListener(click -> {
 						
-						sub = new MySub("60%", "45%");
-						try {
-							form = new RubroViewExtended(Variables.OPERACION_NUEVO, this);
-						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						sub = new MySub("50%","32%");
+						form = new TipoRubroViewExtended(Variables.OPERACION_NUEVO, this);
 						sub.setModal(true);
 						sub.setVista(form);
 						
@@ -99,51 +95,50 @@ public class RubrosPanelExtended extends RubrosPanel{
 			/*Si no tiene permisos mostramos mensaje*/
 			Mensajes.mostrarMensajeError(Variables.USUSARIO_SIN_PERMISOS);
 		}
+		
+		
 	}
 	
 	private void inicializarGrilla() throws InstantiationException, IllegalAccessException, ClassNotFoundException, FileNotFoundException, IOException{
 		
 		
 		this.container = 
-				new BeanItemContainer<RubroVO>(RubroVO.class);
+				new BeanItemContainer<TipoRubroVO>(TipoRubroVO.class);
 		
 		//Obtenemos lista de empresas del sistema
 		try {
-			this.lstRubros = this.getRubros();
+			this.lstTipoRubros = this.getTipoRubros();
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
-		for (RubroVO rubroVO : lstRubros) {
-			container.addBean(rubroVO);
+		for (TipoRubroVO tipoRubroVO : lstTipoRubros) {
+			container.addBean(tipoRubroVO);
 		}
 		
 		
-		this.gridRubros.setContainerDataSource(container);
+		this.gridTipoRubros.setContainerDataSource(container);
 		
-		gridRubros.removeColumn("activo");
-		gridRubros.removeColumn("fechaMod");
-		gridRubros.removeColumn("usuarioMod");
-		gridRubros.removeColumn("operacion");
-		gridRubros.removeColumn("activoImpuesto");
-		gridRubros.removeColumn("descripcionTipoRubro");
-		gridRubros.removeColumn("codigoImpuesto");
-		gridRubros.removeColumn("codTipoRubro");
+		gridTipoRubros.removeColumn("activo");
+		gridTipoRubros.removeColumn("fechaMod");
+		gridTipoRubros.removeColumn("usuarioMod");
+		gridTipoRubros.removeColumn("operacion");
+		gridTipoRubros.removeColumn("codEmp");
 		
 		/*Agregamos los filtros a la grilla*/
 		this.filtroGrilla();
 		
 		
-		gridRubros.addSelectionListener(new SelectionListener() {
+		gridTipoRubros.addSelectionListener(new SelectionListener() {
 						
 		    @Override
 		    public void select(SelectionEvent event) {
 		       
 		    	try{
 		    		
-		    		if(gridRubros.getSelectedRow() != null){
-		    			BeanItem<RubroVO> item = container.getItem(gridRubros.getSelectedRow());
+		    		if(gridTipoRubros.getSelectedRow() != null){
+		    			BeanItem<TipoRubroVO> item = container.getItem(gridTipoRubros.getSelectedRow());
 				    	
 				    	/*Puede ser null si accedemos luego de haberlo agregado, ya que no va a la base*/
 				    	if(item.getBean().getFechaMod() == null)
@@ -151,8 +146,8 @@ public class RubrosPanelExtended extends RubrosPanel{
 				    		item.getBean().setFechaMod(new Timestamp(System.currentTimeMillis()));
 				    	}
 							
-				    	form = new RubroViewExtended(Variables.OPERACION_LECTURA, RubrosPanelExtended.this);
-						sub = new MySub("60%","45%");
+				    	form = new TipoRubroViewExtended(Variables.OPERACION_LECTURA, TipoRubrosPanelExtended.this);
+				    	sub = new MySub("50%","32%");
 						sub.setModal(true);
 						sub.setVista(form);
 						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
@@ -173,81 +168,82 @@ public class RubrosPanelExtended extends RubrosPanel{
 	}
 	
 	/**
-	 * Obtenemos rubros del sistema
+	 * Obtenemos empresas del sistema
 	 * @throws Exception 
 	 *
 	 */
-	private ArrayList<RubroVO> getRubros() throws Exception  {
+	private ArrayList<TipoRubroVO> getTipoRubros() throws Exception  {
 		
-		ArrayList<RubroVO> lstRubros = new ArrayList<RubroVO>();
+		ArrayList<TipoRubroVO> lstTipoRubros = new ArrayList<TipoRubroVO>();
 
 		try {
-			 /* para confirmar los permisos del usuario*/
-				UsuarioPermisosVO permisoAux = 
-						new UsuarioPermisosVO(this.permisos.getCodEmp(),
-								this.permisos.getUsuario(),
-								VariablesPermisos.FORMULARIO_RUBROS,
-								VariablesPermisos.OPERACION_LEER);
 			
-			lstRubros = controlador.getRubros(permisoAux, permisoAux.getCodEmp());
+			/*Inicializamos VO de permisos para el usuario, formulario y operacion
+			 * para confirmar los permisos del usuario*/
+			UsuarioPermisosVO permisoAux = 
+					new UsuarioPermisosVO(this.permisos.getCodEmp(),
+							this.permisos.getUsuario(),
+							VariablesPermisos.FORMULARIO_TIPORUBROS,
+							VariablesPermisos.OPERACION_LEER);
+
+			
+			lstTipoRubros = controlador.getTipoRubros(permisoAux, permisos.getCodEmp());
 			
 		} 
-		catch (ObteniendoRubrosException | InicializandoException | ConexionException
-				| ObteniendoPermisosException| NoTienePermisosException e) {
+		catch (ObteniendoTipoRubroException | InicializandoException | ConexionException| ObteniendoPermisosException| NoTienePermisosException e) {
 			
 			Mensajes.mostrarMensajeError(e.getMessage());
 		}
-		
 			
-		return lstRubros;
+		return lstTipoRubros;
 	}
 	
 	/**
-	 * Actualizamos Grilla si se agrega o modigfica un rubro
-	 * desde RubroViewExtended
+	 * Actualizamos Grilla si se agrega o modigfica un tipo rubro
+	 * desde TipoRubroViewExtended
 	 *
 	 */
-	public void actulaizarGrilla(RubroVO rubroVO)
+	public void actulaizarGrilla(TipoRubroVO tipoRubroVO)
 	{
 
-		/*Si esta la empresa en la lista, es una acutalizacion
+		/*Si esta el tipo rubro en la lista, es una acutalizacion
 		 * y modificamos el objeto en la lista*/
-		if(this.existeRubroenLista(rubroVO.getcodRubro()))
+		if(this.existeTipoRubroenLista(tipoRubroVO.getCodTipoRubro()))
 		{
-			this.actualizarRubroenLista(rubroVO);
+			this.actualizarTipoRubroenLista(tipoRubroVO);
 		}
 		else  /*De lo contrario es uno nuevo y lo agregamos a la lista*/
 		{
-			this.lstRubros.add(rubroVO);
+			this.lstTipoRubros.add(tipoRubroVO);
 		}
 			
 		/*Actualizamos la grilla*/
 		this.container.removeAllItems();
-		this.container.addAll(this.lstRubros);
+		this.container.addAll(this.lstTipoRubros);
 		
-		this.gridRubros.setContainerDataSource(container);
+		this.gridTipoRubros.setContainerDataSource(container);
 
 	}
 	
 	/**
-	 * Modificamos un rubro de la lista cuando
-	 * se hace una acutalizacion de un rubro
+	 * Modificamos un tipo rubro de la lista cuando
+	 * se hace una acutalizacion de un tipo rubro
 	 *
 	 */
-	private void actualizarRubroenLista(RubroVO rubroVO)
+	private void actualizarTipoRubroenLista(TipoRubroVO tipoRubroVO)
 	{
 		int i =0;
 		boolean salir = false;
 		
-		RubroVO rubroEnLista;
+		TipoRubroVO tipoRubroEnLista;
 		
-		while( i < this.lstRubros.size() && !salir)
+		while( i < this.lstTipoRubros.size() && !salir)
 		{
-			rubroEnLista = this.lstRubros.get(i);
+			tipoRubroEnLista = this.lstTipoRubros.get(i);
 			
-			if(rubroVO.getcodRubro().equals(rubroEnLista.getcodRubro())){
+			if(tipoRubroVO.getCodTipoRubro().equals(tipoRubroEnLista.getCodTipoRubro())){
 				
-				this.lstRubros.get(i).copiar(rubroVO);
+				this.lstTipoRubros.get(i).copiar(tipoRubroVO);
 				salir = true;
 			}
 			
@@ -256,21 +252,21 @@ public class RubrosPanelExtended extends RubrosPanel{
 	}
 	
 	/**
-	 * Retornanoms true si esta el rubro en la lista
-	 * de rubros de la vista
+	 * Retornanoms true si esta el tipo rubro en la lista
+	 * de tipo rubros de la vista
 	 *
 	 */
-	private boolean existeRubroenLista(String codRubro)
+	private boolean existeTipoRubroenLista(String cod_tipoRubro)
 	{
 		int i =0;
 		boolean esta = false;
 		
-		RubroVO aux;
+		TipoRubroVO aux;
 		
-		while( i < this.lstRubros.size() && !esta)
+		while( i < this.lstTipoRubros.size() && !esta)
 		{
-			aux = this.lstRubros.get(i);
-			if(codRubro.equals(aux.getcodRubro()))
+			aux = this.lstTipoRubros.get(i);
+			if(cod_tipoRubro.equals(aux.getCodTipoRubro()))
 			{
 				esta = true;
 			}
@@ -286,10 +282,10 @@ public class RubrosPanelExtended extends RubrosPanel{
 		try
 		{
 		
-			com.vaadin.ui.Grid.HeaderRow filterRow = gridRubros.appendHeaderRow();
+			com.vaadin.ui.Grid.HeaderRow filterRow = gridTipoRubros.appendHeaderRow();
 	
 			// Set up a filter for all columns
-			for (Object pid: gridRubros.getContainerDataSource()
+			for (Object pid: gridTipoRubros.getContainerDataSource()
 			                     .getContainerPropertyIds()) 
 			{
 			    
@@ -329,8 +325,8 @@ public class RubrosPanelExtended extends RubrosPanel{
 	
 	private void deshabilitarBotonNuevo()
 	{
-		this.btnNuevoRubro.setVisible(false);
-		this.btnNuevoRubro.setEnabled(false);
+		this.btnNuevoTipoRubro.setVisible(false);
+		this.btnNuevoTipoRubro.setEnabled(false);
 	}
 	
 	
@@ -343,5 +339,8 @@ public class RubrosPanelExtended extends RubrosPanel{
 	{
 		Mensajes.mostrarMensajeError(msj);
 	}
+	
+	
+	
 
 }

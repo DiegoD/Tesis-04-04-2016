@@ -24,6 +24,7 @@ import com.vista.Impuestos.ImpuestosPanelExtended;
 import com.vista.Login.LoginExtended;
 import com.vista.Monedas.MonedasPanelExtended;
 import com.vista.Rubros.RubrosPanelExtended;
+import com.vista.TipoRubro.TipoRubrosPanelExtended;
 import com.vista.Usuarios.UsuariosPanelExtend;
 import com.vaadin.ui.TabSheet.Tab;
 
@@ -277,6 +278,21 @@ public class MenuExtended extends Menu{
 		});
 		
 		
+		this.tipoRubros.addClickListener(click -> {
+			
+			setSizeFull();
+			
+			this.content.removeAllComponents();
+			try {
+				
+				TipoRubrosPanelExtended u = new TipoRubrosPanelExtended();
+				this.content.addComponent(u);
+				
+			} catch (Exception e) {
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}
+		});
+		
 	}
 	
 	
@@ -326,6 +342,7 @@ public class MenuExtended extends Menu{
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_DOCUMENTOS_DGI) || 
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_MONEDAS) || 
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_COTIZACIONES) ||
+				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_TIPORUBROS) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_RUBROS))
 			{
 				lstFormsMenuMant.add(formularioVO);
@@ -387,6 +404,12 @@ public class MenuExtended extends Menu{
 					case VariablesPermisos.FORMULARIO_COTIZACIONES:
 						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_COTIZACIONES, VariablesPermisos.OPERACION_LEER))
 							this.habilitarCotizaciones();
+						
+					break;
+					
+					case VariablesPermisos.FORMULARIO_TIPORUBROS:
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_TIPORUBROS, VariablesPermisos.OPERACION_LEER))
+							this.habilitarTipoRubros();
 						
 					break;
 				}
@@ -493,6 +516,9 @@ public class MenuExtended extends Menu{
 		
 		this.cotizaciones.setVisible(false);
 		this.cotizaciones.setEnabled(false);
+		
+		this.tipoRubros.setVisible(false);
+		this.tipoRubros.setEnabled(false);
 	}
 	
 	
@@ -571,6 +597,12 @@ public class MenuExtended extends Menu{
 		this.cotizaciones.setVisible(true);
 		this.cotizaciones.setEnabled(true);
 		this.tabMantenimientos.addComponent(cotizaciones);
+	}
+	
+	private void habilitarTipoRubros(){
+		this.tipoRubros.setVisible(true);
+		this.tipoRubros.setEnabled(true);
+		this.tabMantenimientos.addComponent(tipoRubros);
 	}
 	
 	public PermisosUsuario getPermisosUsuario()

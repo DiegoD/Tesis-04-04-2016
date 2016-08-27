@@ -419,9 +419,9 @@ public class ConsultasDD {
 	
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("SELECT cod_rubro, descripcion, activo, fecha_mod, usuario_mod, operacion, cod_impuesto, tipo_rubro, cod_tipo_rubro ");
+		sb.append("SELECT cod_rubro, descripcion, activo, fecha_mod, usuario_mod, operacion, cod_impuesto, cod_tipo_rubro, cod_emp ");
 		sb.append("FROM m_rubros ");
-		
+		sb.append("WHERE cod_emp = ? ");
 		return sb.toString();
 	}
 
@@ -431,7 +431,7 @@ public class ConsultasDD {
 	
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("INSERT INTO vaadin.m_rubros (cod_rubro, descripcion, activo, fecha_mod, usuario_mod, operacion, cod_impuesto, tipo_rubro, cod_tipo_rubro )");
+		sb.append("INSERT INTO vaadin.m_rubros (cod_rubro, descripcion, activo, fecha_mod, usuario_mod, operacion, cod_impuesto, cod_tipo_rubro, cod_emp )");
 		sb.append("VALUES (?, ?, ?, NOW(), ?, ?, ?, ?, ? ) ");
 		
 		return sb.toString();
@@ -443,7 +443,8 @@ public class ConsultasDD {
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("SELECT cod_rubro ");
-		sb.append("FROM m_rubros WHERE cod_rubro = ? ");
+		sb.append("FROM m_rubros ");
+		sb.append("WHERE cod_rubro = ? AND cod_emp = ? ");
 		
 		return sb.toString();
 	}
@@ -460,9 +461,8 @@ public class ConsultasDD {
 		sb.append("usuario_mod = ?, ");
 		sb.append("operacion = ?, ");
 		sb.append("cod_impuesto = ?, ");
-		sb.append("tipo_rubro = ?, ");
 		sb.append("cod_tipo_rubro = ? ");
-		sb.append("WHERE cod_rubro = ? ");
+		sb.append("WHERE cod_rubro = ? AND cod_emp = ? ");
 		
 		return sb.toString();
 	}
@@ -643,4 +643,65 @@ public class ConsultasDD {
 	}
 
 ////////////////////////FIN-COTIZACIONES///////////////////////////////////////////////////
+	
+	
+////////////////////////INI-TIPO RUBRO///////////////////////////////////////////////////
+    
+	public String getTipoRubros(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_tiporubro, descripcion, fecha_mod, usuario_mod, operacion, activo, cod_emp ");
+		sb.append("FROM m_tipoRubro WHERE cod_emp = ? ");
+		
+		return sb.toString();
+	}
+
+	public String insertarTipoRubro()
+	{
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO vaadin.m_tiporubro (cod_tipoRubro, descripcion, fecha_mod, usuario_mod, operacion, activo, cod_emp )");
+		sb.append("VALUES (?, ?, NOW(), ?, ?, ?, ? ) ");
+		
+		return sb.toString();
+	
+	}
+
+	public String memberTipoRubro(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_tipoRubro, descripcion, activo, usuario_mod, fecha_mod ");
+		sb.append("FROM m_tiporubro WHERE cod_tipoRubro = ? AND cod_emp = ? ");
+		
+		return sb.toString();
+	}
+
+
+	public String actualizarTipoRubro(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("UPDATE vaadin.m_tiporubro ");
+		sb.append("SET descripcion = ?, ");
+		sb.append("activo = ?, ");
+		sb.append("fecha_mod = NOW(), ");
+		sb.append("usuario_mod = ?, ");
+		sb.append("operacion = ? ");
+		sb.append("WHERE cod_tipoRubro = ? AND cod_emp = ? ");
+		
+		return sb.toString();
+	}
+	
+	public String getTipoRubro(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_tiporubro, descripcion, fecha_mod, usuario_mod, operacion, activo, cod_emp ");
+		sb.append("FROM m_tipoRubro WHERE cod_tipoRubro = ? AND cod_emp = ? ");
+		
+		return sb.toString();
+	}
 }

@@ -1,9 +1,9 @@
-package com.vista.Empresas;
+package com.vista.TipoRubro;
 
 import java.text.SimpleDateFormat;
 
 import com.controladores.EmpresaControlador;
-import com.controladores.ImpuestoControlador;
+import com.controladores.TipoRubroControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
@@ -13,42 +13,38 @@ import com.excepciones.Empresas.ExisteEmpresaException;
 import com.excepciones.Empresas.InsertandoEmpresaException;
 import com.excepciones.Empresas.ModificandoEmpresaException;
 import com.excepciones.Empresas.NoExisteEmpresaException;
-import com.excepciones.Impuestos.ExisteImpuestoException;
-import com.excepciones.Impuestos.InsertandoImpuestoException;
-import com.excepciones.Impuestos.ModificandoImpuestoException;
-import com.excepciones.Impuestos.NoExisteImpuestoException;
-import com.excepciones.Usuarios.ExisteUsuarioException;
+import com.excepciones.TipoRubro.ExisteTipoRubroException;
+import com.excepciones.TipoRubro.InsertandoTipoRubroException;
+import com.excepciones.TipoRubro.ModificandoTipoRubroException;
+import com.excepciones.TipoRubro.NoExisteTipoRubroException;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.server.VaadinService;
-import com.valueObject.ImpuestoVO;
-import com.valueObject.UsuarioPermisosVO;
-import com.valueObject.UsuarioVO;
-import com.valueObject.empresa.EmpresaUsuVO;
 import com.valueObject.empresa.EmpresaVO;
-import com.vista.MD5;
+import com.valueObject.UsuarioPermisosVO;
+import com.valueObject.TipoRubro.TipoRubroVO;
 import com.vista.Mensajes;
 import com.vista.MySub;
 import com.vista.PermisosUsuario;
 import com.vista.Variables;
 import com.vista.VariablesPermisos;
+import com.vista.Empresas.EmpresasPanelExtended;
 
-public class EmpresaViewExtended extends EmpresaView{
-
-	private BeanFieldGroup<EmpresaUsuVO> fieldGroup;
-	private EmpresaControlador controlador;
+public class TipoRubroViewExtended extends TipoRubroView{
+	
+	private BeanFieldGroup<TipoRubroVO> fieldGroup;
+	private TipoRubroControlador controlador;
 	private String operacion;
-	private EmpresasPanelExtended mainView;
+	private TipoRubrosPanelExtended mainView;
 	MySub sub;
 	private PermisosUsuario permisos;
-	
 	
 	/**
 	 * Constructor del formulario
 	 * Con operación y la vista que lo llamo
 	 */
-	public EmpresaViewExtended(String opera, EmpresasPanelExtended main){
+	public TipoRubroViewExtended(String opera, TipoRubrosPanelExtended main){
 		
 		this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
 		this.operacion = opera;
@@ -74,38 +70,32 @@ public class EmpresaViewExtended extends EmpresaView{
 		
 					
 					
-					EmpresaUsuVO empresaUsuVO = new EmpresaUsuVO();		
+					TipoRubroVO tipoRubroVO = new TipoRubroVO();		
 					
-					empresaUsuVO.setCodEmp(codEmp.getValue().trim());
-					empresaUsuVO.setNomEmp(nomEmp.getValue().trim());
-					empresaUsuVO.setActivo(activo.getValue());
-					empresaUsuVO.setUsuarioMod(this.permisos.getUsuario());
-					empresaUsuVO.setOperacion(operacion);
-					
-					/*Datos del usuario administrador*/
-					MD5 md5 = new MD5(); /*Para encriptar la contrasena*/
-					empresaUsuVO.setUsuario(usuario.getValue().trim());
-					empresaUsuVO.setPass(md5.getMD5Hash(pass.getValue().trim()));
-					
+					tipoRubroVO.setCodTipoRubro(codTipoRubro.getValue().trim());
+					tipoRubroVO.setDescripcion(descripcion.getValue().trim());
+					tipoRubroVO.setActivo(activo.getValue());
+					tipoRubroVO.setUsuarioMod(this.permisos.getUsuario());
+					tipoRubroVO.setOperacion(operacion);
 					
 										
 					if(this.operacion.equals(Variables.OPERACION_NUEVO)) {	
 		
-						this.controlador.insertarEmpresa(empresaUsuVO, permisoAux);
+						this.controlador.insertarTipoRubro(tipoRubroVO, permisoAux.getCodEmp(), permisoAux);
 						
-						this.mainView.actulaizarGrilla(empresaUsuVO);
+						this.mainView.actulaizarGrilla(tipoRubroVO);
 						
-						Mensajes.mostrarMensajeOK("Se ha guardado la empresa");
+						Mensajes.mostrarMensajeOK("Se ha guardado el tipo de rubro");
 						main.cerrarVentana();
 					
 					}
 					else if(this.operacion.equals(Variables.OPERACION_EDITAR))	{
 						
-						this.controlador.actualizarEmpresa(empresaUsuVO, permisoAux);
+						this.controlador.actualizarTipoRubro(tipoRubroVO, permisoAux.getCodEmp(), permisoAux);
 						
-						this.mainView.actulaizarGrilla(empresaUsuVO);
+						this.mainView.actulaizarGrilla(tipoRubroVO);
 						
-						Mensajes.mostrarMensajeOK("Se ha modificado la empresa");
+						Mensajes.mostrarMensajeOK("Se ha modificado el tipo de rubro");
 						main.cerrarVentana();
 						
 					}
@@ -115,39 +105,39 @@ public class EmpresaViewExtended extends EmpresaView{
 					Mensajes.mostrarMensajeWarning(Variables.WARNING_CAMPOS_NO_VALIDOS);
 				}
 					
-				} 
-				catch (ConexionException | NoExisteEmpresaException | ModificandoEmpresaException | 
-						ExisteEmpresaException | InicializandoException | InsertandoEmpresaException |
-						 ErrorInesperadoException| ObteniendoPermisosException|  NoTienePermisosException| ExisteUsuarioException e) {
-					
-					Mensajes.mostrarMensajeError(e.getMessage());
-				}
+			} 
+			catch (ConexionException | NoExisteTipoRubroException | ModificandoTipoRubroException | 
+					ExisteTipoRubroException | InicializandoException | InsertandoTipoRubroException |
+					 ErrorInesperadoException| ObteniendoPermisosException| NoTienePermisosException e) {
 				
-			});
+				Mensajes.mostrarMensajeError(e.getMessage());
+			}
+				
+		});
 		
-			/*Inicalizamos listener para boton de Editar*/
-			this.btnEditar.addClickListener(click -> {
-					
-				try {
+		/*Inicalizamos listener para boton de Editar*/
+		this.btnEditar.addClickListener(click -> {
 				
-					/*Inicializamos el Form en modo Edicion*/
-					this.iniFormEditar();
-				}
-				catch(Exception e)	{
-					Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
-				}
-			});
+			try {
 			
-			this.cancelar.addClickListener(click -> {
-				main.cerrarVentana();
-			});
+				/*Inicializamos el Form en modo Edicion*/
+				this.iniFormEditar();
+			}
+			catch(Exception e)	{
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}
+		});
+			
+		this.cancelar.addClickListener(click -> {
+			main.cerrarVentana();
+		});
 	}
 	
 	public  void inicializarForm(){
 		
-		this.controlador = new EmpresaControlador();
+		this.controlador = new TipoRubroControlador();
 					
-		this.fieldGroup =  new BeanFieldGroup<EmpresaUsuVO>(EmpresaUsuVO.class);
+		this.fieldGroup =  new BeanFieldGroup<TipoRubroVO>(TipoRubroVO.class);
 		
 		//Seteamos info del form si es requerido
 		if(fieldGroup != null)
@@ -176,56 +166,31 @@ public class EmpresaViewExtended extends EmpresaView{
 	 */
 	private void setearValidaciones(boolean setear){
 		
-		this.codEmp.setRequired(setear);
-		this.codEmp.setRequiredError("Es requerido");
+		this.codTipoRubro.setRequired(setear);
+		this.codTipoRubro.setRequiredError("Es requerido");
 		
-		this.nomEmp.setRequired(setear);
-		this.nomEmp.setRequiredError("Es requerido");
-		
-	}
-	
-	/**
-	 * Seteamos las validaciones del Formulario en modo Nuevo
-	 * Este requiere tambien los campos del usuario
-	 * pasamos un booleano para activarlos y desactivarlos
-	 * EN modo LEER: las deshabilitamos (para que no aparezcan los asteriscos, etc)
-	 * EN modo NUEVO: las habilitamos
-	 * EN modo EDITAR: las habilitamos
-	 *
-	 */
-	private void setearValidacionesNuevo(boolean setear){
-		
-		this.codEmp.setRequired(setear);
-		this.codEmp.setRequiredError("Es requerido");
-		
-		this.nomEmp.setRequired(setear);
-		this.nomEmp.setRequiredError("Es requerido");
-		
-		this.usuario.setRequired(true);
-		this.usuario.setRequiredError("Es requerido");
-		
-		this.pass.setRequired(true);
-		this.pass.setRequiredError("Es requerido");
+		this.descripcion.setRequired(setear);
+		this.descripcion.setRequiredError("Es requerido");
 		
 	}
 	
 	/**
-	 * Dado un item ImpuestoVO seteamos la info del formulario
+	 * Dado un item TipoRubroVO seteamos la info del formulario
 	 *
 	 */
-	public void setDataSourceFormulario(BeanItem<EmpresaUsuVO> item)
+	public void setDataSourceFormulario(BeanItem<TipoRubroVO> item)
 	{
 		this.fieldGroup.setItemDataSource(item);
 		
-		EmpresaUsuVO empresa = new EmpresaUsuVO();
-		empresa = fieldGroup.getItemDataSource().getBean();
-		String fecha = new SimpleDateFormat("dd/MM/yyyy").format(empresa.getFechaMod());
+		TipoRubroVO tipoRubro = new TipoRubroVO();
+		tipoRubro = fieldGroup.getItemDataSource().getBean();
+		String fecha = new SimpleDateFormat("dd/MM/yyyy").format(tipoRubro.getFechaMod());
 		
 		
 		auditoria.setDescription(
-				"Usuario: " + empresa.getUsuarioMod() + "<br>" +
+				"Usuario: " + tipoRubro.getUsuarioMod() + "<br>" +
 			    "Fecha: " + fecha + "<br>" +
-			    "Operación: " + empresa.getOperacion());
+			    "Operación: " + tipoRubro.getOperacion());
 		
 		/*SETEAMOS LA OPERACION EN MODO LECUTA
 		 * ES CUANDO LLAMAMOS ESTE METODO*/
@@ -264,9 +229,6 @@ public class EmpresaViewExtended extends EmpresaView{
 		/*Dejamos todods los campos readonly*/
 		this.readOnlyFields(true);
 		
-		/*Deshabilitamos fields de usuario*/
-		this.disableFieldsUsuario();
-		
 	}
 	
 	/**
@@ -280,7 +242,7 @@ public class EmpresaViewExtended extends EmpresaView{
 		
 		
 		/*Verificamos que tenga permisos*/
-		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_EMPRESAS, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_TIPORUBROS, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
 		if(permisoNuevoEditar){
 			
@@ -294,9 +256,6 @@ public class EmpresaViewExtended extends EmpresaView{
 			
 			/*Seteamos las validaciones*/
 			this.setearValidaciones(true);
-			
-			/*Deshabilitamos fields de usuario*/
-			this.disableFieldsUsuario();
 		}
 		else{
 			
@@ -313,7 +272,7 @@ public class EmpresaViewExtended extends EmpresaView{
 	{
 		this.operacion = Variables.OPERACION_NUEVO;
 		/*Chequeamos si tiene permiso de editar*/
-		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_EMPRESAS, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_TIPORUBROS, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
 		/*Si no tiene permisos de Nuevo Cerrmamos la ventana y mostramos mensaje*/
 		if(!permisoNuevoEditar)
@@ -326,12 +285,9 @@ public class EmpresaViewExtended extends EmpresaView{
 		this.disableBotonLectura();
 		this.activo.setValue(true);
 		
-		/*Habilitamos los campos del usuario administrador*/
-		this.enableFieldsUsuario();
-		
 		/*Seteamos validaciones en nuevo, cuando es editar
 		 * solamente cuando apreta el boton editar*/
-		this.setearValidacionesNuevo(true);
+		this.setearValidaciones(true);
 		
 		/*Como es en operacion nuevo, dejamos todos los campos editabls*/
 		this.readOnlyFields(false);
@@ -346,7 +302,7 @@ public class EmpresaViewExtended extends EmpresaView{
 	 */
 	private void setearFieldsEditar()
 	{
-		this.nomEmp.setReadOnly(false);
+		this.descripcion.setReadOnly(false);
 		this.activo.setReadOnly(false);
 	}
 	
@@ -400,8 +356,8 @@ public class EmpresaViewExtended extends EmpresaView{
 	 */
 	private void readOnlyFields(boolean setear)
 	{
-		this.codEmp.setReadOnly(setear);
-		this.nomEmp.setReadOnly(setear);
+		this.codTipoRubro.setReadOnly(setear);
+		this.descripcion.setReadOnly(setear);
 		this.activo.setReadOnly(setear);
 				
 	}
@@ -413,11 +369,11 @@ public class EmpresaViewExtended extends EmpresaView{
 	 */
 	private void agregarFieldsValidaciones()
 	{
-        this.codEmp.addValidator(
+        this.codTipoRubro.addValidator(
                 new StringLengthValidator(
                      " 15 caracteres máximo", 1, 15, false));
         
-        this.nomEmp.addValidator(
+        this.descripcion.addValidator(
                 new StringLengthValidator(
                         " 45 caracteres máximo", 1, 45, false));
         
@@ -437,7 +393,7 @@ public class EmpresaViewExtended extends EmpresaView{
 				
 		try
 		{
-			if(this.codEmp.isValid() && this.nomEmp.isValid() )
+			if(this.codTipoRubro.isValid() && this.descripcion.isValid() )
 				valido = true;
 			
 		}catch(Exception e)
@@ -447,22 +403,6 @@ public class EmpresaViewExtended extends EmpresaView{
 		
 		return valido;
 	}
-	
-	private void disableFieldsUsuario()
-	{
-		this.usuario.setEnabled(false);
-		this.usuario.setVisible(false);
-		
-		this.pass.setEnabled(false);
-		this.pass.setVisible(false);
-	}
-	
-	private void enableFieldsUsuario()
-	{
-		this.usuario.setEnabled(true);
-		this.usuario.setVisible(true);
-		
-		this.pass.setEnabled(true);
-		this.pass.setVisible(true);
-	}
+
+
 }

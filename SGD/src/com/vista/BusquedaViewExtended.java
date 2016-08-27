@@ -19,6 +19,7 @@ import com.valueObject.CodigoGeneralizadoVO;
 import com.valueObject.DocumDGIVO;
 import com.valueObject.ImpuestoVO;
 import com.valueObject.MonedaVO;
+import com.valueObject.TipoRubro.TipoRubroVO;
 import com.vista.Rubros.RubroViewExtended;
 
 public class BusquedaViewExtended extends BusquedaView{
@@ -26,7 +27,7 @@ public class BusquedaViewExtended extends BusquedaView{
 	private ArrayList<Object> lst;
 	BeanItemContainer<ImpuestoVO> containerImpuesto;
 	BeanItemContainer<DocumDGIVO> containerDocumentosDgi;
-	BeanItemContainer<CodigoGeneralizadoVO> containerCodigoGeneralizado;
+	BeanItemContainer<TipoRubroVO> containerTipoRubro;
 	BeanItemContainer<MonedaVO> containerMoneda;
 	Object seleccionado;
 	IBusqueda main;
@@ -46,11 +47,11 @@ public class BusquedaViewExtended extends BusquedaView{
 			this.lblNombre.setValue("Documentos");
 			this.seleccionado = new DocumDGIVO();
 		}
-		else if(obj instanceof CodigoGeneralizadoVO){
+		else if(obj instanceof TipoRubroVO){
 	
-			this.containerCodigoGeneralizado = new BeanItemContainer<CodigoGeneralizadoVO>(CodigoGeneralizadoVO.class);
+			this.containerTipoRubro = new BeanItemContainer<TipoRubroVO>(TipoRubroVO.class);
 			this.lblNombre.setValue("Tipo Rubro");
-			this.seleccionado = new CodigoGeneralizadoVO();
+			this.seleccionado = new TipoRubroVO();
 		}
 		
 		else if(obj instanceof MonedaVO){
@@ -88,10 +89,10 @@ public class BusquedaViewExtended extends BusquedaView{
 					    }
 		    		}
 		    		
-		    		else if(seleccionado instanceof CodigoGeneralizadoVO){
+		    		else if(seleccionado instanceof TipoRubroVO){
 			    		if(grid.getSelectedRow() != null){
 			    			
-			    			BeanItem<CodigoGeneralizadoVO> item = containerCodigoGeneralizado.getItem(grid.getSelectedRow());
+			    			BeanItem<TipoRubroVO> item = containerTipoRubro.getItem(grid.getSelectedRow());
 					    	seleccionado = item.getBean(); 
 					    	main.setInfo(seleccionado);	
 					    	main.cerrarVentana();
@@ -165,19 +166,19 @@ public class BusquedaViewExtended extends BusquedaView{
 			
 		}
 		
-		if(seleccionado instanceof CodigoGeneralizadoVO){
+		if(seleccionado instanceof TipoRubroVO){
 			
-			ArrayList<CodigoGeneralizadoVO> lstDoc = new ArrayList<>();
+			ArrayList<TipoRubroVO> lstDoc = new ArrayList<>();
 			
-			CodigoGeneralizadoVO i;
+			TipoRubroVO i;
 			for (Object o : lst) {
 				
-				i = (CodigoGeneralizadoVO) o;
+				i = (TipoRubroVO) o;
 				lstDoc.add(i);
 			}
 			
-			this.containerCodigoGeneralizado.addAll(lstDoc);
-			this.grid.setContainerDataSource(containerCodigoGeneralizado);
+			this.containerTipoRubro.addAll(lstDoc);
+			this.grid.setContainerDataSource(containerTipoRubro);
 			
 			grid.removeColumn("fechaMod");
 			grid.removeColumn("usuarioMod");
@@ -229,10 +230,6 @@ public class BusquedaViewExtended extends BusquedaView{
 		try
 		{
 			 
-			/*if(seleccionado instanceof ImpuestoVO)
-				containerImpuesto.addContainerProperty(ImpuestoVO.class, ImpuestoVO.class, ImpuestoVO.class);
-			VER CON DIEGO */
-			
 			com.vaadin.ui.Grid.HeaderRow filterRow = grid.appendHeaderRow();
 	
 			// Set up a filter for all columns
@@ -277,14 +274,14 @@ public class BusquedaViewExtended extends BusquedaView{
 					                    change.getText(), true, false));
 				    	}
 				    	
-				    	else if(seleccionado instanceof CodigoGeneralizadoVO) /*PARA DOCUMENTOS GDI*/
+				    	else if(seleccionado instanceof TipoRubroVO) /*PARA DOCUMENTOS GDI*/
 				    	{
 					    	// Can't modify filters so need to replace
-					    	this.containerCodigoGeneralizado.removeContainerFilters(pid);
+					    	this.containerTipoRubro.removeContainerFilters(pid);
 			
 					        // (Re)create the filter if necessary
 					        if (! change.getText().isEmpty())
-					        	this.containerCodigoGeneralizado.addContainerFilter(
+					        	this.containerTipoRubro.addContainerFilter(
 					                new SimpleStringFilter(pid,
 					                    change.getText(), true, false));
 				    	}
