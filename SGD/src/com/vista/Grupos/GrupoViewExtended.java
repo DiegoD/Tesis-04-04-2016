@@ -319,7 +319,7 @@ public class GrupoViewExtended extends GrupoView {
 					
 					this.frmFormPermisos = new GrupoFormularioPermisosExtended(this, formSelecccionado, Variables.OPERACION_EDITAR);
 					
-					sub = new MySub("53%", "40%" );
+					sub = new MySub("35%", "30%" );
 					sub.setModal(true);
 					sub.setVista(this.frmFormPermisos);
 					sub.center();

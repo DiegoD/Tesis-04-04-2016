@@ -24,6 +24,7 @@ public class GrupoFormularioPermisosExtended extends GrupoFormularioPermisos{
 	@SuppressWarnings("unused")
 	public GrupoFormularioPermisosExtended(GrupoViewExtended main, FormularioVO form, String operacion)
 	{
+			
 		this.operacion = operacion;
 		this.mainView = main;
 		this.frm = form;

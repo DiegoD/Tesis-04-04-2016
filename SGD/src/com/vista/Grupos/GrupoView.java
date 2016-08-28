@@ -23,12 +23,14 @@ import com.vaadin.ui.declarative.Design;
 @SuppressWarnings("serial")
 public class GrupoView extends FormLayout {
 	protected Link auditoria;
+	protected FormLayout formLay1;
 	protected TextField codGrupo;
 	protected TextField nomGrupo;
 	protected CheckBox activo;
 	protected Button aceptar;
 	protected Button btnEditar;
 	protected Button cancelar;
+	protected FormLayout formLay2;
 	protected Grid lstFormularios;
 	protected Button btnAgregar;
 	protected Button btnEditarForm;
