@@ -83,4 +83,6 @@ public class RubroControlador {
 	public ArrayList<TipoRubroVO> getTipoRubros(String cod_emp) throws ObteniendoTipoRubroException, ConexionException, InicializandoException {
 		return FachadaDD.getInstance().getTipoRubros(cod_emp);
 	}
+	
+
 }

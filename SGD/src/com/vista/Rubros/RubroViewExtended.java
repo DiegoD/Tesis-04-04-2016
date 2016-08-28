@@ -14,24 +14,18 @@ import com.excepciones.Rubros.ExisteRubroException;
 import com.excepciones.Rubros.InsertandoRubroException;
 import com.excepciones.Rubros.ModificandoRubroException;
 import com.excepciones.Rubros.NoExisteRubroException;
+import com.excepciones.TipoRubro.ObteniendoTipoRubroException;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.server.VaadinService;
+import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
 import com.vaadin.ui.UI;
-import com.valueObject.CodigoGeneralizadoVO;
-import com.valueObject.EmpLoginVO;
-import com.valueObject.empresa.EmpresaVO;
-import com.valueObject.CodigoGeneralizadoVO;
-import com.valueObject.EmpLoginVO;
 import com.valueObject.ImpuestoVO;
 import com.valueObject.RubroVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.TipoRubro.TipoRubroVO;
-import com.vista.BusquedaView;
-import com.valueObject.empresa.EmpresaVO;
-import com.vista.BusquedaView;
 import com.vista.BusquedaViewExtended;
 import com.vista.IBusqueda;
 import com.vista.Mensajes;
@@ -40,7 +34,7 @@ import com.vista.PermisosUsuario;
 import com.vista.Variables;
 import com.vista.VariablesPermisos;
 
-public class RubroViewExtended extends RubroView implements IBusqueda{
+public class RubroViewExtended extends RubroView {
 	
 	private BeanFieldGroup<RubroVO> fieldGroup;
 	private RubroControlador controlador;
@@ -52,6 +46,7 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 	private PermisosUsuario permisos;
 	ArrayList<ImpuestoVO> lstImpuestos = new ArrayList<ImpuestoVO>();
 	private String codigoImp;
+	RubroVO rubro = new RubroVO();
 	
 	
 	/**
@@ -94,13 +89,24 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 					rubroVO.setActivo(activo.getValue());
 					rubroVO.setUsuarioMod(this.permisos.getUsuario());
 					rubroVO.setOperacion(operacion);
-					rubroVO.setCodigoImpuesto(codigoImpuesto.getValue());
-					rubroVO.setDescripcionImpuesto(descripcionImpuesto.getValue().trim());
-					String aux = porcentajeImpuesto.getValue().toString().trim().replace(",", ".");
-					rubroVO.setPorcentajeImpuesto(Float.parseFloat(aux));
-					rubroVO.setCodTipoRubro(codTipoRubro.getValue().trim());
-					rubroVO.setDescripcionTipoRubro(descripcionTipoRubro.getValue().trim());
+					ImpuestoVO aux = new ImpuestoVO();
+					aux = (ImpuestoVO) this.comboImpuestos.getValue();
+					rubroVO.setCodigoImpuesto(aux.getcodImpuesto());
+					rubroVO.setDescripcionImpuesto(aux.getDescripcion());
+					rubroVO.setPorcentajeImpuesto(aux.getPorcentaje());
 					
+					TipoRubroVO auxTipo = new TipoRubroVO();
+					auxTipo = (TipoRubroVO) this.comboTipoRubro.getValue();
+					rubroVO.setCodTipoRubro(auxTipo.getCodTipoRubro());
+					rubroVO.setDescripcionTipoRubro(auxTipo.getDescripcion());
+					
+//					rubroVO.setCodigoImpuesto(codigoImpuesto.getValue());
+//					rubroVO.setDescripcionImpuesto(descripcionImpuesto.getValue().trim());
+//					String aux = porcentajeImpuesto.getValue().toString().trim().replace(",", ".");
+//					rubroVO.setPorcentajeImpuesto(Float.parseFloat(aux));
+//					rubroVO.setCodTipoRubro(codTipoRubro.getValue().trim());
+//					rubroVO.setDescripcionTipoRubro(descripcionTipoRubro.getValue().trim());
+//					
 					
 					if(this.operacion.equals(Variables.OPERACION_NUEVO)) {	
 		
@@ -154,82 +160,164 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 			}
 		});
 			
-		this.btnBuscarImpuesto.addClickListener(click -> {
-			
-			BusquedaViewExtended form = new BusquedaViewExtended(this, new ImpuestoVO());
-			ArrayList<Object> lst = new ArrayList<Object>();
-			ArrayList<ImpuestoVO> lstImpuesto = new ArrayList<ImpuestoVO>();
-			//controlador = new ImpuestoControlador();
-			try {
-				lstImpuesto = this.controlador.getImpuestos(this.permisos.getCodEmp());
-				
-			} catch (ObteniendoImpuestosException | InicializandoException | ConexionException
-					| ObteniendoPermisosException| NoTienePermisosException e) {
-
-				Mensajes.mostrarMensajeError(e.getMessage());
-			}
-			Object obj;
-			for (ImpuestoVO i: lstImpuesto) {
-				obj = new Object();
-				obj = (Object)i;
-				lst.add(obj);
-			}
-			try {
-				
-				form.inicializarGrilla(lst);
-				
-			} catch (Exception e) {
-				
-				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
-			}
-			
-			
-			
-			sub = new MySub("65%", "65%" );
-			sub.setModal(true);
-			sub.center();
-			sub.setModal(true);
-			sub.setVista(form);
-			sub.center();
-			sub.setDraggable(true);
-			UI.getCurrent().addWindow(sub);
-			
-		});
+//		this.btnBuscarImpuesto.addClickListener(click -> {
+//			
+//			BusquedaViewExtended form = new BusquedaViewExtended(this, new ImpuestoVO());
+//			ArrayList<Object> lst = new ArrayList<Object>();
+//			ArrayList<ImpuestoVO> lstImpuesto = new ArrayList<ImpuestoVO>();
+//			//controlador = new ImpuestoControlador();
+//			try {
+//				lstImpuesto = this.controlador.getImpuestos();
+//				
+//			} catch (ObteniendoImpuestosException | InicializandoException | ConexionException
+//					| ObteniendoPermisosException| NoTienePermisosException e) {
+//
+//				Mensajes.mostrarMensajeError(e.getMessage());
+//			}
+//			Object obj;
+//			for (ImpuestoVO i: lstImpuesto) {
+//				obj = new Object();
+//				obj = (Object)i;
+//				lst.add(obj);
+//			}
+//			try {
+//				
+//				form.inicializarGrilla(lst);
+//				
+//			} catch (Exception e) {
+//				
+//				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+//			}
+//			
+//			
+//			
+//			sub = new MySub("65%", "65%" );
+//			sub.setModal(true);
+//			sub.center();
+//			sub.setModal(true);
+//			sub.setVista(form);
+//			sub.center();
+//			sub.setDraggable(true);
+//			UI.getCurrent().addWindow(sub);
+//			
+//		});
+//		this.btnBuscarImpuesto.addClickListener(click -> {
+//			
+//			BusquedaViewExtended form = new BusquedaViewExtended(this, new ImpuestoVO());
+//			ArrayList<Object> lst = new ArrayList<Object>();
+//			ArrayList<ImpuestoVO> lstImpuesto = new ArrayList<ImpuestoVO>();
+//			//controlador = new ImpuestoControlador();
+//			try {
+//				lstImpuesto = this.controlador.getImpuestos();
+//				
+//			} catch (ObteniendoImpuestosException | InicializandoException | ConexionException
+//					| ObteniendoPermisosException| NoTienePermisosException e) {
+//
+//				Mensajes.mostrarMensajeError(e.getMessage());
+//			}
+//			Object obj;
+//			for (ImpuestoVO i: lstImpuesto) {
+//				obj = new Object();
+//				obj = (Object)i;
+//				lst.add(obj);
+//			}
+//			try {
+//				
+//				form.inicializarGrilla(lst);
+//				
+//			} catch (Exception e) {
+//				
+//				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+//			}
+//			
+//			
+//			
+//			sub = new MySub("65%", "65%" );
+//			sub.setModal(true);
+//			sub.center();
+//			sub.setModal(true);
+//			sub.setVista(form);
+//			sub.center();
+//			sub.setDraggable(true);
+//			UI.getCurrent().addWindow(sub);
+//			
+//		});
+//		this.btnBuscarImpuesto.addClickListener(click -> {
+//			
+//			BusquedaViewExtended form = new BusquedaViewExtended(this, new ImpuestoVO());
+//			ArrayList<Object> lst = new ArrayList<Object>();
+//			ArrayList<ImpuestoVO> lstImpuesto = new ArrayList<ImpuestoVO>();
+//			//controlador = new ImpuestoControlador();
+//			try {
+//				lstImpuesto = this.controlador.getImpuestos(this.permisos.getCodEmp());
+//				
+//			} catch (ObteniendoImpuestosException | InicializandoException | ConexionException
+//					| ObteniendoPermisosException| NoTienePermisosException e) {
+//
+//				Mensajes.mostrarMensajeError(e.getMessage());
+//			}
+//			Object obj;
+//			for (ImpuestoVO i: lstImpuesto) {
+//				obj = new Object();
+//				obj = (Object)i;
+//				lst.add(obj);
+//			}
+//			try {
+//				
+//				form.inicializarGrilla(lst);
+//				
+//			} catch (Exception e) {
+//				
+//				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+//			}
+//			
+//			
+//			
+//			sub = new MySub("65%", "65%" );
+//			sub.setModal(true);
+//			sub.center();
+//			sub.setModal(true);
+//			sub.setVista(form);
+//			sub.center();
+//			sub.setDraggable(true);
+//			UI.getCurrent().addWindow(sub);
+//			
+//		});
 		
-		this.btnBuscarTipoRubro.addClickListener(click -> {
-			BusquedaViewExtended form = new BusquedaViewExtended(this, new TipoRubroVO());
-			ArrayList<Object> lst = new ArrayList<Object>();
-			ArrayList<TipoRubroVO> lstTipoRubro = new ArrayList<TipoRubroVO>();
-			try {
-				lstTipoRubro = this.controlador.getTipoRubros(permisos.getCodEmp()); 
-			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			Object obj;
-			for (TipoRubroVO i: lstTipoRubro) {
-				obj = new Object();
-				obj = (Object)i;
-				lst.add(obj);
-			}
-			try {
-				form.inicializarGrilla(lst);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			
-			
-			sub = new MySub("65%", "65%" );
-			sub.setModal(true);
-			sub.center();
-			sub.setModal(true);
-			sub.setVista(form);
-			sub.center();
-			sub.setDraggable(true);
-			UI.getCurrent().addWindow(sub);
-		});
+//		this.btnBuscarTipoRubro.addClickListener(click -> {
+//			BusquedaViewExtended form = new BusquedaViewExtended(this, new TipoRubroVO());
+//			ArrayList<Object> lst = new ArrayList<Object>();
+//			ArrayList<TipoRubroVO> lstTipoRubro = new ArrayList<TipoRubroVO>();
+//			try {
+//				lstTipoRubro = this.controlador.getTipoRubros(permisos.getCodEmp()); 
+//			} catch (Exception e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
+//			Object obj;
+//			for (TipoRubroVO i: lstTipoRubro) {
+//				obj = new Object();
+//				obj = (Object)i;
+//				lst.add(obj);
+//			}
+//			try {
+//				form.inicializarGrilla(lst);
+//			} catch (Exception e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			
+//			
+//			
+//			sub = new MySub("65%", "65%" );
+//			sub.setModal(true);
+//			sub.center();
+//			sub.setModal(true);
+//			sub.setVista(form);
+//			sub.center();
+//			sub.setDraggable(true);
+//			UI.getCurrent().addWindow(sub);
+//		});
 		
 		this.cancelar.addClickListener(click -> {
 			main.cerrarVentana();
@@ -241,6 +329,10 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 		this.controlador = new RubroControlador();
 					
 		this.fieldGroup =  new BeanFieldGroup<RubroVO>(RubroVO.class);
+		
+//		//inicializar los valores de los combos impuesto y tipo de rubro
+		inicializarComboImpuesto(null);
+		inicializarComboTipoRubro(null);
 		
 		//Seteamos info del form si es requerido
 		if(fieldGroup != null)
@@ -257,7 +349,6 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 			/*Inicializamos formulario como editar*/
 			this.iniFormLectura();
 		} 
-		
 		
 	}
 	
@@ -277,14 +368,21 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 		this.descripcion.setRequired(setear);
 		this.descripcion.setRequiredError("Es requerido");
 		
-		this.descripcionImpuesto.setRequired(setear);
-		this.descripcionImpuesto.setRequiredError("Es requerido");
+		this.comboImpuestos.setRequired(setear);
+		this.comboImpuestos.setRequiredError("Es requerido");
 		
-		this.codTipoRubro.setRequired(setear);
-		this.codTipoRubro.setRequiredError("Es requerido");
+		this.comboTipoRubro.setRequired(setear);
+		this.comboTipoRubro.setRequiredError("Es requerido");
 		
-		this.descripcionTipoRubro.setRequired(setear);
-		this.descripcionTipoRubro.setRequiredError("Es requerido");
+		
+//		this.descripcionImpuesto.setRequired(setear);
+//		this.descripcionImpuesto.setRequiredError("Es requerido");
+//		
+//		this.codTipoRubro.setRequired(setear);
+//		this.codTipoRubro.setRequiredError("Es requerido");
+//		
+//		this.descripcionTipoRubro.setRequired(setear);
+//		this.descripcionTipoRubro.setRequiredError("Es requerido");
 		
 	}
 	
@@ -296,16 +394,19 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 	{
 		this.fieldGroup.setItemDataSource(item);
 		
-		RubroVO rubro = new RubroVO();
+		
 		rubro = fieldGroup.getItemDataSource().getBean();
 		String fecha = new SimpleDateFormat("dd/MM/yyyy").format(rubro.getFechaMod());
-		//this.codigoImp = rubro.getCod_impuesto();
 		
 		auditoria.setDescription(
 				"Usuario: " + rubro.getUsuarioMod() + "<br>" +
 			    "Fecha: " + fecha + "<br>" +
 			    "Operación: " + rubro.getOperacion());
 		
+		//inicializar los valores de los combos impuesto y tipo de rubro
+		inicializarComboImpuesto(rubro.getCodigoImpuesto());
+		inicializarComboTipoRubro(rubro.getCodTipoRubro());
+				
 		/*SETEAMOS LA OPERACION EN MODO LECUTA
 		 * ES CUANDO LLAMAMOS ESTE METODO*/
 		if(this.operacion.equals(Variables.OPERACION_LECTURA))
@@ -341,8 +442,6 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 		
 		/*Dejamos todods los campos readonly*/
 		this.readOnlyFields(true);
-		
-		
 		
 	}
 	
@@ -419,12 +518,15 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 	{
 		this.descripcion.setReadOnly(false);
 		this.activo.setReadOnly(false);
-		this.descripcionImpuesto.setReadOnly(false);
-		this.descripcionTipoRubro.setReadOnly(false);
-		this.codigoImpuesto.setReadOnly(false);
-		this.descripcionImpuesto.setEnabled(false);
-		this.codigoImpuesto.setEnabled(false);
-		this.descripcionTipoRubro.setEnabled(false);
+		this.comboImpuestos.setEnabled(true);
+		this.comboTipoRubro.setEnabled(true);
+		
+//		this.descripcionImpuesto.setReadOnly(false);
+//		this.descripcionTipoRubro.setReadOnly(false);
+//		this.codigoImpuesto.setReadOnly(false);
+//		this.descripcionImpuesto.setEnabled(false);
+//		this.codigoImpuesto.setEnabled(false);
+//		this.descripcionTipoRubro.setEnabled(false);
 	}
 	
 	
@@ -457,10 +559,10 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 	{
 		this.aceptar.setEnabled(false);
 		this.aceptar.setVisible(false);
-		this.btnBuscarImpuesto.setEnabled(false);
-		this.btnBuscarImpuesto.setVisible(false);
-		this.btnBuscarTipoRubro.setEnabled(false);
-		this.btnBuscarTipoRubro.setVisible(false);
+//		this.btnBuscarImpuesto.setEnabled(false);
+//		this.btnBuscarImpuesto.setVisible(false);
+//		this.btnBuscarTipoRubro.setEnabled(false);
+//		this.btnBuscarTipoRubro.setVisible(false);
 	}
 	
 	/**
@@ -471,10 +573,10 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 	{
 		this.aceptar.setEnabled(true);
 		this.aceptar.setVisible(true);
-		this.btnBuscarImpuesto.setEnabled(true);
-		this.btnBuscarImpuesto.setVisible(true);
-		this.btnBuscarTipoRubro.setEnabled(true);
-		this.btnBuscarTipoRubro.setVisible(true);
+//		this.btnBuscarImpuesto.setEnabled(true);
+//		this.btnBuscarImpuesto.setVisible(true);
+//		this.btnBuscarTipoRubro.setEnabled(true);
+//		this.btnBuscarTipoRubro.setVisible(true);
 	}
 	
 	/**
@@ -487,12 +589,17 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 		this.codRubro.setReadOnly(setear);
 		this.descripcion.setReadOnly(setear);
 		this.activo.setReadOnly(setear);
-		this.descripcionImpuesto.setReadOnly(false);	
-		this.descripcionImpuesto.setEnabled(false);
-		this.descripcionTipoRubro.setReadOnly(false);
-		this.descripcionTipoRubro.setEnabled(false);
-		this.codigoImpuesto.setReadOnly(false);
-		this.codigoImpuesto.setEnabled(false);
+		this.comboImpuestos.setEnabled(false);
+		this.comboTipoRubro.setEnabled(false);
+		
+		//this.comboImpuestos.setReadOnly(setear);
+		//this.comboTipoRubro.setReadOnly(setear);
+//		this.descripcionImpuesto.setReadOnly(false);	
+//		this.descripcionImpuesto.setEnabled(false);
+//		this.descripcionTipoRubro.setReadOnly(false);
+//		this.descripcionTipoRubro.setEnabled(false);
+//		this.codigoImpuesto.setReadOnly(false);
+//		this.codigoImpuesto.setEnabled(false);
 		
 		
 	}
@@ -527,7 +634,7 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 		//Agregamos validaciones a los campos para luego controlarlos
 		this.agregarFieldsValidaciones();
 		
-		if(this.codRubro.isValid() && this.descripcion.isValid() && this.codigoImpuesto.isValid() && this.codRubro.isValid() && this.descripcionTipoRubro.isValid())
+		if(this.codRubro.isValid() && this.descripcion.isValid() && this.comboImpuestos.isValid() && this.comboTipoRubro.isValid())
 			valido = true;
 			
 		return valido;
@@ -556,35 +663,96 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 		return lstImpuestos;
 	}
 	
-	public void setImpuesto(ImpuestoVO impuesto){
-		this.descripcionImpuesto.setValue(impuesto.getDescripcion());
-		this.codigoImpuesto.setValue(impuesto.getcodImpuesto());
-	}
+//	public void setImpuesto(ImpuestoVO impuesto){
+//		this.descripcionImpuesto.setValue(impuesto.getDescripcion());
+//		this.codigoImpuesto.setValue(impuesto.getcodImpuesto());
+//	}
 	
 	public void cerrarVentana()
 	{
 		UI.getCurrent().removeWindow(sub);
 	}
 
-	@Override
-	public void setInfo(Object datos) {
-		// TODO Auto-generated method stub
-		if(datos instanceof ImpuestoVO){
-			ImpuestoVO impuestoVO = (ImpuestoVO) datos;
-			this.descripcionImpuesto.setValue(impuestoVO.getDescripcion());
-			this.codigoImpuesto.setValue(impuestoVO.getcodImpuesto());
-			//this.porcentajeImpuesto.setValue(Float.toString(impuestoVO.getPorcentaje()));
-			//this.porcentajeImpuesto.setValue(String.valueOf(impuestoVO.getPorcentaje()));
-			this.porcentajeImpuesto.setValue(String.format("%.2f",impuestoVO.getPorcentaje()));
+//	@Override
+//	public void setInfo(Object datos) {
+//		// TODO Auto-generated method stub
+//		if(datos instanceof ImpuestoVO){
+//			ImpuestoVO impuestoVO = (ImpuestoVO) datos;
+//			this.descripcionImpuesto.setValue(impuestoVO.getDescripcion());
+//			this.codigoImpuesto.setValue(impuestoVO.getcodImpuesto());
+//			//this.porcentajeImpuesto.setValue(Float.toString(impuestoVO.getPorcentaje()));
+//			//this.porcentajeImpuesto.setValue(String.valueOf(impuestoVO.getPorcentaje()));
+//			this.porcentajeImpuesto.setValue(String.format("%.2f",impuestoVO.getPorcentaje()));
+//		}
+//		
+//		if(datos instanceof TipoRubroVO){
+//			TipoRubroVO tipoRubro = (TipoRubroVO) datos;
+//			this.descripcionTipoRubro.setValue(tipoRubro.getDescripcion());
+//			this.codTipoRubro.setValue(tipoRubro.getCodTipoRubro());
+//		}
+//		
+//		
+//	}
+	
+	public void inicializarComboImpuesto(String cod){
+		
+		BeanItemContainer<ImpuestoVO> impuestosObj = new BeanItemContainer<ImpuestoVO>(ImpuestoVO.class);
+		ImpuestoVO imp = new ImpuestoVO();
+		
+		ArrayList<ImpuestoVO> lstImpuesto = new ArrayList<ImpuestoVO>();
+		
+		try {
+			lstImpuesto = this.controlador.getImpuestos(this.permisos.getCodEmp());
+			
+		} catch (ObteniendoImpuestosException | InicializandoException | ConexionException
+				| ObteniendoPermisosException| NoTienePermisosException e) {
+
+			Mensajes.mostrarMensajeError(e.getMessage());
 		}
 		
-		if(datos instanceof TipoRubroVO){
-			TipoRubroVO tipoRubro = (TipoRubroVO) datos;
-			this.descripcionTipoRubro.setValue(tipoRubro.getDescripcion());
-			this.codTipoRubro.setValue(tipoRubro.getCodTipoRubro());
+		for (ImpuestoVO impuestoVO : lstImpuesto) {
+			impuestosObj.addBean(impuestoVO);
+			if(cod != null){
+				if(cod.equals(impuestoVO.getcodImpuesto())){
+					imp = impuestoVO;
+				}
+			}
 		}
 		
+		this.comboImpuestos.setContainerDataSource(impuestosObj);
+		this.comboImpuestos.setItemCaptionPropertyId("descripcion");
+		this.comboImpuestos.setValue(imp);
 		
+	}
+	
+	public void inicializarComboTipoRubro(String cod){
+		
+		BeanItemContainer<TipoRubroVO> tipoRubrosObj = new BeanItemContainer<TipoRubroVO>(TipoRubroVO.class);
+		TipoRubroVO tipoRubro = new TipoRubroVO();
+		ArrayList<TipoRubroVO> lstTipoRubros = new ArrayList<TipoRubroVO>();
+		
+		try {
+			lstTipoRubros = this.controlador.getTipoRubros(permisos.getCodEmp());
+			
+		} catch (ObteniendoTipoRubroException | InicializandoException | ConexionException e) {
+
+			Mensajes.mostrarMensajeError(e.getMessage());
+		}
+		
+		for (TipoRubroVO tipoRubroVO : lstTipoRubros) {
+			
+			tipoRubrosObj.addBean(tipoRubroVO);
+			
+			if(cod != null){
+				if(cod.equals(tipoRubroVO.getCodTipoRubro())){
+					tipoRubro = tipoRubroVO;
+				}
+			}
+		}
+		
+		this.comboTipoRubro.setContainerDataSource(tipoRubrosObj);
+		this.comboTipoRubro.setItemCaptionPropertyId("descripcion");
+		this.comboTipoRubro.setValue(tipoRubro);
 	}
 	
 }

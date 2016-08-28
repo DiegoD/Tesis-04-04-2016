@@ -120,6 +120,7 @@ public class RubrosPanelExtended extends RubrosPanel{
 		}
 		
 		
+		
 		this.gridRubros.setContainerDataSource(container);
 		
 		gridRubros.removeColumn("activo");

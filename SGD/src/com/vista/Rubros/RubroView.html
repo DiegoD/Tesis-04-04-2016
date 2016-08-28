@@ -15,18 +15,12 @@
     <vaadin-form-layout size-full> 
      <vaadin-text-field caption="Codigo" readonly _id="codRubro"></vaadin-text-field> 
      <vaadin-text-field caption="Descripción" width="187px" readonly _id="descripcion"></vaadin-text-field> 
-     <vaadin-horizontal-layout caption="Impuesto" spacing> 
-      <vaadin-text-field immediate width="108px" _id="codigoImpuesto" :middle></vaadin-text-field> 
-      <vaadin-text-field _id="descripcionImpuesto"></vaadin-text-field> 
-      <vaadin-button icon="fonticon://FontAwesome/f002" style-name="icon-only borderless quiet" _id="btnBuscarImpuesto"></vaadin-button> 
-      <vaadin-text-field visible="false" _id="porcentajeImpuesto"></vaadin-text-field> 
-     </vaadin-horizontal-layout> 
-     <vaadin-horizontal-layout caption="Tipo" spacing> 
-      <vaadin-text-field visible="false" immediate width="108px" _id="codTipoRubro"></vaadin-text-field> 
-      <vaadin-text-field width="305px" _id="descripcionTipoRubro"></vaadin-text-field> 
-      <vaadin-button icon="fonticon://FontAwesome/f002" style-name="icon-only borderless quiet" _id="btnBuscarTipoRubro"></vaadin-button> 
-     </vaadin-horizontal-layout> 
-     <vaadin-combo-box caption="Impuesto" item-caption-mode="id" _id="impuestos"> 
+     <vaadin-combo-box caption="Impuesto" item-caption-mode="id" _id="comboImpuestos"> 
+      <option>Option 1</option> 
+      <option>Option 2</option> 
+      <option>Option 3</option> 
+     </vaadin-combo-box> 
+     <vaadin-combo-box caption="Tipo Rubro" item-caption-mode="id" _id="comboTipoRubro"> 
       <option>Option 1</option> 
       <option>Option 2</option> 
       <option>Option 3</option> 
