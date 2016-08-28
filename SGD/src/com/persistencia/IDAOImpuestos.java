@@ -18,10 +18,10 @@ import com.logica.Impuesto;
 
 public interface IDAOImpuestos {
 	
-	public ArrayList<Impuesto> getImpuestos(Connection con) throws ObteniendoImpuestosException, ConexionException;
-	public void insertarImpuesto(Impuesto impuesto, Connection con) throws  InsertandoImpuestoException, ConexionException ;
-	public boolean memberImpuesto(String cod_impuesto, Connection con) throws ExisteImpuestoException, ConexionException;
-	public void eliminarImpuesto(String cod_impuesto, Connection con) throws ModificandoImpuestoException, ConexionException;
-	public void actualizarImpuesto(Impuesto impuesto, Connection con) throws ModificandoImpuestoException, ConexionException;
+	public ArrayList<Impuesto> getImpuestos(String codEmp, Connection con) throws ObteniendoImpuestosException, ConexionException;
+	public void insertarImpuesto(Impuesto impuesto, String codEmp, Connection con) throws  InsertandoImpuestoException, ConexionException ;
+	public boolean memberImpuesto(String cod_impuesto, String codEmp, Connection con) throws ExisteImpuestoException, ConexionException;
+	public void eliminarImpuesto(String cod_impuesto, String codEmp, Connection con) throws ModificandoImpuestoException, ConexionException;
+	public void actualizarImpuesto(Impuesto impuesto, String codEmp, Connection con) throws ModificandoImpuestoException, ConexionException;
 	
 }

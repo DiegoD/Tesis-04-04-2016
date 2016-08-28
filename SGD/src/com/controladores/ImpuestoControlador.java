@@ -40,7 +40,7 @@ public class ImpuestoControlador {
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			return FachadaDD.getInstance().getImpuestos();
+			return FachadaDD.getInstance().getImpuestos(permisos.getCodEmp());
 		else
 			throw new NoTienePermisosException();
 	}
@@ -54,7 +54,7 @@ public class ImpuestoControlador {
 	{
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			FachadaDD.getInstance().insertarImpuesto(impuestoVO);
+			FachadaDD.getInstance().insertarImpuesto(impuestoVO, permisos.getCodEmp());
 		else
 			throw new NoTienePermisosException();
 	}
@@ -69,7 +69,7 @@ public class ImpuestoControlador {
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			FachadaDD.getInstance().actualizarImpuesto(impuestoVO);
+			FachadaDD.getInstance().actualizarImpuesto(impuestoVO, permisos.getCodEmp());
 		else
 			throw new NoTienePermisosException();
 	}

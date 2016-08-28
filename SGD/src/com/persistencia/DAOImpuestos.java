@@ -30,7 +30,7 @@ public class DAOImpuestos implements IDAOImpuestos{
     /**
 	 * Obtiene Array de todos lo impuestos existentes
 	 */
-	public ArrayList<Impuesto> getImpuestos(Connection con) throws ObteniendoImpuestosException, ConexionException{
+	public ArrayList<Impuesto> getImpuestos(String codEmp, Connection con) throws ObteniendoImpuestosException, ConexionException{
 			
 		ArrayList<Impuesto> lstImpuestos = new ArrayList<Impuesto>();
 		
@@ -40,6 +40,7 @@ public class DAOImpuestos implements IDAOImpuestos{
 			String query = consultas.getImpuestos();
 			
 			PreparedStatement pstmt1 = con.prepareStatement(query);
+			pstmt1.setString(1, codEmp);
 			
 			
 			ResultSet rs = pstmt1.executeQuery();
@@ -80,7 +81,7 @@ public class DAOImpuestos implements IDAOImpuestos{
 	 * Pre condición: El código de impuesto no debe existir previamente
 	 */
 	@Override
-	public void insertarImpuesto(Impuesto impuesto, Connection con)
+	public void insertarImpuesto(Impuesto impuesto, String codEmp, Connection con)
 			throws InsertandoImpuestoException, ConexionException {
 		// TODO Auto-generated method stub
 		ConsultasDD clts = new ConsultasDD();
@@ -99,6 +100,7 @@ public class DAOImpuestos implements IDAOImpuestos{
 			pstmt1.setBoolean(4, impuesto.isActivo());
 			pstmt1.setString(5, impuesto.getUsuarioMod());
 			pstmt1.setString(6, impuesto.getOperacion());
+			pstmt1.setString(7, codEmp);
 			
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
@@ -114,7 +116,7 @@ public class DAOImpuestos implements IDAOImpuestos{
 	 * Dado el codigo de impuesto, valida si existe
 	 */
 	@Override
-	public boolean memberImpuesto(String cod_impuesto, Connection con)
+	public boolean memberImpuesto(String cod_impuesto, String codEmp, Connection con)
 			throws ExisteImpuestoException, ConexionException {
 		// TODO Auto-generated method stub
 		
@@ -129,6 +131,7 @@ public class DAOImpuestos implements IDAOImpuestos{
 			PreparedStatement pstmt1 = con.prepareStatement(query);
 			
 			pstmt1.setString(1, cod_impuesto);
+			pstmt1.setString(2, codEmp);
 			
 			ResultSet rs = pstmt1.executeQuery();
 			
@@ -147,7 +150,7 @@ public class DAOImpuestos implements IDAOImpuestos{
 	}
 
 	@Override
-	public void eliminarImpuesto(String cod_impuesto, Connection con)
+	public void eliminarImpuesto(String cod_impuesto, String codEmp, Connection con)
 			throws ModificandoImpuestoException, ConexionException {
 		// TODO Auto-generated method stub
 	}
@@ -157,7 +160,7 @@ public class DAOImpuestos implements IDAOImpuestos{
 	 * PRECONDICION: El código del codigo debe existir
 	 */
 	@Override
-	public void actualizarImpuesto(Impuesto impuesto, Connection con) throws ModificandoImpuestoException, ConexionException {
+	public void actualizarImpuesto(Impuesto impuesto, String codEmp, Connection con) throws ModificandoImpuestoException, ConexionException {
 		// TODO Auto-generated method stub
 		ConsultasDD consultas = new ConsultasDD();
 		String update = consultas.actualizarImpuesto();
@@ -173,6 +176,7 @@ public class DAOImpuestos implements IDAOImpuestos{
 			pstmt1.setString(4, impuesto.getUsuarioMod());
 			pstmt1.setString(5, impuesto.getOperacion());
 			pstmt1.setString(6, impuesto.getCod_imp());
+			pstmt1.setString(7, codEmp);
 			
 			pstmt1.executeUpdate ();
 			

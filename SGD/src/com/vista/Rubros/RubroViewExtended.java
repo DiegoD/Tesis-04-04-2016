@@ -161,7 +161,7 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 			ArrayList<ImpuestoVO> lstImpuesto = new ArrayList<ImpuestoVO>();
 			//controlador = new ImpuestoControlador();
 			try {
-				lstImpuesto = this.controlador.getImpuestos();
+				lstImpuesto = this.controlador.getImpuestos(this.permisos.getCodEmp());
 				
 			} catch (ObteniendoImpuestosException | InicializandoException | ConexionException
 					| ObteniendoPermisosException| NoTienePermisosException e) {
@@ -544,8 +544,7 @@ public class RubroViewExtended extends RubroView implements IBusqueda{
 
 		try {
 			
-				lstImpuestos = this.controlador.getImpuestos();
-			
+				lstImpuestos = this.controlador.getImpuestos(this.permisos.getCodEmp());
 		} 
 		catch (ObteniendoImpuestosException | InicializandoException | ConexionException
 				| ObteniendoPermisosException| NoTienePermisosException e) {

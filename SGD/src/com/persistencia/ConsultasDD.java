@@ -233,7 +233,7 @@ public class ConsultasDD {
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("SELECT cod_impuesto, descripcion, porcentaje, activo, fecha_mod, usuario_mod, operacion ");
-		sb.append("FROM m_impuestos ");
+		sb.append("FROM m_impuestos WHERE cod_emp = ?");
 		
 		return sb.toString();
 	}
@@ -243,8 +243,8 @@ public class ConsultasDD {
     	
     	StringBuilder sb = new StringBuilder();
     	 
-    	 sb.append("INSERT INTO vaadin.m_impuestos (cod_impuesto, descripcion, porcentaje, activo, fecha_mod, usuario_mod, operacion )");
-    	 sb.append("VALUES (?, ?, ?, ?, NOW(), ?, ?) ");
+    	 sb.append("INSERT INTO vaadin.m_impuestos (cod_impuesto, descripcion, porcentaje, activo, fecha_mod, usuario_mod, operacion, cod_emp )");
+    	 sb.append("VALUES (?, ?, ?, ?, NOW(), ?, ?, ?) ");
 
     	 return sb.toString();
     	
@@ -257,7 +257,7 @@ public class ConsultasDD {
         	 
       	 sb.append("SELECT cod_impuesto ");
       	 sb.append("FROM m_impuestos  ");
-      	 sb.append("WHERE cod_impuesto = ? ");
+      	 sb.append("WHERE cod_impuesto = ? AND cod_emp = ? ");
 
       	 return sb.toString();
       }
@@ -268,7 +268,7 @@ public class ConsultasDD {
     	 
       	 sb.append("DELETE ");
       	 sb.append("FROM m_impuesto  ");
-      	 sb.append("WHERE cod_impuesto = ? ");
+      	 sb.append("WHERE cod_impuesto = ? AND cod_emp = ? ");
       	 
       	 return sb.toString();
     }
@@ -284,7 +284,7 @@ public class ConsultasDD {
   		sb.append("fecha_mod = NOW(), ");
   		sb.append("usuario_mod = ?, ");
   		sb.append("operacion = ? ");
-  		sb.append("WHERE cod_impuesto = ? ");
+  		sb.append("WHERE cod_impuesto = ? AND cod_emp = ? ");
       	 
       	return sb.toString();
     }
@@ -294,7 +294,7 @@ public class ConsultasDD {
     	 
      	 sb.append("SELECT cod_impuesto, descripcion, porcentaje, activo, fecha_mod, usuario_mod, operacion ");
      	 sb.append("FROM m_impuestos  ");
-     	 sb.append("WHERE cod_impuesto = ? ");
+     	 sb.append("WHERE cod_impuesto = ? AND cod_emp = ? ");
      	 return sb.toString();
     }
 ////////////////////////INI-MONEDAS///////////////////////////////////////////////////

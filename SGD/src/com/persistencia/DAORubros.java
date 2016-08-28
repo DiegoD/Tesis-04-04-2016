@@ -25,7 +25,7 @@ public class DAORubros implements IDAORubros{
 	DAOImpuestos impuestos = new DAOImpuestos();
 	
 	@Override
-	public ArrayList<Rubro> getRubros(String cod_emp, Connection con) throws ObteniendoRubrosException, ConexionException {
+	public ArrayList<Rubro> getRubros(String codEmp, Connection con) throws ObteniendoRubrosException, ConexionException {
 		// TODO Auto-generated method stub
 		ArrayList<Rubro> lstRubros = new ArrayList<Rubro>();
 		
@@ -43,7 +43,8 @@ public class DAORubros implements IDAORubros{
 			PreparedStatement pstmt2 = con.prepareStatement(queryImpuesto);
 			PreparedStatement pstmt3 = con.prepareStatement(queryTipoRubro);
 			
-			pstmt1.setString(1, cod_emp);
+			pstmt1.setString(1, codEmp);
+			
 			ResultSet rs = pstmt1.executeQuery();
 			
 			Rubro rubro;
@@ -65,6 +66,7 @@ public class DAORubros implements IDAORubros{
 				
 				
 				pstmt2.setString(1, codImpuesto);
+				pstmt2.setString(2, codEmp);
 				
 				ResultSet rs2 = pstmt2.executeQuery();
 				
@@ -84,7 +86,7 @@ public class DAORubros implements IDAORubros{
 				}
 				
 				pstmt3.setString(1, codTipoRubro);
-				pstmt3.setString(2, cod_emp);
+				pstmt3.setString(2, codEmp);
 				
 				ResultSet rs3 = pstmt3.executeQuery();
 				

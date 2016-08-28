@@ -327,7 +327,7 @@ public class FachadaDD {
 	 * Obtiene todos los impuestos existentes
 	 */
     @SuppressWarnings("unchecked")
-	public ArrayList<ImpuestoVO> getImpuestos() throws ObteniendoImpuestosException, ConexionException
+	public ArrayList<ImpuestoVO> getImpuestos(String codEmp) throws ObteniendoImpuestosException, ConexionException
     {
     	
     	Connection con = null;
@@ -339,7 +339,7 @@ public class FachadaDD {
     	{
     		con = this.pool.obtenerConeccion();
     		
-    		lstImpuestos = this.impuestos.getImpuestos(con);
+    		lstImpuestos = this.impuestos.getImpuestos(codEmp, con);
     		
     		
     		ImpuestoVO aux;
@@ -380,7 +380,7 @@ public class FachadaDD {
 	 * Inserta un impuesto en la base
 	 * Valida que no exista un impuesto con el mismo código
 	 */
-    public void insertarImpuesto(ImpuestoVO impuestoVO) throws InsertandoImpuestoException, ConexionException, ExisteImpuestoException 
+    public void insertarImpuesto(ImpuestoVO impuestoVO, String codEmp) throws InsertandoImpuestoException, ConexionException, ExisteImpuestoException 
     {
     	
     	Connection con = null;
@@ -393,9 +393,9 @@ public class FachadaDD {
 			
 	    	Impuesto impuesto = new Impuesto(impuestoVO); 
 	    	
-	    	if(!this.impuestos.memberImpuesto(impuesto.getCod_imp(), con)) 	{
+	    	if(!this.impuestos.memberImpuesto(impuesto.getCod_imp(), codEmp, con)) 	{
 	    		
-	    		this.impuestos.insertarImpuesto(impuesto, con);
+	    		this.impuestos.insertarImpuesto(impuesto, codEmp, con);
 	    		con.commit();
 	    	}
 	    	else{
@@ -428,7 +428,7 @@ public class FachadaDD {
 	 * Actualiza los datos de un impuesto dado su código
 	 * valida que exista el código 
 	 */
-    public void actualizarImpuesto(ImpuestoVO impuestoVO) throws ConexionException, NoExisteImpuestoException, ModificandoImpuestoException, ExisteImpuestoException  
+    public void actualizarImpuesto(ImpuestoVO impuestoVO, String codEmp) throws ConexionException, NoExisteImpuestoException, ModificandoImpuestoException, ExisteImpuestoException  
 	{
 	    	
 	    	Connection con = null;
@@ -440,9 +440,9 @@ public class FachadaDD {
 				
 				Impuesto impuesto = new Impuesto(impuestoVO);
 		    	
-		    	if(this.impuestos.memberImpuesto(impuesto.getCod_imp(), con))
+		    	if(this.impuestos.memberImpuesto(impuesto.getCod_imp(), codEmp, con))
 		    	{
-		    		impuestos.actualizarImpuesto(impuesto, con);
+		    		impuestos.actualizarImpuesto(impuesto, codEmp,  con);
 		    		con.commit();
 		    	}
 		    	

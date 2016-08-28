@@ -75,9 +75,9 @@ public class RubroControlador {
 	 * @throws ObteniendoPermisosException 
 	 * @throws NoTienePermisosException 
 	 */
-	public ArrayList<ImpuestoVO> getImpuestos() throws ObteniendoImpuestosException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException {
+	public ArrayList<ImpuestoVO> getImpuestos(String codEmp) throws ObteniendoImpuestosException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException {
 		
-		return FachadaDD.getInstance().getImpuestos();
+		return FachadaDD.getInstance().getImpuestos(codEmp);
 	}
 
 	public ArrayList<TipoRubroVO> getTipoRubros(String cod_emp) throws ObteniendoTipoRubroException, ConexionException, InicializandoException {

@@ -1,9 +1,7 @@
 package com.vista.Impuestos;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 
-import com.controladores.GrupoControlador;
 import com.controladores.ImpuestoControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.ErrorInesperadoException;
@@ -14,23 +12,10 @@ import com.excepciones.Impuestos.ExisteImpuestoException;
 import com.excepciones.Impuestos.InsertandoImpuestoException;
 import com.excepciones.Impuestos.ModificandoImpuestoException;
 import com.excepciones.Impuestos.NoExisteImpuestoException;
-import com.excepciones.grupos.ExisteGrupoException;
-import com.excepciones.grupos.InsertandoGrupoException;
-import com.excepciones.grupos.MemberGrupoException;
-import com.excepciones.grupos.ModificandoGrupoException;
-import com.excepciones.grupos.NoExisteGrupoException;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.data.util.filter.SimpleStringFilter;
-import com.vaadin.data.validator.DoubleValidator;
 import com.vaadin.data.validator.StringLengthValidator;
-import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinService;
-import com.vaadin.ui.TextField;
-import com.vaadin.ui.UI;
-import com.valueObject.FormularioVO;
-import com.valueObject.GrupoVO;
 import com.valueObject.ImpuestoVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.vista.Mensajes;
@@ -104,7 +89,7 @@ public class ImpuestoViewExtended extends ImpuestoView{
 						
 						this.mainView.actulaizarGrilla(impuestoVO);
 						
-						Mensajes.mostrarMensajeOK("Se ha modificado el Grupo");
+						Mensajes.mostrarMensajeOK("Se ha modificado el Impuesto");
 						main.cerrarVentana();
 						
 					}
@@ -258,7 +243,7 @@ public class ImpuestoViewExtended extends ImpuestoView{
 		
 		
 		/*Verificamos que tenga permisos*/
-		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GRUPO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_IMPUESTO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
 		if(permisoNuevoEditar){
 			
@@ -288,7 +273,7 @@ public class ImpuestoViewExtended extends ImpuestoView{
 	{
 		this.operacion = Variables.OPERACION_NUEVO;
 		/*Chequeamos si tiene permiso de editar*/
-		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GRUPO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_IMPUESTO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
 		/*Si no tiene permisos de Nuevo Cerrmamos la ventana y mostramos mensaje*/
 		if(!permisoNuevoEditar)
