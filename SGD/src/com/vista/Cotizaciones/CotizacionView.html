@@ -13,11 +13,11 @@
    </vaadin-horizontal-layout> 
    <vaadin-horizontal-layout responsive size-full> 
     <vaadin-form-layout size-full> 
-     <vaadin-horizontal-layout caption="Moneda" spacing> 
-      <vaadin-text-field width="103px" _id="codMoneda"></vaadin-text-field> 
-      <vaadin-text-field width="186px" _id="descripcionMoneda"></vaadin-text-field> 
-      <vaadin-button icon="fonticon://FontAwesome/f002" style-name="icon-only borderless quiet" _id="btnBuscarMoneda"></vaadin-button> 
-     </vaadin-horizontal-layout> 
+     <vaadin-combo-box caption="Moneda" item-caption-mode="id" width="206px" _id="comboMoneda"> 
+      <option>Option 1</option> 
+      <option>Option 2</option> 
+      <option>Option 3</option> 
+     </vaadin-combo-box> 
      <vaadin-date-field caption="Fecha Cotización" width="206px" _id="fecha"></vaadin-date-field> 
      <vaadin-text-field caption="Cotización Compra" width="103px" readonly _id="cotizacionCompra"></vaadin-text-field> 
      <vaadin-text-field caption="Cotización Venta" width="103px" readonly _id="cotizacionVenta"></vaadin-text-field> 

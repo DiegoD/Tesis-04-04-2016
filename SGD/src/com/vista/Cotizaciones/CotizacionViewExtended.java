@@ -17,14 +17,18 @@ import com.excepciones.Cotizaciones.InsertandoCotizacionException;
 import com.excepciones.Cotizaciones.ModificandoCotizacionException;
 import com.excepciones.Cotizaciones.NoExisteCotizacionException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
+import com.excepciones.TipoRubro.ObteniendoTipoRubroException;
+import com.gargoylesoftware.htmlunit.javascript.host.PermissionStatus;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.UI;
+import com.valueObject.ImpuestoVO;
 import com.valueObject.MonedaVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.Cotizacion.CotizacionVO;
+import com.valueObject.TipoRubro.TipoRubroVO;
 import com.vista.BusquedaViewExtended;
 import com.vista.IBusqueda;
 import com.vista.Mensajes;
@@ -82,8 +86,13 @@ public class CotizacionViewExtended extends CotizacionView implements IBusqueda{
 					aux = cotizacionVenta.getValue().toString().trim().replace(",", ".");
 					cotizacionVO.setCotizacionVenta(Float.parseFloat(aux));
 					
-					cotizacionVO.setCodMoneda(codMoneda.getValue().trim());
-					cotizacionVO.setDescripcionMoneda(descripcionMoneda.getValue().trim());
+					MonedaVO auxMoneda = new MonedaVO();
+					auxMoneda = (MonedaVO) this.comboMoneda.getValue();
+					cotizacionVO.setCodMoneda(auxMoneda.getCodMoneda());
+					cotizacionVO.setDescripcionMoneda(auxMoneda.getDescripcion());
+					
+//					cotizacionVO.setCodMoneda(codMoneda.getValue().trim());
+//					cotizacionVO.setDescripcionMoneda(descripcionMoneda.getValue().trim());
 					
 					cotizacionVO.setUsuarioMod(this.permisos.getUsuario());
 					cotizacionVO.setOperacion(operacion);
@@ -140,55 +149,55 @@ public class CotizacionViewExtended extends CotizacionView implements IBusqueda{
 			}
 		});
 		
-		this.btnBuscarMoneda.addClickListener(click -> {
-			
-			BusquedaViewExtended form = new BusquedaViewExtended(this, new MonedaVO());
-			ArrayList<Object> lst = new ArrayList<Object>();
-			ArrayList<MonedaVO> lstMonedas = new ArrayList<MonedaVO>();
-			//controladorImpuestos = new ImpuestoControlador();
-			try {
-				 /* para confirmar los permisos del usuario*/
-				permisoAux = 
-						new UsuarioPermisosVO(this.permisos.getCodEmp(),
-								this.permisos.getUsuario(),
-								VariablesPermisos.FORMULARIO_COTIZACIONES,
-								VariablesPermisos.OPERACION_NUEVO_EDITAR);
-				lstMonedas = this.controlador.getMonedas(permisoAux);
-				
-			} catch (ConexionException | InicializandoException | ObteniendoPermisosException | NoTienePermisosException e) {
-
-				Mensajes.mostrarMensajeError(e.getMessage());
-			}
-			catch (ObteniendoMonedaException e){
-				Mensajes.mostrarMensajeError(e.getMessage());
-			}
-			Object obj;
-			for (MonedaVO i: lstMonedas) {
-				obj = new Object();
-				obj = (Object)i;
-				lst.add(obj);
-			}
-			try {
-				
-				form.inicializarGrilla(lst);
-				
-			} catch (Exception e) {
-				
-				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
-			}
-			
-			
-			
-			sub = new MySub("65%", "65%" );
-			sub.setModal(true);
-			sub.center();
-			sub.setModal(true);
-			sub.setVista(form);
-			sub.center();
-			sub.setDraggable(true);
-			UI.getCurrent().addWindow(sub);
-			
-		});
+//		this.btnBuscarMoneda.addClickListener(click -> {
+//			
+//			BusquedaViewExtended form = new BusquedaViewExtended(this, new MonedaVO());
+//			ArrayList<Object> lst = new ArrayList<Object>();
+//			ArrayList<MonedaVO> lstMonedas = new ArrayList<MonedaVO>();
+//			//controladorImpuestos = new ImpuestoControlador();
+//			try {
+//				 /* para confirmar los permisos del usuario*/
+//				permisoAux = 
+//						new UsuarioPermisosVO(this.permisos.getCodEmp(),
+//								this.permisos.getUsuario(),
+//								VariablesPermisos.FORMULARIO_COTIZACIONES,
+//								VariablesPermisos.OPERACION_NUEVO_EDITAR);
+//				lstMonedas = this.controlador.getMonedas(permisoAux);
+//				
+//			} catch (ConexionException | InicializandoException | ObteniendoPermisosException | NoTienePermisosException e) {
+//
+//				Mensajes.mostrarMensajeError(e.getMessage());
+//			}
+//			catch (ObteniendoMonedaException e){
+//				Mensajes.mostrarMensajeError(e.getMessage());
+//			}
+//			Object obj;
+//			for (MonedaVO i: lstMonedas) {
+//				obj = new Object();
+//				obj = (Object)i;
+//				lst.add(obj);
+//			}
+//			try {
+//				
+//				form.inicializarGrilla(lst);
+//				
+//			} catch (Exception e) {
+//				
+//				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+//			}
+//			
+//			
+//			
+//			sub = new MySub("65%", "65%" );
+//			sub.setModal(true);
+//			sub.center();
+//			sub.setModal(true);
+//			sub.setVista(form);
+//			sub.center();
+//			sub.setDraggable(true);
+//			UI.getCurrent().addWindow(sub);
+//			
+//		});
 		
 		this.cancelar.addClickListener(click -> {
 			main.cerrarVentana();
@@ -200,6 +209,9 @@ public class CotizacionViewExtended extends CotizacionView implements IBusqueda{
 		this.controlador = new CotizacionControlador();
 					
 		this.fieldGroup =  new BeanFieldGroup<CotizacionVO>(CotizacionVO.class);
+		
+		//inicializar los valores de los combos impuesto y tipo de rubro
+		inicializarComboMoneda(null);
 		
 		//Seteamos info del form si es requerido
 		if(fieldGroup != null)
@@ -228,11 +240,11 @@ public class CotizacionViewExtended extends CotizacionView implements IBusqueda{
 	 */
 	private void setearValidaciones(boolean setear){
 		
-		this.codMoneda.setRequired(setear);
-		this.codMoneda.setRequiredError("Es requerido");
-		
-		this.descripcionMoneda.setRequired(setear);
-		this.descripcionMoneda.setRequiredError("Es requerido");
+//		this.codMoneda.setRequired(setear);
+//		this.codMoneda.setRequiredError("Es requerido");
+//		
+//		this.descripcionMoneda.setRequired(setear);
+//		this.descripcionMoneda.setRequiredError("Es requerido");
 		
 		this.fecha.setRequired(setear);
 		this.fecha.setRequiredError("Es requerido");
@@ -242,6 +254,9 @@ public class CotizacionViewExtended extends CotizacionView implements IBusqueda{
 		
 		this.cotizacionVenta.setRequired(setear);
 		this.cotizacionVenta.setRequiredError("Es requerido");
+		
+		this.comboMoneda.setRequired(setear);
+		this.comboMoneda.setRequiredError("Es requerido");
 		
 	}
 	
@@ -261,6 +276,8 @@ public class CotizacionViewExtended extends CotizacionView implements IBusqueda{
 				"Usuario: " + cotizacion.getUsuarioMod() + "<br>" +
 			    "Fecha: " + fecha + "<br>" +
 			    "Operación: " + cotizacion.getOperacion());
+		
+		this.inicializarComboMoneda(cotizacion.getCodMoneda());
 		
 		/*SETEAMOS LA OPERACION EN MODO LECUTA
 		 * ES CUANDO LLAMAMOS ESTE METODO*/
@@ -361,8 +378,13 @@ public class CotizacionViewExtended extends CotizacionView implements IBusqueda{
 		
 		/*Como es en operacion nuevo, dejamos todos los campos editabls*/
 		this.readOnlyFields(false);
+		
+		this.enableCombos();
 	}
 	
+	private void enableCombos(){
+		this.comboMoneda.setEnabled(true);
+	}
 	/**
 	 * Dejamos setear los texFields correspondientes, 
 	 *  
@@ -372,13 +394,12 @@ public class CotizacionViewExtended extends CotizacionView implements IBusqueda{
 	 */
 	private void setearFieldsEditar()
 	{
-		this.fecha.setReadOnly(false);
 		this.cotizacionCompra.setReadOnly(false);
 		this.cotizacionVenta.setReadOnly(false);
-		this.codMoneda.setReadOnly(false);
-		this.descripcionMoneda.setReadOnly(false);
-		this.codMoneda.setEnabled(true);
-		this.descripcionMoneda.setEnabled(true);
+//		this.codMoneda.setReadOnly(false);
+//		this.descripcionMoneda.setReadOnly(false);
+//		this.codMoneda.setEnabled(true);
+//		this.descripcionMoneda.setEnabled(true);
 		
 	}
 	
@@ -412,8 +433,8 @@ public class CotizacionViewExtended extends CotizacionView implements IBusqueda{
 	{
 		this.aceptar.setEnabled(false);
 		this.aceptar.setVisible(false);
-		this.btnBuscarMoneda.setEnabled(false);
-		this.btnBuscarMoneda.setVisible(false);
+//		this.btnBuscarMoneda.setEnabled(false);
+//		this.btnBuscarMoneda.setVisible(false);
 	}
 	
 	/**
@@ -424,8 +445,8 @@ public class CotizacionViewExtended extends CotizacionView implements IBusqueda{
 	{
 		this.aceptar.setEnabled(true);
 		this.aceptar.setVisible(true);
-		this.btnBuscarMoneda.setEnabled(true);
-		this.btnBuscarMoneda.setVisible(true);
+//		this.btnBuscarMoneda.setEnabled(true);
+//		this.btnBuscarMoneda.setVisible(true);
 	}
 	
 	/**
@@ -435,10 +456,12 @@ public class CotizacionViewExtended extends CotizacionView implements IBusqueda{
 	 */
 	private void readOnlyFields(boolean setear)
 	{
-		this.codMoneda.setReadOnly(setear);
-		this.descripcionMoneda.setReadOnly(setear);
+//		this.codMoneda.setReadOnly(setear);
+//		this.descripcionMoneda.setReadOnly(setear);
 		this.cotizacionCompra.setReadOnly(setear);
 		this.cotizacionVenta.setReadOnly(setear);
+		this.fecha.setReadOnly(setear);
+		this.comboMoneda.setEnabled(false);
 	}
 	
 	/**
@@ -456,6 +479,7 @@ public class CotizacionViewExtended extends CotizacionView implements IBusqueda{
 //                new StringLengthValidator(
 //                        " 45 caracteres máximo", 1, 45, false));
         
+		
 	}
 	
 	/**
@@ -466,14 +490,14 @@ public class CotizacionViewExtended extends CotizacionView implements IBusqueda{
 	 */
 	private boolean fieldsValidos()
 	{
-		boolean valido = true;
-//		
-//		//Agregamos validaciones a los campos para luego controlarlos
-//		this.agregarFieldsValidaciones();
-//		
-//		if(this.codRubro.isValid() && this.descripcion.isValid() && this.codigoImpuesto.isValid() && this.codRubro.isValid() && this.tipoRubro.isValid())
-//			valido = true;
-//			
+		boolean valido = false;
+		
+		//Agregamos validaciones a los campos para luego controlarlos
+		this.agregarFieldsValidaciones();
+		
+		if(this.comboMoneda.isValid() && this.fecha.isValid() && this.cotizacionCompra.isValid() && this.cotizacionVenta.isValid())
+			valido = true;
+			
 		return valido;
 	}
 	
@@ -488,10 +512,44 @@ public class CotizacionViewExtended extends CotizacionView implements IBusqueda{
 		// TODO Auto-generated method stub
 		if(datos instanceof MonedaVO){
 			MonedaVO monedaVO = (MonedaVO) datos;
-			this.descripcionMoneda.setValue(monedaVO.getDescripcion());
-			this.codMoneda.setValue(monedaVO.getCodMoneda());
+//			this.descripcionMoneda.setValue(monedaVO.getDescripcion());
+//			this.codMoneda.setValue(monedaVO.getCodMoneda());
 		}
 		
 	}
 	
+	public void inicializarComboMoneda(String cod){
+		
+		BeanItemContainer<MonedaVO> monedasObj = new BeanItemContainer<MonedaVO>(MonedaVO.class);
+		MonedaVO moneda = new MonedaVO();
+		ArrayList<MonedaVO> lstMonedas = new ArrayList<MonedaVO>();
+		
+		try {
+			permisoAux = 
+					new UsuarioPermisosVO(this.permisos.getCodEmp(),
+							this.permisos.getUsuario(),
+							VariablesPermisos.FORMULARIO_COTIZACIONES,
+							VariablesPermisos.OPERACION_NUEVO_EDITAR);
+			lstMonedas = this.controlador.getMonedas(permisoAux);
+			
+		} catch (ObteniendoMonedaException | InicializandoException | ConexionException | ObteniendoPermisosException | NoTienePermisosException e) {
+
+			Mensajes.mostrarMensajeError(e.getMessage());
+		}
+		
+		for (MonedaVO monedaVO : lstMonedas) {
+			
+			monedasObj.addBean(monedaVO);
+			
+			if(cod != null){
+				if(cod.equals(monedaVO.getCodMoneda())){
+					moneda = monedaVO;
+				}
+			}
+		}
+		
+		this.comboMoneda.setContainerDataSource(monedasObj);
+		this.comboMoneda.setItemCaptionPropertyId("descripcion");
+		this.comboMoneda.setValue(moneda);
+	}
 }

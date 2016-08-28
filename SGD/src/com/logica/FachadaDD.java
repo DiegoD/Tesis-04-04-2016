@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import org.json.simple.JSONArray;
@@ -1408,7 +1409,7 @@ public class FachadaDD {
 			
 			Cotizacion cotizacion = new Cotizacion(cotizacionVO); 
 			
-			if(!this.cotizaciones.memberCotizacion(cotizacionVO.getCodMoneda(), cotizacionVO.getFecha(), codEmp, con)) 	{
+			if(!this.cotizaciones.memberCotizacion(cotizacionVO.getCodMoneda(), (Timestamp) cotizacionVO.getFecha(), codEmp, con)) 	{
 			
 				this.cotizaciones.insertarCotizacion(cotizacion, codEmp, con);
 				con.commit();

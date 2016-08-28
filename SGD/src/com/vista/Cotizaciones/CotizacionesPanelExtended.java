@@ -3,7 +3,9 @@ package com.vista.Cotizaciones;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import com.controladores.CotizacionControlador;
 import com.excepciones.ConexionException;
@@ -102,6 +104,7 @@ public class CotizacionesPanelExtended extends CotizacionesPanel{
 		//Obtenemos lista de empresas del sistema
 		try {
 			this.lstCotizaciones = this.getCotizaciones();
+			
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -252,7 +255,7 @@ public class CotizacionesPanelExtended extends CotizacionesPanel{
 	 * de empresas de la vista
 	 *
 	 */
-	private boolean existeCotizacionenLista(String cod_moneda, Timestamp fecha)
+	private boolean existeCotizacionenLista(String cod_moneda, Date fecha)
 	{
 		int i =0;
 		boolean esta = false;

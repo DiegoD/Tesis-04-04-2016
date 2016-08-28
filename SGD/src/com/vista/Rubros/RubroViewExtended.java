@@ -505,6 +505,7 @@ public class RubroViewExtended extends RubroView {
 		
 		/*Como es en operacion nuevo, dejamos todos los campos editabls*/
 		this.readOnlyFields(false);
+		this.enableCombos();
 	}
 	
 	/**
@@ -602,6 +603,11 @@ public class RubroViewExtended extends RubroView {
 //		this.codigoImpuesto.setEnabled(false);
 		
 		
+	}
+	
+	private void enableCombos(){
+		this.comboImpuestos.setEnabled(true);
+		this.comboTipoRubro.setEnabled(true);
 	}
 	
 	/**

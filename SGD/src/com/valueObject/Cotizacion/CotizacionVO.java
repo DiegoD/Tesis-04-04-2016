@@ -1,12 +1,15 @@
 package com.valueObject.Cotizacion;
 
 import java.sql.Timestamp;
+import java.util.Date;
+
 import com.valueObject.AuditoriaVO;
 import com.valueObject.empresa.EmpresaVO;
 
 public class CotizacionVO extends AuditoriaVO{
 	
-	private Timestamp fecha;
+	//private Timestamp fecha;
+	private Date fecha;
 	private float cotizacionCompra;
 	private float cotizacionVenta;
 	private String codMoneda;
@@ -19,7 +22,7 @@ public class CotizacionVO extends AuditoriaVO{
 		
 	}
 	
-	public CotizacionVO(Timestamp fecha, float cotizacion_compra, float cotizacion_venta, String codMoneda, 
+	public CotizacionVO(Date fecha, float cotizacion_compra, float cotizacion_venta, String codMoneda, 
 			String descripcionMoneda, String simboloMoneda, boolean aceptaCotizacionMoneda, boolean activoMoneda) {
 		super();
 		this.fecha = fecha;
@@ -54,11 +57,11 @@ public class CotizacionVO extends AuditoriaVO{
 		
 	}
 	
-	public Timestamp getFecha() {
+	public Date getFecha() {
 		return fecha;
 	}
 
-	public void setFecha(Timestamp fecha) {
+	public void setFecha(Date fecha) {
 		this.fecha = fecha;
 	}
 

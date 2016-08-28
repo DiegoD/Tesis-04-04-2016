@@ -36,7 +36,7 @@ public class Cotizacion extends Auditoria{
 		this.moneda.setAcepta_cotizacion(cotizacionVO.isAceptaCotizacionMoneda());
 		this.moneda.setActivo(cotizacionVO.isActivoMoneda());
 		
-		this.fecha = cotizacionVO.getFecha();
+		this.fecha = (Timestamp) cotizacionVO.getFecha();
 		this.cotizacion_compra = cotizacionVO.getCotizacionCompra();
 		this.cotizacion_venta = cotizacionVO.getCotizacionVenta();
 	}
