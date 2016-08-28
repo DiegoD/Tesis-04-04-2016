@@ -12,9 +12,9 @@ import com.logica.Moneda;
 
 public interface IDAOMonedas {
 	
-	public ArrayList<Moneda> getMonedas(Connection con) throws ObteniendoMonedaException, ConexionException;
-	public void insertarMoneda(Moneda moneda, Connection con) throws  InsertandoMonedaException, ConexionException ;
-	public boolean memberMoneda(String cod_moneda, Connection con) throws ExisteMonedaException, ConexionException;
-	public void eliminarMoneda(String cod_moneda, Connection con) throws ModificandoMonedaException, ConexionException;
-	public void actualizarMoneda(Moneda moneda, Connection con) throws ModificandoMonedaException, ConexionException;
+	public ArrayList<Moneda> getMonedas(String codEmp, Connection con) throws ObteniendoMonedaException, ConexionException;
+	public void insertarMoneda(Moneda moneda, String codEmp, Connection con) throws  InsertandoMonedaException, ConexionException ;
+	public boolean memberMoneda(String codMoneda, String codEmp, Connection con) throws ExisteMonedaException, ConexionException;
+	public void eliminarMoneda(String codMoneda, String codEmp, Connection con) throws ModificandoMonedaException, ConexionException;
+	public void actualizarMoneda(Moneda moneda, String codEmp, Connection con) throws ModificandoMonedaException, ConexionException;
 }

@@ -38,7 +38,7 @@ public class MonedaControlador {
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			return FachadaDD.getInstance().getMonedas();
+			return FachadaDD.getInstance().getMonedas(permisos.getCodEmp());
 		else
 			throw new NoTienePermisosException();
 	}
@@ -52,7 +52,7 @@ public class MonedaControlador {
 	{
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			FachadaDD.getInstance().insertarMoneda(monedaVO);
+			FachadaDD.getInstance().insertarMoneda(monedaVO, permisos.getCodEmp());
 		else
 			throw new NoTienePermisosException();
 	}
@@ -66,7 +66,7 @@ public class MonedaControlador {
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			FachadaDD.getInstance().actualizarMoneda(monedaVO);
+			FachadaDD.getInstance().actualizarMoneda(monedaVO, permisos.getCodEmp());
 		else
 			throw new NoTienePermisosException();
 	}

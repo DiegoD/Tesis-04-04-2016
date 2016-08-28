@@ -21,7 +21,7 @@ import com.logica.Moneda;
 public class DAOMonedas implements IDAOMonedas{
 
 	@Override
-	public ArrayList<Moneda> getMonedas(Connection con) throws ObteniendoMonedaException, ConexionException {
+	public ArrayList<Moneda> getMonedas(String codEmp, Connection con) throws ObteniendoMonedaException, ConexionException {
 		// TODO Auto-generated method stub
 		ArrayList<Moneda> lstMonedas = new ArrayList<Moneda>();
 		
@@ -31,7 +31,7 @@ public class DAOMonedas implements IDAOMonedas{
 			String query = consultas.getMonedas();
 			
 			PreparedStatement pstmt1 = con.prepareStatement(query);
-			
+			pstmt1.setString(1, codEmp);
 			
 			ResultSet rs = pstmt1.executeQuery();
 			
@@ -72,7 +72,7 @@ public class DAOMonedas implements IDAOMonedas{
 	 * Pre condición: El código de moneda no debe existir previamente
 	 */
 	@Override
-	public void insertarMoneda(Moneda moneda, Connection con) throws InsertandoMonedaException, ConexionException {
+	public void insertarMoneda(Moneda moneda, String codEmp, Connection con) throws InsertandoMonedaException, ConexionException {
 		// TODO Auto-generated method stub
 		ConsultasDD clts = new ConsultasDD();
     	
@@ -91,6 +91,7 @@ public class DAOMonedas implements IDAOMonedas{
 			pstmt1.setBoolean(5, moneda.isActivo());
 			pstmt1.setString(6, moneda.getUsuarioMod());
 			pstmt1.setString(7, moneda.getOperacion());
+			pstmt1.setString(8, codEmp);
 			
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
@@ -102,7 +103,7 @@ public class DAOMonedas implements IDAOMonedas{
 	}
 
 	@Override
-	public boolean memberMoneda(String cod_moneda, Connection con) throws ExisteMonedaException, ConexionException {
+	public boolean memberMoneda(String codMoneda, String codEmp, Connection con) throws ExisteMonedaException, ConexionException {
 		// TODO Auto-generated method stub
 		boolean existe = false;
 		
@@ -114,7 +115,8 @@ public class DAOMonedas implements IDAOMonedas{
 			
 			PreparedStatement pstmt1 = con.prepareStatement(query);
 			
-			pstmt1.setString(1, cod_moneda);
+			pstmt1.setString(1, codMoneda);
+			pstmt1.setString(2, codEmp);
 			
 			ResultSet rs = pstmt1.executeQuery();
 			
@@ -133,7 +135,7 @@ public class DAOMonedas implements IDAOMonedas{
 	}
 
 	@Override
-	public void eliminarMoneda(String cod_moneda, Connection con) throws ModificandoMonedaException, ConexionException {
+	public void eliminarMoneda(String cod_moneda, String codEmp, Connection con) throws ModificandoMonedaException, ConexionException {
 		// TODO Auto-generated method stub
 		
 	}
@@ -143,7 +145,7 @@ public class DAOMonedas implements IDAOMonedas{
 	 * PRECONDICION: El código de la moneda debe existir
 	 */
 	@Override
-	public void actualizarMoneda(Moneda moneda, Connection con) throws ModificandoMonedaException, ConexionException {
+	public void actualizarMoneda(Moneda moneda,String codEmp, Connection con) throws ModificandoMonedaException, ConexionException {
 		// TODO Auto-generated method stub
 		ConsultasDD consultas = new ConsultasDD();
 		String update = consultas.actualizarMoneda();
@@ -161,6 +163,7 @@ public class DAOMonedas implements IDAOMonedas{
 			pstmt1.setString(5, moneda.getUsuarioMod());
 			pstmt1.setString(6, moneda.getOperacion());
 			pstmt1.setString(7, moneda.getCod_moneda());
+			pstmt1.setString(8, codEmp);
 			
 			pstmt1.executeUpdate ();
 			

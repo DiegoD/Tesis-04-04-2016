@@ -471,7 +471,7 @@ public class FachadaDD {
 	 * Obtiene todos las monedas existentes
 	 */
     @SuppressWarnings("unchecked")
-	public ArrayList<MonedaVO> getMonedas() throws ObteniendoMonedaException, ConexionException
+	public ArrayList<MonedaVO> getMonedas(String codEmp) throws ObteniendoMonedaException, ConexionException
     {
     	
     	Connection con = null;
@@ -483,7 +483,7 @@ public class FachadaDD {
     	{
     		con = this.pool.obtenerConeccion();
     		
-    		lstMonedas = this.monedas.getMonedas(con);
+    		lstMonedas = this.monedas.getMonedas(codEmp, con);
     		
     		
     		MonedaVO aux;
@@ -525,7 +525,7 @@ public class FachadaDD {
 	 * Inserta un impuesto en la base
 	 * Valida que no exista un impuesto con el mismo código
 	 */
-    public void insertarMoneda(MonedaVO monedaVO) throws InsertandoMonedaException, ConexionException, ExisteMonedaException 
+    public void insertarMoneda(MonedaVO monedaVO, String codEmp) throws InsertandoMonedaException, ConexionException, ExisteMonedaException 
     {
     	
     	Connection con = null;
@@ -538,9 +538,9 @@ public class FachadaDD {
 			
 	    	Moneda moneda = new Moneda(monedaVO); 
 	    	
-	    	if(!this.monedas.memberMoneda(moneda.getCod_moneda(), con)) 	{
+	    	if(!this.monedas.memberMoneda(moneda.getCod_moneda(), codEmp, con)) 	{
 	    		
-	    		this.monedas.insertarMoneda(moneda, con);
+	    		this.monedas.insertarMoneda(moneda,codEmp, con);
 	    		con.commit();
 	    	}
 	    	else{
@@ -573,7 +573,7 @@ public class FachadaDD {
 	 * Actualiza los datos de una moneda dado su código
 	 * valida que exista el código 
 	 */
-    public void actualizarMoneda(MonedaVO monedaVO) throws ConexionException, NoExisteMonedaException, ModificandoMonedaException, ExisteMonedaException  
+    public void actualizarMoneda(MonedaVO monedaVO, String codEmp) throws ConexionException, NoExisteMonedaException, ModificandoMonedaException, ExisteMonedaException  
 	{
 	    	
 	    	Connection con = null;
@@ -585,9 +585,9 @@ public class FachadaDD {
 				
 				Moneda moneda = new Moneda(monedaVO);
 		    	
-		    	if(this.monedas.memberMoneda(moneda.getCod_moneda(), con))
+		    	if(this.monedas.memberMoneda(moneda.getCod_moneda(), codEmp, con))
 		    	{
-		    		monedas.actualizarMoneda(moneda, con);
+		    		monedas.actualizarMoneda(moneda, codEmp, con);
 		    		con.commit();
 		    	}
 		    	
