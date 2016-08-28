@@ -217,7 +217,7 @@ public class GrupoViewExtended extends GrupoView {
 					codGrupo = fieldGroup.getItemDataSource().getBean().getCodGrupo();
 				}
 				
-				ArrayList<FormularioVO> lstForms = this.controlador.getFormulariosNoGrupo(codGrupo);
+				ArrayList<FormularioVO> lstForms = this.controlador.getFormulariosNoGrupo(codGrupo, this.permisos.getCodEmp());
 				form.setGrillaForms(lstForms);
 				
 				UI.getCurrent().addWindow(sub);

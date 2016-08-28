@@ -12,8 +12,8 @@ import com.logica.DocumentoAduanero;
 import java.sql.Connection;
 
 public interface IDAODocumentos {
-	public ArrayList<DocumentoAduanero> getDocumentos(Connection con) throws ObteniendoDocumentosException, ConexionException;
-	public void insertarDocumento(DocumentoAduanero documento, Connection con) throws  InsertandoDocumentoException, ConexionException ;
-	public boolean memberDocumento(String cod_documento, Connection con) throws ExisteDocumentoException, ConexionException;
-	public void actualizarDocumento(DocumentoAduanero documento, Connection con) throws ModificandoDocumentoException, ConexionException;
+	public ArrayList<DocumentoAduanero> getDocumentos(String codEmp, Connection con) throws ObteniendoDocumentosException, ConexionException;
+	public void insertarDocumento(DocumentoAduanero documento, String codEmp, Connection con) throws  InsertandoDocumentoException, ConexionException ;
+	public boolean memberDocumento(String cod_documento, String codEmp, Connection con) throws ExisteDocumentoException, ConexionException;
+	public void actualizarDocumento(DocumentoAduanero documento, String codEmp, Connection con) throws ModificandoDocumentoException, ConexionException;
 }

@@ -34,7 +34,7 @@ public class CotizacionControlador {
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			return FachadaDD.getInstance().getCotizaciones();
+			return FachadaDD.getInstance().getCotizaciones(permisos.getCodEmp());
 		else
 			throw new NoTienePermisosException();
 	}
@@ -48,7 +48,7 @@ public class CotizacionControlador {
 	{
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			FachadaDD.getInstance().insertarCotizacion(cotizacionVO);
+			FachadaDD.getInstance().insertarCotizacion(cotizacionVO, permisos.getCodEmp());
 		else
 			throw new NoTienePermisosException();
 	}
@@ -63,7 +63,7 @@ public class CotizacionControlador {
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			FachadaDD.getInstance().actualizarCotizacion(cotizacionVO);
+			FachadaDD.getInstance().actualizarCotizacion(cotizacionVO, permisos.getCodEmp());
 		else
 			throw new NoTienePermisosException();
 	}

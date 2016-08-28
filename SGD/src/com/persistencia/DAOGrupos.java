@@ -20,7 +20,7 @@ import com.logica.Grupo;
 public class DAOGrupos implements IDAOGrupos {
 	
 
-	public ArrayList<Grupo> getGrupos(Connection con) throws ObteniendoGruposException, ObteniendoFormulariosException
+	public ArrayList<Grupo> getGrupos(String codEmp, Connection con) throws ObteniendoGruposException, ObteniendoFormulariosException
 	{
 		ArrayList<Grupo> lstGrupos = new ArrayList<Grupo>();
 		
@@ -30,9 +30,10 @@ public class DAOGrupos implements IDAOGrupos {
 			String query = consultas.getGrupos();
 			
 			PreparedStatement pstmt1 = con.prepareStatement(query);
-			
+			pstmt1.setString(1, codEmp);
 			
 			ResultSet rs = pstmt1.executeQuery();
+			
 			
 			Grupo grupo;
 			
@@ -48,7 +49,7 @@ public class DAOGrupos implements IDAOGrupos {
 				grupo.setActivo(rs.getBoolean(6));
 				
 				/*Obtenemos los formularios del grupo*/
-				grupo.setLstFormularios(this.getFormulariosxGrupo(grupo.getCodGrupo(), con));
+				grupo.setLstFormularios(this.getFormulariosxGrupo(grupo.getCodGrupo(), codEmp, con));
 
 				lstGrupos.add(grupo);
 			}
@@ -66,7 +67,7 @@ public class DAOGrupos implements IDAOGrupos {
 		return lstGrupos;
 	}
 
-	public Grupo getGrupo(Connection con, String codGrupo) throws ObteniendoGruposException, ObteniendoFormulariosException
+	public Grupo getGrupo(String codEmp, Connection con, String codGrupo) throws ObteniendoGruposException, ObteniendoFormulariosException
 	{
 		Grupo grupo = null;
 		try
@@ -76,6 +77,7 @@ public class DAOGrupos implements IDAOGrupos {
 			
 			PreparedStatement pstmt1 = con.prepareStatement(query);
 			pstmt1.setString(1, codGrupo);
+			pstmt1.setString(2, codEmp);
 			
 			ResultSet rs = pstmt1.executeQuery();
 			
@@ -93,7 +95,7 @@ public class DAOGrupos implements IDAOGrupos {
 				grupo.setActivo(rs.getBoolean(6));
 				
 				/*Obtenemos los formularios del grupo*/
-				grupo.setLstFormularios(this.getFormulariosxGrupo(grupo.getCodGrupo(), con));
+				grupo.setLstFormularios(this.getFormulariosxGrupo(grupo.getCodGrupo(), codEmp, con));
 
 			}
 			
@@ -114,7 +116,7 @@ public class DAOGrupos implements IDAOGrupos {
 	 * PRECONDICION: El código del codigo no debe existir
 	 *
 	 */
-	public void insertarGrupo(Grupo grupo, Connection con) throws InsertandoGrupoException, ConexionException 
+	public void insertarGrupo(Grupo grupo, String codEmp, Connection con) throws InsertandoGrupoException, ConexionException 
 	{
 
 		Consultas clts = new Consultas();
@@ -131,11 +133,12 @@ public class DAOGrupos implements IDAOGrupos {
 			pstmt1.setString(3, grupo.getUsuarioMod());
 			pstmt1.setString(4, grupo.getOperacion());
 			pstmt1.setBoolean(5, grupo.isActivo());
+			pstmt1.setString(6, codEmp);
 			
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
 			
-			this.insertarFormulariosxGrupo(grupo.getCodGrupo(), grupo.getLstFormularios(), con);
+			this.insertarFormulariosxGrupo(grupo.getCodGrupo(), codEmp, grupo.getLstFormularios(), con);
 	
 		} catch (SQLException e) {
 			
@@ -147,7 +150,7 @@ public class DAOGrupos implements IDAOGrupos {
 	 * Nos retorna true si existe el código del grupo
 	 *
 	 */
-	public boolean memberGrupo(String codGrupo, Connection con) throws MemberGrupoException, ConexionException{
+	public boolean memberGrupo(String codGrupo, String codEmp, Connection con) throws MemberGrupoException, ConexionException{
 		
 		boolean existe = false;
 		
@@ -160,6 +163,7 @@ public class DAOGrupos implements IDAOGrupos {
 			PreparedStatement pstmt1 = con.prepareStatement(query);
 			
 			pstmt1.setString(1, codGrupo);
+			pstmt1.setString(2, codEmp);
 			
 			ResultSet rs = pstmt1.executeQuery();
 			
@@ -183,7 +187,7 @@ public class DAOGrupos implements IDAOGrupos {
 	 * PRECONDICION: Invocar dentro de una transaction
 	 *
 	 */
-	public void eliminarGrupo(String codGrupo, Connection con) throws ModificandoGrupoException, ConexionException
+	public void eliminarGrupo(String codGrupo, String codEmp, Connection con) throws ModificandoGrupoException, ConexionException
 	{
 		Consultas consultas = new Consultas ();
 		String delete = consultas.eliminarGrupo();
@@ -193,10 +197,11 @@ public class DAOGrupos implements IDAOGrupos {
 		
 		try 
 		{
-			this.eliminarFormulariosxGrupo(codGrupo, con);
+			this.eliminarFormulariosxGrupo(codGrupo, codEmp, con);
 			
 			pstmt1 =  con.prepareStatement(delete);
 			pstmt1.setString(1, codGrupo);
+			pstmt1.setString(2, codEmp);
 			
 			pstmt1.executeUpdate ();
 			
@@ -220,7 +225,7 @@ public class DAOGrupos implements IDAOGrupos {
 	 * @throws ModificandoGrupoException 
 	 *
 	 */
-	public void actualizarGrupo(Grupo grupo, Connection con) throws ModificandoGrupoException
+	public void actualizarGrupo(Grupo grupo, String codEmp, Connection con) throws ModificandoGrupoException
 	{
 		Consultas consultas = new Consultas ();
 		String update = consultas.getActualizarGrupo();
@@ -231,10 +236,10 @@ public class DAOGrupos implements IDAOGrupos {
 		try 
 		{
 			/*Primero eliminamos los formularios para luego volver a insertarlos*/
-			this.eliminarFormulariosxGrupo(grupo.getCodGrupo(), con);
+			this.eliminarFormulariosxGrupo(grupo.getCodGrupo(), codEmp, con);
 			
 			/*Volvemos a insertar los formularios modificados*/
-			this.insertarFormulariosxGrupo(grupo.getCodGrupo(), grupo.getLstFormularios(), con);
+			this.insertarFormulariosxGrupo(grupo.getCodGrupo(), codEmp, grupo.getLstFormularios(), con);
 			
 			/*Updateamos la info del grupo*/
      		pstmt1 =  con.prepareStatement(update);
@@ -243,6 +248,7 @@ public class DAOGrupos implements IDAOGrupos {
 			pstmt1.setString(3, grupo.getOperacion());
 			pstmt1.setBoolean(4, grupo.isActivo());
 			pstmt1.setString(5, grupo.getCodGrupo());
+			pstmt1.setString(6, codEmp);
 			
 			
 			pstmt1.executeUpdate ();
@@ -262,7 +268,7 @@ public class DAOGrupos implements IDAOGrupos {
 	 * Nos retorna los formularios activos para el grupo
 	 *
 	 */
-	private ArrayList<Formulario> getFormulariosxGrupo(String codGrupo, Connection con) throws ObteniendoFormulariosException
+	private ArrayList<Formulario> getFormulariosxGrupo(String codGrupo, String cod_emp, Connection con) throws ObteniendoFormulariosException
 	{
 		ArrayList<Formulario> lstFormulario = new ArrayList<Formulario>();
 		
@@ -308,7 +314,7 @@ public class DAOGrupos implements IDAOGrupos {
 	 * PRECONDICION: El código del codigo no debe existir
 	 *
 	 */
-	private void insertarFormulariosxGrupo(String codGrupo, ArrayList<Formulario> lstFormularios, Connection con) throws InsertandoGrupoException, ConexionException 
+	private void insertarFormulariosxGrupo(String codGrupo, String codEmp, ArrayList<Formulario> lstFormularios, Connection con) throws InsertandoGrupoException, ConexionException 
 	{
 
 		Consultas clts = new Consultas();
@@ -329,6 +335,7 @@ public class DAOGrupos implements IDAOGrupos {
     			pstmt1.setBoolean(3, formulario.isLeer());
     			pstmt1.setBoolean(4, formulario.isNuevoEditar());
     			pstmt1.setBoolean(5, formulario.isBorrar());
+    			pstmt1.setString(6, codEmp);
 
     			pstmt1.executeUpdate ();
 			}
@@ -347,7 +354,7 @@ public class DAOGrupos implements IDAOGrupos {
 	 * PRECONDICION: El código del codigo debe existir
 	 *
 	 */
-	private void eliminarFormulariosxGrupo(String codGrupo, Connection con) throws ModificandoGrupoException, ConexionException
+	private void eliminarFormulariosxGrupo(String codGrupo, String codEmp, Connection con) throws ModificandoGrupoException, ConexionException
 	{
 		Consultas consultas = new Consultas ();
 		String delete = consultas.eliminarFormulariosxGrupo();
@@ -358,6 +365,7 @@ public class DAOGrupos implements IDAOGrupos {
 		{
 			pstmt1 =  con.prepareStatement(delete);
 			pstmt1.setString(1, codGrupo);
+			pstmt1.setString(2, codEmp);
 			
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
@@ -375,7 +383,7 @@ public class DAOGrupos implements IDAOGrupos {
 	 * al grupo para que los pueda agregar
 	 *
 	 */
-	public ArrayList<Formulario> getFormulariosNoGrupo(String codGrupo, Connection con) throws ObteniendoFormulariosException
+	public ArrayList<Formulario> getFormulariosNoGrupo(String codGrupo, String codEmp, Connection con) throws ObteniendoFormulariosException
 	{
 		ArrayList<Formulario> lstFormulario = new ArrayList<Formulario>();
 		
@@ -386,6 +394,7 @@ public class DAOGrupos implements IDAOGrupos {
 			
 			PreparedStatement pstmt1 = con.prepareStatement(query);
 			pstmt1.setString(1, codGrupo);
+			pstmt1.setString(2, codEmp);
 			
 			ResultSet rs = pstmt1.executeQuery();
 			

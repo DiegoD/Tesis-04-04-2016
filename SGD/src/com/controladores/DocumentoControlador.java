@@ -32,7 +32,7 @@ public class DocumentoControlador {
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			return FachadaDD.getInstance().getDocumentos();
+			return FachadaDD.getInstance().getDocumentos(permisos.getCodEmp());
 		else
 			throw new NoTienePermisosException();
 	}
@@ -46,7 +46,7 @@ public class DocumentoControlador {
 	{
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			FachadaDD.getInstance().insertarDocumento(documentoVO);
+			FachadaDD.getInstance().insertarDocumento(documentoVO, permisos.getCodEmp());
 		else
 			throw new NoTienePermisosException();
 	}
@@ -56,6 +56,6 @@ public class DocumentoControlador {
 	 * Actualiza los datos de un documento
 	 */
 	public void actualizarDocumento(DocumentoAduaneroVO documentoVO, UsuarioPermisosVO permisos) throws ConexionException, NoExisteDocumentoException, ModificandoDocumentoException, ExisteDocumentoException, InicializandoException {
-		FachadaDD.getInstance().actualizarDocumento(documentoVO);
+		FachadaDD.getInstance().actualizarDocumento(documentoVO, permisos.getCodEmp());
 	}
 }

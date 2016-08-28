@@ -198,7 +198,7 @@ public class Consultas {
     	 StringBuilder sb = new StringBuilder();
     	 
     	 sb.append("SELECT cod_grupo, nombre, fecha_mod, usuario_mod, operacion, activo ");
-    	 sb.append("FROM m_grupos ");
+    	 sb.append("FROM m_grupos WHERE cod_emp = ?");
 
     	 return sb.toString();
     }
@@ -209,7 +209,7 @@ public class Consultas {
     	 StringBuilder sb = new StringBuilder();
     	 
     	 sb.append("SELECT cod_grupo, nombre, fecha_mod, usuario_mod, operacion, activo ");
-    	 sb.append("FROM m_grupos WHERE cod_grupo = ?");
+    	 sb.append("FROM m_grupos WHERE cod_grupo = ? AND cod_emp = ?");
 
     	 return sb.toString();
     }
@@ -219,8 +219,8 @@ public class Consultas {
     	
     	StringBuilder sb = new StringBuilder();
     	 
-    	 sb.append("INSERT INTO vaadin.m_grupos (cod_grupo, nombre, usuario_mod, operacion, fecha_mod, activo)");
-    	 sb.append("VALUES (?, ?, ?, ?, NOW(), ?) ");
+    	 sb.append("INSERT INTO vaadin.m_grupos (cod_grupo, nombre, usuario_mod, operacion, fecha_mod, activo, cod_emp) ");
+    	 sb.append("VALUES (?, ?, ?, ?, NOW(), ?, ?) ");
 
     	 return sb.toString();
     	
@@ -233,7 +233,7 @@ public class Consultas {
         	 
       	 sb.append("SELECT cod_grupo ");
       	 sb.append("FROM m_grupos  ");
-      	 sb.append("WHERE cod_grupo = ? ");
+      	 sb.append("WHERE cod_grupo = ? AND cod_emp = ?");
 
       	 return sb.toString();
       }
@@ -244,7 +244,7 @@ public class Consultas {
     	 
       	 sb.append("DELETE ");
       	 sb.append("FROM m_grupos  ");
-      	 sb.append("WHERE cod_grupo = ? ");
+      	 sb.append("WHERE cod_grupo = ? AND cod_emp = ?");
       	 
       	 return sb.toString();
     }
@@ -259,7 +259,7 @@ public class Consultas {
   		sb.append("usuario_mod = ?, ");
   		sb.append("operacion = ?, ");
   		sb.append("activo = ? ");
-  		sb.append("WHERE cod_grupo = ? ");
+  		sb.append("WHERE cod_grupo = ? AND cod_emp = ?");
       	 
       	return sb.toString();
     }
@@ -282,7 +282,7 @@ public class Consultas {
     {
     	StringBuilder sb = new StringBuilder();
 	
-    	sb.append("DELETE FROM m_grupoxform WHERE cod_grupo = ? ");
+    	sb.append("DELETE FROM m_grupoxform WHERE cod_grupo = ? AND cod_emp = ?");
 
     	return sb.toString();
     }
@@ -291,8 +291,8 @@ public class Consultas {
     {
     	StringBuilder sb = new StringBuilder();
 	
-    	sb.append("INSERT INTO vaadin.m_grupoxform (formulario, cod_grupo, leer, nuevo_editar, borrar) ");
-    	sb.append("VALUES (?, ?, ?, ?, ?) ");
+    	sb.append("INSERT INTO vaadin.m_grupoxform (formulario, cod_grupo, leer, nuevo_editar, borrar, cod_emp) ");
+    	sb.append("VALUES (?, ?, ?, ?, ?, ?) ");
     	
     	return sb.toString();
     }
@@ -303,7 +303,7 @@ public class Consultas {
     	
     	sb.append("SELECT formulario, nombre, fecha_mod, usuario_mod, operacion, activo ");
     	sb.append("FROM g_formularios ");
-    	sb.append("WHERE formulario NOT IN (SELECT formulario FROM m_grupoxform WHERE cod_grupo = ? )");
+    	sb.append("WHERE formulario NOT IN (SELECT formulario FROM m_grupoxform WHERE cod_grupo = ? AND cod_emp = ?)");
 
     	return sb.toString();
     }

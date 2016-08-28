@@ -343,7 +343,7 @@ public class CotizacionViewExtended extends CotizacionView implements IBusqueda{
 	{
 		this.operacion = Variables.OPERACION_NUEVO;
 		/*Chequeamos si tiene permiso de editar*/
-		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_RUBROS, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_COTIZACIONES, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
 		/*Si no tiene permisos de Nuevo Cerrmamos la ventana y mostramos mensaje*/
 		if(!permisoNuevoEditar)

@@ -21,7 +21,7 @@ import java.sql.Connection;
 public class DAODocumentos implements IDAODocumentos{
 
 	@Override
-	public ArrayList<DocumentoAduanero> getDocumentos(Connection con) throws ObteniendoDocumentosException, ConexionException {
+	public ArrayList<DocumentoAduanero> getDocumentos(String codEmp, Connection con) throws ObteniendoDocumentosException, ConexionException {
 		// TODO Auto-generated method stub
 		ArrayList<DocumentoAduanero> lstDocumentos = new ArrayList<DocumentoAduanero>();
 		
@@ -31,9 +31,10 @@ public class DAODocumentos implements IDAODocumentos{
 			String query = consultas.getDocumentos();
 			
 			PreparedStatement pstmt1 = con.prepareStatement(query);
-			
+			pstmt1.setString(1, codEmp);
 			
 			ResultSet rs = pstmt1.executeQuery();
+			
 			
 			DocumentoAduanero documento;
 			
@@ -52,8 +53,6 @@ public class DAODocumentos implements IDAODocumentos{
 				lstDocumentos.add(documento);
 			}
 			
-			
-			
 			rs.close ();
 			pstmt1.close ();
 		}
@@ -71,7 +70,7 @@ public class DAODocumentos implements IDAODocumentos{
 	 * Pre condición: El código de documento no debe existir previamente
 	 */
 	@Override
-	public void insertarDocumento(DocumentoAduanero documento, Connection con)
+	public void insertarDocumento(DocumentoAduanero documento, String codEmp, Connection con)
 			throws InsertandoDocumentoException, ConexionException {
 		ConsultasDD clts = new ConsultasDD();
     	
@@ -88,6 +87,7 @@ public class DAODocumentos implements IDAODocumentos{
 			pstmt1.setBoolean(3, documento.isActivo());
 			pstmt1.setString(4, documento.getUsuarioMod());
 			pstmt1.setString(5, documento.getOperacion());
+			pstmt1.setString(6, codEmp);
 			
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
@@ -103,7 +103,7 @@ public class DAODocumentos implements IDAODocumentos{
 	 * Dado el codigo de documento, valida si existe
 	 */
 	@Override
-	public boolean memberDocumento(String cod_documento, Connection con)
+	public boolean memberDocumento(String cod_documento, String codEmp, Connection con)
 			throws ExisteDocumentoException, ConexionException {
 		// TODO Auto-generated method stub
 		boolean existe = false;
@@ -117,6 +117,7 @@ public class DAODocumentos implements IDAODocumentos{
 			PreparedStatement pstmt1 = con.prepareStatement(query);
 			
 			pstmt1.setString(1, cod_documento);
+			pstmt1.setString(2, codEmp);
 			
 			ResultSet rs = pstmt1.executeQuery();
 			
@@ -135,7 +136,7 @@ public class DAODocumentos implements IDAODocumentos{
 	}
 
 	@Override
-	public void actualizarDocumento(DocumentoAduanero documento, Connection con)
+	public void actualizarDocumento(DocumentoAduanero documento, String codEmp, Connection con)
 			throws ModificandoDocumentoException, ConexionException {
 		
 		ConsultasDD consultas = new ConsultasDD();
@@ -151,6 +152,7 @@ public class DAODocumentos implements IDAODocumentos{
 			pstmt1.setString(3, documento.getUsuarioMod());
 			pstmt1.setString(4, documento.getOperacion());
 			pstmt1.setString(5, documento.getCod_docucmento());
+			pstmt1.setString(6, codEmp);
 			
 			pstmt1.executeUpdate ();
 			

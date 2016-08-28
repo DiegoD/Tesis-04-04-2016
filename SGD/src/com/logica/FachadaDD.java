@@ -700,8 +700,10 @@ public class FachadaDD {
 	    		usu.setUsuarioMod(empresaUsuVO.getUsuarioMod());
 	    		usu.setOperacion(empresaUsuVO.getOperacion());
 	    		
-	    		/*Obtenemos el grupo admin para otorgale los permisos al usuario*/
-	    		Grupo g = this.grupos.getGrupo(con, "Adm");
+	    		/*Obtenemos el grupo admin para otorgale los permisos al usuario
+	    		 * Param es la empresa para tomar la parametrizacion de donde creamos
+	    		 * los usuarios admin, Param esta creada solamente con este fin*/
+	    		Grupo g = this.grupos.getGrupo("Param",con, "Adm");
 	    		ArrayList<Grupo> grupos = new ArrayList<Grupo>();
 	    		grupos.add(g);
 	    		    		
@@ -948,7 +950,7 @@ public class FachadaDD {
 	* Obtiene todos los documentos existentes
 	*/
 	@SuppressWarnings("unchecked")
-	public ArrayList<DocumentoAduaneroVO> getDocumentos() throws ObteniendoDocumentosException, ConexionException
+	public ArrayList<DocumentoAduaneroVO> getDocumentos(String codEmp) throws ObteniendoDocumentosException, ConexionException
 	{
 	
 		Connection con = null;
@@ -960,7 +962,7 @@ public class FachadaDD {
 		{
 			con = this.pool.obtenerConeccion();
 			
-			lstDocumentos = this.documentos.getDocumentos(con);
+			lstDocumentos = this.documentos.getDocumentos(codEmp, con);
 			
 			
 			DocumentoAduaneroVO aux;
@@ -1000,7 +1002,7 @@ public class FachadaDD {
 	* Valida que no exista un documento con el mismo código
 	* @throws ExisteEmpresaException 
 	*/
-	public void insertarDocumento(DocumentoAduaneroVO documentoVO) throws InsertandoDocumentoException, ConexionException, ExisteDocumentoException 
+	public void insertarDocumento(DocumentoAduaneroVO documentoVO, String codEmp) throws InsertandoDocumentoException, ConexionException, ExisteDocumentoException 
 	{
 	
 		Connection con = null;
@@ -1013,9 +1015,9 @@ public class FachadaDD {
 			
 			DocumentoAduanero documento = new DocumentoAduanero(documentoVO); 
 		
-			if(!this.documentos.memberDocumento(documento.getCod_docucmento(), con)) 	{
+			if(!this.documentos.memberDocumento(documento.getCod_docucmento(), codEmp, con)) 	{
 			
-				this.documentos.insertarDocumento(documento, con);
+				this.documentos.insertarDocumento(documento, codEmp, con);
 				con.commit();
 			}
 			else{
@@ -1049,7 +1051,7 @@ public class FachadaDD {
 	* Actualiza los datos de un documento dado su código
 	* valida que exista el código 
 	*/
-	public void actualizarDocumento(DocumentoAduaneroVO documentoVO) throws ConexionException, NoExisteDocumentoException, ModificandoDocumentoException, ExisteDocumentoException  
+	public void actualizarDocumento(DocumentoAduaneroVO documentoVO, String codEmp) throws ConexionException, NoExisteDocumentoException, ModificandoDocumentoException, ExisteDocumentoException  
 	{
 	
 		Connection con = null;
@@ -1061,8 +1063,8 @@ public class FachadaDD {
 		
 			DocumentoAduanero documento = new DocumentoAduanero(documentoVO);
 		
-		if(this.documentos.memberDocumento(documento.getCod_docucmento(), con))	{
-			this.documentos.actualizarDocumento(documento, con);
+		if(this.documentos.memberDocumento(documento.getCod_docucmento(), codEmp, con))	{
+			this.documentos.actualizarDocumento(documento, codEmp, con);
 			con.commit();
 		}
 		
@@ -1332,10 +1334,10 @@ public class FachadaDD {
 	
 ///////////////////////////////////////////////////////////////////COTIZACIONES////////////////////////////////////////////////////////////////////////////////////////////
 	/**
-	* Obtiene todas las cotizaciones existentes
+	* Obtiene todas las cotizaciones existentes para la empresa
 	*/
 	@SuppressWarnings("unchecked")
-	public ArrayList<CotizacionVO> getCotizaciones() throws ObteniendoCotizacionesException, ConexionException
+	public ArrayList<CotizacionVO> getCotizaciones(String codEmp) throws ObteniendoCotizacionesException, ConexionException
 	{
 	
 		Connection con = null;
@@ -1347,7 +1349,7 @@ public class FachadaDD {
 		{
 			con = this.pool.obtenerConeccion();
 			
-			lstCotizaciones = this.cotizaciones.getCotizaciones(con);
+			lstCotizaciones = this.cotizaciones.getCotizaciones(codEmp, con);
 			
 			CotizacionVO aux;
 			for (Cotizacion cotizacion : lstCotizaciones) 
@@ -1393,7 +1395,7 @@ public class FachadaDD {
 	* Valida que no exista una cotización para moneda/fecha
 	* @throws ExisteEmpresaException 
 	*/
-	public void insertarCotizacion(CotizacionVO cotizacionVO) throws InsertandoCotizacionException, ConexionException, 
+	public void insertarCotizacion(CotizacionVO cotizacionVO, String codEmp) throws InsertandoCotizacionException, ConexionException, 
 		ExisteCotizacionException{
 	
 		Connection con = null;
@@ -1406,9 +1408,9 @@ public class FachadaDD {
 			
 			Cotizacion cotizacion = new Cotizacion(cotizacionVO); 
 			
-			if(!this.cotizaciones.memberCotizacion(cotizacionVO.getCodMoneda(), cotizacionVO.getFecha(), con)) 	{
+			if(!this.cotizaciones.memberCotizacion(cotizacionVO.getCodMoneda(), cotizacionVO.getFecha(), codEmp, con)) 	{
 			
-				this.cotizaciones.insertarCotizacion(cotizacion, con);
+				this.cotizaciones.insertarCotizacion(cotizacion, codEmp, con);
 				con.commit();
 			}
 			else{
@@ -1439,7 +1441,7 @@ public class FachadaDD {
 	* Actualiza los datos de una cotizacion dada la moneda y la fecha
 	* valida que exista el código 
 	*/
-	public void actualizarCotizacion(CotizacionVO cotizacionVO) throws ConexionException, NoExisteCotizacionException,
+	public void actualizarCotizacion(CotizacionVO cotizacionVO, String codEmp) throws ConexionException, NoExisteCotizacionException,
 		ModificandoCotizacionException, ExisteCotizacionException  
 	{
 	
@@ -1452,9 +1454,9 @@ public class FachadaDD {
 			
 			Cotizacion cotizacion = new Cotizacion(cotizacionVO);
 			
-			if(this.cotizaciones.memberCotizacion(cotizacion.getMoneda().getCod_moneda(), cotizacion.getFecha(), con)){
+			if(this.cotizaciones.memberCotizacion(cotizacion.getMoneda().getCod_moneda(), cotizacion.getFecha(), codEmp, con)){
 				
-				this.cotizaciones.actualizarCotizacion(cotizacion, con);
+				this.cotizaciones.actualizarCotizacion(cotizacion, codEmp, con);
 				con.commit();
 			}
 		

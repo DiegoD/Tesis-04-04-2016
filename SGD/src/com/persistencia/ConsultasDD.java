@@ -476,7 +476,7 @@ public class ConsultasDD {
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("SELECT cod_documento, descripcion, activo, fecha_mod, usuario_mod, operacion ");
-		sb.append("FROM m_documentos_aduaneros ");
+		sb.append("FROM m_documentos_aduaneros WHERE cod_emp = ?");
 		
 		return sb.toString();
 	}
@@ -486,8 +486,8 @@ public class ConsultasDD {
 	
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("INSERT INTO vaadin.m_documentos_aduaneros (cod_documento, descripcion, activo, fecha_mod, usuario_mod, operacion )");
-		sb.append("VALUES (?, ?, ?, NOW(), ?, ? ) ");
+		sb.append("INSERT INTO vaadin.m_documentos_aduaneros (cod_documento, descripcion, activo, fecha_mod, usuario_mod, operacion, cod_emp )");
+		sb.append("VALUES (?, ?, ?, NOW(), ?, ?, ? ) ");
 		
 		return sb.toString();
 	
@@ -498,7 +498,7 @@ public class ConsultasDD {
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("SELECT cod_documento ");
-		sb.append("FROM m_documentos_aduaneros WHERE cod_documento = ? ");
+		sb.append("FROM m_documentos_aduaneros WHERE cod_documento = ? AND cod_emp = ? ");
 		
 		return sb.toString();
 	}
@@ -514,7 +514,7 @@ public class ConsultasDD {
 		sb.append("fecha_mod = NOW(), ");
 		sb.append("usuario_mod = ?, ");
 		sb.append("operacion = ? ");
-		sb.append("WHERE cod_documento = ? ");
+		sb.append("WHERE cod_documento = ? AND cod_emp = ?");
 		
 		return sb.toString();
 	}
@@ -599,7 +599,8 @@ public class ConsultasDD {
 		sb.append("SELECT m_cotizaciones.cod_moneda, m_cotizaciones.fecha, m_cotizaciones.cotizacion_compra, "
 				+ "m_cotizaciones.cotizacion_venta, m_cotizaciones.fecha_mod, m_cotizaciones.usuario_mod, "
 				+ "m_cotizaciones.operacion, m_monedas.cod_moneda, m_monedas.descripcion, m_monedas.simbolo, m_monedas.acepta_cotizacion, m_monedas.activo ");
-		sb.append("FROM m_cotizaciones, m_monedas WHERE m_cotizaciones.cod_moneda = m_monedas.cod_moneda; ");
+		sb.append("FROM m_cotizaciones, m_monedas WHERE m_cotizaciones.cod_moneda = m_monedas.cod_moneda ");
+		sb.append(" AND cod_emp = ? ");
 		
 		return sb.toString();
 	}
@@ -609,8 +610,8 @@ public class ConsultasDD {
 	
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("INSERT INTO vaadin.m_cotizaciones (cod_moneda, fecha, cotizacion_compra, cotizacion_venta, fecha_mod, usuario_mod, operacion )");
-		sb.append("VALUES (?, ?, ?, ?, NOW(), ?, ? ) ");
+		sb.append("INSERT INTO vaadin.m_cotizaciones (cod_moneda, fecha, cotizacion_compra, cotizacion_venta, fecha_mod, usuario_mod, operacion, cod_emp )");
+		sb.append("VALUES (?, ?, ?, ?, NOW(), ?, ?, ? ) ");
 		
 		return sb.toString();
 	
@@ -621,7 +622,7 @@ public class ConsultasDD {
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("SELECT cod_moneda ");
-		sb.append("FROM m_cotizaciones WHERE cod_moneda = ? and fecha = ? ");
+		sb.append("FROM m_cotizaciones WHERE cod_moneda = ? and fecha = ? AND cod_emp = ?");
 		
 		return sb.toString();
 	}
@@ -637,7 +638,7 @@ public class ConsultasDD {
 		sb.append("fecha_mod = NOW(), ");
 		sb.append("usuario_mod = ?, ");
 		sb.append("operacion = ? ");
-		sb.append("WHERE cod_moneda = ? and fecha = ? ");
+		sb.append("WHERE cod_moneda = ? and fecha = ? AND cod_emp = ? ");
 		
 		return sb.toString();
 	}

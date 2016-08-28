@@ -42,7 +42,7 @@ public class GrupoControlador {
 	{
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			Fachada.getInstance().insertarGrupo(grupoVO);
+			Fachada.getInstance().insertarGrupo(grupoVO, permisos.getCodEmp());
 		else
 			throw new NoTienePermisosException();
 	}
@@ -51,7 +51,7 @@ public class GrupoControlador {
 	{
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			return Fachada.getInstance().getGrupos();
+			return Fachada.getInstance().getGrupos(permisos.getCodEmp());
 		else
 			throw new NoTienePermisosException();
 	
@@ -61,14 +61,14 @@ public class GrupoControlador {
 	{
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			Fachada.getInstance().editarGrupo(grupoVO);
+			Fachada.getInstance().editarGrupo(grupoVO, permisos.getCodEmp());
 		else
 			throw new NoTienePermisosException();
 	}
 	
-	public ArrayList<FormularioVO> getFormulariosNoGrupo(String codGrupo) throws ObteniendoGruposException, ConexionException, ErrorInesperadoException, InicializandoException {
+	public ArrayList<FormularioVO> getFormulariosNoGrupo(String codGrupo, String codEmp) throws ObteniendoGruposException, ConexionException, ErrorInesperadoException, InicializandoException {
 	{
-		return Fachada.getInstance().getFormulariosNoGrupo(codGrupo);
+		return Fachada.getInstance().getFormulariosNoGrupo(codGrupo, codEmp);
 	}
 	
 

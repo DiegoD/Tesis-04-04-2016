@@ -131,7 +131,7 @@ public class Fachada {
     
 /////////////////////////////////INI-GUPOS/////////////////////////////////
     @SuppressWarnings("unchecked")
-	public ArrayList<GrupoVO> getGrupos() throws ObteniendoGruposException, ConexionException,  ObteniendoFormulariosException
+	public ArrayList<GrupoVO> getGrupos(String codEmp) throws ObteniendoGruposException, ConexionException,  ObteniendoFormulariosException
     {
     	
     	Connection con = null;
@@ -143,7 +143,7 @@ public class Fachada {
     	{
     		con = this.pool.obtenerConeccion();
     		
-    		lstGrupos = this.grupos.getGrupos(con);
+    		lstGrupos = this.grupos.getGrupos(codEmp, con);
     		
     		
     		GrupoVO aux;
@@ -194,7 +194,7 @@ public class Fachada {
     	return lstGruposVO;
     }
     
-    public void insertarGrupo(GrupoVO grupoVO) throws InsertandoGrupoException, ConexionException, ExisteGrupoException 
+    public void insertarGrupo(GrupoVO grupoVO, String codEmp) throws InsertandoGrupoException, ConexionException, ExisteGrupoException 
     {
     	
     	Connection con = null;
@@ -207,9 +207,9 @@ public class Fachada {
 			
 	    	Grupo grupo = new Grupo(grupoVO); 
 	    	
-	    	if(!this.grupos.memberGrupo(grupo.getCodGrupo(), con))
+	    	if(!this.grupos.memberGrupo(grupo.getCodGrupo(), codEmp, con))
 	    	{
-	    		this.grupos.insertarGrupo(grupo, con);
+	    		this.grupos.insertarGrupo(grupo, codEmp, con);
 	    		
 	    		con.commit();
 	    	}
@@ -239,7 +239,7 @@ public class Fachada {
     	}
     }
     
-	public void editarGrupo(GrupoVO grupoVO) throws ConexionException, NoExisteGrupoException, ModificandoGrupoException  
+	public void editarGrupo(GrupoVO grupoVO, String codEmp) throws ConexionException, NoExisteGrupoException, ModificandoGrupoException  
 	{
 	    	
 	    	Connection con = null;
@@ -251,10 +251,10 @@ public class Fachada {
 				
 				Grupo grupo = new Grupo(grupoVO);
 		    	
-		    	if(this.grupos.memberGrupo(grupo.getCodGrupo(), con))
+		    	if(this.grupos.memberGrupo(grupo.getCodGrupo(), codEmp, con))
 		    	{
 		    		/*Primero eliminamos el grupo*/
-		    		this.grupos.actualizarGrupo(grupo, con);
+		    		this.grupos.actualizarGrupo(grupo, codEmp, con);
 		    			    		
 		    		
 		    		con.commit();
@@ -281,7 +281,7 @@ public class Fachada {
 	    }
     
 	 @SuppressWarnings("unchecked")
-		public ArrayList<FormularioVO> getFormulariosNoGrupo(String codGrupo) throws ObteniendoGruposException, ConexionException, ErrorInesperadoException {
+		public ArrayList<FormularioVO> getFormulariosNoGrupo(String codGrupo, String codEmp) throws ObteniendoGruposException, ConexionException, ErrorInesperadoException {
 	    	
 	    	Connection con = null;
 	    	
@@ -292,7 +292,7 @@ public class Fachada {
 	    	{
 	    		con = this.pool.obtenerConeccion();
 	    		
-	    		lstFormularios = this.grupos.getFormulariosNoGrupo(codGrupo, con);
+	    		lstFormularios = this.grupos.getFormulariosNoGrupo(codGrupo, codEmp, con);
 	    		
 	    		
 	    		/*Transformamos al VO de seleccion*/

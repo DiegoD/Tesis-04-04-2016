@@ -21,7 +21,7 @@ import com.logica.Moneda;
 public class DAOCotizaciones implements IDAOCotizaciones{
 
 	@Override
-	public ArrayList<Cotizacion> getCotizaciones(Connection con)
+	public ArrayList<Cotizacion> getCotizaciones(String codEmp, Connection con)
 			throws ObteniendoCotizacionesException, ConexionException {
 		// TODO Auto-generated method stub
 		
@@ -33,8 +33,10 @@ public class DAOCotizaciones implements IDAOCotizaciones{
 			String query = consultas.getCotizaciones();
 			
 			PreparedStatement pstmt1 = con.prepareStatement(query);
+			pstmt1.setString(1, codEmp);
 			
 			ResultSet rs = pstmt1.executeQuery();
+			
 			
 			Cotizacion cotizacion;
 			
@@ -71,7 +73,7 @@ public class DAOCotizaciones implements IDAOCotizaciones{
 	}
 
 	@Override
-	public void insertarCotizacion(Cotizacion cotizacion, Connection con)
+	public void insertarCotizacion(Cotizacion cotizacion, String codEmp, Connection con)
 			throws InsertandoCotizacionException, ConexionException {
 		// TODO Auto-generated method stub
 		
@@ -92,6 +94,7 @@ public class DAOCotizaciones implements IDAOCotizaciones{
 			pstmt1.setFloat(4, cotizacion.getCotizacion_venta());
 			pstmt1.setString(5, cotizacion.getUsuarioMod());
 			pstmt1.setString(6, cotizacion.getOperacion());
+			pstmt1.setString(7, codEmp);
 			
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
@@ -104,7 +107,7 @@ public class DAOCotizaciones implements IDAOCotizaciones{
 	}
 
 	@Override
-	public boolean memberCotizacion(String cod_moneda, Timestamp fecha, Connection con)
+	public boolean memberCotizacion(String cod_moneda, Timestamp fecha, String codEmp, Connection con)
 			throws ExisteCotizacionException, ConexionException {
 		// TODO Auto-generated method stub
 		boolean existe = false;
@@ -119,6 +122,7 @@ public class DAOCotizaciones implements IDAOCotizaciones{
 			
 			pstmt1.setString(1, cod_moneda);
 			pstmt1.setTimestamp(2, fecha);
+			pstmt1.setString(3, codEmp);
 			
 			ResultSet rs = pstmt1.executeQuery();
 			
@@ -137,7 +141,7 @@ public class DAOCotizaciones implements IDAOCotizaciones{
 	}
 
 	@Override
-	public void actualizarCotizacion(Cotizacion cotizacion, Connection con)
+	public void actualizarCotizacion(Cotizacion cotizacion, String codEmp, Connection con)
 			throws ModificandoCotizacionException, ConexionException {
 		// TODO Auto-generated method stub
 		ConsultasDD consultas = new ConsultasDD();
@@ -155,6 +159,7 @@ public class DAOCotizaciones implements IDAOCotizaciones{
     		pstmt1.setString(4, cotizacion.getOperacion());
     		pstmt1.setString(5, cotizacion.getMoneda().getCod_moneda());
     		pstmt1.setTimestamp(6, cotizacion.getFecha());
+    		pstmt1.setString(7, codEmp);
     		
     		System.out.println(update);
 			pstmt1.executeUpdate ();

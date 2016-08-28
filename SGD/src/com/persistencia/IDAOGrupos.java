@@ -13,11 +13,11 @@ import com.valueObject.GrupoVO;
 
 public interface IDAOGrupos {
 
-	public ArrayList<Grupo> getGrupos(Connection con) throws ObteniendoGruposException, ConexionException, ObteniendoFormulariosException;
-	public void insertarGrupo(Grupo grupo, Connection con) throws  InsertandoGrupoException, ConexionException ;
-	public boolean memberGrupo(String codGrupo, Connection con) throws MemberGrupoException, ConexionException;
-	public void eliminarGrupo(String codGrupo, Connection con) throws ModificandoGrupoException, ConexionException;
-	public ArrayList<Formulario> getFormulariosNoGrupo(String codGrupo, Connection con) throws ObteniendoFormulariosException;
-	public void actualizarGrupo(Grupo grupo, Connection con) throws ModificandoGrupoException;
-	public Grupo getGrupo(Connection con, String codGrupo) throws ObteniendoGruposException, ObteniendoFormulariosException;
+	public ArrayList<Grupo> getGrupos(String codEmp, Connection con) throws ObteniendoGruposException, ConexionException, ObteniendoFormulariosException;
+	public void insertarGrupo(Grupo grupo, String codEmp, Connection con) throws  InsertandoGrupoException, ConexionException ;
+	public boolean memberGrupo(String codGrupo, String codEmp, Connection con) throws MemberGrupoException, ConexionException;
+	public void eliminarGrupo(String codGrupo, String codEmp, Connection con) throws ModificandoGrupoException, ConexionException;
+	public ArrayList<Formulario> getFormulariosNoGrupo(String codGrupo, String codEmp, Connection con) throws ObteniendoFormulariosException;
+	public void actualizarGrupo(Grupo grupo, String codEmp, Connection con) throws ModificandoGrupoException;
+	public Grupo getGrupo(String codEmp, Connection con, String codGrupo) throws ObteniendoGruposException, ObteniendoFormulariosException;
 }
