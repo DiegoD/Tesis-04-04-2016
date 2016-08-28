@@ -476,7 +476,7 @@ public class ConsultasDD {
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("SELECT cod_documento, descripcion, activo, fecha_mod, usuario_mod, operacion ");
-		sb.append("FROM m_documentos_aduaneros WHERE cod_emp = ?");
+		sb.append("FROM m_documentos_aduaneros WHERE cod_emp = ? ");
 		
 		return sb.toString();
 	}
@@ -600,7 +600,7 @@ public class ConsultasDD {
 				+ "m_cotizaciones.cotizacion_venta, m_cotizaciones.fecha_mod, m_cotizaciones.usuario_mod, "
 				+ "m_cotizaciones.operacion, m_monedas.cod_moneda, m_monedas.descripcion, m_monedas.simbolo, m_monedas.acepta_cotizacion, m_monedas.activo ");
 		sb.append("FROM m_cotizaciones, m_monedas WHERE m_cotizaciones.cod_moneda = m_monedas.cod_moneda ");
-		sb.append(" AND cod_emp = ? ");
+		sb.append(" AND m_cotizaciones.cod_emp = ? ");
 		
 		return sb.toString();
 	}
