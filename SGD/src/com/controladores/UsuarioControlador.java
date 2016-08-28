@@ -32,7 +32,7 @@ public class UsuarioControlador {
 	{
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			return FachadaDD.getInstance().getUsuarios();
+			return FachadaDD.getInstance().getUsuarios(permisos.getCodEmp());
 		else
 			throw new NoTienePermisosException();
     }

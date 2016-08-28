@@ -84,7 +84,7 @@ public class DAOUsuarios implements IDAOUsuarios {
 	/**
 	 * Obtiene Array de todos lo usuarios existentes
 	 */
-	public ArrayList<Usuario> getUsuarios(Connection con) throws ObteniendoUsuariosException, ConexionException, ObteniendoGruposException{
+	public ArrayList<Usuario> getUsuarios(String codEmp, Connection con) throws ObteniendoUsuariosException, ConexionException, ObteniendoGruposException{
 		
 		ArrayList<Usuario> lstUsuarios = new ArrayList<Usuario>();
 	
@@ -94,7 +94,10 @@ public class DAOUsuarios implements IDAOUsuarios {
 	    	String query = clts.getUsuarios();
 	    	PreparedStatement pstmt1 = con.prepareStatement(query);
 	    	
+	    	pstmt1.setString(1, codEmp);
+	    	
 	    	ResultSet rs;
+	    	
 			rs = pstmt1.executeQuery();
 			
 			while(rs.next ()) {

@@ -70,9 +70,9 @@ public class ConsultasDD {
     
     public String getUsuarios(){
     	StringBuilder sb = new StringBuilder();
-    	sb.append("SELECT usuario, pass, nombre, activo, usuario_mod, operacion, fecha_mod, mail ");
-    	sb.append("FROM m_usuarios ");
-
+    	sb.append("SELECT m_usuarios.usuario, m_usuarios.pass, m_usuarios.nombre, m_usuarios.activo, m_usuarios.usuario_mod, m_usuarios.operacion, m_usuarios.fecha_mod, m_usuarios.mail ");
+    	sb.append("FROM m_usuarios, m_usuariosxemp WHERE m_usuarios.usuario = m_usuariosxemp.usuario ");
+    	sb.append(" AND m_usuariosxemp.cod_emp = ? ");
     	return sb.toString();
     }
     
@@ -162,10 +162,13 @@ public class ConsultasDD {
 		StringBuilder sb = new StringBuilder();
     	
 		sb.append("SELECT m_grupos.cod_grupo, m_grupos.nombre ");
-    	sb.append("FROM m_gruposxusu, m_grupos "); 
+    	sb.append("FROM m_gruposxusu, m_grupos, m_usuariosxemp  "); 
 		sb.append("WHERE m_gruposxusu.usuario = ? ");
 		sb.append("AND m_gruposxusu.cod_grupo = m_grupos.cod_grupo ");
-    	
+		sb.append("AND m_usuariosxemp.usuario = m_gruposxusu.usuario ");
+		sb.append("AND m_usuariosxemp.cod_emp = m_gruposxusu.cod_emp ");
+		sb.append("AND m_grupos.cod_emp =  m_gruposxusu.cod_emp ");
+		
     	return sb.toString();
 	
 	}

@@ -26,7 +26,7 @@ public interface IDAOUsuarios {
 	
 	public boolean usuarioValido(LoginVO loginVO, Connection con) throws LoginException;
 	
-	public ArrayList<Usuario> getUsuarios(Connection con) throws ClassNotFoundException, ObteniendoUsuariosException, ConexionException, ObteniendoGruposException;
+	public ArrayList<Usuario> getUsuarios(String codEmp, Connection con) throws ClassNotFoundException, ObteniendoUsuariosException, ConexionException, ObteniendoGruposException;
 
 	public boolean memberUsuario(String usuario, Connection con) throws ExisteUsuarioException, ConexionException;
 	

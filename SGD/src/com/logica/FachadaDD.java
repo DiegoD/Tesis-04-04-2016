@@ -139,7 +139,7 @@ public class FachadaDD {
     /**
 	 * Obtiene Array de todos lo usuarios existentes 
 	 */
-	public ArrayList<UsuarioVO> getUsuarios() throws ConexionException, ClassNotFoundException, ObteniendoUsuariosException, ErrorInesperadoException, ObteniendoGruposException {
+	public ArrayList<UsuarioVO> getUsuarios(String codEmp) throws ConexionException, ClassNotFoundException, ObteniendoUsuariosException, ErrorInesperadoException, ObteniendoGruposException {
     	
     	Connection con = null;
     	ArrayList<Usuario> lstUsuarios = new ArrayList<Usuario>();
@@ -150,7 +150,7 @@ public class FachadaDD {
 			con = this.pool.obtenerConeccion();
 	    	
 			
-			lstUsuarios = this.usuarios.getUsuarios(con);
+			lstUsuarios = this.usuarios.getUsuarios(codEmp, con);
 			UsuarioVO aux;
 			
 			for (Usuario usuario: lstUsuarios)
