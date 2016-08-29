@@ -65,7 +65,7 @@ public class TipoRubroViewExtended extends TipoRubroView{
 					UsuarioPermisosVO permisoAux = 
 							new UsuarioPermisosVO(this.permisos.getCodEmp(),
 									this.permisos.getUsuario(),
-									VariablesPermisos.FORMULARIO_EMPRESAS,
+									VariablesPermisos.FORMULARIO_TIPORUBROS,
 									VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
 					
@@ -207,7 +207,7 @@ public class TipoRubroViewExtended extends TipoRubroView{
 	{
 		
 		/*Verificamos que tenga permisos para editar*/
-		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_EMPRESAS, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_TIPORUBROS, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
 		/*Si tiene permisos de editar habilitamos el boton de 
 		 * edicion*/

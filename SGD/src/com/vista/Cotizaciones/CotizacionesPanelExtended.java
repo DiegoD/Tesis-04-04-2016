@@ -3,9 +3,11 @@ package com.vista.Cotizaciones;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 import com.controladores.CotizacionControlador;
 import com.excepciones.ConexionException;
@@ -15,6 +17,7 @@ import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Cotizaciones.ObteniendoCotizacionesException;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.util.converter.StringToDateConverter;
 import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
@@ -117,6 +120,8 @@ public class CotizacionesPanelExtended extends CotizacionesPanel{
 		
 		this.gridCotizaciones.setContainerDataSource(container);
 		
+		gridCotizaciones.setColumnOrder("descripcionMoneda", "fecha", "cotizacionCompra", "cotizacionVenta");
+		gridCotizaciones.getColumn("descripcionMoneda").setHeaderCaption("Moneda");
 		gridCotizaciones.removeColumn("fechaMod");
 		gridCotizaciones.removeColumn("usuarioMod");
 		gridCotizaciones.removeColumn("operacion");
@@ -162,6 +167,23 @@ public class CotizacionesPanelExtended extends CotizacionesPanel{
 			    }
 		      
 		    }
+		});
+		
+		//Modifica el formato de fecha en la grilla 
+		gridCotizaciones.getColumn("fecha").setConverter(new StringToDateConverter(){
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+
+			public DateFormat getFormat(Locale locale){
+
+				return new SimpleDateFormat("dd/MM/yyyy");
+
+			}
+
 		});
 		
 	}
