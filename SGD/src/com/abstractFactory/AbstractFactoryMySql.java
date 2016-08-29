@@ -83,5 +83,12 @@ public class AbstractFactoryMySql implements IAbstractFactory
 		
 		return new DAOTipoRubro();
 	}
+	
+	@Override
+	public IDAOCuentas crearDAOCuentas() {
+		
+		return new DAOCuentas();
+	}
+
 
 }

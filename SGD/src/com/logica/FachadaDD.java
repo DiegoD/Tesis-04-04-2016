@@ -7,6 +7,7 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -26,6 +27,12 @@ import com.excepciones.Cotizaciones.InsertandoCotizacionException;
 import com.excepciones.Cotizaciones.ModificandoCotizacionException;
 import com.excepciones.Cotizaciones.NoExisteCotizacionException;
 import com.excepciones.Cotizaciones.ObteniendoCotizacionesException;
+import com.excepciones.Cuentas.ExisteCuentaException;
+import com.excepciones.Cuentas.InsertandoCuentaException;
+import com.excepciones.Cuentas.MemberCuentaException;
+import com.excepciones.Cuentas.ModificandoCuentaException;
+import com.excepciones.Cuentas.NoExisteCuentaException;
+import com.excepciones.Cuentas.ObteniendoCuentasException;
 import com.excepciones.Documentos.ExisteDocumentoException;
 import com.excepciones.Documentos.InsertandoDocumentoException;
 import com.excepciones.Documentos.ModificandoDocumentoException;
@@ -70,6 +77,7 @@ import com.excepciones.grupos.ObteniendoFormulariosException;
 import com.excepciones.grupos.ObteniendoGruposException;
 import com.valueObject.*;
 import com.valueObject.Cotizacion.CotizacionVO;
+import com.valueObject.Cuenta.CuentaVO;
 import com.valueObject.TipoRubro.TipoRubroVO;
 import com.valueObject.empresa.EmpresaUsuVO;
 import com.valueObject.empresa.EmpresaVO;
@@ -92,6 +100,7 @@ public class FachadaDD {
 	private IDAOCodigosGeneralizados codigosGeneralizados;
 	private IDAOCotizaciones cotizaciones;
 	private IDAOTipoRubro tipoRubros;
+	private IDAOCuentas cuentas;
 	
 	private AbstractFactoryBuilder fabrica;
 	private IAbstractFactory fabricaConcreta;
@@ -114,6 +123,7 @@ public class FachadaDD {
         this.codigosGeneralizados = fabricaConcreta.crearDAOCodigosGeneralizados();
         this.cotizaciones = fabricaConcreta.crearDAOCotizaciones();
         this.tipoRubros = fabricaConcreta.crearDAOTipoRubro();
+        this.cuentas = fabricaConcreta.crearDAOCuentas();
     }
     
     public static FachadaDD getInstance() throws InicializandoException {
@@ -1625,4 +1635,232 @@ public class FachadaDD {
     		pool.liberarConeccion(con);
     	}
 	}
+    
+    
+/////////////////////////////////INI-CUENTAS/////////////////////////////////
+	@SuppressWarnings("unchecked")
+	public ArrayList<CuentaVO> getCuentas(String codEmp) throws ObteniendoCuentasException, ConexionException, com.excepciones.Cuentas.ObteniendoRubrosException
+	{
+	
+		Connection con = null;
+		
+		ArrayList<Cuenta> lstCuentas; 
+		ArrayList<CuentaVO> lstCuentasVO = new ArrayList<CuentaVO>();
+		
+		try
+		{
+			con = this.pool.obtenerConeccion();
+			
+			lstCuentas = this.cuentas.getCuentas(codEmp, con);
+			
+			
+			CuentaVO aux;
+			for (Cuenta cuenta : lstCuentas) 
+			{
+				aux = new CuentaVO();
+				
+				aux.setCodCuenta(cuenta.getCod_cuenta());
+				aux.setDescripcion(cuenta.getDescripcion());
+				aux.setFechaMod(cuenta.getFechaMod());
+				aux.setUsuarioMod(cuenta.getUsuarioMod());
+				aux.setOperacion(cuenta.getOperacion());
+				aux.setActivo(cuenta.isActivo());
+				
+				
+//				FormularioVO auxF;
+//				for (Formulario frm : grupo.getLstFormularios()) {
+//				
+//					auxF = new FormularioVO();
+//					
+//					auxF.setCodFormulario(frm.getCodFormulario());
+//					auxF.setNomFormulario(frm.getNomFormulario());
+//					
+//					auxF.setLeer(frm.isLeer());
+//					auxF.setNuevoEditar(frm.isNuevoEditar());
+//					auxF.setBorrar(frm.isBorrar());
+//					
+//					aux.getLstFormularios().add(auxF);
+//				}
+				
+				lstCuentasVO.add(aux);
+			}
+		
+		}
+		catch(ObteniendoCuentasException | com.excepciones.Cuentas.ObteniendoRubrosException e){
+			throw e;
+		
+		} 
+		catch (ConexionException e) {
+		
+			throw e;
+		} 
+		finally{
+			this.pool.liberarConeccion(con);
+		}
+		
+		
+		return lstCuentasVO;
+	}
+
+	public void insertarCuenta(CuentaVO cuentaVO, String codEmp) throws InsertandoCuentaException, ConexionException, ExisteCuentaException 
+	{
+	
+		Connection con = null;
+		boolean existe = false;
+		
+		try 
+		{
+			con = this.pool.obtenerConeccion();
+			con.setAutoCommit(false);
+			
+			Cuenta cuenta = new Cuenta(cuentaVO); 
+			
+			if(!this.cuentas.memberCuenta(cuenta.getCod_cuenta(), codEmp, con)){
+				
+				this.cuentas.insertarCuenta(cuenta, codEmp, con);
+				con.commit();
+			}
+			else{
+				existe = true;
+			}
+		
+		
+		}
+		catch(Exception InsertandoCuentaException){
+			
+			try {
+				con.rollback();
+		
+			} 
+			catch (SQLException e) {
+		
+				throw new InsertandoCuentaException();
+			}
+		
+			throw new InsertandoCuentaException();
+		}
+		finally	{
+			pool.liberarConeccion(con);
+		}
+		if (existe){
+			throw new ExisteCuentaException();
+		}
+	}
+
+	public void editarCuenta(CuentaVO cuentaVO, String codEmp) throws ConexionException, NoExisteCuentaException, ModificandoCuentaException  
+	{
+	
+		Connection con = null;
+		
+		try 
+		{
+		con = this.pool.obtenerConeccion();
+		con.setAutoCommit(false);
+		
+		Cuenta cuenta = new Cuenta(cuentaVO);
+		
+		if(this.cuentas.memberCuenta(cuenta.getCod_cuenta(), codEmp, con)){
+			
+			this.cuentas.actualizarCuenta(cuenta, codEmp, con);
+			con.commit();
+		}
+		
+		else
+			throw new NoExisteCuentaException();
+		
+		}
+		catch(MemberCuentaException| ConexionException | SQLException | ModificandoCuentaException e){
+			try {
+				con.rollback();
+		
+			} 
+			catch (SQLException e1) {
+		
+				throw new ConexionException();
+			}
+			throw new ModificandoCuentaException();
+		}
+		finally{
+			pool.liberarConeccion(con);
+		}
+	}
+
+//@SuppressWarnings("unchecked")
+//public ArrayList<FormularioVO> getFormulariosNoGrupo(String codGrupo, String codEmp) throws ObteniendoGruposException, ConexionException, ErrorInesperadoException {
+//
+//Connection con = null;
+//
+//ArrayList<Formulario> lstFormularios = new ArrayList<Formulario>();
+//ArrayList<FormularioVO> lstFormSelVO = new ArrayList<FormularioVO>();
+//
+//try
+//{
+//con = this.pool.obtenerConeccion();
+//
+//lstFormularios = this.grupos.getFormulariosNoGrupo(codGrupo, codEmp, con);
+//
+//
+///*Transformamos al VO de seleccion*/
+//FormularioVO formSelVO;
+//for (Formulario formulario : lstFormularios) {
+//formSelVO = new FormularioVO(formulario);
+//
+//lstFormSelVO.add(formSelVO);
+//}
+//
+//}catch(Exception e)
+//{
+//throw new ErrorInesperadoException();
+//}
+//finally
+//{
+//this.pool.liberarConeccion(con);
+//}
+//
+//return lstFormSelVO;
+//
+//}
+//
+//
+//@SuppressWarnings("unchecked")
+//public Hashtable<String, FormularioVO> getFormulariosxUsuario(String usuario, String codEmp) throws ObteniendoFormulariosException, ConexionException 
+//
+//{
+//Connection con = null;
+//
+//ArrayList<Formulario> lstFormularios = new ArrayList<Formulario>();
+//Hashtable<String, FormularioVO> hLstFormSelVO = new Hashtable<String, FormularioVO>();
+//
+//try {
+//con = this.pool.obtenerConeccion();
+//
+//
+//lstFormularios = this.usuarios.getFormulariosxUsuario(usuario, codEmp, con);
+//
+//
+///*Transformamos al VO */
+//FormularioVO formSelVO;
+//for (Formulario formulario : lstFormularios) {
+//formSelVO = new FormularioVO(formulario);
+//
+//hLstFormSelVO.put(formSelVO.getCodigo(), formSelVO);
+//}
+//
+//} catch (ObteniendoFormulariosException e) {
+//throw e;
+//
+//} catch (ConexionException e) {
+//
+//throw e;
+//}
+//finally
+//{
+//this.pool.liberarConeccion(con);
+//}
+//
+//return hLstFormSelVO;
+//
+//}
+
+/////////////////////////////////FIN-CUENTAS/////////////////////////////////
 }

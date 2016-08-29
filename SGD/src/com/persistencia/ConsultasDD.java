@@ -708,4 +708,125 @@ public class ConsultasDD {
 		
 		return sb.toString();
 	}
+	
+////////////////////////INI-CUENTAS///////////////////////////////////////////////////
+    
+	public String getCuentas()
+	{
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_cuenta, descripcion, fecha_mod, usuario_mod, operacion, activo ");
+		sb.append("FROM m_cuentas WHERE cod_emp = ? ");
+		
+		return sb.toString();
+	}
+
+	public String getCuenta()
+	{
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_cuenta, descripcion, fecha_mod, usuario_mod, operacion, activo ");
+		sb.append("FROM m_cuentas WHERE cod_cuenta = ? AND cod_emp = ? ");
+		
+		return sb.toString();
+	}
+
+	public String insertarCuenta()
+	{
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO vaadin.m_cuentas (cod_cuenta, descripcion, usuario_mod, operacion, fecha_mod, activo, cod_emp) ");
+		sb.append("VALUES (?, ?, ?, ?, NOW(), ?, ?) ");
+		
+		return sb.toString();
+	
+	}
+
+	public String memberCuenta()
+	{
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_cuenta ");
+		sb.append("FROM m_cuentas  ");
+		sb.append("WHERE cod_cuenta = ? AND cod_emp = ?");
+		
+		return sb.toString();
+	}
+
+	public String eliminarGrupo()
+	{
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("DELETE ");
+		sb.append("FROM m_cuentas  ");
+		sb.append("WHERE cod_cuenta = ? AND cod_emp = ?");
+		
+		return sb.toString();
+	}
+
+	public String getActualizarCuenta(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("UPDATE vaadin.m_cuentas ");
+		sb.append("SET descripcion = ?, ");
+		sb.append("fecha_mod = NOW(), ");
+		sb.append("usuario_mod = ?, ");
+		sb.append("operacion = ?, ");
+		sb.append("activo = ? ");
+		sb.append("WHERE cod_cuenta = ? AND cod_emp = ?");
+		
+		return sb.toString();
+	}
+
+//	public String getFormulariosxGrupo()
+//	{
+//		StringBuilder sb = new StringBuilder();
+//		
+//		sb.append("SELECT g_formularios.formulario, g_formularios.nombre,  ");
+//		sb.append("m_grupoxform.leer, m_grupoxform.nuevo_editar, m_grupoxform.borrar  ");
+//		sb.append("FROM m_grupoxform, g_formularios "); 
+//		sb.append("WHERE cod_grupo = ? ");
+//		sb.append("AND m_grupoxform.formulario = g_formularios.formulario ");
+//		//+ "AND (g_formularios <> 'MEmpresas' OR usuario = 'AppAdmin')");
+//		
+//		return sb.toString();
+//	}
+//
+//	public String eliminarFormulariosxGrupo()
+//	{
+//		StringBuilder sb = new StringBuilder();
+//		
+//		sb.append("DELETE FROM m_grupoxform WHERE cod_grupo = ? AND cod_emp = ?");
+//		
+//		return sb.toString();
+//	}
+//
+//	public String insertarFormulariosxGrupo()
+//	{
+//		StringBuilder sb = new StringBuilder();
+//		
+//		sb.append("INSERT INTO vaadin.m_grupoxform (formulario, cod_grupo, leer, nuevo_editar, borrar, cod_emp) ");
+//		sb.append("VALUES (?, ?, ?, ?, ?, ?) ");
+//		
+//		return sb.toString();
+//	}
+//
+//	public String getFormulariosNOGrupo()
+//	{
+//		StringBuilder sb = new StringBuilder();
+//		
+//		sb.append("SELECT formulario, nombre, fecha_mod, usuario_mod, operacion, activo ");
+//		sb.append("FROM g_formularios ");
+//		sb.append("WHERE formulario NOT IN (SELECT formulario FROM m_grupoxform WHERE cod_grupo = ? AND cod_emp = ?)");
+//		
+//		return sb.toString();
+//	}
+
+
+////////////////////////FIN-CUENTAS///////////////////////////////////////////////////
 }
