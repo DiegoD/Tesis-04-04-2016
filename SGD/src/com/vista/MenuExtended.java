@@ -17,6 +17,7 @@ import com.vista.Documentos.DocumentosPanelExtended;
 import com.vista.Clientes.ClientesPanelExtended;
 import com.vista.CodigosGeneralizados.CodigosGeneralizadosPanelExtended;
 import com.vista.Cotizaciones.CotizacionesPanelExtended;
+import com.vista.Cuentas.CuentasPanelExtended;
 import com.vista.Empresas.EmpresasPanelExtended;
 import com.vista.Funcionarios.FuncionariosPanelExtended;
 import com.vista.Grupos.GruposPanelExtended;
@@ -293,6 +294,21 @@ public class MenuExtended extends Menu{
 			}
 		});
 		
+		this.cuentas.addClickListener(click -> {
+			
+			setSizeFull();
+			
+			this.content.removeAllComponents();
+			try {
+				
+				CuentasPanelExtended u = new CuentasPanelExtended();
+				this.content.addComponent(u);
+				
+			} catch (Exception e) {
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}
+		});
+		
 	}
 	
 	
@@ -343,6 +359,7 @@ public class MenuExtended extends Menu{
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_MONEDAS) || 
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_COTIZACIONES) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_TIPORUBROS) ||
+				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_CUENTAS) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_RUBROS))
 			{
 				lstFormsMenuMant.add(formularioVO);
@@ -410,6 +427,12 @@ public class MenuExtended extends Menu{
 					case VariablesPermisos.FORMULARIO_TIPORUBROS:
 						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_TIPORUBROS, VariablesPermisos.OPERACION_LEER))
 							this.habilitarTipoRubros();
+						
+					break;
+					
+					case VariablesPermisos.FORMULARIO_CUENTAS:
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_CUENTAS, VariablesPermisos.OPERACION_LEER))
+							this.habilitarCuentas();
 						
 					break;
 				}
@@ -519,6 +542,9 @@ public class MenuExtended extends Menu{
 		
 		this.tipoRubros.setVisible(false);
 		this.tipoRubros.setEnabled(false);
+		
+		this.cuentas.setVisible(false);
+		this.cuentas.setEnabled(false);
 	}
 	
 	
@@ -603,6 +629,12 @@ public class MenuExtended extends Menu{
 		this.tipoRubros.setVisible(true);
 		this.tipoRubros.setEnabled(true);
 		this.tabMantenimientos.addComponent(tipoRubros);
+	}
+	
+	private void habilitarCuentas(){
+		this.cuentas.setVisible(true);
+		this.cuentas.setEnabled(true);
+		this.tabMantenimientos.addComponent(cuentas);
 	}
 	
 	public PermisosUsuario getPermisosUsuario()

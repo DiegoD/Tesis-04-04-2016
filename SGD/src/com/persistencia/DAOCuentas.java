@@ -15,8 +15,10 @@ import com.excepciones.Cuentas.ObteniendoRubrosException;
 import com.excepciones.grupos.InsertandoGrupoException;
 import com.excepciones.grupos.MemberGrupoException;
 import com.excepciones.grupos.ModificandoGrupoException;
+import com.excepciones.grupos.ObteniendoFormulariosException;
 import com.excepciones.grupos.ObteniendoGruposException;
 import com.logica.Cuenta;
+import com.logica.Formulario;
 import com.logica.Grupo;
 import com.logica.Rubro;
 
@@ -53,12 +55,10 @@ public class DAOCuentas implements IDAOCuentas{
 				cuenta.setActivo(rs.getBoolean(6));
 				
 				/*Obtenemos los formularios del grupo*/
-//				grupo.setLstFormularios(this.getFormulariosxGrupo(grupo.getCodGrupo(), codEmp, con));
-//
-//				lstGrupos.add(grupo);
+				cuenta.setLstRubros(this.getRubrosxCuenta(cuenta.getCod_cuenta(), codEmp, con));
+
+				lstCuentas.add(cuenta);
 			}
-			
-			
 			
 			rs.close ();
 			pstmt1.close ();
@@ -94,7 +94,7 @@ public class DAOCuentas implements IDAOCuentas{
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
 			
-			//this.insertarFormulariosxGrupo(grupo.getCodGrupo(), codEmp, grupo.getLstFormularios(), con);
+			this.insertarRubrosxCuenta(cuenta.getCod_cuenta(), codEmp, cuenta.getLstRubros(), con);
 	
 		} catch (SQLException e) {
 			
@@ -144,14 +144,7 @@ public class DAOCuentas implements IDAOCuentas{
 	}
 
 	@Override
-	public ArrayList<Rubro> getRubrosNoCuenta(String codCuenta, String codEmp, Connection con)
-			throws ObteniendoRubrosException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void actualizarCuenta(Cuenta cuenta, String codEmp, Connection con) throws ModificandoCuentaException {
+	public void actualizarCuenta(Cuenta cuenta, String codEmp, Connection con) throws ModificandoCuentaException, ConexionException, InsertandoCuentaException {
 		// TODO Auto-generated method stub
 		ConsultasDD consultas = new ConsultasDD();
 		String update = consultas.getActualizarCuenta();
@@ -161,11 +154,11 @@ public class DAOCuentas implements IDAOCuentas{
 		
 		try 
 		{
-			/*Primero eliminamos los formularios para luego volver a insertarlos*/
-			//this.eliminarFormulariosxGrupo(grupo.getCodGrupo(), codEmp, con);
+			/*Primero eliminamos los rubros para luego volver a insertarlos*/
+			this.eliminarRubrosxCuenta(cuenta.getCod_cuenta(), codEmp, con);
 			
-			/*Volvemos a insertar los formularios modificados*/
-			//this.insertarFormulariosxGrupo(grupo.getCodGrupo(), codEmp, grupo.getLstFormularios(), con);
+			/*Volvemos a insertar los rubros modificados*/
+			this.insertarRubrosxCuenta(cuenta.getCod_cuenta(), codEmp, cuenta.getLstRubros(), con);
 			
 			/*Updateamos la info del grupo*/
      		pstmt1 =  con.prepareStatement(update);
@@ -220,9 +213,8 @@ public class DAOCuentas implements IDAOCuentas{
 				cuenta.setOperacion(rs.getString(5));
 				cuenta.setActivo(rs.getBoolean(6));
 				
-				/*Obtenemos los formularios del grupo*/
-				//grupo.setLstFormularios(this.getFormulariosxGrupo(grupo.getCodGrupo(), codEmp, con));
-
+				/*Obtenemos los rubros de la cuenta*/
+				cuenta.setLstRubros(this.getRubrosxCuenta(cuenta.getCod_cuenta(), codEmp, con));
 			}
 			
 			rs.close ();
@@ -236,6 +228,158 @@ public class DAOCuentas implements IDAOCuentas{
 		return cuenta;
 	}
 	
+	/**
+	 * Nos retorna los rubros activos para la cuenta
+	 *
+	 */
+	private ArrayList<Rubro> getRubrosxCuenta(String codCuenta, String cod_emp, Connection con) throws ObteniendoRubrosException
+	{
+		ArrayList<Rubro> lstRubro = new ArrayList<Rubro>();
+		
+		try
+		{
+			ConsultasDD consultas = new ConsultasDD ();
+			String query =	consultas.getRubrosxCuenta();
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			pstmt1.setString(1, codCuenta);
+			pstmt1.setString(2, cod_emp);
+			ResultSet rs = pstmt1.executeQuery();
+			
+			Rubro rubro;
+			
+			while(rs.next ()) {
+
+				rubro = new Rubro();
+				
+				rubro.setCod_rubro(rs.getString(1));
+				rubro.setDescripcion(rs.getString(2));
+				rubro.setOficina(rs.getBoolean(3));
+				rubro.setProceso(rs.getBoolean(4));
+				rubro.setPersona(rs.getBoolean(5));
+				
+				lstRubro.add(rubro);
+			}
+			
+			rs.close ();
+			pstmt1.close ();
+		}
+		catch (SQLException e) {
+			
+			throw new ObteniendoRubrosException();
+		}
+			
+		return lstRubro;
+	}
 	
+	/**
+	 * Insertamos rubro dada cuenta,
+	 * PRECONDICION: El código del rubro no debe existir
+	 *
+	 */
+	private void insertarRubrosxCuenta(String codCuenta, String codEmp, ArrayList<Rubro> lstRubros, Connection con) throws InsertandoCuentaException, ConexionException 
+	{
+
+		ConsultasDD clts = new ConsultasDD();
+    	
+    	String insert = clts.insertarRubrosxCuenta();
+    	
+    	PreparedStatement pstmt1;
+  	
+    	try {
+    		
+			pstmt1 =  con.prepareStatement(insert);
+    		
+    		for (Rubro rubro : lstRubros) {
+				
+    			pstmt1.setString(1, codCuenta);
+    			pstmt1.setString(2, rubro.getCod_rubro());
+    			
+    			pstmt1.setBoolean(3, rubro.isOficina());
+    			pstmt1.setBoolean(4, rubro.isProceso());
+    			pstmt1.setBoolean(5, rubro.isPersona());
+    			pstmt1.setString(6, codEmp);
+
+    			pstmt1.executeUpdate ();
+			}
+    		
+			pstmt1.close ();
+	
+		} catch (SQLException e) {
+			
+			throw new InsertandoCuentaException();
+		} 
+	}
+
+	
+	/**
+	 * Eliminamos rubros de la cuenta dado el codigo del rubro,
+	 * PRECONDICION: El código del  rubro debe existir
+	 *
+	 */
+	private void eliminarRubrosxCuenta(String codRubro, String codEmp, Connection con) throws ModificandoCuentaException, ConexionException
+	{
+		ConsultasDD consultas = new ConsultasDD ();
+		String delete = consultas.eliminarRubrosxCuenta();
+		
+		PreparedStatement pstmt1;
+		
+		try 
+		{
+			pstmt1 =  con.prepareStatement(delete);
+			pstmt1.setString(1, codRubro);
+			pstmt1.setString(2, codEmp);
+			
+			pstmt1.executeUpdate ();
+			pstmt1.close ();
+	
+			
+		} catch (SQLException e) {
+			
+			throw new ModificandoCuentaException();
+		}
+	}
+	
+	
+	/**
+	 * Nos retorna los rubros que no pertenecen
+	 * a la cuenta para que los pueda agregar
+	 *
+	 */
+	public ArrayList<Rubro> getRubrosNoCuenta(String codCuenta, String codEmp, Connection con) throws ObteniendoRubrosException
+	{
+		ArrayList<Rubro> lstRubro = new ArrayList<Rubro>();
+		
+		try
+		{
+			ConsultasDD consultas = new ConsultasDD();
+			String query = consultas.getRubrosNOCuenta();			
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			pstmt1.setString(1, codCuenta);
+			pstmt1.setString(2, codEmp);
+			
+			ResultSet rs = pstmt1.executeQuery();
+			
+			Rubro rubro;
+			
+			while(rs.next ()) {
+
+				rubro = new Rubro();
+
+				rubro.setCod_rubro(rs.getString(1));
+				rubro.setDescripcion(rs.getString(2));
+				
+				lstRubro.add(rubro);
+			}
+			
+			rs.close ();
+			pstmt1.close ();
+		}
+		catch (SQLException e) {
+			
+			throw new ObteniendoRubrosException();
+		}
+			
+		return lstRubro;
+	}
 
 }

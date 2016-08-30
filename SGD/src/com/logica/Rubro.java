@@ -9,6 +9,9 @@ public class Rubro extends Auditoria{
 	private boolean activo;
 	private Impuesto impuesto;
 	private TipoRubro tipoRubro;
+	private boolean oficina;
+	private boolean proceso;
+	private boolean persona;
 	
 
 	public Rubro(){
@@ -24,6 +27,19 @@ public class Rubro extends Auditoria{
 		this.impuesto = impuesto;
 		this.tipoRubro = tipoRubro;
 	}
+	
+	public Rubro(String cod_rubro, String descripcion, boolean activo, Impuesto impuesto,
+		     TipoRubro tipoRubro, boolean oficina, boolean proceso, boolean persona) {
+		super();
+		this.cod_rubro = cod_rubro;
+		this.descripcion = descripcion;
+		this.activo = activo;
+		this.impuesto = impuesto;
+		this.tipoRubro = tipoRubro;
+		this.oficina = oficina;
+		this.proceso = proceso;
+		this.persona = persona;
+	}
 
 	public Rubro(RubroVO rubroVO){
 		super(rubroVO.getUsuarioMod(), rubroVO.getFechaMod(), rubroVO.getOperacion());
@@ -36,11 +52,11 @@ public class Rubro extends Auditoria{
 		this.activo = rubroVO.isActivo();
 		this.impuesto.setCod_imp(rubroVO.getCodigoImpuesto());
 		this.tipoRubro.setCod_tipoRubro(rubroVO.getCodTipoRubro());
-		
-		
+		this.oficina = rubroVO.isOficina();
+		this.proceso = rubroVO.isProceso();
+		this.persona = rubroVO.isPersona();
 	}
 
-	
 	public String getCod_rubro() {
 		return cod_rubro;
 	}
@@ -81,5 +97,29 @@ public class Rubro extends Auditoria{
 		this.tipoRubro = tipoRubro;
 	}
 
+	public boolean isOficina() {
+		return oficina;
+	}
 
+	public void setOficina(boolean oficina) {
+		this.oficina = oficina;
+	}
+
+	public boolean isProceso() {
+		return proceso;
+	}
+
+	public void setProceso(boolean proceso) {
+		this.proceso = proceso;
+	}
+
+	public boolean isPersona() {
+		return persona;
+	}
+
+	public void setPersona(boolean persona) {
+		this.persona = persona;
+	}
+
+	
 }

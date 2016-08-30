@@ -1,6 +1,7 @@
 package com.valueObject;
 
 import com.logica.Auditoria;
+import com.logica.Rubro;
 
 public class RubroVO extends Auditoria{
 	
@@ -13,6 +14,9 @@ public class RubroVO extends Auditoria{
 	private boolean activoImpuesto;
 	private String descripcionTipoRubro;
 	private String codTipoRubro;
+	private boolean oficina;
+	private boolean proceso;
+	private boolean persona;
 	
 	public RubroVO(){
 		
@@ -31,6 +35,24 @@ public class RubroVO extends Auditoria{
 		this.activoImpuesto = activoImpuesto;
 		this.descripcionTipoRubro = descripcionTipoRubro;
 		this.codTipoRubro = tipoRubro;
+	}
+	
+	public RubroVO(String codRubro, String descripcion, boolean activo, String cod_impuesto, String descripcionImpuesto,
+			float porcentajeImpuesto, boolean activoImpuesto, String tipoRubro, String descripcionTipoRubro,
+			boolean oficina, boolean proceso, boolean persona) {
+		super();
+		this.codRubro = codRubro;
+		this.descripcion = descripcion;
+		this.activo = activo;
+		this.codigoImpuesto = cod_impuesto;
+		this.descripcionImpuesto = descripcionImpuesto;
+		this.porcentajeImpuesto = porcentajeImpuesto;
+		this.activoImpuesto = activoImpuesto;
+		this.descripcionTipoRubro = descripcionTipoRubro;
+		this.codTipoRubro = tipoRubro;
+		this.oficina = oficina;
+		this.proceso = proceso;
+		this.persona = persona;
 	}
 
 
@@ -54,9 +76,20 @@ public class RubroVO extends Auditoria{
 		this.activoImpuesto = rubroVO.isActivoImpuesto();
 		this.descripcionTipoRubro = rubroVO.getDescripcionTipoRubro();
 		this.codTipoRubro = rubroVO.getCodTipoRubro();
+		this.oficina = rubroVO.isOficina();
+		this.proceso = rubroVO.isProceso();
+		this.persona = rubroVO.isPersona();
 		
 	}
 
+	public RubroVO(Rubro rubro){
+		this.codRubro = rubro.getCod_rubro();
+		this.descripcion = rubro.getDescripcion();
+		this.activo = rubro.isActivo();
+		this.codTipoRubro = rubro.getTipoRubro().getCod_tipoRubro();
+		this.codigoImpuesto = rubro.getImpuesto().getCod_imp();
+		
+	}
 
 	public String getcodRubro() {
 		return codRubro;
@@ -154,6 +187,36 @@ public class RubroVO extends Auditoria{
 
 	public void setDescripcionTipoRubro(String descripcionTipoRubro) {
 		this.descripcionTipoRubro = descripcionTipoRubro;
+	}
+
+
+	public boolean isOficina() {
+		return oficina;
+	}
+
+
+	public void setOficina(boolean oficina) {
+		this.oficina = oficina;
+	}
+
+
+	public boolean isProceso() {
+		return proceso;
+	}
+
+
+	public void setProceso(boolean proceso) {
+		this.proceso = proceso;
+	}
+
+
+	public boolean isPersona() {
+		return persona;
+	}
+
+
+	public void setPersona(boolean persona) {
+		this.persona = persona;
 	}
 	
 	

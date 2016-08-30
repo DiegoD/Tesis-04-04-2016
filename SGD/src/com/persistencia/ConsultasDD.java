@@ -783,49 +783,56 @@ public class ConsultasDD {
 		return sb.toString();
 	}
 
-//	public String getFormulariosxGrupo()
-//	{
-//		StringBuilder sb = new StringBuilder();
-//		
+	public String getRubrosxCuenta()
+	{
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT m_rubros.cod_rubro, m_rubros.descripcion, ");
+		sb.append("m_rubrosxcuenta.oficina, m_rubrosxcuenta.proceso, m_rubrosxcuenta.persona ");
+		sb.append("FROM m_rubros, m_rubrosxcuenta ");
+		sb.append("WHERE m_rubrosxcuenta.cod_cuenta = ? and m_rubros.cod_emp = ? ");
+		sb.append("AND m_rubros.cod_rubro = m_rubrosxcuenta.cod_cuenta ");
+		
+		
 //		sb.append("SELECT g_formularios.formulario, g_formularios.nombre,  ");
-//		sb.append("m_grupoxform.leer, m_grupoxform.nuevo_editar, m_grupoxform.borrar  ");
-//		sb.append("FROM m_grupoxform, g_formularios "); 
-//		sb.append("WHERE cod_grupo = ? ");
+//    	sb.append("m_grupoxform.leer, m_grupoxform.nuevo_editar, m_grupoxform.borrar ");
+//    	sb.append("FROM m_grupoxform, g_formularios "); 
+//		sb.append("WHERE cod_grupo = ? and cod_emp = ? ");
 //		sb.append("AND m_grupoxform.formulario = g_formularios.formulario ");
-//		//+ "AND (g_formularios <> 'MEmpresas' OR usuario = 'AppAdmin')");
-//		
-//		return sb.toString();
-//	}
-//
-//	public String eliminarFormulariosxGrupo()
-//	{
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append("DELETE FROM m_grupoxform WHERE cod_grupo = ? AND cod_emp = ?");
-//		
-//		return sb.toString();
-//	}
-//
-//	public String insertarFormulariosxGrupo()
-//	{
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append("INSERT INTO vaadin.m_grupoxform (formulario, cod_grupo, leer, nuevo_editar, borrar, cod_emp) ");
-//		sb.append("VALUES (?, ?, ?, ?, ?, ?) ");
-//		
-//		return sb.toString();
-//	}
-//
-//	public String getFormulariosNOGrupo()
-//	{
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append("SELECT formulario, nombre, fecha_mod, usuario_mod, operacion, activo ");
-//		sb.append("FROM g_formularios ");
-//		sb.append("WHERE formulario NOT IN (SELECT formulario FROM m_grupoxform WHERE cod_grupo = ? AND cod_emp = ?)");
-//		
-//		return sb.toString();
-//	}
+		//VER EMPRESA
+		
+		return sb.toString();
+	}
+
+	public String eliminarRubrosxCuenta()
+	{
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("DELETE FROM m_rubrosxcuenta WHERE cod_rubro = ? AND cod_emp = ?");
+		
+		return sb.toString();
+	}
+
+	public String insertarRubrosxCuenta()
+	{
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO vaadin.m_rubrosxcuenta (cod_cuenta, cod_rubro, oficina, proceso, persona, cod_emp) ");
+		sb.append("VALUES (?, ?, ?, ?, ?, ?) ");
+		
+		return sb.toString();
+	}
+
+	public String getRubrosNOCuenta()
+	{
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_rubro, descripcion, fecha_mod, usuario_mod, operacion, activo ");
+		sb.append("FROM m_rubros ");
+		sb.append("WHERE cod_rubro NOT IN (SELECT cod_rubro FROM m_rubrosxcuenta WHERE cod_cuenta = ? AND cod_emp = ?)");
+		
+		return sb.toString();
+	}
 
 
 ////////////////////////FIN-CUENTAS///////////////////////////////////////////////////

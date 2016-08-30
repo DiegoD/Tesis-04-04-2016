@@ -19,6 +19,6 @@ public interface IDAOCuentas {
 	public boolean memberCuenta(String codCuenta, String codEmp, Connection con) throws MemberCuentaException, ConexionException;
 	public void eliminarCuenta(String codCuenta, String codEmp, Connection con) throws ModificandoCuentaException, ConexionException;
 	public ArrayList<Rubro> getRubrosNoCuenta(String codCuenta, String codEmp, Connection con) throws ObteniendoRubrosException;
-	public void actualizarCuenta(Cuenta cuenta, String codEmp, Connection con) throws ModificandoCuentaException;
+	public void actualizarCuenta(Cuenta cuenta, String codEmp, Connection con) throws ModificandoCuentaException, ConexionException, InsertandoCuentaException;
 	public Cuenta getCuenta(String codEmp, Connection con, String codCuenta) throws ObteniendoCuentasException, ObteniendoRubrosException;
 }

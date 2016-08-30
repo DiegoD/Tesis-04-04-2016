@@ -16,16 +16,18 @@ import com.excepciones.Cuentas.ObteniendoCuentasException;
 import com.excepciones.Cuentas.ObteniendoRubrosException;
 import com.logica.Fachada;
 import com.logica.FachadaDD;
+import com.valueObject.RubroVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.Cuenta.CuentaVO;
+import com.vista.Cuentas.CuentaViewExtended;
 
 public class CuentaControlador {
 	
-//	private CuentaViewExtended vista;
-//	
-//	public CuentaControlador(CuentaViewExtended view){
-//		this.vista = view;
-//	}
+	private CuentaViewExtended vista;
+	
+	public CuentaControlador(CuentaViewExtended view){
+		this.vista = view;
+	}
 	
 	public CuentaControlador(){
 		
@@ -57,7 +59,7 @@ public class CuentaControlador {
 			throw new NoTienePermisosException();
 	}
 	
-//	public ArrayList<FormularioVO> getFormulariosNoGrupo(String codGrupo, String codEmp) throws ObteniendoGruposException, ConexionException, ErrorInesperadoException, InicializandoException {
-//		return Fachada.getInstance().getFormulariosNoGrupo(codGrupo, codEmp);
-//	}
+	public ArrayList<RubroVO> getRubrosNoCuenta(String codCuenta, String codEmp) throws ObteniendoRubrosException, ConexionException, ErrorInesperadoException, InicializandoException, ObteniendoCuentasException {
+		return FachadaDD.getInstance().getRubrosNoCuenta(codCuenta, codEmp);
+	}
 }
