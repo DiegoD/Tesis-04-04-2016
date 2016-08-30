@@ -279,7 +279,7 @@ public class DAOGrupos implements IDAOGrupos {
 			
 			PreparedStatement pstmt1 = con.prepareStatement(query);
 			pstmt1.setString(1, codGrupo);
-			
+			pstmt1.setString(2, cod_emp);
 			ResultSet rs = pstmt1.executeQuery();
 			
 			Formulario formulario;
