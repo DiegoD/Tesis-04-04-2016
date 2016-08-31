@@ -266,16 +266,18 @@ public class Consultas {
 
     public String getFormulariosxGrupo()
     {
-    	StringBuilder sb = new StringBuilder();
-    	
-    	sb.append("SELECT g_formularios.formulario, g_formularios.nombre,  ");
-    	sb.append("m_grupoxform.leer, m_grupoxform.nuevo_editar, m_grupoxform.borrar  ");
-    	sb.append("FROM m_grupoxform, g_formularios "); 
-		sb.append("WHERE cod_grupo = ? and cod_emp = ? ");
-		sb.append("AND m_grupoxform.formulario = g_formularios.formulario ");
-				//+ "AND (g_formularios <> 'MEmpresas' OR usuario = 'AppAdmin')");
-    	
-    	return sb.toString();
+
+     StringBuilder sb = new StringBuilder();
+     
+     sb.append("SELECT g_formularios.formulario, g_formularios.nombre,  ");
+     sb.append("m_grupoxform.leer, m_grupoxform.nuevo_editar, m_grupoxform.borrar  ");
+     sb.append("FROM m_grupoxform, g_formularios "); 
+     sb.append("WHERE cod_grupo = ? and cod_emp = ? ");
+     sb.append("AND m_grupoxform.formulario = g_formularios.formulario ");
+    //+ "AND (g_formularios <> 'MEmpresas' OR usuario = 'AppAdmin')");
+     
+     return sb.toString();
+
     }
     
     public String eliminarFormulariosxGrupo()
@@ -685,5 +687,130 @@ public String getProcesosActivos(){
 	
 ////////////////////////FIN PROCESOS//////////////////////////////////////////////
 	
+////////////////////////BANCOS///////////////////////////////////////////////////
+	public String getBancos(){
+		
+		StringBuilder sb = new StringBuilder();
+		 
+		sb.append("SELECT cod_bco, nom_bco, cod_emp, tel, direccion, contacto, activo, usuario_mod, operacion, fecha_mod");
+		sb.append("FROM m_bancos WHERE cod_emp = ?");
+
+		return sb.toString();
+	}
+
+	public String getBancosActivos(){
+	
+	StringBuilder sb = new StringBuilder();
+	
+		sb.append("SELECT cod_bco, nom_bco, cod_emp, tel, direccion, contacto, activo, usuario_mod, operacion, fecha_mod ");
+		sb.append("FROM m_bancos WHERE cod_emp = ? AND activo = 1");
+		
+		
+		return sb.toString();
+	}
+
+	public String insertarBanco()
+	{
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO vaadin.m_bancos (cod_bco, nom_bco, cod_emp, tel, direccion, contacto, activo, usuario_mod, operacion, fecha_mod) ");
+		sb.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+	
+		return sb.toString();
+	}
+
+	public String memberBanco(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_bco FROM m_bancos ");
+		sb.append("FROM m_bancos WHERE cod_bco = ? AND cod_emp = ? ");
+		
+		return sb.toString();
+	}
+
+
+	public String actualizarBanco(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("UPDATE m_bancos ");
+		sb.append("SET  ");
+		sb.append("nom_bco = ?, ");
+		sb.append("tel = ?, ");
+		sb.append("direccion = ?, ");
+		sb.append("contacto = ?, ");
+		sb.append("activo = ?, ");
+		sb.append("usuario_mod = ?, ");
+		sb.append("operacion = ?, ");
+		sb.append("fecha_mod = ? ");
+		sb.append("WHERE cod_bco = ? AND cod_emp = ? ");
+
+		return sb.toString();
+	}	
+	
+	
+////////////////////////FIN BANCOS///////////////////////////////////////////////
+
+////////////////////////CTAS BANCOS//////////////////////////////////////////////
+	
+	public String getCtasBancos(){
+		
+		StringBuilder sb = new StringBuilder();
+		 
+		sb.append("SELECT cod_ctabco, nom_cta, cod_bco, cod_emp, activo, usuario_mod, operacion, fecha_mod ");
+		sb.append("FROM m_ctasbcos WHREE cod_bco = ? AND cod_emp = ? ");
+
+		return sb.toString();
+	}
+
+	public String getCtasBancosActivos(){
+	
+	StringBuilder sb = new StringBuilder();
+	
+	sb.append("SELECT cod_ctabco, nom_cta, cod_bco, cod_emp, activo, usuario_mod, operacion, fecha_mod ");
+	sb.append("FROM m_ctasbcos WHREE cod_bco = ? AND cod_emp = ? AND activo = 1 ");
+		
+		
+		return sb.toString();
+	}
+
+	public String insertarCtaBanco()
+	{
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO m_ctasbcos (cod_ctabco, nom_cta, cod_bco, cod_emp, activo, usuario_mod, operacion, fecha_mod) ");
+		sb.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?) ");
+	
+		return sb.toString();
+	}
+
+	public String memberCtasBanco(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_ctabco ");
+		sb.append("FROM m_ctasbcos WHREE cod_bco = ? AND cod_emp = ? AND activo = 1 ");
+		
+		return sb.toString();
+	}
+
+
+	public String actualizarCtaBanco(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("UPDATE m_ctasbcos ");
+		sb.append("SET  ");
+		sb.append("nom_cta = ?, ");
+		sb.append("activo = ?, ");
+		sb.append("usuario_mod = ?, ");
+		sb.append("operacion = ?, ");
+		sb.append("fecha_mod = ? ");
+		sb.append("WHERE cod_ctabco = ? AND cod_bco = ? AND cod_emp = ? ");
+		
+		return sb.toString();
+	}	
+////////////////////////FIN CTAS BANCOS///////////////////////////////////////////////
     
 }
