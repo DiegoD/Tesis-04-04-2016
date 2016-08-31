@@ -1,5 +1,6 @@
 package com.abstractFactory;
 
+import com.persistencia.IDAOBancos;
 import com.persistencia.IDAOClientes;
 import com.persistencia.IDAOCodigosGeneralizados;
 import com.persistencia.IDAOCotizaciones;
@@ -47,4 +48,6 @@ public interface IAbstractFactory
 	public IDAOTipoRubro crearDAOTipoRubro();
 
 	public IDAOCuentas crearDAOCuentas();
+	
+	public IDAOBancos crearDAOBancos();
 }

@@ -14,6 +14,14 @@ import org.json.simple.JSONObject;
 import com.abstractFactory.AbstractFactoryBuilder;
 import com.abstractFactory.IAbstractFactory;
 import com.excepciones.*;
+import com.excepciones.Bancos.ExisteBancoException;
+import com.excepciones.Bancos.InsertandoBancoException;
+import com.excepciones.Bancos.InsertandoCuentaException;
+import com.excepciones.Bancos.ModificandoBancoException;
+import com.excepciones.Bancos.ModificandoCuentaBcoException;
+import com.excepciones.Bancos.ObteniendoBancosException;
+import com.excepciones.Bancos.ObteniendoCuentasBcoException;
+import com.excepciones.Bancos.VerificandoBancosException;
 import com.excepciones.Documentos.ExisteDocumentoException;
 import com.excepciones.Documentos.InsertandoDocumentoException;
 import com.excepciones.Documentos.ModificandoDocumentoException;
@@ -41,6 +49,7 @@ import com.excepciones.grupos.NoExisteGrupoException;
 import com.excepciones.grupos.ObteniendoFormulariosException;
 import com.excepciones.grupos.ObteniendoGruposException;
 import com.valueObject.*;
+import com.valueObject.banco.BancoVO;
 import com.valueObject.cliente.ClienteVO;
 import com.vista.VariablesPermisos;
 import com.persistencia.*;
@@ -59,6 +68,7 @@ public class Fachada {
 	private IDAOClientes clientes;
 	private IDAOFuncionarios funcionarios;
 	private IDAODocumDgi documentosDGI;
+	private IDAOBancos bancos;
 	
 	private AbstractFactoryBuilder fabrica;
 	private IAbstractFactory fabricaConcreta;
@@ -76,12 +86,12 @@ public class Fachada {
         this.clientes = fabricaConcreta.crearDAOClientes();
         this.funcionarios = fabricaConcreta.crearDAOFuncionarios();
         this.documentosDGI = fabricaConcreta.crearDAODocumDgi();
+        this.bancos = fabricaConcreta.crearDAOBancos();
         
     }
     
     public static Fachada getInstance() throws InicializandoException {
          
-         	
     	if(INSTANCE == null)
         {
             synchronized (lock)
@@ -992,4 +1002,178 @@ public class Fachada {
 		
 		return tienePermiso;
 	}
+
+/////////////////////////////////BANCOS/////////////////////////////////
+	 
+/**
+*Nos retorna todos los clientes para la empresa
+ * @throws ObteniendoCuentasBcoException 
+*
+*/
+@SuppressWarnings("unchecked")
+public ArrayList<BancoVO> getBancosTodos(String codEmp) throws ObteniendoBancosException, ConexionException, ObteniendoCuentasBcoException {
+	
+	Connection con = null;
+	
+	ArrayList<Banco> lstbancos;
+	ArrayList<BancoVO> lstBancoVO = new ArrayList<BancoVO>();
+	
+	try
+	{
+		con = this.pool.obtenerConeccion();
+		
+		lstbancos = this.bancos.getBancosTodos(con, codEmp);
+		
+		for (Banco banco : lstbancos) 
+		{
+			lstBancoVO.add(banco.getBancoVO());
+		}
+	
+	}catch(ObteniendoBancosException  e)
+	{
+		throw e;
+	
+	} catch (ConexionException e) {
+	
+		throw e;
+	} 
+	finally
+	{
+		this.pool.liberarConeccion(con);
+	}
+	
+	
+	return lstBancoVO;
+}	 
+
+
+/**
+* Nos retorna todos los clientes activos para la empresa
+ * @throws ObteniendoCuentasBcoException 
+*
+*/
+@SuppressWarnings("unchecked")
+public ArrayList<BancoVO> getBancosActivos(String codEmp) throws ObteniendoBancosException, ConexionException, ObteniendoCuentasBcoException {
+
+	Connection con = null;
+	
+	ArrayList<Banco> lstbancos;
+	ArrayList<BancoVO> lstBancoVO = new ArrayList<BancoVO>();
+	
+	try
+	{
+		con = this.pool.obtenerConeccion();
+		
+		lstbancos = this.bancos.getBancosActivos(con, codEmp);
+		
+		for (Banco banco : lstbancos) 
+		{
+			lstBancoVO.add(banco.getBancoVO());
+		}
+	
+	}catch(ObteniendoBancosException  e)
+	{
+		throw e;
+	
+	} catch (ConexionException e) {
+	
+		throw e;
+	} 
+	finally
+	{
+		this.pool.liberarConeccion(con);
+	}
+	
+	
+	return lstBancoVO;
+}	 
+
+
+public void insertarBanco(BancoVO bancoVO, String codEmp) throws InsertandoBancoException, ConexionException, ExisteBancoException{
+
+	Connection con = null;
+	boolean existe = false;
+	
+	try 
+	{
+		con = this.pool.obtenerConeccion();
+		con.setAutoCommit(false);
+		
+		Banco banco = new Banco(bancoVO); 
+		
+		/*Verificamos que no exista un cliente con el mismo documento*/
+		if(!this.bancos.memberBanco(bancoVO.getCodigo(), codEmp, con))
+		{
+			this.bancos.insertarBanco(banco, codEmp, con);
+		
+			con.commit();
+		}
+		else{
+			existe = true;
+		}
+	
+	}catch(Exception e){
+		
+		try {
+			con.rollback();
+		
+		} catch (SQLException ex) {
+		
+			throw new InsertandoBancoException();
+		}
+	
+		throw new InsertandoBancoException();
+	}
+	finally
+	{
+		pool.liberarConeccion(con);
+	}
+	if (existe){
+		throw new ExisteBancoException();
+	}
+	
+}
+
+public void editarBanco(BancoVO bancoVO, String codEmp) throws  ConexionException, ModificandoBancoException, VerificandoBancosException, ExisteBancoException, ModificandoCuentaBcoException{
+
+	Connection con = null;
+	
+	try 
+	{
+		con = this.pool.obtenerConeccion();
+		con.setAutoCommit(false);
+		
+		Banco banco = new Banco(bancoVO);
+		
+		/*Verificamos que exista el codigo del cliente*/
+		if(this.bancos.memberBanco(banco.getCodigo(), codEmp, con))
+		{
+			this.bancos.modificarBanco(banco, codEmp, con);
+			
+			con.commit();
+		}
+		else
+		throw new ModificandoBancoException();
+	
+	}catch(ModificandoBancoException| ExisteBancoException| ConexionException | SQLException  e)
+	{
+		try {
+		con.rollback();
+		
+		} catch (SQLException e1) {
+		
+		throw new ConexionException();
+		}
+			throw new ModificandoBancoException();
+	}
+	finally
+	{
+		pool.liberarConeccion(con);
+	}
+}
+
+/////////////////////////////////FIN-CLIENTES/////////////////////////////////
+
+	
+	
 }

@@ -90,5 +90,10 @@ public class AbstractFactoryMySql implements IAbstractFactory
 		return new DAOCuentas();
 	}
 
+	@Override
+	public IDAOBancos crearDAOBancos() {
+		
+		return new DAOBancos();
+	}
 
 }
