@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8" name="design-properties" content="{&quot;RULERS_VISIBLE&quot;:true,&quot;GUIDELINES_VISIBLE&quot;:false,&quot;SNAP_TO_OBJECTS&quot;:true,&quot;SNAP_TO_GRID&quot;:true,&quot;SNAPPING_DISTANCE&quot;:10,&quot;JAVA_SOURCES_ROOT&quot;:&quot;src&quot;,&quot;THEME&quot;:&quot;sgd&quot;}">
+ </head> 
+ <body> 
+  <vaadin-form-layout spacing="false" height="343px" margin> 
+   <vaadin-label style-name="colored h2" responsive plain-text :center>
+     Usos
+   </vaadin-label> 
+   <vaadin-label responsive id="lbDescripcion" plain-text _id="lbDescripcion" :center>
+     Edición de usos del rubro por cuenta 
+   </vaadin-label> 
+   <vaadin-form-layout spacing="false" height="180px" margin-right> 
+   <vaadin-check-box caption="Oficina" id="chkOficina" _id="chkOficina"></vaadin-check-box> 
+    <vaadin-check-box caption="Proceso" _id="chkProceso"></vaadin-check-box> 
+    <vaadin-check-box caption="Persona" id="chkPersona" _id="chkPersona"></vaadin-check-box> 
+   </vaadin-form-layout> 
+   <vaadin-horizontal-layout width="177px" :bottom> 
+    <vaadin-button style-name="primary tiny" responsive id="btnAgregar" plain-text _id="btnAgregar">
+      Aceptar 
+    </vaadin-button> 
+    <vaadin-button style-name="primary tiny" responsive id="btncancelar" height="28px" plain-text _id="cancelar">
+      Cancelar 
+    </vaadin-button> 
+   </vaadin-horizontal-layout> 
+  </vaadin-form-layout>  
+ </body>
+</html>

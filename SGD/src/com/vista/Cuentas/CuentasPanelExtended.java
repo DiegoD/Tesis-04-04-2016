@@ -338,5 +338,6 @@ public class CuentasPanelExtended extends CuentasPanel{
 		gridCuentas.getColumn("usuarioMod").setHidden(true);
 		gridCuentas.getColumn("operacion").setHidden(true);
 		gridCuentas.getColumn("activo").setHidden(true);
+		gridCuentas.getColumn("lstRubros").setHidden(true);
 	}
 }

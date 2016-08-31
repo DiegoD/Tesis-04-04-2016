@@ -10,6 +10,8 @@ import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.data.validator.StringLengthValidator;
+import com.vaadin.event.SelectionEvent;
+import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
@@ -33,7 +35,7 @@ public class CuentaViewExtended extends CuentaView{
 	BeanItemContainer<RubroVO> container;
 	private RubroVO rubroSelecccionado; 
 	
-	//VER private GrupoFormularioPermisos frmFormPermisos;
+	private CuentaRubroPermisos rubroFormPermisos;
 	MySub sub;
 	private PermisosUsuario permisos; /*Variable con los permisos del usuario*/
 	
@@ -149,189 +151,191 @@ public class CuentaViewExtended extends CuentaView{
 			}
 		});
 			
-//		/*Inicalizamos listener para boton de Agregar Rubro*/
-//		this.btnAgregar.addClickListener(click -> {
-//					
-//			try {
-//				
-//				GrupoViewAgregarFormularioExtended form = new GrupoViewAgregarFormularioExtended(this);
-//				
-//				sub = new MySub("70%", "60%" );
-//				sub.setModal(true);
-//				sub.setVista(form);
-//				//sub.setWidth("50%");
-//				//sub.setHeight("50%");
-//				sub.center();
-//				
-//				String codGrupo;/*Codigo del grupo para obtener los forms del mismo*/
-//				
-//				/*Obtenemos los formularios que no estan en el grupo
-//				 * para mostrarlos en la grilla para seleccionar*/
-//				if(this.operacion.equals(Variables.OPERACION_NUEVO) )
-//				{
-//					/*Si la operacion es nuevo, ponemos el  codGrupo vacio
-//					 * asi nos trae todos los grupos disponibles*/
-//					codGrupo = "";
-//				}
-//				else 
-//				{
-//					/*Si es operacion Editar tomamos el codGrupo de el fieldGroup*/
-//					codGrupo = fieldGroup.getItemDataSource().getBean().getCodGrupo();
-//				}
-//				
-//				ArrayList<FormularioVO> lstForms = this.controlador.getFormulariosNoGrupo(codGrupo, this.permisos.getCodEmp());
-//				form.setGrillaForms(lstForms);
-//				
-//				UI.getCurrent().addWindow(sub);
-//
-//			}
-//			catch(Exception e){
-//					Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
-//			}
-//		});
+		/*Inicalizamos listener para boton de Agregar Rubro*/
+		this.btnAgregar.addClickListener(click -> {
+					
+			try {
+				
+				CuentaViewAgregarRubroExtended form = new CuentaViewAgregarRubroExtended(this);
+				
+				sub = new MySub("70%", "60%" );
+				sub.setModal(true);
+				sub.setVista(form);
+				//sub.setWidth("50%");
+				//sub.setHeight("50%");
+				sub.center();
+				
+				String codCuenta;/*Codigo de la cuenta para obtener los rubros del mismo*/
+				
+				/*Obtenemos los formularios que no estan en el grupo
+				 * para mostrarlos en la grilla para seleccionar*/
+				if(this.operacion.equals(Variables.OPERACION_NUEVO) )
+				{
+					/*Si la operacion es nuevo, ponemos el  codGrupo vacio
+					 * asi nos trae todos los grupos disponibles*/
+					codCuenta = "";
+				}
+				else 
+				{
+					/*Si es operacion Editar tomamos el codGrupo de el fieldGroup*/
+					codCuenta = fieldGroup.getItemDataSource().getBean().getCodCuenta();
+				}
+				
+				ArrayList<RubroVO> lstRubrosB = this.controlador.getRubrosNoCuenta(codCuenta, this.permisos.getCodEmp());
+						
+				form.setGrillaRubros(lstRubrosB);
+				
+				UI.getCurrent().addWindow(sub);
+
+			}
+			catch(Exception e){
+					Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}
+		});
 				
 		this.cancelar.addClickListener(click -> {
 			main.cerrarVentana();
 		});
 				
-//		/*Inicalizamos listener para boton de Quitar*/
-//		this.btnQuitar.addClickListener(click -> {
-//			
-//		boolean esta = false;	
-//
-//		try {
-//			
-//			/*Verificamos que haya un formulario seleccionado para
-//			 * eliminar*/
-//			if(formSelecccionado != null)
-//			{
-//
-//				/*Recorremos los formularios del grupo
-//				 * y buscamos el seleccionarlo para quitarlo*/
-//				int i = 0;
-//				while(i < lstFormsVO.size() && !esta)
-//				{
-//					if(lstFormsVO.get(i).getCodigo().equals(formSelecccionado.getCodigo()))
-//					{
-//						/*Quitamos el formulario seleccionado de la lista*/
-//						lstFormsVO.remove(lstFormsVO.get(i));
-//						
-//						esta = true;
-//					}
-//
-//					i++;
-//				}
-//				
-//				/*Si lo encontro en la grilla*/
-//				if(esta)
-//				{
-//					/*Actualizamos el container y la grilla*/
-//					container.removeAllItems();
-//					container.addAll(lstFormsVO);
-//					//lstFormularios.setContainerDataSource(container);
-//					this.actualizarGrillaContainer(container);
-//					
-//				}
-//				
-//			}
-//			else /*De lo contrario mostramos mensaje que debe selcionar un formulario*/
-//			{
-//				Mensajes.mostrarMensajeError("Debe seleccionar un formulario para quitar");
-//			}
-//	
-//			}catch(Exception e)
-//			{
-//				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
-//			}
-//		});
+		/*Inicalizamos listener para boton de Quitar*/
+		this.btnQuitar.addClickListener(click -> {
+			
+		boolean esta = false;	
+
+		try {
+			
+			/*Verificamos que haya un formulario seleccionado para
+			 * eliminar*/
+			if(rubroSelecccionado != null)
+			{
+
+				/*Recorremos los rubros de la cuenta
+				 * y buscamos el seleccionarlo para quitarlo*/
+				int i = 0;
+				while(i < lstRubrosVO.size() && !esta)
+				{
+					if(lstRubrosVO.get(i).getcodRubro().equals(rubroSelecccionado.getcodRubro()))
+					{
+						/*Quitamos el formulario seleccionado de la lista*/
+						lstRubrosVO.remove(lstRubrosVO.get(i));
+						
+						esta = true;
+					}
+
+					i++;
+				}
+				
+				/*Si lo encontro en la grilla*/
+				if(esta)
+				{
+					/*Actualizamos el container y la grilla*/
+					container.removeAllItems();
+					container.addAll(lstRubrosVO);
+					//lstFormularios.setContainerDataSource(container);
+					this.actualizarGrillaContainer(container);
+					
+				}
+				
+			}
+			else /*De lo contrario mostramos mensaje que debe selcionar un formulario*/
+			{
+				Mensajes.mostrarMensajeError("Debe seleccionar un rubro para quitar");
+			}
+	
+			}catch(Exception e)
+			{
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}
+		});
 				
 //		/*Inicializamos el listener de la grilla de formularios*/
-//		lstFormularios.addSelectionListener(new SelectionListener() {
-//			
-//		    @Override
-//		    public void select(SelectionEvent event) {
-//		       
-//		    	try{
-//		    		if(lstFormularios.getSelectedRow() != null){
-//		    			BeanItem<FormularioVO> item = container.getItem(lstFormularios.getSelectedRow());
-//				    	formSelecccionado = item.getBean(); /*Seteamos el formulario
-//			    	 									seleccionado para poder quitarlo*/
-//		    		}
-//		    	}
-//		    	catch(Exception e){
-//		    		Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
-//		    	}
-//		      
-//		    }
-//		});
+		this.lstRubros.addSelectionListener(new SelectionListener() {
+			
+		    @Override
+		    public void select(SelectionEvent event) {
+		       
+		    	try{
+		    		if(lstRubros.getSelectedRow() != null){
+		    			BeanItem<RubroVO> item = container.getItem(lstRubros.getSelectedRow());
+				    	rubroSelecccionado = item.getBean(); /*Seteamos el formulario
+			    	 									seleccionado para poder quitarlo*/
+		    		}
+		    	}
+		    	catch(Exception e){
+		    		Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+		    	}
+		      
+		    }
+
+		});
 				
 				
 				
-//		/*Listener boton editar de la grilla de formularios*/
-//		this.btnEditarForm.addClickListener(click -> {
-//			
-//		boolean esta = false;	
-//
-//		try {
-//			
-//			/*Verificamos que haya un formulario seleccionado para
-//			 * eliminar*/
-//			if(formSelecccionado != null)
-//			{
-//				
-//				this.frmFormPermisos = new GrupoFormularioPermisosExtended(this, formSelecccionado, Variables.OPERACION_EDITAR);
-//				
-//				sub = new MySub("35%", "30%" );
-//				sub.setModal(true);
-//				sub.setVista(this.frmFormPermisos);
-//				sub.center();
-//				
-//				UI.getCurrent().addWindow(sub);
-//				
-//			}
-//			else /*De lo contrario mostramos mensaje que debe selcionar un formulario*/
-//			{
-//				Mensajes.mostrarMensajeError("Debe seleccionar un formulario para editar");
-//			}
-//	
-//			}catch(Exception e)
-//			{
-//				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
-//			}
-//		});
+		/*Listener boton editar de la grilla de formularios*/
+		this.btnEditarForm.addClickListener(click -> {
+			
+		boolean esta = false;	
+
+		try {
+			
+			/*Verificamos que haya un formulario seleccionado para
+			 * eliminar*/
+			if(rubroSelecccionado != null)
+			{
 				
-//		/*Listener boton permisos*/
-//		this.btnVerPermisos.addClickListener(click -> {
-//			
-//		boolean esta = false;	
-//
-//		try {
-//			
-//			/*Verificamos que haya un formulario seleccionado para
-//			 * eliminar*/
-//			if(formSelecccionado != null)
-//			{
-//				
-//				this.frmFormPermisos = new GrupoFormularioPermisosExtended(this, formSelecccionado, Variables.OPERACION_LECTURA);
-//				
-//				sub = new MySub("53%", "40%" );
-//				sub.setModal(true);
-//				sub.setVista(this.frmFormPermisos);
-//				sub.center();
-//				
-//				UI.getCurrent().addWindow(sub);
-//				
-//			}
-//			else /*De lo contrario mostramos mensaje que debe selcionar un formulario*/
-//			{
-//				Mensajes.mostrarMensajeError("Debe seleccionar un formulario");
-//			}
-//	
-//			}catch(Exception e)
-//			{
-//				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
-//			}
-//		});
+				this.rubroFormPermisos = new CuentaRubroPermisosExtended(this, rubroSelecccionado, Variables.OPERACION_EDITAR);
+				
+				sub = new MySub("53%", "40%" );
+				sub.setModal(true);
+				sub.setVista(this.rubroFormPermisos);
+				sub.center();
+				
+				UI.getCurrent().addWindow(sub);
+				
+			}
+			else /*De lo contrario mostramos mensaje que debe selcionar un formulario*/
+			{
+				Mensajes.mostrarMensajeError("Debe seleccionar un rubro para editar");
+			}
+	
+			}catch(Exception e)
+			{
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}
+		});
+				
+		/*Listener boton permisos*/
+		this.btnVerPermisos.addClickListener(click -> {
+			
+		boolean esta = false;	
+
+		try {
+			
+			/*Verificamos que haya un formulario seleccionado para
+			 * eliminar*/
+			if(rubroSelecccionado != null)
+			{
+				
+				this.rubroFormPermisos = new CuentaRubroPermisosExtended(this, rubroSelecccionado, Variables.OPERACION_LECTURA);
+				
+				sub = new MySub("53%", "40%" );
+				sub.setModal(true);
+				sub.setVista(this.rubroFormPermisos);
+				sub.center();
+				
+				UI.getCurrent().addWindow(sub);
+				
+			}
+			else /*De lo contrario mostramos mensaje que debe selcionar un formulario*/
+			{
+				Mensajes.mostrarMensajeError("Debe seleccionar un rubro");
+			}
+	
+			}catch(Exception e)
+			{
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}
+		});
 		
 	}
 	
@@ -474,7 +478,7 @@ public class CuentaViewExtended extends CuentaView{
 		
 		if(permisoNuevoEditar){
 			
-			/*Oculatamos Editar y mostramos el de guardar y de agregar formularios*/
+			/*Oculatamos Editar y mostramos el de guardar y de agregar rubros*/
 			this.enableBotonAceptar();
 			this.disableBotonLectura();
 			this.enableBotonAgregarQuitar();
@@ -703,7 +707,7 @@ public class CuentaViewExtended extends CuentaView{
 	/**
 	 *Agregamos los rubros seleccionados
 	 */
-	public void agregarRubrossSeleccionados(ArrayList<RubroVO> lstRubros)
+	public void agregarRubrosSeleccionados(ArrayList<RubroVO> lstRubros)
 	{
 
         RubroVO bean = new RubroVO();
@@ -891,6 +895,18 @@ public class CuentaViewExtended extends CuentaView{
 		lstRubros.getColumn("proceso").setHidden(true);
 		lstRubros.getColumn("persona").setHidden(true);
 		lstRubros.getColumn("oficina").setHidden(true);
+		lstRubros.getColumn("activo").setHidden(true);
+		lstRubros.getColumn("codigoImpuesto").setHidden(true);
+		lstRubros.getColumn("descripcionImpuesto").setHidden(true);
+		lstRubros.getColumn("porcentajeImpuesto").setHidden(true);
+		lstRubros.getColumn("activoImpuesto").setHidden(true);
+		lstRubros.getColumn("descripcionTipoRubro").setHidden(true);
+		lstRubros.getColumn("codTipoRubro").setHidden(true);
+		lstRubros.getColumn("fechaMod").setHidden(true);
+		lstRubros.getColumn("usuarioMod").setHidden(true);
+		lstRubros.getColumn("operacion").setHidden(true);
+		
+		
 		
 	}
 	

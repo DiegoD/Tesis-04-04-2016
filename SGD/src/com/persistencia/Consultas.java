@@ -271,7 +271,7 @@ public class Consultas {
     	sb.append("SELECT g_formularios.formulario, g_formularios.nombre,  ");
     	sb.append("m_grupoxform.leer, m_grupoxform.nuevo_editar, m_grupoxform.borrar  ");
     	sb.append("FROM m_grupoxform, g_formularios "); 
-		sb.append("WHERE cod_grupo = ? ");
+		sb.append("WHERE cod_grupo = ? and cod_emp = ? ");
 		sb.append("AND m_grupoxform.formulario = g_formularios.formulario ");
 				//+ "AND (g_formularios <> 'MEmpresas' OR usuario = 'AppAdmin')");
     	

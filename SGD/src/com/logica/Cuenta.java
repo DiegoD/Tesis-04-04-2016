@@ -15,10 +15,11 @@ public class Cuenta extends Auditoria{
 	private ArrayList<Rubro> lstRubros;
 	
 	public Cuenta(){
-		
+		this.lstRubros = new ArrayList<Rubro>();
 	}
 	
 	public Cuenta(String cod_cuenta, String descripcion, boolean activo, ArrayList<Rubro> lstRubros) {
+		
 		super();
 		this.cod_cuenta = cod_cuenta;
 		this.descripcion = descripcion;
@@ -33,10 +34,10 @@ public class Cuenta extends Auditoria{
 		this.cod_cuenta = cuentaVO.getCodCuenta();
 		this.descripcion = cuentaVO.getDescripcion();
 		this.activo = cuentaVO.isActivo();
-		
+		this.lstRubros = new ArrayList<Rubro>();
 		Rubro rubroAux;
 		for(RubroVO rubroVO : cuentaVO.getLstRubros()){
-			rubroAux = new Rubro();
+			rubroAux = new Rubro(rubroVO);
 			this.lstRubros.add(rubroAux);
 		}
 	}

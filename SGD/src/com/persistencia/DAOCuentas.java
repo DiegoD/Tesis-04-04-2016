@@ -20,7 +20,9 @@ import com.excepciones.grupos.ObteniendoGruposException;
 import com.logica.Cuenta;
 import com.logica.Formulario;
 import com.logica.Grupo;
+import com.logica.Impuesto;
 import com.logica.Rubro;
+import com.logica.TipoRubro;
 
 public class DAOCuentas implements IDAOCuentas{
 
@@ -316,7 +318,7 @@ public class DAOCuentas implements IDAOCuentas{
 	 * PRECONDICION: El código del  rubro debe existir
 	 *
 	 */
-	private void eliminarRubrosxCuenta(String codRubro, String codEmp, Connection con) throws ModificandoCuentaException, ConexionException
+	private void eliminarRubrosxCuenta(String codCuenta, String codEmp, Connection con) throws ModificandoCuentaException, ConexionException
 	{
 		ConsultasDD consultas = new ConsultasDD ();
 		String delete = consultas.eliminarRubrosxCuenta();
@@ -326,7 +328,7 @@ public class DAOCuentas implements IDAOCuentas{
 		try 
 		{
 			pstmt1 =  con.prepareStatement(delete);
-			pstmt1.setString(1, codRubro);
+			pstmt1.setString(1, codCuenta);
 			pstmt1.setString(2, codEmp);
 			
 			pstmt1.executeUpdate ();
@@ -357,16 +359,34 @@ public class DAOCuentas implements IDAOCuentas{
 			pstmt1.setString(1, codCuenta);
 			pstmt1.setString(2, codEmp);
 			
+			System.out.println(query);
+			
 			ResultSet rs = pstmt1.executeQuery();
 			
 			Rubro rubro;
+			Impuesto impuesto;
+			TipoRubro tipoRubro;
 			
 			while(rs.next ()) {
 
 				rubro = new Rubro();
-
+				impuesto = new Impuesto();
+				tipoRubro = new TipoRubro();
+				
 				rubro.setCod_rubro(rs.getString(1));
 				rubro.setDescripcion(rs.getString(2));
+				rubro.setFechaMod(rs.getTimestamp(3));
+				rubro.setUsuarioMod(rs.getString(4));
+				rubro.setOperacion(rs.getString(5));
+				rubro.setActivo(rs.getBoolean(6));
+				
+				impuesto.setCod_imp(rs.getString(7));
+				tipoRubro.setCod_tipoRubro(rs.getString(8));
+				tipoRubro.setDescripcion(rs.getString(9));
+				impuesto.setDescripcion(rs.getString(11));
+				
+				rubro.setImpuesto(impuesto);
+				rubro.setTipoRubro(tipoRubro);
 				
 				lstRubro.add(rubro);
 			}

@@ -86,8 +86,13 @@ public class RubroVO extends Auditoria{
 		this.codRubro = rubro.getCod_rubro();
 		this.descripcion = rubro.getDescripcion();
 		this.activo = rubro.isActivo();
-		this.codTipoRubro = rubro.getTipoRubro().getCod_tipoRubro();
-		this.codigoImpuesto = rubro.getImpuesto().getCod_imp();
+		
+		if(rubro.getTipoRubro().getCod_tipoRubro() != null){
+			this.codTipoRubro = rubro.getTipoRubro().getCod_tipoRubro();
+		}
+		if(rubro.getImpuesto().getCod_imp() != null){
+			this.codigoImpuesto = rubro.getImpuesto().getCod_imp();
+		}
 		
 	}
 

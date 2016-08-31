@@ -791,15 +791,7 @@ public class ConsultasDD {
 		sb.append("m_rubrosxcuenta.oficina, m_rubrosxcuenta.proceso, m_rubrosxcuenta.persona ");
 		sb.append("FROM m_rubros, m_rubrosxcuenta ");
 		sb.append("WHERE m_rubrosxcuenta.cod_cuenta = ? and m_rubros.cod_emp = ? ");
-		sb.append("AND m_rubros.cod_rubro = m_rubrosxcuenta.cod_cuenta ");
-		
-		
-//		sb.append("SELECT g_formularios.formulario, g_formularios.nombre,  ");
-//    	sb.append("m_grupoxform.leer, m_grupoxform.nuevo_editar, m_grupoxform.borrar ");
-//    	sb.append("FROM m_grupoxform, g_formularios "); 
-//		sb.append("WHERE cod_grupo = ? and cod_emp = ? ");
-//		sb.append("AND m_grupoxform.formulario = g_formularios.formulario ");
-		//VER EMPRESA
+		sb.append("AND m_rubros.cod_rubro = m_rubrosxcuenta.cod_rubro ");
 		
 		return sb.toString();
 	}
@@ -808,7 +800,7 @@ public class ConsultasDD {
 	{
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("DELETE FROM m_rubrosxcuenta WHERE cod_rubro = ? AND cod_emp = ?");
+		sb.append("DELETE FROM m_rubrosxcuenta WHERE cod_cuenta = ? AND cod_emp = ?");
 		
 		return sb.toString();
 	}
@@ -827,9 +819,14 @@ public class ConsultasDD {
 	{
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("SELECT cod_rubro, descripcion, fecha_mod, usuario_mod, operacion, activo ");
-		sb.append("FROM m_rubros ");
-		sb.append("WHERE cod_rubro NOT IN (SELECT cod_rubro FROM m_rubrosxcuenta WHERE cod_cuenta = ? AND cod_emp = ?)");
+		sb.append("SELECT m_rubros.cod_rubro, m_rubros.descripcion, m_rubros.fecha_mod, "
+				+ "m_rubros.usuario_mod, m_rubros.operacion, m_rubros.activo, m_rubros.cod_impuesto, "
+				+ "m_tiporubro.cod_tipoRubro, m_tiporubro.descripcion, "
+				+ "m_impuestos.cod_impuesto, m_impuestos.descripcion ");
+		sb.append("FROM m_rubros, m_tiporubro, m_impuestos ");
+		sb.append("WHERE cod_rubro NOT IN (SELECT cod_rubro FROM m_rubrosxcuenta WHERE cod_cuenta = ? AND cod_emp = ?) ");
+		sb.append("AND m_rubros.cod_impuesto = m_impuestos.cod_impuesto AND m_impuestos.cod_emp = m_rubros.cod_emp ");
+		sb.append("AND m_rubros.cod_tipo_rubro = m_tiporubro.cod_tipoRubro AND m_tiporubro.cod_emp = m_rubros.cod_emp");
 		
 		return sb.toString();
 	}
