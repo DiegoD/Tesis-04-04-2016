@@ -19,10 +19,15 @@
      </vaadin-horizontal-layout> 
      <vaadin-text-field caption="Razon Social" width="305px" readonly _id="razonSocial"></vaadin-text-field> 
      <vaadin-horizontal-layout caption="Documento" style-name="name-wrapper" spacing _id="documento_wrapper"> 
+      <vaadin-combo-box item-caption-mode="id" width="110px" _id="comboDocumento"> 
+       <option>Option 1</option> 
+       <option>Option 2</option> 
+       <option>Option 3</option> 
+      </vaadin-combo-box> 
       <vaadin-text-field id="codigoDoc" visible="false" style-name="form-textfield" width="108px" _id="codigoDoc"></vaadin-text-field> 
-      <vaadin-text-field style-name="form-textfield" width="108px" readonly _id="nombreDoc"></vaadin-text-field> 
+      <vaadin-text-field enabled="false" visible="false" style-name="form-textfield" width="108px" readonly _id="nombreDoc"></vaadin-text-field> 
       <vaadin-text-field style-name="form-textfield" _id="numeroDoc"></vaadin-text-field> 
-      <vaadin-button icon="fonticon://FontAwesome/f002" style-name="icon-only borderless quiet" _id="btnBuscarDoc"></vaadin-button> 
+      <vaadin-button visible="false" icon="fonticon://FontAwesome/f002" enabled="false" style-name="icon-only borderless quiet" _id="btnBuscarDoc"></vaadin-button> 
      </vaadin-horizontal-layout> 
      <vaadin-text-field caption="Dirección" responsive width="305px" readonly _id="direccion"></vaadin-text-field> 
      <vaadin-text-field caption="Mail" responsive width="305px" readonly _id="mail"></vaadin-text-field> 

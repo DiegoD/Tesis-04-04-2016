@@ -359,8 +359,6 @@ public class DAOCuentas implements IDAOCuentas{
 			pstmt1.setString(1, codCuenta);
 			pstmt1.setString(2, codEmp);
 			
-			System.out.println(query);
-			
 			ResultSet rs = pstmt1.executeQuery();
 			
 			Rubro rubro;

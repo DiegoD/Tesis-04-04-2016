@@ -161,7 +161,6 @@ public class DAOCotizaciones implements IDAOCotizaciones{
     		pstmt1.setTimestamp(6, cotizacion.getFecha());
     		pstmt1.setString(7, codEmp);
     		
-    		System.out.println(update);
 			pstmt1.executeUpdate ();
 			
 			pstmt1.close ();

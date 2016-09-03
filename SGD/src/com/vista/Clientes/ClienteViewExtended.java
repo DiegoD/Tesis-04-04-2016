@@ -5,17 +5,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import com.controladores.ClienteControlador;
-import com.controladores.ImpuestoControlador;
 import com.excepciones.ConexionException;
-import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
 import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Documentos.ObteniendoDocumentosException;
-import com.excepciones.Impuestos.ExisteImpuestoException;
-import com.excepciones.Impuestos.InsertandoImpuestoException;
-import com.excepciones.Impuestos.ModificandoImpuestoException;
-import com.excepciones.Impuestos.NoExisteImpuestoException;
 import com.excepciones.Impuestos.ObteniendoImpuestosException;
 import com.excepciones.clientes.ExisteClienteExeption;
 import com.excepciones.clientes.ExisteDocumentoClienteException;
@@ -24,15 +18,12 @@ import com.excepciones.clientes.ModificandoClienteException;
 import com.excepciones.clientes.VerificandoClienteException;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.data.validator.DoubleValidator;
+import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.validator.EmailValidator;
-import com.vaadin.data.validator.FloatRangeValidator;
 import com.vaadin.data.validator.StringLengthValidator;
-import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.UI;
 import com.valueObject.DocumDGIVO;
-import com.valueObject.ImpuestoVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.cliente.ClienteVO;
 import com.vista.BusquedaViewExtended;
@@ -42,7 +33,6 @@ import com.vista.MySub;
 import com.vista.PermisosUsuario;
 import com.vista.Variables;
 import com.vista.VariablesPermisos;
-import com.vista.Impuestos.ImpuestosPanelExtended;
 
 public class ClienteViewExtended extends ClienteView implements IBusqueda{
 	
@@ -52,6 +42,7 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 	private ClientesPanelExtended mainView;
 	MySub sub;
 	private PermisosUsuario permisos;
+	UsuarioPermisosVO permisoAux;
 	
 	/**
 	 * Constructor del formulario
@@ -79,7 +70,7 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 				{
 					/*Inicializamos VO de permisos para el usuario, formulario y operacion
 					 * para confirmar los permisos del usuario*/
-					UsuarioPermisosVO permisoAux = 
+					permisoAux = 
 							new UsuarioPermisosVO(this.permisos.getCodEmp(),
 									this.permisos.getUsuario(),
 									VariablesPermisos.FORMULARIO_CLIENTES,
@@ -152,46 +143,46 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 				main.cerrarVentana();
 			});
 			
-			this.btnBuscarDoc.addClickListener(click -> {
-				
-				//ImpuestosHelpExtended form = new ImpuestosHelpExtended(this);
-				
-				BusquedaViewExtended form = new BusquedaViewExtended(this, new DocumDGIVO());
-				ArrayList<Object> lst = new ArrayList<Object>();
-				ArrayList<DocumDGIVO> lstDocumDgi = new ArrayList<DocumDGIVO>();
-				
-				try {
-					
-					lstDocumDgi = this.controlador.obtnerDocumentosDgi();
-					
-				} catch (ObteniendoDocumentosException| ConexionException| InicializandoException e) {
-					
-					Mensajes.mostrarMensajeError(e.getMessage());
-				}
-				Object obj;
-				for (DocumDGIVO i: lstDocumDgi) {
-					obj = new Object();
-					obj = (Object)i;
-					lst.add(obj);
-				}
-				try {
-					form.inicializarGrilla(lst);
-				
-				} catch (ObteniendoImpuestosException| ConexionException| InicializandoException e) {
-					
-					Mensajes.mostrarMensajeError(e.getMessage());
-				}
-				
-				sub = new MySub("60%", "60%" );
-				sub.setModal(true);
-				sub.center();
-				sub.setModal(true);
-				sub.setVista(form);
-				sub.center();
-				sub.setDraggable(true);
-				UI.getCurrent().addWindow(sub);
-				
-			});
+//			this.btnBuscarDoc.addClickListener(click -> {
+//				
+//				//ImpuestosHelpExtended form = new ImpuestosHelpExtended(this);
+//				
+//				BusquedaViewExtended form = new BusquedaViewExtended(this, new DocumDGIVO());
+//				ArrayList<Object> lst = new ArrayList<Object>();
+//				ArrayList<DocumDGIVO> lstDocumDgi = new ArrayList<DocumDGIVO>();
+//				
+//				try {
+//					
+//					lstDocumDgi = this.controlador.obtnerDocumentosDgi();
+//					
+//				} catch (ObteniendoDocumentosException| ConexionException| InicializandoException e) {
+//					
+//					Mensajes.mostrarMensajeError(e.getMessage());
+//				}
+//				Object obj;
+//				for (DocumDGIVO i: lstDocumDgi) {
+//					obj = new Object();
+//					obj = (Object)i;
+//					lst.add(obj);
+//				}
+//				try {
+//					form.inicializarGrilla(lst);
+//				
+//				} catch (ObteniendoImpuestosException| ConexionException| InicializandoException e) {
+//					
+//					Mensajes.mostrarMensajeError(e.getMessage());
+//				}
+//				
+//				sub = new MySub("60%", "60%" );
+//				sub.setModal(true);
+//				sub.center();
+//				sub.setModal(true);
+//				sub.setVista(form);
+//				sub.center();
+//				sub.setDraggable(true);
+//				UI.getCurrent().addWindow(sub);
+//				
+//			});
 		
 	}
 
@@ -200,6 +191,8 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 		this.controlador = new ClienteControlador();
 					
 		this.fieldGroup =  new BeanFieldGroup<ClienteVO>(ClienteVO.class);
+		
+		this.inicializarComboDocumento(null);
 		
 		//Seteamos info del form si es requerido
 		if(fieldGroup != null)
@@ -238,15 +231,17 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 		this.razonSocial.setRequired(setear);
 		this.razonSocial.setRequiredError("Es requerido");
 		
-		this.codigoDoc.setRequired(setear);
-		this.codigoDoc.setRequiredError("Es requerido");
-		
-		this.nombreDoc.setRequired(setear);
-		this.nombreDoc.setRequiredError("Es requerido");
+//		this.codigoDoc.setRequired(setear);
+//		this.codigoDoc.setRequiredError("Es requerido");
+//		
+//		this.nombreDoc.setRequired(setear);
+//		this.nombreDoc.setRequiredError("Es requerido");
 		
 		this.numeroDoc.setRequired(setear);
 		this.numeroDoc.setRequiredError("Es requerido");
 				
+		this.comboDocumento.setRequired(setear);
+		this.comboDocumento.setRequiredError("Es requerido");
 				
 	}
 	
@@ -268,6 +263,9 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 			"Usuario: " + clienteVO.getUsuarioMod() + "<br>" +
 		    "Fecha: " + fecha + "<br>" +
 		    "Operación: " + clienteVO.getOperacion());
+		
+		
+		this.inicializarComboDocumento(clienteVO.getCodigoDoc());
 		
 		/*SETEAMOS LA OPERACION EN MODO LECUTA
 		 * ES CUANDO LLAMAMOS ESTE METODO*/
@@ -298,7 +296,7 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 		}
 		
 		/*Deshabilitamos boton de busqueda de documento*/
-		this.disableBotonBusquedaDoc();
+		//this.disableBotonBusquedaDoc();
 		
 		
 		/*Deshabilitamos boton de aceptar*/
@@ -324,7 +322,7 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 		this.operacion = Variables.OPERACION_EDITAR;
 		
 		/*Habilitamos boton de busqueda de documento*/
-		this.enableBotonBusquedaDoc();
+		//this.enableBotonBusquedaDoc();
 		
 		/*Verificamos que tenga permisos*/
 		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_CLIENTES, VariablesPermisos.OPERACION_NUEVO_EDITAR);
@@ -359,7 +357,7 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 	private void iniFormNuevo()
 	{
 		/*Habilitamos boton busquedad de documento*/
-		this.enableBotonBusquedaDoc();
+		//this.enableBotonBusquedaDoc();
 		
 		/*Chequeamos si tiene permiso de editar*/
 		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_CLIENTES, VariablesPermisos.OPERACION_NUEVO_EDITAR);
@@ -390,6 +388,11 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 		
 		/*Como es en operacion nuevo, dejamos todos los campos editabls*/
 		this.readOnlyFields(false);
+		this.enableCombos();
+	}
+	
+	private void enableCombos(){
+		this.comboDocumento.setEnabled(true);
 	}
 	
 	/**
@@ -402,7 +405,7 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 	private void setearFieldsEditar()
 	{
 		this.razonSocial.setReadOnly(false);
-		this.nombreDoc.setReadOnly(false);
+		//this.nombreDoc.setReadOnly(false);
 		this.numeroDoc.setReadOnly(false);
 		this.nombre.setReadOnly(false);
 		this.tel.setReadOnly(false);
@@ -411,11 +414,12 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 		this.activo.setReadOnly(false);
 		
 		/*Codigo y nombre de documento no los dejamos editar*/
-		this.codigoDoc.setReadOnly(true);
+		//this.codigoDoc.setReadOnly(true);
 		this.nombreDoc.setReadOnly(true);
 		
 		/*El codigo del cliente tampodo lo dejamos editar*/
-		this.codigo.setReadOnly(true); 
+		this.codigo.setReadOnly(true);
+		this.comboDocumento.setEnabled(true);
 	}
 	
 	
@@ -465,21 +469,21 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 	 * Deshabilitamos el boton busqueda documento
 	 *
 	 */
-	private void disableBotonBusquedaDoc()
-	{
-		this.btnBuscarDoc.setEnabled(false);
-		this.btnBuscarDoc.setVisible(false);
-	}
+//	private void disableBotonBusquedaDoc()
+//	{
+//		this.btnBuscarDoc.setEnabled(false);
+//		this.btnBuscarDoc.setVisible(false);
+//	}
 	
 	/**
 	 * habilitamos el boton busqueda documento
 	 *
 	 */
-	private void enableBotonBusquedaDoc()
-	{
-		this.btnBuscarDoc.setEnabled(true);
-		this.btnBuscarDoc.setVisible(true);
-	}
+//	private void enableBotonBusquedaDoc()
+//	{
+//		this.btnBuscarDoc.setEnabled(true);
+//		this.btnBuscarDoc.setVisible(true);
+//	}
 	
 	
 	/**
@@ -491,13 +495,14 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 	{
 		this.codigo.setReadOnly(true); /*Codigo siempre true*/
 		this.razonSocial.setReadOnly(setear);
-		this.nombreDoc.setReadOnly(true); /*Nombre doc siempre true*/
+		//this.nombreDoc.setReadOnly(true); /*Nombre doc siempre true*/
 		this.numeroDoc.setReadOnly(setear);
 		this.nombre.setReadOnly(setear);
 		this.tel.setReadOnly(setear);
 		this.direccion.setReadOnly(setear);
 		this.mail.setReadOnly(setear);
 		this.activo.setReadOnly(setear);
+		this.comboDocumento.setEnabled(false);
 				
 	}
 	
@@ -555,11 +560,12 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 			if(this.codigo.isValid() &&
 				this.razonSocial.isValid() &&
 				//this.codigoDoc.isValid() &&
-				this.nombreDoc.isValid() &&
+				//this.nombreDoc.isValid() &&
 				this.numeroDoc.isValid() &&
 				this.nombre.isValid() &&
 				this.tel.isValid() &&
 				this.direccion.isValid() &&
+				this.comboDocumento.isValid() &&
 				this.mail.isValid() 
 			){
 				valido = true;
@@ -597,11 +603,13 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 			String direccion = this.direccion.getValue().toString().trim();
 			String mail = this.mail.getValue().toString().trim();
 			boolean activo = this.activo.getValue().booleanValue();
-			String codigoDoc = this.codigoDoc.getValue().toString().trim();
+			//String codigoDoc = this.codigoDoc.getValue().toString().trim();
 			
 					
+			DocumDGIVO auxdocumento = new DocumDGIVO();
+			auxdocumento = (DocumDGIVO) this.comboDocumento.getValue();
 			
-			String nombreDoc = this.nombreDoc.getValue().toString().trim();
+			//String nombreDoc = this.nombreDoc.getValue().toString().trim();
 			String numeroDoc = this.numeroDoc.getValue().toString().trim();
 			String razonSocial = this.razonSocial.getValue().toString().trim();
 			
@@ -613,8 +621,12 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 			cliente.setDireccion(direccion);
 			cliente.setMail(mail);
 			cliente.setActivo(activo);
-			cliente.setCodigoDoc(codigoDoc);
-			cliente.setNombreDoc(nombreDoc);
+			//cliente.setCodigoDoc(codigoDoc);
+			//cliente.setNombreDoc(nombreDoc);
+			
+			cliente.setCodigoDoc(auxdocumento.getcodDocumento());
+			cliente.setNombreDoc(auxdocumento.getdescripcion());
+			
 			cliente.setNumeroDoc(numeroDoc);
 			cliente.setRazonSocial(razonSocial);
 			
@@ -641,16 +653,16 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 		if(datos instanceof DocumDGIVO){
 			DocumDGIVO documDgi = (DocumDGIVO) datos;
 			
-			/*Seteamos readOnly en false para que no de error al querer modificarlos*/
-			this.codigoDoc.setReadOnly(false);
-			this.nombreDoc.setReadOnly(false);
-			
-			this.codigoDoc.setValue(documDgi.getcodDocumento());
-			this.nombreDoc.setValue(documDgi.getdescripcion());
-			
-			/*Volvemos a setearlos como readOnly*/
-			this.codigoDoc.setReadOnly(true);
-			this.nombreDoc.setReadOnly(true);
+//			/*Seteamos readOnly en false para que no de error al querer modificarlos*/
+//			this.codigoDoc.setReadOnly(false);
+//			this.nombreDoc.setReadOnly(false);
+//			
+//			this.codigoDoc.setValue(documDgi.getcodDocumento());
+//			this.nombreDoc.setValue(documDgi.getdescripcion());
+//			
+//			/*Volvemos a setearlos como readOnly*/
+//			this.codigoDoc.setReadOnly(true);
+//			this.nombreDoc.setReadOnly(true);
 		}
 		
 	}
@@ -661,4 +673,39 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 		UI.getCurrent().removeWindow(sub);
 	}
 
+	
+	public void inicializarComboDocumento(String cod){
+		
+		BeanItemContainer<DocumDGIVO> documentosObj = new BeanItemContainer<DocumDGIVO>(DocumDGIVO.class);
+		DocumDGIVO documento = new DocumDGIVO();
+		ArrayList<DocumDGIVO> lstDocumentos = new ArrayList<DocumDGIVO>();
+		
+		try {
+			permisoAux = 
+					new UsuarioPermisosVO(this.permisos.getCodEmp(),
+							this.permisos.getUsuario(),
+							VariablesPermisos.FORMULARIO_COTIZACIONES,
+							VariablesPermisos.OPERACION_NUEVO_EDITAR);
+			lstDocumentos = this.controlador.obtnerDocumentosDgi();
+			
+		} catch (ObteniendoDocumentosException | ConexionException | InicializandoException e) {
+
+			Mensajes.mostrarMensajeError(e.getMessage());
+		}
+		
+		for (DocumDGIVO documentoVO : lstDocumentos) {
+			
+			documentosObj.addBean(documentoVO);
+			
+			if(cod != null){
+				if(cod.equals(documentoVO.getcodDocumento())){
+					documento = documentoVO;
+				}
+			}
+		}
+		
+		this.comboDocumento.setContainerDataSource(documentosObj);
+		this.comboDocumento.setItemCaptionPropertyId("descripcion");
+		this.comboDocumento.setValue(documento);
+	}
 }
