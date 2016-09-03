@@ -1,6 +1,7 @@
 package com.valueObject.banco;
 
 import com.valueObject.AuditoriaVO;
+import com.valueObject.MonedaVO;
 
 public class CtaBcoVO extends AuditoriaVO{
 
@@ -8,6 +9,7 @@ public class CtaBcoVO extends AuditoriaVO{
 	private String nombre;
 	private String codBco;
 	private String codEmp;
+	private MonedaVO monedaVO;
 	private boolean activo;
 	
 	public CtaBcoVO(){}
@@ -19,6 +21,7 @@ public class CtaBcoVO extends AuditoriaVO{
 		this.codBco = vo.codBco;
 		this.codEmp = vo.codEmp;
 		this.activo = vo.activo;
+		this.monedaVO.copiar(vo.monedaVO);
 	}
 	
 	public String getCodigo() {
@@ -51,7 +54,13 @@ public class CtaBcoVO extends AuditoriaVO{
 	public void setActivo(boolean activo) {
 		this.activo = activo;
 	}
-	
-	
+
+	public MonedaVO getMonedaVO() {
+		return monedaVO;
+	}
+
+	public void setMonedaVO(MonedaVO monedaVO) {
+		this.monedaVO = monedaVO;
+	}
 	
 }

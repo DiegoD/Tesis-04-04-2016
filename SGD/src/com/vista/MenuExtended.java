@@ -14,6 +14,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.valueObject.FormularioVO;
 import com.vista.Documentos.DocumentosPanelExtended;
 //import com.vista.Clientes.ClienteView;
+import com.vista.Bancos.BancosPanelExtended;
 import com.vista.Clientes.ClientesPanelExtended;
 import com.vista.CodigosGeneralizados.CodigosGeneralizadosPanelExtended;
 import com.vista.Cotizaciones.CotizacionesPanelExtended;
@@ -309,6 +310,20 @@ public class MenuExtended extends Menu{
 			}
 		});
 		
+		this.bancos.addClickListener(click -> {
+			
+			setSizeFull();
+			
+			this.content.removeAllComponents();
+			try {
+				
+				BancosPanelExtended u = new BancosPanelExtended(); 
+				this.content.addComponent(u);
+				
+			} catch (Exception e) {
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}
+		});
 	}
 	
 	
@@ -360,6 +375,7 @@ public class MenuExtended extends Menu{
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_COTIZACIONES) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_TIPORUBROS) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_CUENTAS) ||
+				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_BANCOS) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_RUBROS))
 			{
 				lstFormsMenuMant.add(formularioVO);
@@ -433,6 +449,12 @@ public class MenuExtended extends Menu{
 					case VariablesPermisos.FORMULARIO_CUENTAS:
 						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_CUENTAS, VariablesPermisos.OPERACION_LEER))
 							this.habilitarCuentas();
+						
+					break;
+					
+					case VariablesPermisos.FORMULARIO_BANCOS:
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_BANCOS, VariablesPermisos.OPERACION_LEER))
+							this.habilitarBancos();
 						
 					break;
 				}
@@ -545,6 +567,9 @@ public class MenuExtended extends Menu{
 		
 		this.cuentas.setVisible(false);
 		this.cuentas.setEnabled(false);
+		
+		this.bancos.setVisible(false);
+		this.bancos.setEnabled(false);
 	}
 	
 	
@@ -635,6 +660,12 @@ public class MenuExtended extends Menu{
 		this.cuentas.setVisible(true);
 		this.cuentas.setEnabled(true);
 		this.tabMantenimientos.addComponent(cuentas);
+	}
+	
+	private void habilitarBancos(){
+		this.bancos.setVisible(true);
+		this.bancos.setEnabled(true);
+		this.tabMantenimientos.addComponent(bancos);
 	}
 	
 	public PermisosUsuario getPermisosUsuario()

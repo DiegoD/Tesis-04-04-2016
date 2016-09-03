@@ -1,0 +1,346 @@
+package com.vista.Bancos;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+
+import com.controladores.BancoControlador;
+import com.controladores.GrupoControlador;
+import com.excepciones.ConexionException;
+import com.excepciones.ErrorInesperadoException;
+import com.excepciones.InicializandoException;
+import com.excepciones.NoTienePermisosException;
+import com.excepciones.ObteniendoPermisosException;
+import com.excepciones.Bancos.ObteniendoBancosException;
+import com.excepciones.Bancos.ObteniendoCuentasBcoException;
+import com.excepciones.grupos.ObteniendoFormulariosException;
+import com.excepciones.grupos.ObteniendoGruposException;
+import com.vaadin.data.util.BeanItem;
+import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.util.filter.SimpleStringFilter;
+import com.vaadin.event.SelectionEvent;
+import com.vaadin.event.SelectionEvent.SelectionListener;
+import com.vaadin.server.VaadinService;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
+import com.valueObject.GrupoVO;
+import com.valueObject.UsuarioPermisosVO;
+import com.valueObject.banco.BancoVO;
+import com.vista.Mensajes;
+import com.vista.MySub;
+import com.vista.PermisosUsuario;
+import com.vista.Variables;
+import com.vista.VariablesPermisos;
+import com.vista.Grupos.GrupoViewExtended;
+import com.vista.Grupos.GruposPanelExtended;
+
+public class BancosPanelExtended extends BancosPanel{
+
+	private BancoViewExtended form; 
+	private ArrayList<BancoVO> lstBancos; /*Lista con los grupos*/
+	private BeanItemContainer<BancoVO> container;
+	private BancoControlador controlador;
+	PermisosUsuario permisos;
+	MySub sub = new MySub("75%", "65%");
+	
+	public BancosPanelExtended(){
+		
+		controlador = new BancoControlador();
+		this.lstBancos = new ArrayList<BancoVO>();
+		
+		String usuario = (String)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("usuario");
+		this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
+		
+			
+        /*Verificamos que el usuario tenga permisos de lectura para mostrar la vista*/
+		boolean permisoLectura = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_BANCOS, VariablesPermisos.OPERACION_LEER);
+		
+		if(permisoLectura){
+        
+			try {
+				
+				this.inicializarGrilla();
+				
+				/*Para el boton de nuevo, verificamos que tenga permisos de nuevoEditar*/
+				boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_BANCOS, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+				if(permisoNuevoEditar)
+				{
+				
+					this.btnNuevo.addClickListener(click -> {
+						
+							sub = new MySub("75%", "70%");
+							form = new BancoViewExtended(Variables.OPERACION_NUEVO, this);
+							sub.setModal(true);
+							sub.setVista(form);
+							
+							UI.getCurrent().addWindow(sub);
+						
+					});
+				}else{
+					/*Si no tiene permisos ocultamos boton de nuevo*/
+					this.deshabilitarBotonNuevo();
+				}
+					
+				
+			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+				
+				Mensajes.mostrarMensajeError("Ha ocurrido un error inesperado");
+				
+			} catch(Exception e)
+			{
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}
+		}else {
+			
+			/*Si no tiene permisos mostramos mensaje*/
+			Mensajes.mostrarMensajeError(Variables.USUSARIO_SIN_PERMISOS);
+		}
+	}
+	
+	private void inicializarGrilla() throws InstantiationException, IllegalAccessException, ClassNotFoundException, FileNotFoundException, IOException{
+		
+									
+		this.container = 
+				new BeanItemContainer<BancoVO>(BancoVO.class);
+		
+		//Obtenemos lista de grupos del sistema
+		this.lstBancos = this.getBancos(); 
+		
+		for (BancoVO bcoVO : lstBancos) {
+			container.addBean(bcoVO);
+		}
+		
+		gridBancos.setContainerDataSource(container);
+		
+		//Quitamos las columnas de la grilla de auditoria
+		this.ocultarColumnasGrilla();
+		
+		/*Agregamos los filtros a la grilla*/
+		this.filtroGrilla();
+		
+		gridBancos.addSelectionListener(new SelectionListener() {
+						
+		    @Override
+		    public void select(SelectionEvent event) {
+		       
+		    	try{
+		    		
+		    		if(gridBancos.getSelectedRow() != null){
+		    			BeanItem<BancoVO> item = container.getItem(gridBancos.getSelectedRow());
+				    	
+				    	/*Puede ser null si accedemos luego de haberlo agregado, ya que no va a la base*/
+				    	if(item.getBean().getFechaMod() == null)
+				    	{
+				    		item.getBean().setFechaMod(new Timestamp(System.currentTimeMillis()));
+				    	}
+							
+						form = new BancoViewExtended(Variables.OPERACION_LECTURA, BancosPanelExtended.this);
+						//form.fieldGroup.setItemDataSource(item);
+						sub = new MySub("65%","70%");
+						sub.setModal(true);
+						sub.setVista(form);
+						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
+						form.setDataSourceFormulario(item);
+						form.setLstCtas(item.getBean().getLstCtas());
+						
+						UI.getCurrent().addWindow(sub);
+		    		}
+			    	
+				}
+		    	
+		    	catch(Exception e){
+			    	Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			    }
+		      
+		    }
+		});
+		
+	}
+	
+	/**
+	 * Obtenemos grupos del sistema
+	 *
+	 */
+	private ArrayList<BancoVO> getBancos(){
+		
+		ArrayList<BancoVO> lstGrupos = new ArrayList<BancoVO>();
+
+		try {
+			
+			/*Inicializamos VO de permisos para el usuario, formulario y operacion
+			 * para confirmar los permisos del usuario*/
+			UsuarioPermisosVO permisoAux = 
+					new UsuarioPermisosVO(this.permisos.getCodEmp(),
+							this.permisos.getUsuario(),
+							VariablesPermisos.FORMULARIO_GRUPO,
+							VariablesPermisos.OPERACION_LEER);
+
+			
+			lstGrupos = controlador.getBancosTodos(permisoAux);
+
+		} catch (InicializandoException | ConexionException | ObteniendoPermisosException | NoTienePermisosException | ObteniendoBancosException | ObteniendoCuentasBcoException e) {
+			
+			Mensajes.mostrarMensajeError(e.getMessage());
+		}
+		
+			
+		return lstGrupos;
+	}
+	
+	/**
+	 * Actualizamos Grilla si se agrega o modigfica un grupo
+	 * desde GrupoViewExtended
+	 *
+	 */
+	public void actulaizarGrilla(BancoVO bancoVO)
+	{
+
+		/*Si esta el grupo en la lista, es una acutalizacion
+		 * y modificamos el objeto en la lista*/
+		if(this.existeGrupoenLista(bancoVO.getCodigo()))
+		{
+			this.actualizarGrupoenLista(bancoVO);
+		}
+		else  /*De lo contrario es uno nuevo y lo agregamos a la lista*/
+		{
+			this.lstBancos.add(bancoVO);
+		}
+			
+		/*Actualizamos la grilla*/
+		this.container.removeAllItems();
+		this.container.addAll(this.lstBancos);
+		
+		this.gridBancos.setContainerDataSource(container);
+
+	}
+	
+	
+	/**
+	 * Modificamos un grupoVO de la lista cuando
+	 * se hace una acutalizacion de un Grupo
+	 *
+	 */
+	private void actualizarGrupoenLista(BancoVO bancoVO)
+	{
+		int i =0;
+		boolean salir = false;
+		
+		BancoVO bancoEnLista;
+		
+		while( i < this.lstBancos.size() && !salir)
+		{
+			bancoEnLista = this.lstBancos.get(i);
+			if(bancoVO.getCodigo().equals(bancoEnLista.getCodigo()))
+			{
+				//this.lstGrupos.get(i).setNomGrupo(grupoVO.getNomGrupo());
+				
+				this.lstBancos.get(i).copiar(bancoVO);
+
+				salir = true;
+			}
+			
+			i++;
+		}
+		
+	}
+	
+	/**
+	 * Retornanoms true si esta el grupoVO en la lista
+	 * de grupos de la vista
+	 *
+	 */
+	private boolean existeGrupoenLista(String codBanco)
+	{
+		int i =0;
+		boolean esta = false;
+		
+		BancoVO aux;
+		
+		while( i < this.lstBancos.size() && !esta)
+		{
+			aux = this.lstBancos.get(i);
+			if(codBanco.equals(aux.getCodigo()))
+			{
+				esta = true;
+			}
+			
+			i++;
+		}
+		
+		return esta;
+	}
+	
+	private void filtroGrilla()
+	{
+		try
+		{
+		
+			com.vaadin.ui.Grid.HeaderRow filterRow = gridBancos.appendHeaderRow();
+	
+			// Set up a filter for all columns
+			for (Object pid: gridBancos.getContainerDataSource()
+			                     .getContainerPropertyIds()) 
+			{
+			    
+				com.vaadin.ui.Grid.HeaderCell cell = filterRow.getCell(pid);
+			    
+			    if(cell != null)
+				{
+				    /*Agregar field para usar el filtro*/
+				    TextField filterField = new TextField();
+				    filterField.setImmediate(true);
+				    filterField.setWidth("100%");
+				    filterField.setHeight("80%");
+				    filterField.setInputPrompt("Filtro");
+				     /*Actualizar el filtro cuando este tenga un cambio en texto*/
+				    filterField.addTextChangeListener(change -> {
+				        
+				    	/*No se pueden modificar los filtros,
+				    	 * necesitamos reemplazarlos*/
+				    	this.container.removeContainerFilters(pid);
+		
+				    	/*Hacemos nuevamente el filtro si es necesario*/
+				        if (! change.getText().isEmpty())
+				        	this.container.addContainerFilter(
+				                new SimpleStringFilter(pid,
+				                    change.getText(), true, false));
+				    });
+
+				    cell.setComponent(filterField);
+				}
+			}
+			
+		}catch(Exception e)
+		{
+			 System.out.println(e.getStackTrace());
+		}
+	}
+	
+	private void deshabilitarBotonNuevo()
+	{
+		this.btnNuevo.setVisible(false);
+		this.btnNuevo.setEnabled(false);
+	}
+	
+	
+	public void cerrarVentana()
+	{
+		UI.getCurrent().removeWindow(sub);
+	}
+	
+	public void mostrarMensaje(String msj)
+	{
+		Mensajes.mostrarMensajeError(msj);
+	}
+	
+	private void ocultarColumnasGrilla()
+	{
+		gridBancos.getColumn("fechaMod").setHidden(true);
+		gridBancos.getColumn("usuarioMod").setHidden(true);
+		gridBancos.getColumn("operacion").setHidden(true);
+		gridBancos.getColumn("activo").setHidden(true);
+		gridBancos.getColumn("lstCtas").setHidden(true);
+	}
+	
+}

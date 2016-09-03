@@ -26,12 +26,6 @@ import com.vista.Grupos.GrupoViewExtended;
 
 public class GrupoControlador {
 
-	private GrupoViewExtended vista;
-	
-	public GrupoControlador(GrupoViewExtended view)
-	{
-		this.vista = view;
-	}
 	
 	public GrupoControlador()
 	{

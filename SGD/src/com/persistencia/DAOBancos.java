@@ -10,6 +10,7 @@ import com.excepciones.ConexionException;
 import com.excepciones.Bancos.*;
 import com.logica.Banco;
 import com.logica.CtaBco;
+import com.logica.Moneda;
 import com.mysql.jdbc.Statement;
 
 public class DAOBancos implements IDAOBancos{
@@ -34,7 +35,6 @@ public class DAOBancos implements IDAOBancos{
 			
 			Banco aux;
 			while(rs.next ()) {
-				
 							
 				aux = new Banco();
 				
@@ -276,6 +276,7 @@ public class DAOBancos implements IDAOBancos{
 			rs = pstmt1.executeQuery();
 			
 			CtaBco aux;
+			Moneda monedaAux;
 			while(rs.next ()) {
 				
 							
@@ -292,7 +293,17 @@ public class DAOBancos implements IDAOBancos{
 				aux.setOperacion(rs.getString("operacion"));
 				aux.setFechaMod(rs.getTimestamp("fecha_mod"));
 				
-							
+				monedaAux = new Moneda();
+				monedaAux.setAcepta_cotizacion(rs.getBoolean("acepta_cotizacion"));
+				monedaAux.setActivo(rs.getBoolean("activoMoneda"));
+				monedaAux.setCod_moneda(rs.getString("cod_moneda"));
+				monedaAux.setDescripcion(rs.getString("descripcion"));
+				monedaAux.setFechaMod(rs.getTimestamp("m_fecha_mod"));
+				monedaAux.setUsuarioMod(rs.getString("m_usuario_mod"));
+				monedaAux.setOperacion(rs.getString("m_operacion"));
+				monedaAux.setSimbolo(rs.getString("simbolo"));
+				
+				aux.setMoneda(monedaAux);
 				
 				lstCtaBancos.add(aux);
 				

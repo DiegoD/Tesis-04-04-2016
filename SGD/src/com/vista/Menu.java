@@ -40,6 +40,7 @@ public class Menu extends HorizontalLayout {
 	protected Button cotizaciones;
 	protected Button tipoRubros;
 	protected Button cuentas;
+	protected Button bancos;
 	protected Accordion acordion;
 	protected VerticalLayout content;
 

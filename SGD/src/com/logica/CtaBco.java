@@ -1,5 +1,6 @@
 package com.logica;
 
+import com.valueObject.MonedaVO;
 import com.valueObject.banco.CtaBcoVO;
 
 public class CtaBco extends Auditoria{
@@ -10,6 +11,10 @@ public class CtaBco extends Auditoria{
 	private String codEmp;
 	private boolean activo;
 	
+	private Moneda moneda;
+	
+	
+
 	public CtaBco(){}
 	
 	public CtaBco(CtaBcoVO vo){
@@ -19,6 +24,7 @@ public class CtaBco extends Auditoria{
 		this.codBco = vo.getCodBco();
 		this.codEmp = vo.getCodEmp();
 		this.activo = vo.isActivo();
+		this.moneda = new Moneda(vo.getMonedaVO());
 		
 	}
 	
@@ -29,12 +35,14 @@ public class CtaBco extends Auditoria{
 	public CtaBcoVO getCtaBcoVO()
 	{
 		CtaBcoVO vo = new CtaBcoVO();
-		
+
 		vo.setCodigo(this.codigo);
 		vo.setNombre(this.nombre);
 		vo.setCodBco(this.codBco);
 		vo.setCodEmp(this.codEmp);
 		vo.setActivo(this.activo);
+		
+		vo.setMonedaVO(this.moneda.getMonedaVO());
 		
 		return vo;
 	}
@@ -70,4 +78,11 @@ public class CtaBco extends Auditoria{
 		this.activo = activo;
 	}
 	
+	public Moneda getMoneda() {
+		return moneda;
+	}
+
+	public void setMoneda(Moneda moneda) {
+		this.moneda = moneda;
+	}
 }

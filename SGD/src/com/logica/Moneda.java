@@ -35,6 +35,28 @@ public class Moneda extends Auditoria{
 		this.activo = monedaVO.isActivo();
 
 	}
+	
+	
+	/**
+	*Nos retorna un MonedaVO
+	*
+	*/
+	public MonedaVO getMonedaVO(){
+		
+		MonedaVO aux = new MonedaVO();
+		
+		aux.setCodMoneda(this.cod_moneda);
+		aux.setDescripcion(this.descripcion);
+		aux.setSimbolo(this.simbolo);
+		aux.setAceptaCotizacion(this.acepta_cotizacion);
+		aux.setActivo(this.activo);
+		aux.setUsuarioMod(this.getUsuarioMod());
+		aux.setFechaMod(this.getFechaMod());
+		aux.setOperacion(this.getOperacion());
+		
+		return aux;
+	}
+	
 	public String getCod_moneda() {
 		return cod_moneda;
 	}

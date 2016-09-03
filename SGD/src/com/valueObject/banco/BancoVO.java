@@ -2,7 +2,9 @@ package com.valueObject.banco;
 
 import java.util.ArrayList;
 
-public class BancoVO {
+import com.valueObject.AuditoriaVO;
+
+public class BancoVO extends AuditoriaVO{
 
 	private String codigo;
 	private String nombre;
