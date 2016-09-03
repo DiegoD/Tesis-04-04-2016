@@ -241,6 +241,17 @@ public class ConsultasDD {
 		return sb.toString();
 	}
 	
+	
+	public String getImpuestosActivos(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_impuesto, descripcion, porcentaje, activo, fecha_mod, usuario_mod, operacion ");
+		sb.append("FROM m_impuestos WHERE cod_emp = ? and activo = 1 ");
+		
+		return sb.toString();
+	}
+	
 	public String insertarImpuesto()
     {
     	
@@ -308,6 +319,16 @@ public class ConsultasDD {
 		
 		sb.append("SELECT cod_moneda, descripcion, simbolo, acepta_cotizacion, activo, fecha_mod, usuario_mod, operacion ");
 		sb.append("FROM m_monedas WHERE cod_emp = ?");
+		
+		return sb.toString();
+	}
+	
+	public String getMonedasActivas(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_moneda, descripcion, simbolo, acepta_cotizacion, activo, fecha_mod, usuario_mod, operacion ");
+		sb.append("FROM m_monedas WHERE cod_emp = ? and activo = 1 ");
 		
 		return sb.toString();
 	}
@@ -425,6 +446,16 @@ public class ConsultasDD {
 		sb.append("SELECT cod_rubro, descripcion, activo, fecha_mod, usuario_mod, operacion, cod_impuesto, cod_tipo_rubro, cod_emp ");
 		sb.append("FROM m_rubros ");
 		sb.append("WHERE cod_emp = ? ");
+		return sb.toString();
+	}
+	
+	public String getRubrosActivos(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_rubro, descripcion, activo, fecha_mod, usuario_mod, operacion, cod_impuesto, cod_tipo_rubro, cod_emp ");
+		sb.append("FROM m_rubros ");
+		sb.append("WHERE cod_emp = ? and activo = 1 ");
 		return sb.toString();
 	}
 
@@ -660,6 +691,16 @@ public class ConsultasDD {
 		
 		return sb.toString();
 	}
+	
+	public String getTipoRubrosActivos(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_tiporubro, descripcion, fecha_mod, usuario_mod, operacion, activo, cod_emp ");
+		sb.append("FROM m_tipoRubro WHERE cod_emp = ? and activo = 1 ");
+		
+		return sb.toString();
+	}
 
 	public String insertarTipoRubro()
 	{
@@ -826,7 +867,8 @@ public class ConsultasDD {
 		sb.append("FROM m_rubros, m_tiporubro, m_impuestos ");
 		sb.append("WHERE cod_rubro NOT IN (SELECT cod_rubro FROM m_rubrosxcuenta WHERE cod_cuenta = ? AND cod_emp = ?) ");
 		sb.append("AND m_rubros.cod_impuesto = m_impuestos.cod_impuesto AND m_impuestos.cod_emp = m_rubros.cod_emp ");
-		sb.append("AND m_rubros.cod_tipo_rubro = m_tiporubro.cod_tipoRubro AND m_tiporubro.cod_emp = m_rubros.cod_emp");
+		sb.append("AND m_rubros.cod_tipo_rubro = m_tiporubro.cod_tipoRubro AND m_tiporubro.cod_emp = m_rubros.cod_emp "
+				+ "AND m_rubros.activo = 1 ");
 		
 		return sb.toString();
 	}

@@ -388,6 +388,59 @@ public class FachadaDD {
     }
     
     /**
+   	 * Obtiene todos los impuestos existentes ACTIVOS
+   	 */
+       @SuppressWarnings("unchecked")
+   	public ArrayList<ImpuestoVO> getImpuestosActivos(String codEmp) throws ObteniendoImpuestosException, ConexionException
+    {
+       	
+       	Connection con = null;
+       	
+       	ArrayList<Impuesto> lstImpuestos;
+       	ArrayList<ImpuestoVO> lstImpuestoVO = new ArrayList<ImpuestoVO>();
+       	    	
+       	try
+       	{
+       		con = this.pool.obtenerConeccion();
+       		
+       		lstImpuestos = this.impuestos.getImpuestosActivos(codEmp, con);
+       		
+       		
+       		ImpuestoVO aux;
+       		for (Impuesto impuesto : lstImpuestos) 
+   			{
+       			aux = new ImpuestoVO();
+       			
+       			aux.setcodImpuesto(impuesto.getCod_imp());
+       			aux.setDescripcion(impuesto.getDescripcion());
+       			aux.setPorcentaje(impuesto.getPorcentaje());
+       			aux.setActivo(impuesto.isActivo());
+       			aux.setFechaMod(impuesto.getFechaMod());
+       			aux.setOperacion(impuesto.getOperacion());
+       			aux.setUsuarioMod(impuesto.getUsuarioMod());
+       			
+       			lstImpuestoVO.add(aux);
+   			}
+   	
+       	}
+       	catch(ObteniendoImpuestosException e){
+       		throw e;
+       		
+       	} 
+       	catch (ConexionException e) {
+   			
+       		throw e;
+       	} 
+       	finally
+       	{
+       		this.pool.liberarConeccion(con);
+       	}
+       	    
+       	
+       	return lstImpuestoVO;
+       }
+    
+    /**
 	 * Inserta un impuesto en la base
 	 * Valida que no exista un impuesto con el mismo código
 	 */
@@ -531,6 +584,62 @@ public class FachadaDD {
     	
     	return lstMonedasVO;
     }
+    
+    
+    /**
+	 * Obtiene todos las monedas existentes
+	 */
+    @SuppressWarnings("unchecked")
+	public ArrayList<MonedaVO> getMonedasActivas(String codEmp) throws ObteniendoMonedaException, ConexionException
+    {
+    	
+    	Connection con = null;
+    	
+    	ArrayList<Moneda> lstMonedas;
+    	ArrayList<MonedaVO> lstMonedasVO = new ArrayList<MonedaVO>();
+    	    	
+    	try
+    	{
+    		con = this.pool.obtenerConeccion();
+    		
+    		lstMonedas = this.monedas.getMonedasActivas(codEmp, con);
+    		
+    		
+    		MonedaVO aux;
+    		for (Moneda moneda : lstMonedas) 
+			{
+    			aux = new MonedaVO();
+    			
+    			aux.setCodMoneda(moneda.getCod_moneda());
+    			aux.setDescripcion(moneda.getDescripcion());
+    			aux.setSimbolo(moneda.getSimbolo());
+    			aux.setAceptaCotizacion(moneda.isAcepta_cotizacion());
+    			aux.setActivo(moneda.isActivo());
+    			aux.setFechaMod(moneda.getFechaMod());
+    			aux.setOperacion(moneda.getOperacion());
+    			aux.setUsuarioMod(moneda.getUsuarioMod());
+    			
+    			lstMonedasVO.add(aux);
+			}
+	
+    	}
+    	catch(ObteniendoMonedaException e){
+    		throw e;
+    		
+    	} 
+    	catch (ConexionException e) {
+			
+    		throw e;
+    	} 
+    	finally
+    	{
+    		this.pool.liberarConeccion(con);
+    	}
+    	    
+    	
+    	return lstMonedasVO;
+    }
+    
     
     /**
 	 * Inserta un impuesto en la base
@@ -822,6 +931,63 @@ public class FachadaDD {
     		con = this.pool.obtenerConeccion();
     		
     		lstRubros = this.rubros.getRubros(cod_emp, con);
+    		
+    		
+    		RubroVO aux;
+    		for (Rubro rubro : lstRubros) 
+			{
+    			aux = new RubroVO();
+    			
+    			aux.setcodRubro(rubro.getCod_rubro());
+    			aux.setDescripcion(rubro.getDescripcion());
+    			aux.setActivo(rubro.isActivo());
+    			aux.setFechaMod(rubro.getFechaMod());
+    			aux.setOperacion(rubro.getOperacion());
+    			aux.setUsuarioMod(rubro.getUsuarioMod());
+    			aux.setCodigoImpuesto(rubro.getImpuesto().getCod_imp());
+    			aux.setDescripcionImpuesto(rubro.getImpuesto().getDescripcion());
+    			aux.setPorcentajeImpuesto(rubro.getImpuesto().getPorcentaje());
+    			aux.setDescripcionTipoRubro(rubro.getTipoRubro().getDescripcion());
+    			aux.setCodTipoRubro(rubro.getTipoRubro().getCod_tipoRubro());
+    			
+    			lstRubrosVO.add(aux);
+			}
+	
+    	}
+    	catch(ObteniendoRubrosException e){
+    		throw e;
+    		
+    	} 
+    	catch (ConexionException e) {
+			
+    		throw e;
+    	} 
+    	finally
+    	{
+    		this.pool.liberarConeccion(con);
+    	}
+    	    
+    	
+    	return lstRubrosVO;
+    }
+    
+    /**
+	 * Obtiene todos los rubros existentes
+	 */
+    @SuppressWarnings("unchecked")
+	public ArrayList<RubroVO> getRubrosActivos(String cod_emp) throws ObteniendoRubrosException, ConexionException
+    {
+    	
+    	Connection con = null;
+    	
+    	ArrayList<Rubro> lstRubros;
+    	ArrayList<RubroVO> lstRubrosVO = new ArrayList<RubroVO>();
+    	    	
+    	try
+    	{
+    		con = this.pool.obtenerConeccion();
+    		
+    		lstRubros = this.rubros.getRubrosActivos(cod_emp, con);
     		
     		
     		RubroVO aux;
@@ -1510,6 +1676,58 @@ public class FachadaDD {
     		con = this.pool.obtenerConeccion();
     		
     		lstTipoRubros = this.tipoRubros.getTipoRubros(con, cod_emp); 
+    		
+    		TipoRubroVO aux;
+    		for (TipoRubro tipoRubro : lstTipoRubros) 
+			{
+    			aux = new TipoRubroVO();
+    			
+    			aux.setCodTipoRubro(tipoRubro.getCod_tipoRubro());
+    			aux.setDescripcion(tipoRubro.getDescripcion());
+    			aux.setActivo(tipoRubro.isActivo());
+    			aux.setFechaMod(tipoRubro.getFechaMod());
+    			aux.setOperacion(tipoRubro.getOperacion());
+    			aux.setUsuarioMod(tipoRubro.getUsuarioMod());
+    			
+    			lstTipoRubrosVO.add(aux);
+			}
+	
+    	}
+    	catch(ObteniendoTipoRubroException e){
+    		throw e;
+    		
+    	} 
+    	catch (ConexionException e) {
+			
+    		throw e;
+    	} 
+    	finally
+    	{
+    		this.pool.liberarConeccion(con);
+    	}
+    	    
+    	
+    	return lstTipoRubrosVO;
+    }
+    
+    
+    /**
+	 * Obtiene todos los tipos de rubro existentes ACTIVOS
+	 */
+    @SuppressWarnings("unchecked")
+	public ArrayList<TipoRubroVO> getTipoRubrosActivos(String cod_emp) throws ObteniendoTipoRubroException, ConexionException
+    {
+    	
+    	Connection con = null;
+    	
+    	ArrayList<TipoRubro> lstTipoRubros;
+    	ArrayList<TipoRubroVO> lstTipoRubrosVO = new ArrayList<TipoRubroVO>();
+    	    	
+    	try
+    	{
+    		con = this.pool.obtenerConeccion();
+    		
+    		lstTipoRubros = this.tipoRubros.getTipoRubrosActivos(con, cod_emp); 
     		
     		TipoRubroVO aux;
     		for (TipoRubro tipoRubro : lstTipoRubros) 

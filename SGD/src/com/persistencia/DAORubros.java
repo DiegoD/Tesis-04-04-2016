@@ -119,6 +119,100 @@ public class DAORubros implements IDAORubros{
 	}
 
 	@Override
+	public ArrayList<Rubro> getRubrosActivos(String codEmp, Connection con) throws ObteniendoRubrosException, ConexionException {
+		// TODO Auto-generated method stub
+		ArrayList<Rubro> lstRubros = new ArrayList<Rubro>();
+		
+		try
+		{
+			ConsultasDD consultas = new ConsultasDD ();
+			String query = consultas.getRubrosActivos();
+			String queryImpuesto = consultas.getImpuesto();
+			String queryTipoRubro = consultas.getTipoRubro();
+			String codImpuesto;
+			String codTipoRubro;
+			
+			
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			PreparedStatement pstmt2 = con.prepareStatement(queryImpuesto);
+			PreparedStatement pstmt3 = con.prepareStatement(queryTipoRubro);
+			
+			pstmt1.setString(1, codEmp);
+			
+			ResultSet rs = pstmt1.executeQuery();
+			
+			Rubro rubro;
+			Impuesto impuesto;
+			TipoRubro tipoRubro;
+			while(rs.next ()) {
+
+				rubro = new Rubro();
+				
+				
+				rubro.setCod_rubro(rs.getString(1));
+				rubro.setDescripcion(rs.getString(2));
+				rubro.setActivo(rs.getBoolean(3));
+				rubro.setFechaMod(rs.getTimestamp(4));
+				rubro.setUsuarioMod(rs.getString(5));
+				rubro.setOperacion(rs.getString(6));
+				codImpuesto = rs.getString(7);
+				codTipoRubro = rs.getString(8);
+				
+				
+				pstmt2.setString(1, codImpuesto);
+				pstmt2.setString(2, codEmp);
+				
+				ResultSet rs2 = pstmt2.executeQuery();
+				
+				while(rs2.next()){
+					
+					impuesto = new Impuesto();
+					impuesto.setCod_imp(rs2.getString(1));
+					impuesto.setDescripcion(rs2.getString(2));
+					impuesto.setPorcentaje(rs2.getFloat(3));
+					impuesto.setActivo(rs2.getBoolean(4));
+					impuesto.setFechaMod(rs2.getTimestamp(5));
+					impuesto.setUsuarioMod(rs2.getString(6));
+					impuesto.setOperacion(rs2.getString(7));
+					
+					
+					rubro.setImpuesto(impuesto);
+				}
+				
+				pstmt3.setString(1, codTipoRubro);
+				pstmt3.setString(2, codEmp);
+				
+				ResultSet rs3 = pstmt3.executeQuery();
+				
+				while(rs3.next()){
+					
+					tipoRubro = new TipoRubro();
+					tipoRubro.setCod_tipoRubro(rs3.getString(1));
+					tipoRubro.setDescripcion(rs3.getString(2));
+					tipoRubro.setFechaMod(rs3.getTimestamp(3));
+					tipoRubro.setUsuarioMod(rs3.getString(4));
+					tipoRubro.setOperacion(rs3.getString(5));
+					tipoRubro.setActivo(rs3.getBoolean(6));
+					tipoRubro.setCod_emp(rs3.getString(7));
+					
+					rubro.setTipoRubro(tipoRubro);
+				}
+				
+				lstRubros.add(rubro);
+			}
+			
+			rs.close ();
+			pstmt1.close ();
+		}
+		catch (SQLException e) {
+			
+			throw new ObteniendoRubrosException();
+		}
+			
+		return lstRubros;
+	}
+	
+	@Override
 	/**
 	 * Inserta un rubro en la base
 	 * Pre condición: El código de rubro no debe existir previamente

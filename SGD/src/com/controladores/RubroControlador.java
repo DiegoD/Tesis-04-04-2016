@@ -42,6 +42,20 @@ public class RubroControlador {
 	}
 	
 	/**
+	 * Obtiene array list de VO de todas los rubros ACTIVOS
+	 * @throws NoTienePermisosException 
+	 * @throws ObteniendoPermisosException 
+	 */
+	public ArrayList<RubroVO> getRubrosActivos(UsuarioPermisosVO permisos, String cod_emp) throws ObteniendoRubrosException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException {
+		
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))	
+			return FachadaDD.getInstance().getRubrosActivos(cod_emp);
+		else
+			throw new NoTienePermisosException();
+	}
+	
+	/**
 	 * Inserta un nuevo rubro
 	 * @throws NoTienePermisosException 
 	 * @throws ObteniendoPermisosException 
@@ -82,6 +96,20 @@ public class RubroControlador {
 
 	public ArrayList<TipoRubroVO> getTipoRubros(String cod_emp) throws ObteniendoTipoRubroException, ConexionException, InicializandoException {
 		return FachadaDD.getInstance().getTipoRubros(cod_emp);
+	}
+	
+	/**
+	 * Obtiene array list de VO de todos los impuestos
+	 * @throws ObteniendoPermisosException 
+	 * @throws NoTienePermisosException 
+	 */
+	public ArrayList<ImpuestoVO> getImpuestosActivos(String codEmp) throws ObteniendoImpuestosException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException {
+		
+		return FachadaDD.getInstance().getImpuestosActivos(codEmp);
+	}
+
+	public ArrayList<TipoRubroVO> getTipoRubrosActivos(String cod_emp) throws ObteniendoTipoRubroException, ConexionException, InicializandoException {
+		return FachadaDD.getInstance().getTipoRubrosActivos(cod_emp);
 	}
 	
 

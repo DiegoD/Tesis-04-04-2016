@@ -68,10 +68,10 @@ public class CotizacionControlador {
 			throw new NoTienePermisosException();
 	}
 	
-	public ArrayList<MonedaVO> getMonedas(UsuarioPermisosVO permisos) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoMonedaException {
+	public ArrayList<MonedaVO> getMonedasActivas(UsuarioPermisosVO permisos) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoMonedaException {
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			return FachadaDD.getInstance().getMonedas(permisos.getCodEmp());
+			return FachadaDD.getInstance().getMonedasActivas(permisos.getCodEmp());
 		else
 			throw new NoTienePermisosException();
 	}

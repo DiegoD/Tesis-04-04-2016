@@ -708,7 +708,7 @@ public class RubroViewExtended extends RubroView {
 		ArrayList<ImpuestoVO> lstImpuesto = new ArrayList<ImpuestoVO>();
 		
 		try {
-			lstImpuesto = this.controlador.getImpuestos(this.permisos.getCodEmp());
+			lstImpuesto = this.controlador.getImpuestosActivos(this.permisos.getCodEmp());
 			
 		} catch (ObteniendoImpuestosException | InicializandoException | ConexionException
 				| ObteniendoPermisosException| NoTienePermisosException e) {
@@ -738,7 +738,7 @@ public class RubroViewExtended extends RubroView {
 		ArrayList<TipoRubroVO> lstTipoRubros = new ArrayList<TipoRubroVO>();
 		
 		try {
-			lstTipoRubros = this.controlador.getTipoRubros(permisos.getCodEmp());
+			lstTipoRubros = this.controlador.getTipoRubrosActivos(permisos.getCodEmp());
 			
 		} catch (ObteniendoTipoRubroException | InicializandoException | ConexionException e) {
 

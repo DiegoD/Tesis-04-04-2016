@@ -75,6 +75,55 @@ public class DAOImpuestos implements IDAOImpuestos{
 		return lstImpuestos;
 	
 	}
+	
+	/**
+	 * Obtiene Array de todos lo impuestos existentes
+	 */
+	public ArrayList<Impuesto> getImpuestosActivos(String codEmp, Connection con) throws ObteniendoImpuestosException, ConexionException{
+			
+		ArrayList<Impuesto> lstImpuestos = new ArrayList<Impuesto>();
+		
+		try
+		{
+			ConsultasDD consultas = new ConsultasDD ();
+			String query = consultas.getImpuestosActivos();
+			
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			pstmt1.setString(1, codEmp);
+			
+			
+			ResultSet rs = pstmt1.executeQuery();
+			
+			Impuesto impuesto;
+			
+			while(rs.next ()) {
+
+				impuesto = new Impuesto();
+				
+				impuesto.setCod_imp(rs.getString(1));
+				impuesto.setDescripcion(rs.getString(2));
+				impuesto.setPorcentaje(rs.getFloat(3));
+				impuesto.setActivo(rs.getBoolean(4));
+				impuesto.setFechaMod(rs.getTimestamp(5));
+				impuesto.setUsuarioMod(rs.getString(6));
+				impuesto.setOperacion(rs.getString(7));
+				
+				lstImpuestos.add(impuesto);
+			}
+			
+			
+			
+			rs.close ();
+			pstmt1.close ();
+		}
+		catch (SQLException e) {
+			
+			throw new ObteniendoImpuestosException();
+		}
+			
+		return lstImpuestos;
+	
+	}
 
 	/**
 	 * Inserta un impuesto en la base

@@ -13,6 +13,7 @@ import com.logica.Rubro;
 public interface IDAORubros {
 	
 	public ArrayList<Rubro> getRubros(String cod_emp, Connection con) throws ObteniendoRubrosException, ConexionException;
+	public ArrayList<Rubro> getRubrosActivos(String cod_emp, Connection con) throws ObteniendoRubrosException, ConexionException;
 	public void insertarRubro(Rubro rubro, String cod_emp, Connection con) throws  InsertandoRubroException, ConexionException ;
 	public boolean memberRubro(String cod_rubro, String cod_emp, Connection con) throws ExisteRubroException, ConexionException;
 	public void actualizarRubro(Rubro rubro, String cod_emp, Connection con) throws ModificandoRubroException, ConexionException;

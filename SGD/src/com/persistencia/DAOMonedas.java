@@ -66,6 +66,54 @@ public class DAOMonedas implements IDAOMonedas{
 		return lstMonedas;
 	
 	}
+	
+	
+	@Override
+	public ArrayList<Moneda> getMonedasActivas(String codEmp, Connection con) throws ObteniendoMonedaException, ConexionException {
+		// TODO Auto-generated method stub
+		ArrayList<Moneda> lstMonedas = new ArrayList<Moneda>();
+		
+		try
+		{
+			ConsultasDD consultas = new ConsultasDD ();
+			String query = consultas.getMonedasActivas();
+			
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			pstmt1.setString(1, codEmp);
+			
+			ResultSet rs = pstmt1.executeQuery();
+			
+			Moneda moneda;
+			
+			while(rs.next ()) {
+
+				moneda = new Moneda();
+				
+				moneda.setCod_moneda(rs.getString(1));
+				moneda.setDescripcion(rs.getString(2));
+				moneda.setSimbolo(rs.getString(3));
+				moneda.setAcepta_cotizacion(rs.getBoolean(4));
+				moneda.setActivo(rs.getBoolean(5));
+				moneda.setFechaMod(rs.getTimestamp(6));
+				moneda.setUsuarioMod(rs.getString(7));
+				moneda.setOperacion(rs.getString(8));
+				
+				lstMonedas.add(moneda);
+			}
+			
+			
+			
+			rs.close ();
+			pstmt1.close ();
+		}
+		catch (SQLException e) {
+			
+			throw new ObteniendoMonedaException();
+		}
+			
+		return lstMonedas;
+	
+	}
 
 	/**
 	 * Inserta una moneda en la base

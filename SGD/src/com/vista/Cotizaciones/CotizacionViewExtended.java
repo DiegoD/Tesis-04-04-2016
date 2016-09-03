@@ -530,7 +530,7 @@ public class CotizacionViewExtended extends CotizacionView implements IBusqueda{
 							this.permisos.getUsuario(),
 							VariablesPermisos.FORMULARIO_COTIZACIONES,
 							VariablesPermisos.OPERACION_NUEVO_EDITAR);
-			lstMonedas = this.controlador.getMonedas(permisoAux);
+			lstMonedas = this.controlador.getMonedasActivas(permisoAux);
 			
 		} catch (ObteniendoMonedaException | InicializandoException | ConexionException | ObteniendoPermisosException | NoTienePermisosException e) {
 
