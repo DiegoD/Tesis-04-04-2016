@@ -40,6 +40,11 @@ public class Banco extends Auditoria{
 		this.contacto = bcoVO.getContacto();
 		this.activo = bcoVO.isActivo();
 		
+		this.codEmp = bcoVO.getCodEmp();
+		this.setOperacion(bcoVO.getOperacion());
+		this.setFechaMod(bcoVO.getFechaMod());
+		this.setUsuarioMod(bcoVO.getUsuarioMod());
+		
 		this.lstCtas = new ArrayList<CtaBco>();
 		
 		for (CtaBcoVO ctaBcoVO : bcoVO.getLstCtas()) {
@@ -64,7 +69,11 @@ public class Banco extends Auditoria{
 		bcoVO.setContacto(this.contacto);
 		bcoVO.setActivo(this.activo);
 		
-		this.lstCtas = new ArrayList<CtaBco>();
+		bcoVO.setFechaMod(this.getFechaMod());
+		bcoVO.setOperacion(this.getOperacion());
+		bcoVO.setUsuarioMod(this.getUsuarioMod());
+		
+		//this.lstCtas = new ArrayList<CtaBco>();
 		
 		for (CtaBco ctaBco : this.getLstCtas()) {
 			

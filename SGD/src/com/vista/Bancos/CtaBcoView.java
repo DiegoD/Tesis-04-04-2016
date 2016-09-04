@@ -28,7 +28,6 @@ public class CtaBcoView extends FormLayout {
 	protected ComboBox comboMoneda;
 	protected CheckBox activo;
 	protected Button btnAgregar;
-	protected Button btnEditar;
 	protected Button cancelar;
 
 	public CtaBcoView() {

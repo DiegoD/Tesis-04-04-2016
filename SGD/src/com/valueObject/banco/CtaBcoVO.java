@@ -12,14 +12,22 @@ public class CtaBcoVO extends AuditoriaVO{
 	private MonedaVO monedaVO;
 	private boolean activo;
 	
-	public CtaBcoVO(){}
+	public CtaBcoVO(){
+		
+		this.monedaVO = new MonedaVO();
+	}
 	
 	public void Copiar(CtaBcoVO vo){
 		
 		this.codigo = vo.codigo;
 		this.nombre = vo.nombre;
-		this.codBco = vo.codBco;
-		this.codEmp = vo.codEmp;
+		
+		if(vo.codBco!= null)
+			this.codBco = vo.codBco;
+			
+		if(vo.codEmp!= null)
+			this.codEmp = vo.codEmp;
+		
 		this.activo = vo.activo;
 		this.monedaVO.copiar(vo.monedaVO);
 	}

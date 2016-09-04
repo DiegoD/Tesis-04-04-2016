@@ -723,7 +723,7 @@ public String getProcesosActivos(){
 	
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("SELECT cod_bco FROM m_bancos ");
+		sb.append("SELECT cod_bco  ");
 		sb.append("FROM m_bancos WHERE cod_bco = ? AND cod_emp = ? ");
 		
 		return sb.toString();
@@ -758,10 +758,10 @@ public String getProcesosActivos(){
 		
 		StringBuilder sb = new StringBuilder();
 		 
-		sb.append("SELECT b.cod_ctabco, b.nom_cta, b.cod_bco, b.cod_emp, b.activo, b.cod_moneda, b.usuario_mod, b.operacion, b.fecha_mod ");
-		sb.append("m.descripcion, m.simbolo, m.acepta_cotizacion, m.activo activoMoneda, m.fecha_mod m_fecha_mod, m.usuario_mod m_usuario_mod, m.operacion m_operacion, m.cod_emp" );
-		sb.append("FROM m_ctasbcos b, m_monedas m WHREE cod_bco = ? AND cod_emp = ? ");
-		sb.append(" AND b.cod_moneda = b.cod_moneda AND b.cod_emp = m.cod_emp");
+		sb.append("SELECT b.cod_ctabco, b.nom_cta, b.cod_bco, b.cod_emp, b.activo, b.cod_moneda, b.usuario_mod, b.operacion, b.fecha_mod, ");
+		sb.append("m.descripcion, m.simbolo, m.acepta_cotizacion, m.activo activoMoneda, m.fecha_mod m_fecha_mod, m.usuario_mod m_usuario_mod, m.operacion m_operacion, m.cod_emp " );
+		sb.append("FROM m_ctasbcos b, m_monedas m WHERE cod_bco = ? AND b.cod_emp = ? ");
+		sb.append(" AND b.cod_moneda = m.cod_moneda AND b.cod_emp = m.cod_emp");
 
 		return sb.toString();
 	}
@@ -781,8 +781,8 @@ public String getProcesosActivos(){
 	{
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("INSERT INTO m_ctasbcos (cod_ctabco, nom_cta, cod_bco, cod_emp, activo, usuario_mod, operacion, fecha_mod) ");
-		sb.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?) ");
+		sb.append("INSERT INTO m_ctasbcos (cod_ctabco, nom_cta, cod_bco, cod_emp, activo, usuario_mod, operacion, fecha_mod, cod_moneda) ");
+		sb.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ");
 	
 		return sb.toString();
 	}
@@ -813,6 +813,16 @@ public String getProcesosActivos(){
 		
 		return sb.toString();
 	}	
+	
+	public String memberCtaBanco(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_ctabco  ");
+		sb.append("FROM m_ctasbcos WHERE cod_ctabco = ? AND cod_bco = ? AND cod_emp = ?  ");
+		
+		return sb.toString();
+	}
 ////////////////////////FIN CTAS BANCOS///////////////////////////////////////////////
     
 }

@@ -26,6 +26,10 @@ public class CtaBco extends Auditoria{
 		this.activo = vo.isActivo();
 		this.moneda = new Moneda(vo.getMonedaVO());
 		
+		this.setUsuarioMod(vo.getUsuarioMod());
+		this.setOperacion(vo.getOperacion());
+		this.setFechaMod(vo.getFechaMod());
+		
 	}
 	
 	/**
@@ -41,6 +45,9 @@ public class CtaBco extends Auditoria{
 		vo.setCodBco(this.codBco);
 		vo.setCodEmp(this.codEmp);
 		vo.setActivo(this.activo);
+		vo.setFechaMod(this.getFechaMod());
+		vo.setUsuarioMod(this.getUsuarioMod());
+		vo.setOperacion(this.getOperacion());
 		
 		vo.setMonedaVO(this.moneda.getMonedaVO());
 		

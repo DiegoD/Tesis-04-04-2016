@@ -64,16 +64,22 @@ public class CtaBcoViewExtended extends CtaBcoView{
 		this.ctaBcoVO = ctaBco;
 
 		/*Seteamos los campos de la cuenta seleccionada*/
-		
+		/*Primero dejamos los campor que no sean readonly (de lo contrario falla)*/	
+		this.readOnlyFields(false);
 		this.codigo.setValue(ctaBco.getCodigo());
 		this.nombre.setValue(ctaBco.getNombre());
+		this.activo.setValue(ctaBco.isActivo());
 		this.comboMoneda.setValue(ctaBco.getMonedaVO());
 		
 		/*Dependiendo de la operacion como inicializamos el formulario*/
-		if(operacion.equals(Variables.OPERACION_EDITAR))
+		if(operacion.equals(Variables.OPERACION_EDITAR)){
 			this.iniFormEditar();
-		else if(operacion.equals(Variables.OPERACION_LECTURA))
+			this.setearAuditoria(ctaBco);
+		}
+		else if(operacion.equals(Variables.OPERACION_LECTURA)){
 			this.iniFormLectura();
+			this.setearAuditoria(ctaBco);
+		}
 		
 
 		/*Inicializamos listener*/
@@ -93,6 +99,9 @@ public class CtaBcoViewExtended extends CtaBcoView{
 		this.disableBotonesEditar();
 		
 				
+		/*Inicializamos el combo de monedas*/
+		this.inicializarComboMoneda(ctaBcoVO.getMonedaVO().getCodMoneda());
+		
 		/*Dejamos todods los campos readonly*/
 		this.readOnlyFields(true);
 		
@@ -110,6 +119,7 @@ public class CtaBcoViewExtended extends CtaBcoView{
 		/*Habilitamos boton aceptar*/
 		this.enableBotonesEditar();
 		
+				
 		/*Inicializamos el combo de monedas*/
 		this.inicializarComboMoneda(ctaBcoVO.getMonedaVO().getCodMoneda());
 		
@@ -140,11 +150,20 @@ public class CtaBcoViewExtended extends CtaBcoView{
 		this.inicializarComboMoneda(null);
 		
 		/*Deshabilitamos el boton de editar*/
-		this.desHabilitarBotonEditar();
+		//this.desHabilitarBotonEditar();
 		
 		/*Seteamos validaciones en nuevo, cuando es editar
 		 * solamente cuando apreta el boton editar*/
 		this.setearValidaciones(true);
+	}
+	
+	private void setearAuditoria(CtaBcoVO ctaBco)
+	{
+		auditoria.setDescription(
+				
+				"Usuario: " + ctaBco.getUsuarioMod() + "<br>" +
+			    "Fecha: " + ctaBco.getFechaMod() + "<br>" +
+			    "Operación: " + ctaBco.getOperacion());
 	}
 	
 	private void disableBotonesEditar()	{
@@ -160,18 +179,13 @@ public class CtaBcoViewExtended extends CtaBcoView{
 		
 		this.btnAgregar.setEnabled(true);
 		this.btnAgregar.setVisible(true);
-	}
-	
-	private void habilitarBotonEditar(){
-		this.btnEditar.setEnabled(false);
-		this.btnEditar.setVisible(false);
+		
 		
 	}
 	
-	private void desHabilitarBotonEditar(){
-		this.btnEditar.setEnabled(true);
-		this.btnEditar.setVisible(true);
-	}	
+	
+	
+
 	
 	/**
 	 * Dejamos todos los Fields readonly o no,
@@ -182,6 +196,7 @@ public class CtaBcoViewExtended extends CtaBcoView{
 	{
 		this.codigo.setReadOnly(setear);
 		this.nombre.setReadOnly(setear);
+		this.activo.setReadOnly(setear);
 		this.comboMoneda.setReadOnly(setear);
 				
 	}
@@ -197,7 +212,7 @@ public class CtaBcoViewExtended extends CtaBcoView{
 			permisoAux = 
 					new UsuarioPermisosVO(this.permisos.getCodEmp(),
 							this.permisos.getUsuario(),
-							VariablesPermisos.FORMULARIO_COTIZACIONES,
+							VariablesPermisos.FORMULARIO_BANCOS,
 							VariablesPermisos.OPERACION_NUEVO_EDITAR);
 			lstMonedas = this.controlador.getMonedas(permisoAux);
 			
@@ -307,22 +322,24 @@ public class CtaBcoViewExtended extends CtaBcoView{
 					UsuarioPermisosVO permisoAux = 
 							new UsuarioPermisosVO(this.permisos.getCodEmp(),
 									this.permisos.getUsuario(),
-									VariablesPermisos.FORMULARIO_GRUPO,
+									VariablesPermisos.FORMULARIO_BANCOS,
 									VariablesPermisos.OPERACION_NUEVO_EDITAR);	
 								
-					ctaBcoVO = new CtaBcoVO();
+					this.ctaBcoVO = new CtaBcoVO();
 					
 					/*Seteamos la formulario los valores selecionados*/
 					this.ctaBcoVO.setCodigo(this.codigo.getValue().trim());
 					this.ctaBcoVO.setNombre(this.nombre.getValue().trim());
+					this.ctaBcoVO.setActivo(this.activo.getValue());
 					this.ctaBcoVO.setMonedaVO((MonedaVO)this.comboMoneda.getValue());
 						
 					/*Actualizamos el form en el padre*/
 					this.mainView.actulaizarGrilla(ctaBcoVO);
+					//mainView.agregarCtasSeleccionados(this.ctaBcoVO);
+					
 					mainView.cerrarVentana();
 				
 				}
-				//((Window) this.getParent()).removeFromParent(this);
 
 			}catch(Exception e)
 			{

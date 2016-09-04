@@ -6,16 +6,12 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import com.controladores.BancoControlador;
-import com.controladores.GrupoControlador;
 import com.excepciones.ConexionException;
-import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
 import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Bancos.ObteniendoBancosException;
 import com.excepciones.Bancos.ObteniendoCuentasBcoException;
-import com.excepciones.grupos.ObteniendoFormulariosException;
-import com.excepciones.grupos.ObteniendoGruposException;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.filter.SimpleStringFilter;
@@ -24,7 +20,6 @@ import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
-import com.valueObject.GrupoVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.banco.BancoVO;
 import com.vista.Mensajes;
@@ -32,13 +27,11 @@ import com.vista.MySub;
 import com.vista.PermisosUsuario;
 import com.vista.Variables;
 import com.vista.VariablesPermisos;
-import com.vista.Grupos.GrupoViewExtended;
-import com.vista.Grupos.GruposPanelExtended;
 
 public class BancosPanelExtended extends BancosPanel{
 
 	private BancoViewExtended form; 
-	private ArrayList<BancoVO> lstBancos; /*Lista con los grupos*/
+	private ArrayList<BancoVO> lstBancos; /*Lista con los Bancos*/
 	private BeanItemContainer<BancoVO> container;
 	private BancoControlador controlador;
 	PermisosUsuario permisos;
@@ -69,7 +62,7 @@ public class BancosPanelExtended extends BancosPanel{
 				
 					this.btnNuevo.addClickListener(click -> {
 						
-							sub = new MySub("75%", "70%");
+							sub = new MySub("72%", "70%");
 							form = new BancoViewExtended(Variables.OPERACION_NUEVO, this);
 							sub.setModal(true);
 							sub.setVista(form);
@@ -104,7 +97,7 @@ public class BancosPanelExtended extends BancosPanel{
 		this.container = 
 				new BeanItemContainer<BancoVO>(BancoVO.class);
 		
-		//Obtenemos lista de grupos del sistema
+		//Obtenemos lista de bancos del sistema
 		this.lstBancos = this.getBancos(); 
 		
 		for (BancoVO bcoVO : lstBancos) {
@@ -137,7 +130,7 @@ public class BancosPanelExtended extends BancosPanel{
 							
 						form = new BancoViewExtended(Variables.OPERACION_LECTURA, BancosPanelExtended.this);
 						//form.fieldGroup.setItemDataSource(item);
-						sub = new MySub("65%","70%");
+						sub = new MySub("72%","70%");
 						sub.setModal(true);
 						sub.setVista(form);
 						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
@@ -159,12 +152,12 @@ public class BancosPanelExtended extends BancosPanel{
 	}
 	
 	/**
-	 * Obtenemos grupos del sistema
+	 * Obtenemos bancos del sistema
 	 *
 	 */
 	private ArrayList<BancoVO> getBancos(){
 		
-		ArrayList<BancoVO> lstGrupos = new ArrayList<BancoVO>();
+		ArrayList<BancoVO> lstBancos = new ArrayList<BancoVO>();
 
 		try {
 			
@@ -173,11 +166,11 @@ public class BancosPanelExtended extends BancosPanel{
 			UsuarioPermisosVO permisoAux = 
 					new UsuarioPermisosVO(this.permisos.getCodEmp(),
 							this.permisos.getUsuario(),
-							VariablesPermisos.FORMULARIO_GRUPO,
+							VariablesPermisos.FORMULARIO_BANCOS,
 							VariablesPermisos.OPERACION_LEER);
 
 			
-			lstGrupos = controlador.getBancosTodos(permisoAux);
+			lstBancos = controlador.getBancosTodos(permisoAux);
 
 		} catch (InicializandoException | ConexionException | ObteniendoPermisosException | NoTienePermisosException | ObteniendoBancosException | ObteniendoCuentasBcoException e) {
 			
@@ -185,22 +178,22 @@ public class BancosPanelExtended extends BancosPanel{
 		}
 		
 			
-		return lstGrupos;
+		return lstBancos;
 	}
 	
 	/**
-	 * Actualizamos Grilla si se agrega o modigfica un grupo
-	 * desde GrupoViewExtended
+	 * Actualizamos Grilla si se agrega o modigfica un banco
+	 * desde BancoViewExtended
 	 *
 	 */
 	public void actulaizarGrilla(BancoVO bancoVO)
 	{
 
-		/*Si esta el grupo en la lista, es una acutalizacion
+		/*Si esta el banco en la lista, es una acutalizacion
 		 * y modificamos el objeto en la lista*/
-		if(this.existeGrupoenLista(bancoVO.getCodigo()))
+		if(this.existeBancoenLista(bancoVO.getCodigo()))
 		{
-			this.actualizarGrupoenLista(bancoVO);
+			this.actualizarBancoenLista(bancoVO);
 		}
 		else  /*De lo contrario es uno nuevo y lo agregamos a la lista*/
 		{
@@ -217,11 +210,11 @@ public class BancosPanelExtended extends BancosPanel{
 	
 	
 	/**
-	 * Modificamos un grupoVO de la lista cuando
-	 * se hace una acutalizacion de un Grupo
+	 * Modificamos un bancoVO de la lista cuando
+	 * se hace una acutalizacion de un Banco
 	 *
 	 */
-	private void actualizarGrupoenLista(BancoVO bancoVO)
+	private void actualizarBancoenLista(BancoVO bancoVO)
 	{
 		int i =0;
 		boolean salir = false;
@@ -233,8 +226,6 @@ public class BancosPanelExtended extends BancosPanel{
 			bancoEnLista = this.lstBancos.get(i);
 			if(bancoVO.getCodigo().equals(bancoEnLista.getCodigo()))
 			{
-				//this.lstGrupos.get(i).setNomGrupo(grupoVO.getNomGrupo());
-				
 				this.lstBancos.get(i).copiar(bancoVO);
 
 				salir = true;
@@ -246,11 +237,11 @@ public class BancosPanelExtended extends BancosPanel{
 	}
 	
 	/**
-	 * Retornanoms true si esta el grupoVO en la lista
-	 * de grupos de la vista
+	 * Retornanoms true si esta el bancoVO en la lista
+	 * de bancoss de la vista
 	 *
 	 */
-	private boolean existeGrupoenLista(String codBanco)
+	private boolean existeBancoenLista(String codBanco)
 	{
 		int i =0;
 		boolean esta = false;
@@ -341,6 +332,11 @@ public class BancosPanelExtended extends BancosPanel{
 		gridBancos.getColumn("operacion").setHidden(true);
 		gridBancos.getColumn("activo").setHidden(true);
 		gridBancos.getColumn("lstCtas").setHidden(true);
+	
+		gridBancos.getColumn("tel").setHidden(true);
+		gridBancos.getColumn("codEmp").setHidden(true);
+		gridBancos.getColumn("contacto").setHidden(true);
+		gridBancos.getColumn("direccion").setHidden(true);
 	}
 	
 }

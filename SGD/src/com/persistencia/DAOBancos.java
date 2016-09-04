@@ -191,10 +191,12 @@ public class DAOBancos implements IDAOBancos{
 			pstmt1.setString(9, banco.getOperacion());
 			pstmt1.setTimestamp(10,banco.getFechaMod());
 			
+			
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
 			
 			for (CtaBco cta : banco.getLstCtas()) {
+				
 				
 				this.insertarCtaBanco(cta, codEmp, banco.getCodigo(), con);
 				
@@ -400,6 +402,7 @@ public class DAOBancos implements IDAOBancos{
 			pstmt1.setString(6, cta.getUsuarioMod());
 			pstmt1.setString(7, cta.getOperacion());
 			pstmt1.setTimestamp(8,cta.getFechaMod());
+			pstmt1.setString(9,cta.getMoneda().getCod_moneda());
 			
 			
 			pstmt1.executeUpdate ();
@@ -429,27 +432,70 @@ public class DAOBancos implements IDAOBancos{
     	
     	try {
     		
-    		pstmt1 =  con.prepareStatement(update);
-							
-			pstmt1.setString(1, cta.getNombre());
-			pstmt1.setBoolean(2, cta.isActivo());
-			pstmt1.setString(3, cta.getUsuarioMod());
-			pstmt1.setString(4, cta.getOperacion());
-			pstmt1.setTimestamp(5,cta.getFechaMod());
-			
-			pstmt1.setString(6, cta.getCodigo());
-			pstmt1.setString(7, codBco);
-			pstmt1.setString(8, codEmp);
-			
-			pstmt1.executeUpdate ();
+    		/*Si no existe es porque es una nueva y hacemos un insert*/
+    		if(!this.memberCtaBanco(cta.getCodigo(),codBco,codEmp, con )){
+    			
+    			this.insertarCtaBanco(cta, codEmp, codBco, con);
+    			
+    		}else{ /*Si existe es un update*/
+    			
+	    		pstmt1 =  con.prepareStatement(update);
+								
+				pstmt1.setString(1, cta.getNombre());
+				pstmt1.setBoolean(2, cta.isActivo());
+				pstmt1.setString(3, cta.getUsuarioMod());
+				pstmt1.setString(4, cta.getOperacion());
+				pstmt1.setTimestamp(5,cta.getFechaMod());
 				
-			pstmt1.close ();
+				pstmt1.setString(6, cta.getCodigo());
+				pstmt1.setString(7, codBco);
+				pstmt1.setString(8, codEmp);
+				
+				pstmt1.executeUpdate ();
+				
+				pstmt1.close ();
+    		}
 					
 		} 
-    	catch (SQLException e) 
+    	catch (SQLException | ExisteBancoException | InsertandoCuentaException e) 
     	{
 			throw new ModificandoCuentaBcoException();
 		} 
 		
+	}
+	
+	/**
+	 * Dado el codigo la Cuenta, valida si existe
+	 */
+	public boolean memberCtaBanco(String codCta,String codBanco, String codEmp, Connection con) throws ExisteBancoException, ConexionException{
+		
+		boolean existe = false;
+		
+		try{
+			
+			
+			Consultas consultas = new Consultas();
+			String query = consultas.memberCtaBanco();
+			
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			
+			pstmt1.setString(1, codCta);
+			pstmt1.setString(2, codBanco);
+			pstmt1.setString(3, codEmp);
+			
+			ResultSet rs = pstmt1.executeQuery();
+			
+			if (rs.next ()) 
+				existe = true;
+						
+			rs.close ();
+			pstmt1.close ();
+			
+			return existe;
+			
+		}catch(SQLException e){
+			
+			throw new ExisteBancoException();
+		}
 	}
 }

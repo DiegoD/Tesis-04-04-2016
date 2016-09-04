@@ -37,8 +37,8 @@ public class BancoView extends FormLayout {
 	protected FormLayout formLay2;
 	protected Grid lstFormularios;
 	protected Button btnAgregar;
-	protected Button btnEditarForm;
 	protected Button btnQuitar;
+	protected Button btnEditarForm;
 	protected Button btnVerPermisos;
 
 	public BancoView() {

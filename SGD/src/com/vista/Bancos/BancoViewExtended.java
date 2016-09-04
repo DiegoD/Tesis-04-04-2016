@@ -6,9 +6,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 import com.controladores.BancoControlador;
-import com.controladores.GrupoControlador;
 import com.excepciones.ConexionException;
-import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
 import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
@@ -17,7 +15,6 @@ import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.filter.SimpleStringFilter;
-import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
@@ -27,26 +24,24 @@ import com.vaadin.ui.UI;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.banco.BancoVO;
 import com.valueObject.banco.CtaBcoVO;
-import com.vista.BusquedaViewExtended;
 import com.vista.Mensajes;
 import com.vista.MySub;
 import com.vista.PermisosUsuario;
 import com.vista.Variables;
 import com.vista.VariablesPermisos;
-import com.vista.Grupos.GrupoFormularioPermisosExtended;
-import com.vista.Grupos.GrupoViewAgregarFormularioExtended;
 
 public class BancoViewExtended extends BancoView{
 
-	private BeanFieldGroup<BancoVO> fieldGroup;
-	private ArrayList<CtaBcoVO> lstCtaBcoVO; /*Lista de Formularios del Grupo*/
-	private ArrayList<CtaBcoVO> lstCtaBcoAgregar; /*Lista de Formularios a agregar*/
+	private BeanFieldGroup<BancoVO> fieldBanco;
+	private ArrayList<CtaBcoVO> lstCtaBcoVO; /*Lista de cuentas del banco*/
+	private ArrayList<CtaBcoVO> lstCtaBcoAgregar; /*Lista de ctas a agregar*/
 	private BancoControlador controlador;
 	private String operacion;
 	private BancosPanelExtended mainView;
 	BeanItemContainer<CtaBcoVO> container;
 	private CtaBcoVO ctaBcoSelecccionado; /*Variable utilizada cuando se selecciona
-	 										  un formulario, para poder quitarlo de la lista*/
+	 										  una cuenta, para poder quitarlo de la lista*/
+	
 	
 	private CtaBcoViewExtended frmFCtaBcos;
 	MySub sub;
@@ -59,7 +54,7 @@ public class BancoViewExtended extends BancoView{
 	 * si hay que cargarle la info
 	 *
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "serial", "unused" })
 	public BancoViewExtended(String opera, BancosPanelExtended main){
 	
 	/*Inicializamos los permisos para el usuario*/
@@ -88,7 +83,7 @@ public class BancoViewExtended extends BancoView{
 				UsuarioPermisosVO permisoAux = 
 						new UsuarioPermisosVO(this.permisos.getCodEmp(),
 								this.permisos.getUsuario(),
-								VariablesPermisos.FORMULARIO_GRUPO,
+								VariablesPermisos.FORMULARIO_BANCOS,
 								VariablesPermisos.OPERACION_NUEVO_EDITAR);				
 				
 				/*Obtenemos los datos ingresados en el formulario*/
@@ -97,12 +92,17 @@ public class BancoViewExtended extends BancoView{
 				
 				/*Si hay algun formulario nuevo agregado
 				 * lo agregamos a la lista del formulario*/
-				if(this.lstCtaBcoAgregar.size() > 0)
+				if(this.lstCtaBcoVO.size() > 0)
 				{
-					for (CtaBcoVO f : this.lstCtaBcoAgregar) {
+					for (CtaBcoVO f : this.lstCtaBcoVO) {
+						
+						f.setCodEmp(bcoVO.getCodEmp());
+						f.setFechaMod(bcoVO.getFechaMod());
+						f.setOperacion(bcoVO.getOperacion());
+						f.setUsuarioMod(bcoVO.getUsuarioMod());
 						
 						/*Si no esta lo agregamos*/
-						if(!this.existeFormularioenLista(f.getCodigo()))
+						if(!this.existeCuentaenLista(f.getCodigo()))
 							this.lstCtaBcoVO.add(f);
 					}
 				}
@@ -116,7 +116,7 @@ public class BancoViewExtended extends BancoView{
 					
 					this.mainView.actulaizarGrilla(bcoVO);
 					
-					Mensajes.mostrarMensajeOK("Se ha guardado el Grupo");
+					Mensajes.mostrarMensajeOK("Se ha guardado el Banco");
 					main.cerrarVentana();
 				
 				}else if(this.operacion.equals(Variables.OPERACION_EDITAR))
@@ -126,7 +126,7 @@ public class BancoViewExtended extends BancoView{
 					
 					this.mainView.actulaizarGrilla(bcoVO);
 					
-					Mensajes.mostrarMensajeOK("Se ha modificado el Grupo");
+					Mensajes.mostrarMensajeOK("Se ha modificado el Banco");
 					main.cerrarVentana();
 					
 				}
@@ -155,13 +155,9 @@ public class BancoViewExtended extends BancoView{
 				
 		try {
 			
-			//this.codGrupo.setReadOnly(true);
-			
 			/*Inicializamos el Form en modo Edicion*/
 			this.iniFormEditar();
 			
-			
-	
 			}catch(Exception e)
 			{
 				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
@@ -175,27 +171,27 @@ public class BancoViewExtended extends BancoView{
 				
 				CtaBcoViewExtended form = new CtaBcoViewExtended(this);
 				
-				sub = new MySub("70%", "60%" );
+				sub = new MySub("53%", "40%");
 				sub.setModal(true);
 				sub.setVista(form);
 				//sub.setWidth("50%");
 				//sub.setHeight("50%");
 				sub.center();
 				
-				String codGrupo;/*Codigo del grupo para obtener los forms del mismo*/
+				String codBanco;/*Codigo del banco para obtener los forms del mismo*/
 				
-				/*Obtenemos los formularios que no estan en el grupo
+				/*Obtenemos los formularios que no estan en el banco
 				 * para mostrarlos en la grilla para seleccionar*/
 				if(this.operacion.equals(Variables.OPERACION_NUEVO) )
 				{
-					/*Si la operacion es nuevo, ponemos el  codGrupo vacio
+					/*Si la operacion es nuevo, ponemos el  codBanco vacio
 					 * asi nos trae todos los grupos disponibles*/
-					codGrupo = "";
+					codBanco = "";
 				}
 				else 
 				{
-					/*Si es operacion Editar tomamos el codGrupo de el fieldGroup*/
-					codGrupo = fieldGroup.getItemDataSource().getBean().getCodigo();
+					/*Si es operacion Editar tomamos el codBanco de el fieldGroup*/
+					codBanco = fieldBanco.getItemDataSource().getBean().getCodigo();
 				}
 				
 				UI.getCurrent().addWindow(sub);
@@ -282,9 +278,8 @@ public class BancoViewExtended extends BancoView{
 			});
 			
 			/*Listener boton editar de la grilla de cuentas*/
-			this.btnEditarForm.addClickListener(click -> {
+			this.btnEditarForm.addClickListener(click -> { 
 				
-			boolean esta = false;	
 	
 			try {
 				
@@ -295,7 +290,7 @@ public class BancoViewExtended extends BancoView{
 					
 					this.frmFCtaBcos = new CtaBcoViewExtended(this, ctaBcoSelecccionado, Variables.OPERACION_EDITAR);
 					
-					sub = new MySub("35%", "30%" );
+					sub = new MySub("53%", "40%" );
 					sub.setModal(true);
 					sub.setVista(this.frmFCtaBcos);
 					sub.center();
@@ -317,12 +312,10 @@ public class BancoViewExtended extends BancoView{
 			/*Listener boton permisos*/
 			this.btnVerPermisos.addClickListener(click -> {
 				
-			boolean esta = false;	
 	
 			try {
 				
-				/*Verificamos que haya un formulario seleccionado para
-				 * eliminar*/
+				/*Verificamos que haya un formulario seleccionado*/
 				if(ctaBcoSelecccionado != null)
 				{
 					
@@ -355,11 +348,11 @@ public class BancoViewExtended extends BancoView{
 		
 		this.controlador = new BancoControlador();
 					
-		this.fieldGroup =  new BeanFieldGroup<BancoVO>(BancoVO.class);
+		this.fieldBanco =  new BeanFieldGroup<BancoVO>(BancoVO.class);
 		
 		//Seteamos info del form si es requerido
-		if(fieldGroup != null)
-			fieldGroup.buildAndBindMemberFields(this);
+		if(fieldBanco != null)
+			fieldBanco.buildAndBindMemberFields(this);
 		
 		/*SI LA OPERACION NO ES NUEVO, OCULTAMOS BOTON ACEPTAR*/
 		if(this.operacion.equals(Variables.OPERACION_NUEVO))
@@ -368,7 +361,7 @@ public class BancoViewExtended extends BancoView{
 			this.iniFormNuevo();
 			
 			/*Agregamos los filtros a la grilla*/
-			this.filtroGrilla();
+			//this.filtroGrilla();
 	
 		}else if(this.operacion.equals(Variables.OPERACION_LECTURA))
 		{
@@ -407,10 +400,10 @@ public class BancoViewExtended extends BancoView{
 	 */
 	public void setDataSourceFormulario(BeanItem<BancoVO> item)
 	{
-		this.fieldGroup.setItemDataSource(item);
+		this.fieldBanco.setItemDataSource(item);
 		
 		BancoVO bancoVO = new BancoVO();
-		bancoVO = fieldGroup.getItemDataSource().getBean();
+		bancoVO = fieldBanco.getItemDataSource().getBean();
 		String fecha = new SimpleDateFormat("dd/MM/yyyy").format(bancoVO.getFechaMod());
 		
 		
@@ -497,6 +490,12 @@ public class BancoViewExtended extends BancoView{
 			this.disableBotonLectura();
 			this.enableBotonAgregarQuitar();
 			
+			/*Deshanilitamos el boton de quitar la cuenta
+			 * Solamente se puede quitar cuando es nuevo, cuando 
+			 * esta creada solamente se desactiva*/
+			this.btnQuitar.setEnabled(false);
+			this.btnQuitar.setVisible(false);
+			
 			/*Dejamos los textfields que se pueden editar
 			 * en readonly = false asi  se pueden editar*/
 			this.setearFieldsEditar();
@@ -543,10 +542,6 @@ public class BancoViewExtended extends BancoView{
 		
 		/*Como es en operacion nuevo, dejamos todos los campos editabls*/
 		this.readOnlyFields(false);
-		
-		
-		
-		
 	}
 	
 	/**
@@ -578,6 +573,9 @@ public class BancoViewExtended extends BancoView{
 	{
 		this.btnEditar.setEnabled(false);
 		this.btnEditar.setVisible(false);
+		
+		this.btnVerPermisos.setEnabled(false);
+		this.btnVerPermisos.setVisible(false);
 	}
 	
 	/**
@@ -752,7 +750,8 @@ public class BancoViewExtended extends BancoView{
 	/**
 	 *Agregamos las cuentas seleccionados
 	 */
-	public void agregarCtasSeleccionados(ArrayList<CtaBcoVO> lstCtas)
+	@SuppressWarnings("unused")
+	public void agregarCtasSeleccionados(CtaBcoVO cta)
 	{
 
         CtaBcoVO bean = new CtaBcoVO();
@@ -761,30 +760,23 @@ public class BancoViewExtended extends BancoView{
          * dejamos el ultimo agregado*/
         Hashtable<String, CtaBcoVO> hCtas = new Hashtable<String, CtaBcoVO>();
         
-		if(lstCtas.size() > 0)
+		if(cta != null)
 		{
-			
-			
 			/*Recorremos hash e isertamos en lista de forms a agregar*/
 			/*para no duplicar formularios*/
-			for (CtaBcoVO ctaVO : lstCtas) {
-				
-				/*Hacemos un nuevo objeto por bug de vaadin
-				 * de lo contrario no refresca la grilla*/
-				bean.Copiar(ctaVO);
-				
-		        boolean saco = this.lstCtaBcoAgregar.remove(ctaVO);
-		        this.lstCtaBcoVO.add(ctaVO);
-		        this.lstCtaBcoAgregar.add(ctaVO);
-				
-				this.container.addBean(bean);
-			}
+			
+			bean.Copiar(cta);
+			
+	        boolean saco = this.lstCtaBcoAgregar.remove(cta);
+	        //this.lstCtaBcoVO.add(cta);
+	        this.lstCtaBcoAgregar.add(cta);
+			
+			//this.container.addBean(bean); aaa
 			
 		}
 		
 		//lstFormularios.setContainerDataSource(container);
-		this.actualizarGrillaContainer(container);
-
+		//this.actualizarGrillaContainer(container); aaa
 	}
 	
 	public void cerrarVentana()
@@ -852,9 +844,9 @@ public class BancoViewExtended extends BancoView{
 	public void actulaizarGrilla(CtaBcoVO ctaBcoVO)
 	{
 
-		/*Si esta el grupo en la lista, es una acutalizacion
+		/*Si esta la cuenta en la lista, es una acutalizacion
 		 * y modificamos el objeto en la lista*/
-		if(this.existeFormularioenLista(ctaBcoVO.getCodigo()))
+		if(this.existeCuentaenLista(ctaBcoVO.getCodigo()))
 		{
 			this.actualizarCtaBcoLista(ctaBcoVO);
 		}
@@ -890,8 +882,6 @@ public class BancoViewExtended extends BancoView{
 			ctaBcoEnLista = this.lstCtaBcoVO.get(i);
 			if(ctaBcoVO.getCodigo().equals(ctaBcoEnLista.getCodigo()))
 			{
-				//this.lstGrupos.get(i).setNomGrupo(grupoVO.getNomGrupo());
-				
 				this.lstCtaBcoVO.get(i).Copiar(ctaBcoVO);
 
 				salir = true;
@@ -907,7 +897,7 @@ public class BancoViewExtended extends BancoView{
 	 * de ctas de la vista
 	 *
 	 */
-	private boolean existeFormularioenLista(String codCtaBco)
+	private boolean existeCuentaenLista(String codCtaBco)
 	{
 		int i =0;
 		boolean esta = false;
@@ -960,19 +950,19 @@ public class BancoViewExtended extends BancoView{
 		
 		try
 		{
-			if(operacion.equals(Variables.OPERACION_EDITAR))
-				codigo = this.codigo.getValue().toString().trim();
+			codigo = this.codigo.getValue().toString().trim();
 			
 			String nombre = this.nombre.getValue().toString().trim();;
 			String tel = this.Tel.getValue().toString().trim();
 			String direccion = this.direccion.getValue().toString().trim();
 			String contacto = this.contacto.getValue().toString().trim();;
 			boolean activo = this.activo.getValue().booleanValue();
-			String codEmp = this.codEmp.getValue().toString().trim();
+			String codEmp = this.permisos.getCodEmp();
 			
 			
-			String usuarioMod = (String)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("usuario"); 
+			String usuarioMod = this.permisos.getUsuario(); 
 			//String operacion = Variables.OPERACION_NUEVO;
+			
 			
 			banco.setNombre(nombre);
 			banco.setTel(tel);
@@ -986,11 +976,10 @@ public class BancoViewExtended extends BancoView{
 			banco.setUsuarioMod(usuarioMod);
 			banco.setOperacion(operacion);
 			
-			if(operacion.equals(Variables.OPERACION_EDITAR))
-				banco.setCodigo(codigo);
+			banco.setCodigo(codigo);
 			
+			banco.setCodEmp(this.permisos.getCodEmp());
 			
-			//TENEMOS QUE OBTENER LAS CUENTAS !!!!!!!
 		
 		}catch(Exception e){
 			
