@@ -13,12 +13,13 @@ import com.excepciones.Procesos.IngresandoProcesoException;
 import com.excepciones.Procesos.ModificandoProcesoException;
 import com.excepciones.Procesos.ObteniendoProcesosException;
 import com.logica.ClienteInfo;
+import com.logica.DocumentoAduanero;
 import com.logica.MonedaInfo;
 import com.logica.Proceso;
 import com.mysql.jdbc.Statement;
 import com.valueObject.MonedaInfoVO;
 
-public class DAOProcesos {
+public class DAOProcesos implements IDAOProcesos{
 
 	/**
 	 * Nos retorna una lista con todos los procesos del sistema
@@ -29,7 +30,7 @@ public class DAOProcesos {
 	
 		try {
 			
-	    	Consultas clts = new Consultas();
+	    	ConsultasDD clts = new ConsultasDD();
 	    	String query = clts.getProcesos();
 	    	PreparedStatement pstmt1 = con.prepareStatement(query);
 	    	
@@ -48,11 +49,14 @@ public class DAOProcesos {
 				aux.setMonedaInfo(new MonedaInfo(rs.getString("cod_moneda")
 									, rs.getString("nomMoneda")
 									, rs.getString("simbolo")));
+				aux.setDocumento(new DocumentoAduanero(rs.getString("m_documentos_aduaneros.cod_documento"), 
+									rs.getString("m_documentos_aduaneros.descripcion")));
 				
 				aux.setCodigo(rs.getInt("cod_proceso"));
 				aux.setFecha(rs.getDate("fec_doc"));
 				aux.setNroMega(rs.getInt("nro_mega"));
-				aux.setCodDocum(rs.getString("cod_docum"));
+				
+				//aux.setCodDocum(rs.getString("cod_docum"));
 				aux.setNroDocum(rs.getString("nro_docum"));
 				aux.setFecDocum(rs.getDate("fec_docum"));
 				aux.setCarpeta(rs.getString("carpeta"));
@@ -65,7 +69,7 @@ public class DAOProcesos {
 				aux.setMedio(rs.getString("medio"));
 				aux.setDescripcion(rs.getString("descripcion"));
 				aux.setObservaciones(rs.getString("observaciones"));
-				aux.setActivo(rs.getBoolean("activo"));
+				//aux.setActivo(rs.getBoolean("activo"));
 				
 				
 				aux.setUsuarioMod(rs.getString("usuario_mod"));
@@ -87,72 +91,73 @@ public class DAOProcesos {
     	return lstProcesos;
 	}
 	
-	/**
-	 * Nos retorna una lista con todos los procesos activos del sistema
-	 */
-	public ArrayList<Proceso> getClientesActivos(Connection con, String codEmp) throws ObteniendoProcesosException, ConexionException {
-		
-		ArrayList<Proceso> lstProcesos = new ArrayList<Proceso>();
-		
-		try {
-			
-	    	Consultas clts = new Consultas();
-	    	String query = clts.getProcesosActivos();
-	    	PreparedStatement pstmt1 = con.prepareStatement(query);
-	    	
-	    	ResultSet rs;
-	    	
-	    	pstmt1.setString(1, codEmp);
-			rs = pstmt1.executeQuery();
-			
-			Proceso aux;
-			while(rs.next ()) {
-				
-							
-				aux = new Proceso();
-				
-				aux.setClienteInfo(new ClienteInfo(rs.getString("cod_cliente"), rs.getString("nom_tit")));
-				aux.setMonedaInfo(new MonedaInfo(rs.getString("cod_moneda")
-									, rs.getString("nomMoneda")
-									, rs.getString("simbolo")));
-				
-				aux.setCodigo(rs.getInt("cod_proceso"));
-				aux.setFecha(rs.getDate("fec_doc"));
-				aux.setNroMega(rs.getInt("nro_mega"));
-				aux.setCodDocum(rs.getString("cod_docum"));
-				aux.setNroDocum(rs.getString("nro_docum"));
-				aux.setFecDocum(rs.getDate("fec_docum"));
-				aux.setCarpeta(rs.getString("carpeta"));
-				aux.setImpMo(rs.getDouble("imp_mo"));
-				aux.setImpMn(rs.getDouble("imp_mn"));
-				aux.setImpTr(rs.getDouble("imp_tr"));
-				aux.setTcMov(rs.getFloat("tc_mov"));
-				aux.setKilos(rs.getDouble("kilos"));
-				aux.setMarca(rs.getString("marca"));
-				aux.setMedio(rs.getString("medio"));
-				aux.setDescripcion(rs.getString("descripcion"));
-				aux.setObservaciones(rs.getString("observaciones"));
-				aux.setActivo(rs.getBoolean("activo"));
-				
-				
-				aux.setUsuarioMod(rs.getString("usuario_mod"));
-				aux.setOperacion(rs.getString("operacion"));
-				aux.setFechaMod(rs.getTimestamp("fecha_mod"));
-				
-				lstProcesos.add(aux);
-				
-			}
-			rs.close ();
-			pstmt1.close ();
-    	}	
-    	
-		catch (SQLException e) {
-			throw new ObteniendoProcesosException();
-			
-		}
-    	
-    	return lstProcesos;
-	}
+//	/**
+//	 * Nos retorna una lista con todos los procesos activos del sistema
+//	 */
+//	public ArrayList<Proceso> getClientesActivos(Connection con, String codEmp) throws ObteniendoProcesosException, ConexionException {
+//		
+//		ArrayList<Proceso> lstProcesos = new ArrayList<Proceso>();
+//		
+//		try {
+//			
+//	    	Consultas clts = new Consultas();
+//	    	String query = clts.getProcesosActivos();
+//	    	PreparedStatement pstmt1 = con.prepareStatement(query);
+//	    	
+//	    	ResultSet rs;
+//	    	
+//	    	pstmt1.setString(1, codEmp);
+//			rs = pstmt1.executeQuery();
+//			
+//			Proceso aux;
+//			while(rs.next ()) {
+//				
+//							
+//				aux = new Proceso();
+//				
+//				aux.setClienteInfo(new ClienteInfo(rs.getString("cod_cliente"), rs.getString("nom_tit")));
+//				aux.setMonedaInfo(new MonedaInfo(rs.getString("cod_moneda")
+//									, rs.getString("nomMoneda")
+//									, rs.getString("simbolo")));
+//				
+//				aux.setDocumento(new DocumentoAduanero(rs.getString("m_documentos_aduaneros.cod_documento"), 
+//						rs.getString("m_documentos_aduaneros.descripcion")));
+//				
+//				aux.setCodigo(rs.getInt("cod_proceso"));
+//				aux.setFecha(rs.getDate("fec_doc"));
+//				aux.setNroMega(rs.getInt("nro_mega"));
+//				aux.setNroDocum(rs.getString("nro_docum"));
+//				aux.setFecDocum(rs.getDate("fec_docum"));
+//				aux.setCarpeta(rs.getString("carpeta"));
+//				aux.setImpMo(rs.getDouble("imp_mo"));
+//				aux.setImpMn(rs.getDouble("imp_mn"));
+//				aux.setImpTr(rs.getDouble("imp_tr"));
+//				aux.setTcMov(rs.getFloat("tc_mov"));
+//				aux.setKilos(rs.getDouble("kilos"));
+//				aux.setMarca(rs.getString("marca"));
+//				aux.setMedio(rs.getString("medio"));
+//				aux.setDescripcion(rs.getString("descripcion"));
+//				aux.setObservaciones(rs.getString("observaciones"));
+//				
+//				
+//				aux.setUsuarioMod(rs.getString("usuario_mod"));
+//				aux.setOperacion(rs.getString("operacion"));
+//				aux.setFechaMod(rs.getTimestamp("fecha_mod"));
+//				
+//				lstProcesos.add(aux);
+//				
+//			}
+//			rs.close ();
+//			pstmt1.close ();
+//    	}	
+//    	
+//		catch (SQLException e) {
+//			throw new ObteniendoProcesosException();
+//			
+//		}
+//    	
+//    	return lstProcesos;
+//	}
 
 	/**
 	 * Dado el codigo del proceso, valida si existe
@@ -210,7 +215,6 @@ public class DAOProcesos {
 			pstmt1.setDate(2,  proceso.getFecha());
 			pstmt1.setInt(3, proceso.getNroMega());
 			
-			pstmt1.setString(4, proceso.getCodDocum());
 			pstmt1.setString(5, proceso.getNroDocum());
 			pstmt1.setDate(6, proceso.getFecDocum());
 			pstmt1.setString(7, proceso.getCarpeta());
@@ -255,7 +259,7 @@ public class DAOProcesos {
 	 * PRECONDICION: NO EXISTE OTRO CLIENTE EN EL SISTEMA CON EL MISMO DOCUMENTO
 	 * 
 	 */
-	public void modificarCliente(Proceso proceso, String codEmp, Connection con) throws ModificandoProcesoException{
+	public void modificarProceso(Proceso proceso, String codEmp, Connection con) throws ModificandoProcesoException{
 		
 		Consultas consultas = new Consultas();
 		String update = consultas.actualizarProceso();
@@ -271,7 +275,7 @@ public class DAOProcesos {
 			pstmt1.setDate(2,  proceso.getFecha());
 			pstmt1.setInt(3, proceso.getNroMega());
 			
-			pstmt1.setString(4, proceso.getCodDocum());
+			//pstmt1.setString(4, proceso.getCodDocum());
 			pstmt1.setString(5, proceso.getNroDocum());
 			pstmt1.setDate(6, proceso.getFecDocum());
 			pstmt1.setString(7, proceso.getCarpeta());
@@ -301,6 +305,6 @@ public class DAOProcesos {
 			throw new ModificandoProcesoException();
 		}
 	}
-	
+
 	
 }

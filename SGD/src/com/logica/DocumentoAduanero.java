@@ -12,11 +12,16 @@ public class DocumentoAduanero extends Auditoria {
 		
 	}
 
+	public DocumentoAduanero(String cod_docucmento, String descirpcion) {
+		super();
+		this.cod_docucmento = cod_docucmento;
+		this.descirpcion = descirpcion;
+	}
+	
 	public DocumentoAduanero(String cod_docucmento, String descirpcion, boolean activo) {
 		super();
 		this.cod_docucmento = cod_docucmento;
 		this.descirpcion = descirpcion;
-		this.activo = activo;
 	}
 
 	public DocumentoAduanero(DocumentoAduaneroVO documentoVO){

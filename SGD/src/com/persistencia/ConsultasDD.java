@@ -875,4 +875,88 @@ public class ConsultasDD {
 
 
 ////////////////////////FIN-CUENTAS///////////////////////////////////////////////////
+	
+////////////////////////PROCESOS//////////////////////////////////////////////////
+
+	public String getProcesos(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_proceso, cod_cliente, m_clientes.nom_tit, fec_doc, nro_mega ");
+		sb.append(", m_documentos_aduaneros.cod_documento, m_documentos_aduaneros.descripcion, nro_docum, fec_docum, carpeta ");
+		sb.append(", m_monedas.cod_moneda, m_monedas.descripcion AS nomMoneda, m_monedas.simbolo  ");
+		sb.append(", imp_mo, tc_mov, imp_mn, imp_tr, kilos, marca, medio ");
+		sb.append(", descripcion, observaciones, fecha_mod, usuario_mod ");
+		sb.append(", operacion ");
+		sb.append("FROM c_procesos , m_clientes, m_monedas, m_documentos_aduaneros ");
+		sb.append("WHERE c_procesos.cod_cliente = m_clientes.cod_tit   ");
+		sb.append("AND c_procesos.cod_moneda = m_monedas.cod_moneda  ");
+		sb.append("AND m_documentos_aduaneros.cod_documento = c_procesos.cod_documento");
+		sb.append("AND cod_emp = ? ");
+		
+		
+		return sb.toString();
+	}
+
+	public String getProcesosActivos(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_proceso, cod_cliente, m_clientes.nom_tit, fec_doc, nro_mega ");
+		sb.append(", m_documentos_aduaneros.cod_documento, m_documentos_aduaneros.descripcion, nro_docum, fec_docum, carpeta ");
+		sb.append(", m_monedas.cod_moneda, m_monedas.descripcion AS nomMoneda, m_monedas.simbolo  ");
+		sb.append(", imp_mo, tc_mov, imp_mn, imp_tr, kilos, marca, medio ");
+		sb.append(", descripcion, observaciones, fecha_mod, usuario_mod ");
+		sb.append(", operacion, activo  ");
+		sb.append("FROM c_procesos , m_clientes, m_monedas  ");
+		sb.append("WHERE c_procesos.cod_cliente = m_clientes.cod_tit   ");
+		sb.append("AND c_procesos.cod_moneda = m_monedas.cod_moneda  ");
+		sb.append("AND m_documentos_aduaneros.cod_documento = c_procesos.cod_documento");
+		sb.append("AND cod_emp = ? AND activo = 1");
+		
+		
+		return sb.toString();
+	}
+
+	public String insertarProceso()
+	{
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO c_procesos ( cod_cliente, fec_doc, nro_mega ");
+		sb.append(", cod_docum, nro_docum, fec_docum, carpeta, cod_moneda, imp_mo, tc_mov, imp_mn ");
+		sb.append(", imp_tr, kilos, marca, medio, descripcion, observaciones, fecha_mod, usuario_mod, operacion, activo) ");
+		sb.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?) ");
+		
+		
+		return sb.toString();
+	}
+
+	public String memberProceso(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_proceso ");
+		sb.append("FROM c_procesos WHERE cod_proceso = ? AND cod_emp = ? ");
+		
+		return sb.toString();
+	}
+
+
+		public String actualizarProceso(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("UPDATE c_procesos");
+		sb.append("SET cod_cliente = ?, fec_doc = ?,nro_mega = ?,cod_docum = ?,nro_docum = ?,fec_docum = ?,");
+		sb.append("carpeta = ?,cod_moneda = ?,imp_mo = ?,tc_mov = ?,imp_mn = ?,imp_tr = ?,kilos = ?,");
+		sb.append("marca = ?,medio = ?,descripcion = ?,observaciones = ?,fecha_mod = NOW(),usuario_mod = ?, ");
+		sb.append("operacion = ?,activo = ? ");
+		sb.append("WHERE cod_proceso = ? ");
+		
+		
+		return sb.toString();
+	}
+
+////////////////////////FIN PROCESOS//////////////////////////////////////////////
 }

@@ -54,6 +54,11 @@ import com.excepciones.Monedas.InsertandoMonedaException;
 import com.excepciones.Monedas.ModificandoMonedaException;
 import com.excepciones.Monedas.NoExisteMonedaException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
+import com.excepciones.Procesos.ExisteProcesoException;
+import com.excepciones.Procesos.IngresandoProcesoException;
+import com.excepciones.Procesos.ModificandoProcesoException;
+import com.excepciones.Procesos.NoExisteProcesoException;
+import com.excepciones.Procesos.ObteniendoProcesosException;
 import com.excepciones.Rubros.ExisteRubroException;
 import com.excepciones.Rubros.InsertandoRubroException;
 import com.excepciones.Rubros.ModificandoRubroException;
@@ -81,6 +86,7 @@ import com.valueObject.Cuenta.CuentaVO;
 import com.valueObject.TipoRubro.TipoRubroVO;
 import com.valueObject.empresa.EmpresaUsuVO;
 import com.valueObject.empresa.EmpresaVO;
+import com.valueObject.proceso.ProcesoVO;
 import com.persistencia.*;
 
 public class FachadaDD {
@@ -101,7 +107,7 @@ public class FachadaDD {
 	private IDAOCotizaciones cotizaciones;
 	private IDAOTipoRubro tipoRubros;
 	private IDAOCuentas cuentas;
-	
+	private IDAOProcesos procesos;
 	private AbstractFactoryBuilder fabrica;
 	private IAbstractFactory fabricaConcreta;
 	
@@ -124,6 +130,7 @@ public class FachadaDD {
         this.cotizaciones = fabricaConcreta.crearDAOCotizaciones();
         this.tipoRubros = fabricaConcreta.crearDAOTipoRubro();
         this.cuentas = fabricaConcreta.crearDAOCuentas();
+        this.procesos = fabricaConcreta.crearDAOProcesos();
     }
     
     public static FachadaDD getInstance() throws InicializandoException {
@@ -2076,4 +2083,154 @@ public class FachadaDD {
 //	}
 
 /////////////////////////////////FIN-CUENTAS/////////////////////////////////
+	
+	
+/////////////////////////////////INI-PROCESOS/////////////////////////////////
+	/**
+	 * Obtiene todos los procesos existentes 
+	 */
+    @SuppressWarnings("unchecked")
+	public ArrayList<ProcesoVO> getProcesos(String cod_emp) throws ObteniendoProcesosException, ConexionException
+    {
+    	
+    	Connection con = null;
+    	
+    	ArrayList<Proceso> lstProcesos;
+    	ArrayList<ProcesoVO> lstProcesosVO = new ArrayList<ProcesoVO>();
+    	    	
+    	try
+    	{
+    		con = this.pool.obtenerConeccion();
+    		
+    		lstProcesos = this.procesos.getProcesosTodos(con, cod_emp);
+    		
+    		
+    		ProcesoVO aux;
+    		for (Proceso proceso : lstProcesos) 
+			{
+    			aux = new ProcesoVO();
+    			
+    			aux.setCodigo(proceso.getCodigo());
+    			aux.setCodCliente(proceso.getClienteInfo().getCodigo());
+    			aux.setNomCliente(proceso.getClienteInfo().getNombre());
+    			aux.setCodMoneda(proceso.getMonedaInfo().getCod_moneda());
+    			aux.setDescMoneda(proceso.getMonedaInfo().getDescripcion());
+    			aux.setSimboloMoneda(proceso.getMonedaInfo().getSimbolo());
+    			aux.setFecha(proceso.getFecha());
+    			aux.setNroMega(proceso.getNroMega());
+    			aux.setCodDocum(proceso.getDocumento().getCod_docucmento());
+    			aux.setNomDocum(proceso.getDocumento().getDescirpcion());
+    			aux.setNroDocum(proceso.getNroDocum());
+    			aux.setFecDocum(proceso.getFecDocum());
+    			aux.setCarpeta(proceso.getCarpeta());
+    			aux.setImpMo(proceso.getImpMo());
+    			aux.setImpMn(proceso.getImpMn());
+    			aux.setImpTr(proceso.getImpTr());
+    			aux.setTcMov(proceso.getTcMov());
+    			aux.setKilos(proceso.getKilos());
+    			aux.setFecCruce(proceso.getFecCruce());
+    			aux.setMarca(proceso.getMarca());
+    			aux.setMedio(proceso.getMedio());
+    			aux.setDescMoneda(proceso.getDescripcion());
+    			aux.setObservaciones(proceso.getDescripcion());
+    			
+    			lstProcesosVO.add(aux);
+			}
+	
+    	}
+    	catch(ObteniendoProcesosException e){
+    		throw e;
+    		
+    	} 
+    	catch (ConexionException e) {
+			
+    		throw e;
+    	} 
+    	finally
+    	{
+    		this.pool.liberarConeccion(con);
+    	}
+    	    
+    	
+    	return lstProcesosVO;
+    }
+    
+    /**
+	 * Inserta un nuevo proceso en la base
+	 */
+    public void insertarProceso(ProcesoVO procesoVO, String cod_emp) throws IngresandoProcesoException, ConexionException, ExisteProcesoException 
+    {
+    	
+    	Connection con = null;
+    	boolean existe = false;
+    	
+    	try 
+    	{
+			con = this.pool.obtenerConeccion();
+			con.setAutoCommit(false);
+			
+	    	Proceso proceso = new Proceso(procesoVO); 
+	    	
+	    	this.procesos.insertarProceso(proceso, cod_emp, con);
+    		con.commit();
+    	
+    	}
+    	catch(Exception IngresandoProcesoException)  	{
+    		try {
+				con.rollback();
+				
+			} catch (SQLException e) {
+				
+				throw new IngresandoProcesoException();
+			}
+    		
+    		throw new IngresandoProcesoException();
+    	}
+    	finally
+    	{
+    		pool.liberarConeccion(con);
+    	}
+    }
+
+    /**
+	 * Actualiza los datos de un proceso dado su código y la empresa
+	 * valida que exista el código 
+	 */
+    public void actualizarProceso(ProcesoVO procesoVO, String cod_emp) throws ConexionException, ModificandoProcesoException, NoExisteProcesoException, ExisteProcesoException  
+	{
+	    	
+    	Connection con = null;
+    	
+    	try 
+    	{
+			con = this.pool.obtenerConeccion();
+			con.setAutoCommit(false);
+			
+			Proceso proceso = new Proceso(procesoVO);
+	    	
+			if(this.procesos.memberProceso(proceso.getCodigo(), cod_emp, con)){
+				this.procesos.modificarProceso(proceso, cod_emp, con);
+				con.commit();
+			}
+	    	else
+	    		throw new NoExisteProcesoException();
+    	
+    	}
+    	catch(NoExisteProcesoException| ConexionException | SQLException | ModificandoProcesoException e){
+    		try {
+				con.rollback();
+				
+			} 
+    		catch (SQLException e1) {
+				
+				throw new ConexionException();
+			}
+    		throw new ModificandoProcesoException();
+    	}
+    	finally
+    	{
+    		pool.liberarConeccion(con);
+    	}
+	}
+/////////////////////////////////FIN-PROCESOS/////////////////////////////////
 }
