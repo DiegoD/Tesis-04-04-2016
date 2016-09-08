@@ -45,36 +45,34 @@ public class DAOProcesos implements IDAOProcesos{
 							
 				aux = new Proceso();
 				
-				aux.setClienteInfo(new ClienteInfo(rs.getString("cod_cliente"), rs.getString("nom_tit")));
-				aux.setMonedaInfo(new MonedaInfo(rs.getString("cod_moneda")
-									, rs.getString("nomMoneda")
-									, rs.getString("simbolo")));
-				aux.setDocumento(new DocumentoAduanero(rs.getString("m_documentos_aduaneros.cod_documento"), 
-									rs.getString("m_documentos_aduaneros.descripcion")));
+				aux.setCodigo(rs.getInt(1));
+				aux.setFecha(rs.getTimestamp(2));
+				aux.setNroDocum(rs.getInt(3));
+				aux.setFecDocum(rs.getTimestamp(4));
+				aux.setNroMega(rs.getInt(5));
+				aux.setCarpeta(rs.getString(6));
+				aux.setImpMo(rs.getFloat(7));
+				aux.setImpMn(rs.getFloat(8));
+				aux.setImpTr(rs.getFloat(9));
+				aux.setTcMov(rs.getFloat(10));
+				aux.setKilos(rs.getFloat(11));
+				aux.setFecCruce(rs.getTimestamp(12));
+				aux.setMarca(rs.getString(13));
+				aux.setMedio(rs.getString(14));
+				aux.setDescripcion(rs.getString(15));
+				aux.setObservaciones(rs.getString(16));
+				aux.setFechaMod(rs.getTimestamp(17));
+				aux.setUsuarioMod(rs.getString(18));
+				aux.setOperacion(rs.getString(19));
 				
-				aux.setCodigo(rs.getInt("cod_proceso"));
-				aux.setFecha(rs.getDate("fec_doc"));
-				aux.setNroMega(rs.getInt("nro_mega"));
+				aux.setDocumento(new DocumentoAduanero((rs.getString(20)), 
+						rs.getString(21)));
 				
-				//aux.setCodDocum(rs.getString("cod_docum"));
-				aux.setNroDocum(rs.getString("nro_docum"));
-				aux.setFecDocum(rs.getDate("fec_docum"));
-				aux.setCarpeta(rs.getString("carpeta"));
-				aux.setImpMo(rs.getDouble("imp_mo"));
-				aux.setImpMn(rs.getDouble("imp_mn"));
-				aux.setImpTr(rs.getDouble("imp_tr"));
-				aux.setTcMov(rs.getFloat("tc_mov"));
-				aux.setKilos(rs.getDouble("kilos"));
-				aux.setMarca(rs.getString("marca"));
-				aux.setMedio(rs.getString("medio"));
-				aux.setDescripcion(rs.getString("descripcion"));
-				aux.setObservaciones(rs.getString("observaciones"));
-				//aux.setActivo(rs.getBoolean("activo"));
+				aux.setClienteInfo(new ClienteInfo(rs.getString(22), rs.getString(23)));
 				
-				
-				aux.setUsuarioMod(rs.getString("usuario_mod"));
-				aux.setOperacion(rs.getString("operacion"));
-				aux.setFechaMod(rs.getTimestamp("fecha_mod"));
+				aux.setMonedaInfo(new MonedaInfo(rs.getString(24)
+						, rs.getString(25)
+						, rs.getString(26)));
 				
 				lstProcesos.add(aux);
 				
@@ -200,7 +198,7 @@ public class DAOProcesos implements IDAOProcesos{
 	 */
 	public int insertarProceso(Proceso proceso, String codEmp, Connection con) throws IngresandoProcesoException, ConexionException {
 
-		Consultas clts = new Consultas();
+		ConsultasDD clts = new ConsultasDD();
     	
     	String insert = clts.insertarProceso();
     	
@@ -211,28 +209,27 @@ public class DAOProcesos implements IDAOProcesos{
     		
 			pstmt1 =  con.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
 			
-			pstmt1.setString(1, proceso.getClienteInfo().getCodigo());
-			pstmt1.setDate(2,  proceso.getFecha());
-			pstmt1.setInt(3, proceso.getNroMega());
-			
-			pstmt1.setString(5, proceso.getNroDocum());
-			pstmt1.setDate(6, proceso.getFecDocum());
-			pstmt1.setString(7, proceso.getCarpeta());
-			pstmt1.setString(8, proceso.getMonedaInfo().getCod_moneda());
-			pstmt1.setDouble(9, proceso.getImpMo());
-			pstmt1.setFloat(10, proceso.getTcMov());
-			pstmt1.setDouble(11, proceso.getImpMn());
-			pstmt1.setDouble(12, proceso.getImpTr());
-			pstmt1.setDouble(13, proceso.getKilos());
-			pstmt1.setString(14, proceso.getMarca());
-			pstmt1.setString(15, proceso.getMedio());
-			pstmt1.setString(16, proceso.getDescripcion());
-			pstmt1.setString(17, proceso.getObservaciones());
-			
-			pstmt1.setString(18, proceso.getUsuarioMod());
-			pstmt1.setString(19, proceso.getOperacion());
-			//pstmt1.setTimestamp(20, proceso.getFechaMod());
-			
+			pstmt1.setTimestamp(1, proceso.getFecha());
+			pstmt1.setInt(2, proceso.getNroDocum());
+			pstmt1.setTimestamp(3, proceso.getFecDocum());
+			pstmt1.setInt(4, proceso.getNroMega());
+			pstmt1.setString(5, proceso.getCarpeta());
+			pstmt1.setFloat(6, proceso.getImpMo());
+			pstmt1.setFloat(7, proceso.getImpMn());
+			pstmt1.setFloat(8, proceso.getImpTr());
+			pstmt1.setFloat(9, proceso.getTcMov());
+			pstmt1.setFloat(10, proceso.getKilos());
+			pstmt1.setTimestamp(11, proceso.getFecCruce());
+			pstmt1.setString(12, proceso.getMarca());
+			pstmt1.setString(13, proceso.getMedio());
+			pstmt1.setString(14, proceso.getDescripcion());
+			pstmt1.setString(15, proceso.getObservaciones());
+			pstmt1.setString(16, proceso.getUsuarioMod());
+			pstmt1.setString(17, proceso.getOperacion());
+			pstmt1.setString(18, proceso.getDocumento().getCod_docucmento());
+			pstmt1.setString(19, proceso.getClienteInfo().getCodigo());
+			pstmt1.setString(20, proceso.getMonedaInfo().getCod_moneda());
+			pstmt1.setString(21, codEmp);
 			
 			pstmt1.executeUpdate ();
 			
@@ -261,7 +258,7 @@ public class DAOProcesos implements IDAOProcesos{
 	 */
 	public void modificarProceso(Proceso proceso, String codEmp, Connection con) throws ModificandoProcesoException{
 		
-		Consultas consultas = new Consultas();
+		ConsultasDD consultas = new ConsultasDD();
 		String update = consultas.actualizarProceso();
 		PreparedStatement pstmt1;
 		
@@ -271,28 +268,28 @@ public class DAOProcesos implements IDAOProcesos{
 			/*Updateamos la info del usuario*/
      		pstmt1 =  con.prepareStatement(update);
      		
-     		pstmt1.setString(1, proceso.getClienteInfo().getCodigo());
-			pstmt1.setDate(2,  proceso.getFecha());
-			pstmt1.setInt(3, proceso.getNroMega());
-			
-			//pstmt1.setString(4, proceso.getCodDocum());
-			pstmt1.setString(5, proceso.getNroDocum());
-			pstmt1.setDate(6, proceso.getFecDocum());
-			pstmt1.setString(7, proceso.getCarpeta());
-			pstmt1.setString(8, proceso.getMonedaInfo().getCod_moneda());
-			pstmt1.setDouble(9, proceso.getImpMo());
-			pstmt1.setFloat(10, proceso.getTcMov());
-			pstmt1.setDouble(11, proceso.getImpMn());
-			pstmt1.setDouble(12, proceso.getImpTr());
-			pstmt1.setDouble(13, proceso.getKilos());
-			pstmt1.setString(14, proceso.getMarca());
-			pstmt1.setString(15, proceso.getMedio());
-			pstmt1.setString(16, proceso.getDescripcion());
-			pstmt1.setString(17, proceso.getObservaciones());
-			
-			pstmt1.setString(18, proceso.getUsuarioMod());
-			pstmt1.setString(19, proceso.getOperacion());
-			pstmt1.setInt(20, proceso.getCodigo()); /*WHERE*/
+			pstmt1.setTimestamp(1, proceso.getFecha());
+			pstmt1.setInt(2, proceso.getNroDocum());
+			pstmt1.setTimestamp(3, proceso.getFecDocum());
+			pstmt1.setInt(4, proceso.getNroMega());
+			pstmt1.setString(5, proceso.getCarpeta());
+			pstmt1.setFloat(6, proceso.getImpMo());
+			pstmt1.setFloat(7, proceso.getImpMn());
+			pstmt1.setFloat(8, proceso.getImpTr());
+			pstmt1.setFloat(9, proceso.getTcMov());
+			pstmt1.setFloat(10, proceso.getKilos());
+			pstmt1.setTimestamp(11, proceso.getFecCruce());
+			pstmt1.setString(12, proceso.getMarca());
+			pstmt1.setString(13, proceso.getMedio());
+			pstmt1.setString(14, proceso.getDescripcion());
+			pstmt1.setString(15, proceso.getObservaciones());
+			pstmt1.setString(16, proceso.getUsuarioMod());
+			pstmt1.setString(17, proceso.getOperacion());
+			pstmt1.setString(18, proceso.getDocumento().getCod_docucmento());
+			pstmt1.setString(19, proceso.getClienteInfo().getCodigo());
+			pstmt1.setString(20, proceso.getMonedaInfo().getCod_moneda());
+			pstmt1.setInt(21, proceso.getCodigo());
+			pstmt1.setString(22, codEmp);
 			
 			pstmt1.executeUpdate ();
 			

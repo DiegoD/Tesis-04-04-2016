@@ -1,6 +1,7 @@
 package com.logica;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 import com.valueObject.MonedaInfoVO;
 import com.valueObject.cliente.ClienteInfoVO;
@@ -10,36 +11,31 @@ public class Proceso extends Auditoria{
 
 	private ClienteInfo clienteInfo;
 	private DocumentoAduanero documento;
+	private MonedaInfo monedaInfo;
 	
 	private int codigo;
-	private Date fecha;
+	private Timestamp fecha;
 	private int nroMega;
-	//private String codDocum;
-	private String nroDocum;
-	private Date fecDocum;
+	private int nroDocum;
+	private Timestamp fecDocum;
 	private String carpeta;
-	private double impMo;
-	private double impMn;
-	private double impTr;
+	private float impMo;
+	private float impMn;
+	private float impTr;
 	private float tcMov;
-	private double kilos;
-	private Date fecCruce;
+	private float kilos;
+	private Timestamp fecCruce;
 	private String marca;
 	private String medio;
 	private String descripcion;
 	private String observaciones;
-	//private boolean activo;
-	
-	
-	private MonedaInfo monedaInfo;
-	
 	
 	public Proceso(){}
 	
 	
-	public Proceso(ClienteInfo clienteInfo, DocumentoAduanero documento, int codigo, Date fecha, int nroMega,
-			String nroDocum, Date fecDocum, String carpeta, double impMo, double impMn, double impTr, float tcMov,
-			double kilos, Date fecCruce, String marca, String medio, String descripcion, String observaciones,
+	public Proceso(ClienteInfo clienteInfo, DocumentoAduanero documento, int codigo, Timestamp fecha, int nroMega,
+			Integer nroDocum, Timestamp fecDocum, String carpeta, float impMo, float impMn, float impTr, float tcMov,
+			float kilos, Timestamp fecCruce, String marca, String medio, String descripcion, String observaciones,
 			MonedaInfo monedaInfo) {
 		super();
 		this.clienteInfo = clienteInfo;
@@ -65,7 +61,7 @@ public class Proceso extends Auditoria{
 
 
 	public Proceso(ProcesoVO procVO){
-		
+		super(procVO.getUsuarioMod(), procVO.getFechaMod(), procVO.getOperacion());
 		this.clienteInfo = new ClienteInfo(procVO.getCodCliente(), procVO.getNomCliente());
 		this.monedaInfo = new MonedaInfo(procVO.getCodMoneda(), procVO.getDescMoneda(),
 				procVO.getSimboloMoneda());
@@ -145,10 +141,10 @@ public class Proceso extends Auditoria{
 	public void setCodigo(int codigo) {
 		this.codigo = codigo;
 	}
-	public Date getFecha() {
+	public Timestamp getFecha() {
 		return fecha;
 	}
-	public void setFecha(Date fecha) {
+	public void setFecha(Timestamp fecha) {
 		this.fecha = fecha;
 	}
 	public int getNroMega() {
@@ -163,16 +159,16 @@ public class Proceso extends Auditoria{
 //	public void setCodDocum(String codDocum) {
 //		this.codDocum = codDocum;
 //	}
-	public String getNroDocum() {
+	public Integer getNroDocum() {
 		return nroDocum;
 	}
-	public void setNroDocum(String nroDocum) {
+	public void setNroDocum(Integer nroDocum) {
 		this.nroDocum = nroDocum;
 	}
-	public Date getFecDocum() {
+	public Timestamp getFecDocum() {
 		return fecDocum;
 	}
-	public void setFecDocum(Date fecDocum) {
+	public void setFecDocum(Timestamp fecDocum) {
 		this.fecDocum = fecDocum;
 	}
 	public String getCarpeta() {
@@ -181,22 +177,22 @@ public class Proceso extends Auditoria{
 	public void setCarpeta(String carpeta) {
 		this.carpeta = carpeta;
 	}
-	public double getImpMo() {
+	public float getImpMo() {
 		return impMo;
 	}
-	public void setImpMo(double impMo) {
+	public void setImpMo(float impMo) {
 		this.impMo = impMo;
 	}
-	public double getImpMn() {
+	public float getImpMn() {
 		return impMn;
 	}
-	public void setImpMn(double impMn) {
+	public void setImpMn(float impMn) {
 		this.impMn = impMn;
 	}
-	public double getImpTr() {
+	public float getImpTr() {
 		return impTr;
 	}
-	public void setImpTr(double impTr) {
+	public void setImpTr(float impTr) {
 		this.impTr = impTr;
 	}
 	public float getTcMov() {
@@ -205,10 +201,10 @@ public class Proceso extends Auditoria{
 	public void setTcMov(float tcMov) {
 		this.tcMov = tcMov;
 	}
-	public double getKilos() {
+	public float getKilos() {
 		return kilos;
 	}
-	public void setKilos(double kilos) {
+	public void setKilos(float kilos) {
 		this.kilos = kilos;
 	}
 	
@@ -221,11 +217,11 @@ public class Proceso extends Auditoria{
 		this.documento = documento;
 	}
 
-	public Date getFecCruce() {
+	public Timestamp getFecCruce() {
 		return fecCruce;
 	}
 
-	public void setFecCruce(Date fecCruce) {
+	public void setFecCruce(Timestamp fecCruce) {
 		this.fecCruce = fecCruce;
 	}
 

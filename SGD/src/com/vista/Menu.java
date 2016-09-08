@@ -41,6 +41,7 @@ public class Menu extends HorizontalLayout {
 	protected Button tipoRubros;
 	protected Button cuentas;
 	protected Button bancos;
+	protected Button procesos;
 	protected Accordion acordion;
 	protected VerticalLayout content;
 

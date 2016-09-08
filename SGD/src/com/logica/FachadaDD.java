@@ -2131,7 +2131,7 @@ public class FachadaDD {
     			aux.setFecCruce(proceso.getFecCruce());
     			aux.setMarca(proceso.getMarca());
     			aux.setMedio(proceso.getMedio());
-    			aux.setDescMoneda(proceso.getDescripcion());
+    			aux.setDescripcion(proceso.getDescripcion());
     			aux.setObservaciones(proceso.getDescripcion());
     			
     			lstProcesosVO.add(aux);

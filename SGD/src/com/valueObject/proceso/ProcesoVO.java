@@ -1,6 +1,5 @@
 package com.valueObject.proceso;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 
 import com.valueObject.AuditoriaVO;
@@ -11,6 +10,7 @@ public class ProcesoVO extends AuditoriaVO{
 
 	//private ClienteInfoVO clieteInfoVO;
 	//private MonedaInfoVO monedaInfoVO;
+	private int codigo;
 	
 	private String codCliente;
 	private String nomCliente;
@@ -19,20 +19,20 @@ public class ProcesoVO extends AuditoriaVO{
 	private String descMoneda;
 	private String simboloMoneda;
 
-	private int codigo;
-	private Date fecha;
+	
+	private Timestamp fecha;
 	private int nroMega;
 	private String codDocum;
 	private String nomDocum;
-	private String nroDocum;
-	private Date fecDocum;
+	private Integer nroDocum;
+	private Timestamp fecDocum;
 	private String carpeta;
-	private double impMo;
-	private double impMn;
-	private double impTr;
+	private float impMo;
+	private float impMn;
+	private float impTr;
 	private float tcMov;
-	private double kilos;
-	private Date fecCruce;
+	private float kilos;
+	private Timestamp fecCruce;
 	private String marca;
 	private String medio;
 	private String descripcion;
@@ -60,8 +60,8 @@ public class ProcesoVO extends AuditoriaVO{
 	}
 	
 	public ProcesoVO(String codCliente, String nomCliente, String codMoneda, String descMoneda, String simboloMoneda,
-			int codigo, Date fecha, int nroMega, String codDocum, String nomDocum, String nroDocum, Date fecDocum, String carpeta,
-			double impMo, double impMn, double impTr, float tcMov, double kilos, Date fecCruce, String marca, String medio,
+			int codigo, Timestamp fecha, int nroMega, String codDocum, String nomDocum, Integer nroDocum, Timestamp fecDocum, String carpeta,
+			float impMo, float impMn, float impTr, float tcMov, float kilos, Timestamp fecCruce, String marca, String medio,
 			String descripcion, String observaciones) {
 		super();
 		this.codCliente = codCliente;
@@ -160,11 +160,11 @@ public class ProcesoVO extends AuditoriaVO{
 	public void setSimboloMoneda(String simboloMoneda) {
 		this.simboloMoneda = simboloMoneda;
 	}
-	public Date getFecha() {
+	public Timestamp getFecha() {
 		return fecha;
 	}
-	public void setFecha(Date fecha) {
-		this.fecha = fecha;
+	public void setFecha(Timestamp timestamp) {
+		this.fecha = timestamp;
 	}
 	public int getNroMega() {
 		return nroMega;
@@ -178,7 +178,7 @@ public class ProcesoVO extends AuditoriaVO{
 	public void setCodDocum(String codDocum) {
 		this.codDocum = codDocum;
 	}
-	public String getNroDocum() {
+	public Integer getNroDocum() {
 		return nroDocum;
 	}
 	
@@ -190,13 +190,13 @@ public class ProcesoVO extends AuditoriaVO{
 		this.nomDocum = nomDocum;
 	}
 
-	public void setNroDocum(String nroDocum) {
+	public void setNroDocum(Integer nroDocum) {
 		this.nroDocum = nroDocum;
 	}
-	public Date getFecDocum() {
+	public Timestamp getFecDocum() {
 		return fecDocum;
 	}
-	public void setFecDocum(Date fecDocum) {
+	public void setFecDocum(Timestamp fecDocum) {
 		this.fecDocum = fecDocum;
 	}
 	public String getCarpeta() {
@@ -206,22 +206,22 @@ public class ProcesoVO extends AuditoriaVO{
 		this.carpeta = carpeta;
 	}
 	
-	public double getImpMo() {
+	public float getImpMo() {
 		return impMo;
 	}
-	public void setImpMo(double impMo) {
+	public void setImpMo(float impMo) {
 		this.impMo = impMo;
 	}
-	public double getImpMn() {
+	public float getImpMn() {
 		return impMn;
 	}
-	public void setImpMn(double impMn) {
+	public void setImpMn(float impMn) {
 		this.impMn = impMn;
 	}
-	public double getImpTr() {
+	public float getImpTr() {
 		return impTr;
 	}
-	public void setImpTr(double impTr) {
+	public void setImpTr(float impTr) {
 		this.impTr = impTr;
 	}
 	public float getTcMov() {
@@ -230,19 +230,19 @@ public class ProcesoVO extends AuditoriaVO{
 	public void setTcMov(float tcMov) {
 		this.tcMov = tcMov;
 	}
-	public double getKilos() {
+	public float getKilos() {
 		return kilos;
 	}
-	public void setKilos(double kilos) {
+	public void setKilos(float kilos) {
 		this.kilos = kilos;
 	}
 	
 	
-	public Date getFecCruce() {
+	public Timestamp getFecCruce() {
 		return fecCruce;
 	}
 
-	public void setFecCruce(Date fecCruce) {
+	public void setFecCruce(Timestamp fecCruce) {
 		this.fecCruce = fecCruce;
 	}
 

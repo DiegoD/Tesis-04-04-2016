@@ -38,7 +38,7 @@ public class ProcesosPanelExtended extends ProcesosPanel{
 	private ArrayList<ProcesoVO> lstProcesos; /*Lista con las empresas*/
 	private BeanItemContainer<ProcesoVO> container;
 	private ProcesoControlador controlador;
-	MySub sub = new MySub("65%", "65%");
+	MySub sub = new MySub("98%","70%");
 	PermisosUsuario permisos;
 
 	public ProcesosPanelExtended(){
@@ -64,7 +64,7 @@ public class ProcesosPanelExtended extends ProcesosPanel{
 				
 					this.btnNuevoProceso.addClickListener(click -> {
 						
-						sub = new MySub("60%","37%");
+						sub = new MySub("98%","70%");
 						form = new ProcesoViewExtended(Variables.OPERACION_NUEVO, this);
 						sub.setModal(true);
 						sub.setVista((Component) form);
@@ -116,6 +116,9 @@ public class ProcesosPanelExtended extends ProcesosPanel{
 		
 		this.gridProcesos.setContainerDataSource(container);
 		
+		gridProcesos.removeColumn("tcMov");
+		gridProcesos.removeColumn("simboloMoneda");
+		gridProcesos.removeColumn("codCliente");
 		gridProcesos.removeColumn("codMoneda");
 		gridProcesos.removeColumn("fechaMod");
 		gridProcesos.removeColumn("usuarioMod");
@@ -130,7 +133,6 @@ public class ProcesosPanelExtended extends ProcesosPanel{
 		gridProcesos.removeColumn("impMn");
 		gridProcesos.removeColumn("impTr");
 		gridProcesos.removeColumn("kilos");
-		gridProcesos.removeColumn("nroMega");
 		gridProcesos.removeColumn("fecCruce");
 		gridProcesos.removeColumn("marca");
 		gridProcesos.removeColumn("medio");
@@ -158,7 +160,7 @@ public class ProcesosPanelExtended extends ProcesosPanel{
 				    	}
 							
 				    	form = new ProcesoViewExtended(Variables.OPERACION_LECTURA, ProcesosPanelExtended.this);
-				    	sub = new MySub("60%","37%");
+				    	sub = new MySub("98%","70%");
 						sub.setModal(true);
 						sub.setVista((Component) form);
 						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/

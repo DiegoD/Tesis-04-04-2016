@@ -25,6 +25,7 @@ import com.vista.Grupos.GruposPanelExtended;
 import com.vista.Impuestos.ImpuestosPanelExtended;
 import com.vista.Login.LoginExtended;
 import com.vista.Monedas.MonedasPanelExtended;
+import com.vista.Procesos.ProcesosPanelExtended;
 import com.vista.Rubros.RubrosPanelExtended;
 import com.vista.TipoRubro.TipoRubrosPanelExtended;
 import com.vista.Usuarios.UsuariosPanelExtend;
@@ -324,6 +325,21 @@ public class MenuExtended extends Menu{
 				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 			}
 		});
+		
+		this.procesos.addClickListener(click -> {
+			
+			setSizeFull();
+			
+			this.content.removeAllComponents();
+			try {
+				
+				ProcesosPanelExtended u = new ProcesosPanelExtended(); 
+				this.content.addComponent(u);
+				
+			} catch (Exception e) {
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}
+		});
 	}
 	
 	
@@ -376,6 +392,7 @@ public class MenuExtended extends Menu{
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_TIPORUBROS) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_CUENTAS) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_BANCOS) ||
+				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_PROCESOS) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_RUBROS))
 			{
 				lstFormsMenuMant.add(formularioVO);
@@ -455,6 +472,12 @@ public class MenuExtended extends Menu{
 					case VariablesPermisos.FORMULARIO_BANCOS:
 						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_BANCOS, VariablesPermisos.OPERACION_LEER))
 							this.habilitarBancos();
+						
+					break;
+					
+					case VariablesPermisos.FORMULARIO_PROCESOS:
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_PROCESOS, VariablesPermisos.OPERACION_LEER))
+							this.habilitarProcesos();
 						
 					break;
 				}
@@ -570,6 +593,9 @@ public class MenuExtended extends Menu{
 		
 		this.bancos.setVisible(false);
 		this.bancos.setEnabled(false);
+		
+		this.procesos.setVisible(false);
+		this.procesos.setEnabled(false);
 	}
 	
 	
@@ -666,6 +692,12 @@ public class MenuExtended extends Menu{
 		this.bancos.setVisible(true);
 		this.bancos.setEnabled(true);
 		this.tabMantenimientos.addComponent(bancos);
+	}
+	
+	private void habilitarProcesos(){
+		this.procesos.setVisible(true);
+		this.procesos.setEnabled(true);
+		this.tabMantenimientos.addComponent(procesos);
 	}
 	
 	public PermisosUsuario getPermisosUsuario()

@@ -13,30 +13,47 @@
      <vaadin-horizontal-layout width-full> 
       <vaadin-link caption="Auditoria" style-name="tiny" _id="auditoria" :middle :right></vaadin-link> 
      </vaadin-horizontal-layout> 
-     <vaadin-horizontal-layout caption="Proceso" style-name="name-wrapper" spacing _id="name_wrapper"> 
+     <vaadin-horizontal-layout caption="Proceso" spacing> 
       <vaadin-text-field style-name="form-textfield" width="108px" readonly _id="codigo"></vaadin-text-field> 
+      <vaadin-label caption="Mega   " width="55px" _id="lblMega"></vaadin-label> 
+      <vaadin-text-field width="108px" readonly _id="nroMega"></vaadin-text-field> 
+      <vaadin-label caption="Fecha" size-auto _id="lblFecha"></vaadin-label> 
+      <vaadin-date-field width="144px" _id="fecha"></vaadin-date-field> 
      </vaadin-horizontal-layout> 
      <vaadin-horizontal-layout caption="Cliente" spacing _id="cliente"> 
       <vaadin-text-field style-name="form-textfield" width="108px" _id="codCliente"></vaadin-text-field> 
       <vaadin-text-field style-name="form-textfield" _id="nomCliente"></vaadin-text-field> 
+      <vaadin-text-field width="108px" readonly _id="carpeta"></vaadin-text-field> 
       <vaadin-button icon="fonticon://FontAwesome/f002" style-name="icon-only borderless quiet" _id="btnBuscarCliente"></vaadin-button> 
      </vaadin-horizontal-layout> 
-     <vaadin-horizontal-layout caption="Documento" style-name="name-wrapper" spacing _id="documento_wrapper"> 
-      <vaadin-combo-box item-caption-mode="id" width="110px" _id="comboDocumento"> 
+     <vaadin-horizontal-layout caption="Documento" spacing> 
+      <vaadin-combo-box item-caption-mode="id" width="108px" _id="comboDocumento"> 
        <option>Option 1</option> 
        <option>Option 2</option> 
        <option>Option 3</option> 
       </vaadin-combo-box> 
       <vaadin-text-field style-name="form-textfield" _id="nroDocum"></vaadin-text-field> 
+      <vaadin-date-field width="144px" _id="fecDocum"></vaadin-date-field> 
      </vaadin-horizontal-layout> 
-     <vaadin-date-field caption="Fecha documento" width="144px" _id="fecDocum"></vaadin-date-field> 
-     <vaadin-text-field caption="Carpeta" width="305px" readonly _id="carpeta"></vaadin-text-field> 
-     <vaadin-text-field caption="Importe Mo" readonly _id="impMo"></vaadin-text-field> 
-     <vaadin-text-field caption="Importe Mn" readonly _id="impMn"></vaadin-text-field> 
-     <vaadin-text-field caption="Importe Tr" readonly _id="impTr"></vaadin-text-field> 
-     <vaadin-text-field caption="Tasa" readonly _id="tcMov"></vaadin-text-field> 
-     <vaadin-text-field caption="Kilos" readonly _id="Kilos"></vaadin-text-field> 
-     <vaadin-date-field caption="Fecha Cruce" width="144px" _id="fecCruce"></vaadin-date-field> 
+     <vaadin-horizontal-layout caption="Moneda" spacing> 
+      <vaadin-combo-box item-caption-mode="id" width="108px" _id="comboMoneda"> 
+       <option>Option 1</option> 
+       <option>Option 2</option> 
+       <option>Option 3</option> 
+      </vaadin-combo-box> 
+      <vaadin-label caption="Valor" size-auto></vaadin-label> 
+      <vaadin-text-field width="108px" readonly _id="impMo"></vaadin-text-field> 
+      <vaadin-label caption="T. Cambio" size-auto></vaadin-label> 
+      <vaadin-text-field width="108px" readonly _id="tcMov"></vaadin-text-field> 
+      <vaadin-label caption="V.N.A. $" size-auto></vaadin-label> 
+      <vaadin-text-field width="108px" readonly _id="impMn"></vaadin-text-field> 
+     </vaadin-horizontal-layout> 
+     <vaadin-horizontal-layout caption="Kilos" spacing> 
+      <vaadin-text-field width="108px" readonly _id="Kilos"></vaadin-text-field> 
+      <vaadin-label caption="Fecha de Cruce" size-auto></vaadin-label> 
+      <vaadin-date-field width="144px" _id="fecCruce"></vaadin-date-field> 
+     </vaadin-horizontal-layout> 
+     <vaadin-text-field caption="Importe Tr" visible="false" readonly _id="impTr"></vaadin-text-field> 
      <vaadin-text-field caption="Marca" readonly _id="marca"></vaadin-text-field> 
      <vaadin-text-field caption="Medio" readonly _id="medio"></vaadin-text-field> 
      <vaadin-text-field caption="Descripcion" readonly _id="descripcion"></vaadin-text-field> 

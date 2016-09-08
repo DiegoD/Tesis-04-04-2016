@@ -7,14 +7,20 @@ import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
 import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
+import com.excepciones.Documentos.ObteniendoDocumentosException;
+import com.excepciones.Monedas.ObteniendoMonedaException;
 import com.excepciones.Procesos.ExisteProcesoException;
 import com.excepciones.Procesos.IngresandoProcesoException;
 import com.excepciones.Procesos.ModificandoProcesoException;
 import com.excepciones.Procesos.NoExisteProcesoException;
 import com.excepciones.Procesos.ObteniendoProcesosException;
+import com.excepciones.clientes.ObteniendoClientesException;
 import com.logica.Fachada;
 import com.logica.FachadaDD;
+import com.valueObject.DocumentoAduaneroVO;
+import com.valueObject.MonedaVO;
 import com.valueObject.UsuarioPermisosVO;
+import com.valueObject.cliente.ClienteVO;
 import com.valueObject.proceso.ProcesoVO;
 
 public class ProcesoControlador {
@@ -66,4 +72,33 @@ public class ProcesoControlador {
 			throw new NoTienePermisosException();
 	}
 	
+	/**
+	 * Trae los clientes activos
+	 */
+	public ArrayList<ClienteVO> getClientes(UsuarioPermisosVO permisos) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoClientesException {
+		
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			return Fachada.getInstance().getClientesActivos(permisos.getCodEmp());
+		else
+			throw new NoTienePermisosException();
+	}
+	
+	public ArrayList<MonedaVO> getMonedas(UsuarioPermisosVO permisos) throws ObteniendoMonedaException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException{
+		
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			return FachadaDD.getInstance().getMonedasActivas(permisos.getCodEmp());
+		else
+			throw new NoTienePermisosException();
+	}
+	
+	public ArrayList<DocumentoAduaneroVO> getDocumentos(UsuarioPermisosVO permisos) throws ObteniendoDocumentosException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException{
+		
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			return FachadaDD.getInstance().getDocumentos(permisos.getCodEmp());
+		else
+			throw new NoTienePermisosException();
+	}
 }

@@ -20,6 +20,7 @@ import com.valueObject.DocumDGIVO;
 import com.valueObject.ImpuestoVO;
 import com.valueObject.MonedaVO;
 import com.valueObject.TipoRubro.TipoRubroVO;
+import com.valueObject.cliente.ClienteVO;
 import com.vista.Rubros.RubroViewExtended;
 
 public class BusquedaViewExtended extends BusquedaView{
@@ -29,6 +30,7 @@ public class BusquedaViewExtended extends BusquedaView{
 	BeanItemContainer<DocumDGIVO> containerDocumentosDgi;
 	BeanItemContainer<TipoRubroVO> containerTipoRubro;
 	BeanItemContainer<MonedaVO> containerMoneda;
+	BeanItemContainer<ClienteVO> containerCliente;
 	Object seleccionado;
 	IBusqueda main;
 	
@@ -59,6 +61,13 @@ public class BusquedaViewExtended extends BusquedaView{
 			this.containerMoneda = new BeanItemContainer<MonedaVO>(MonedaVO.class);
 			this.lblNombre.setValue("Monedas");
 			this.seleccionado = new MonedaVO();
+		}
+		
+		else if(obj instanceof ClienteVO){
+			
+			this.containerCliente = new BeanItemContainer<ClienteVO>(ClienteVO.class);
+			this.lblNombre.setValue("Clientes");
+			this.seleccionado = new ClienteVO();
 		}
 		
 		grid.addSelectionListener(new SelectionListener() 
@@ -108,6 +117,17 @@ public class BusquedaViewExtended extends BusquedaView{
 					    	main.cerrarVentana();
 					    }
 		    		}
+		    		
+		    		else if(seleccionado instanceof ClienteVO){
+			    		if(grid.getSelectedRow() != null){
+			    			
+			    			BeanItem<ClienteVO> item = containerCliente.getItem(grid.getSelectedRow());
+					    	seleccionado = item.getBean(); 
+					    	main.setInfo(seleccionado);	
+					    	main.cerrarVentana();
+					    }
+		    		}
+		    		
 		    		
 		    	}
 		    	catch(Exception e){
@@ -212,6 +232,29 @@ public class BusquedaViewExtended extends BusquedaView{
 			
 		}
 		
+		if(seleccionado instanceof ClienteVO){
+			
+			ArrayList<ClienteVO> lstDoc = new ArrayList<>();
+			
+			ClienteVO i;
+			for (Object o : lst) {
+				
+				i = (ClienteVO) o;
+				lstDoc.add(i);
+			}
+			
+			this.containerCliente.addAll(lstDoc);
+			this.grid.setContainerDataSource(containerCliente);
+			
+			grid.removeColumn("fechaMod");
+			grid.removeColumn("usuarioMod");
+			grid.removeColumn("operacion");
+			
+		
+			this.arreglarGrilla();
+			
+		}
+		
 		
 		
 	}
@@ -294,6 +337,18 @@ public class BusquedaViewExtended extends BusquedaView{
 					        // (Re)create the filter if necessary
 					        if (! change.getText().isEmpty())
 					        	this.containerMoneda.addContainerFilter(
+					                new SimpleStringFilter(pid,
+					                    change.getText(), true, false));
+				    	}
+				    	
+				    	else if(seleccionado instanceof ClienteVO) /*PARA MONEDAS*/
+				    	{
+					    	// Can't modify filters so need to replace
+					    	this.containerCliente.removeContainerFilters(pid);
+			
+					        // (Re)create the filter if necessary
+					        if (! change.getText().isEmpty())
+					        	this.containerCliente.addContainerFilter(
 					                new SimpleStringFilter(pid,
 					                    change.getText(), true, false));
 				    	}
