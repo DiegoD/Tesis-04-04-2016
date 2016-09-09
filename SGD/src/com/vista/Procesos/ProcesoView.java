@@ -36,7 +36,6 @@ public class ProcesoView extends CssLayout {
 	protected HorizontalLayout cliente;
 	protected TextField codCliente;
 	protected TextField nomCliente;
-	protected TextField carpeta;
 	protected Button btnBuscarCliente;
 	protected ComboBox comboDocumento;
 	protected TextField nroDocum;
@@ -47,6 +46,7 @@ public class ProcesoView extends CssLayout {
 	protected TextField impMn;
 	protected TextField Kilos;
 	protected DateField fecCruce;
+	protected TextField carpeta;
 	protected TextField impTr;
 	protected TextField marca;
 	protected TextField medio;

@@ -94,16 +94,24 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 					procesoVO.setCodDocum(auxDocumento.getcodDocumento());
 					procesoVO.setNomDocum(auxDocumento.getdescripcion());
 					
+					String aux = impMo.getValue().toString().trim().replace(",", ".");
+					procesoVO.setImpMo(Float.parseFloat(aux));
+					
+					aux = impMn.getValue().toString().trim().replace(",", ".");
+					procesoVO.setImpMn(Float.parseFloat(aux));
+					
+					aux = tcMov.getValue().toString().trim().replace(",", ".");
+					procesoVO.setTcMov(Float.parseFloat(aux));
+					
+					//procesoVO.setImpTr(Float.parseFloat(impTr.getValue().trim()));
+					
 					procesoVO.setCodigo(Integer.parseInt(codigo.getValue().trim()));
 					procesoVO.setFecha(new java.sql.Timestamp(fecha.getValue().getTime()));
 					procesoVO.setNroMega(Integer.parseInt(nroMega.getValue().trim()));
 					procesoVO.setNroDocum(Integer.parseInt(nroDocum.getValue().trim()));
 					procesoVO.setFecDocum(new java.sql.Timestamp(fecDocum.getValue().getTime()));
 					procesoVO.setCarpeta(carpeta.getValue().trim());
-					procesoVO.setImpMo(Float.parseFloat(impMo.getValue().trim()));
-					procesoVO.setImpMn(Float.parseFloat(impMn.getValue().trim()));
-					//procesoVO.setImpTr(Float.parseFloat(impTr.getValue().trim()));
-					procesoVO.setTcMov(Float.parseFloat(tcMov.getValue().trim()));
+					
 					procesoVO.setKilos(Float.parseFloat(Kilos.getValue().trim()));
 					procesoVO.setFecCruce(new java.sql.Timestamp(fecCruce.getValue().getTime()));
 					procesoVO.setMarca(marca.getValue().trim());
