@@ -48,11 +48,11 @@ public class ProcesoControlador {
 	 * @throws NoTienePermisosException 
 	 * @throws ObteniendoPermisosException 
 	 */
-	public void insertarProceso(ProcesoVO procesoVO, UsuarioPermisosVO permisos) throws IngresandoProcesoException, ExisteProcesoException, InicializandoException, ConexionException, ErrorInesperadoException, ObteniendoPermisosException, NoTienePermisosException
+	public int insertarProceso(ProcesoVO procesoVO, UsuarioPermisosVO permisos) throws IngresandoProcesoException, ExisteProcesoException, InicializandoException, ConexionException, ErrorInesperadoException, ObteniendoPermisosException, NoTienePermisosException
 	{
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			FachadaDD.getInstance().insertarProceso(procesoVO, permisos.getCodEmp());
+			return FachadaDD.getInstance().insertarProceso(procesoVO, permisos.getCodEmp());
 		else
 			throw new NoTienePermisosException();
 	}

@@ -101,5 +101,11 @@ public class AbstractFactoryMySql implements IAbstractFactory
 		
 		return new DAOProcesos();
 	}
+	
+	@Override
+	public IDAONumeradores crearDAONumeradores() {
+		
+		return new DAONumeradores();
+	}
 
 }

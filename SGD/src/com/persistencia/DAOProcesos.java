@@ -194,16 +194,17 @@ public class DAOProcesos implements IDAOProcesos{
 
 	/**
 	 * Inserta un proceso en la base, nos retrorna un entero que es el codigo del proceso insertado
+	 * @throws SQLException 
 	 * 
 	 */
-	public int insertarProceso(Proceso proceso, String codEmp, Connection con) throws IngresandoProcesoException, ConexionException {
+	public void insertarProceso(Proceso proceso, String codEmp, Connection con) throws IngresandoProcesoException, ConexionException, SQLException {
 
 		ConsultasDD clts = new ConsultasDD();
-    	
+    	int codigo =0;
+		
     	String insert = clts.insertarProceso();
     	
     	PreparedStatement pstmt1;
-    	int codigo =0;	
     	
     	try {
     		
@@ -230,14 +231,15 @@ public class DAOProcesos implements IDAOProcesos{
 			pstmt1.setString(19, proceso.getClienteInfo().getCodigo());
 			pstmt1.setString(20, proceso.getMonedaInfo().getCod_moneda());
 			pstmt1.setString(21, codEmp);
+			pstmt1.setInt(22, codigo);
 			
 			pstmt1.executeUpdate ();
 			
-			/*Obtenemos el codigo del cliente insertado*/
-			ResultSet rs = pstmt1.getGeneratedKeys();
-			if (rs.next()){
-			    codigo=rs.getInt(1);
-			}
+//			/*Obtenemos el codigo del cliente insertado*/
+//			ResultSet rs = pstmt1.getGeneratedKeys();
+//			if (rs.next()){
+//			    codigo=rs.getInt(1);
+//			}
 			
 			pstmt1.close ();
 					
@@ -247,7 +249,6 @@ public class DAOProcesos implements IDAOProcesos{
 			throw new IngresandoProcesoException();
 		} 
 		
-    	return codigo;
 	}
 	
 	/**

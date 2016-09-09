@@ -931,8 +931,8 @@ public class ConsultasDD {
 				+ "carpeta, importe_moneda, importe_moneda_nacional, importe_transaccion, "
 				+ "tasa_cambio, peso, fecha_cruce, marca, medio, descripcion, observaciones, "
 				+ "fecha_mod, usuario_mod, operacion, "
-				+ "cod_documento, cod_cliente, cod_moneda, cod_emp ) ");
-		sb.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?, ?, ?) ");
+				+ "cod_documento, cod_cliente, cod_moneda, cod_emp, cod_proceso ) ");
+		sb.append("VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?) ");
 		
 		return sb.toString();
 	}
@@ -964,4 +964,32 @@ public class ConsultasDD {
 	}
 
 ////////////////////////FIN PROCESOS//////////////////////////////////////////////
+		
+////////////////////////INI NUMERADORES//////////////////////////////////////////////
+
+		
+	public String getNumero()
+	{
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT numero ");
+		sb.append("FROM g_numeradores WHERE cod_numerador = ? AND cod_emp = ? ");
+		
+		return sb.toString();
+	}
+	
+	public String actualizarNumero()
+	{
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("UPDATE vaadin.g_numeradores ");
+		sb.append("SET numero = ? ");
+		sb.append("WHERE cod_numerador = ? AND cod_emp = ?");
+		
+		return sb.toString();
+	}
+		
+////////////////////////FIN NUMERADORES//////////////////////////////////////////////
 }

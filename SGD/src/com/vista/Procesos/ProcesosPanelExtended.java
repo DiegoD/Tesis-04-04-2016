@@ -3,7 +3,10 @@ package com.vista.Procesos;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import com.controladores.ProcesoControlador;
 import com.excepciones.ConexionException;
@@ -14,6 +17,7 @@ import com.excepciones.Monedas.ObteniendoMonedaException;
 import com.excepciones.Procesos.ObteniendoProcesosException;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.util.converter.StringToDateConverter;
 import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
@@ -138,6 +142,7 @@ public class ProcesosPanelExtended extends ProcesosPanel{
 		gridProcesos.removeColumn("medio");
 		gridProcesos.removeColumn("descripcion");
 		gridProcesos.removeColumn("observaciones");
+		gridProcesos.removeColumn("descMoneda");
 		
 		/*Agregamos los filtros a la grilla*/
 		this.filtroGrilla();
@@ -176,6 +181,23 @@ public class ProcesosPanelExtended extends ProcesosPanel{
 			    }
 		      
 		    }
+		});
+		
+		//Modifica el formato de fecha en la grilla 
+		gridProcesos.getColumn("fecha").setConverter(new StringToDateConverter(){
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+
+			public DateFormat getFormat(Locale locale){
+
+				return new SimpleDateFormat("dd/MM/yyyy");
+
+			}
+
 		});
 		
 	}

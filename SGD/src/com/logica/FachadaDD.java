@@ -108,6 +108,7 @@ public class FachadaDD {
 	private IDAOTipoRubro tipoRubros;
 	private IDAOCuentas cuentas;
 	private IDAOProcesos procesos;
+	private IDAONumeradores numeradores;
 	private AbstractFactoryBuilder fabrica;
 	private IAbstractFactory fabricaConcreta;
 	
@@ -131,6 +132,7 @@ public class FachadaDD {
         this.tipoRubros = fabricaConcreta.crearDAOTipoRubro();
         this.cuentas = fabricaConcreta.crearDAOCuentas();
         this.procesos = fabricaConcreta.crearDAOProcesos();
+        this.numeradores = fabricaConcreta.crearDAONumeradores();
     }
     
     public static FachadaDD getInstance() throws InicializandoException {
@@ -2158,11 +2160,12 @@ public class FachadaDD {
     /**
 	 * Inserta un nuevo proceso en la base
 	 */
-    public void insertarProceso(ProcesoVO procesoVO, String cod_emp) throws IngresandoProcesoException, ConexionException, ExisteProcesoException 
+    public int insertarProceso(ProcesoVO procesoVO, String cod_emp) throws IngresandoProcesoException, ConexionException, ExisteProcesoException 
     {
     	
     	Connection con = null;
     	boolean existe = false;
+    	int codigo;
     	
     	try 
     	{
@@ -2170,9 +2173,11 @@ public class FachadaDD {
 			con.setAutoCommit(false);
 			
 	    	Proceso proceso = new Proceso(procesoVO); 
-	    	
+	    	codigo = numeradores.getNumero(con, "01", cod_emp);
+	    	proceso.setCodigo(codigo);
 	    	this.procesos.insertarProceso(proceso, cod_emp, con);
     		con.commit();
+    		return codigo;
     	
     	}
     	catch(Exception IngresandoProcesoException)  	{

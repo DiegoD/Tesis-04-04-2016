@@ -1,6 +1,7 @@
 package com.persistencia;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
@@ -14,7 +15,7 @@ public interface IDAOProcesos {
 	
 	public ArrayList<Proceso> getProcesosTodos(Connection con, String codEmp) throws ObteniendoProcesosException, ConexionException;
 	public boolean memberProceso(int codProceso, String codEmp, Connection con) throws ExisteProcesoException, ConexionException;
-	public int insertarProceso(Proceso proceso, String codEmp, Connection con) throws IngresandoProcesoException, ConexionException;
+	public void insertarProceso(Proceso proceso, String codEmp, Connection con) throws IngresandoProcesoException, ConexionException, SQLException;
 	public void modificarProceso(Proceso proceso, String codEmp, Connection con) throws ModificandoProcesoException;
 	
 

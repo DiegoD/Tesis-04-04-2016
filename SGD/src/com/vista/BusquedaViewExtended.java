@@ -249,9 +249,17 @@ public class BusquedaViewExtended extends BusquedaView{
 			grid.removeColumn("fechaMod");
 			grid.removeColumn("usuarioMod");
 			grid.removeColumn("operacion");
+			grid.removeColumn("tel");
+			grid.removeColumn("direccion");
+			grid.removeColumn("mail");
+			grid.removeColumn("activo");
+			grid.removeColumn("codigoDoc");
+			grid.removeColumn("nombreDoc");
+			grid.removeColumn("numeroDoc");
 			
 		
 			this.arreglarGrilla();
+			this.filtroGrilla();
 			
 		}
 		
@@ -341,7 +349,7 @@ public class BusquedaViewExtended extends BusquedaView{
 					                    change.getText(), true, false));
 				    	}
 				    	
-				    	else if(seleccionado instanceof ClienteVO) /*PARA MONEDAS*/
+				    	else if(seleccionado instanceof ClienteVO) /*PARA CLIENTES*/
 				    	{
 					    	// Can't modify filters so need to replace
 					    	this.containerCliente.removeContainerFilters(pid);

@@ -45,6 +45,7 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 	MySub sub;
 	private PermisosUsuario permisos;
 	UsuarioPermisosVO permisoAux;
+	int codigoInsert;
 	
 	public ProcesoViewExtended(String opera, ProcesosPanelExtended main){
 		
@@ -76,7 +77,6 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 					procesoVO.setOperacion(operacion);
 					
 					//Cliente
-					procesoVO.setCodigo(Integer.parseInt(codigo.getValue().trim()));
 					procesoVO.setCodCliente(codCliente.getValue().trim());
 					procesoVO.setNomCliente(nomCliente.getValue().trim());
 					//procesoVO.setCodMoneda(codMoneda.getValue().trim());
@@ -105,7 +105,7 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 					
 					//procesoVO.setImpTr(Float.parseFloat(impTr.getValue().trim()));
 					
-					procesoVO.setCodigo(Integer.parseInt(codigo.getValue().trim()));
+					//procesoVO.setCodigo(Integer.parseInt(codigo.getValue().trim()));
 					procesoVO.setFecha(new java.sql.Timestamp(fecha.getValue().getTime()));
 					procesoVO.setNroMega(Integer.parseInt(nroMega.getValue().trim()));
 					procesoVO.setNroDocum(Integer.parseInt(nroDocum.getValue().trim()));
@@ -121,7 +121,9 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 
 					if(this.operacion.equals(Variables.OPERACION_NUEVO)) {	
 		
-						this.controlador.insertarProceso(procesoVO, permisoAux);
+						codigoInsert = this.controlador.insertarProceso(procesoVO, permisoAux);
+						procesoVO.setCodigo(codigoInsert);
+						
 						this.mainView.actulaizarGrilla(procesoVO);
 						
 						Mensajes.mostrarMensajeOK("Se ha guardado el proceso");
@@ -201,6 +203,7 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 			try {
 				
 				form.inicializarGrilla(lst);
+			
 				
 			} catch (Exception e) {
 				
@@ -439,8 +442,8 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 		
 		this.codCliente.setEnabled(false);
 		this.nomCliente.setEnabled(false);
-		this.comboMoneda.setEnabled(false);
-		this.comboDocumento.setEnabled(false);
+		this.comboMoneda.setEnabled(true);
+		this.comboDocumento.setEnabled(true);
 	}
 	
 	
@@ -532,18 +535,18 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 		
         this.carpeta.addValidator(
                 new StringLengthValidator(
-                     " 20 caracteres máximo", 1, 20, false));
+                     " 20 caracteres máximo", 0, 20, true));
         
         this.marca.addValidator(
                 new StringLengthValidator(
-                        " 100 caracteres máximo", 1, 100, false));
+                        " 100 caracteres máximo", 0, 100, true));
         this.medio.addValidator(
                 new StringLengthValidator(
-                        " 100 caracteres máximo", 1, 100, false));
+                        " 100 caracteres máximo", 0, 100, true));
         
         this.descripcion.addValidator(
                 new StringLengthValidator(
-                        " 100 caracteres máximo", 1, 100, false));
+                        " 100 caracteres máximo", 0, 100, true));
         
         
 	}
@@ -568,7 +571,8 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 					&& this.impMn.isValid() && this.impMo.isValid()
 					&& this.tcMov.isValid() && this.Kilos.isValid()
 					&& this.fecCruce.isValid() && this.marca.isValid()
-					&& this.medio.isValid() && this.descripcion.isValid())
+					&& this.medio.isValid() && this.descripcion.isValid()
+					&& this.comboDocumento.isValid() && this.comboMoneda.isValid())
 				valido = true;
 			
 		}catch(Exception e)
