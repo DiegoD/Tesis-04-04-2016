@@ -82,42 +82,111 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 					//procesoVO.setCodMoneda(codMoneda.getValue().trim());
 					
 					//Moneda
-					MonedaVO auxMoneda = new MonedaVO();
-					auxMoneda = (MonedaVO) this.comboMoneda.getValue();
-					procesoVO.setCodMoneda(auxMoneda.getCodMoneda());
-					procesoVO.setDescMoneda(auxMoneda.getDescripcion());
-					procesoVO.setSimboloMoneda(auxMoneda.getSimbolo());
+					if(this.comboMoneda.getValue() != null){
+						MonedaVO auxMoneda = new MonedaVO();
+						auxMoneda = (MonedaVO) this.comboMoneda.getValue();
+						procesoVO.setCodMoneda(auxMoneda.getCodMoneda());
+						procesoVO.setDescMoneda(auxMoneda.getDescripcion());
+						procesoVO.setSimboloMoneda(auxMoneda.getSimbolo());
+					}
+					else{
+						procesoVO.setCodMoneda("");
+						procesoVO.setDescMoneda("");
+						procesoVO.setSimboloMoneda("");
+					}
 					
 					//Documento
-					DocumentoAduaneroVO auxDocumento = new DocumentoAduaneroVO();
-					auxDocumento = (DocumentoAduaneroVO) this.comboDocumento.getValue();
-					procesoVO.setCodDocum(auxDocumento.getcodDocumento());
-					procesoVO.setNomDocum(auxDocumento.getdescripcion());
+					if(this.comboDocumento.getValue() != null){
+						DocumentoAduaneroVO auxDocumento = new DocumentoAduaneroVO();
+						auxDocumento = (DocumentoAduaneroVO) this.comboDocumento.getValue();
+						procesoVO.setCodDocum(auxDocumento.getcodDocumento());
+						procesoVO.setNomDocum(auxDocumento.getdescripcion());
+					}
+					else{
+						procesoVO.setCodDocum("");
+						procesoVO.setNomDocum("");
+					}
 					
-					String aux = impMo.getValue().toString().trim().replace(",", ".");
-					procesoVO.setImpMo(Float.parseFloat(aux));
 					
-					aux = impMn.getValue().toString().trim().replace(",", ".");
-					procesoVO.setImpMn(Float.parseFloat(aux));
+					procesoVO.setObservaciones(obseAux.getValue());
+					String aux;
+					if(impMo.getValue() != ""){
+						aux = impMo.getValue().toString().trim().replace(",", ".");
+						procesoVO.setImpMo(Float.parseFloat(aux));
+					}
+					else{
+						procesoVO.setImpMo(0);
+					}
 					
-					aux = tcMov.getValue().toString().trim().replace(",", ".");
-					procesoVO.setTcMov(Float.parseFloat(aux));
+					if(impMn.getValue() != ""){
+						aux = impMn.getValue().toString().trim().replace(",", ".");
+						procesoVO.setImpMn(Float.parseFloat(aux));
+					}
+					else{
+						procesoVO.setImpMn(0);
+					}
+					
+					if(tcMov.getValue() != ""){
+						aux = tcMov.getValue().toString().trim().replace(",", ".");
+						procesoVO.setTcMov(Float.parseFloat(aux));
+					}
+					else{
+						procesoVO.setTcMov(0);
+					}
 					
 					//procesoVO.setImpTr(Float.parseFloat(impTr.getValue().trim()));
 					
-					//procesoVO.setCodigo(Integer.parseInt(codigo.getValue().trim()));
+					if(this.operacion.equals(Variables.OPERACION_NUEVO)){
+						procesoVO.setCodigo(0);
+					}
+					else{
+						procesoVO.setCodigo(Integer.parseInt(codigo.getValue().trim()));
+					}
+					
 					procesoVO.setFecha(new java.sql.Timestamp(fecha.getValue().getTime()));
-					procesoVO.setNroMega(Integer.parseInt(nroMega.getValue().trim()));
-					procesoVO.setNroDocum(Integer.parseInt(nroDocum.getValue().trim()));
-					procesoVO.setFecDocum(new java.sql.Timestamp(fecDocum.getValue().getTime()));
+					
+					if(nroMega.getValue() != ""){
+						aux = nroMega.getValue().trim().replace(".", "");
+						procesoVO.setNroMega(Integer.parseInt(aux));
+					}
+					else{
+						procesoVO.setNroMega(0);
+					}
+					
+					if(nroDocum.getValue() != ""){
+						aux = nroDocum.getValue().trim().replace(".", "");
+						procesoVO.setNroDocum(Integer.parseInt(aux));
+					}
+					else{
+						procesoVO.setNroDocum(0);
+					}
+						
+					if(Kilos.getValue() != ""){
+						aux = Kilos.getValue().trim().replace(".", "");
+						procesoVO.setKilos(Integer.parseInt(aux));
+					}
+					else{
+						procesoVO.setKilos(0);
+					}
+					
+					if(fecDocum.getValue() != null){
+						procesoVO.setFecDocum(new java.sql.Timestamp(fecDocum.getValue().getTime()));
+					}
+					else{
+						procesoVO.setFecDocum(null);
+					}
 					procesoVO.setCarpeta(carpeta.getValue().trim());
 					
-					procesoVO.setKilos(Float.parseFloat(Kilos.getValue().trim()));
-					procesoVO.setFecCruce(new java.sql.Timestamp(fecCruce.getValue().getTime()));
+					if(fecCruce.getValue() != null){
+						procesoVO.setFecCruce(new java.sql.Timestamp(fecCruce.getValue().getTime()));
+					}
+					else{
+						procesoVO.setFecCruce(null);
+					}
+					
 					procesoVO.setMarca(marca.getValue().trim());
 					procesoVO.setMedio(medio.getValue().trim());
 					procesoVO.setDescripcion(descripcion.getValue().trim());
-					//VERprocesoVO.setObservaciones(observaciones.getValue.trim());
 
 					if(this.operacion.equals(Variables.OPERACION_NUEVO)) {	
 		
@@ -220,6 +289,26 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 			UI.getCurrent().addWindow(sub);
 			
 		});
+		
+		/*Inicalizamos listener para boton de Editar*/
+		this.observaciones.addClickListener(click -> {
+			
+			ProcesoObservacionesViewExtended form = new ProcesoObservacionesViewExtended(this, obseAux.getValue(), this.operacion);
+			try {
+			
+				sub = new MySub("65%", "35%" );
+				sub.setModal(true);
+				sub.center();
+				sub.setModal(true);
+				sub.setVista(form);
+				sub.center();
+				sub.setDraggable(true);
+				UI.getCurrent().addWindow(sub);
+			}
+			catch(Exception e)	{
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}
+		});
 	}
 	
 	public  void inicializarForm(){
@@ -265,30 +354,10 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 		this.fecha.setRequired(setear);
 		this.fecha.setRequiredError("Es requerido");
 		
-		this.fecDocum.setRequired(setear);
-		this.fecDocum.setRequiredError("Es requerido");
-		
-		this.carpeta.setRequired(setear);
-		this.carpeta.setRequiredError("Es requerido");
-		
-		this.impMo.setRequired(setear);
-		this.impMo.setRequiredError("Es requerido");
-		
-		this.impMn.setRequired(setear);
-		this.impMn.setRequiredError("Es requerido");
-		
-		this.tcMov.setRequired(setear);
-		this.tcMov.setRequiredError("Es requerido");
-		
-		this.comboMoneda.setRequired(setear);
-		this.comboMoneda.setRequiredError("Es requerido");
-		
-		this.comboDocumento.setRequired(setear);
-		this.comboDocumento.setRequiredError("Es requerido");
 	}
 	
 	/**
-	 * Dado un item MonedaVO seteamos la info del formulario
+	 * Dado un item ProcesoVO seteamos la info del formulario
 	 *
 	 */
 	public void setDataSourceFormulario(BeanItem<ProcesoVO> item)
@@ -297,6 +366,7 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 		
 		ProcesoVO proceso = new ProcesoVO();
 		proceso = fieldGroup.getItemDataSource().getBean();
+		this.obseAux.setValue(proceso.getObservaciones()); 
 		String fecha = new SimpleDateFormat("dd/MM/yyyy").format(proceso.getFechaMod());
 		
 		
@@ -413,6 +483,7 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 	private void enableCombos(){
 		this.comboMoneda.setEnabled(true);
 		this.comboDocumento.setEnabled(true);
+		
 	}
 	
 	/**
@@ -440,8 +511,6 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 		this.codCliente.setReadOnly(false);
 		this.nomCliente.setReadOnly(false);
 		
-		this.codCliente.setEnabled(false);
-		this.nomCliente.setEnabled(false);
 		this.comboMoneda.setEnabled(true);
 		this.comboDocumento.setEnabled(true);
 	}
@@ -503,9 +572,8 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 	 */
 	private void readOnlyFields(boolean setear)
 	{
-		this.codigo.setReadOnly(setear);
-		this.codCliente.setReadOnly(setear);
-		this.nomCliente.setReadOnly(setear);
+		this.codigo.setReadOnly(true);
+		
 		this.fecha.setReadOnly(setear);
 		this.nroMega.setReadOnly(setear);
 		this.nroDocum.setReadOnly(setear);
@@ -522,6 +590,8 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 
 		this.comboMoneda.setEnabled(false);
 		this.comboDocumento.setEnabled(false);
+		this.codCliente.setEnabled(false);
+		this.nomCliente.setEnabled(false);
 				
 	}
 	
@@ -565,7 +635,7 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 				
 		try
 		{
-			if(this.codigo.isValid() && this.codCliente.isValid() && this.fecha.isValid() 
+			if(this.codCliente.isValid() && this.fecha.isValid() 
 					&& this.nroMega.isValid() && this.nroDocum.isValid()
 					&& this.fecDocum.isValid() && this.carpeta.isValid()
 					&& this.impMn.isValid() && this.impMo.isValid()
@@ -597,6 +667,10 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 //			this.codMoneda.setValue(monedaVO.getCodMoneda());
 		}
 		
+	}
+	
+	public void setObservaciones(String observaciones){
+		this.obseAux.setValue(observaciones); 
 	}
 	
 	public void inicializarComboMoneda(String cod){
@@ -668,4 +742,7 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 		this.comboDocumento.setItemCaptionPropertyId("descripcion");
 		this.comboDocumento.setValue(documento);
 	}
+	
+	
+	
 }

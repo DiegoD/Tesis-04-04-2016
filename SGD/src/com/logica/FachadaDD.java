@@ -2112,6 +2112,9 @@ public class FachadaDD {
 			{
     			aux = new ProcesoVO();
     			
+    			aux.setOperacion(proceso.getOperacion());
+    			aux.setFechaMod(proceso.getFechaMod());
+    			aux.setUsuarioMod(proceso.getUsuarioMod());
     			aux.setCodigo(proceso.getCodigo());
     			aux.setCodCliente(proceso.getClienteInfo().getCodigo());
     			aux.setNomCliente(proceso.getClienteInfo().getNombre());
@@ -2134,7 +2137,7 @@ public class FachadaDD {
     			aux.setMarca(proceso.getMarca());
     			aux.setMedio(proceso.getMedio());
     			aux.setDescripcion(proceso.getDescripcion());
-    			aux.setObservaciones(proceso.getDescripcion());
+    			aux.setObservaciones(proceso.getObservaciones());
     			
     			lstProcesosVO.add(aux);
 			}

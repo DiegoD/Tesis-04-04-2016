@@ -892,12 +892,10 @@ public class ConsultasDD {
 				+ "m_clientes.cod_tit, m_clientes.nom_tit, "
 				+ "m_monedas.cod_moneda, m_monedas.descripcion, m_monedas.simbolo ");
 		
-		sb.append("FROM c_procesos, m_documentos_aduaneros, m_clientes, m_monedas ");
-		
-		sb.append("WHERE c_procesos.cod_documento = m_documentos_aduaneros.cod_documento "
-				+ "AND c_procesos.cod_cliente = m_clientes.cod_tit "
-				+ "AND c_procesos.cod_moneda = m_monedas.cod_moneda "
-				+ "AND c_procesos.cod_emp = ? ");
+		sb.append("FROM c_procesos LEFT JOIN  m_documentos_aduaneros ON c_procesos.cod_documento = m_documentos_aduaneros.cod_documento"
+				+ " LEFT JOIN  m_clientes ON c_procesos.cod_cliente = m_clientes.cod_tit"
+				+ " LEFT JOIN m_monedas ON c_procesos.cod_moneda = m_monedas.cod_moneda "
+				+ " AND c_procesos.cod_emp = ? ");  
 		
 		return sb.toString();
 	}

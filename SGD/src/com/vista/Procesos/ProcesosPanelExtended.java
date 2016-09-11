@@ -42,7 +42,7 @@ public class ProcesosPanelExtended extends ProcesosPanel{
 	private ArrayList<ProcesoVO> lstProcesos; /*Lista con las empresas*/
 	private BeanItemContainer<ProcesoVO> container;
 	private ProcesoControlador controlador;
-	MySub sub = new MySub("98%","70%");
+	MySub sub = new MySub("100%","70%");
 	PermisosUsuario permisos;
 
 	public ProcesosPanelExtended(){
@@ -68,7 +68,7 @@ public class ProcesosPanelExtended extends ProcesosPanel{
 				
 					this.btnNuevoProceso.addClickListener(click -> {
 						
-						sub = new MySub("98%","70%");
+						sub = new MySub("100%","70%");
 						form = new ProcesoViewExtended(Variables.OPERACION_NUEVO, this);
 						sub.setModal(true);
 						sub.setVista((Component) form);
@@ -165,7 +165,7 @@ public class ProcesosPanelExtended extends ProcesosPanel{
 				    	}
 							
 				    	form = new ProcesoViewExtended(Variables.OPERACION_LECTURA, ProcesosPanelExtended.this);
-				    	sub = new MySub("98%","70%");
+				    	sub = new MySub("100%","70%");
 						sub.setModal(true);
 						sub.setVista((Component) form);
 						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/

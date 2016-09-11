@@ -200,7 +200,6 @@ public class DAOProcesos implements IDAOProcesos{
 	public void insertarProceso(Proceso proceso, String codEmp, Connection con) throws IngresandoProcesoException, ConexionException, SQLException {
 
 		ConsultasDD clts = new ConsultasDD();
-    	int codigo =0;
 		
     	String insert = clts.insertarProceso();
     	
@@ -231,7 +230,7 @@ public class DAOProcesos implements IDAOProcesos{
 			pstmt1.setString(19, proceso.getClienteInfo().getCodigo());
 			pstmt1.setString(20, proceso.getMonedaInfo().getCod_moneda());
 			pstmt1.setString(21, codEmp);
-			pstmt1.setInt(22, codigo);
+			pstmt1.setInt(22, proceso.getCodigo());
 			
 			pstmt1.executeUpdate ();
 			
