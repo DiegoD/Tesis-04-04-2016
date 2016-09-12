@@ -43,6 +43,11 @@ import com.excepciones.Empresas.InsertandoEmpresaException;
 import com.excepciones.Empresas.ModificandoEmpresaException;
 import com.excepciones.Empresas.NoExisteEmpresaException;
 import com.excepciones.Empresas.ObteniendoEmpresasException;
+import com.excepciones.Gastos.ExisteGastoException;
+import com.excepciones.Gastos.IngresandoGastoException;
+import com.excepciones.Gastos.ModificandoGastoException;
+import com.excepciones.Gastos.NoExisteGastoException;
+import com.excepciones.Gastos.ObteniendoGastosException;
 import com.excepciones.Impuestos.ExisteImpuestoException;
 import com.excepciones.Impuestos.InsertandoImpuestoException;
 import com.excepciones.Impuestos.ModificandoImpuestoException;
@@ -83,6 +88,7 @@ import com.excepciones.grupos.ObteniendoGruposException;
 import com.valueObject.*;
 import com.valueObject.Cotizacion.CotizacionVO;
 import com.valueObject.Cuenta.CuentaVO;
+import com.valueObject.Gasto.GastoVO;
 import com.valueObject.TipoRubro.TipoRubroVO;
 import com.valueObject.empresa.EmpresaUsuVO;
 import com.valueObject.empresa.EmpresaVO;
@@ -111,6 +117,7 @@ public class FachadaDD {
 	private IDAONumeradores numeradores;
 	private AbstractFactoryBuilder fabrica;
 	private IAbstractFactory fabricaConcreta;
+	private IDAOGastos gastos;
 	
 	
     private FachadaDD() throws InstantiationException, IllegalAccessException, ClassNotFoundException, FileNotFoundException, IOException
@@ -133,6 +140,7 @@ public class FachadaDD {
         this.cuentas = fabricaConcreta.crearDAOCuentas();
         this.procesos = fabricaConcreta.crearDAOProcesos();
         this.numeradores = fabricaConcreta.crearDAONumeradores();
+        this.gastos = fabricaConcreta.crearDAOGastos();
     }
     
     public static FachadaDD getInstance() throws InicializandoException {
@@ -2241,4 +2249,155 @@ public class FachadaDD {
     	}
 	}
 /////////////////////////////////FIN-PROCESOS/////////////////////////////////
+ 
+/////////////////////////////////INI-GASTOS/////////////////////////////////
+	/**
+	* Obtiene todos los gastos existentes 
+	*/
+	@SuppressWarnings("unchecked")
+	public ArrayList<GastoVO> getGastos(String cod_emp) throws ObteniendoGastosException, ConexionException
+	{
+	
+		Connection con = null;
+		
+		ArrayList<Gasto> lstGastos;
+		ArrayList<GastoVO> lstGastosVO = new ArrayList<GastoVO>();
+		
+		try
+		{
+			con = this.pool.obtenerConeccion();
+			
+			lstGastos = this.gastos.getGastos(con, cod_emp);
+			
+			
+			GastoVO aux;
+			for (Gasto gasto : lstGastos) 
+			{
+				aux = new GastoVO();
+				
+				aux.setOperacion(gasto.getOperacion());
+				aux.setFechaMod(gasto.getFechaMod());
+				aux.setUsuarioMod(gasto.getUsuarioMod());
+				
+				aux.setCodGasto(gasto.getCod_gasto());
+				aux.setCodProceso(gasto.getProceso().getCodigo());
+				aux.setCodCliente(gasto.getCliente().getCodigo());
+				aux.setNomCliente(gasto.getCliente().getNombre());
+				aux.setCodMoneda(gasto.getMoneda().getCod_moneda());
+				aux.setDescMoneda(gasto.getMoneda().getDescripcion());
+				aux.setSimboloMoneda(gasto.getMoneda().getSimbolo());
+				aux.setCodCuenta(gasto.getCuenta().getCod_cuenta());
+				aux.setDescripcionCuenta(gasto.getCuenta().getDescripcion());
+				aux.setCodRubro(gasto.getRubro().getCod_rubro());
+				aux.setDescripcionRubro(gasto.getRubro().getDescripcion());
+				aux.setTipoRubro(gasto.getRubro().getTipoRubro().getCod_tipoRubro());
+				aux.setCodImpuesto(gasto.getRubro().getImpuesto().getCod_imp());
+				aux.setDescripcionImpuesto(gasto.getRubro().getImpuesto().getDescripcion());
+				aux.setPorcentajeImpuesto(gasto.getRubro().getImpuesto().getPorcentaje());
+				aux.setFecha(gasto.getFecha());
+				aux.setImpMo(gasto.getImpMo());
+				aux.setImpMn(gasto.getImpMn());
+				aux.setTcMov(gasto.getTcMov());
+				aux.setDescripcion(gasto.getDescripcion());
+				
+				lstGastosVO.add(aux);
+			}
+		
+		}
+		catch(ObteniendoGastosException e){
+			throw e;
+		
+		} 
+		catch (ConexionException e) {
+		
+			throw e;
+		} 
+		finally{
+			this.pool.liberarConeccion(con);
+		}
+		
+		
+		return lstGastosVO;
+	}
+
+	/**
+	* Inserta un nuevo gasto en la base
+	*/
+	public int insertarGasto(GastoVO gastoVO, String cod_emp) throws IngresandoGastoException, ConexionException, ExisteGastoException 
+	{
+	
+		Connection con = null;
+		boolean existe = false;
+		int codigo;
+		
+		try 
+		{
+			con = this.pool.obtenerConeccion();
+			con.setAutoCommit(false);
+			
+			Gasto gasto = new Gasto(gastoVO); 
+			codigo = numeradores.getNumero(con, "02", cod_emp);
+			gasto.setCod_gasto(codigo);
+			this.gastos.insertarGasto(gasto, cod_emp, con);
+			con.commit();
+			return codigo;
+		
+		}
+		catch(Exception IngresandoProcesoException)  	{
+			try {
+				con.rollback();
+			
+			} 
+			catch (SQLException e) {
+		
+				throw new IngresandoGastoException();
+			}
+		
+			throw new IngresandoGastoException();
+		}
+		finally{
+			pool.liberarConeccion(con);
+		}
+	}
+
+	/**
+	* Actualiza los datos de un gasto dado su código y la empresa
+	* valida que exista el código 
+	*/
+	public void actualizarGasto(GastoVO gastoVO, String cod_emp) throws ConexionException, ModificandoGastoException, NoExisteGastoException, ExisteGastoException  
+	{
+	
+		Connection con = null;
+		
+		try 
+		{
+			con = this.pool.obtenerConeccion();
+			con.setAutoCommit(false);
+			
+			Gasto gasto = new Gasto(gastoVO);
+			
+			if(this.gastos.memberGasto(gasto.getCod_gasto(), cod_emp, con)){
+				this.gastos.modificarGasto(gasto, cod_emp, con);
+				con.commit();
+			}
+			else
+				throw new NoExisteGastoException();
+			
+		}
+		catch(NoExisteGastoException| ConexionException | SQLException | ModificandoGastoException e){
+			try {
+			con.rollback();
+			
+			} 
+			catch (SQLException e1) {
+		
+				throw new ConexionException();
+			}
+			throw new ModificandoGastoException();
+		}
+		finally{
+			pool.liberarConeccion(con);
+		}
+	}
+/////////////////////////////////FIN-GASTOS/////////////////////////////////
 }

@@ -56,6 +56,12 @@ public class Rubro extends Auditoria{
 		this.proceso = rubroVO.isProceso();
 		this.persona = rubroVO.isPersona();
 	}
+	
+	public Rubro(String cod_rubro, String descripcion, Impuesto impuesto){
+		this.cod_rubro = cod_rubro;
+		this.descripcion = descripcion;
+		this.impuesto = impuesto;
+	}
 
 	public String getCod_rubro() {
 		return cod_rubro;

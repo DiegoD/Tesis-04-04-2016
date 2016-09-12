@@ -58,6 +58,10 @@ public class Proceso extends Auditoria{
 		this.observaciones = observaciones;
 		this.monedaInfo = monedaInfo;
 	}
+	
+	public Proceso(int codigo){
+		this.codigo = codigo;
+	}
 
 
 	public Proceso(ProcesoVO procVO){

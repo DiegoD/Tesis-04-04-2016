@@ -107,5 +107,11 @@ public class AbstractFactoryMySql implements IAbstractFactory
 		
 		return new DAONumeradores();
 	}
+	
+	@Override
+	public IDAOGastos crearDAOGastos() {
+		
+		return new DAOGastos();
+	}
 
 }

@@ -10,6 +10,7 @@ import com.persistencia.IDAODocumDgi;
 import com.persistencia.IDAODocumentos;
 import com.persistencia.IDAOEmpresas;
 import com.persistencia.IDAOFuncionarios;
+import com.persistencia.IDAOGastos;
 import com.persistencia.IDAOGrupos;
 import com.persistencia.IDAOImpuestos;
 import com.persistencia.IDAOMonedas;
@@ -56,4 +57,6 @@ public interface IAbstractFactory
 	public IDAOProcesos crearDAOProcesos();
 	
 	public IDAONumeradores crearDAONumeradores();
+	
+	public IDAOGastos crearDAOGastos();
 }

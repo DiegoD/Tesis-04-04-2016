@@ -42,6 +42,11 @@ public class Cuenta extends Auditoria{
 		}
 	}
 	
+	public Cuenta(String cod_cuenta, String descripcion){
+		this.cod_cuenta = cod_cuenta;
+		this.descripcion = descripcion;
+	}
+	
 	public String getCod_cuenta() {
 		return cod_cuenta;
 	}
