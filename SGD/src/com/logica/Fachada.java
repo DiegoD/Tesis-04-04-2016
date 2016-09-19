@@ -28,6 +28,10 @@ import com.excepciones.Documentos.ModificandoDocumentoException;
 import com.excepciones.Documentos.NoExisteDocumentoException;
 import com.excepciones.Documentos.ObteniendoDocumentosException;
 import com.excepciones.Empresas.ExisteEmpresaException;
+import com.excepciones.IngresoCobros.ExisteIngresoCobroException;
+import com.excepciones.IngresoCobros.InsertandoIngresoCobroException;
+import com.excepciones.IngresoCobros.ModificandoIngresoCobroException;
+import com.excepciones.IngresoCobros.ObteniendoIngresoCobroException;
 import com.excepciones.Login.LoginException;
 import com.excepciones.Usuarios.ExisteUsuarioException;
 import com.excepciones.clientes.ExisteClienteExeption;
@@ -48,7 +52,9 @@ import com.excepciones.grupos.ModificandoGrupoException;
 import com.excepciones.grupos.NoExisteGrupoException;
 import com.excepciones.grupos.ObteniendoFormulariosException;
 import com.excepciones.grupos.ObteniendoGruposException;
+import com.logica.IngresoCobro.IngresoCobro;
 import com.valueObject.*;
+import com.valueObject.IngresoCobro.IngresoCobroVO;
 import com.valueObject.banco.BancoVO;
 import com.valueObject.cliente.ClienteVO;
 import com.vista.VariablesPermisos;
@@ -69,6 +75,7 @@ public class Fachada {
 	private IDAOFuncionarios funcionarios;
 	private IDAODocumDgi documentosDGI;
 	private IDAOBancos bancos;
+	private IDAOIngresoCobro ingresoCobro;
 	
 	private AbstractFactoryBuilder fabrica;
 	private IAbstractFactory fabricaConcreta;
@@ -87,6 +94,7 @@ public class Fachada {
         this.funcionarios = fabricaConcreta.crearDAOFuncionarios();
         this.documentosDGI = fabricaConcreta.crearDAODocumDgi();
         this.bancos = fabricaConcreta.crearDAOBancos();
+        this.ingresoCobro = fabricaConcreta.crearDAOIngresoCobro();
         
     }
     
@@ -1172,8 +1180,138 @@ public void editarBanco(BancoVO bancoVO, String codEmp) throws  ConexionExceptio
 	}
 }
 
-/////////////////////////////////FIN-CLIENTES/////////////////////////////////
+/////////////////////////////////FIN-BANCOS/////////////////////////////////
 
+/////////////////////////////////INICIO-INGRESO COBRO//////////////////////
+/**
+*Nos retorna los ingreso de cobro del sistema para la empresa
+ * 
+*
+*/
+@SuppressWarnings("unchecked") 
+public ArrayList<IngresoCobroVO> getIngresoCobroTodos(String codEmp) throws ObteniendoIngresoCobroException, ConexionException {
+	
+	Connection con = null;
+	
+	ArrayList<IngresoCobro> lst;
+	ArrayList<IngresoCobroVO> lstVO = new ArrayList<IngresoCobroVO>();
+	
+	try
+	{
+		con = this.pool.obtenerConeccion();
+		
+		lst = this.ingresoCobro.getIngresoCobroTodos(con, codEmp);
+		
+		for (IngresoCobro ing : lst) 
+		{
+			lstVO.add(ing.retornarIngresoCobroVO());
+		}
+	
+	}catch(ObteniendoIngresoCobroException  e)
+	{
+		throw e;
+	
+	} catch (ConexionException e) {
+	
+		throw e;
+	} 
+	finally
+	{
+		this.pool.liberarConeccion(con);
+	}
+	
+	
+	return lstVO;
+}	 
+
+
+
+public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws InsertandoIngresoCobroException, ConexionException, ExisteIngresoCobroException{
+
+	Connection con = null;
+	boolean existe = false;
+	
+	try 
+	{
+		con = this.pool.obtenerConeccion();
+		con.setAutoCommit(false);
+		
+		IngresoCobro ing = new IngresoCobro(ingVO); 
+		
+		/*Verificamos que no exista un cliente con el mismo documento*/
+		if(!this.ingresoCobro.memberIngresoCobro(ing.getNroDocum(), codEmp, con))
+		{
+			this.ingresoCobro.insertarIngresoCobro(ing, codEmp, con);
+		
+			con.commit();
+		}
+		else{
+			existe = true;
+		}
+	
+	}catch(Exception e){
+		
+		try {
+			con.rollback();
+		
+		} catch (SQLException ex) {
+		
+			throw new InsertandoIngresoCobroException();
+		}
+	
+		throw new InsertandoIngresoCobroException();
+	}
+	finally
+	{
+		pool.liberarConeccion(con);
+	}
+	if (existe){
+		throw new ExisteIngresoCobroException();
+	}
+	
+}
+
+public void modificarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws  ConexionException, ModificandoIngresoCobroException, ExisteIngresoCobroException{
+
+	Connection con = null;
+	
+	try 
+	{
+		con = this.pool.obtenerConeccion();
+		con.setAutoCommit(false);
+		
+		IngresoCobro ing = new IngresoCobro(ingVO);
+		
+		/*Verificamos que exista el nro de cobro*/
+		if(this.ingresoCobro.memberIngresoCobro(ing.getNroDocum(), codEmp, con))
+		{
+			this.ingresoCobro.modificarIngresoCobro(ing, codEmp, con);
+			
+			con.commit();
+		}
+		else
+		throw new ModificandoIngresoCobroException();
+	
+	}catch(ModificandoIngresoCobroException| ExisteIngresoCobroException| ConexionException | SQLException  e)
+	{
+		try {
+		con.rollback();
+		
+		} catch (SQLException e1) {
+		
+		throw new ConexionException();
+		}
+			throw new ModificandoIngresoCobroException();
+	}
+	finally
+	{
+		pool.liberarConeccion(con);
+	}
+}
+
+
+
+/////////////////////////////////FIN-INGRESO COBRO/////////////////////////
 	
 	
 }

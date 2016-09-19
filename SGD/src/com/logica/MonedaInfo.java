@@ -4,7 +4,7 @@ import com.valueObject.MonedaInfoVO;
 
 public class MonedaInfo {
 	
-	private String cod_moneda;
+	private String codMoneda;
 	private String descripcion;
 	private String simbolo;
 	
@@ -12,7 +12,7 @@ public class MonedaInfo {
 	
 	public MonedaInfo(MonedaInfoVO monedaInfoVO){
 		
-		this.cod_moneda = monedaInfoVO.getCod_moneda();
+		this.codMoneda = monedaInfoVO.getCod_moneda();
 		this.descripcion = monedaInfoVO.getDescripcion();
 		this.simbolo = monedaInfoVO.getSimbolo();
 		
@@ -20,17 +20,17 @@ public class MonedaInfo {
 	
 	public MonedaInfo(String codMoneda, String descripcion, String simbolo){
 		
-		this.cod_moneda = codMoneda;
+		this.codMoneda = codMoneda;
 		this.descripcion = descripcion;
 		this.simbolo = simbolo;
 		
 	}
 	
-	public String getCod_moneda() {
-		return cod_moneda;
+	public String getCodMoneda() {
+		return codMoneda;
 	}
-	public void setCod_moneda(String cod_moneda) {
-		this.cod_moneda = cod_moneda;
+	public void setCodMoneda(String cod_moneda) {
+		this.codMoneda = cod_moneda;
 	}
 	public String getDescripcion() {
 		return descripcion;

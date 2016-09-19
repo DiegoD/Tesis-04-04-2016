@@ -2186,7 +2186,7 @@ public class FachadaDD {
     			aux.setCodigo(proceso.getCodigo());
     			aux.setCodCliente(proceso.getClienteInfo().getCodigo());
     			aux.setNomCliente(proceso.getClienteInfo().getNombre());
-    			aux.setCodMoneda(proceso.getMonedaInfo().getCod_moneda());
+    			aux.setCodMoneda(proceso.getMonedaInfo().getCodMoneda());
     			aux.setDescMoneda(proceso.getMonedaInfo().getDescripcion());
     			aux.setSimboloMoneda(proceso.getMonedaInfo().getSimbolo());
     			aux.setFecha(proceso.getFecha());

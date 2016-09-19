@@ -824,5 +824,154 @@ public String getProcesosActivos(){
 		return sb.toString();
 	}
 ////////////////////////FIN CTAS BANCOS///////////////////////////////////////////////
+	
+///////////////////////INGRESO COBRO/////////////////////////////////////////////////
+
+	public String insertIngresoCobroCab(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO c_ingcobro (cod_docum, serie_docum, nro_docum, cod_tit, cod_cuenta ");
+		sb.append(", cod_emp, fec_doc, fec_valor, cod_bco, cod_ctabco, cod_mpago, cod_doc_ref ");
+		sb.append(", serie_doc_ref, nro_doc_ref, cod_moneda, imp_tot_mn, imp_tot_mo, tc_mov ");
+		sb.append(", observaciones, nro_trans, fecha_mod, usuario_mod, operacion) ");
+		sb.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+		
+		return sb.toString();
+	}
+	
+	public String insertIngresoCobroCabDet(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO vaadin.d_ingcobro (cod_cuenta, cod_emp, cod_docum, serie_docum, nro_docum, cod_proceso,  ");
+		sb.append("cod_rubro, cuenta, fec_doc, fec_valor, cod_moneda, cod_impuesto, imp_impu_mn, imp_impu_mo,  ");
+		sb.append("imp_sub_mn, imp_sub_mo, imp_tot_mn, imp_tot_mo, tc_mov, referencia, referencia2, ");
+		sb.append("nro_trans, fecha_mod, usuario_mod, operacion, linea) ");
+		sb.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+		
+		return sb.toString();
+	}
+
+	public String getIngresoCobroCabTodos(){
+		
+		StringBuilder sb = new StringBuilder();
+		 
+		sb.append("SELECT cod_docum, serie_docum, nro_docum, m_clientes.cod_tit, m_clientes.nom_tit, m_cuentas.cod_cuenta, m_cuentas.descripcion nom_cuenta, c_ingcobro.cod_emp, fec_doc,  ");
+		sb.append("fec_valor, m_bancos.cod_bco, m_bancos.nom_bco, m_ctasbcos.cod_ctabco, m_ctasbcos.nom_cta, cod_mpago, cod_doc_ref, serie_doc_ref, nro_doc_ref,  ");
+		sb.append("m_monedas.cod_moneda, m_monedas.descripcion, m_monedas.simbolo, imp_tot_mn, imp_tot_mo, tc_mov, observaciones, nro_trans,  ");
+		sb.append("c_ingcobro.fecha_mod, c_ingcobro.usuario_mod, c_ingcobro.operacion, m_monedas.descripcion, m_monedas.simbolo");
+		sb.append("FROM c_ingcobro, m_monedas, m_clientes, m_ctasbcos, m_cuentas WHERE cod_emp = ?  ");
+		
+		sb.append(" AND c_ingcobro.cod_moneda = m_monedas.cod_moneda ");
+		sb.append("AND c_ingcobro.cod_emp = m_monedas.cod_emp ");
+		
+		sb.append("AND c_ingcobro.cod_emp = m_clientes.cod_emp  ");
+		sb.append("AND c_ingcobro.cod_tit = m_clientes.cod_tit  ");
+		
+		sb.append("AND c_ingcobro.cod_bco = m_bancos.cod_bco  ");
+		sb.append("AND c_ingcobro.cod_emp = m_bancos.cod_emp  ");
+		
+		sb.append(" AND c_ingcobro.cod_emp = m_ctasbcos.cod_emp  ");
+		sb.append(" AND c_ingcobro.cod_ctabco = m_ctasbcos.cod_ctabco  ");
+		sb.append(" AND c_ingcobro.cod_bco = m_ctasbcos.cod_bco  ");
+		
+		sb.append(" AND c_ingcobro.cod_emp = m_cuentas.cod_emp  ");
+		sb.append(" AND c_ingcobro.cod_cuenta = m_cuentas.cod_cuenta  ");
+		
+		return sb.toString();
+	}
+
+	public String getIngresoCobroDetxTrans(){
+		
+		StringBuilder sb = new StringBuilder();
+		 
+		sb.append("SELECT m_cuentas.cod_cuenta, m_cuentas.descripcion nom_cuenta, d_ingcobro.cod_emp, cod_docum, serie_docum, nro_docum, cod_proceso,  ");
+		sb.append("m_rubros.cod_rubro, m_rubros.descripcion nom_rubro, cuenta, fec_doc, fec_valor, m_monedas.cod_moneda, m_monedas.simbolo, m_monedas.descripcion nom_moneda ");
+		sb.append(", m_impuestos.cod_impuesto, m_impuestos.descripcion nom_impuesto, m_impuestos.porcentaje, imp_impu_mn,  ");
+		sb.append("imp_impu_mo, imp_sub_mn, imp_sub_mo, imp_tot_mn, imp_tot_mo, tc_mov, referencia,  ");
+		sb.append("referencia2, nro_trans, d_ingcobro.fecha_mod, d_ingcobro.usuario_mod, d_ingcobro.operacion, d_ingcobro.linea ");
+
+		sb.append("FROM d_ingcobro, m_monedas, m_impuestos, m_rubros, m_cuentas  ");
+
+		sb.append("WHERE d_ingcobro.cod_moneda = m_monedas.cod_moneda  ");
+		sb.append("AND d_ingcobro.cod_emp = m_monedas.cod_emp "); 
+			
+		sb.append(" AND d_ingcobro.cod_impuesto = m_impuestos.cod_impuesto "); 
+		sb.append("AND d_ingcobro.cod_emp = m_impuestos.cod_emp "); 
+			
+		sb.append(" AND d_ingcobro.cod_rubro = m_rubros.cod_rubro  ");
+		sb.append("AND d_ingcobro.cod_emp = m_rubros.cod_emp "); 
+		sb.append("AND d_ingcobro.nro_trans  = ? ");
+		
+		sb.append(" AND d_ingcobro.cod_cuenta = m_cuentas.cod_cuenta  ");
+		sb.append("AND d_ingcobro.cod_emp = m_cuentas.cod_emp "); 
+		
+		return sb.toString();
+	}
+	
+	public String getIngresoCobroCabInd(){
+		
+		StringBuilder sb = new StringBuilder();
+		 
+		sb.append("SELECT cod_docum, serie_docum, nro_docum, m_clientes.cod_tit, m_clientes.nom_tit, m_cuentas.cod_cuenta, m_cuentas.descripcion,  c_ingcobro.cod_emp, fec_doc,  ");
+		sb.append("fec_valor, m_bancos.cod_bco, m_bancos.nom_bco, m_ctasbcos.cod_ctabco, m_ctasbcos.nom_cta, cod_mpago, cod_doc_ref, serie_doc_ref, nro_doc_ref,  ");
+		sb.append("m_monedas.cod_moneda, m_monedas.descripcion, m_monedas.simbolo, imp_tot_mn, imp_tot_mo, tc_mov, observaciones, nro_trans,  ");
+		sb.append("fecha_mod, usuario_mod, operacion, m_monedas.descripcion, m_monedas.simbolo ");
+		sb.append("FROM c_ingcobro, m_monedas, m_clientes, m_ctasbcos, m_cuentas WHERE cod_emp = ?   ");
+		sb.append(" AND cod_docum = ? AND nro_docum = ? ");
+		
+		sb.append(" AND c_ingcobro.cod_moneda = m_monedas.cod_moneda ");
+		sb.append("AND c_ingcobro.cod_emp = m_monedas.cod_emp ");
+		
+		sb.append("AND c_ingcobro.cod_emp = m_clientes.cod_emp  ");
+		sb.append("AND c_ingcobro.cod_tit = m_clientes.cod_tit  ");
+		
+		sb.append("AND c_ingcobro.cod_bco = m_bancos.cod_bco  ");
+		sb.append("AND c_ingcobro.cod_emp = m_bancos.cod_emp  ");
+		
+		sb.append(" AND c_ingcobro.cod_emp = m_ctasbcos.cod_emp  ");
+		sb.append(" AND c_ingcobro.cod_ctabco = m_ctasbcos.cod_ctabco  ");
+		sb.append(" AND c_ingcobro.cod_bco = m_ctasbcos.cod_bco  ");
+		
+		sb.append(" AND c_ingcobro.cod_emp = m_cuentas.cod_emp  ");
+		sb.append(" AND c_ingcobro.cod_cuenta = m_cuentas.cod_cuenta  ");
+		
+		
+		
+		return sb.toString();
+	}
+
+		
+	public String memberIngresoCobro(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT nro_docum ");
+		sb.append("FROM c_ingcobro WHERE nro_docum = ? AND cod_emp = ? ");
+		
+		return sb.toString();
+	}
+	
+	public String deleteIngresoCobroCab(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("DELETE FROM c_ingcobro WHERE nro_trans = ? ");
+		
+		return sb.toString();
+	}
+	
+	public String deleteIngresoCobroDet(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("DELETE FROM d_ingcobro WHERE nro_trans = ? ");
+		
+		return sb.toString();
+	}
+	
+	
+//////////////////////FIN-INGRESO COBRO/////////////////////////////////////////////
     
 }

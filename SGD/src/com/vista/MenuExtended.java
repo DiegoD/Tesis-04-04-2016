@@ -3,11 +3,14 @@ package com.vista;
 import java.util.ArrayList;
 
 import com.vaadin.server.Page;
+import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinService;
 import com.vaadin.shared.Position;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.MenuBar;
+import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
@@ -41,8 +44,90 @@ public class MenuExtended extends Menu{
 	private VerticalLayout tabAdministracion;
 	private PermisosUsuario permisos;
 	private Principal mainPrincipal; /*Variable para poder desloguearse*/
+	MenuBar barmenu;
+	
+	private void inicializarMenu(){
+		
+		this.barmenu = new MenuBar();
+		this.barmenu.setStyleName("valo-menu-responsive");
+		
+		// A top-level menu item that opens a submenu
+		MenuItem administracion = barmenu.addItem("Administración", null, null);
+		MenuItem mantenimientos = barmenu.addItem("Mantenimientos", null, null);
+		
+		
+		// Submenu item with a sub-submenu
+		MenuItem usuarios = administracion.addItem("Usuarios", cmdUsuario);
+		MenuItem grupos = administracion.addItem("Grupos", cmdGrupos);
+		
+		MenuItem impuestos = mantenimientos.addItem("Impuestos", cmdImpuestos);
+		
+		this.content.addComponent(barmenu);
+		
+	}
+	
+	MenuBar.Command cmdUsuario = new MenuBar.Command() {
+	    public void menuSelected(MenuItem selectedItem) {
+	        
+	    	setSizeFull();
+			
+			content.removeAllComponents();
+			try {
+				
+				UsuariosPanelExtend u = new UsuariosPanelExtend();
+				content.addComponent(u);
+				
+			} catch (Exception e) {
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}
+	    }
+	};
+	
+	MenuBar.Command cmdGrupos = new MenuBar.Command() {
+	    public void menuSelected(MenuItem selectedItem) {
+	    	
+	    	setSizeFull();
+			
+			content.removeAllComponents();
+			try {
+				
+				GruposPanelExtended c = new GruposPanelExtended();
+				c.setSizeFull();
+				content.setSizeFull();
+				
+				content.addComponent(c);
+				
+			} catch (Exception e) {
+				
+				Mensajes.mostrarMensajeError(e.getMessage());
+			}
+	    }
+	};
+	
+	MenuBar.Command cmdImpuestos = new MenuBar.Command() {
+	    public void menuSelected(MenuItem selectedItem) {
+	    	
+    		setSizeFull();
+			
+			content.removeAllComponents();
+			try {
+				
+				ImpuestosPanelExtended c = new ImpuestosPanelExtended();
+				c.setSizeFull();
+				content.setSizeFull();
+				
+				content.addComponent(c);
+				
+			} catch (Exception e) {
+				
+				Mensajes.mostrarMensajeError(e.getMessage());
+			}
+	    }
+	};
 	
 	public MenuExtended(Principal principalView){
+		
+		this.inicializarMenu();
 		
 		this.mainPrincipal = principalView;
 		this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");;

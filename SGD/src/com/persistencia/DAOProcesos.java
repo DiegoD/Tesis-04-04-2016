@@ -228,7 +228,7 @@ public class DAOProcesos implements IDAOProcesos{
 			pstmt1.setString(17, proceso.getOperacion());
 			pstmt1.setString(18, proceso.getDocumento().getCod_docucmento());
 			pstmt1.setString(19, proceso.getClienteInfo().getCodigo());
-			pstmt1.setString(20, proceso.getMonedaInfo().getCod_moneda());
+			pstmt1.setString(20, proceso.getMonedaInfo().getCodMoneda());
 			pstmt1.setString(21, codEmp);
 			pstmt1.setInt(22, proceso.getCodigo());
 			
@@ -287,7 +287,7 @@ public class DAOProcesos implements IDAOProcesos{
 			pstmt1.setString(17, proceso.getOperacion());
 			pstmt1.setString(18, proceso.getDocumento().getCod_docucmento());
 			pstmt1.setString(19, proceso.getClienteInfo().getCodigo());
-			pstmt1.setString(20, proceso.getMonedaInfo().getCod_moneda());
+			pstmt1.setString(20, proceso.getMonedaInfo().getCodMoneda());
 			pstmt1.setInt(21, proceso.getCodigo());
 			pstmt1.setString(22, codEmp);
 			

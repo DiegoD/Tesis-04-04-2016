@@ -13,6 +13,7 @@ import com.persistencia.IDAOFuncionarios;
 import com.persistencia.IDAOGastos;
 import com.persistencia.IDAOGrupos;
 import com.persistencia.IDAOImpuestos;
+import com.persistencia.IDAOIngresoCobro;
 import com.persistencia.IDAOMonedas;
 import com.persistencia.IDAONumeradores;
 import com.persistencia.IDAOProcesos;
@@ -55,8 +56,11 @@ public interface IAbstractFactory
 	public IDAOBancos crearDAOBancos();
 	
 	public IDAOProcesos crearDAOProcesos();
+
+	public IDAOIngresoCobro crearDAOIngresoCobro();
 	
 	public IDAONumeradores crearDAONumeradores();
 	
 	public IDAOGastos crearDAOGastos();
+
 }
