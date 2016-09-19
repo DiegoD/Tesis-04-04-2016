@@ -1934,6 +1934,66 @@ public class FachadaDD {
 		return lstCuentasVO;
 	}
 
+	public ArrayList<CuentaVO> getCuentasxRubro(String codEmp, String codRubro) throws ObteniendoCuentasException, ConexionException, com.excepciones.Cuentas.ObteniendoRubrosException
+	{
+	
+		Connection con = null;
+		
+		ArrayList<Cuenta> lstCuentas; 
+		ArrayList<CuentaVO> lstCuentasVO = new ArrayList<CuentaVO>();
+		
+		try
+		{
+			con = this.pool.obtenerConeccion();
+			
+			lstCuentas = this.cuentas.getCuentasxRubro(codEmp, codRubro, con);
+			
+			
+			CuentaVO aux;
+			for (Cuenta cuenta : lstCuentas) 
+			{
+				aux = new CuentaVO();
+				
+				aux.setCodCuenta(cuenta.getCod_cuenta());
+				aux.setDescripcion(cuenta.getDescripcion());
+				aux.setFechaMod(cuenta.getFechaMod());
+				aux.setUsuarioMod(cuenta.getUsuarioMod());
+				aux.setOperacion(cuenta.getOperacion());
+				aux.setActivo(cuenta.isActivo());
+				
+				
+				RubroVO auxR;
+				for(Rubro rub : cuenta.getLstRubros()){
+					auxR = new RubroVO();
+					auxR.setcodRubro(rub.getCod_rubro());
+					auxR.setDescripcion(rub.getDescripcion());
+					auxR.setOficina(rub.isOficina());
+					auxR.setProceso(rub.isProceso());
+					auxR.setPersona(rub.isPersona());
+					
+					aux.getLstRubros().add(auxR);
+				}
+				
+				lstCuentasVO.add(aux);
+			}
+		
+		}
+		catch(ObteniendoCuentasException | com.excepciones.Cuentas.ObteniendoRubrosException e){
+			throw e;
+		
+		} 
+		catch (ConexionException e) {
+		
+			throw e;
+		} 
+		finally{
+			this.pool.liberarConeccion(con);
+		}
+		
+		
+		return lstCuentasVO;
+	}
+	
 	public void insertarCuenta(CuentaVO cuentaVO, String codEmp) throws InsertandoCuentaException, ConexionException, ExisteCuentaException 
 	{
 	
@@ -2290,7 +2350,7 @@ public class FachadaDD {
 				aux.setDescripcionCuenta(gasto.getCuenta().getDescripcion());
 				aux.setCodRubro(gasto.getRubro().getCod_rubro());
 				aux.setDescripcionRubro(gasto.getRubro().getDescripcion());
-				aux.setTipoRubro(gasto.getRubro().getTipoRubro().getCod_tipoRubro());
+				//aux.setTipoRubro(gasto.getRubro().getTipoRubro().getCod_tipoRubro());
 				aux.setCodImpuesto(gasto.getRubro().getImpuesto().getCod_imp());
 				aux.setDescripcionImpuesto(gasto.getRubro().getImpuesto().getDescripcion());
 				aux.setPorcentajeImpuesto(gasto.getRubro().getImpuesto().getPorcentaje());

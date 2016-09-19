@@ -21,6 +21,7 @@ import com.vista.Cotizaciones.CotizacionesPanelExtended;
 import com.vista.Cuentas.CuentasPanelExtended;
 import com.vista.Empresas.EmpresasPanelExtended;
 import com.vista.Funcionarios.FuncionariosPanelExtended;
+import com.vista.Gastos.GastosPanelExtended;
 import com.vista.Grupos.GruposPanelExtended;
 import com.vista.Impuestos.ImpuestosPanelExtended;
 import com.vista.Login.LoginExtended;
@@ -340,6 +341,21 @@ public class MenuExtended extends Menu{
 				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 			}
 		});
+		
+		this.gastos.addClickListener(click -> {
+			
+			setSizeFull();
+			
+			this.content.removeAllComponents();
+			try {
+				
+				GastosPanelExtended u = new GastosPanelExtended(); 
+				this.content.addComponent(u);
+				
+			} catch (Exception e) {
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}
+		});
 	}
 	
 	
@@ -393,6 +409,7 @@ public class MenuExtended extends Menu{
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_CUENTAS) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_BANCOS) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_PROCESOS) ||
+				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_GASTOS) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_RUBROS))
 			{
 				lstFormsMenuMant.add(formularioVO);
@@ -480,6 +497,13 @@ public class MenuExtended extends Menu{
 							this.habilitarProcesos();
 						
 					break;
+					
+					case VariablesPermisos.FORMULARIO_GASTOS:
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GASTOS, VariablesPermisos.OPERACION_LEER))
+							this.habilitarGastos();
+						
+					break;
+					
 				}
 				
 			}
@@ -596,6 +620,9 @@ public class MenuExtended extends Menu{
 		
 		this.procesos.setVisible(false);
 		this.procesos.setEnabled(false);
+		
+		this.gastos.setVisible(false);
+		this.gastos.setEnabled(false);
 	}
 	
 	
@@ -698,6 +725,12 @@ public class MenuExtended extends Menu{
 		this.procesos.setVisible(true);
 		this.procesos.setEnabled(true);
 		this.tabMantenimientos.addComponent(procesos);
+	}
+	
+	private void habilitarGastos(){
+		this.gastos.setVisible(true);
+		this.gastos.setEnabled(true);
+		this.tabMantenimientos.addComponent(gastos);
 	}
 	
 	public PermisosUsuario getPermisosUsuario()

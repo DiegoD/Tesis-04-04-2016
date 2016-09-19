@@ -1,7 +1,10 @@
 package com.vista;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import com.controladores.ImpuestoControlador;
 import com.excepciones.ConexionException;
@@ -10,6 +13,7 @@ import com.excepciones.Impuestos.ObteniendoImpuestosException;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.util.converter.StringToDateConverter;
 import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
@@ -19,8 +23,11 @@ import com.valueObject.CodigoGeneralizadoVO;
 import com.valueObject.DocumDGIVO;
 import com.valueObject.ImpuestoVO;
 import com.valueObject.MonedaVO;
+import com.valueObject.RubroVO;
+import com.valueObject.Cuenta.CuentaVO;
 import com.valueObject.TipoRubro.TipoRubroVO;
 import com.valueObject.cliente.ClienteVO;
+import com.valueObject.proceso.ProcesoVO;
 import com.vista.Rubros.RubroViewExtended;
 
 public class BusquedaViewExtended extends BusquedaView{
@@ -31,6 +38,9 @@ public class BusquedaViewExtended extends BusquedaView{
 	BeanItemContainer<TipoRubroVO> containerTipoRubro;
 	BeanItemContainer<MonedaVO> containerMoneda;
 	BeanItemContainer<ClienteVO> containerCliente;
+	BeanItemContainer<ProcesoVO> containerProceso;
+	BeanItemContainer<RubroVO> containerRubro;
+	BeanItemContainer<CuentaVO> containerCuenta;
 	Object seleccionado;
 	IBusqueda main;
 	
@@ -68,6 +78,27 @@ public class BusquedaViewExtended extends BusquedaView{
 			this.containerCliente = new BeanItemContainer<ClienteVO>(ClienteVO.class);
 			this.lblNombre.setValue("Clientes");
 			this.seleccionado = new ClienteVO();
+		}
+		
+		else if(obj instanceof ProcesoVO){
+			
+			this.containerProceso = new BeanItemContainer<ProcesoVO>(ProcesoVO.class);
+			this.lblNombre.setValue("Procesos");
+			this.seleccionado = new ProcesoVO();
+		}
+		
+		else if(obj instanceof RubroVO){
+			
+			this.containerRubro = new BeanItemContainer<RubroVO>(RubroVO.class);
+			this.lblNombre.setValue("Rubros");
+			this.seleccionado = new RubroVO();
+		}
+		
+		else if(obj instanceof CuentaVO){
+			
+			this.containerCuenta = new BeanItemContainer<CuentaVO>(CuentaVO.class);
+			this.lblNombre.setValue("Cuentas");
+			this.seleccionado = new CuentaVO();
 		}
 		
 		grid.addSelectionListener(new SelectionListener() 
@@ -128,6 +159,35 @@ public class BusquedaViewExtended extends BusquedaView{
 					    }
 		    		}
 		    		
+		    		else if(seleccionado instanceof ProcesoVO){
+			    		if(grid.getSelectedRow() != null){
+			    			
+			    			BeanItem<ProcesoVO> item = containerProceso.getItem(grid.getSelectedRow());
+					    	seleccionado = item.getBean(); 
+					    	main.setInfo(seleccionado);	
+					    	main.cerrarVentana();
+					    }
+		    		}
+		    		
+		    		else if(seleccionado instanceof RubroVO){
+			    		if(grid.getSelectedRow() != null){
+			    			
+			    			BeanItem<RubroVO> item = containerRubro.getItem(grid.getSelectedRow());
+					    	seleccionado = item.getBean(); 
+					    	main.setInfo(seleccionado);	
+					    	main.cerrarVentana();
+					    }
+		    		}
+		    		
+		    		else if(seleccionado instanceof CuentaVO){
+			    		if(grid.getSelectedRow() != null){
+			    			
+			    			BeanItem<CuentaVO> item = containerCuenta.getItem(grid.getSelectedRow());
+					    	seleccionado = item.getBean(); 
+					    	main.setInfo(seleccionado);	
+					    	main.cerrarVentana();
+					    }
+		    		}
 		    		
 		    	}
 		    	catch(Exception e){
@@ -263,8 +323,104 @@ public class BusquedaViewExtended extends BusquedaView{
 			
 		}
 		
+		if(seleccionado instanceof ProcesoVO){
+			
+			ArrayList<ProcesoVO> lstDoc = new ArrayList<>();
+			
+			ProcesoVO i;
+			for (Object o : lst) {
+				
+				i = (ProcesoVO) o;
+				lstDoc.add(i);
+			}
+			
+			this.containerProceso.addAll(lstDoc);
+			this.grid.setContainerDataSource(containerProceso);
+			
+			grid.removeColumn("tcMov");
+			grid.removeColumn("simboloMoneda");
+			grid.removeColumn("codCliente");
+			grid.removeColumn("codMoneda");
+			grid.removeColumn("fechaMod");
+			grid.removeColumn("usuarioMod");
+			grid.removeColumn("operacion");
+			grid.removeColumn("nroMega");
+			grid.removeColumn("codDocum");
+			grid.removeColumn("nomDocum");
+			grid.removeColumn("nroDocum");
+			grid.removeColumn("fecDocum");
+			grid.removeColumn("carpeta");
+			grid.removeColumn("impMo");
+			grid.removeColumn("impMn");
+			grid.removeColumn("impTr");
+			grid.removeColumn("kilos");
+			grid.removeColumn("fecCruce");
+			grid.removeColumn("marca");
+			grid.removeColumn("medio");
+			grid.removeColumn("observaciones");
+			grid.removeColumn("descMoneda");
 		
+			this.arreglarGrillaProceso();
+			this.filtroGrilla();
+			
+		}
 		
+		if(seleccionado instanceof RubroVO){
+			
+			ArrayList<RubroVO> lstDoc = new ArrayList<>();
+			
+			RubroVO i;
+			for (Object o : lst) {
+				
+				i = (RubroVO) o;
+				lstDoc.add(i);
+			}
+			
+			this.containerRubro.addAll(lstDoc);
+			this.grid.setContainerDataSource(containerRubro);
+			
+			grid.removeColumn("fechaMod");
+			grid.removeColumn("usuarioMod");
+			grid.removeColumn("operacion");
+			
+			grid.removeColumn("activo");
+			grid.removeColumn("codigoImpuesto");
+			grid.removeColumn("activoImpuesto");
+			grid.removeColumn("descripcionTipoRubro");
+			grid.removeColumn("codTipoRubro");
+			grid.removeColumn("oficina");
+			grid.removeColumn("proceso");
+			grid.removeColumn("persona");
+			
+			//this.arreglarGrillaProceso();
+			this.filtroGrilla();
+			
+		}
+		
+		if(seleccionado instanceof CuentaVO){
+			
+			ArrayList<CuentaVO> lstDoc = new ArrayList<>();
+			
+			CuentaVO i;
+			for (Object o : lst) {
+				
+				i = (CuentaVO) o;
+				lstDoc.add(i);
+			}
+			
+			this.containerCuenta.addAll(lstDoc);
+			this.grid.setContainerDataSource(containerCuenta);
+			
+			grid.removeColumn("fechaMod");
+			grid.removeColumn("usuarioMod");
+			grid.removeColumn("operacion");
+			grid.removeColumn("activo");
+			grid.removeColumn("lstRubros");
+			
+			//this.arreglarGrillaProceso();
+			this.filtroGrilla();
+			
+		}
 	}
 	
 	private void arreglarGrilla()
@@ -274,6 +430,31 @@ public class BusquedaViewExtended extends BusquedaView{
 		lstColumn.get(0).setWidth(200);
 		lstColumn.get(0).setHeaderCaption("Código");
 		lstColumn.get(1).setHeaderCaption("Nombre");
+	}
+	
+	private void arreglarGrillaProceso(){
+		List<Column> lstColumn = grid.getColumns();
+		
+		lstColumn.get(0).setWidth(150);
+		lstColumn.get(0).setHeaderCaption("Número");
+		lstColumn.get(1).setWidth(300);
+		lstColumn.get(2).setWidth(150);
+		//Modifica el formato de fecha en la grilla 
+		grid.getColumn("fecha").setConverter(new StringToDateConverter(){
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+
+			public DateFormat getFormat(Locale locale){
+
+				return new SimpleDateFormat("dd/MM/yyyy");
+
+			}
+
+		});
 	}
 	
 	private void filtroGrilla()
@@ -357,6 +538,42 @@ public class BusquedaViewExtended extends BusquedaView{
 					        // (Re)create the filter if necessary
 					        if (! change.getText().isEmpty())
 					        	this.containerCliente.addContainerFilter(
+					                new SimpleStringFilter(pid,
+					                    change.getText(), true, false));
+				    	}
+				    	
+				    	else if(seleccionado instanceof ProcesoVO) /*PARA PROCESOS*/
+				    	{
+					    	// Can't modify filters so need to replace
+					    	this.containerProceso.removeContainerFilters(pid);
+			
+					        // (Re)create the filter if necessary
+					        if (! change.getText().isEmpty())
+					        	this.containerProceso.addContainerFilter(
+					                new SimpleStringFilter(pid,
+					                    change.getText(), true, false));
+				    	}
+				    	
+				    	else if(seleccionado instanceof RubroVO) /*PARA RUBROS*/
+				    	{
+					    	// Can't modify filters so need to replace
+					    	this.containerRubro.removeContainerFilters(pid);
+			
+					        // (Re)create the filter if necessary
+					        if (! change.getText().isEmpty())
+					        	this.containerRubro.addContainerFilter(
+					                new SimpleStringFilter(pid,
+					                    change.getText(), true, false));
+				    	}
+				    	
+				    	else if(seleccionado instanceof CuentaVO) /*PARA CUENTAS*/
+				    	{
+					    	// Can't modify filters so need to replace
+					    	this.containerCuenta.removeContainerFilters(pid);
+			
+					        // (Re)create the filter if necessary
+					        if (! change.getText().isEmpty())
+					        	this.containerCuenta.addContainerFilter(
 					                new SimpleStringFilter(pid,
 					                    change.getText(), true, false));
 				    	}

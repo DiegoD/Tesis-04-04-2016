@@ -72,6 +72,53 @@ public class DAOCuentas implements IDAOCuentas{
 			
 		return lstCuentas;
 	}
+	
+	public ArrayList<Cuenta> getCuentasxRubro(String codEmp, String codRubro, Connection con)
+			throws ObteniendoCuentasException, ConexionException, ObteniendoRubrosException {
+		// TODO Auto-generated method stub
+		ArrayList<Cuenta> lstCuentas = new ArrayList<Cuenta>();
+		
+		try
+		{
+			ConsultasDD consultas = new ConsultasDD ();
+			String query = consultas.getCuentasxRubro();
+			
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			pstmt1.setString(1, codRubro);
+			pstmt1.setString(2, codEmp);
+			
+			ResultSet rs = pstmt1.executeQuery();
+			
+			
+			Cuenta cuenta;
+			
+			while(rs.next ()) {
+
+				cuenta = new Cuenta();
+
+				cuenta.setCod_cuenta(rs.getString(1));
+				cuenta.setDescripcion(rs.getString(2));
+				cuenta.setFechaMod(rs.getTimestamp(3));
+				cuenta.setUsuarioMod(rs.getString(4));
+				cuenta.setOperacion(rs.getString(5));
+				cuenta.setActivo(rs.getBoolean(6));
+				
+				/*Obtenemos los formularios del grupo*/
+				cuenta.setLstRubros(this.getRubrosxCuenta(cuenta.getCod_cuenta(), codEmp, con));
+
+				lstCuentas.add(cuenta);
+			}
+			
+			rs.close ();
+			pstmt1.close ();
+		}
+		catch (SQLException e) {
+			
+			throw new ObteniendoCuentasException();
+		}
+			
+		return lstCuentas;
+	}
 
 	@Override
 	public void insertarCuenta(Cuenta cuenta, String codEmp, Connection con)

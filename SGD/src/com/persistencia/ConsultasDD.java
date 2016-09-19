@@ -762,6 +762,19 @@ public class ConsultasDD {
 		
 		return sb.toString();
 	}
+	
+	public String getCuentasxRubro()
+	{
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT m_cuentas.cod_cuenta, m_cuentas.descripcion, m_cuentas.fecha_mod, m_cuentas.usuario_mod, m_cuentas.operacion, m_cuentas.activo ");
+		sb.append("FROM m_cuentas, m_rubrosxcuenta ");
+		sb.append("WHERE m_rubrosxcuenta.cod_rubro = ? AND m_cuentas.cod_emp = ?"
+				+ "AND m_cuentas.cod_cuenta = m_rubrosxcuenta.cod_cuenta ");
+		
+		return sb.toString();
+	}
 
 	public String getCuenta()
 	{
@@ -986,14 +999,14 @@ public class ConsultasDD {
 				+ " c_procesos.cod_proceso,"
 				+ " m_cuentas.cod_cuenta, m_cuentas.descripcion,"
 				+ " m_rubros.cod_rubro, m_rubros.descripcion, m_rubros.cod_tipo_rubro, m_rubros.cod_impuesto,"
-				+ " m_impuestos.cod_impuesto, m_impuestos.descripcion, m_impuestos.porcentaje,");
+				+ " m_impuestos.cod_impuesto, m_impuestos.descripcion, m_impuestos.porcentaje ");
 		
-		sb.append("FROM c_gastos LEFT JOIN m_procesos ON c_castos.cod_proceso = m_procesos.cod_proceso "
-		+ " LEFT JOIN  m_clientes ON c_gastos.cod_cliente = m_clientes.cod_tit "
-		+ " LETF JOIN m_cuentas ON c_gastos.cod_cuenta = m_cuentas.cod_cuenta "
+		sb.append("FROM c_gastos LEFT JOIN c_procesos ON c_gastos.cod_proceso = c_procesos.cod_proceso "
+		+ " LEFT JOIN  m_clientes ON c_procesos.cod_cliente = m_clientes.cod_tit "
+		+ " LEFT JOIN m_cuentas ON c_gastos.cod_cuenta = m_cuentas.cod_cuenta "
 		+ " LEFT JOIN m_rubros ON c_gastos.cod_rubro = m_rubros.cod_rubro "
 		+ " LEFT JOIN m_monedas ON c_gastos.cod_moneda = m_monedas.cod_moneda "
-		+ " LEFT JOIN m_impuestos ON m_rubros.cod_impuesto = m_impuesto.cod_impuesto "
+		+ " LEFT JOIN m_impuestos ON m_rubros.cod_impuesto = m_impuestos.cod_impuesto "
 		+ " AND c_procesos.cod_emp = ? ");  
 		
 		return sb.toString();

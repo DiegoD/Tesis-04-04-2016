@@ -139,9 +139,8 @@ public class DAOGastos implements IDAOGastos{
 			pstmt1.setFloat(10, gasto.getTcMov());
 			pstmt1.setString(11, gasto.getDescripcion());
 			pstmt1.setString(12, codEmp);
-			pstmt1.setTimestamp(13, gasto.getFechaMod());
-			pstmt1.setString(14, gasto.getUsuarioMod());
-			pstmt1.setString(15, gasto.getOperacion());
+			pstmt1.setString(13, gasto.getUsuarioMod());
+			pstmt1.setString(14, gasto.getOperacion());
 			
 			pstmt1.executeUpdate ();
 			pstmt1.close ();

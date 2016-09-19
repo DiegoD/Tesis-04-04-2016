@@ -20,6 +20,7 @@ public final class VariablesPermisos {
 	public static final String FORMULARIO_CUENTAS = "MCuentas";
 	public static final String FORMULARIO_BANCOS = "MBancos";
 	public static final String FORMULARIO_PROCESOS = "MProcesos";
+	public static final String FORMULARIO_GASTOS = "MGastos";
 	
 	/*Variables para las operaciones*/
 	public static final String OPERACION_NUEVO_EDITAR = "NUEVO_EDITAR";

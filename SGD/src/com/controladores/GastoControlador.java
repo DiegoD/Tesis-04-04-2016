@@ -14,16 +14,20 @@ import com.excepciones.Gastos.IngresandoGastoException;
 import com.excepciones.Gastos.ModificandoGastoException;
 import com.excepciones.Gastos.NoExisteGastoException;
 import com.excepciones.Gastos.ObteniendoGastosException;
+import com.excepciones.Impuestos.ObteniendoImpuestosException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
+import com.excepciones.Procesos.ObteniendoProcesosException;
 import com.excepciones.clientes.ObteniendoClientesException;
 import com.logica.Fachada;
 import com.logica.FachadaDD;
+import com.valueObject.ImpuestoVO;
 import com.valueObject.MonedaVO;
 import com.valueObject.RubroVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.Cuenta.CuentaVO;
 import com.valueObject.Gasto.GastoVO;
 import com.valueObject.cliente.ClienteVO;
+import com.valueObject.proceso.ProcesoVO;
 
 public class GastoControlador {
 	
@@ -95,11 +99,11 @@ public class GastoControlador {
 			throw new NoTienePermisosException();
 	}
 	
-	public ArrayList<CuentaVO> getCuentas(UsuarioPermisosVO permisos) throws ObteniendoCuentasException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoRubrosException{
+	public ArrayList<CuentaVO> getCuentas(UsuarioPermisosVO permisos, String codRubro) throws ObteniendoCuentasException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoRubrosException{
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			return FachadaDD.getInstance().getCuentas(permisos.getCodEmp());
+			return FachadaDD.getInstance().getCuentasxRubro(permisos.getCodEmp(), codRubro);
 		else
 			throw new NoTienePermisosException();
 	}
@@ -108,10 +112,27 @@ public class GastoControlador {
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			return FachadaDD.getInstance().getRubros(permisos.getCodEmp());
+			return FachadaDD.getInstance().getRubrosActivos(permisos.getCodEmp());
 		else
 			throw new NoTienePermisosException();
 	}
 	
+	public ArrayList<ImpuestoVO> getImpuestos(UsuarioPermisosVO permisos) throws ObteniendoImpuestosException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoImpuestosException{
+		
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			return FachadaDD.getInstance().getImpuestosActivos(permisos.getCodEmp());
+		else
+			throw new NoTienePermisosException();
+	}
+	
+	public ArrayList<ProcesoVO> getProcesos(UsuarioPermisosVO permisos) throws ObteniendoProcesosException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoProcesosException{
+		
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			return FachadaDD.getInstance().getProcesos(permisos.getCodEmp());
+		else
+			throw new NoTienePermisosException();
+	}
 
 }

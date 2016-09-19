@@ -15,6 +15,7 @@ import com.logica.Rubro;
 public interface IDAOCuentas {
 	
 	public ArrayList<Cuenta> getCuentas(String codEmp, Connection con) throws ObteniendoCuentasException, ConexionException, ObteniendoRubrosException;
+	public ArrayList<Cuenta> getCuentasxRubro(String codEmp, String codRubro, Connection con) throws ObteniendoCuentasException, ConexionException, ObteniendoRubrosException;
 	public void insertarCuenta(Cuenta cuenta, String codEmp, Connection con) throws  InsertandoCuentaException, ConexionException ;
 	public boolean memberCuenta(String codCuenta, String codEmp, Connection con) throws MemberCuentaException, ConexionException;
 	public void eliminarCuenta(String codCuenta, String codEmp, Connection con) throws ModificandoCuentaException, ConexionException;
