@@ -13,8 +13,7 @@ public abstract class DocumDetalle extends DatosDocum{
 	private double impImpuMo ;
 	private double impSubMn ;
 	private double impSubMo ;
-	private double impTotMnd ;
-	private double impTtotMod ;
+	
 	private double tcMov;
 	private CuentaInfo cuenta;
 	private RubroInfo rubroInfo;
@@ -41,8 +40,8 @@ public abstract class DocumDetalle extends DatosDocum{
 		this.impImpuMo = t.getImpImpuMo();
 		this.impSubMn = t.getImpSubMn();
 		this.impSubMo = t.getImpSubMo();
-		this.impTotMnd = t.getImpTotMn();
-		this.impTtotMod = t.getImpTtotMo();
+		//this.impTotMn = t.getImpTotMn();
+		//this.impTtotMo = t.getImpTtotMo();
 		this.tcMov = t.getTcMov();
 		this.cuenta = new CuentaInfo(t.getCodCuenta(), t.getNomCuenta());
 		this.codProceso = t.getCodProceso();
@@ -83,8 +82,8 @@ public abstract class DocumDetalle extends DatosDocum{
 		aux.setImpSubMn(this.impSubMn);
 		aux.setImpSubMo(this.impSubMo);
 		
-		aux.setImpTotMn(this.impTotMnd);
-		aux.setImpTtotMo(this.impTtotMod);
+		aux.setImpTotMn(this.getImpTotMn());
+		aux.setImpTtotMo(this.getImpTotMo());
 		aux.setTcMov(this.tcMov);
 		
 		
@@ -130,22 +129,7 @@ public abstract class DocumDetalle extends DatosDocum{
 		this.impSubMo = impSubMo;
 	}
 
-	public double getImpTotMn() {
-		return impTotMnd;
-	}
-
-	public void setImpTotMn(double impTotMn) {
-		this.impTotMnd = impTotMn;
-	}
-
-	public double getImpTtotMo() {
-		return impTtotMod;
-	}
-
-	public void setImpTtotMo(double impTtotMo) {
-		this.impTtotMod = impTtotMo;
-	}
-
+	
 	public double getTcMov() {
 		return tcMov;
 	}
