@@ -66,5 +66,14 @@ public class IngresoCobroControlador {
 			throw new NoTienePermisosException();
 	}
 	
+	public ArrayList<MonedaVO> getMonedas(UsuarioPermisosVO permisos) throws ObteniendoMonedaException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException{
+		
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			return FachadaDD.getInstance().getMonedasActivas(permisos.getCodEmp());
+		else
+			throw new NoTienePermisosException();
+	}
+	
 	
 }

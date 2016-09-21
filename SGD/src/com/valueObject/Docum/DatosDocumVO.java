@@ -10,6 +10,8 @@ import com.valueObject.Titular.TitularInfoVO;
 public class DatosDocumVO extends AuditoriaVO{
 
 	private Timestamp fecDoc;
+	private Timestamp fecValor;
+	
 	private String codDocum;
 	private String serieDocum;
 	private int nroDocum;
@@ -29,7 +31,7 @@ public class DatosDocumVO extends AuditoriaVO{
 	private double impTotMn;
 	private double impTotMo;
 	private double tcMov;
-	private Timestamp fecValor;
+	
 	
 
 	

@@ -25,6 +25,7 @@ import com.valueObject.ImpuestoVO;
 import com.valueObject.MonedaVO;
 import com.valueObject.RubroVO;
 import com.valueObject.Cuenta.CuentaVO;
+import com.valueObject.Gasto.GastoVO;
 import com.valueObject.TipoRubro.TipoRubroVO;
 import com.valueObject.cliente.ClienteVO;
 import com.valueObject.proceso.ProcesoVO;
@@ -41,6 +42,7 @@ public class BusquedaViewExtended extends BusquedaView{
 	BeanItemContainer<ProcesoVO> containerProceso;
 	BeanItemContainer<RubroVO> containerRubro;
 	BeanItemContainer<CuentaVO> containerCuenta;
+	BeanItemContainer<GastoVO> containerGasto;
 	Object seleccionado;
 	IBusqueda main;
 	
@@ -99,6 +101,12 @@ public class BusquedaViewExtended extends BusquedaView{
 			this.containerCuenta = new BeanItemContainer<CuentaVO>(CuentaVO.class);
 			this.lblNombre.setValue("Cuentas");
 			this.seleccionado = new CuentaVO();
+		}
+		else if(obj instanceof GastoVO){
+			
+			this.containerGasto = new BeanItemContainer<GastoVO>(GastoVO.class);
+			this.lblNombre.setValue("Gastos");
+			this.seleccionado = new GastoVO();
 		}
 		
 		grid.addSelectionListener(new SelectionListener() 
@@ -183,6 +191,16 @@ public class BusquedaViewExtended extends BusquedaView{
 			    		if(grid.getSelectedRow() != null){
 			    			
 			    			BeanItem<CuentaVO> item = containerCuenta.getItem(grid.getSelectedRow());
+					    	seleccionado = item.getBean(); 
+					    	main.setInfo(seleccionado);	
+					    	main.cerrarVentana();
+					    }
+		    		}
+		    		
+		    		else if(seleccionado instanceof GastoVO){
+			    		if(grid.getSelectedRow() != null){
+			    			
+			    			BeanItem<GastoVO> item = containerGasto.getItem(grid.getSelectedRow());
 					    	seleccionado = item.getBean(); 
 					    	main.setInfo(seleccionado);	
 					    	main.cerrarVentana();
@@ -421,10 +439,35 @@ public class BusquedaViewExtended extends BusquedaView{
 			this.filtroGrilla();
 			
 		}
+		
+		if(seleccionado instanceof GastoVO){
+			
+			ArrayList<GastoVO> lstDoc = new ArrayList<>();
+			
+			GastoVO i;
+			for (Object o : lst) {
+				
+				i = (GastoVO) o;
+				lstDoc.add(i);
+			}
+			
+			this.containerGasto.addAll(lstDoc);
+			this.grid.setContainerDataSource(containerGasto);
+			
+			grid.removeColumn("fechaMod");
+			grid.removeColumn("usuarioMod");
+			grid.removeColumn("operacion");
+			grid.removeColumn("activo");
+			
+			this.arreglarGrillaGasto(); /*FaltaImplementar*/
+			this.filtroGrilla();
+			
+		}
 	}
 	
 	private void arreglarGrilla()
 	{
+		
 		List<Column> lstColumn = grid.getColumns();
 		
 		lstColumn.get(0).setWidth(200);
@@ -433,6 +476,32 @@ public class BusquedaViewExtended extends BusquedaView{
 	}
 	
 	private void arreglarGrillaProceso(){
+		List<Column> lstColumn = grid.getColumns();
+		
+		lstColumn.get(0).setWidth(150);
+		lstColumn.get(0).setHeaderCaption("Número");
+		lstColumn.get(1).setWidth(300);
+		lstColumn.get(2).setWidth(150);
+		//Modifica el formato de fecha en la grilla 
+		grid.getColumn("fecha").setConverter(new StringToDateConverter(){
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+
+			public DateFormat getFormat(Locale locale){
+
+				return new SimpleDateFormat("dd/MM/yyyy");
+
+			}
+
+		});
+	}
+	
+	/*Este falta implementarlo es copia del de proceso*/
+	private void arreglarGrillaGasto(){
 		List<Column> lstColumn = grid.getColumns();
 		
 		lstColumn.get(0).setWidth(150);
@@ -574,6 +643,18 @@ public class BusquedaViewExtended extends BusquedaView{
 					        // (Re)create the filter if necessary
 					        if (! change.getText().isEmpty())
 					        	this.containerCuenta.addContainerFilter(
+					                new SimpleStringFilter(pid,
+					                    change.getText(), true, false));
+				    	}
+				    	
+				    	else if(seleccionado instanceof GastoVO) /*PARA GASTOS*/
+				    	{
+					    	// Can't modify filters so need to replace
+					    	this.containerGasto.removeContainerFilters(pid);
+			
+					        // (Re)create the filter if necessary
+					        if (! change.getText().isEmpty())
+					        	this.containerGasto.addContainerFilter(
 					                new SimpleStringFilter(pid,
 					                    change.getText(), true, false));
 				    	}

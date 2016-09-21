@@ -26,6 +26,9 @@ public class IngresoCobroVO extends DatosDocumVO{
 	private ArrayList<IngresoCobroDetalleVO> detalle;
 	
 	public IngresoCobroVO(){
+		this.setCodDocum("ingcobro");
+		this.setSerieDocum("0");
+		
 		this.detalle = new ArrayList<IngresoCobroDetalleVO>();
 	}
 	

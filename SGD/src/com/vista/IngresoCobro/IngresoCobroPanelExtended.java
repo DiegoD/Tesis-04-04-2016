@@ -190,18 +190,18 @@ public class IngresoCobroPanelExtended extends IngresoCobroPanel{
 	 * desde BancoViewExtended
 	 *
 	 */
-	public void actulaizarGrilla(BancoVO bancoVO)
+	public void actulaizarGrilla(IngresoCobroVO ingVO)
 	{
 
 		/*Si esta el banco en la lista, es una acutalizacion
 		 * y modificamos el objeto en la lista*/
-		if(this.existeBancoenLista(bancoVO.getCodigo()))
+		if(this.existeEnLista(ingVO.getNroDocum()))
 		{
-			this.actualizarBancoenLista(bancoVO);
+			this.actualizarBancoenLista(ingVO);
 		}
 		else  /*De lo contrario es uno nuevo y lo agregamos a la lista*/
 		{
-			this.lstIngresoCobro.add(bancoVO);
+			this.lstIngresoCobro.add(ingVO);
 		}
 			
 		/*Actualizamos la grilla*/
@@ -218,19 +218,19 @@ public class IngresoCobroPanelExtended extends IngresoCobroPanel{
 	 * se hace una acutalizacion de un Banco
 	 *
 	 */
-	private void actualizarBancoenLista(BancoVO bancoVO)
+	private void actualizarBancoenLista(IngresoCobroVO ingVO)
 	{
 		int i =0;
 		boolean salir = false;
 		
-		BancoVO bancoEnLista;
+		IngresoCobroVO ingEnLista;
 		
 		while( i < this.lstIngresoCobro.size() && !salir)
 		{
-			bancoEnLista = this.lstIngresoCobro.get(i);
-			if(bancoVO.getCodigo().equals(bancoEnLista.getCodigo()))
+			ingEnLista = this.lstIngresoCobro.get(i);
+			if(ingVO.getNroDocum()==ingEnLista.getNroDocum())
 			{
-				this.lstIngresoCobro.get(i).copiar(bancoVO);
+				this.lstIngresoCobro.get(i).copiar(ingVO);
 
 				salir = true;
 			}
@@ -245,17 +245,17 @@ public class IngresoCobroPanelExtended extends IngresoCobroPanel{
 	 * de bancoss de la vista
 	 *
 	 */
-	private boolean existeBancoenLista(String codBanco)
+	private boolean existeEnLista(int nro)
 	{
 		int i =0;
 		boolean esta = false;
 		
-		BancoVO aux;
+		IngresoCobroVO aux;
 		
 		while( i < this.lstIngresoCobro.size() && !esta)
 		{
 			aux = this.lstIngresoCobro.get(i);
-			if(codBanco.equals(aux.getCodigo()))
+			if(nro==aux.getNroDocum())
 			{
 				esta = true;
 			}
