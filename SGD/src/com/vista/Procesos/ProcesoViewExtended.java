@@ -661,7 +661,7 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 		// TODO Auto-generated method stub
 		if(datos instanceof ClienteVO){
 			ClienteVO clienteVO = (ClienteVO) datos;
-			this.codCliente.setValue(clienteVO.getCodigoDoc());
+			this.codCliente.setValue(String.valueOf(clienteVO.getCodigo()));
 			this.nomCliente.setValue(clienteVO.getNombre());
 //			this.descripcionMoneda.setValue(monedaVO.getDescripcion());
 //			this.codMoneda.setValue(monedaVO.getCodMoneda());

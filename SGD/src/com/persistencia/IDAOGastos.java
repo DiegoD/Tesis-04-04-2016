@@ -14,8 +14,8 @@ import com.logica.Gasto;
 public interface IDAOGastos {
 	
 	public ArrayList<Gasto> getGastos(Connection con, String codEmp) throws ObteniendoGastosException, ConexionException;
-	public boolean memberGasto(int codGasto, String codEmp, Connection con) throws ExisteGastoException, ConexionException;
+	public boolean memberGasto(long codGasto, String codEmp, Connection con) throws ExisteGastoException, ConexionException;
 	public void insertarGasto(Gasto gasto, String codEmp, Connection con) throws IngresandoGastoException, ConexionException, SQLException;
-	public void modificarGasto(Gasto gasto, String codEmp, Connection con) throws ModificandoGastoException;
+	public void modificarGasto(Gasto gasto, String codEmp, Connection con) throws ModificandoGastoException, IngresandoGastoException, ConexionException;
 
 }

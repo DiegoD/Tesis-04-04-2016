@@ -990,26 +990,30 @@ public class ConsultasDD {
 	
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("SELECT c_gastos.cod_gasto, c_gastos.cod_proceso, "
-				+ " c_gastos.fecha, c_gastos.importe_moneda,"
-				+ " c_gastos.importe_moneda_nacional, c_gastos.tasa_cambio, c_gastos.descripcion,"
-				+ " c_gastos.fecha_mod, c_gastos.usuario_mod, c_gastos.operacion,"
-				+ " m_clientes.cod_tit, m_clientes.nom_tit,"
-				+ " m_monedas.cod_moneda, m_monedas.descripcion, m_monedas.simbolo,"
-				+ " c_procesos.cod_proceso,"
-				+ " m_cuentas.cod_cuenta, m_cuentas.descripcion,"
-				+ " m_rubros.cod_rubro, m_rubros.descripcion, m_rubros.cod_tipo_rubro, m_rubros.cod_impuesto,"
-				+ " m_impuestos.cod_impuesto, m_impuestos.descripcion, m_impuestos.porcentaje ");
+		sb.append("SELECT c_gastos.fecDoc, c_gastos.cod_docum, c_gastos.serie_docum, "
+				+ "c_gastos.nro_docum, c_gastos.cod_emp, c_gastos.referencia, "
+				+ "c_gastos.nro_trans, c_gastos.fecValor, c_gastos.cod_proceso, "
+				+ "c_gastos.referenciaDetalle, c_gastos.imp_impu_mn, c_gastos.imp_impu_mo, "
+				+ "c_gastos.imp_sub_mn, c_gastos.imp_sub_mo, c_gastos.imp_tot_mn, "
+				+ "c_gastos.imp_tot_mo, c_gastos.tc_mov, c_gastos.cuenta, "
+				+ "c_gastos.fecha_mod, c_gastos.usuario_mod, c_gastos.operacion, "
+				+ "m_clientes.cod_tit, m_clientes.nom_tit, "
+				+ "m_monedas.cod_moneda, m_monedas.descripcion, m_monedas.simbolo, "
+				+ "m_cuentas.cod_cuenta, m_cuentas.descripcion, "
+				+ "m_rubros.cod_rubro, m_rubros.descripcion, m_rubros.cod_tipo_rubro, m_rubros.cod_impuesto, "
+				+ "m_impuestos.cod_impuesto, m_impuestos.descripcion, m_impuestos.porcentaje, "
+				+ "c_procesos.descripcion ");
 		
-		sb.append("FROM c_gastos LEFT JOIN c_procesos ON c_gastos.cod_proceso = c_procesos.cod_proceso "
-		+ " LEFT JOIN  m_clientes ON c_procesos.cod_cliente = m_clientes.cod_tit "
-		+ " LEFT JOIN m_cuentas ON c_gastos.cod_cuenta = m_cuentas.cod_cuenta "
-		+ " LEFT JOIN m_rubros ON c_gastos.cod_rubro = m_rubros.cod_rubro "
-		+ " LEFT JOIN m_monedas ON c_gastos.cod_moneda = m_monedas.cod_moneda "
-		+ " LEFT JOIN m_impuestos ON m_rubros.cod_impuesto = m_impuestos.cod_impuesto "
-		+ " AND c_procesos.cod_emp = ? ");  
-		
-		return sb.toString();
+		sb.append("FROM c_gastos"
+				+ " LEFT JOIN  m_clientes ON c_gastos.cod_tit = m_clientes.cod_tit "
+				+ " LEFT JOIN m_cuentas ON c_gastos.cod_cuenta = m_cuentas.cod_cuenta "
+				+ " LEFT JOIN m_rubros ON c_gastos.cod_rubro = m_rubros.cod_rubro "
+				+ " LEFT JOIN m_monedas ON c_gastos.cod_moneda = m_monedas.cod_moneda "
+				+ " LEFT JOIN m_impuestos ON m_rubros.cod_impuesto = m_impuestos.cod_impuesto "
+				+ " LEFT JOIN c_procesos ON c_gastos.cod_proceso = c_procesos.cod_proceso "
+				+ " AND c_gastos.cod_emp = ? ");  
+				
+				return sb.toString();
 	}
 	
 	public String insertarGasto()
@@ -1017,10 +1021,13 @@ public class ConsultasDD {
 	
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("INSERT INTO c_gastos ( cod_gasto, cod_proceso, cod_cliente, cod_rubro, "
-				+ " cod_cuenta, cod_moneda, fecha, importe_moneda, importe_moneda_nacional, "
-				+ " tasa_cambio, descripcion, cod_emp, fecha_mod, usuario_mod, operacion ) ");
-		sb.append("VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?) ");
+		sb.append("INSERT INTO c_gastos ( fecDoc, cod_docum, serie_docum, nro_docum, "
+				+ " cod_emp, cod_moneda, referencia, cod_tit, nro_trans, "
+				+ " fecValor, cod_proceso, referenciaDetalle, imp_impu_mn, imp_impu_mo, imp_sub_mn, "
+				+ " imp_sub_mo, imp_tot_mn, imp_tot_mo, tc_mov, cod_cuenta, cod_rubro, cuenta, "
+				+ " fecha_mod, usuario_mod, operacion ) ");
+		sb.append("VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
+				+ " ?, ?, ?, ?, ?, ?, NOW(), ?, ?) ");
 		
 		return sb.toString();
 	}
@@ -1029,22 +1036,19 @@ public class ConsultasDD {
 	
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("SELECT cod_gasto ");
-		sb.append("FROM c_gastos WHERE cod_gasto = ? AND cod_emp = ? ");
+		sb.append("SELECT nro_trans ");
+		sb.append("FROM c_gastos WHERE nro_trans = ? AND cod_emp = ? ");
 		
 		return sb.toString();
 	}
 	
 	
-	public String actualizarGasto(){
+	public String eliminarGasto(){
 	
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("UPDATE c_gastos ");
-		sb.append("SET cod_proceso = ?, cod_cliente = ?, cod_rubro = ?, cod_cuenta = ?, "
-		+ "cod_moneda = ?, fecha = ?, importe_moneda = ?, importe_moneda_nacional = ?, "
-		+ "tasa_cambio = ?, descripcion = ?, cod_emp = ?, fecha_mod = NOW(), usuario_mod = ?, operacion = ? ");
-		sb.append("WHERE cod_gasto = ? AND cod_emp = ? ");
+		sb.append("DELETE FROM c_gastos ");
+		sb.append("WHERE nro_trans = ? AND cod_emp = ? ");
 		
 		return sb.toString();
 	}

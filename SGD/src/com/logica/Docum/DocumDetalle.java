@@ -7,6 +7,7 @@ import com.valueObject.IngresoCobro.IngresoCobroDetalleVO;
 public abstract class DocumDetalle extends DatosDocum{
 	
 	private String codProceso;
+	private String descProceso;
 	private String referencia;
 	
 	private double impImpuMn;
@@ -45,10 +46,11 @@ public abstract class DocumDetalle extends DatosDocum{
 		this.tcMov = t.getTcMov();
 		this.cuenta = new CuentaInfo(t.getCodCuenta(), t.getNomCuenta());
 		this.codProceso = t.getCodProceso();
+		this.descProceso = t.getDescProceso();
 		this.rubroInfo = new RubroInfo(t.getCodRubro(), t.getNomRubro());
 		this.codCuentaInd = t.getCodCtaInd();
 		this.linea = t.getLinea();
-		
+		this.referencia = t.getReferencia();
 	}
 	
 	public IngresoCobroDetalleVO retornarDatosDocumVO(){
@@ -153,6 +155,16 @@ public abstract class DocumDetalle extends DatosDocum{
 
 	public void setCodProceso(String codProceso) {
 		this.codProceso = codProceso;
+	}
+	
+	
+
+	public String getDescProceso() {
+		return descProceso;
+	}
+
+	public void setDescProceso(String descProceso) {
+		this.descProceso = descProceso;
 	}
 
 	public String getReferencia() {

@@ -50,7 +50,8 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 	MySub sub;
 	private PermisosUsuario permisos;
 	UsuarioPermisosVO permisoAux;
-	int codigoInsert;
+	Integer codigoInsert;
+	String aux;
 	
 	public GastoViewExtended(String opera, GastosPanelExtended main){
 		
@@ -78,73 +79,91 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 									
 					GastoVO gastoVO = new GastoVO();		
 					
+					gastoVO.setCodEmp(this.permisos.getCodEmp());
 					gastoVO.setUsuarioMod(this.permisos.getUsuario());
 					gastoVO.setOperacion(operacion);
-					
-					String aux = codProceso.getValue().trim().replace(".", "");
-					gastoVO.setCodProceso(Integer.parseInt(aux));
+					gastoVO.setDescProceso(descProceso.getValue().trim());
+					gastoVO.setCodProceso(codProceso.getValue().trim());
+					gastoVO.setCodDocum("Gasto");
+					gastoVO.setSerieDocum("A");
+					gastoVO.setNroTrans(1);
+					gastoVO.setCodImpuesto(codImpuesto.getValue().trim());
+					gastoVO.setNomImpuesto(nomImpuesto.getValue().trim());
+					//gastoVO.setPorcentajeImpuesto(porcentajeImpuesto);
 					
 					//Cliente
-					gastoVO.setCodCliente(codCliente.getValue().trim());
-					gastoVO.setNomCliente(nomCliente.getValue().trim());
+					gastoVO.setCodTitular(codTitular.getValue().trim());
+					gastoVO.setNomTitular(nomTitular.getValue().trim());
 					
 					//Moneda
 					if(this.comboMoneda.getValue() != null){
 						MonedaVO auxMoneda = new MonedaVO();
 						auxMoneda = (MonedaVO) this.comboMoneda.getValue();
 						gastoVO.setCodMoneda(auxMoneda.getCodMoneda());
-						gastoVO.setDescMoneda(auxMoneda.getDescripcion());
+						gastoVO.setNomMoneda(auxMoneda.getDescripcion());
 						gastoVO.setSimboloMoneda(auxMoneda.getSimbolo());
 					}
 					else{
 						gastoVO.setCodMoneda("");
-						gastoVO.setDescMoneda("");
+						gastoVO.setNomMoneda("");
 						gastoVO.setSimboloMoneda("");
 					}
 					
-					//Impuesto
-					if(this.descripcionImpuesto.getValue() != null){
-						gastoVO.setCodImpuesto(codImpuesto.getValue().trim());
-						gastoVO.setDescripcionImpuesto(descripcionImpuesto.getValue().trim());
-						
-						aux = porcentajeImpuesto.getValue().toString().trim().replace(",", ".");
-						gastoVO.setPorcentajeImpuesto(Float.parseFloat(aux));
-					}
-					else{
-						gastoVO.setCodImpuesto("");
-						gastoVO.setDescripcionImpuesto("");
-						gastoVO.setPorcentajeImpuesto(0);
-					}
-//					if(this.comboImpuesto.getValue() != null){
-//						ImpuestoVO auxImpuesto = new ImpuestoVO();
-//						auxImpuesto = (ImpuestoVO) this.comboImpuesto.getValue();
-//						gastoVO.setCodImpuesto(auxImpuesto.getcodImpuesto());
-//						gastoVO.setDescripcionImpuesto(auxImpuesto.getDescripcion());
-//						gastoVO.setPorcentajeImpuesto(auxImpuesto.getPorcentaje());
+					
+//					//Impuesto
+//					if(this.descripcionImpuesto.getValue() != null){
+//						gastoVO.setCodImpuesto(codImpuesto.getValue().trim());
+//						gastoVO.setDescripcionImpuesto(descripcionImpuesto.getValue().trim());
+//						
+//						aux = porcentajeImpuesto.getValue().toString().trim().replace(",", ".");
+//						gastoVO.setPorcentajeImpuesto(Float.parseFloat(aux));
+//					}
+//					else{
+//						gastoVO.setCodImpuesto("");
+//						gastoVO.setDescripcionImpuesto("");
+//						gastoVO.setPorcentajeImpuesto(0);
 //					}
 					
-					
-					gastoVO.setDescripcion(descripcion.getValue().trim());
+					gastoVO.setReferencia(referencia.getValue().trim());
 					gastoVO.setCodCuenta(codCuenta.getValue().trim());
-					gastoVO.setDescripcionCuenta(descripcionCuenta.getValue().trim());
+					gastoVO.setNomCuenta(nomCuenta.getValue().trim());
 					gastoVO.setCodRubro(codRubro.getValue().trim());
-					gastoVO.setDescripcionRubro(descripcionRubro.getValue().trim());
+					gastoVO.setNomRubro(nomRubro.getValue().trim());
 					
-					if(impMo.getValue() != ""){
-						aux = impMo.getValue().toString().trim().replace(",", ".");
-						gastoVO.setImpMo(Float.parseFloat(aux));
+					if(impTotMn.getValue() != ""){
+						aux = impTotMn.getValue().toString().trim().replace(",", ".");
+						gastoVO.setImpTotMn(Float.parseFloat(aux));
 					}
 					else{
-						gastoVO.setImpMo(0);
+						gastoVO.setImpTotMn(0);
 					}
 					
-					if(impMn.getValue() != ""){
-						aux = impMn.getValue().toString().trim().replace(",", ".");
-						gastoVO.setImpMn(Float.parseFloat(aux));
+					if(impTtotMo.getValue() != ""){
+						aux = impTtotMo.getValue().toString().trim().replace(",", ".");
+						gastoVO.setImpTtotMo(Float.parseFloat(aux));
 					}
 					else{
-						gastoVO.setImpMn(0);
+						gastoVO.setImpTtotMo(0);
 					}
+					
+					if(impImpuMn.getValue() != ""){
+						aux = impImpuMn.getValue().toString().trim().replace(",", ".");
+						gastoVO.setImpImpuMn(Float.parseFloat(aux));
+					}
+					else{
+						gastoVO.setImpImpuMn(0);
+					}
+					
+					if(impImpuMo.getValue() != ""){
+						aux = impImpuMo.getValue().toString().trim().replace(",", ".");
+						gastoVO.setImpImpuMo(Float.parseFloat(aux));
+					}
+					else{
+						gastoVO.setImpImpuMo(0);
+					}
+					
+					gastoVO.setImpSubMn(0);
+					gastoVO.setImpSubMo(0);
 					
 					if(tcMov.getValue() != ""){
 						aux = tcMov.getValue().toString().trim().replace(",", ".");
@@ -156,18 +175,19 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 					
 					
 					if(this.operacion.equals(Variables.OPERACION_NUEVO)){
-						gastoVO.setCodGasto((0));
+						gastoVO.setNroDocum((0));
 					}
 					else{
-						gastoVO.setCodGasto(Integer.parseInt(codGasto.getValue().trim()));
+						gastoVO.setNroDocum(Integer.parseInt(nroDocum.getValue().trim()));
 					}
 					
-					gastoVO.setFecha(new java.sql.Timestamp(fecha.getValue().getTime()));
-
+					gastoVO.setFecDoc(new java.sql.Timestamp(fecDoc.getValue().getTime()));
+					gastoVO.setFecValor(new java.sql.Timestamp(fecValor.getValue().getTime()));
+					
 					if(this.operacion.equals(Variables.OPERACION_NUEVO)) {	
 		
 						codigoInsert = this.controlador.insertarGasto(gastoVO, permisoAux);
-						gastoVO.setCodGasto(codigoInsert);
+						gastoVO.setNroDocum(codigoInsert);
 						
 						this.mainView.actulaizarGrilla(gastoVO);
 						
@@ -401,32 +421,32 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 	 */
 	private void setearValidaciones(boolean setear){
 		
-		this.codProceso.setRequired(setear);
-		this.codProceso.setRequiredError("Es requerido");
-		
-		this.fecha.setRequired(setear);
-		this.fecha.setRequiredError("Es requerido");
-		
-		this.codCuenta.setRequired(setear);
-		this.codCuenta.setRequiredError("Es requerido");
-		
-		this.codRubro.setRequired(setear);
-		this.codRubro.setRequiredError("Es requerido");
-		
-		this.tcMov.setRequired(setear);
-		this.tcMov.setRequiredError("Es requerido");
-		
-		this.impMo.setRequired(setear);
-		this.impMo.setRequiredError("Es requerido");
-		
-		this.impMn.setRequired(setear);
-		this.impMn.setRequiredError("Es requerido");
-		
-//		this.comboImpuesto.setRequired(setear);
-//		this.comboImpuesto.setRequiredError("Es requerido");
-		
-		this.comboMoneda.setRequired(setear);
-		this.comboMoneda.setRequiredError("Es requerido");
+//		this.codProceso.setRequired(setear);
+//		this.codProceso.setRequiredError("Es requerido");
+//		
+//		this.fecha.setRequired(setear);
+//		this.fecha.setRequiredError("Es requerido");
+//		
+//		this.codCuenta.setRequired(setear);
+//		this.codCuenta.setRequiredError("Es requerido");
+//		
+//		this.codRubro.setRequired(setear);
+//		this.codRubro.setRequiredError("Es requerido");
+//		
+//		this.tcMov.setRequired(setear);
+//		this.tcMov.setRequiredError("Es requerido");
+//		
+//		this.impMo.setRequired(setear);
+//		this.impMo.setRequiredError("Es requerido");
+//		
+//		this.impMn.setRequired(setear);
+//		this.impMn.setRequiredError("Es requerido");
+//		
+////		this.comboImpuesto.setRequired(setear);
+////		this.comboImpuesto.setRequiredError("Es requerido");
+//		
+//		this.comboMoneda.setRequired(setear);
+//		this.comboMoneda.setRequiredError("Es requerido");
 		
 	}
 	
@@ -556,7 +576,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 	
 	private void enableCombos(){
 		this.comboMoneda.setEnabled(true);
-		this.comboImpuesto.setEnabled(true);
+		//this.comboImpuesto.setEnabled(true);
 		
 	}
 	
@@ -570,34 +590,34 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 	private void setearFieldsEditar()
 	{
 		
-		this.fecha.setReadOnly(false);
-		this.codGasto.setReadOnly(false);
-		this.codGasto.setEnabled(false);
-		this.codProceso.setReadOnly(false);
-		this.codProceso.setEnabled(false);
-		this.codRubro.setReadOnly(false);
-		this.codRubro.setEnabled(false);
-		this.descripcionRubro.setReadOnly(false);
-		this.descripcionRubro.setEnabled(false);
-		this.descripcionImpuesto.setReadOnly(false);
-		this.descripcionImpuesto.setEnabled(false);
-		
-		this.codCliente.setReadOnly(false);
-		this.nomCliente.setReadOnly(false);
-		this.codCuenta.setReadOnly(false);
-		this.codCuenta.setEnabled(false);
-		this.descripcionCuenta.setReadOnly(false);
-		this.descripcionCuenta.setEnabled(false);
-		
-		this.impMn.setReadOnly(false);
-		this.impMo.setReadOnly(false);
-		this.tcMov.setReadOnly(false);
-		this.descripcion.setReadOnly(false);
-		this.codCliente.setReadOnly(false);
-		this.nomCliente.setReadOnly(false);
-		
-		this.comboMoneda.setEnabled(true);
-		this.comboImpuesto.setEnabled(true);
+//		this.fecha.setReadOnly(false);
+//		this.codGasto.setReadOnly(false);
+//		this.codGasto.setEnabled(false);
+//		this.codProceso.setReadOnly(false);
+//		this.codProceso.setEnabled(false);
+//		this.codRubro.setReadOnly(false);
+//		this.codRubro.setEnabled(false);
+//		this.descripcionRubro.setReadOnly(false);
+//		this.descripcionRubro.setEnabled(false);
+//		this.descripcionImpuesto.setReadOnly(false);
+//		this.descripcionImpuesto.setEnabled(false);
+//		
+//		this.codCliente.setReadOnly(false);
+//		this.nomCliente.setReadOnly(false);
+//		this.codCuenta.setReadOnly(false);
+//		this.codCuenta.setEnabled(false);
+//		this.descripcionCuenta.setReadOnly(false);
+//		this.descripcionCuenta.setEnabled(false);
+//		
+//		this.impMn.setReadOnly(false);
+//		this.impMo.setReadOnly(false);
+//		this.tcMov.setReadOnly(false);
+//		this.descripcion.setReadOnly(false);
+//		this.codCliente.setReadOnly(false);
+//		this.nomCliente.setReadOnly(false);
+//		
+//		this.comboMoneda.setEnabled(true);
+//		this.comboImpuesto.setEnabled(true);
 	}
 	
 	
@@ -641,6 +661,9 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		
 		this.btnBuscarCuenta.setEnabled(false);
 		this.btnBuscarCuenta.setVisible(false);
+		
+		this.btnBuscarCliente.setEnabled(false);
+		this.btnBuscarCliente.setVisible(false);
 	}
 	
 	/**
@@ -660,6 +683,9 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		
 		this.btnBuscarCuenta.setEnabled(true);
 		this.btnBuscarCuenta.setVisible(true);
+		
+		this.btnBuscarCliente.setEnabled(true);
+		this.btnBuscarCliente.setVisible(true);
 	}
 	
 	/**
@@ -669,38 +695,38 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 	 */
 	private void readOnlyFields(boolean setear)
 	{
-		this.fecha.setReadOnly(setear);
-		this.codGasto.setReadOnly(setear);
-		this.codProceso.setReadOnly(setear);
-		this.codCliente.setReadOnly(setear);
-		this.nomCliente.setReadOnly(setear);
-		this.codRubro.setReadOnly(setear);
-		this.descripcionRubro.setReadOnly(setear);
-		this.descripcionImpuesto.setReadOnly(setear);
-		
-		this.codCuenta.setReadOnly(setear);
-		this.descripcionCuenta.setReadOnly(setear);
-		this.impMn.setReadOnly(setear);
-		this.impMo.setReadOnly(setear);
-		this.tcMov.setReadOnly(setear);
-		this.descripcion.setReadOnly(setear);
-		this.codCliente.setReadOnly(setear);
-		this.nomCliente.setReadOnly(setear);
-		
-		
-		
-		this.comboMoneda.setEnabled(false);
-		this.comboImpuesto.setEnabled(false);
-		this.codCliente.setEnabled(false);
-		this.nomCliente.setEnabled(false);
-		this.codProceso.setEnabled(false);
-		this.codGasto.setEnabled(false);
-		this.descripcionImpuesto.setEnabled(false);
-		this.codRubro.setEnabled(false);
-		this.descripcionRubro.setEnabled(false);
-		this.descripcionImpuesto.setEnabled(false);
-		this.codCuenta.setEnabled(false);
-		this.descripcionCuenta.setEnabled(false);
+//		this.fecha.setReadOnly(setear);
+//		this.codGasto.setReadOnly(setear);
+//		this.codProceso.setReadOnly(setear);
+//		this.codCliente.setReadOnly(setear);
+//		this.nomCliente.setReadOnly(setear);
+//		this.codRubro.setReadOnly(setear);
+//		this.descripcionRubro.setReadOnly(setear);
+//		this.descripcionImpuesto.setReadOnly(setear);
+//		
+//		this.codCuenta.setReadOnly(setear);
+//		this.descripcionCuenta.setReadOnly(setear);
+//		this.impMn.setReadOnly(setear);
+//		this.impMo.setReadOnly(setear);
+//		this.tcMov.setReadOnly(setear);
+//		this.descripcion.setReadOnly(setear);
+//		this.codCliente.setReadOnly(setear);
+//		this.nomCliente.setReadOnly(setear);
+//		
+//		
+//		
+//		this.comboMoneda.setEnabled(false);
+//		this.comboImpuesto.setEnabled(false);
+//		this.codCliente.setEnabled(false);
+//		this.nomCliente.setEnabled(false);
+//		this.codProceso.setEnabled(false);
+//		this.codGasto.setEnabled(false);
+//		this.descripcionImpuesto.setEnabled(false);
+//		this.codRubro.setEnabled(false);
+//		this.descripcionRubro.setEnabled(false);
+//		this.descripcionImpuesto.setEnabled(false);
+//		this.codCuenta.setEnabled(false);
+//		this.descripcionCuenta.setEnabled(false);
 				
 	}
 	
@@ -748,11 +774,11 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 				
 		try
 		{
-			if(this.codCliente.isValid() && this.fecha.isValid() 
-					&& this.codProceso.isValid() && this.codGasto.isValid()
-					&& this.codCuenta.isValid() && this.codRubro.isValid()
-					&& this.comboMoneda.isValid() && this.descripcionImpuesto.isValid()
-					&& this.tcMov.isValid() && this.impMn.isValid() && this.impMo.isValid())
+//			if(this.codCliente.isValid() && this.fecha.isValid() 
+//					&& this.codProceso.isValid() && this.codGasto.isValid()
+//					&& this.codCuenta.isValid() && this.codRubro.isValid()
+//					&& this.comboMoneda.isValid() && this.descripcionImpuesto.isValid()
+//					&& this.tcMov.isValid() && this.impMn.isValid() && this.impMo.isValid())
 				valido = true;
 			
 		}catch(Exception e)
@@ -772,22 +798,22 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		if(datos instanceof ProcesoVO){
 			ProcesoVO procesoVO = (ProcesoVO) datos;
 			this.codProceso.setValue(String.valueOf(procesoVO.getCodigo()));
-			this.codCliente.setValue((procesoVO.getCodCliente()));
-			this.nomCliente.setValue(procesoVO.getNomCliente());
+			this.codTitular.setValue((procesoVO.getCodCliente()));
+			this.nomTitular.setValue(procesoVO.getNomCliente());
 		}
 		if(datos instanceof RubroVO){
 			RubroVO rubroVO = (RubroVO) datos;
 			this.codRubro.setValue(rubroVO.getcodRubro());
-			this.descripcionRubro.setValue(rubroVO.getDescripcion());
-			this.descripcionImpuesto.setValue(rubroVO.getDescripcionImpuesto());
-			this.codImpuesto.setValue(rubroVO.getCodigoImpuesto());
-			this.porcentajeImpuesto.setValue(String.valueOf(rubroVO.getPorcentajeImpuesto()));
+			this.nomRubro.setValue(rubroVO.getDescripcion());
+//			this.descripcionImpuesto.setValue(rubroVO.getDescripcionImpuesto());
+//			this.codImpuesto.setValue(rubroVO.getCodigoImpuesto());
+//			this.porcentajeImpuesto.setValue(String.valueOf(rubroVO.getPorcentajeImpuesto()));
 		}
 		
 		if(datos instanceof CuentaVO){
 			CuentaVO cuentaVO = (CuentaVO) datos;
 			this.codCuenta.setValue(cuentaVO.getCodCuenta());
-			this.descripcionCuenta.setValue(cuentaVO.getDescripcion());
+			this.nomCuenta.setValue(cuentaVO.getDescripcion());
 			
 		}
 		
@@ -858,9 +884,9 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 			}
 		}
 		
-		this.comboImpuesto.setContainerDataSource(impuestosObj);
-		this.comboImpuesto.setItemCaptionPropertyId("descripcion");
-		this.comboImpuesto.setValue(impuesto);
+//		this.comboImpuesto.setContainerDataSource(impuestosObj);
+//		this.comboImpuesto.setItemCaptionPropertyId("descripcion");
+//		this.comboImpuesto.setValue(impuesto);
 	}
 	
 }

@@ -19,7 +19,10 @@ public class DocumDetalleVO extends DatosDocumVO{
 	private String nomCuenta;
 	
 	private String codProceso;
+	private String descProceso;
 	
+
+
 	private String nomRubro;
 	private String codRubro;
 	
@@ -50,6 +53,7 @@ public class DocumDetalleVO extends DatosDocumVO{
 		this.codRubro = t.codRubro;
 		this.codCtaInd = t.codCtaInd;
 		this.linea = t.linea;
+		this.descProceso = t.descProceso;
 		
 	}
 
@@ -213,5 +217,12 @@ public class DocumDetalleVO extends DatosDocumVO{
 		this.linea = linea;
 	}
 
+	public String getDescProceso() {
+		return descProceso;
+	}
+
+	public void setDescProceso(String descProceso) {
+		this.descProceso = descProceso;
+	}
 
 }

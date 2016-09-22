@@ -2335,31 +2335,39 @@ public class FachadaDD {
 			{
 				aux = new GastoVO();
 				
-				aux.setOperacion(gasto.getOperacion());
+				aux.setFecDoc(gasto.getFecDoc());
+				aux.setCodDocum(gasto.getCodDocum());
+				aux.setSerieDocum(gasto.getSerieDocum());
+				aux.setNroDocum(gasto.getNroDocum());
+				aux.setCodEmp(gasto.getCodEmp());
+				aux.setCodMoneda(gasto.getMoneda().getCodMoneda());
+				aux.setNomMoneda(gasto.getMoneda().getDescripcion());
+				aux.setReferencia(gasto.getReferencia());
+				aux.setCodTitular(gasto.getTitInfo().getCodigo());
+				aux.setNomTitular(gasto.getTitInfo().getNombre());
+				aux.setNroTrans(gasto.getNroTrans());
+				aux.setFecValor(gasto.getFecValor());
+				aux.setCodProceso(gasto.getCodProceso());
+				aux.setReferencia(gasto.getReferencia());
+				aux.setImpImpuMn(gasto.getImpImpuMn());
+				aux.setImpImpuMo(gasto.getImpImpuMo());
+				aux.setImpSubMn(gasto.getImpSubMn());
+				aux.setImpSubMo(gasto.getImpSubMo());
+				aux.setImpTotMn(gasto.getImpTotMn());
+				aux.setImpTotMo(gasto.getImpTotMo());
+				aux.setTcMov(gasto.getTcMov());
+				aux.setCodCuenta(gasto.getCuenta().getCodCuenta());
+				aux.setNomCuenta(gasto.getCuenta().getNomCuenta());
+				aux.setCodRubro(gasto.getRubroInfo().getCodRubro());
+				aux.setNomRubro(gasto.getRubroInfo().getNomRubro());
+				aux.setCodCtaInd(gasto.getCodCuentaInd());
 				aux.setFechaMod(gasto.getFechaMod());
 				aux.setUsuarioMod(gasto.getUsuarioMod());
-				
-				aux.setCodGasto(gasto.getCod_gasto());
-				aux.setCodProceso(gasto.getProceso().getCodigo());
-				aux.setCodCliente(gasto.getCliente().getCodigo());
-				aux.setNomCliente(gasto.getCliente().getNombre());
-				aux.setCodMoneda(gasto.getMoneda().getCod_moneda());
-				aux.setDescMoneda(gasto.getMoneda().getDescripcion());
-				aux.setSimboloMoneda(gasto.getMoneda().getSimbolo());
-				aux.setCodCuenta(gasto.getCuenta().getCod_cuenta());
-				aux.setDescripcionCuenta(gasto.getCuenta().getDescripcion());
-				aux.setCodRubro(gasto.getRubro().getCod_rubro());
-				aux.setDescripcionRubro(gasto.getRubro().getDescripcion());
-				//aux.setTipoRubro(gasto.getRubro().getTipoRubro().getCod_tipoRubro());
-				aux.setCodImpuesto(gasto.getRubro().getImpuesto().getCod_imp());
-				aux.setDescripcionImpuesto(gasto.getRubro().getImpuesto().getDescripcion());
-				aux.setPorcentajeImpuesto(gasto.getRubro().getImpuesto().getPorcentaje());
-				aux.setFecha(gasto.getFecha());
-				aux.setImpMo(gasto.getImpMo());
-				aux.setImpMn(gasto.getImpMn());
-				aux.setTcMov(gasto.getTcMov());
-				aux.setDescripcion(gasto.getDescripcion());
-				
+				aux.setOperacion(gasto.getOperacion());
+				aux.setDescProceso(gasto.getDescProceso());
+				aux.setCodImpuesto(gasto.getImpuestoInfo().getCodImpuesto());
+				aux.setNomImpuesto(gasto.getImpuestoInfo().getNomImpuesto());
+				aux.setPorcentajeImpuesto(gasto.getImpuestoInfo().getPorcentaje());
 				lstGastosVO.add(aux);
 			}
 		
@@ -2388,7 +2396,7 @@ public class FachadaDD {
 	
 		Connection con = null;
 		boolean existe = false;
-		int codigo;
+		Integer codigo;
 		
 		try 
 		{
@@ -2397,7 +2405,7 @@ public class FachadaDD {
 			
 			Gasto gasto = new Gasto(gastoVO); 
 			codigo = numeradores.getNumero(con, "02", cod_emp);
-			gasto.setCod_gasto(codigo);
+			gasto.setNroDocum(codigo);
 			this.gastos.insertarGasto(gasto, cod_emp, con);
 			con.commit();
 			return codigo;
@@ -2423,8 +2431,9 @@ public class FachadaDD {
 	/**
 	* Actualiza los datos de un gasto dado su código y la empresa
 	* valida que exista el código 
+	 * @throws IngresandoGastoException 
 	*/
-	public void actualizarGasto(GastoVO gastoVO, String cod_emp) throws ConexionException, ModificandoGastoException, NoExisteGastoException, ExisteGastoException  
+	public void actualizarGasto(GastoVO gastoVO, String cod_emp) throws ConexionException, ModificandoGastoException, NoExisteGastoException, ExisteGastoException, IngresandoGastoException  
 	{
 	
 		Connection con = null;
@@ -2436,7 +2445,7 @@ public class FachadaDD {
 			
 			Gasto gasto = new Gasto(gastoVO);
 			
-			if(this.gastos.memberGasto(gasto.getCod_gasto(), cod_emp, con)){
+			if(this.gastos.memberGasto(gasto.getNroTrans(), cod_emp, con)){
 				this.gastos.modificarGasto(gasto, cod_emp, con);
 				con.commit();
 			}

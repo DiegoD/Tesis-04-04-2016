@@ -70,7 +70,7 @@ public class GastosPanelExtended extends GastosPanel{
 				
 					this.btnNuevoGasto.addClickListener(click -> {
 						
-						sub = new MySub("100%","70%");
+						sub = new MySub("75%","55%");
 						form = new GastoViewExtended(Variables.OPERACION_NUEVO, this);
 						sub.setModal(true);
 						sub.setVista((Component) form);
@@ -122,20 +122,6 @@ public class GastosPanelExtended extends GastosPanel{
 		
 		this.gridGastos.setContainerDataSource(container);
 		
-		gridGastos.removeColumn("codProceso");
-		gridGastos.removeColumn("codCliente");
-		gridGastos.removeColumn("codMoneda");
-		gridGastos.removeColumn("descMoneda");
-		gridGastos.removeColumn("simboloMoneda");
-		gridGastos.removeColumn("codCuenta");
-		gridGastos.removeColumn("codRubro");
-		gridGastos.removeColumn("tipoRubro");
-		gridGastos.removeColumn("codImpuesto");
-		gridGastos.removeColumn("porcentajeImpuesto");
-		gridGastos.removeColumn("impMo");
-		gridGastos.removeColumn("impMn");
-		gridGastos.removeColumn("tcMov");
-		gridGastos.removeColumn("descripcion");
 		gridGastos.removeColumn("fechaMod");
 		gridGastos.removeColumn("usuarioMod");
 		gridGastos.removeColumn("operacion");
@@ -162,7 +148,7 @@ public class GastosPanelExtended extends GastosPanel{
 				    	}
 							
 				    	form = new GastoViewExtended(Variables.OPERACION_LECTURA, GastosPanelExtended.this);
-				    	sub = new MySub("100%","70%");
+				    	sub = new MySub("75%","55%");
 						sub.setModal(true);
 						sub.setVista((Component) form);
 						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
@@ -180,22 +166,22 @@ public class GastosPanelExtended extends GastosPanel{
 		    }
 		});
 		
-		//Modifica el formato de fecha en la grilla 
-		gridGastos.getColumn("fecha").setConverter(new StringToDateConverter(){
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-
-			@Override
-
-			public DateFormat getFormat(Locale locale){
-
-				return new SimpleDateFormat("dd/MM/yyyy");
-
-			}
-
-		});
+//		//Modifica el formato de fecha en la grilla 
+//		gridGastos.getColumn("fecha").setConverter(new StringToDateConverter(){
+//			/**
+//			 * 
+//			 */
+//			private static final long serialVersionUID = 1L;
+//
+//			@Override
+//
+//			public DateFormat getFormat(Locale locale){
+//
+//				return new SimpleDateFormat("dd/MM/yyyy");
+//
+//			}
+//
+//		});
 		
 	}
 	
@@ -241,7 +227,7 @@ public class GastosPanelExtended extends GastosPanel{
 
 		/*Si esta el proceso en la lista, es una acutalizacion
 		 * y modificamos el objeto en la lista*/
-		if(this.existeGastoenLista(gastoVO.getCodGasto()))
+		if(this.existeGastoenLista(gastoVO.getNroTrans()))
 		{
 			this.actualizarGastoenLista(gastoVO);
 		}
@@ -274,9 +260,9 @@ public class GastosPanelExtended extends GastosPanel{
 		{
 			gastoEnLista = this.lstGastos.get(i);
 			
-			if(gastoVO.getCodGasto() == gastoEnLista.getCodGasto()){
+			if(gastoVO.getNroTrans() == gastoEnLista.getNroTrans()){
 				
-				this.lstGastos.get(i).Copiar(gastoVO);
+				this.lstGastos.get(i).copiar(gastoVO);
 				salir = true;
 			}
 			
@@ -289,7 +275,7 @@ public class GastosPanelExtended extends GastosPanel{
 	 * de gastos de la vista
 	 *
 	 */
-	private boolean existeGastoenLista(Integer cod_gasto)
+	private boolean existeGastoenLista(Long nro_trans)
 	{
 		int i =0;
 		boolean esta = false;
@@ -299,7 +285,7 @@ public class GastosPanelExtended extends GastosPanel{
 		while( i < this.lstGastos.size() && !esta)
 		{
 			aux = this.lstGastos.get(i);
-			if(cod_gasto.equals(aux.getCodGasto()))
+			if(nro_trans.equals(aux.getNroTrans()))
 			{
 				esta = true;
 			}

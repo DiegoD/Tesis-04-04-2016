@@ -54,7 +54,7 @@ public class GastoControlador {
 	 * @throws NoTienePermisosException 
 	 * @throws ObteniendoPermisosException 
 	 */
-	public int insertarGasto(GastoVO gastoVO, UsuarioPermisosVO permisos) throws IngresandoGastoException, ExisteGastoException, InicializandoException, ConexionException, ErrorInesperadoException, ObteniendoPermisosException, NoTienePermisosException
+	public Integer insertarGasto(GastoVO gastoVO, UsuarioPermisosVO permisos) throws IngresandoGastoException, ExisteGastoException, InicializandoException, ConexionException, ErrorInesperadoException, ObteniendoPermisosException, NoTienePermisosException
 	{
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
@@ -68,8 +68,9 @@ public class GastoControlador {
 	 * Actualiza los datos de un gasto
 	 * @throws NoTienePermisosException 
 	 * @throws ObteniendoPermisosException 
+	 * @throws IngresandoGastoException 
 	 */
-	public void actualizarGasto(GastoVO gastoVO, UsuarioPermisosVO permisos) throws ConexionException, NoExisteGastoException, ModificandoGastoException, ExisteGastoException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException {
+	public void actualizarGasto(GastoVO gastoVO, UsuarioPermisosVO permisos) throws ConexionException, NoExisteGastoException, ModificandoGastoException, ExisteGastoException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, IngresandoGastoException {
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))

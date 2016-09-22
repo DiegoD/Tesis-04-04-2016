@@ -18,6 +18,10 @@ import com.logica.Impuesto;
 import com.logica.MonedaInfo;
 import com.logica.Proceso;
 import com.logica.Rubro;
+import com.logica.Docum.CuentaInfo;
+import com.logica.Docum.ImpuestoInfo;
+import com.logica.Docum.RubroInfo;
+import com.logica.Docum.TitularInfo;
 import com.mysql.jdbc.Statement;
 
 public class DAOGastos implements IDAOGastos{
@@ -42,28 +46,38 @@ public class DAOGastos implements IDAOGastos{
 			Gasto aux;
 			while(rs.next ()) {
 				
-							
 				aux = new Gasto();
 				
-				aux.setCod_gasto(rs.getInt(1));
-				aux.setProceso(new Proceso(rs.getInt(2)));
-				aux.setFecha(rs.getTimestamp(3));
-				aux.setImpMo(rs.getFloat(4));
-				aux.setImpMn(rs.getFloat(5));
-				aux.setTcMov(rs.getFloat(6));
-				aux.setDescripcion(rs.getString(7));
-				aux.setFechaMod(rs.getTimestamp(8));
-				aux.setUsuarioMod(rs.getString(9));
-				aux.setOperacion(rs.getString(10));
-				aux.setCliente(new ClienteInfo(rs.getString(11), rs.getString(12)));
-				aux.setMoneda(new MonedaInfo (rs.getString(13), rs.getString(14), rs.getString(15)));
-				aux.setCuenta(new Cuenta(rs.getString(17), rs.getString(18)));
-				Impuesto imp = new Impuesto();
-				imp.setCod_imp(rs.getString(23));
-				imp.setDescripcion(rs.getString(24));
-				imp.setPorcentaje(rs.getFloat(25));
-				aux.setCuenta(new Cuenta(rs.getString(17), rs.getString(18)));
-				aux.setRubro(new Rubro(rs.getString(19), rs.getString(20), imp));
+				aux.setFecDoc(rs.getTimestamp(1));
+				aux.setCodDocum(rs.getString(2));
+				aux.setSerieDocum(rs.getString(3));
+				aux.setNroDocum(rs.getInt(4));
+				aux.setCodEmp(rs.getString(5));
+				aux.setReferencia(rs.getString(6));
+				aux.setNroTrans(rs.getLong(7));
+				aux.setFecValor(rs.getTimestamp(8));
+				aux.setCodProceso(rs.getString(9));
+				aux.setImpImpuMn(rs.getFloat(11));
+				aux.setImpImpuMo(rs.getFloat(12));
+				aux.setImpSubMn(rs.getFloat(13));
+				aux.setImpSubMo(rs.getFloat(14));
+				aux.setImpTotMn(rs.getFloat(15));
+				aux.setImpTotMo(rs.getFloat(16));
+				aux.setTcMov(rs.getFloat(17));
+				aux.setCodCuentaInd(rs.getString(18));
+				aux.setFechaMod(rs.getTimestamp(19));
+				aux.setUsuarioMod(rs.getString(20));
+				aux.setOperacion(rs.getString(21));
+				aux.setTitInfo(new TitularInfo(rs.getString(22), rs.getString(23)));
+				aux.setMoneda(new MonedaInfo (rs.getString(24), rs.getString(25), rs.getString(26)));
+				aux.setCuenta(new CuentaInfo(rs.getString(27), rs.getString(28)));
+				aux.setRubroInfo(new RubroInfo(rs.getString(29), rs.getString(30)));
+				ImpuestoInfo imp = new ImpuestoInfo();
+				imp.setCodImpuesto(rs.getString(33));
+				imp.setNomImpuesto(rs.getString(34));
+				imp.setPorcentaje(rs.getFloat(35));
+				aux.setImpuestoInfo(imp);
+				aux.setDescProceso(rs.getString(36));
 				
 				lstGastos.add(aux);
 				
@@ -81,7 +95,7 @@ public class DAOGastos implements IDAOGastos{
 	}
 
 	@Override
-	public boolean memberGasto(int codGasto, String codEmp, Connection con)
+	public boolean memberGasto(long nroTrans, String codEmp, Connection con)
 			throws ExisteGastoException, ConexionException {
 		// TODO Auto-generated method stub
 		boolean existe = false;
@@ -94,7 +108,7 @@ public class DAOGastos implements IDAOGastos{
 			
 			PreparedStatement pstmt1 = con.prepareStatement(query);
 			
-			pstmt1.setInt(1, codGasto);
+			pstmt1.setLong(1, nroTrans);
 			pstmt1.setString(2, codEmp);
 			
 			ResultSet rs = pstmt1.executeQuery();
@@ -126,21 +140,31 @@ public class DAOGastos implements IDAOGastos{
     	try {
     		
 			pstmt1 =  con.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
-			
-			pstmt1.setInt(1, gasto.getCod_gasto());
-			pstmt1.setInt(2, gasto.getProceso().getCodigo());
-			pstmt1.setString(3, gasto.getCliente().getCodigo());
-			pstmt1.setString(4, gasto.getRubro().getCod_rubro());
-			pstmt1.setString(5, gasto.getCuenta().getCod_cuenta());
-			pstmt1.setString(6, gasto.getMoneda().getCod_moneda());
-			pstmt1.setTimestamp(7, gasto.getFecha());
-			pstmt1.setFloat(8, gasto.getImpMo());
-			pstmt1.setFloat(9, gasto.getImpMn());
-			pstmt1.setFloat(10, gasto.getTcMov());
-			pstmt1.setString(11, gasto.getDescripcion());
-			pstmt1.setString(12, codEmp);
-			pstmt1.setString(13, gasto.getUsuarioMod());
-			pstmt1.setString(14, gasto.getOperacion());
+					
+			pstmt1.setTimestamp(1, gasto.getFecDoc());
+			pstmt1.setString(2, gasto.getCodDocum());
+			pstmt1.setString(3, gasto.getSerieDocum());
+			pstmt1.setInt(4, gasto.getNroDocum());
+			pstmt1.setString(5, gasto.getCodEmp());
+			pstmt1.setString(6, gasto.getMoneda().getCodMoneda());
+			pstmt1.setString(7, gasto.getReferencia());
+			pstmt1.setString(8, gasto.getTitInfo().getCodigo());
+			pstmt1.setLong(9, gasto.getNroTrans());
+			pstmt1.setTimestamp(10, gasto.getFecValor());
+			pstmt1.setString(11, gasto.getCodProceso());
+			pstmt1.setString(12, gasto.getReferencia());
+			pstmt1.setDouble(13, gasto.getImpImpuMn());
+			pstmt1.setDouble(14, gasto.getImpImpuMo());
+			pstmt1.setDouble(15, gasto.getImpSubMn());
+			pstmt1.setDouble(16, gasto.getImpSubMo());
+			pstmt1.setDouble(17, gasto.getImpTotMn());
+			pstmt1.setDouble(18, gasto.getImpTotMo());
+			pstmt1.setDouble(19, gasto.getTcMov());
+			pstmt1.setString(20, gasto.getCuenta().getCodCuenta());
+			pstmt1.setString(21, gasto.getRubroInfo().getCodRubro());
+			pstmt1.setString(22, gasto.getCodCuentaInd());
+			pstmt1.setString(23, gasto.getUsuarioMod());
+			pstmt1.setString(24, gasto.getOperacion());
 			
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
@@ -154,35 +178,20 @@ public class DAOGastos implements IDAOGastos{
 	}
 
 	@Override
-	public void modificarGasto(Gasto gasto, String codEmp, Connection con) throws ModificandoGastoException {
+	public void modificarGasto(Gasto gasto, String codEmp, Connection con) throws ModificandoGastoException, IngresandoGastoException, ConexionException {
 		// TODO Auto-generated method stub
 		ConsultasDD consultas = new ConsultasDD();
-		String update = consultas.actualizarGasto();
+		String eliminar = consultas.eliminarGasto();
 		PreparedStatement pstmt1;
-		
 		
 		try {
 			
-			/*Updateamos la info del usuario*/
-     		pstmt1 =  con.prepareStatement(update);
-     		
-     		pstmt1.setInt(1, gasto.getProceso().getCodigo());
-     		pstmt1.setString(2, gasto.getCliente().getCodigo());
-     		pstmt1.setString(3, gasto.getRubro().getCod_rubro());
-     		pstmt1.setString(4, gasto.getCuenta().getCod_cuenta());
-     		pstmt1.setString(5, gasto.getMoneda().getCod_moneda());
-     		pstmt1.setTimestamp(6, gasto.getFecha());
-     		pstmt1.setFloat(7, gasto.getImpMo());
-     		pstmt1.setFloat(8, gasto.getImpMn());
-     		pstmt1.setFloat(9, gasto.getTcMov());
-     		pstmt1.setString(10, gasto.getDescripcion());
-     		pstmt1.setString(11, codEmp);
-     		pstmt1.setString(12, gasto.getUsuarioMod());
-     		pstmt1.setString(13, gasto.getOperacion());
-     		pstmt1.setInt(14, gasto.getCod_gasto());
-     		pstmt1.setString(15, codEmp);
+			pstmt1 =  con.prepareStatement(eliminar);
+			pstmt1.setLong(1, gasto.getNroTrans());
+			pstmt1.setString(2, gasto.getCodEmp());
 			
 			pstmt1.executeUpdate ();
+			this.insertarGasto(gasto, codEmp, con);
 			
 			pstmt1.close ();
 	
