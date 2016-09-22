@@ -24,6 +24,7 @@ import com.vaadin.ui.declarative.Design;
 public class GastoView extends FormLayout {
 	protected Link auditoria;
 	protected TextField nroDocum;
+	protected TextField nroTrans;
 	protected TextField codDocum;
 	protected TextField serieDocum;
 	protected DateField fecDoc;

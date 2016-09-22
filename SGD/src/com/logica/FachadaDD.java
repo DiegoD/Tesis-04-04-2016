@@ -89,6 +89,7 @@ import com.valueObject.*;
 import com.valueObject.Cotizacion.CotizacionVO;
 import com.valueObject.Cuenta.CuentaVO;
 import com.valueObject.Gasto.GastoVO;
+import com.valueObject.Numeradores.NumeradoresVO;
 import com.valueObject.TipoRubro.TipoRubroVO;
 import com.valueObject.empresa.EmpresaUsuVO;
 import com.valueObject.empresa.EmpresaVO;
@@ -2391,12 +2392,13 @@ public class FachadaDD {
 	/**
 	* Inserta un nuevo gasto en la base
 	*/
-	public int insertarGasto(GastoVO gastoVO, String cod_emp) throws IngresandoGastoException, ConexionException, ExisteGastoException 
+	public NumeradoresVO insertarGasto(GastoVO gastoVO, String cod_emp) throws IngresandoGastoException, ConexionException, ExisteGastoException 
 	{
 	
 		Connection con = null;
 		boolean existe = false;
 		Integer codigo;
+		NumeradoresVO codigos = new NumeradoresVO();
 		
 		try 
 		{
@@ -2404,11 +2406,13 @@ public class FachadaDD {
 			con.setAutoCommit(false);
 			
 			Gasto gasto = new Gasto(gastoVO); 
-			codigo = numeradores.getNumero(con, "02", cod_emp);
-			gasto.setNroDocum(codigo);
+			codigos.setCodigo(numeradores.getNumero(con, "02", cod_emp));
+			codigos.setNumeroTrans(numeradores.getNumero(con, "03", cod_emp));
+			gasto.setNroDocum(codigos.getCodigo());
+			gasto.setNroTrans(codigos.getNumeroTrans());
 			this.gastos.insertarGasto(gasto, cod_emp, con);
 			con.commit();
-			return codigo;
+			return codigos;
 		
 		}
 		catch(Exception IngresandoProcesoException)  	{

@@ -70,7 +70,7 @@ public class GastosPanelExtended extends GastosPanel{
 				
 					this.btnNuevoGasto.addClickListener(click -> {
 						
-						sub = new MySub("75%","55%");
+						sub = new MySub("85%","45%");
 						form = new GastoViewExtended(Variables.OPERACION_NUEVO, this);
 						sub.setModal(true);
 						sub.setVista((Component) form);
@@ -126,6 +126,43 @@ public class GastosPanelExtended extends GastosPanel{
 		gridGastos.removeColumn("usuarioMod");
 		gridGastos.removeColumn("operacion");
 		
+		gridGastos.removeColumn("codDocum");
+		gridGastos.removeColumn("serieDocum");
+		gridGastos.removeColumn("codEmp");
+		
+		gridGastos.removeColumn("codMoneda");
+		gridGastos.removeColumn("nomMoneda");
+		gridGastos.removeColumn("simboloMoneda");
+		
+		gridGastos.removeColumn("codTitular");
+		gridGastos.removeColumn("nroTrans");
+		//gridGastos.removeColumn("impTotMn");
+		
+		gridGastos.removeColumn("impTotMo");
+		gridGastos.removeColumn("tcMov");
+		gridGastos.removeColumn("fecValor");
+		
+		gridGastos.removeColumn("codImpuesto");
+		gridGastos.removeColumn("nomImpuesto");
+		gridGastos.removeColumn("porcentajeImpuesto");
+		
+		gridGastos.removeColumn("impImpuMn");
+		gridGastos.removeColumn("impImpuMo");
+		gridGastos.removeColumn("impSubMn");
+		
+		gridGastos.removeColumn("impSubMo");
+		gridGastos.removeColumn("impTotMn");
+		gridGastos.removeColumn("impTtotMo");
+		
+		//gridGastos.removeColumn("tcMov");
+		gridGastos.removeColumn("nomCuenta");
+		gridGastos.removeColumn("codProceso");
+		
+		gridGastos.removeColumn("nomRubro");
+		gridGastos.removeColumn("codRubro");
+		gridGastos.removeColumn("codCtaInd");
+		gridGastos.removeColumn("linea");
+		gridGastos.removeColumn("codCuenta");
 		
 		/*Agregamos los filtros a la grilla*/
 		this.filtroGrilla();
@@ -148,7 +185,7 @@ public class GastosPanelExtended extends GastosPanel{
 				    	}
 							
 				    	form = new GastoViewExtended(Variables.OPERACION_LECTURA, GastosPanelExtended.this);
-				    	sub = new MySub("75%","55%");
+				    	sub = new MySub("85%","45%");
 						sub.setModal(true);
 						sub.setVista((Component) form);
 						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
@@ -166,22 +203,22 @@ public class GastosPanelExtended extends GastosPanel{
 		    }
 		});
 		
-//		//Modifica el formato de fecha en la grilla 
-//		gridGastos.getColumn("fecha").setConverter(new StringToDateConverter(){
-//			/**
-//			 * 
-//			 */
-//			private static final long serialVersionUID = 1L;
-//
-//			@Override
-//
-//			public DateFormat getFormat(Locale locale){
-//
-//				return new SimpleDateFormat("dd/MM/yyyy");
-//
-//			}
-//
-//		});
+		//Modifica el formato de fecha en la grilla 
+		gridGastos.getColumn("fecDoc").setConverter(new StringToDateConverter(){
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+
+			public DateFormat getFormat(Locale locale){
+
+				return new SimpleDateFormat("dd/MM/yyyy");
+
+			}
+
+		});
 		
 	}
 	

@@ -15,12 +15,14 @@
     <vaadin-form-layout style-name="tiny" spacing="false" size-full margin-bottom="false"> 
      <vaadin-horizontal-layout caption="Número" style-name="tiny" spacing height="40px"> 
       <vaadin-text-field style-name="tiny" width="90px" _id="nroDocum"></vaadin-text-field> 
+      <vaadin-text-field visible="false" _id="nroTrans"></vaadin-text-field> 
       <vaadin-text-field visible="false" style-name="tiny" readonly _id="codDocum"></vaadin-text-field> 
       <vaadin-text-field visible="false" style-name="tiny" _id="serieDocum"></vaadin-text-field> 
-      <vaadin-label caption="Fecha" style-name="tiny" size-auto></vaadin-label> 
-      <vaadin-date-field style-name="tiny" width="130px" _id="fecDoc"></vaadin-date-field> 
-      <vaadin-label caption="Fecha Efectiva" style-name="tiny" size-auto></vaadin-label> 
-      <vaadin-date-field style-name="tiny" width="130px" _id="fecValor"></vaadin-date-field> 
+     </vaadin-horizontal-layout> 
+     <vaadin-horizontal-layout caption="Fecha" spacing height="36px"> 
+      <vaadin-date-field style-name="tiny" width="127px" _id="fecDoc"></vaadin-date-field> 
+      <vaadin-label caption="Fecha Efectiva" style-name="tiny" width-auto height="2px"></vaadin-label> 
+      <vaadin-date-field style-name="tiny" width="122px" _id="fecValor"></vaadin-date-field> 
      </vaadin-horizontal-layout> 
      <vaadin-horizontal-layout caption="Proceso" spacing> 
       <vaadin-text-field style-name="tiny" width="90px" _id="codProceso"></vaadin-text-field> 
@@ -50,7 +52,7 @@
         Button 
       </vaadin-button> 
      </vaadin-horizontal-layout> 
-     <vaadin-horizontal-layout caption="Impuestos" spacing> 
+     <vaadin-horizontal-layout caption="Impuestos" spacing height="36px"> 
       <vaadin-text-field style-name="tiny" width="90px" _id="codImpuesto"></vaadin-text-field> 
       <vaadin-text-field style-name="tiny" width="159px" _id="nomImpuesto"></vaadin-text-field> 
       <vaadin-text-field style-name="tiny" width="93px" _id="porcentajeImpuesto"></vaadin-text-field> 
@@ -74,7 +76,7 @@
       <vaadin-label caption="I. Nacional" width="78px"></vaadin-label> 
       <vaadin-text-field style-name="tiny" width="90px" _id="impImpuMn"></vaadin-text-field> 
      </vaadin-horizontal-layout> 
-     <vaadin-horizontal-layout caption="Descripción" spacing> 
+     <vaadin-horizontal-layout caption="Descripción" spacing height="48px"> 
       <vaadin-text-field style-name="tiny" width="366px" _id="referencia"></vaadin-text-field> 
      </vaadin-horizontal-layout> 
      <vaadin-horizontal-layout width="187px"> 

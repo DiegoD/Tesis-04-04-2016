@@ -26,6 +26,7 @@ import com.valueObject.RubroVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.Cuenta.CuentaVO;
 import com.valueObject.Gasto.GastoVO;
+import com.valueObject.Numeradores.NumeradoresVO;
 import com.valueObject.cliente.ClienteVO;
 import com.valueObject.proceso.ProcesoVO;
 
@@ -54,7 +55,7 @@ public class GastoControlador {
 	 * @throws NoTienePermisosException 
 	 * @throws ObteniendoPermisosException 
 	 */
-	public Integer insertarGasto(GastoVO gastoVO, UsuarioPermisosVO permisos) throws IngresandoGastoException, ExisteGastoException, InicializandoException, ConexionException, ErrorInesperadoException, ObteniendoPermisosException, NoTienePermisosException
+	public NumeradoresVO insertarGasto(GastoVO gastoVO, UsuarioPermisosVO permisos) throws IngresandoGastoException, ExisteGastoException, InicializandoException, ConexionException, ErrorInesperadoException, ObteniendoPermisosException, NoTienePermisosException
 	{
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))

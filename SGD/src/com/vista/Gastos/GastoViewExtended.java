@@ -18,11 +18,9 @@ import com.excepciones.Gastos.NoExisteGastoException;
 import com.excepciones.Impuestos.ObteniendoImpuestosException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
 import com.excepciones.Procesos.ObteniendoProcesosException;
-import com.excepciones.clientes.ObteniendoClientesException;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.UI;
 import com.valueObject.ImpuestoVO;
@@ -31,7 +29,7 @@ import com.valueObject.RubroVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.Cuenta.CuentaVO;
 import com.valueObject.Gasto.GastoVO;
-import com.valueObject.cliente.ClienteVO;
+import com.valueObject.Numeradores.NumeradoresVO;
 import com.valueObject.proceso.ProcesoVO;
 import com.vista.BusquedaViewExtended;
 import com.vista.IBusqueda;
@@ -52,6 +50,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 	UsuarioPermisosVO permisoAux;
 	Integer codigoInsert;
 	String aux;
+	NumeradoresVO codigos;
 	
 	public GastoViewExtended(String opera, GastosPanelExtended main){
 		
@@ -86,7 +85,6 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 					gastoVO.setCodProceso(codProceso.getValue().trim());
 					gastoVO.setCodDocum("Gasto");
 					gastoVO.setSerieDocum("A");
-					gastoVO.setNroTrans(1);
 					gastoVO.setCodImpuesto(codImpuesto.getValue().trim());
 					gastoVO.setNomImpuesto(nomImpuesto.getValue().trim());
 					//gastoVO.setPorcentajeImpuesto(porcentajeImpuesto);
@@ -181,13 +179,21 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 						gastoVO.setNroDocum(Integer.parseInt(nroDocum.getValue().trim()));
 					}
 					
+					if(this.operacion.equals(Variables.OPERACION_NUEVO)){
+						gastoVO.setNroTrans((0));
+					}
+					else{
+						gastoVO.setNroTrans(Integer.parseInt(nroTrans.getValue().trim()));
+					}
+					
 					gastoVO.setFecDoc(new java.sql.Timestamp(fecDoc.getValue().getTime()));
 					gastoVO.setFecValor(new java.sql.Timestamp(fecValor.getValue().getTime()));
 					
 					if(this.operacion.equals(Variables.OPERACION_NUEVO)) {	
 		
-						codigoInsert = this.controlador.insertarGasto(gastoVO, permisoAux);
-						gastoVO.setNroDocum(codigoInsert);
+						codigos = this.controlador.insertarGasto(gastoVO, permisoAux);
+						gastoVO.setNroDocum(codigos.getCodigo());
+						gastoVO.setNroTrans(codigos.getNumeroTrans());
 						
 						this.mainView.actulaizarGrilla(gastoVO);
 						
