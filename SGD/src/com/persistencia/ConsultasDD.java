@@ -958,6 +958,16 @@ public class ConsultasDD {
 		
 ////////////////////////INI NUMERADORES//////////////////////////////////////////////
 
+	public String getNumeroTrans()
+	{
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT numero ");
+		sb.append("FROM g_numeradores WHERE cod_numerador = ? ");
+		
+		return sb.toString();
+	}
 		
 	public String getNumero()
 	{
@@ -966,6 +976,18 @@ public class ConsultasDD {
 		
 		sb.append("SELECT numero ");
 		sb.append("FROM g_numeradores WHERE cod_numerador = ? AND cod_emp = ? ");
+		
+		return sb.toString();
+	}
+	
+	public String actualizarNumeroTrans()
+	{
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("UPDATE vaadin.g_numeradores ");
+		sb.append("SET numero = ? ");
+		sb.append("WHERE cod_numerador = ? ");
 		
 		return sb.toString();
 	}

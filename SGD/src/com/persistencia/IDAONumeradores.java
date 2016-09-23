@@ -9,5 +9,5 @@ import com.excepciones.Procesos.IngresandoProcesoException;
 public interface IDAONumeradores {
 	
 	public int getNumero(Connection con, String cod_numerador, String cod_Emp) throws IngresandoProcesoException, ConexionException, SQLException;
-
+	public int getNroTrans(Connection con, String cod_numerador) throws SQLException;
 }

@@ -2406,8 +2406,8 @@ public class FachadaDD {
 			con.setAutoCommit(false);
 			
 			Gasto gasto = new Gasto(gastoVO); 
-			codigos.setCodigo(numeradores.getNumero(con, "02", cod_emp));
-			codigos.setNumeroTrans(numeradores.getNumero(con, "03", cod_emp));
+			codigos.setCodigo(numeradores.getNumero(con, "02", cod_emp)); //Gasto
+			codigos.setNumeroTrans(numeradores.getNroTrans(con, "03")); //Transacción
 			gasto.setNroDocum(codigos.getCodigo());
 			gasto.setNroTrans(codigos.getNumeroTrans());
 			this.gastos.insertarGasto(gasto, cod_emp, con);
