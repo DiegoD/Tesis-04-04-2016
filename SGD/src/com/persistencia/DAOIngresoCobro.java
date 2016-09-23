@@ -372,7 +372,6 @@ public class DAOIngresoCobro implements IDAOIngresoCobro{
     	
     	return lst;
 	}
-
 	
 
 	

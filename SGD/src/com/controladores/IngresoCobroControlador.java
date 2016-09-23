@@ -57,7 +57,7 @@ public class IngresoCobroControlador {
 	/**
 	 * Modifica los datos de un cobro
 	 */
-	public void modificarIngresoCobro(IngresoCobroVO ingVO, UsuarioPermisosVO permisos) throws ConexionException, ModificandoIngresoCobroException, InicializandoException, VerificandoBancosException, ObteniendoPermisosException, NoTienePermisosException, ExisteIngresoCobroException 
+	public void modificarIngresoCobro(IngresoCobroVO ingVO, UsuarioPermisosVO permisos) throws ConexionException, ModificandoIngresoCobroException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ExisteIngresoCobroException 
 	{
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))

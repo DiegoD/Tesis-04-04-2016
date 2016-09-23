@@ -430,7 +430,7 @@ public class Consultas {
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("SELECT cod_tit, nom_tit ");
-		sb.append("FROM m_clientes WHERE cod_tit = ? AND cod_emp = ?");
+		sb.append("FROM m_titulares WHERE cod_tit = ? AND cod_emp = ?");
 
 		return sb.toString();
 	}
@@ -524,7 +524,7 @@ public class Consultas {
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("SELECT cod_tit, nom_tit ");
-		sb.append("FROM m_funcionarios WHERE cod_tit = ? AND cod_emp = ?");
+		sb.append("FROM m_titulares WHERE cod_tit = ? AND cod_emp = ?");
 		
 		return sb.toString();
 	}

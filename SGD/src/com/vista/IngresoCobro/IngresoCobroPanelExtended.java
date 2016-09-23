@@ -13,6 +13,7 @@ import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Bancos.ObteniendoBancosException;
 import com.excepciones.Bancos.ObteniendoCuentasBcoException;
+import com.excepciones.IngresoCobros.ObteniendoIngresoCobroException;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.filter.SimpleStringFilter;
@@ -34,7 +35,7 @@ import com.vista.Bancos.BancosPanelExtended;
 
 public class IngresoCobroPanelExtended extends IngresoCobroPanel{
 	
-	private BancoViewExtended form; 
+	private IngresoCobroViewExtended form; 
 	private ArrayList<IngresoCobroVO> lstIngresoCobro; /*Lista con los cobros*/
 	private BeanItemContainer<IngresoCobroVO> container;
 	private IngresoCobroControlador controlador;
@@ -67,7 +68,7 @@ public class IngresoCobroPanelExtended extends IngresoCobroPanel{
 					this.btnNuevo.addClickListener(click -> {
 						
 							sub = new MySub("72%", "70%");
-							form = new BancoViewExtended(Variables.OPERACION_NUEVO, this);
+							form = new IngresoCobroViewExtended(Variables.OPERACION_NUEVO, this);
 							sub.setModal(true);
 							sub.setVista(form);
 							
@@ -99,16 +100,16 @@ public class IngresoCobroPanelExtended extends IngresoCobroPanel{
 		
 									
 		this.container = 
-				new BeanItemContainer<BancoVO>(BancoVO.class);
+				new BeanItemContainer<IngresoCobroVO>(IngresoCobroVO.class);
 		
 		//Obtenemos lista de bancos del sistema
-		this.lstIngresoCobro = this.getBancos(); 
+		this.lstIngresoCobro = this.getCobros(); 
 		
-		for (BancoVO bcoVO : lstIngresoCobro) {
-			container.addBean(bcoVO);
+		for (IngresoCobroVO ingVO : lstIngresoCobro) {
+			container.addBean(ingVO);
 		}
 		
-		gridBancos.setContainerDataSource(container);
+		grid.setContainerDataSource(container);
 		
 		//Quitamos las columnas de la grilla de auditoria
 		this.ocultarColumnasGrilla();
@@ -116,15 +117,15 @@ public class IngresoCobroPanelExtended extends IngresoCobroPanel{
 		/*Agregamos los filtros a la grilla*/
 		this.filtroGrilla();
 		
-		gridBancos.addSelectionListener(new SelectionListener() {
+		grid.addSelectionListener(new SelectionListener() {
 						
 		    @Override
 		    public void select(SelectionEvent event) {
 		       
 		    	try{
 		    		
-		    		if(gridBancos.getSelectedRow() != null){
-		    			BeanItem<BancoVO> item = container.getItem(gridBancos.getSelectedRow());
+		    		if(grid.getSelectedRow() != null){
+		    			BeanItem<IngresoCobroVO> item = container.getItem(grid.getSelectedRow());
 				    	
 				    	/*Puede ser null si accedemos luego de haberlo agregado, ya que no va a la base*/
 				    	if(item.getBean().getFechaMod() == null)
@@ -132,14 +133,14 @@ public class IngresoCobroPanelExtended extends IngresoCobroPanel{
 				    		item.getBean().setFechaMod(new Timestamp(System.currentTimeMillis()));
 				    	}
 							
-						form = new BancoViewExtended(Variables.OPERACION_LECTURA, BancosPanelExtended.this);
+						form = new IngresoCobroViewExtended(Variables.OPERACION_LECTURA, IngresoCobroPanelExtended.this);
 						//form.fieldGroup.setItemDataSource(item);
 						sub = new MySub("72%","70%");
 						sub.setModal(true);
 						sub.setVista(form);
 						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
 						form.setDataSourceFormulario(item);
-						form.setLstCtas(item.getBean().getLstCtas());
+						form.setLstDetalle(item.getBean().getDetalle());
 						
 						UI.getCurrent().addWindow(sub);
 		    		}
@@ -156,12 +157,12 @@ public class IngresoCobroPanelExtended extends IngresoCobroPanel{
 	}
 	
 	/**
-	 * Obtenemos bancos del sistema
+	 * Obtenemos cobros del sistema
 	 *
 	 */
-	private ArrayList<BancoVO> getBancos(){
+	private ArrayList<IngresoCobroVO> getCobros(){
 		
-		ArrayList<BancoVO> lstBancos = new ArrayList<BancoVO>();
+		ArrayList<IngresoCobroVO> lstBancos = new ArrayList<IngresoCobroVO>();
 
 		try {
 			
@@ -170,13 +171,13 @@ public class IngresoCobroPanelExtended extends IngresoCobroPanel{
 			UsuarioPermisosVO permisoAux = 
 					new UsuarioPermisosVO(this.permisos.getCodEmp(),
 							this.permisos.getUsuario(),
-							VariablesPermisos.FORMULARIO_BANCOS,
+							VariablesPermisos.FORMULARIO_INGRESO_COBRO,
 							VariablesPermisos.OPERACION_LEER);
 
 			
-			lstBancos = controlador.getBancosTodos(permisoAux);
+			lstBancos = controlador.getIngresoCobroTodos(permisoAux);
 
-		} catch (InicializandoException | ConexionException | ObteniendoPermisosException | NoTienePermisosException | ObteniendoBancosException | ObteniendoCuentasBcoException e) {
+		} catch (InicializandoException | ConexionException | ObteniendoPermisosException | NoTienePermisosException | ObteniendoIngresoCobroException e) {
 			
 			Mensajes.mostrarMensajeError(e.getMessage());
 		}
@@ -208,7 +209,7 @@ public class IngresoCobroPanelExtended extends IngresoCobroPanel{
 		this.container.removeAllItems();
 		this.container.addAll(this.lstIngresoCobro);
 		
-		this.gridBancos.setContainerDataSource(container);
+		this.grid.setContainerDataSource(container);
 
 	}
 	
@@ -271,10 +272,10 @@ public class IngresoCobroPanelExtended extends IngresoCobroPanel{
 		try
 		{
 		
-			com.vaadin.ui.Grid.HeaderRow filterRow = gridBancos.appendHeaderRow();
+			com.vaadin.ui.Grid.HeaderRow filterRow = grid.appendHeaderRow();
 	
 			// Set up a filter for all columns
-			for (Object pid: gridBancos.getContainerDataSource()
+			for (Object pid: grid.getContainerDataSource()
 			                     .getContainerPropertyIds()) 
 			{
 			    
@@ -331,16 +332,13 @@ public class IngresoCobroPanelExtended extends IngresoCobroPanel{
 	
 	private void ocultarColumnasGrilla()
 	{
-		gridBancos.getColumn("fechaMod").setHidden(true);
-		gridBancos.getColumn("usuarioMod").setHidden(true);
-		gridBancos.getColumn("operacion").setHidden(true);
-		gridBancos.getColumn("activo").setHidden(true);
-		gridBancos.getColumn("lstCtas").setHidden(true);
+		grid.getColumn("fechaMod").setHidden(true);
+		grid.getColumn("usuarioMod").setHidden(true);
+		grid.getColumn("operacion").setHidden(true);
+		grid.getColumn("activo").setHidden(true);
+		grid.getColumn("lstCtas").setHidden(true);
 	
-		gridBancos.getColumn("tel").setHidden(true);
-		gridBancos.getColumn("codEmp").setHidden(true);
-		gridBancos.getColumn("contacto").setHidden(true);
-		gridBancos.getColumn("direccion").setHidden(true);
+	
 	}
 
 }

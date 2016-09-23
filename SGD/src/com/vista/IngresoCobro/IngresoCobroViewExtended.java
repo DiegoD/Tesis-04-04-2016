@@ -4,19 +4,16 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-import com.controladores.GrupoControlador;
 import com.controladores.IngresoCobroControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
 import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
+import com.excepciones.IngresoCobros.ExisteIngresoCobroException;
+import com.excepciones.IngresoCobros.InsertandoIngresoCobroException;
+import com.excepciones.IngresoCobros.ModificandoIngresoCobroException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
-import com.excepciones.grupos.ExisteGrupoException;
-import com.excepciones.grupos.InsertandoGrupoException;
-import com.excepciones.grupos.MemberGrupoException;
-import com.excepciones.grupos.ModificandoGrupoException;
-import com.excepciones.grupos.NoExisteGrupoException;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
@@ -28,13 +25,13 @@ import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
-import com.valueObject.FormularioVO;
-import com.valueObject.GrupoVO;
 import com.valueObject.MonedaVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.Gasto.GastoVO;
 import com.valueObject.IngresoCobro.IngresoCobroDetalleVO;
 import com.valueObject.IngresoCobro.IngresoCobroVO;
+import com.valueObject.banco.CtaBcoVO;
+import com.valueObject.cliente.ClienteVO;
 import com.vista.BusquedaViewExtended;
 import com.vista.IBusqueda;
 import com.vista.Mensajes;
@@ -42,10 +39,6 @@ import com.vista.MySub;
 import com.vista.PermisosUsuario;
 import com.vista.Variables;
 import com.vista.VariablesPermisos;
-import com.vista.Grupos.GrupoFormularioPermisos;
-import com.vista.Grupos.GrupoFormularioPermisosExtended;
-import com.vista.Grupos.GrupoViewAgregarFormularioExtended;
-import com.vista.Grupos.GruposPanelExtended;
 
 public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusqueda{
 
@@ -59,7 +52,6 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	private IngresoCobroDetalleVO formSelecccionado; /*Variable utilizada cuando se selecciona
 	 										  un detalle, para poder quitarlo de la lista*/
 	
-	private GrupoFormularioPermisos frmFormPermisos;
 	MySub sub;
 	private PermisosUsuario permisos; /*Variable con los permisos del usuario*/
 	
@@ -209,7 +201,9 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				Mensajes.mostrarMensajeWarning(Variables.WARNING_CAMPOS_NO_VALIDOS);
 			}
 				
-			} catch (InsertandoGrupoException| MemberGrupoException| ExisteGrupoException| InicializandoException| ConexionException | ModificandoGrupoException | ErrorInesperadoException | NoExisteGrupoException| NoTienePermisosException| ObteniendoPermisosException e) {
+			} catch (ModificandoIngresoCobroException|ExisteIngresoCobroException | InicializandoException| ConexionException | NoTienePermisosException| ObteniendoPermisosException e) {
+				
+				ExisteIngresoCobroException a;
 				
 				Mensajes.mostrarMensajeError(e.getMessage());
 				
@@ -268,7 +262,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 					codCliente = fieldGroup.getItemDataSource().getBean().getCodTitular());
 				}
 				/*Aca obtener los gastos con saldo para el cliente*/
-				ArrayList<FormularioVO> lstForms = this.controlador.getFormulariosNoGrupo(codCliente, this.permisos.getCodEmp());
+				ArrayList<GastoVO> lstForms = this.controlador.getFormulariosNoGrupo(codCliente, this.permisos.getCodEmp());
 				form.setGrillaForms(lstForms);
 				
 				UI.getCurrent().addWindow(sub);
@@ -1115,6 +1109,24 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		this.comboMoneda.setItemCaptionPropertyId("descripcion");
 		this.comboMoneda.setValue(moneda);
 	}
+	@Override
+	public void setInfo(Object datos) {
+		// TODO Auto-generated method stub
+		
+		/*ACA PASARLE TODOS LOS DATOS DEL INGRESOCOBROVO 
+		 * que viene del panel extended 'para iniicializarlo cuando seleccionan un cobro desde el panel*/
+		
+		/*
+		if(datos instanceof IngresoCobroVO){
+			IngresoCobroVO ingVO = (IngresoCobroVO) datos;
+			this.codCliente.setValue(ingVO.getCodigoDoc());
+			this.nomCliente.setValue(ingVO.getNombre());
+		}*/
+		
+	}
 	
+	public void setLstDetalle(ArrayList<IngresoCobroDetalleVO> lst) {
+		this.lstDetalleVO = lst;
+	}
 	
 }
