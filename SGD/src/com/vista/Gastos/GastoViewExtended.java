@@ -21,6 +21,7 @@ import com.excepciones.Procesos.ObteniendoProcesosException;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.UI;
 import com.valueObject.ImpuestoVO;
@@ -427,33 +428,44 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 	 */
 	private void setearValidaciones(boolean setear){
 		
-//		this.codProceso.setRequired(setear);
-//		this.codProceso.setRequiredError("Es requerido");
-//		
-//		this.fecha.setRequired(setear);
-//		this.fecha.setRequiredError("Es requerido");
-//		
-//		this.codCuenta.setRequired(setear);
-//		this.codCuenta.setRequiredError("Es requerido");
-//		
-//		this.codRubro.setRequired(setear);
-//		this.codRubro.setRequiredError("Es requerido");
-//		
-//		this.tcMov.setRequired(setear);
-//		this.tcMov.setRequiredError("Es requerido");
-//		
-//		this.impMo.setRequired(setear);
-//		this.impMo.setRequiredError("Es requerido");
-//		
-//		this.impMn.setRequired(setear);
-//		this.impMn.setRequiredError("Es requerido");
-//		
-////		this.comboImpuesto.setRequired(setear);
-////		this.comboImpuesto.setRequiredError("Es requerido");
-//		
-//		this.comboMoneda.setRequired(setear);
-//		this.comboMoneda.setRequiredError("Es requerido");
+		this.fecDoc.setRequired(setear);
+		this.fecDoc.setRequiredError("Es requerido");
 		
+		this.fecValor.setRequired(setear);
+		this.fecValor.setRequiredError("Es requerido");
+		
+		this.comboMoneda.setRequired(setear);
+		this.comboMoneda.setRequiredError("Es requerido");
+		
+		this.codTitular.setRequired(setear);
+		this.codTitular.setRequiredError("Es requerido");
+		
+		this.tcMov.setRequired(setear);
+		this.tcMov.setRequiredError("Es requerido");
+		
+		this.codImpuesto.setRequired(setear);
+		this.codImpuesto.setRequiredError("Es requerido");
+		
+		this.impImpuMn.setRequired(setear);
+		this.impImpuMn.setRequiredError("Es requerido");
+		
+		this.impImpuMo.setRequired(setear);
+		this.impImpuMo.setRequiredError("Es requerido");
+		
+		this.impTotMn.setRequired(setear);
+		this.impTotMn.setRequiredError("Es requerido");
+		
+		this.impTtotMo.setRequired(setear);
+		this.impTtotMo.setRequiredError("Es requerido");
+		
+		this.codProceso.setRequired(setear);
+		this.codProceso.setRequiredError("Es requerido");
+		
+		this.codRubro.setRequired(setear);
+		this.codRubro.setRequiredError("Es requerido");
+		
+		this.codCuenta.setRequired(setear);
+		this.codCuenta.setRequiredError("Es requerido");
 	}
 	
 	/**
@@ -596,34 +608,30 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 	private void setearFieldsEditar()
 	{
 		
-//		this.fecha.setReadOnly(false);
-//		this.codGasto.setReadOnly(false);
-//		this.codGasto.setEnabled(false);
-//		this.codProceso.setReadOnly(false);
-//		this.codProceso.setEnabled(false);
-//		this.codRubro.setReadOnly(false);
-//		this.codRubro.setEnabled(false);
-//		this.descripcionRubro.setReadOnly(false);
-//		this.descripcionRubro.setEnabled(false);
-//		this.descripcionImpuesto.setReadOnly(false);
-//		this.descripcionImpuesto.setEnabled(false);
-//		
-//		this.codCliente.setReadOnly(false);
-//		this.nomCliente.setReadOnly(false);
-//		this.codCuenta.setReadOnly(false);
-//		this.codCuenta.setEnabled(false);
-//		this.descripcionCuenta.setReadOnly(false);
-//		this.descripcionCuenta.setEnabled(false);
-//		
-//		this.impMn.setReadOnly(false);
-//		this.impMo.setReadOnly(false);
-//		this.tcMov.setReadOnly(false);
-//		this.descripcion.setReadOnly(false);
-//		this.codCliente.setReadOnly(false);
-//		this.nomCliente.setReadOnly(false);
-//		
-//		this.comboMoneda.setEnabled(true);
-//		this.comboImpuesto.setEnabled(true);
+		this.fecDoc.setReadOnly(false);
+		this.fecValor.setReadOnly(false);
+		this.tcMov.setReadOnly(false);
+		this.impImpuMn.setReadOnly(false);
+		this.impImpuMo.setReadOnly(false);
+		this.impTotMn.setReadOnly(false);
+		this.impTtotMo.setReadOnly(false);
+		this.referencia.setReadOnly(false);
+		
+		this.codProceso.setReadOnly(false);
+		this.descProceso.setReadOnly(false);
+		this.codTitular.setReadOnly(false);
+		this.nomTitular.setReadOnly(false);
+		this.codRubro.setReadOnly(false);
+		this.nomRubro.setReadOnly(false);
+		this.codCuenta.setReadOnly(false);
+		this.nomCuenta.setReadOnly(false);
+		this.codImpuesto.setReadOnly(false);
+		this.nomImpuesto.setReadOnly(false);
+		this.porcentajeImpuesto.setReadOnly(false);
+		this.nroDocum.setReadOnly(false);
+		
+		this.comboMoneda.setEnabled(true);
+		
 	}
 	
 	
@@ -635,7 +643,6 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 	{
 		this.btnEditar.setEnabled(false);
 		this.btnEditar.setVisible(false);
-		
 		
 	}
 	
@@ -701,39 +708,30 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 	 */
 	private void readOnlyFields(boolean setear)
 	{
-//		this.fecha.setReadOnly(setear);
-//		this.codGasto.setReadOnly(setear);
-//		this.codProceso.setReadOnly(setear);
-//		this.codCliente.setReadOnly(setear);
-//		this.nomCliente.setReadOnly(setear);
-//		this.codRubro.setReadOnly(setear);
-//		this.descripcionRubro.setReadOnly(setear);
-//		this.descripcionImpuesto.setReadOnly(setear);
-//		
-//		this.codCuenta.setReadOnly(setear);
-//		this.descripcionCuenta.setReadOnly(setear);
-//		this.impMn.setReadOnly(setear);
-//		this.impMo.setReadOnly(setear);
-//		this.tcMov.setReadOnly(setear);
-//		this.descripcion.setReadOnly(setear);
-//		this.codCliente.setReadOnly(setear);
-//		this.nomCliente.setReadOnly(setear);
-//		
-//		
-//		
-//		this.comboMoneda.setEnabled(false);
-//		this.comboImpuesto.setEnabled(false);
-//		this.codCliente.setEnabled(false);
-//		this.nomCliente.setEnabled(false);
-//		this.codProceso.setEnabled(false);
-//		this.codGasto.setEnabled(false);
-//		this.descripcionImpuesto.setEnabled(false);
-//		this.codRubro.setEnabled(false);
-//		this.descripcionRubro.setEnabled(false);
-//		this.descripcionImpuesto.setEnabled(false);
-//		this.codCuenta.setEnabled(false);
-//		this.descripcionCuenta.setEnabled(false);
-				
+		this.fecDoc.setReadOnly(setear);
+		this.fecValor.setReadOnly(setear);
+		this.tcMov.setReadOnly(setear);
+		this.impImpuMn.setReadOnly(setear);
+		this.impImpuMo.setReadOnly(setear);
+		this.impTotMn.setReadOnly(setear);
+		this.impTtotMo.setReadOnly(setear);
+		this.referencia.setReadOnly(setear);
+		
+		this.codProceso.setEnabled(false);
+		this.descProceso.setEnabled(false);
+		this.codTitular.setEnabled(false);
+		this.nomTitular.setEnabled(false);
+		this.codRubro.setEnabled(false);
+		this.nomRubro.setEnabled(false);
+		this.codCuenta.setEnabled(false);
+		this.nomCuenta.setEnabled(false);
+		this.codImpuesto.setEnabled(false);
+		this.nomImpuesto.setEnabled(false);
+		this.porcentajeImpuesto.setEnabled(false);
+		this.comboMoneda.setEnabled(false);
+		this.nroDocum.setEnabled(false);
+		
+		
 	}
 	
 	/**
@@ -744,17 +742,21 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 	private void agregarFieldsValidaciones()
 	{
 		
-//        this.codProceso.addValidator(
+		this.referencia.addValidator(
+				new StringLengthValidator(
+						"50 caracteres máximo", 0, 50, true));
+		
+//        this.referencia.addValidator(
 //                new StringLengthValidator(
-//                     " 20 caracteres máximo", 0, 20, true));
-//        
+//                     " 50 caracteres máximo", 0, 50, true));
+        
 //        this.codCuenta.addValidator(
 //                new StringLengthValidator(
 //                        " 20 caracteres máximo", 0, 100, true));
 //        this.codRubro.addValidator(
 //                new StringLengthValidator(
 //                        " 100 caracteres máximo", 0, 100, true));
-        
+//        
 //        this.comboImpuesto.addValidator(
 //                new StringLengthValidator(
 //                        " 100 caracteres máximo", 0, 100, true));
@@ -780,7 +782,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 				
 		try
 		{
-//			if(this.codCliente.isValid() && this.fecha.isValid() 
+//			if(this.fecDoc.isValid() && this.fecValor.isValid() 
 //					&& this.codProceso.isValid() && this.codGasto.isValid()
 //					&& this.codCuenta.isValid() && this.codRubro.isValid()
 //					&& this.comboMoneda.isValid() && this.descripcionImpuesto.isValid()

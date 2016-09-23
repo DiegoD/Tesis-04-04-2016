@@ -10,6 +10,7 @@ import com.excepciones.Procesos.IngresandoProcesoException;
 
 public class DAONumeradores implements IDAONumeradores{
 
+	
 	@Override
 	public int getNumero(Connection con, String cod_numerador, String cod_Emp)
 			throws IngresandoProcesoException, ConexionException, SQLException {
