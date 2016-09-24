@@ -1024,7 +1024,8 @@ public class ConsultasDD {
 				+ "m_cuentas.cod_cuenta, m_cuentas.descripcion, "
 				+ "m_rubros.cod_rubro, m_rubros.descripcion, m_rubros.cod_tipo_rubro, m_rubros.cod_impuesto, "
 				+ "m_impuestos.cod_impuesto, m_impuestos.descripcion, m_impuestos.porcentaje, "
-				+ "c_procesos.descripcion ");
+				+ "c_procesos.descripcion,"
+				+ "m_funcionarios.cod_tit, m_funcionarios.nom_tit ");
 		
 		sb.append("FROM c_gastos"
 				+ " INNER JOIN  m_clientes ON c_gastos.cod_tit = m_clientes.cod_tit "
@@ -1033,6 +1034,7 @@ public class ConsultasDD {
 				+ " INNER JOIN m_monedas ON c_gastos.cod_moneda = m_monedas.cod_moneda "
 				+ " INNER JOIN m_impuestos ON m_rubros.cod_impuesto = m_impuestos.cod_impuesto "
 				+ " INNER JOIN c_procesos ON c_gastos.cod_proceso = c_procesos.cod_proceso "
+				+ " LEFT JOIN m_funcionarios ON c_gastos.cod_tit = m_funcionarios.cod_tit "
 				+ " AND c_gastos.cod_emp = ? ");  
 				
 				return sb.toString();

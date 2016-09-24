@@ -15,6 +15,11 @@
     <vaadin-form-layout style-name="tiny" spacing="false" size-full margin-bottom="false"> 
      <vaadin-horizontal-layout caption="Número" style-name="tiny" spacing height="40px"> 
       <vaadin-text-field style-name="tiny" width="90px" _id="nroDocum"></vaadin-text-field> 
+      <vaadin-combo-box style-name="tiny" item-caption-mode="id" width="135px" _id="comboSeleccion"> 
+       <option>Oficina</option> 
+       <option>Proceso</option> 
+       <option>Empleado</option> 
+      </vaadin-combo-box> 
       <vaadin-text-field visible="false" _id="nroTrans"></vaadin-text-field> 
       <vaadin-text-field visible="false" style-name="tiny" readonly _id="codDocum"></vaadin-text-field> 
       <vaadin-text-field visible="false" style-name="tiny" _id="serieDocum"></vaadin-text-field> 
@@ -24,17 +29,17 @@
       <vaadin-label caption="Fecha Efectiva" style-name="tiny" width-auto height="2px"></vaadin-label> 
       <vaadin-date-field style-name="tiny" width="122px" _id="fecValor"></vaadin-date-field> 
      </vaadin-horizontal-layout> 
-     <vaadin-horizontal-layout caption="Proceso" spacing> 
+     <vaadin-horizontal-layout caption="Proceso" spacing _id="proceso"> 
       <vaadin-text-field style-name="tiny" width="90px" _id="codProceso"></vaadin-text-field> 
       <vaadin-text-field style-name="tiny" width="264px" _id="descProceso"></vaadin-text-field> 
       <vaadin-button icon="fonticon://FontAwesome/f002" style-name="icon-only borderless quiet" _id="btnBuscarProceso">
         Button 
       </vaadin-button> 
      </vaadin-horizontal-layout> 
-     <vaadin-horizontal-layout caption="Cliente" spacing> 
+     <vaadin-horizontal-layout caption="Cliente" spacing _id="cliente"> 
       <vaadin-text-field style-name="tiny" width="90px" _id="codTitular"></vaadin-text-field> 
       <vaadin-text-field style-name="tiny" width="264px" _id="nomTitular"></vaadin-text-field> 
-      <vaadin-button icon="fonticon://FontAwesome/f002" style-name="icon-only borderless quiet" _id="btnBuscarCliente">
+      <vaadin-button icon="fonticon://FontAwesome/f002" style-name="icon-only borderless quiet" plain-text _id="btnBuscarEmpleado">
         Button 
       </vaadin-button> 
      </vaadin-horizontal-layout> 
@@ -56,6 +61,9 @@
       <vaadin-text-field style-name="tiny" width="90px" _id="codImpuesto"></vaadin-text-field> 
       <vaadin-text-field style-name="tiny" width="159px" _id="nomImpuesto"></vaadin-text-field> 
       <vaadin-text-field style-name="tiny" width="93px" _id="porcentajeImpuesto"></vaadin-text-field> 
+      <vaadin-button icon="fonticon://FontAwesome/f002" style-name="icon-only borderless quiet" _id="btnBuscarImpuesto">
+        Button 
+      </vaadin-button> 
      </vaadin-horizontal-layout> 
      <vaadin-horizontal-layout caption="Moneda" spacing height="40px"> 
       <vaadin-combo-box style-name="tiny" item-caption-mode="id" width="92px" _id="comboMoneda"> 

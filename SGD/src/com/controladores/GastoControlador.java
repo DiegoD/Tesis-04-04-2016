@@ -18,8 +18,10 @@ import com.excepciones.Impuestos.ObteniendoImpuestosException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
 import com.excepciones.Procesos.ObteniendoProcesosException;
 import com.excepciones.clientes.ObteniendoClientesException;
+import com.excepciones.funcionarios.ObteniendoFuncionariosException;
 import com.logica.Fachada;
 import com.logica.FachadaDD;
+import com.valueObject.FuncionarioVO;
 import com.valueObject.ImpuestoVO;
 import com.valueObject.MonedaVO;
 import com.valueObject.RubroVO;
@@ -133,6 +135,15 @@ public class GastoControlador {
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
 			return FachadaDD.getInstance().getProcesos(permisos.getCodEmp());
+		else
+			throw new NoTienePermisosException();
+	}
+	
+	public ArrayList<FuncionarioVO> getFuncionarios(UsuarioPermisosVO permisos) throws ObteniendoFuncionariosException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException {
+		
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			return Fachada.getInstance().getFuncionariosTodos(permisos.getCodEmp());
 		else
 			throw new NoTienePermisosException();
 	}

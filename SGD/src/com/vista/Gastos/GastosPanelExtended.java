@@ -163,6 +163,7 @@ public class GastosPanelExtended extends GastosPanel{
 		gridGastos.removeColumn("codCtaInd");
 		gridGastos.removeColumn("linea");
 		gridGastos.removeColumn("codCuenta");
+		gridGastos.removeColumn("cuenta");
 		
 		/*Agregamos los filtros a la grilla*/
 		this.filtroGrilla();

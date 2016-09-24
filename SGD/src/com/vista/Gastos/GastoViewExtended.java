@@ -18,12 +18,21 @@ import com.excepciones.Gastos.NoExisteGastoException;
 import com.excepciones.Impuestos.ObteniendoImpuestosException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
 import com.excepciones.Procesos.ObteniendoProcesosException;
+import com.excepciones.funcionarios.ObteniendoFuncionariosException;
+import com.vaadin.data.Container.ItemSetChangeEvent;
+import com.vaadin.data.Container.ItemSetChangeListener;
+import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.validator.StringLengthValidator;
+import com.vaadin.event.FieldEvents.BlurEvent;
+import com.vaadin.event.FieldEvents.BlurListener;
+import com.vaadin.event.FieldEvents.FocusEvent;
+import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.UI;
+import com.valueObject.FuncionarioVO;
 import com.valueObject.ImpuestoVO;
 import com.valueObject.MonedaVO;
 import com.valueObject.RubroVO;
@@ -83,11 +92,19 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 					gastoVO.setUsuarioMod(this.permisos.getUsuario());
 					gastoVO.setOperacion(operacion);
 					gastoVO.setDescProceso(descProceso.getValue().trim());
-					gastoVO.setCodProceso(codProceso.getValue().trim());
+					if(codProceso.getValue().equals("")){
+						gastoVO.setCodProceso(null);
+					}
+					else{
+						gastoVO.setCodProceso(codProceso.getValue().trim());
+					}
+					
 					gastoVO.setCodDocum("Gasto");
 					gastoVO.setSerieDocum("A");
 					gastoVO.setCodImpuesto(codImpuesto.getValue().trim());
 					gastoVO.setNomImpuesto(nomImpuesto.getValue().trim());
+					gastoVO.setCodCtaInd("IngGastoProceso");
+					
 					//gastoVO.setPorcentajeImpuesto(porcentajeImpuesto);
 					
 					//Cliente
@@ -388,6 +405,117 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 			
 		});
 		
+		this.btnBuscarImpuesto.addClickListener(click -> {
+			
+			BusquedaViewExtended form = new BusquedaViewExtended(this, new ImpuestoVO());
+			ArrayList<Object> lst = new ArrayList<Object>();
+			ArrayList<ImpuestoVO> lstImpuestos = new ArrayList<ImpuestoVO>();
+			
+			/*Inicializamos VO de permisos para el usuario, formulario y operacion
+			 * para confirmar los permisos del usuario*/
+			UsuarioPermisosVO permisoAux = 
+					new UsuarioPermisosVO(this.permisos.getCodEmp(),
+							this.permisos.getUsuario(),
+							VariablesPermisos.FORMULARIO_GASTOS,
+							VariablesPermisos.OPERACION_NUEVO_EDITAR);
+			
+			try {
+				lstImpuestos = this.controlador.getImpuestos(permisoAux);
+				
+			} catch ( ConexionException | InicializandoException | ObteniendoPermisosException | NoTienePermisosException | ObteniendoImpuestosException e) {
+
+				Mensajes.mostrarMensajeError(e.getMessage());
+			}
+			Object obj;
+			for (ImpuestoVO i: lstImpuestos) {
+				obj = new Object();
+				obj = (Object)i;
+				lst.add(obj);
+			}
+			try {
+				
+				form.inicializarGrilla(lst);
+			
+				
+			} catch (Exception e) {
+				
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}
+			
+			sub = new MySub("65%", "65%" );
+			sub.setModal(true);
+			sub.center();
+			sub.setModal(true);
+			sub.setVista(form);
+			sub.center();
+			sub.setDraggable(true);
+			UI.getCurrent().addWindow(sub);
+			
+		});
+		
+		this.btnBuscarEmpleado.addClickListener(click -> {
+			
+			BusquedaViewExtended form = new BusquedaViewExtended(this, new FuncionarioVO());
+			ArrayList<Object> lst = new ArrayList<Object>();
+			ArrayList<FuncionarioVO> lstFuncionarios = new ArrayList<FuncionarioVO>();
+			
+			/*Inicializamos VO de permisos para el usuario, formulario y operacion
+			 * para confirmar los permisos del usuario*/
+			UsuarioPermisosVO permisoAux = 
+					new UsuarioPermisosVO(this.permisos.getCodEmp(),
+							this.permisos.getUsuario(),
+							VariablesPermisos.FORMULARIO_GASTOS,
+							VariablesPermisos.OPERACION_NUEVO_EDITAR);
+			
+			try {
+				lstFuncionarios = this.controlador.getFuncionarios(permisoAux);
+				
+			} catch ( ObteniendoFuncionariosException | ConexionException | InicializandoException | ObteniendoPermisosException | NoTienePermisosException e) {
+
+				Mensajes.mostrarMensajeError(e.getMessage());
+			}
+			Object obj;
+			for (FuncionarioVO i: lstFuncionarios) {
+				obj = new Object();
+				obj = (Object)i;
+				lst.add(obj);
+			}
+			try {
+				
+				form.inicializarGrilla(lst);
+			
+				
+			} catch (Exception e) {
+				
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}
+			
+			sub = new MySub("65%", "65%" );
+			sub.setModal(true);
+			sub.center();
+			sub.setModal(true);
+			sub.setVista(form);
+			sub.center();
+			sub.setDraggable(true);
+			UI.getCurrent().addWindow(sub);
+			
+		});
+		
+		comboSeleccion.addBlurListener(new BlurListener() {
+            
+			@Override
+			public void blur(BlurEvent event) {
+				// TODO Auto-generated method stub
+				if(comboSeleccion.getValue().equals("Empleado")){
+					inicializoEmpleado();
+				}
+				else if(comboSeleccion.getValue().equals("Proceso")){
+					inicializoProceso();
+				}
+				
+			}
+        });
+		
 
 	}
 	
@@ -397,9 +525,12 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 					
 		this.fieldGroup =  new BeanFieldGroup<GastoVO>(GastoVO.class);
 		
+		
+		
 		//inicializar los valores de los combos impuesto y tipo de rubro
 		inicializarComboMoneda(null);
-		inicializarComboImpuesto(null);
+		
+		
 		
 		//Seteamos info del form si es requerido
 		if(fieldGroup != null)
@@ -408,14 +539,26 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		/*SI LA OPERACION NO ES NUEVO, OCULTAMOS BOTON ACEPTAR*/
 		if(this.operacion.equals(Variables.OPERACION_NUEVO))
 		{
+			this.comboSeleccion.setValue("Proceso");
+			
 			/*Inicializamos al formulario como nuevo*/
 			this.iniFormNuevo();
+			this.inicializoProceso();
 	
 		}
 		else if(this.operacion.equals(Variables.OPERACION_LECTURA))	{
 			/*Inicializamos formulario como editar*/
+			this.comboSeleccion.setValue("Proceso");
+			
 			this.iniFormLectura();
+			if(this.comboSeleccion.getValue().equals("Proceso")){
+				this.inicializoProceso();
+			}
+			else if(this.comboSeleccion.getValue().equals("Empleado")){
+				this.inicializoEmpleado();
+			}
 		} 
+		
 	}
 	
 	/**
@@ -458,9 +601,6 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		this.impTtotMo.setRequired(setear);
 		this.impTtotMo.setRequiredError("Es requerido");
 		
-		this.codProceso.setRequired(setear);
-		this.codProceso.setRequiredError("Es requerido");
-		
 		this.codRubro.setRequired(setear);
 		this.codRubro.setRequiredError("Es requerido");
 		
@@ -488,7 +628,6 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 			    "Operación: " + gasto.getOperacion());
 		
 		this.inicializarComboMoneda(gasto.getCodMoneda());
-		this.inicializarComboImpuesto(gasto.getCodImpuesto());
 		
 		/*SETEAMOS LA OPERACION EN MODO LECUTA
 		 * ES CUANDO LLAMAMOS ESTE METODO*/
@@ -675,8 +814,12 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		this.btnBuscarCuenta.setEnabled(false);
 		this.btnBuscarCuenta.setVisible(false);
 		
-		this.btnBuscarCliente.setEnabled(false);
-		this.btnBuscarCliente.setVisible(false);
+		this.btnBuscarEmpleado.setEnabled(false);
+		this.btnBuscarEmpleado.setVisible(false);
+		
+		this.btnBuscarImpuesto.setEnabled(false);
+		this.btnBuscarImpuesto.setVisible(false);
+		
 	}
 	
 	/**
@@ -688,8 +831,11 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		this.aceptar.setEnabled(true);
 		this.aceptar.setVisible(true);
 		
-		this.btnBuscarProceso.setEnabled(true);
-		this.btnBuscarProceso.setVisible(true);
+		if(this.comboSeleccion.getValue().equals("Proceso")){
+			this.btnBuscarProceso.setEnabled(true);
+			this.btnBuscarProceso.setVisible(true);
+		}
+		
 		
 		this.btnBuscarRubro.setEnabled(true);
 		this.btnBuscarRubro.setVisible(true);
@@ -697,8 +843,12 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		this.btnBuscarCuenta.setEnabled(true);
 		this.btnBuscarCuenta.setVisible(true);
 		
-		this.btnBuscarCliente.setEnabled(true);
-		this.btnBuscarCliente.setVisible(true);
+		this.btnBuscarImpuesto.setEnabled(true);
+		this.btnBuscarImpuesto.setVisible(true);
+		
+		this.btnBuscarEmpleado.setEnabled(true);
+		this.btnBuscarEmpleado.setVisible(true);
+		
 	}
 	
 	/**
@@ -825,6 +975,21 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 			
 		}
 		
+		if(datos instanceof ImpuestoVO){
+			ImpuestoVO impuestoVO = (ImpuestoVO) datos;
+			this.codImpuesto.setValue(impuestoVO.getcodImpuesto());
+			this.nomImpuesto.setValue(impuestoVO.getDescripcion());
+			this.porcentajeImpuesto.setValue(String.valueOf(impuestoVO.getPorcentaje()));
+			
+		}
+		
+		if(datos instanceof FuncionarioVO){
+			FuncionarioVO funcionarioVO = (FuncionarioVO) datos;
+			this.codTitular.setValue(String.valueOf(funcionarioVO.getCodigo()));
+			this.nomTitular.setValue(funcionarioVO.getNombre());
+			
+		}
+		
 	}
 	
 	public void inicializarComboMoneda(String cod){
@@ -862,39 +1027,15 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		this.comboMoneda.setValue(moneda);
 	}
 	
-	public void inicializarComboImpuesto(String cod){
-		
-		BeanItemContainer<ImpuestoVO> impuestosObj = new BeanItemContainer<ImpuestoVO>(ImpuestoVO.class);
-		ImpuestoVO impuesto = new ImpuestoVO();
-		ArrayList<ImpuestoVO> lstImpuestos = new ArrayList<ImpuestoVO>();
-		
-		try {
-			permisoAux = 
-					new UsuarioPermisosVO(this.permisos.getCodEmp(),
-							this.permisos.getUsuario(),
-							VariablesPermisos.FORMULARIO_GASTOS,
-							VariablesPermisos.OPERACION_NUEVO_EDITAR);
-			lstImpuestos = this.controlador.getImpuestos(permisoAux);
-			
-		} catch (ObteniendoImpuestosException | InicializandoException | ConexionException | ObteniendoPermisosException | NoTienePermisosException e) {
-
-			Mensajes.mostrarMensajeError(e.getMessage());
-		}
-		
-		for (ImpuestoVO impuestoVO : lstImpuestos) {
-			
-			impuestosObj.addBean(impuestoVO);
-			
-			if(cod != null){
-				if(cod.equals(impuestoVO.getcodImpuesto())){
-					impuesto = impuestoVO;
-				}
-			}
-		}
-		
-//		this.comboImpuesto.setContainerDataSource(impuestosObj);
-//		this.comboImpuesto.setItemCaptionPropertyId("descripcion");
-//		this.comboImpuesto.setValue(impuesto);
+	public void inicializoProceso(){
+		this.proceso.setVisible(true);
+		this.cliente.setCaption("Cliente");
+		this.btnBuscarEmpleado.setVisible(false);
 	}
 	
+	public void inicializoEmpleado(){
+		this.proceso.setVisible(false);
+		this.cliente.setCaption("Empleado");
+		this.btnBuscarEmpleado.setVisible(true);
+	}
 }

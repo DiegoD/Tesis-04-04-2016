@@ -512,7 +512,7 @@ public class Consultas {
 		
 		sb.append("SELECT cod_tit, nom_tit, cod_emp, tel, nro_dgi, m_documdgi.cod_docdgi, m_documdgi.nombre AS nomDoc , direccion, mail ");
 		sb.append(", m_funcionarios.activo, m_funcionarios.usuario_mod, m_funcionarios.operacion, m_funcionarios.fecha_mod ");
-		sb.append("FROM m_funcionarios, m_documdgi WHERE m_funcionarios.cod_docdgi = m_documdgi.cod_docdgi AND cod_emp = ? AND m_clientes.activo = 1");
+		sb.append("FROM m_funcionarios, m_documdgi WHERE m_funcionarios.cod_docdgi = m_documdgi.cod_docdgi AND cod_emp = ? AND m_funcionarios.activo = 1");
 		
 		
 		return sb.toString();

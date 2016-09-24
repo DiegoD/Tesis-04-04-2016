@@ -16,28 +16,6 @@ import com.valueObject.Docum.DocumDetalleVO;
 
 public class GastoVO extends DocumDetalleVO{
 	
-//	private int codGasto;
-//	private int codProceso;
-//	private String codCliente;
-//	private String nomCliente;
-//	private String codMoneda;
-//	private String descMoneda;
-//	private String simboloMoneda;
-//	private String codCuenta;
-//	private String descripcionCuenta;
-//	private String codRubro;
-//	private String descripcionRubro;
-//	private String tipoRubro;
-//	private String codImpuesto;
-//	private String descripcionImpuesto;
-//	private float porcentajeImpuesto;
-//	private Timestamp fecha;
-//	private float impMo;
-//	private float impMn;
-//	private float tcMov;
-//	private String descripcion;
-//	
-	
 	public GastoVO(){
 		
 	}

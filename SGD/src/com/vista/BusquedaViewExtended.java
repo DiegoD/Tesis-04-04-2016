@@ -21,6 +21,7 @@ import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.TextField;
 import com.valueObject.CodigoGeneralizadoVO;
 import com.valueObject.DocumDGIVO;
+import com.valueObject.FuncionarioVO;
 import com.valueObject.ImpuestoVO;
 import com.valueObject.MonedaVO;
 import com.valueObject.RubroVO;
@@ -43,6 +44,7 @@ public class BusquedaViewExtended extends BusquedaView{
 	BeanItemContainer<RubroVO> containerRubro;
 	BeanItemContainer<CuentaVO> containerCuenta;
 	BeanItemContainer<GastoVO> containerGasto;
+	BeanItemContainer<FuncionarioVO> containerFuncionario;
 	Object seleccionado;
 	IBusqueda main;
 	
@@ -107,6 +109,13 @@ public class BusquedaViewExtended extends BusquedaView{
 			this.containerGasto = new BeanItemContainer<GastoVO>(GastoVO.class);
 			this.lblNombre.setValue("Gastos");
 			this.seleccionado = new GastoVO();
+		}
+		
+		else if(obj instanceof FuncionarioVO){
+			
+			this.containerFuncionario = new BeanItemContainer<FuncionarioVO>(FuncionarioVO.class);
+			this.lblNombre.setValue("Funcionarios");
+			this.seleccionado = new FuncionarioVO();
 		}
 		
 		grid.addSelectionListener(new SelectionListener() 
@@ -201,6 +210,16 @@ public class BusquedaViewExtended extends BusquedaView{
 			    		if(grid.getSelectedRow() != null){
 			    			
 			    			BeanItem<GastoVO> item = containerGasto.getItem(grid.getSelectedRow());
+					    	seleccionado = item.getBean(); 
+					    	main.setInfo(seleccionado);	
+					    	main.cerrarVentana();
+					    }
+		    		}
+		    		
+		    		else if(seleccionado instanceof FuncionarioVO){
+			    		if(grid.getSelectedRow() != null){
+			    			
+			    			BeanItem<FuncionarioVO> item = containerFuncionario.getItem(grid.getSelectedRow());
 					    	seleccionado = item.getBean(); 
 					    	main.setInfo(seleccionado);	
 					    	main.cerrarVentana();
@@ -463,6 +482,36 @@ public class BusquedaViewExtended extends BusquedaView{
 			this.filtroGrilla();
 			
 		}
+		
+		if(seleccionado instanceof FuncionarioVO){
+			
+			ArrayList<FuncionarioVO> lstDoc = new ArrayList<>();
+			
+			FuncionarioVO i;
+			for (Object o : lst) {
+				
+				i = (FuncionarioVO) o;
+				lstDoc.add(i);
+			}
+			
+			this.containerFuncionario.addAll(lstDoc);
+			this.grid.setContainerDataSource(containerFuncionario);
+			
+			grid.removeColumn("fechaMod");
+			grid.removeColumn("usuarioMod");
+			grid.removeColumn("operacion");
+			grid.removeColumn("tel");
+			grid.removeColumn("direccion");
+			grid.removeColumn("mail");
+			grid.removeColumn("codigoDoc");
+			grid.removeColumn("nombreDoc");
+			grid.removeColumn("numeroDoc");
+			grid.removeColumn("activo");
+			
+			this.arreglarGrillaFuncionario(); /*FaltaImplementar*/
+			this.filtroGrilla();
+			
+		}
 	}
 	
 	private void arreglarGrilla()
@@ -524,6 +573,15 @@ public class BusquedaViewExtended extends BusquedaView{
 			}
 
 		});
+	}
+	
+	/*Este falta implementarlo es copia del de proceso*/
+	private void arreglarGrillaFuncionario(){
+		List<Column> lstColumn = grid.getColumns();
+		
+		lstColumn.get(0).setWidth(150);
+		lstColumn.get(0).setHeaderCaption("Número");
+		//Modifica el formato de fecha en la grilla 
 	}
 	
 	private void filtroGrilla()
@@ -655,6 +713,18 @@ public class BusquedaViewExtended extends BusquedaView{
 					        // (Re)create the filter if necessary
 					        if (! change.getText().isEmpty())
 					        	this.containerGasto.addContainerFilter(
+					                new SimpleStringFilter(pid,
+					                    change.getText(), true, false));
+				    	}
+				    	
+				    	else if(seleccionado instanceof FuncionarioVO) /*PARA GASTOS*/
+				    	{
+					    	// Can't modify filters so need to replace
+					    	this.containerFuncionario.removeContainerFilters(pid);
+			
+					        // (Re)create the filter if necessary
+					        if (! change.getText().isEmpty())
+					        	this.containerFuncionario.addContainerFilter(
 					                new SimpleStringFilter(pid,
 					                    change.getText(), true, false));
 				    	}
