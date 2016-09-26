@@ -165,6 +165,8 @@ public class GastosPanelExtended extends GastosPanel{
 		gridGastos.removeColumn("codCuenta");
 		gridGastos.removeColumn("cuenta");
 		
+		gridGastos.setColumnOrder("fecDoc", "nomTitular", "nroDocum", "referencia", "descProceso");
+	
 		/*Agregamos los filtros a la grilla*/
 		this.filtroGrilla();
 		
@@ -395,5 +397,10 @@ public class GastosPanelExtended extends GastosPanel{
 	public void mostrarMensaje(String msj)
 	{
 		Mensajes.mostrarMensajeError(msj);
+	}
+	
+	public void setSub(){
+		sub.setHeight("85%");
+		sub.setWidth("45%");
 	}
 }

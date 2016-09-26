@@ -91,25 +91,46 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 					gastoVO.setCodEmp(this.permisos.getCodEmp());
 					gastoVO.setUsuarioMod(this.permisos.getUsuario());
 					gastoVO.setOperacion(operacion);
-					gastoVO.setDescProceso(descProceso.getValue().trim());
-					if(codProceso.getValue().equals("")){
-						gastoVO.setCodProceso(null);
+					
+					if(comboSeleccion.getValue().equals("Proceso")){
+						gastoVO.setDescProceso(descProceso.getValue().trim());
+						if(codProceso.getValue().equals("")){
+							gastoVO.setCodProceso(null);
+						}
+						else{
+							gastoVO.setCodProceso(codProceso.getValue().trim());
+						}
 					}
-					else{
-						gastoVO.setCodProceso(codProceso.getValue().trim());
-					}
+					
 					
 					gastoVO.setCodDocum("Gasto");
 					gastoVO.setSerieDocum("A");
 					gastoVO.setCodImpuesto(codImpuesto.getValue().trim());
 					gastoVO.setNomImpuesto(nomImpuesto.getValue().trim());
-					gastoVO.setCodCtaInd("IngGastoProceso");
+					
+					if(comboSeleccion.getValue().equals("Proceso")){
+						gastoVO.setCodCtaInd("IngGastoProceso");
+					}
+					else if(comboSeleccion.getValue().equals("Empleado")){
+						gastoVO.setCodCtaInd("IngGastoEmpleado");
+					}
+					else if(comboSeleccion.getValue().equals("Oficina")){
+						gastoVO.setCodCtaInd("IngGastoOficina");
+					}
+					
 					
 					//gastoVO.setPorcentajeImpuesto(porcentajeImpuesto);
 					
 					//Cliente
-					gastoVO.setCodTitular(codTitular.getValue().trim());
-					gastoVO.setNomTitular(nomTitular.getValue().trim());
+					if(comboSeleccion.getValue().equals("Oficina")){
+						gastoVO.setCodTitular(null);
+						gastoVO.setNomTitular("Oficina");
+					}
+					else{
+						gastoVO.setCodTitular(codTitular.getValue().trim());
+						gastoVO.setNomTitular(nomTitular.getValue().trim());
+					}
+					
 					
 					//Moneda
 					if(this.comboMoneda.getValue() != null){
@@ -512,6 +533,9 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 				else if(comboSeleccion.getValue().equals("Proceso")){
 					inicializoProceso();
 				}
+				else if(comboSeleccion.getValue().equals("Oficina")){
+					inicializoOficina();
+				}
 				
 			}
         });
@@ -548,15 +572,8 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		}
 		else if(this.operacion.equals(Variables.OPERACION_LECTURA))	{
 			/*Inicializamos formulario como editar*/
-			this.comboSeleccion.setValue("Proceso");
 			
 			this.iniFormLectura();
-			if(this.comboSeleccion.getValue().equals("Proceso")){
-				this.inicializoProceso();
-			}
-			else if(this.comboSeleccion.getValue().equals("Empleado")){
-				this.inicializoEmpleado();
-			}
 		} 
 		
 	}
@@ -606,6 +623,9 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		
 		this.codCuenta.setRequired(setear);
 		this.codCuenta.setRequiredError("Es requerido");
+		
+		this.codProceso.setRequired(setear);
+		this.codProceso.setRequiredError("Es requerido");
 	}
 	
 	/**
@@ -628,11 +648,15 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 			    "Operación: " + gasto.getOperacion());
 		
 		this.inicializarComboMoneda(gasto.getCodMoneda());
+		this.inicializarComboSeleccion(gasto.getCodCtaInd());
 		
 		/*SETEAMOS LA OPERACION EN MODO LECUTA
 		 * ES CUANDO LLAMAMOS ESTE METODO*/
-		if(this.operacion.equals(Variables.OPERACION_LECTURA))
+		if(this.operacion.equals(Variables.OPERACION_LECTURA)){
 			this.iniFormLectura();
+			this.comboSeleccion.setEnabled(false);
+		}
+			
 				
 	}
 	
@@ -956,6 +980,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		if(datos instanceof ProcesoVO){
 			ProcesoVO procesoVO = (ProcesoVO) datos;
 			this.codProceso.setValue(String.valueOf(procesoVO.getCodigo()));
+			this.descProceso.setValue(procesoVO.getDescripcion());
 			this.codTitular.setValue((procesoVO.getCodCliente()));
 			this.nomTitular.setValue(procesoVO.getNomCliente());
 		}
@@ -963,9 +988,9 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 			RubroVO rubroVO = (RubroVO) datos;
 			this.codRubro.setValue(rubroVO.getcodRubro());
 			this.nomRubro.setValue(rubroVO.getDescripcion());
-//			this.descripcionImpuesto.setValue(rubroVO.getDescripcionImpuesto());
-//			this.codImpuesto.setValue(rubroVO.getCodigoImpuesto());
-//			this.porcentajeImpuesto.setValue(String.valueOf(rubroVO.getPorcentajeImpuesto()));
+ 			this.nomImpuesto.setValue(rubroVO.getDescripcionImpuesto());
+			this.codImpuesto.setValue(rubroVO.getCodigoImpuesto());
+			this.porcentajeImpuesto.setValue(String.valueOf(rubroVO.getPorcentajeImpuesto()));
 		}
 		
 		if(datos instanceof CuentaVO){
@@ -1027,6 +1052,23 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		this.comboMoneda.setValue(moneda);
 	}
 	
+	public void inicializarComboSeleccion(String cod){
+		
+		if(cod.equals("IngGastoProceso")){
+			this.comboSeleccion.setValue("Proceso");
+			this.inicializoProceso();
+		}
+		else if(cod.equals("IngGastoEmpleado")){
+			this.comboSeleccion.setValue("Empleado");
+			this.inicializoEmpleado();
+		}
+		else if(cod.equals("IngGastoOficina")){
+			this.comboSeleccion.setValue("Oficina");
+			this.inicializoOficina();
+		}
+		
+	}
+	
 	public void inicializoProceso(){
 		this.proceso.setVisible(true);
 		this.cliente.setCaption("Cliente");
@@ -1037,5 +1079,12 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		this.proceso.setVisible(false);
 		this.cliente.setCaption("Empleado");
 		this.btnBuscarEmpleado.setVisible(true);
+		this.mainView.setSub();
+	}
+	
+	public void inicializoOficina(){
+		this.proceso.setVisible(false);
+		this.cliente.setVisible(false);
+		this.mainView.setSub();
 	}
 }
