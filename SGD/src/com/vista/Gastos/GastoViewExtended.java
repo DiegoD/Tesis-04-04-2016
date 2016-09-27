@@ -529,23 +529,6 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 			
 		});
 		
-//		comboSeleccion.addBlurListener(new BlurListener() {
-//            
-//			@Override
-//			public void blur(BlurEvent event) {
-//				// TODO Auto-generated method stub
-//				if(comboSeleccion.getValue().equals("Empleado")){
-//					inicializoEmpleado();
-//				}
-//				else if(comboSeleccion.getValue().equals("Proceso")){
-//					inicializoProceso();
-//				}
-//				else if(comboSeleccion.getValue().equals("Oficina")){
-//					inicializoOficina();
-//				}
-//				
-//			}
-//        });
 		comboSeleccion.setImmediate(true);
 		
 		comboSeleccion.addValueChangeListener(new Property.ValueChangeListener(){
@@ -1105,12 +1088,12 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		this.cliente.setCaption("Empleado");
 		this.cliente.setVisible(true);
 		this.btnBuscarEmpleado.setVisible(true);
-		this.mainView.setSub();
+		this.mainView.setSubEmpleado();
 	}
 	
 	public void inicializoOficina(){
 		this.proceso.setVisible(false);
 		this.cliente.setVisible(false);
-		this.mainView.setSub();
+		this.mainView.setSubOficina();
 	}
 }
