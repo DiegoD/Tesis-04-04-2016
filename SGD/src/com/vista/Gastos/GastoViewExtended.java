@@ -180,10 +180,10 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 					
 					if(impTotMo.getValue() != ""){
 						aux = impTotMo.getValue().toString().trim().replace(",", ".");
-						gastoVO.setImpTtotMo(Float.parseFloat(aux));
+						gastoVO.setImpTotMo(Float.parseFloat(aux));
 					}
 					else{
-						gastoVO.setImpTtotMo(0);
+						gastoVO.setImpTotMo(0);
 					}
 					
 					if(impImpuMn.getValue() != ""){
@@ -620,8 +620,8 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		this.impTotMn.setRequired(setear);
 		this.impTotMn.setRequiredError("Es requerido");
 		
-		this.impTtotMo.setRequired(setear);
-		this.impTtotMo.setRequiredError("Es requerido");
+		this.impTotMo.setRequired(setear);
+		this.impTotMo.setRequiredError("Es requerido");
 		
 		this.codRubro.setRequired(setear);
 		this.codRubro.setRequiredError("Es requerido");
@@ -782,7 +782,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		this.impImpuMn.setReadOnly(false);
 		this.impImpuMo.setReadOnly(false);
 		this.impTotMn.setReadOnly(false);
-		this.impTtotMo.setReadOnly(false);
+		this.impTotMo.setReadOnly(false);
 		this.referencia.setReadOnly(false);
 		
 		this.codProceso.setReadOnly(false);
@@ -893,7 +893,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		this.impImpuMn.setReadOnly(setear);
 		this.impImpuMo.setReadOnly(setear);
 		this.impTotMn.setReadOnly(setear);
-		this.impTtotMo.setReadOnly(setear);
+		this.impTotMo.setReadOnly(setear);
 		this.referencia.setReadOnly(setear);
 		
 		this.codProceso.setEnabled(false);

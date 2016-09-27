@@ -138,7 +138,6 @@ public class GastosPanelExtended extends GastosPanel{
 		gridGastos.removeColumn("nroTrans");
 		//gridGastos.removeColumn("impTotMn");
 		
-		gridGastos.removeColumn("impTotMo");
 		gridGastos.removeColumn("tcMov");
 		gridGastos.removeColumn("fecValor");
 		
@@ -152,7 +151,7 @@ public class GastosPanelExtended extends GastosPanel{
 		
 		gridGastos.removeColumn("impSubMo");
 		gridGastos.removeColumn("impTotMn");
-		gridGastos.removeColumn("impTtotMo");
+		gridGastos.removeColumn("impTotMo");
 		
 		//gridGastos.removeColumn("tcMov");
 		gridGastos.removeColumn("nomCuenta");
