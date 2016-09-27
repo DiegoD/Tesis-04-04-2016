@@ -51,6 +51,8 @@ import com.vista.MySub;
 import com.vista.PermisosUsuario;
 import com.vista.Variables;
 import com.vista.VariablesPermisos;
+import com.vaadin.data.Property;
+import com.vaadin.data.Property.ValueChangeEvent;
 
 public class GastoViewExtended extends GastoView implements IBusqueda{
 	
@@ -126,7 +128,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 					
 					//Cliente
 					if(comboSeleccion.getValue().equals("Oficina")){
-						gastoVO.setCodTitular(null);
+						gastoVO.setCodTitular("0");
 						gastoVO.setNomTitular("Oficina");
 					}
 					else{
@@ -527,11 +529,30 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 			
 		});
 		
-		comboSeleccion.addBlurListener(new BlurListener() {
-            
+//		comboSeleccion.addBlurListener(new BlurListener() {
+//            
+//			@Override
+//			public void blur(BlurEvent event) {
+//				// TODO Auto-generated method stub
+//				if(comboSeleccion.getValue().equals("Empleado")){
+//					inicializoEmpleado();
+//				}
+//				else if(comboSeleccion.getValue().equals("Proceso")){
+//					inicializoProceso();
+//				}
+//				else if(comboSeleccion.getValue().equals("Oficina")){
+//					inicializoOficina();
+//				}
+//				
+//			}
+//        });
+		comboSeleccion.setImmediate(true);
+		
+		comboSeleccion.addValueChangeListener(new Property.ValueChangeListener(){
+			
 			@Override
-			public void blur(BlurEvent event) {
-				// TODO Auto-generated method stub
+			public void valueChange(ValueChangeEvent event) {
+			   
 				if(comboSeleccion.getValue().equals("Empleado")){
 					inicializoEmpleado();
 				}
@@ -541,11 +562,9 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 				else if(comboSeleccion.getValue().equals("Oficina")){
 					inicializoOficina();
 				}
-				
 			}
-        });
+		});
 		
-
 	}
 	
 	public  void inicializarForm(){
@@ -1077,12 +1096,14 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 	public void inicializoProceso(){
 		this.proceso.setVisible(true);
 		this.cliente.setCaption("Cliente");
+		this.cliente.setVisible(true);
 		this.btnBuscarEmpleado.setVisible(false);
 	}
 	
 	public void inicializoEmpleado(){
 		this.proceso.setVisible(false);
 		this.cliente.setCaption("Empleado");
+		this.cliente.setVisible(true);
 		this.btnBuscarEmpleado.setVisible(true);
 		this.mainView.setSub();
 	}
