@@ -771,7 +771,7 @@ public String getProcesosActivos(){
 	StringBuilder sb = new StringBuilder();
 	
 	sb.append("SELECT cod_ctabco, nom_cta, cod_bco, cod_emp, activo, usuario_mod, operacion, fecha_mod ");
-	sb.append("FROM m_ctasbcos WHREE cod_bco = ? AND cod_emp = ? AND activo = 1 ");
+	sb.append("FROM m_ctasbcos WHERE cod_bco = ? AND cod_emp = ? AND activo = 1 ");
 		
 		
 		return sb.toString();
@@ -860,8 +860,8 @@ public String getProcesosActivos(){
 		sb.append("SELECT cod_docum, serie_docum, nro_docum, m_clientes.cod_tit, m_clientes.nom_tit, m_cuentas.cod_cuenta, m_cuentas.descripcion nom_cuenta, c_ingcobro.cod_emp, fec_doc,  ");
 		sb.append("fec_valor, m_bancos.cod_bco, m_bancos.nom_bco, m_ctasbcos.cod_ctabco, m_ctasbcos.nom_cta, cod_mpago, cod_doc_ref, serie_doc_ref, nro_doc_ref,  ");
 		sb.append("m_monedas.cod_moneda, m_monedas.descripcion, m_monedas.simbolo, imp_tot_mn, imp_tot_mo, tc_mov, observaciones, nro_trans,  ");
-		sb.append("c_ingcobro.fecha_mod, c_ingcobro.usuario_mod, c_ingcobro.operacion, m_monedas.descripcion, m_monedas.simbolo");
-		sb.append("FROM c_ingcobro, m_monedas, m_clientes, m_ctasbcos, m_cuentas WHERE cod_emp = ?  ");
+		sb.append("c_ingcobro.fecha_mod, c_ingcobro.usuario_mod, c_ingcobro.operacion, m_monedas.descripcion, m_monedas.simbolo ");
+		sb.append("FROM c_ingcobro, m_monedas, m_clientes, m_ctasbcos, m_cuentas, m_bancos WHERE c_ingcobro.cod_emp = ?  ");
 		
 		sb.append(" AND c_ingcobro.cod_moneda = m_monedas.cod_moneda ");
 		sb.append("AND c_ingcobro.cod_emp = m_monedas.cod_emp ");

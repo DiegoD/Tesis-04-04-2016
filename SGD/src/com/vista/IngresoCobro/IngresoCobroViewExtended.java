@@ -10,26 +10,35 @@ import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
 import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
+import com.excepciones.Bancos.ObteniendoBancosException;
+import com.excepciones.Bancos.ObteniendoCuentasBcoException;
 import com.excepciones.IngresoCobros.ExisteIngresoCobroException;
 import com.excepciones.IngresoCobros.InsertandoIngresoCobroException;
 import com.excepciones.IngresoCobros.ModificandoIngresoCobroException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
+import com.excepciones.clientes.ObteniendoClientesException;
+import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.data.validator.RegexpValidator;
 import com.vaadin.data.validator.StringLengthValidator;
+import com.vaadin.event.FieldEvents.BlurEvent;
+import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.server.VaadinService;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
+import com.valueObject.DocumDGIVO;
 import com.valueObject.MonedaVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.Gasto.GastoVO;
 import com.valueObject.IngresoCobro.IngresoCobroDetalleVO;
 import com.valueObject.IngresoCobro.IngresoCobroVO;
+import com.valueObject.banco.BancoVO;
 import com.valueObject.banco.CtaBcoVO;
 import com.valueObject.cliente.ClienteVO;
 import com.vista.BusquedaViewExtended;
@@ -39,6 +48,8 @@ import com.vista.MySub;
 import com.vista.PermisosUsuario;
 import com.vista.Variables;
 import com.vista.VariablesPermisos;
+import com.vaadin.data.Property;
+import com.vaadin.data.Property.ValueChangeEvent;
 
 public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusqueda{
 
@@ -53,8 +64,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	 										  un detalle, para poder quitarlo de la lista*/
 	
 	MySub sub;
+	//private UsuarioPermisosVO permisos; /*Variable con los permisos del usuario*/
 	private PermisosUsuario permisos; /*Variable con los permisos del usuario*/
-	
 	
 	
 	/**
@@ -62,12 +73,14 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	 * si hay que cargarle la info
 	 *
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	public IngresoCobroViewExtended(String opera, IngresoCobroPanelExtended main){
 	
 	/*Inicializamos los permisos para el usuario*/
 	this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
 	
+	/*Inicializamos listener al combo de bancos, para que inicialice las cuentas asociadas al banco*/
+;
 	
 	this.operacion = opera;
 	this.mainView = main;
@@ -77,6 +90,94 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	this.lstDetalleAgregar = new ArrayList<IngresoCobroDetalleVO>();
 	
 	this.inicializarForm();
+	
+	
+	this.btnBuscarCliente.addClickListener(click -> {
+		
+		BusquedaViewExtended form = new BusquedaViewExtended(this, new ClienteVO());
+		ArrayList<Object> lst = new ArrayList<Object>();
+		ArrayList<ClienteVO> lstClientes = new ArrayList<ClienteVO>();
+		
+		/*Inicializamos VO de permisos para el usuario, formulario y operacion
+		 * para confirmar los permisos del usuario*/
+		UsuarioPermisosVO permisoAux = 
+				new UsuarioPermisosVO(this.permisos.getCodEmp(),
+						this.permisos.getUsuario(),
+						VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+						VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		
+		try {
+			lstClientes = this.controlador.getClientes(permisoAux);
+			
+		} catch ( ConexionException | InicializandoException | ObteniendoPermisosException | NoTienePermisosException |
+				 ObteniendoClientesException e) {
+
+			Mensajes.mostrarMensajeError(e.getMessage());
+		}
+		Object obj;
+		for (ClienteVO i: lstClientes) {
+			obj = new Object();
+			obj = (Object)i;
+			lst.add(obj);
+		}
+		try {
+			
+			form.inicializarGrilla(lst);
+		
+			
+		} catch (Exception e) {
+			
+			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+		}
+		
+		sub = new MySub("65%", "65%" );
+		sub.setModal(true);
+		sub.center();
+		sub.setModal(true);
+		sub.setVista(form);
+		sub.center();
+		sub.setDraggable(true);
+		UI.getCurrent().addWindow(sub);
+		
+	});
+	
+	/**
+	* Agregamos listener al combo de tipo (banco, caja), determinamos si mostramos
+	* los campos del banco o no;
+	*
+	*/
+	comboBancos.addValueChangeListener(new Property.ValueChangeListener() {
+        private static final long serialVersionUID = -5188369735622627751L;
+
+   		@Override
+		public void valueChange(ValueChangeEvent event) {
+   			BancoVO bcoAux;
+			
+			if(comboBancos.getValue() != null){
+				bcoAux = new BancoVO();
+				bcoAux = (BancoVO) comboBancos.getValue();
+				
+				inicializarComboCuentas(bcoAux.getCodigo());
+			}		
+		}
+    });
+	
+	/**
+	* Agregamos listener al combo de tipo (banco, caja), determinamos si mostramos
+	* los campos del banco o no;
+	*
+	*/
+    comboTipo.addValueChangeListener(new Property.ValueChangeListener() {
+        private static final long serialVersionUID = -5188369735622627751L;
+
+   		@Override
+		public void valueChange(ValueChangeEvent event) {
+
+   			mostrarDatosDeBanco();
+		}
+    });
+  //  combobox.setImmediate(true);
+
 	
 	/*Inicializamos listener de boton aceptar*/
 	this.aceptar.addClickListener(click -> {
@@ -175,7 +276,6 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				
 				if(this.operacion.equals(Variables.OPERACION_NUEVO))	
 				{	
-	
 					this.controlador.insertarIngresoCobro(ingCobroVO, permisoAux);
 					
 					this.mainView.actulaizarGrilla(ingCobroVO);
@@ -201,7 +301,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				Mensajes.mostrarMensajeWarning(Variables.WARNING_CAMPOS_NO_VALIDOS);
 			}
 				
-			} catch (ModificandoIngresoCobroException|ExisteIngresoCobroException | InicializandoException| ConexionException | NoTienePermisosException| ObteniendoPermisosException e) {
+			} catch (ModificandoIngresoCobroException| InsertandoIngresoCobroException| ExisteIngresoCobroException | InicializandoException| ConexionException | NoTienePermisosException| ObteniendoPermisosException e) {
 				
 				ExisteIngresoCobroException a;
 				
@@ -211,7 +311,9 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			
 		});
 	
-
+	
+	
+	
 	
 	/*Inicalizamos listener para boton de Editar*/
 		this.btnEditar.addClickListener(click -> {
@@ -259,11 +361,30 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				else 
 				{
 					/*Si es operacion Editar tomamos el codGrupo de el fieldGroup*/
-					codCliente = fieldGroup.getItemDataSource().getBean().getCodTitular());
+					codCliente = fieldGroup.getItemDataSource().getBean().getCodTitular();
 				}
-				/*Aca obtener los gastos con saldo para el cliente*/
-				ArrayList<GastoVO> lstForms = this.controlador.getFormulariosNoGrupo(codCliente, this.permisos.getCodEmp());
-				form.setGrillaForms(lstForms);
+				
+				/*Inicializamos VO de permisos para el usuario, formulario y operacion
+				 * para confirmar los permisos del usuario*/
+				UsuarioPermisosVO permisoAux = 
+						new UsuarioPermisosVO(this.permisos.getCodEmp(),
+								this.permisos.getUsuario(),
+								VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+								VariablesPermisos.OPERACION_NUEVO_EDITAR);
+				
+				/*Obtenemos los gastos con saldo del cliente*/
+				ArrayList<GastoVO> lstGastosConSaldo = this.controlador.getGastosConSaldo(permisoAux, codCliente);
+				
+				/*Hacemos una lista auxliar para pasarselo al BusquedaViewExtended*/
+				ArrayList<Object> lst = new ArrayList<Object>();
+				Object obj;
+				for (GastoVO i: lstGastosConSaldo) {
+					obj = new Object();
+					obj = (Object)i;
+					lst.add(obj);
+				}
+				
+				form.inicializarGrilla(lst);
 				
 				UI.getCurrent().addWindow(sub);
 
@@ -427,6 +548,14 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 					
 		this.fieldGroup =  new BeanFieldGroup<IngresoCobroVO>(IngresoCobroVO.class);
 		
+		/*Mostramos o ocultamos los datos del Banco, dependiendo del combo tipo (banco, caja)*/
+		this.mostrarDatosDeBanco();
+		
+		/*Inicializamos los combos*/
+		this.inicializarComboBancos(null);
+		this.inicializarComboCuentas(null);
+		this.inicializarComboMoneda(null);
+		
 		//Seteamos info del form si es requerido
 		if(fieldGroup != null)
 			fieldGroup.buildAndBindMemberFields(this);
@@ -451,6 +580,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		/*LA OPERACION EDITAR ES DESDE EL DE LECTURA*/
 	}
 
+	
 
 	/**
 	 * Seteamos las validaciones del Formulario
@@ -465,26 +595,13 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		this.comboTipo.setRequired(setear);
 		this.comboTipo.setRequiredError("Es requerido");
 		
-		this.comboBancos.setRequired(setear);
-		this.comboBancos.setRequiredError("Es requerido");
 		
-		this.comboCuentas.setRequired(setear);
-		this.comboCuentas.setRequiredError("Es requerido");
 		
 		this.fecDoc.setRequired(setear);
 		this.fecDoc.setRequiredError("Es requerido");
 		
 		this.fecValor.setRequired(setear);
 		this.fecValor.setRequiredError("Es requerido");
-		
-		this.comboMPagos.setRequired(setear);
-		this.comboMPagos.setRequiredError("Es requerido");
-		
-		this.serieDocRef.setRequired(setear);
-		this.serieDocRef.setRequiredError("Es requerido");
-		
-		this.nroDocRef.setRequired(setear);
-		this.nroDocRef.setRequiredError("Es requerido");
 		
 		this.comboMoneda.setRequired(setear);
 		this.comboMoneda.setRequiredError("Es requerido");
@@ -497,6 +614,32 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		
 		this.codTitular.setRequired(setear);
 		this.codTitular.setRequiredError("Es requerido");
+		
+		this.comboMPagos.setRequired(setear);
+		this.comboMPagos.setRequiredError("Es requerido");
+		
+		/*De Bco*/
+		if(this.comboTipo.equals("Banco"))
+		{
+			this.serieDocRef.setRequired(setear);
+			this.serieDocRef.setRequiredError("Es requerido");
+			
+			this.nroDocRef.setRequired(setear);
+			this.nroDocRef.setRequiredError("Es requerido");
+			
+			this.comboBancos.setRequired(setear);
+			this.comboBancos.setRequiredError("Es requerido");
+			
+			this.comboCuentas.setRequired(setear);
+			this.comboCuentas.setRequiredError("Es requerido");
+		}
+		else
+		{
+			this.serieDocRef.setRequired(false);
+			this.nroDocRef.setRequired(false);
+			this.comboBancos.setRequired(false);
+			this.comboCuentas.setRequired(false);
+		}
 		
 	}
 	
@@ -512,6 +655,10 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		ing = fieldGroup.getItemDataSource().getBean();
 		String fecha = new SimpleDateFormat("dd/MM/yyyy").format(ing.getFechaMod());
 		
+		/*Inicializamos los combos*/
+		this.inicializarComboBancos(ing.getCodBanco());
+		this.inicializarComboCuentas(ing.getCodCtaBco());
+		this.inicializarComboMoneda(ing.getCodMoneda());
 		
 		auditoria.setDescription(
 			
@@ -618,6 +765,10 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	{
 		/*Chequeamos si tiene permiso de editar*/
 		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_COBRO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		
+		
+		/*Mostramos o ocultamos los datos del Banco, dependiendo del combo tipo (banco, caja)*/
+		this.mostrarDatosDeBanco();
 		
 		/*Si no tiene permisos de Nuevo Cerrmamos la ventana y mostramos mensaje*/
 		if(!permisoNuevoEditar)
@@ -1109,24 +1260,133 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		this.comboMoneda.setItemCaptionPropertyId("descripcion");
 		this.comboMoneda.setValue(moneda);
 	}
+	
+	public void inicializarComboCuentas(String cod){
+		
+		BeanItemContainer<CtaBcoVO> ctaObj = new BeanItemContainer<CtaBcoVO>(CtaBcoVO.class);
+		CtaBcoVO cta = new CtaBcoVO();
+		ArrayList<CtaBcoVO> lstctas = new ArrayList<CtaBcoVO>();
+		UsuarioPermisosVO permisosAux;
+		
+		try {
+			permisosAux = 
+					new UsuarioPermisosVO(this.permisos.getCodEmp(),
+							this.permisos.getUsuario(),
+							VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+							VariablesPermisos.OPERACION_NUEVO_EDITAR);
+			
+			/*Si se selacciona un banco buscamos las cuentas, de lo contrario no*/
+			if(this.comboBancos.getValue() != null)
+				lstctas = this.controlador.getCtaBcos(permisosAux,((BancoVO) this.comboBancos.getValue()).getCodigo());
+			
+		} catch (ObteniendoCuentasBcoException | InicializandoException | ConexionException | ObteniendoPermisosException | NoTienePermisosException e) {
+
+			Mensajes.mostrarMensajeError(e.getMessage());
+		}
+		
+		for (CtaBcoVO ctav : lstctas) {
+			
+			ctaObj.addBean(ctav);
+			
+			if(cod != null){
+				if(cod.equals(ctav.getCodigo())){
+					ctav = ctav;
+				}
+			}
+		}
+		
+		this.comboCuentas.setContainerDataSource(ctaObj);
+		this.comboCuentas.setItemCaptionPropertyId("nombre");
+		this.comboCuentas.setValue(cta);
+	}
+	
+	public void inicializarComboBancos(String cod){
+		
+		BeanItemContainer<BancoVO> bcoObj = new BeanItemContainer<BancoVO>(BancoVO.class);
+		BancoVO bcoVO = new BancoVO();
+		ArrayList<BancoVO> lstBcos = new ArrayList<BancoVO>();
+		UsuarioPermisosVO permisosAux;
+		
+		try {
+			permisosAux = 
+					new UsuarioPermisosVO(this.permisos.getCodEmp(),
+							this.permisos.getUsuario(),
+							VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+							VariablesPermisos.OPERACION_NUEVO_EDITAR);
+			
+			lstBcos = this.controlador.getBcos(permisosAux);
+			
+		} catch ( InicializandoException | ConexionException | ObteniendoPermisosException | NoTienePermisosException | ObteniendoBancosException | ObteniendoCuentasBcoException e) {
+
+			Mensajes.mostrarMensajeError(e.getMessage());
+		}
+		
+		for (BancoVO bco : lstBcos) {
+			
+			bcoObj.addBean(bco);
+			
+			if(cod != null){
+				if(cod.equals(bco.getCodigo())){
+					bcoVO = bco;
+				}
+			}
+		}
+		
+		this.comboBancos.setContainerDataSource(bcoObj);
+		this.comboBancos.setItemCaptionPropertyId("nombre");
+		this.comboBancos.setValue(bcoObj);
+	}
+	
+	
 	@Override
 	public void setInfo(Object datos) {
-		// TODO Auto-generated method stub
-		
-		/*ACA PASARLE TODOS LOS DATOS DEL INGRESOCOBROVO 
-		 * que viene del panel extended 'para iniicializarlo cuando seleccionan un cobro desde el panel*/
-		
-		/*
-		if(datos instanceof IngresoCobroVO){
-			IngresoCobroVO ingVO = (IngresoCobroVO) datos;
-			this.codCliente.setValue(ingVO.getCodigoDoc());
-			this.nomCliente.setValue(ingVO.getNombre());
-		}*/
-		
+		if(datos instanceof ClienteVO){
+			ClienteVO clienteVO = (ClienteVO) datos;
+			this.codTitular.setValue(String.valueOf(clienteVO.getCodigo()));
+			this.nomTitular.setValue(clienteVO.getNombre());
+		}
 	}
 	
 	public void setLstDetalle(ArrayList<IngresoCobroDetalleVO> lst) {
 		this.lstDetalleVO = lst;
 	}
+	
+	
+	/**
+	* Si el combo de Tipo es caja: ocultamos los datos del banco
+	* Si el combo tipo es Banco: mostramos los datos de bando
+	*
+	*/
+	private void mostrarDatosDeBanco(){
+		
+		boolean activo = false;
+		
+		if(this.comboTipo.getValue() != null)
+		{
+			String tipo = this.comboTipo.getValue().toString().trim();
+			
+			if(tipo.equals("Banco"))
+				activo = true;
+		}
+		
+		//this.comboBancos.setVisible(activo);
+		this.comboBancos.setEnabled(activo);
+		
+		//this.comboCuentas.setVisible(activo);
+		this.comboCuentas.setEnabled(activo);
+		
+		
+		//this.comboMPagos.setVisible(activo);
+		this.comboMPagos.setEnabled(activo);
+		
+		//this.serieDocRef.setVisible(activo);
+		this.serieDocRef.setEnabled(activo);
+		
+		//this.nroDocRef.setVisible(activo);
+		this.nroDocRef.setEnabled(activo);
+		
+	}
+
+
 	
 }

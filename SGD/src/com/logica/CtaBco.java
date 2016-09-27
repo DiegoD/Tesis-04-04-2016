@@ -15,7 +15,9 @@ public class CtaBco extends Auditoria{
 	
 	
 
-	public CtaBco(){}
+	public CtaBco(){
+		this.moneda = new Moneda();
+	}
 	
 	public CtaBco(CtaBcoVO vo){
 		

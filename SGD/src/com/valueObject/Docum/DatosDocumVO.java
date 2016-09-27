@@ -73,9 +73,26 @@ public class DatosDocumVO extends AuditoriaVO{
 		
 	}
 	
+	public int getNroDocum() {
+		return nroDocum;
+	}
+	
+	public String getNomTitular() {
+		return nomTitular;
+	}
+	
 	public Timestamp getFecDoc() {
 		return fecDoc;
 	}
+	
+	public String getSimboloMoneda() {
+		return simboloMoneda;
+	}
+	
+	public void setImpTotMn(double impTotMn) {
+		this.impTotMn = impTotMn;
+	}
+	
 	public void setFecDoc(Timestamp fecDoc) {
 		this.fecDoc = fecDoc;
 	}
@@ -91,9 +108,7 @@ public class DatosDocumVO extends AuditoriaVO{
 	public void setSerieDocum(String serieDocum) {
 		this.serieDocum = serieDocum;
 	}
-	public int getNroDocum() {
-		return nroDocum;
-	}
+	
 	public void setNroDocum(int nroDocum) {
 		this.nroDocum = nroDocum;
 	}
@@ -120,9 +135,7 @@ public class DatosDocumVO extends AuditoriaVO{
 		this.nroTrans = nroTrans;
 	}
 
-	public String getNomTitular() {
-		return nomTitular;
-	}
+	
 
 	public void setNomTitular(String nomTitular) {
 		this.nomTitular = nomTitular;
@@ -156,9 +169,7 @@ public class DatosDocumVO extends AuditoriaVO{
 		return impTotMn;
 	}
 
-	public void setImpTotMn(double impTotMn) {
-		this.impTotMn = impTotMn;
-	}
+	
 
 	public double getImpTotMo() {
 		return impTotMo;
@@ -184,9 +195,7 @@ public class DatosDocumVO extends AuditoriaVO{
 		this.fecValor = fecValor;
 	}
 
-	public String getSimboloMoneda() {
-		return simboloMoneda;
-	}
+
 
 	public void setSimboloMoneda(String simboloMoneda) {
 		this.simboloMoneda = simboloMoneda;

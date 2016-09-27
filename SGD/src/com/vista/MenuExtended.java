@@ -27,6 +27,7 @@ import com.vista.Funcionarios.FuncionariosPanelExtended;
 import com.vista.Gastos.GastosPanelExtended;
 import com.vista.Grupos.GruposPanelExtended;
 import com.vista.Impuestos.ImpuestosPanelExtended;
+import com.vista.IngresoCobro.IngresoCobroPanelExtended;
 import com.vista.Login.LoginExtended;
 import com.vista.Monedas.MonedasPanelExtended;
 import com.vista.Procesos.ProcesosPanelExtended;
@@ -441,7 +442,24 @@ public class MenuExtended extends Menu{
 				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 			}
 		});
+		
+		this.ingCobro.addClickListener(click -> {
+			
+			setSizeFull();
+			
+			this.content.removeAllComponents();
+			try {
+				
+				IngresoCobroPanelExtended u = new IngresoCobroPanelExtended(); 
+				this.content.addComponent(u);
+				
+			} catch (Exception e) {
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}
+		});
 	}
+	
+	
 	
 	
 	
@@ -495,6 +513,7 @@ public class MenuExtended extends Menu{
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_BANCOS) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_PROCESOS) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_GASTOS) ||
+				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_INGRESO_COBRO) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_RUBROS))
 			{
 				lstFormsMenuMant.add(formularioVO);
@@ -588,6 +607,13 @@ public class MenuExtended extends Menu{
 							this.habilitarGastos();
 						
 					break;
+					
+					case VariablesPermisos.FORMULARIO_INGRESO_COBRO:
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_COBRO, VariablesPermisos.OPERACION_LEER))
+							this.habilitarIngresoCobro();
+						
+					break;
+					
 					
 				}
 				
@@ -708,6 +734,9 @@ public class MenuExtended extends Menu{
 		
 		this.gastos.setVisible(false);
 		this.gastos.setEnabled(false);
+		
+		this.ingCobro.setVisible(false);
+		this.ingCobro.setEnabled(false);
 	}
 	
 	
@@ -816,6 +845,12 @@ public class MenuExtended extends Menu{
 		this.gastos.setVisible(true);
 		this.gastos.setEnabled(true);
 		this.tabMantenimientos.addComponent(gastos);
+	}
+	
+	private void habilitarIngresoCobro(){
+		this.ingCobro.setVisible(true);
+		this.ingCobro.setEnabled(true);
+		this.tabMantenimientos.addComponent(ingCobro);
 	}
 	
 	public PermisosUsuario getPermisosUsuario()

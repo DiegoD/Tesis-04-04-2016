@@ -326,7 +326,7 @@ public class DAOBancos implements IDAOBancos{
 	/**
 	 * Nos retorna una lista con todos los Bancos del sistema para la emrpesa
 	 */
-	private ArrayList<CtaBco> getCtaBcoActivos(Connection con, String codEmp, String codBco) throws ObteniendoCuentasBcoException, ConexionException {
+	public ArrayList<CtaBco> getCtaBcoActivos(Connection con, String codEmp, String codBco) throws ObteniendoCuentasBcoException, ConexionException {
 		
 		ArrayList<CtaBco> lstCtaBancos = new ArrayList<CtaBco>();
 	

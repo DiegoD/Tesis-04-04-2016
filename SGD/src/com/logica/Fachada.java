@@ -56,6 +56,7 @@ import com.logica.IngresoCobro.IngresoCobro;
 import com.valueObject.*;
 import com.valueObject.IngresoCobro.IngresoCobroVO;
 import com.valueObject.banco.BancoVO;
+import com.valueObject.banco.CtaBcoVO;
 import com.valueObject.cliente.ClienteVO;
 import com.vista.VariablesPermisos;
 import com.persistencia.*;
@@ -1014,7 +1015,7 @@ public class Fachada {
 /////////////////////////////////BANCOS/////////////////////////////////
 	 
 /**
-*Nos retorna todos los clientes para la empresa
+*Nos retorna todos los bancos para la empresa
  * @throws ObteniendoCuentasBcoException 
 *
 */
@@ -1055,13 +1056,54 @@ public ArrayList<BancoVO> getBancosTodos(String codEmp) throws ObteniendoBancosE
 }	 
 
 
-/**
-* Nos retorna todos los clientes activos para la empresa
- * @throws ObteniendoCuentasBcoException 
-*
-*/
-@SuppressWarnings("unchecked")
-public ArrayList<BancoVO> getBancosActivos(String codEmp) throws ObteniendoBancosException, ConexionException, ObteniendoCuentasBcoException {
+	/**
+	* Nos retorna todos los bancos para la empresa
+	 * @throws ObteniendoCuentasBcoException 
+	*
+	*/
+	@SuppressWarnings("unchecked")
+	public ArrayList<CtaBcoVO> getCtaBcoActivosxBco(String codEmp, String codBco) throws  ConexionException, ObteniendoCuentasBcoException {
+
+		Connection con = null;
+		
+		ArrayList<CtaBco> lstbancos;
+		ArrayList<CtaBcoVO> lstCtasBancoVO = new ArrayList<CtaBcoVO>();
+		
+		try
+		{
+			con = this.pool.obtenerConeccion();
+	
+			lstbancos = this.bancos.getCtaBcoActivos(con, codEmp, codBco);
+			
+			for (CtaBco cta : lstbancos) 
+			{
+				lstCtasBancoVO.add(cta.getCtaBcoVO());
+			}
+		
+		}catch(ObteniendoCuentasBcoException  e)
+		{
+			throw e;
+		
+		} catch (ConexionException e) {
+		
+			throw e;
+		} 
+		finally
+		{
+			this.pool.liberarConeccion(con);
+		}
+	
+	
+		return lstCtasBancoVO;
+}	 
+
+	/**
+	* Nos retorna todos los clientes activos para la empresa
+	 * @throws ObteniendoCuentasBcoException 
+	*
+	*/
+	@SuppressWarnings("unchecked")
+	public ArrayList<BancoVO> getBancosActivos(String codEmp) throws ObteniendoBancosException, ConexionException, ObteniendoCuentasBcoException {
 
 	Connection con = null;
 	
@@ -1095,7 +1137,6 @@ public ArrayList<BancoVO> getBancosActivos(String codEmp) throws ObteniendoBanco
 	
 	return lstBancoVO;
 }	 
-
 
 public void insertarBanco(BancoVO bancoVO, String codEmp) throws InsertandoBancoException, ConexionException, ExisteBancoException{
 
