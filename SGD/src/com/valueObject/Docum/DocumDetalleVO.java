@@ -12,8 +12,7 @@ public class DocumDetalleVO extends DatosDocumVO{
 	private double impImpuMo ;
 	private double impSubMn ;
 	private double impSubMo ;
-	private double impTotMn ;
-	private double impTtotMo ;
+	
 	private double tcMov;
 	private String codCuenta;
 	private String nomCuenta;
@@ -43,8 +42,6 @@ public class DocumDetalleVO extends DatosDocumVO{
 		this.impImpuMo = t.impImpuMo;
 		this.impSubMn = t.impSubMn;
 		this.impSubMo = t.impSubMo;
-		this.impTotMn = t.impTotMn;
-		this.impTtotMo = t.impTtotMo;
 		this.tcMov = t.tcMov;
 		this.codCuenta = t.codCuenta;
 		this.nomCuenta = t.nomCuenta;
@@ -105,26 +102,6 @@ public class DocumDetalleVO extends DatosDocumVO{
 	
 	public void setImpSubMo(double impSub_mo) {
 		this.impSubMo = impSub_mo;
-	}
-	
-	
-	public double getImpTotMn() {
-		return impTotMn;
-	}
-	
-	
-	public void setImpTotMn(double impTot_mn) {
-		this.impTotMn = impTot_mn;
-	}
-	
-	
-	public double getImpTtotMo() {
-		return impTtotMo;
-	}
-	
-	
-	public void setImpTtotMo(double impTtot_mo) {
-		this.impTtotMo = impTtot_mo;
 	}
 	
 	

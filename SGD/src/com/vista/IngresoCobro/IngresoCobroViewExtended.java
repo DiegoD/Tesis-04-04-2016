@@ -184,6 +184,10 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			
 		try {
 			
+			/*Seteamos validaciones en nuevo, cuando es editar
+			 * solamente cuando apreta el boton editar*/
+			this.setearValidaciones(true);
+			
 			/*Validamos los campos antes de invocar al controlador*/
 			if(this.fieldsValidos())
 			{
@@ -336,61 +340,63 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		/*Inicalizamos listener para boton de Agregar gastos a cobrar*/
 		this.btnAgregar.addClickListener(click -> {
 					
-			try {
-				
-								
-				BusquedaViewExtended form = new BusquedaViewExtended(this, new GastoVO());
-				
-				sub = new MySub("70%", "60%" );
-				sub.setModal(true);
-				sub.setVista(form);
-				//sub.setWidth("50%");
-				//sub.setHeight("50%");
-				sub.center();
-				
-				String codCliente;/*Codigo del cliente para obtener los gastos a cobrar del mismo*/
-				
-				/*Obtenemos los formularios que no estan en el grupo
-				 * para mostrarlos en la grilla para seleccionar*/
-				if(this.operacion.equals(Variables.OPERACION_NUEVO) )
-				{
-					/*Si la operacion es nuevo, ponemos el  codGrupo vacio
-					 * asi nos trae todos los grupos disponibles*/
-					codCliente = "";
-				}
-				else 
-				{
-					/*Si es operacion Editar tomamos el codGrupo de el fieldGroup*/
-					codCliente = fieldGroup.getItemDataSource().getBean().getCodTitular();
-				}
-				
-				/*Inicializamos VO de permisos para el usuario, formulario y operacion
-				 * para confirmar los permisos del usuario*/
-				UsuarioPermisosVO permisoAux = 
-						new UsuarioPermisosVO(this.permisos.getCodEmp(),
-								this.permisos.getUsuario(),
-								VariablesPermisos.FORMULARIO_INGRESO_COBRO,
-								VariablesPermisos.OPERACION_NUEVO_EDITAR);
-				
-				/*Obtenemos los gastos con saldo del cliente*/
-				ArrayList<GastoVO> lstGastosConSaldo = this.controlador.getGastosConSaldo(permisoAux, codCliente);
-				
-				/*Hacemos una lista auxliar para pasarselo al BusquedaViewExtended*/
-				ArrayList<Object> lst = new ArrayList<Object>();
-				Object obj;
-				for (GastoVO i: lstGastosConSaldo) {
-					obj = new Object();
-					obj = (Object)i;
-					lst.add(obj);
-				}
-				
-				form.inicializarGrilla(lst);
-				
-				UI.getCurrent().addWindow(sub);
+			if(this.codTitular.getValue() != null)
+			{
+				try {
+					
+					BusquedaViewExtended form = new BusquedaViewExtended(this, new GastoVO());
+					
+					sub = new MySub("70%", "60%" );
+					sub.setModal(true);
+					sub.setVista(form);
+					//sub.setWidth("50%");
+					//sub.setHeight("50%");
+					sub.center();
+					
+					String codCliente;/*Codigo del cliente para obtener los gastos a cobrar del mismo*/
+					
+					/*Obtenemos los formularios que no estan en el grupo
+					 * para mostrarlos en la grilla para seleccionar*/
+					if(this.operacion.equals(Variables.OPERACION_NUEVO) )
+					{
+						/*Si la operacion es nuevo, ponemos el  codGrupo vacio
+						 * asi nos trae todos los grupos disponibles*/
+						codCliente = this.codTitular.getValue().toString().trim();
+					}
+					else 
+					{
+						/*Si es operacion Editar tomamos el codGrupo de el fieldGroup*/
+						codCliente = fieldGroup.getItemDataSource().getBean().getCodTitular();
+					}
+					
+					/*Inicializamos VO de permisos para el usuario, formulario y operacion
+					 * para confirmar los permisos del usuario*/
+					UsuarioPermisosVO permisoAux = 
+							new UsuarioPermisosVO(this.permisos.getCodEmp(),
+									this.permisos.getUsuario(),
+									VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+									VariablesPermisos.OPERACION_NUEVO_EDITAR);
+					
+					/*Obtenemos los gastos con saldo del cliente*/
+					ArrayList<GastoVO> lstGastosConSaldo = this.controlador.getGastosConSaldo(permisoAux, codCliente);
+					
+					/*Hacemos una lista auxliar para pasarselo al BusquedaViewExtended*/
+					ArrayList<Object> lst = new ArrayList<Object>();
+					Object obj;
+					for (GastoVO i: lstGastosConSaldo) {
+						obj = new Object();
+						obj = (Object)i;
+						lst.add(obj);
+					}
+					
+					form.inicializarGrilla(lst);
+					
+					UI.getCurrent().addWindow(sub);
 
-				}catch(Exception e)
-				{
-					Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+					}catch(Exception e)
+					{
+						Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+					}
 				}
 			});
 			
@@ -787,9 +793,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		this.container = 
 				new BeanItemContainer<IngresoCobroDetalleVO>(IngresoCobroDetalleVO.class);
 		
-		/*Seteamos validaciones en nuevo, cuando es editar
-		 * solamente cuando apreta el boton editar*/
-		this.setearValidaciones(true);
+		
 		
 		/*Como es en operacion nuevo, dejamos todos los campos editabls*/
 		this.readOnlyFields(false);

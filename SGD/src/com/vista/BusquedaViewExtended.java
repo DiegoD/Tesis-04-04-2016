@@ -476,7 +476,6 @@ public class BusquedaViewExtended extends BusquedaView{
 			grid.removeColumn("fechaMod");
 			grid.removeColumn("usuarioMod");
 			grid.removeColumn("operacion");
-			grid.removeColumn("activo");
 			
 			this.arreglarGrillaGasto(); /*FaltaImplementar*/
 			this.filtroGrilla();
@@ -557,11 +556,10 @@ public class BusquedaViewExtended extends BusquedaView{
 		lstColumn.get(0).setHeaderCaption("Número");
 		lstColumn.get(1).setWidth(300);
 		lstColumn.get(2).setWidth(150);
+		
 		//Modifica el formato de fecha en la grilla 
-		grid.getColumn("fecha").setConverter(new StringToDateConverter(){
-			/**
-			 * 
-			 */
+		/*grid.getColumn("fecha").setConverter(new StringToDateConverter(){
+		
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -572,7 +570,7 @@ public class BusquedaViewExtended extends BusquedaView{
 
 			}
 
-		});
+		});*/
 	}
 	
 	/*Este falta implementarlo es copia del de proceso*/
