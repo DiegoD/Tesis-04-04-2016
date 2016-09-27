@@ -69,6 +69,9 @@ import com.excepciones.Rubros.InsertandoRubroException;
 import com.excepciones.Rubros.ModificandoRubroException;
 import com.excepciones.Rubros.NoExisteRubroException;
 import com.excepciones.Rubros.ObteniendoRubrosException;
+import com.excepciones.Saldos.EliminandoSaldoException;
+import com.excepciones.Saldos.IngresandoSaldoException;
+import com.excepciones.Saldos.ModificandoSaldoException;
 import com.excepciones.TipoRubro.ExisteTipoRubroException;
 import com.excepciones.TipoRubro.InsertandoTipoRubroException;
 import com.excepciones.TipoRubro.ModificandoTipoRubroException;
@@ -85,6 +88,7 @@ import com.excepciones.grupos.ModificandoGrupoException;
 import com.excepciones.grupos.NoExisteGrupoException;
 import com.excepciones.grupos.ObteniendoFormulariosException;
 import com.excepciones.grupos.ObteniendoGruposException;
+import com.logica.Docum.DocumDetalle;
 import com.valueObject.*;
 import com.valueObject.Cotizacion.CotizacionVO;
 import com.valueObject.Cuenta.CuentaVO;
@@ -119,6 +123,7 @@ public class FachadaDD {
 	private AbstractFactoryBuilder fabrica;
 	private IAbstractFactory fabricaConcreta;
 	private IDAOGastos gastos;
+	private IDAOSaldos saldos;
 	
 	
     private FachadaDD() throws InstantiationException, IllegalAccessException, ClassNotFoundException, FileNotFoundException, IOException
@@ -142,6 +147,7 @@ public class FachadaDD {
         this.procesos = fabricaConcreta.crearDAOProcesos();
         this.numeradores = fabricaConcreta.crearDAONumeradores();
         this.gastos = fabricaConcreta.crearDAOGastos();
+        this.saldos = fabricaConcreta.crearDAOSaldos();
     }
     
     public static FachadaDD getInstance() throws InicializandoException {
@@ -2483,11 +2489,23 @@ public class FachadaDD {
 			con.setAutoCommit(false);
 			
 			Gasto gasto = new Gasto(gastoVO); 
+			
+			//Obtengo numerador de gastos
 			codigos.setCodigo(numeradores.getNumero(con, "02", cod_emp)); //Gasto
+			
+			//Obtengo numerador de la transacción
 			codigos.setNumeroTrans(numeradores.getNroTrans(con, "03")); //Transacción
+			
+			//Seteo los numeradores obtenidos
 			gasto.setNroDocum(codigos.getCodigo());
 			gasto.setNroTrans(codigos.getNumeroTrans());
+			
+			//Inserto el gasto
 			this.gastos.insertarGasto(gasto, cod_emp, con);
+			
+			//Genero saldo del gasto insertado
+			this.saldos.insertarSaldo((DocumDetalle) gasto, cod_emp, con);
+			
 			con.commit();
 			return codigos;
 		
@@ -2513,8 +2531,11 @@ public class FachadaDD {
 	* Actualiza los datos de un gasto dado su código y la empresa
 	* valida que exista el código 
 	 * @throws IngresandoGastoException 
+	 * @throws IngresandoSaldoException 
+	 * @throws EliminandoSaldoException 
+	 * @throws ModificandoSaldoException 
 	*/
-	public void actualizarGasto(GastoVO gastoVO, String cod_emp) throws ConexionException, ModificandoGastoException, NoExisteGastoException, ExisteGastoException, IngresandoGastoException  
+	public void actualizarGasto(GastoVO gastoVO, String cod_emp) throws ConexionException, ModificandoGastoException, NoExisteGastoException, ExisteGastoException, IngresandoGastoException, ModificandoSaldoException, EliminandoSaldoException, IngresandoSaldoException  
 	{
 	
 		Connection con = null;
@@ -2528,6 +2549,7 @@ public class FachadaDD {
 			
 			if(this.gastos.memberGasto(gasto.getNroTrans(), cod_emp, con)){
 				this.gastos.modificarGasto(gasto, cod_emp, con);
+				this.saldos.modificarSaldo((DocumDetalle) gasto, cod_emp, con);
 				con.commit();
 			}
 			else

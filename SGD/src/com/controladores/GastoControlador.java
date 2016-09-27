@@ -17,6 +17,9 @@ import com.excepciones.Gastos.ObteniendoGastosException;
 import com.excepciones.Impuestos.ObteniendoImpuestosException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
 import com.excepciones.Procesos.ObteniendoProcesosException;
+import com.excepciones.Saldos.EliminandoSaldoException;
+import com.excepciones.Saldos.IngresandoSaldoException;
+import com.excepciones.Saldos.ModificandoSaldoException;
 import com.excepciones.clientes.ObteniendoClientesException;
 import com.excepciones.funcionarios.ObteniendoFuncionariosException;
 import com.logica.Fachada;
@@ -72,8 +75,11 @@ public class GastoControlador {
 	 * @throws NoTienePermisosException 
 	 * @throws ObteniendoPermisosException 
 	 * @throws IngresandoGastoException 
+	 * @throws IngresandoSaldoException 
+	 * @throws EliminandoSaldoException 
+	 * @throws ModificandoSaldoException 
 	 */
-	public void actualizarGasto(GastoVO gastoVO, UsuarioPermisosVO permisos) throws ConexionException, NoExisteGastoException, ModificandoGastoException, ExisteGastoException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, IngresandoGastoException {
+	public void actualizarGasto(GastoVO gastoVO, UsuarioPermisosVO permisos) throws ConexionException, NoExisteGastoException, ModificandoGastoException, ExisteGastoException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, IngresandoGastoException, ModificandoSaldoException, EliminandoSaldoException, IngresandoSaldoException {
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))

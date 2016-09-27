@@ -18,6 +18,9 @@ import com.excepciones.Gastos.NoExisteGastoException;
 import com.excepciones.Impuestos.ObteniendoImpuestosException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
 import com.excepciones.Procesos.ObteniendoProcesosException;
+import com.excepciones.Saldos.EliminandoSaldoException;
+import com.excepciones.Saldos.IngresandoSaldoException;
+import com.excepciones.Saldos.ModificandoSaldoException;
 import com.excepciones.funcionarios.ObteniendoFuncionariosException;
 import com.vaadin.data.Container.ItemSetChangeEvent;
 import com.vaadin.data.Container.ItemSetChangeListener;
@@ -175,8 +178,8 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 						gastoVO.setImpTotMn(0);
 					}
 					
-					if(impTtotMo.getValue() != ""){
-						aux = impTtotMo.getValue().toString().trim().replace(",", ".");
+					if(impTotMo.getValue() != ""){
+						aux = impTotMo.getValue().toString().trim().replace(",", ".");
 						gastoVO.setImpTtotMo(Float.parseFloat(aux));
 					}
 					else{
@@ -258,7 +261,9 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 			} 
 			catch (ConexionException | ModificandoGastoException | ExisteGastoException | 
 					 InicializandoException | IngresandoGastoException | NoExisteGastoException |
-					 ErrorInesperadoException| ObteniendoPermisosException| NoTienePermisosException e) {
+					 ErrorInesperadoException| ObteniendoPermisosException| NoTienePermisosException | 
+					 ModificandoSaldoException | EliminandoSaldoException | IngresandoSaldoException e) {
+				
 				
 				Mensajes.mostrarMensajeError(e.getMessage());
 			}

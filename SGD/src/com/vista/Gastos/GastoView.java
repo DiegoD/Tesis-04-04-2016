@@ -51,7 +51,7 @@ public class GastoView extends FormLayout {
 	protected Button btnBuscarImpuesto;
 	protected ComboBox comboMoneda;
 	protected TextField tcMov;
-	protected TextField impTtotMo;
+	protected TextField impTotMo;
 	protected TextField impTotMn;
 	protected TextField impImpuMo;
 	protected TextField impImpuMn;

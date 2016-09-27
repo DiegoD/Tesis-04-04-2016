@@ -1201,7 +1201,7 @@ public class ConsultasDD {
 				+ " cod_emp, cod_moneda, cod_tit, "
 				+ " imp_tot_mn, imp_tot_mo, cuenta, "
 				+ " fecha_mod, usuario_mod, operacion ) ");
-		sb.append("VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?) ");
+		sb.append("VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?) ");
 		
 		return sb.toString();
 	}
@@ -1223,7 +1223,7 @@ public class ConsultasDD {
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("DELETE FROM sa_docum ");
-		sb.append("WHERE cod_docum = ? AND serie_documm = ? "
+		sb.append("WHERE cod_docum = ? AND serie_docum = ? "
 				+ "AND nro_docum = ? AND cod_emp = ? AND cod_tit = ? ");
 		
 		return sb.toString();

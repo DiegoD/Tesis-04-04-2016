@@ -122,6 +122,12 @@ public class AbstractFactoryMySql implements IAbstractFactory
 		
 		return new DAOGastos();
 	}
+	
+	@Override
+	public IDAOSaldos crearDAOSaldos() {
+		
+		return new DAOSaldos();
+	}
 
 
 }
