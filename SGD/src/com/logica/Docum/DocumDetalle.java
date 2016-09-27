@@ -85,7 +85,7 @@ public abstract class DocumDetalle extends DatosDocum{
 		aux.setImpSubMo(this.impSubMo);
 		
 		aux.setImpTotMn(this.getImpTotMn());
-		aux.setImpTtotMo(this.getImpTotMo());
+		aux.setImpTotMo(this.getImpTotMo());
 		aux.setTcMov(this.tcMov);
 		
 		
