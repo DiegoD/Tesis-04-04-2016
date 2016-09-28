@@ -28,12 +28,14 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.util.converter.Converter.ConversionException;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.server.VaadinService;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import com.valueObject.FuncionarioVO;
 import com.valueObject.ImpuestoVO;
@@ -80,6 +82,16 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 				
 			try {
 				
+				if(this.comboSeleccion.getValue().equals("Proceso")){
+					this.inicializoProceso();
+				}
+				else if(this.comboSeleccion.getValue().equals("Empleado")){
+					this.inicializoEmpleado();
+				}
+				else if(this.comboSeleccion.getValue().equals("Oficina")){
+					this.inicializoOficina();
+				}
+				
 				/*Validamos los campos antes de invocar al controlador*/
 				if(this.fieldsValidos())
 				{
@@ -90,7 +102,8 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 									this.permisos.getUsuario(),
 									VariablesPermisos.FORMULARIO_GASTOS,
 									VariablesPermisos.OPERACION_NUEVO_EDITAR);
-									
+					
+					
 					GastoVO gastoVO = new GastoVO();		
 					
 					gastoVO.setCodEmp(this.permisos.getCodEmp());
@@ -171,6 +184,18 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 					gastoVO.setNomCuenta(nomCuenta.getValue().trim());
 					gastoVO.setCodRubro(codRubro.getValue().trim());
 					gastoVO.setNomRubro(nomRubro.getValue().trim());
+					
+//					try {
+//			            Integer convertedValue = (Integer) impTotMn
+//			                    .getConvertedValue();
+//			            Notification.show(
+//			                    "UI value (String): " + convertedValue
+//			                            + "<br />Converted value (Integer): "
+//			                            + convertedValue);
+//			        } catch (ConversionException e) {
+//			            Notification.show(
+//			                    "Could not convert value: ");
+//			        }
 					
 					if(impTotMn.getValue() != ""){
 						aux = impTotMn.getValue().toString().trim().replace(",", ".");
@@ -633,6 +658,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		
 		this.codProceso.setRequired(setear);
 		this.codProceso.setRequiredError("Es requerido");
+		
 	}
 	
 	/**
@@ -963,11 +989,12 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 				
 		try
 		{
-//			if(this.fecDoc.isValid() && this.fecValor.isValid() 
-//					&& this.codProceso.isValid() && this.codGasto.isValid()
-//					&& this.codCuenta.isValid() && this.codRubro.isValid()
-//					&& this.comboMoneda.isValid() && this.descripcionImpuesto.isValid()
-//					&& this.tcMov.isValid() && this.impMn.isValid() && this.impMo.isValid())
+			if(this.fecDoc.isValid() && this.fecValor.isValid() 
+					&& this.codProceso.isValid() && this.codTitular.isValid()
+					&& this.codRubro.isValid() && this.codCuenta.isValid()
+					&& this.codImpuesto.isValid() && this.comboMoneda.isValid()
+					&& this.tcMov.isValid() && this.impTotMo.isValid() && this.impTotMn.isValid()
+					&& this.impImpuMo.isValid() && this.impImpuMn.isValid() && this.referencia.isValid())
 				valido = true;
 			
 		}catch(Exception e)
@@ -1081,6 +1108,9 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		this.cliente.setCaption("Cliente");
 		this.cliente.setVisible(true);
 		this.btnBuscarEmpleado.setVisible(false);
+		this.codTitular.setRequired(true);
+		this.codProceso.setRequired(true);
+		this.mainView.setSub("Proceso");
 	}
 	
 	public void inicializoEmpleado(){
@@ -1088,12 +1118,16 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		this.cliente.setCaption("Empleado");
 		this.cliente.setVisible(true);
 		this.btnBuscarEmpleado.setVisible(true);
-		this.mainView.setSubEmpleado();
+		this.codProceso.setRequired(false);
+		this.codTitular.setRequired(true);
+		this.mainView.setSub("Empleado");
 	}
 	
 	public void inicializoOficina(){
 		this.proceso.setVisible(false);
 		this.cliente.setVisible(false);
-		this.mainView.setSubOficina();
+		this.codProceso.setRequired(false);
+		this.codTitular.setRequired(false);
+		this.mainView.setSub("Oficina");
 	}
 }

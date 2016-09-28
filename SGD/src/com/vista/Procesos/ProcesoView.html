@@ -6,64 +6,66 @@
  <body> 
   <vaadin-css-layout style-name="root-layout form-template-vaadin" responsive _id="root_layout"> 
    <vaadin-css-layout style-name="main-content-wrapper" width-full _id="main_content_wrapper"> 
-    <vaadin-form-layout style-name="billing-formlayout" size-auto margin _id="billing_form"> 
+    <vaadin-form-layout style-name="billing-formlayout" spacing="false" size-auto margin _id="billing_form"> 
      <vaadin-label style-name="colored h2" responsive plain-text>
        Proceso 
      </vaadin-label> 
-     <vaadin-horizontal-layout caption="Proceso" width="624px" :right> 
-      <vaadin-text-field style-name="form-textfield" width="108px" readonly _id="codigo"></vaadin-text-field> 
-      <vaadin-button primary-style-name="v-link" plain-text _id="observaciones" :right>
+     <vaadin-horizontal-layout caption="Proceso" width="624px" height="33px" :right> 
+      <vaadin-text-field style-name="tiny" width="108px" readonly _id="codigo"></vaadin-text-field> 
+      <vaadin-button primary-style-name="v-link" plain-text _id="observaciones" :bottom :center>
         Observaciones 
       </vaadin-button> 
       <vaadin-link caption="Auditoria" style-name="tiny" _id="auditoria" :right></vaadin-link> 
      </vaadin-horizontal-layout> 
-     <vaadin-horizontal-layout caption="Mega" spacing> 
-      <vaadin-text-field width="108px" readonly _id="nroMega"></vaadin-text-field> 
-      <vaadin-label caption="Fecha" size-auto _id="lblFecha" :right></vaadin-label> 
-      <vaadin-date-field width="144px" _id="fecha" :right></vaadin-date-field> 
+     <vaadin-horizontal-layout caption="Mega" spacing height="33px"> 
+      <vaadin-text-field style-name="tiny" width="108px" readonly _id="nroMega"></vaadin-text-field> 
+      <vaadin-label caption="Fecha" width-auto height="10px" _id="lblFecha" :right></vaadin-label> 
+      <vaadin-date-field style-name="tiny" width="110px" _id="fecha" :right></vaadin-date-field> 
      </vaadin-horizontal-layout> 
-     <vaadin-horizontal-layout caption="Cliente" spacing _id="cliente"> 
-      <vaadin-text-field style-name="form-textfield" width="108px" _id="codCliente"></vaadin-text-field> 
-      <vaadin-text-field style-name="form-textfield" width="382px" _id="nomCliente"></vaadin-text-field> 
+     <vaadin-horizontal-layout caption="Cliente" spacing height="33px" _id="cliente"> 
+      <vaadin-text-field style-name="tiny" width="108px" _id="codCliente"></vaadin-text-field> 
+      <vaadin-text-field style-name="tiny" width="382px" _id="nomCliente"></vaadin-text-field> 
       <vaadin-button icon="fonticon://FontAwesome/f002" style-name="icon-only borderless quiet" _id="btnBuscarCliente"></vaadin-button> 
      </vaadin-horizontal-layout> 
-     <vaadin-horizontal-layout caption="Documento" spacing> 
-      <vaadin-combo-box item-caption-mode="id" width="108px" _id="comboDocumento"> 
+     <vaadin-horizontal-layout caption="Documento" spacing height="33px"> 
+      <vaadin-combo-box style-name="tiny" item-caption-mode="id" width="108px" _id="comboDocumento"> 
        <option>Option 1</option> 
        <option>Option 2</option> 
        <option>Option 3</option> 
       </vaadin-combo-box> 
-      <vaadin-text-field style-name="form-textfield" width="226px" _id="nroDocum"></vaadin-text-field> 
-      <vaadin-date-field width="144px" _id="fecDocum"></vaadin-date-field> 
+      <vaadin-text-field style-name="tiny" width="226px" _id="nroDocum"></vaadin-text-field> 
+      <vaadin-date-field style-name="tiny" width="144px" _id="fecDocum"></vaadin-date-field> 
      </vaadin-horizontal-layout> 
-     <vaadin-horizontal-layout caption="Moneda" spacing> 
-      <vaadin-combo-box item-caption-mode="id" width="108px" _id="comboMoneda"> 
+     <vaadin-horizontal-layout caption="Moneda" spacing height="33px"> 
+      <vaadin-combo-box style-name="tiny" item-caption-mode="id" width="108px" _id="comboMoneda"> 
        <option>Option 1</option> 
        <option>Option 2</option> 
        <option>Option 3</option> 
       </vaadin-combo-box> 
       <vaadin-label caption="T. Cambio" size-auto></vaadin-label> 
-      <vaadin-text-field width="108px" readonly _id="tcMov"></vaadin-text-field> 
+      <vaadin-text-field style-name="tiny" width="108px" readonly _id="tcMov"></vaadin-text-field> 
      </vaadin-horizontal-layout> 
-     <vaadin-horizontal-layout caption="Importe" spacing _id="importe"> 
-      <vaadin-text-field width="108px" readonly _id="impMo"></vaadin-text-field> 
+     <vaadin-horizontal-layout caption="Importe" spacing height="33px" _id="importe"> 
+      <vaadin-text-field style-name="tiny" width="108px" readonly _id="impMo"></vaadin-text-field> 
       <vaadin-label caption="V.N.A. $" width="65px"></vaadin-label> 
-      <vaadin-text-field width="110px" readonly _id="impMn"></vaadin-text-field> 
+      <vaadin-text-field style-name="tiny" width="110px" readonly _id="impMn"></vaadin-text-field> 
      </vaadin-horizontal-layout> 
-     <vaadin-horizontal-layout caption="Kilos" spacing> 
-      <vaadin-text-field width="108px" readonly _id="Kilos"></vaadin-text-field> 
-      <vaadin-label caption="Cruce" size-auto></vaadin-label> 
-      <vaadin-date-field width="137px" _id="fecCruce"></vaadin-date-field> 
+     <vaadin-horizontal-layout caption="Kilos" spacing height="33px"> 
+      <vaadin-text-field style-name="tiny" width="108px" readonly _id="Kilos"></vaadin-text-field> 
+      <vaadin-label caption="Cruce" width="65px"></vaadin-label> 
+      <vaadin-date-field style-name="tiny" width="110px" _id="fecCruce"></vaadin-date-field> 
       <vaadin-label caption="Carpeta" size-auto _id="lblCarpeta"></vaadin-label> 
-      <vaadin-text-field width="120px" _id="carpeta"></vaadin-text-field> 
+      <vaadin-text-field style-name="tiny" width="122px" _id="carpeta"></vaadin-text-field> 
      </vaadin-horizontal-layout> 
-     <vaadin-horizontal-layout caption="Marca" spacing> 
-      <vaadin-text-field width="208px" _id="marca"></vaadin-text-field> 
+     <vaadin-horizontal-layout caption="Marca" spacing height="33px"> 
+      <vaadin-text-field style-name="tiny" width="208px" _id="marca"></vaadin-text-field> 
       <vaadin-label caption="Transporte" size-auto></vaadin-label> 
-      <vaadin-text-field width="201px" readonly _id="medio"></vaadin-text-field> 
+      <vaadin-text-field style-name="tiny" width="201px" readonly _id="medio"></vaadin-text-field> 
      </vaadin-horizontal-layout> 
      <vaadin-text-field caption="Importe Tr" visible="false" readonly _id="impTr"></vaadin-text-field> 
-     <vaadin-text-field caption="Descripcion" width="502px" readonly _id="descripcion"></vaadin-text-field> 
+     <vaadin-horizontal-layout caption="Descripción" height="43px"> 
+      <vaadin-text-field style-name="tiny" width="504px" readonly _id="descripcion"></vaadin-text-field> 
+     </vaadin-horizontal-layout> 
      <vaadin-text-area visible="false" _id="obseAux"></vaadin-text-area> 
      <vaadin-horizontal-layout width="187px"> 
       <vaadin-button style-name="primary tiny" plain-text _id="aceptar" :middle>

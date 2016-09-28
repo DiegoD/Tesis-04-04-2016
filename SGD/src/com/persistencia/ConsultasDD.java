@@ -633,7 +633,7 @@ public class ConsultasDD {
 		sb.append("SELECT m_cotizaciones.cod_moneda, m_cotizaciones.fecha, m_cotizaciones.cotizacion_compra, "
 				+ "m_cotizaciones.cotizacion_venta, m_cotizaciones.fecha_mod, m_cotizaciones.usuario_mod, "
 				+ "m_cotizaciones.operacion, m_monedas.cod_moneda, m_monedas.descripcion, m_monedas.simbolo, m_monedas.acepta_cotizacion, m_monedas.activo ");
-		sb.append("FROM m_cotizaciones, m_monedas WHERE m_cotizaciones.cod_moneda = m_monedas.cod_moneda ");
+		sb.append("FROM m_cotizaciones, m_monedas WHERE m_cotizaciones.cod_moneda = m_monedas.cod_moneda AND m_cotizaciones.cod_emp = m_monedas.cod_emp ");
 		sb.append(" AND m_cotizaciones.cod_emp = ? ");
 		
 		return sb.toString();
@@ -771,7 +771,7 @@ public class ConsultasDD {
 		sb.append("SELECT m_cuentas.cod_cuenta, m_cuentas.descripcion, m_cuentas.fecha_mod, m_cuentas.usuario_mod, m_cuentas.operacion, m_cuentas.activo ");
 		sb.append("FROM m_cuentas, m_rubrosxcuenta ");
 		sb.append("WHERE m_rubrosxcuenta.cod_rubro = ? AND m_cuentas.cod_emp = ?"
-				+ "AND m_cuentas.cod_cuenta = m_rubrosxcuenta.cod_cuenta ");
+				+ "AND m_cuentas.cod_cuenta = m_rubrosxcuenta.cod_cuenta AND m_cuentas.cod_emp = m_rubrosxcuenta.cod_emp ");
 		
 		return sb.toString();
 	}
@@ -811,7 +811,7 @@ public class ConsultasDD {
 		return sb.toString();
 	}
 
-	public String eliminarGrupo()
+	public String eliminarCuenta()
 	{
 		StringBuilder sb = new StringBuilder();
 		
@@ -845,7 +845,7 @@ public class ConsultasDD {
 		sb.append("m_rubrosxcuenta.oficina, m_rubrosxcuenta.proceso, m_rubrosxcuenta.persona ");
 		sb.append("FROM m_rubros, m_rubrosxcuenta ");
 		sb.append("WHERE m_rubrosxcuenta.cod_cuenta = ? and m_rubros.cod_emp = ? ");
-		sb.append("AND m_rubros.cod_rubro = m_rubrosxcuenta.cod_rubro ");
+		sb.append("AND m_rubros.cod_rubro = m_rubrosxcuenta.cod_rubro AND m_rubros.cod_emp = m_rubrosxcuenta.cod_emp ");
 		
 		return sb.toString();
 	}
@@ -1191,8 +1191,8 @@ public class ConsultasDD {
 				+ "m_monedas.cod_moneda, m_monedas.descripcion, m_monedas.simbolo ");
 		
 		sb.append("FROM sa_docum"
-				+ " INNER JOIN  m_clientes ON sa_docum.cod_tit = m_clientes.cod_tit "
-				+ " INNER JOIN m_monedas ON sa_docum.cod_moneda = m_monedas.cod_moneda "
+				+ " INNER JOIN  m_clientes ON sa_docum.cod_tit = m_clientes.cod_tit AND sa_docum.cod_emp = m_clientes.cod_emp "
+				+ " INNER JOIN m_monedas ON sa_docum.cod_moneda = m_monedas.cod_moneda AND sa_docum.cod_emp = m_monedas.cod_emp "
 				+ " AND sa_docum.cod_emp = ? "); 
 		
 		return sb.toString();
@@ -1236,4 +1236,23 @@ public class ConsultasDD {
 	}		
 
 ////////////////////////FIN SALDOS//////////////////////////////////////////////
+	
+////////////////////////INI LOGS///////////////////////////////////////////////
+	public String insertarLog()
+	{
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO g_log ( cod_docum, serie_docum, nro_docum, "
+				+ " cod_doca, serie_doca, nro_doca, "
+				+ " cod_doc_ref, serie_doc_ref, nro_doc_ref, "
+				+ " cod_emp, cod_tit, nro_trans, cod_moneda, "
+				+ " imp_tot_mn, imp_tot_mo, cuenta, "
+				+ " fecha_mod, usuario_mod, operacion ) ");
+		sb.append("VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?) ");
+		
+		return sb.toString();
+	}
+	
+////////////////////////FIN LOGS///////////////////////////////////////////////
 }

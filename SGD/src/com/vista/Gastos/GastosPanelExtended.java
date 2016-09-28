@@ -398,13 +398,20 @@ public class GastosPanelExtended extends GastosPanel{
 		Mensajes.mostrarMensajeError(msj);
 	}
 	
-	public void setSubEmpleado(){
-		sub.setHeight("85%");
-		sub.setWidth("45%");
+	public void setSub(String seleccion){
+		if(seleccion.equals("Proceso")){
+			sub.setHeight("90%");
+			sub.setWidth("45%");
+		}
+		if(seleccion.equals("Empleado")){
+			sub.setHeight("85%");
+			sub.setWidth("45%");
+		}
+		if(seleccion.equals("Oficina")){
+			sub.setHeight("80%");
+			sub.setWidth("44%");
+		}
+		
 	}
 	
-	public void setSubOficina(){
-		sub.setHeight("80%");
-		sub.setWidth("44%");
-	}
 }
