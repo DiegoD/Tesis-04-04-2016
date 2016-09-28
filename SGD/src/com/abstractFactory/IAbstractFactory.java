@@ -5,6 +5,7 @@ import com.persistencia.IDAOClientes;
 import com.persistencia.IDAOCodigosGeneralizados;
 import com.persistencia.IDAOCotizaciones;
 import com.persistencia.IDAOCuentas;
+import com.persistencia.IDAODocLog;
 import com.persistencia.IDAODocumDgi;
 //import com.persistencia.IDAODocumDgi;
 import com.persistencia.IDAODocumentos;
@@ -65,5 +66,7 @@ public interface IAbstractFactory
 	public IDAOGastos crearDAOGastos();
 	
 	public IDAOSaldos crearDAOSaldos();
+	
+	public IDAODocLog crearDAODocLog();
 
 }

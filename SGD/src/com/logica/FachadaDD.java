@@ -88,6 +88,7 @@ import com.excepciones.grupos.ModificandoGrupoException;
 import com.excepciones.grupos.NoExisteGrupoException;
 import com.excepciones.grupos.ObteniendoFormulariosException;
 import com.excepciones.grupos.ObteniendoGruposException;
+import com.logica.DocLog.DocLog;
 import com.logica.Docum.DocumDetalle;
 import com.valueObject.*;
 import com.valueObject.Cotizacion.CotizacionVO;
@@ -105,6 +106,7 @@ public class FachadaDD {
 	private static final Object lock = new Object();
 	private static volatile FachadaDD INSTANCE = null;
 	Pool pool;
+	DocLog logDocum;
 	
 	/*Esto es para abstract factory*/
 	private IDAOUsuarios usuarios;

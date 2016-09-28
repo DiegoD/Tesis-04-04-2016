@@ -129,5 +129,10 @@ public class AbstractFactoryMySql implements IAbstractFactory
 		return new DAOSaldos();
 	}
 
+	@Override
+	public IDAODocLog crearDAODocLog() {
+		
+		return new DAODocLog();
+	}
 
 }

@@ -10,7 +10,7 @@ import com.excepciones.Saldos.IngresandoSaldoException;
 import com.logica.DocLog.DocLog;
 import com.mysql.jdbc.Statement;
 
-public class DAODocLog {
+public class DAODocLog implements IDAODocLog{
 	public void insertarDocLog(DocLog log, String codEmp, Connection con) throws InsertandoLogException, ConexionException, SQLException{
 		ConsultasDD clts = new ConsultasDD();
 		
