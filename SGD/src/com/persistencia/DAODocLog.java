@@ -33,10 +33,10 @@ public class DAODocLog implements IDAODocLog{
 			pstmt1.setInt(9, log.getNro_doc_ref());
 			pstmt1.setString(10, codEmp);
 			pstmt1.setString(11, log.getCod_tit());
-			pstmt1.setInt(12, log.getNro_trans());
+			pstmt1.setLong(12, log.getNro_trans());
 			pstmt1.setString(13, log.getCod_moneda());
-			pstmt1.setFloat(14, log.getImp_tot_mn());
-			pstmt1.setFloat(15, log.getImp_tot_mo());
+			pstmt1.setDouble(14, log.getImp_tot_mn());
+			pstmt1.setDouble(15, log.getImp_tot_mo());
 			pstmt1.setString(16, log.getCuenta());
 			pstmt1.setString(17, log.getUsuarioMod());
 			pstmt1.setString(18, log.getOperacion());

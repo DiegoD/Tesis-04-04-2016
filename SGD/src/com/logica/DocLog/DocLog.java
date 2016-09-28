@@ -14,10 +14,10 @@ public class DocLog extends Auditoria{
 	private String serie_doc_ref;
 	private Integer nro_doc_ref;
 	private String cod_tit;
-	private Integer nro_trans;
+	private Long nro_trans;
 	private String cod_moneda;
-	private Float imp_tot_mn;
-	private Float imp_tot_mo;
+	private Double imp_tot_mn;
+	private Double imp_tot_mo;
 	private String cuenta;
 	
 	public DocLog(){
@@ -25,7 +25,7 @@ public class DocLog extends Auditoria{
 
 	public DocLog(String cod_docum, String serie_docum, Integer nro_docum, String cod_doca, String serie_doca,
 			Integer nro_doca, String cod_doc_ref, String serie_doc_ref, Integer nro_doc_ref, String cod_tit,
-			Integer nro_trans, String cod_moneda, Float imp_tot_mn, Float imp_tot_mo, String cuenta) {
+			Long nro_trans, String cod_moneda, Double imp_tot_mn, Double imp_tot_mo, String cuenta) {
 		super();
 		this.cod_docum = cod_docum;
 		this.serie_docum = serie_docum;
@@ -124,11 +124,11 @@ public class DocLog extends Auditoria{
 		this.cod_tit = cod_tit;
 	}
 
-	public Integer getNro_trans() {
+	public Long getNro_trans() {
 		return nro_trans;
 	}
 
-	public void setNro_trans(Integer nro_trans) {
+	public void setNro_trans(Long nro_trans) {
 		this.nro_trans = nro_trans;
 	}
 
@@ -140,19 +140,19 @@ public class DocLog extends Auditoria{
 		this.cod_moneda = cod_moneda;
 	}
 
-	public Float getImp_tot_mn() {
+	public Double getImp_tot_mn() {
 		return imp_tot_mn;
 	}
 
-	public void setImp_tot_mn(Float imp_tot_mn) {
+	public void setImp_tot_mn(Double imp_tot_mn) {
 		this.imp_tot_mn = imp_tot_mn;
 	}
 
-	public Float getImp_tot_mo() {
+	public Double getImp_tot_mo() {
 		return imp_tot_mo;
 	}
 
-	public void setImp_tot_mo(Float imp_tot_mo) {
+	public void setImp_tot_mo(Double imp_tot_mo) {
 		this.imp_tot_mo = imp_tot_mo;
 	}
 

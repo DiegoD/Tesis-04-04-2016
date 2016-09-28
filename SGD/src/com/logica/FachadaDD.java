@@ -126,6 +126,7 @@ public class FachadaDD {
 	private IAbstractFactory fabricaConcreta;
 	private IDAOGastos gastos;
 	private IDAOSaldos saldos;
+	private IDAODocLog logsDocumentos;
 	
 	
     private FachadaDD() throws InstantiationException, IllegalAccessException, ClassNotFoundException, FileNotFoundException, IOException
@@ -150,6 +151,7 @@ public class FachadaDD {
         this.numeradores = fabricaConcreta.crearDAONumeradores();
         this.gastos = fabricaConcreta.crearDAOGastos();
         this.saldos = fabricaConcreta.crearDAOSaldos();
+        this.logsDocumentos = fabricaConcreta.crearDAODocLog();
     }
     
     public static FachadaDD getInstance() throws InicializandoException {
@@ -2507,6 +2509,29 @@ public class FachadaDD {
 			
 			//Genero saldo del gasto insertado
 			this.saldos.insertarSaldo((DocumDetalle) gasto, cod_emp, con);
+			
+			//Genero log de documento
+			this.logDocum = new DocLog();
+			logDocum.setCod_docum(gasto.getCodDocum());
+			logDocum.setSerie_docum(gasto.getSerieDocum());
+			logDocum.setNro_docum(gasto.getNroDocum());
+			logDocum.setCod_doca(gasto.getCodDocum());
+			logDocum.setSerie_doca(gasto.getSerieDocum());
+			logDocum.setNro_doca(gasto.getNroDocum());
+			logDocum.setCod_doc_ref(gasto.getCodDocum());
+			logDocum.setSerie_doc_ref(gasto.getSerieDocum());
+			logDocum.setNro_doc_ref(gasto.getNroDocum());
+			logDocum.setCod_tit(gasto.getTitInfo().getCodigo());
+			logDocum.setNro_trans(gasto.getNroTrans());
+			logDocum.setCod_moneda(gasto.getMoneda().getCodMoneda());
+			logDocum.setImp_tot_mn(gasto.getImpTotMn());
+			logDocum.setImp_tot_mo(gasto.getImpTotMo());
+			logDocum.setCuenta(gasto.getCodCuentaInd());
+			logDocum.setFechaMod(gasto.getFechaMod());
+			logDocum.setUsuarioMod(gasto.getUsuarioMod());
+			logDocum.setOperacion(gasto.getOperacion());
+			
+			this.logsDocumentos.insertarDocLog(logDocum, cod_emp, con);
 			
 			con.commit();
 			return codigos;
