@@ -1,5 +1,7 @@
 package com.vista.IngresoCobro;
 
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -35,6 +37,8 @@ import com.vaadin.ui.UI;
 import com.valueObject.DocumDGIVO;
 import com.valueObject.MonedaVO;
 import com.valueObject.UsuarioPermisosVO;
+import com.valueObject.Cotizacion.CotizacionVO;
+import com.valueObject.Docum.DocumDetalleVO;
 import com.valueObject.Gasto.GastoVO;
 import com.valueObject.IngresoCobro.IngresoCobroDetalleVO;
 import com.valueObject.IngresoCobro.IngresoCobroVO;
@@ -63,6 +67,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	private IngresoCobroDetalleVO formSelecccionado; /*Variable utilizada cuando se selecciona
 	 										  un detalle, para poder quitarlo de la lista*/
 	
+	boolean cambioMoneda;
+	
 	MySub sub;
 	//private UsuarioPermisosVO permisos; /*Variable con los permisos del usuario*/
 	private PermisosUsuario permisos; /*Variable con los permisos del usuario*/
@@ -76,6 +82,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	@SuppressWarnings({ "unchecked", "deprecation" })
 	public IngresoCobroViewExtended(String opera, IngresoCobroPanelExtended main){
 	
+	this.cambioMoneda = false;
+		
 	/*Inicializamos los permisos para el usuario*/
 	this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
 	
@@ -147,7 +155,6 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	*
 	*/
 	comboBancos.addValueChangeListener(new Property.ValueChangeListener() {
-        private static final long serialVersionUID = -5188369735622627751L;
 
    		@Override
 		public void valueChange(ValueChangeEvent event) {
@@ -168,7 +175,6 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	*
 	*/
     comboTipo.addValueChangeListener(new Property.ValueChangeListener() {
-        private static final long serialVersionUID = -5188369735622627751L;
 
    		@Override
 		public void valueChange(ValueChangeEvent event) {
@@ -178,6 +184,45 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
     });
   //  combobox.setImmediate(true);
 
+    /**
+	* Agregamos listener al combo de monedas, para verificar que no modifique la moneda
+	* una vez ingresado un gasto ya 
+	*
+	*/
+    comboMoneda.addValueChangeListener(new Property.ValueChangeListener() {
+   		@Override
+		public void valueChange(ValueChangeEvent event) {
+   			
+   			/*Si ya hay ingresado un gasto no lo dejamos cambiar la moneda*/
+   			if(lstDetalleVO.size()>0)
+   			{
+   				cambioMoneda = true;
+   				
+   				Mensajes.mostrarMensajeError("No se puede cambiar la moneda con gastos ya ingresados");
+   				
+   				/*Cuando salga del combo ejectura el blur y vuelve a la moneda anterior*/
+   			}
+		}
+    });
+  //  combobox.setImmediate(true);
+    comboMoneda.addBlurListener(new BlurListener() {
+        
+		@Override
+		public void blur(BlurEvent event) {
+			
+			if(cambioMoneda)
+			{
+				/*Volvemos a inicializar el combo de la moneda, con la moneda anterior*/
+   				inicializarComboMoneda(lstDetalleVO.get(0).getCodMoneda());
+   				
+   				cambioMoneda = false;
+			}
+			
+		}
+    });
+    
+    
+    
 	
 	/*Inicializamos listener de boton aceptar*/
 	this.aceptar.addClickListener(click -> {
@@ -200,7 +245,24 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 								VariablesPermisos.OPERACION_NUEVO_EDITAR);				
 				
 				
-				IngresoCobroVO ingCobroVO = new IngresoCobroVO();				
+				IngresoCobroVO ingCobroVO = new IngresoCobroVO();	
+				
+				/*Obtenemos la cotizacion y calculamos el importe MN*/
+				Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
+				CotizacionVO coti = null;
+				try {
+					coti = this.controlador.getCotizacion(permisoAux, fecha, this.getCodMonedaSeleccionada());
+					ingCobroVO.setTcMov(coti.getCotizacionVenta());
+					
+				} catch (Exception e) {
+					Mensajes.mostrarMensajeError(e.getMessage());
+				}
+				
+				
+				ingCobroVO.setImpTotMo(Double.parseDouble(this.impTotMo.getValue()));
+				
+				
+				
 				ingCobroVO.setFecDoc(new java.sql.Timestamp(fecDoc.getValue().getTime()));
 				ingCobroVO.setFecValor(new java.sql.Timestamp(fecValor.getValue().getTime()));
 				/*Codigo y serie docum se inicializan en constructor*/
@@ -346,7 +408,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 					
 					BusquedaViewExtended form = new BusquedaViewExtended(this, new GastoVO());
 					
-					sub = new MySub("70%", "60%" );
+					sub = new MySub("70%", "70%" );
 					sub.setModal(true);
 					sub.setVista(form);
 					//sub.setWidth("50%");
@@ -612,8 +674,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		this.comboMoneda.setRequired(setear);
 		this.comboMoneda.setRequiredError("Es requerido");
 		
-		this.importeMO.setRequired(setear);
-		this.importeMO.setRequiredError("Es requerido");
+		this.impTotMo.setRequired(setear);
+		this.impTotMo.setRequiredError("Es requerido");
 		
 		this.referencia.setRequired(setear);
 		this.referencia.setRequiredError("Es requerido");
@@ -829,7 +891,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		
 		this.comboMoneda.setReadOnly(false);
 		
-		this.importeMO.setReadOnly(false);
+		this.impTotMo.setReadOnly(false);
 		
 		this.referencia.setReadOnly(false);
 	}
@@ -934,7 +996,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		
 		this.comboMoneda.setReadOnly(setear);
 		
-		this.importeMO.setReadOnly(setear);
+		this.impTotMo.setReadOnly(setear);
 		
 		this.referencia.setReadOnly(setear);
 		
@@ -950,7 +1012,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	{
 		nroDocRef.addValidator(new RegexpValidator("^[0-9]*(\\.[0-9]+)?$", true, "Dato numerico"));
 		
-		importeMO.addValidator(new RegexpValidator("^[0-9]*(\\.[0-9]+)?$", true, "Dato numerico"));
+		impTotMo.addValidator(new RegexpValidator("^[0-9]*(\\.[0-9]+)?$", true, "Dato numerico"));
 		
         this.serieDocRef.addValidator(
                 new StringLengthValidator(
@@ -978,7 +1040,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		this.agregarFieldsValidaciones();
 		try
 		{
-			if(this.nroDocRef.isValid() && this.importeMO.isValid()
+			if(this.nroDocRef.isValid() && this.impTotMo.isValid()
 					&& this.serieDocRef.isValid()
 					&& this.referencia.isValid())
 				valido = true;
@@ -1221,11 +1283,40 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		
 		lstGastos.getColumn("operacion").setHidden(true);
 		lstGastos.getColumn("fechaMod").setHidden(true);
-		lstGastos.getColumn("usuaioMod").setHidden(true);
 		
-		//lstFormularios.removeColumn("borrar");
-		//lstFormularios.removeColumn("leer");
-		//lstFormularios.removeColumn("nuevoEditar");
+		lstGastos.getColumn("codCtaInd").setHidden(true);
+		lstGastos.getColumn("codCuenta").setHidden(true);
+		lstGastos.getColumn("codDocum").setHidden(true);
+		lstGastos.getColumn("codEmp").setHidden(true);
+		lstGastos.getColumn("codImpuesto").setHidden(true);
+		lstGastos.getColumn("codMoneda").setHidden(true);
+		//lstGastos.getColumn("codProceso").setHidden(true);
+		lstGastos.getColumn("codRubro").setHidden(true);
+		lstGastos.getColumn("codTitular").setHidden(true);
+		lstGastos.getColumn("cuenta").setHidden(true);
+		lstGastos.getColumn("descProceso").setHidden(true);
+		lstGastos.getColumn("fecDoc").setHidden(true);
+		lstGastos.getColumn("fecValor").setHidden(true);
+		lstGastos.getColumn("impImpuMn").setHidden(true);
+		lstGastos.getColumn("impImpuMo").setHidden(true);
+		lstGastos.getColumn("impSubMn").setHidden(true);
+		lstGastos.getColumn("impSubMo").setHidden(true);
+		lstGastos.getColumn("linea").setHidden(true);
+		lstGastos.getColumn("impTotMn").setHidden(true);
+		lstGastos.getColumn("nomCuenta").setHidden(true);
+		lstGastos.getColumn("nomImpuesto").setHidden(true);
+		lstGastos.getColumn("nomMoneda").setHidden(true);
+		lstGastos.getColumn("nomRubro").setHidden(true);
+		lstGastos.getColumn("nomTitular").setHidden(true);
+		lstGastos.getColumn("nroTrans").setHidden(true);
+		lstGastos.getColumn("porcentajeImpuesto").setHidden(true);
+		lstGastos.getColumn("serieDocum").setHidden(true);
+		lstGastos.getColumn("simboloMoneda").setHidden(true);
+		lstGastos.getColumn("tcMov").setHidden(true);
+		lstGastos.getColumn("usuarioMod").setHidden(true);
+		
+		lstGastos.setColumnOrder("nroDocum", "referencia", "impTotMo", "impTotMo", "codProceso");
+		
 	}
 	
 	public void inicializarComboMoneda(String cod){
@@ -1349,6 +1440,42 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			this.codTitular.setValue(String.valueOf(clienteVO.getCodigo()));
 			this.nomTitular.setValue(clienteVO.getNombre());
 		}
+		if(datos instanceof GastoVO){
+			
+			IngresoCobroDetalleVO g = new IngresoCobroDetalleVO();
+			g.copiar((DocumDetalleVO)datos);
+			
+			this.lstDetalleVO.add(g);
+			
+			/*Actualizamos el container y la grilla*/
+			container.removeAllItems();
+			container.addAll(lstDetalleVO);
+			//lstFormularios.setContainerDataSource(container);
+			this.actualizarGrillaContainer(container);
+			
+			/*Calculamos el importe total de todos los gastos*/
+			this.calcularImporteTotal();
+			
+		}
+	}
+	
+	/**
+	 * Controlamos que el total de los gastos sea igual al total
+	 * ingresado
+	 *
+	 */
+	private void calcularImporteTotal(){
+		
+		double impMoCab = 0;
+		double impMo = 0;
+		
+		for (IngresoCobroDetalleVO det : lstDetalleVO) {
+
+			impMo += det.getImpTotMo();
+		}
+		
+		this.impTotMo.setValue(Double.toString(impMo));
+		
 	}
 	
 	public void setLstDetalle(ArrayList<IngresoCobroDetalleVO> lst) {
@@ -1391,6 +1518,27 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		
 	}
 
-
+	public static java.sql.Date convertFromJAVADateToSQLDate(
+            java.util.Date javaDate) {
+        java.sql.Date sqlDate = null;
+        if (javaDate != null) {
+            sqlDate = new Date(javaDate.getTime());
+        }
+        return sqlDate;
+    }
+	
+	private String getCodMonedaSeleccionada(){
+		
+		String codMoneda = null;
+		
+		//Moneda
+		if(this.comboMoneda.getValue() != null){
+			MonedaVO auxMoneda = new MonedaVO();
+			auxMoneda = (MonedaVO) this.comboMoneda.getValue();
+			codMoneda = auxMoneda.getCodMoneda();
+		}
+		
+		return codMoneda;
+	}
 	
 }

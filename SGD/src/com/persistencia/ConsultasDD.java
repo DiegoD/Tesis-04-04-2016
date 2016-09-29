@@ -638,6 +638,20 @@ public class ConsultasDD {
 		
 		return sb.toString();
 	}
+	
+	public String getCotizacion(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+				
+		sb.append("SELECT m_cotizaciones.cod_moneda, m_cotizaciones.fecha, m_cotizaciones.cotizacion_compra, "
+				+ "m_cotizaciones.cotizacion_venta, m_cotizaciones.fecha_mod, m_cotizaciones.usuario_mod, "
+				+ "m_cotizaciones.operacion, m_monedas.cod_moneda, m_monedas.descripcion, m_monedas.simbolo, m_monedas.acepta_cotizacion, m_monedas.activo ");
+		sb.append("FROM m_cotizaciones, m_monedas WHERE m_cotizaciones.cod_moneda = m_monedas.cod_moneda AND m_cotizaciones.cod_emp = m_monedas.cod_emp ");
+		sb.append(" AND m_cotizaciones.cod_emp = ? AND fecha = ? AND cod_moneda = ? AND m_cotizaciones.cod_emp = m_monedas.cod_emp ");
+		
+		return sb.toString();
+	}
 
 	public String insertarCotizacion()
 	{

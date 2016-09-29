@@ -1596,6 +1596,60 @@ public class FachadaDD {
 		return lstCotizacionesVO;
 	}
 
+	//public Cotizacion getCotizacion(String codEmp, Date fecha,Connection con)
+	
+	/**
+	* Obtiene la cotizacion para la empresa y fecha
+	*/
+	@SuppressWarnings("unchecked")
+	public CotizacionVO getCotizacion(String codEmp, Date fecha, String codMoneda) throws ObteniendoCotizacionesException, ConexionException
+	{
+	
+		Connection con = null;
+		
+		Cotizacion cotizacion;
+		ArrayList<CotizacionVO> lstCotizacionesVO = new ArrayList<CotizacionVO>();
+		CotizacionVO aux;
+		
+		try
+		{
+			con = this.pool.obtenerConeccion();
+			
+			cotizacion = this.cotizaciones.getCotizacion(codEmp, fecha, codMoneda, con);
+			
+			aux = new CotizacionVO();
+			
+			
+			aux.setFecha(cotizacion.getFecha());
+			aux.setCotizacionCompra(cotizacion.getCotizacion_compra());
+			aux.setCotizacionVenta(cotizacion.getCotizacion_venta());
+			aux.setFechaMod(cotizacion.getFechaMod());
+			aux.setUsuarioMod(cotizacion.getUsuarioMod());
+			aux.setOperacion(cotizacion.getOperacion());
+			
+			aux.setCodMoneda(cotizacion.getMoneda().getCod_moneda());
+			aux.setDescripcionMoneda(cotizacion.getMoneda().getDescripcion());
+			aux.setSimboloMoneda(cotizacion.getMoneda().getSimbolo());
+			aux.setAceptaCotizacionMoneda(cotizacion.getMoneda().isAcepta_cotizacion());
+			aux.setActivoMoneda(cotizacion.getMoneda().isActivo());
+		
+		}
+		catch(ObteniendoCotizacionesException e){
+			throw e;
+		
+		} 
+		catch (ConexionException e) {
+		
+			throw e;
+		} 
+		finally	{
+			this.pool.liberarConeccion(con);
+		}
+		
+		
+		return aux;
+	}
+	
 	/**
 	* Inserta una nueva cotización en la base
 	* Valida que no exista una cotización para moneda/fecha

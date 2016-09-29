@@ -19,16 +19,15 @@
       <option>Banco</option> 
      </vaadin-combo-box> 
      <vaadin-date-field caption="Fec Doc" id="fecDoc" style-name="tiny" width="144px" _id="fecDoc"></vaadin-date-field> 
-     <vaadin-date-field caption="Fec Valor" id="fecValor" style-name="tiny" width="144px" _id="fecValor"></vaadin-date-field>
-      <vaadin-horizontal-layout caption="Cliente" style-name="name-wrapper" spacing _id="name_wrapper"> 
+     <vaadin-date-field caption="Fec Valor" id="fecValor" style-name="tiny" width="144px" _id="fecValor"></vaadin-date-field> 
+     <vaadin-horizontal-layout caption="Cliente" style-name="name-wrapper" spacing _id="name_wrapper"> 
       <vaadin-text-field id="codTitular" style-name="tiny" width="144px" readonly _id="codTitular"></vaadin-text-field> 
       <vaadin-text-field id="nomTitular" style-name="tiny" _id="nomTitular"></vaadin-text-field> 
       <vaadin-button icon="fonticon://FontAwesome/f002" style-name="icon-only borderless quiet tiny" _id="btnBuscarCliente"></vaadin-button> 
      </vaadin-horizontal-layout> 
-      <vaadin-text-field caption="Referencia" id="referencia" style-name="tiny" responsive width="341px" readonly _id="referencia"></vaadin-text-field>
+     <vaadin-text-field caption="Referencia" id="referencia" style-name="tiny" responsive width="341px" readonly _id="referencia"></vaadin-text-field> 
      <vaadin-combo-box caption="Banco" style-name="tiny" item-caption-mode="id" width="144px" _id="comboBancos"></vaadin-combo-box> 
      <vaadin-combo-box caption="Cuenta" id="comboCuentas" style-name="tiny" item-caption-mode="id" width="144px" _id="comboCuentas"></vaadin-combo-box> 
-      
      <vaadin-horizontal-layout caption="Medio Pago" style-name="name-wrapper" spacing _id="name_wrappeer"> 
       <vaadin-combo-box id="comboMPagos" style-name="tiny" item-caption-mode="id" width="144px" _id="comboMPagos"> 
        <option>Cheque</option> 
@@ -39,10 +38,8 @@
      </vaadin-horizontal-layout> 
      <vaadin-horizontal-layout caption="Importe" style-name="name-wrapper" spacing _id="name_wrapper2"> 
       <vaadin-combo-box id="comboMoneda" style-name="tiny" item-caption-mode="id" width="144px" _id="comboMoneda"></vaadin-combo-box> 
-      <vaadin-text-field id="importeMO" style-name="tiny" null-representation="" readonly _id="importeMO"></vaadin-text-field> 
+      <vaadin-text-field id="impTotMo" style-name="tiny" null-representation="" readonly _id="impTotMo"></vaadin-text-field> 
      </vaadin-horizontal-layout> 
-    
-     
      <vaadin-horizontal-layout width="187px"> 
       <vaadin-button style-name="primary tiny" plain-text _id="aceptar" :middle>
         Guardar 

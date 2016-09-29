@@ -1,5 +1,6 @@
 package com.controladores;
 
+import java.sql.Date;
 import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
@@ -13,6 +14,7 @@ import com.excepciones.Bancos.ModificandoCuentaBcoException;
 import com.excepciones.Bancos.ObteniendoBancosException;
 import com.excepciones.Bancos.ObteniendoCuentasBcoException;
 import com.excepciones.Bancos.VerificandoBancosException;
+import com.excepciones.Cotizaciones.ObteniendoCotizacionesException;
 import com.excepciones.Gastos.ObteniendoGastosException;
 import com.excepciones.IngresoCobros.ExisteIngresoCobroException;
 import com.excepciones.IngresoCobros.InsertandoIngresoCobroException;
@@ -24,6 +26,7 @@ import com.logica.Fachada;
 import com.logica.FachadaDD;
 import com.valueObject.MonedaVO;
 import com.valueObject.UsuarioPermisosVO;
+import com.valueObject.Cotizacion.CotizacionVO;
 import com.valueObject.Gasto.GastoVO;
 import com.valueObject.IngresoCobro.IngresoCobroVO;
 import com.valueObject.banco.BancoVO;
@@ -116,6 +119,21 @@ public class IngresoCobroControlador {
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
 			return Fachada.getInstance().getClientesActivos(permisos.getCodEmp());
+		else
+			throw new NoTienePermisosException();
+	}
+	
+	/**
+	 * Trae los clientes activos
+	 * @throws NoTienePermisosException 
+	 * @throws InicializandoException 
+	 * @throws ObteniendoPermisosException 
+	 */
+	public CotizacionVO getCotizacion(UsuarioPermisosVO permisos, Date fecha, String codMoneda) throws ObteniendoCotizacionesException, ConexionException, ObteniendoPermisosException, InicializandoException, NoTienePermisosException{
+		
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			return FachadaDD.getInstance().getCotizacion(permisos.getCodEmp(), fecha, codMoneda);
 		else
 			throw new NoTienePermisosException();
 	}

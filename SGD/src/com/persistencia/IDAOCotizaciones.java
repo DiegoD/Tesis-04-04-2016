@@ -1,6 +1,7 @@
 package com.persistencia;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
@@ -22,5 +23,5 @@ public interface IDAOCotizaciones {
 	public void insertarCotizacion(Cotizacion cotizacion, String codEmp, Connection con) throws  InsertandoCotizacionException, ConexionException ;
 	public boolean memberCotizacion(String cod_moneda, Timestamp fecha, String codEmp, Connection con) throws ExisteCotizacionException, ConexionException;
 	public void actualizarCotizacion(Cotizacion cotizacion, String codEmp, Connection con) throws ModificandoCotizacionException, ConexionException;
-
+	public Cotizacion getCotizacion(String codEmp, Date fecha, String codMoneda,Connection con) throws ObteniendoCotizacionesException, ConexionException;
 }

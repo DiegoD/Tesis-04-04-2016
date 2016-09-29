@@ -1,6 +1,7 @@
 package com.persistencia;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,7 +24,6 @@ public class DAOCotizaciones implements IDAOCotizaciones{
 	@Override
 	public ArrayList<Cotizacion> getCotizaciones(String codEmp, Connection con)
 			throws ObteniendoCotizacionesException, ConexionException {
-		// TODO Auto-generated method stub
 		
 		ArrayList<Cotizacion> lstCotizaciones = new ArrayList<Cotizacion>();
 		
@@ -70,6 +70,57 @@ public class DAOCotizaciones implements IDAOCotizaciones{
 		}
 			
 		return lstCotizaciones;
+	}
+	
+	public Cotizacion getCotizacion(String codEmp, Date fecha, String codMoneda,Connection con)
+			throws ObteniendoCotizacionesException, ConexionException {
+		
+		Cotizacion cotizacion = null;
+		
+		try
+		{
+			ConsultasDD consultas = new ConsultasDD ();
+			String query = consultas.getCotizacion();
+			
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			pstmt1.setString(1, codEmp);
+			pstmt1.setDate(2, fecha);
+			pstmt1.setString(3, codMoneda);
+			
+			ResultSet rs = pstmt1.executeQuery();
+			
+			
+			
+			
+			while(rs.next ()) {
+
+				cotizacion = new Cotizacion();
+				Moneda moneda = new Moneda();
+				
+				cotizacion.setFecha(rs.getTimestamp(2));
+				cotizacion.setCotizacion_compra(rs.getFloat(3));
+				cotizacion.setCotizacion_venta(rs.getFloat(4));
+				cotizacion.setFechaMod(rs.getTimestamp(5));
+				cotizacion.setUsuarioMod(rs.getString(6));
+				cotizacion.setOperacion(rs.getString(7));
+				moneda.setCod_moneda(rs.getString(8));
+				moneda.setDescripcion(rs.getString(9));
+				moneda.setSimbolo(rs.getString(10));
+				moneda.setAcepta_cotizacion(rs.getBoolean(11));
+				moneda.setActivo(rs.getBoolean(12));
+				cotizacion.setMoneda(moneda);
+				
+			}
+			
+			rs.close ();
+			pstmt1.close ();
+		}
+		catch (SQLException e) {
+			
+			throw new ObteniendoCotizacionesException();
+		}
+			
+		return cotizacion;
 	}
 
 	@Override

@@ -43,7 +43,7 @@ public class IngresoCobroViews extends FormLayout {
 	protected TextField nroDocRef;
 	protected HorizontalLayout name_wrapper2;
 	protected ComboBox comboMoneda;
-	protected TextField importeMO;
+	protected TextField impTotMo;
 	protected Button aceptar;
 	protected Button btnEditar;
 	protected Button cancelar;
