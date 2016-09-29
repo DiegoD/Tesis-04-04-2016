@@ -28,9 +28,10 @@ import com.vaadin.ui.declarative.Design;
 public class ProcesoView extends CssLayout {
 	protected CssLayout main_content_wrapper;
 	protected FormLayout billing_form;
-	protected TextField codigo;
 	protected Button observaciones;
 	protected Link auditoria;
+	protected HorizontalLayout proceso;
+	protected TextField codigo;
 	protected TextField nroMega;
 	protected Label lblFecha;
 	protected DateField fecha;

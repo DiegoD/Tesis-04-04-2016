@@ -10,12 +10,14 @@
      <vaadin-label style-name="colored h2" responsive height="29px" plain-text>
        Proceso 
      </vaadin-label> 
-     <vaadin-horizontal-layout caption="Proceso" width="624px" height="33px" :right> 
-      <vaadin-text-field style-name="tiny" width="108px" readonly _id="codigo"></vaadin-text-field> 
-      <vaadin-button primary-style-name="v-link" height-full plain-text _id="observaciones" :bottom :center>
+     <vaadin-horizontal-layout spacing width="545px" height="33px" :right> 
+      <vaadin-button primary-style-name="v-link" height-full plain-text _id="observaciones" :middle :right :expand>
         Observaciones 
       </vaadin-button> 
       <vaadin-link caption="Auditoria" style-name="tiny" _id="auditoria" :right></vaadin-link> 
+     </vaadin-horizontal-layout> 
+     <vaadin-horizontal-layout caption="Proceso" spacing _id="proceso"> 
+      <vaadin-text-field style-name="tiny" width="108px" readonly _id="codigo"></vaadin-text-field> 
      </vaadin-horizontal-layout> 
      <vaadin-horizontal-layout caption="Mega" spacing height="33px"> 
       <vaadin-text-field style-name="tiny" width="108px" readonly _id="nroMega"></vaadin-text-field> 

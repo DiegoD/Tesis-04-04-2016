@@ -392,7 +392,7 @@ public class GrupoViewExtended extends GrupoView {
 			this.iniFormNuevo();
 			
 			/*Agregamos los filtros a la grilla*/
-			this.filtroGrilla();
+			//this.filtroGrilla();
 	
 		}else if(this.operacion.equals(Variables.OPERACION_LECTURA))
 		{
