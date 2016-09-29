@@ -439,8 +439,15 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 									VariablesPermisos.FORMULARIO_INGRESO_COBRO,
 									VariablesPermisos.OPERACION_NUEVO_EDITAR);
 					
+
+					//Moneda
+					MonedaVO auxMoneda = new MonedaVO();
+					if(this.comboMoneda.getValue() != null){
+						auxMoneda = (MonedaVO) this.comboMoneda.getValue();
+					}
+					
 					/*Obtenemos los gastos con saldo del cliente*/
-					ArrayList<GastoVO> lstGastosConSaldo = this.controlador.getGastosConSaldo(permisoAux, codCliente);
+					ArrayList<GastoVO> lstGastosConSaldo = this.controlador.getGastosConSaldo(permisoAux, codCliente, auxMoneda.getCodMoneda());
 					
 					/*Hacemos una lista auxliar para pasarselo al BusquedaViewExtended*/
 					ArrayList<Object> lst = new ArrayList<Object>();
@@ -689,6 +696,9 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		/*De Bco*/
 		if(this.comboTipo.equals("Banco"))
 		{
+			this.comboMPagos.setRequired(setear);
+			this.comboMPagos.setRequiredError("Es requerido");
+			
 			this.serieDocRef.setRequired(setear);
 			this.serieDocRef.setRequiredError("Es requerido");
 			
@@ -703,10 +713,12 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		}
 		else
 		{
+			this.serieDocRef.setValue("0");
 			this.serieDocRef.setRequired(false);
 			this.nroDocRef.setRequired(false);
 			this.comboBancos.setRequired(false);
 			this.comboCuentas.setRequired(false);
+			this.comboMPagos.setRequired(false);
 		}
 		
 	}
@@ -831,6 +843,10 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	 */
 	private void iniFormNuevo()
 	{
+		/*Si es nuevo ocultamos el nroDocum (ya que aun no tenemos el numero)*/
+		this.nroDocum.setVisible(false);
+		this.nroDocum.setEnabled(false);
+		
 		/*Chequeamos si tiene permiso de editar*/
 		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_COBRO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		

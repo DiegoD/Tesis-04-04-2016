@@ -294,72 +294,73 @@ public class DAOGastos implements IDAOGastos{
 	}
 	
 	//Nos retorna los gastos con saldo para el titular
-	@Override
-	public ArrayList<Gasto> getGastosConSaldo(Connection con, String codEmp, String codTit)
-			throws ObteniendoGastosException, ConexionException {
-		// TODO Auto-generated method stub
-		ArrayList<Gasto> lstGastos = new ArrayList<Gasto>();
-		
-		try {
+		@Override
+		public ArrayList<Gasto> getGastosConSaldo(Connection con, String codEmp, String codTit, String codMoneda)
+				throws ObteniendoGastosException, ConexionException {
+			// TODO Auto-generated method stub
+			ArrayList<Gasto> lstGastos = new ArrayList<Gasto>();
 			
-	    	ConsultasDD clts = new ConsultasDD();
-	    	String query = clts.getGastosConSaldo();
-	    	PreparedStatement pstmt1 = con.prepareStatement(query);
+			try {
+				
+		    	ConsultasDD clts = new ConsultasDD();
+		    	String query = clts.getGastosConSaldo();
+		    	PreparedStatement pstmt1 = con.prepareStatement(query);
+		    	
+		    	ResultSet rs;
+		    	
+		    	pstmt1.setString(1, codEmp);
+		    	pstmt1.setString(2, codTit);
+		    	pstmt1.setString(3, codMoneda);
+				rs = pstmt1.executeQuery();
+				
+				Gasto aux;
+				while(rs.next ()) {
+					
+					aux = new Gasto();
+					
+					aux.setFecDoc(rs.getTimestamp(1));
+					aux.setCodDocum(rs.getString(2));
+					aux.setSerieDocum(rs.getString(3));
+					aux.setNroDocum(rs.getInt(4));
+					aux.setCodEmp(rs.getString(5));
+					aux.setReferencia(rs.getString(6));
+					aux.setNroTrans(rs.getLong(7));
+					aux.setFecValor(rs.getTimestamp(8));
+					aux.setCodProceso(rs.getString(9));
+					aux.setImpImpuMn(rs.getFloat(11));
+					aux.setImpImpuMo(rs.getFloat(12));
+					aux.setImpSubMn(rs.getFloat(13));
+					aux.setImpSubMo(rs.getFloat(14));
+					aux.setImpTotMn(rs.getFloat(15));
+					aux.setImpTotMo(rs.getFloat(16));
+					aux.setTcMov(rs.getFloat(17));
+					aux.setCodCuentaInd(rs.getString(18));
+					aux.setFechaMod(rs.getTimestamp(19));
+					aux.setUsuarioMod(rs.getString(20));
+					aux.setOperacion(rs.getString(21));
+					aux.setTitInfo(new TitularInfo(rs.getString(22), rs.getString(23)));
+					aux.setMoneda(new MonedaInfo (rs.getString(24), rs.getString(25), rs.getString(26)));
+					aux.setCuenta(new CuentaInfo(rs.getString(27), rs.getString(28)));
+					aux.setRubroInfo(new RubroInfo(rs.getString(29), rs.getString(30)));
+					ImpuestoInfo imp = new ImpuestoInfo();
+					imp.setCodImpuesto(rs.getString(33));
+					imp.setNomImpuesto(rs.getString(34));
+					imp.setPorcentaje(rs.getFloat(35));
+					aux.setImpuestoInfo(imp);
+					aux.setDescProceso(rs.getString(36));
+					
+					lstGastos.add(aux);
+					
+				}
+				rs.close ();
+				pstmt1.close ();
+	    	}	
 	    	
-	    	ResultSet rs;
-	    	
-	    	pstmt1.setString(1, codEmp);
-	    	pstmt1.setString(2, codTit);
-			rs = pstmt1.executeQuery();
-			
-			Gasto aux;
-			while(rs.next ()) {
-				
-				aux = new Gasto();
-				
-				aux.setFecDoc(rs.getTimestamp(1));
-				aux.setCodDocum(rs.getString(2));
-				aux.setSerieDocum(rs.getString(3));
-				aux.setNroDocum(rs.getInt(4));
-				aux.setCodEmp(rs.getString(5));
-				aux.setReferencia(rs.getString(6));
-				aux.setNroTrans(rs.getLong(7));
-				aux.setFecValor(rs.getTimestamp(8));
-				aux.setCodProceso(rs.getString(9));
-				aux.setImpImpuMn(rs.getFloat(11));
-				aux.setImpImpuMo(rs.getFloat(12));
-				aux.setImpSubMn(rs.getFloat(13));
-				aux.setImpSubMo(rs.getFloat(14));
-				aux.setImpTotMn(rs.getFloat(15));
-				aux.setImpTotMo(rs.getFloat(16));
-				aux.setTcMov(rs.getFloat(17));
-				aux.setCodCuentaInd(rs.getString(18));
-				aux.setFechaMod(rs.getTimestamp(19));
-				aux.setUsuarioMod(rs.getString(20));
-				aux.setOperacion(rs.getString(21));
-				aux.setTitInfo(new TitularInfo(rs.getString(22), rs.getString(23)));
-				aux.setMoneda(new MonedaInfo (rs.getString(24), rs.getString(25), rs.getString(26)));
-				aux.setCuenta(new CuentaInfo(rs.getString(27), rs.getString(28)));
-				aux.setRubroInfo(new RubroInfo(rs.getString(29), rs.getString(30)));
-				ImpuestoInfo imp = new ImpuestoInfo();
-				imp.setCodImpuesto(rs.getString(33));
-				imp.setNomImpuesto(rs.getString(34));
-				imp.setPorcentaje(rs.getFloat(35));
-				aux.setImpuestoInfo(imp);
-				aux.setDescProceso(rs.getString(36));
-				
-				lstGastos.add(aux);
+			catch (SQLException e) {
+				throw new ObteniendoGastosException();
 				
 			}
-			rs.close ();
-			pstmt1.close ();
-    	}	
-    	
-		catch (SQLException e) {
-			throw new ObteniendoGastosException();
-			
+	    	
+	    	return lstGastos;
 		}
-    	
-    	return lstGastos;
-	}
 }

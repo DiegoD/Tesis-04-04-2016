@@ -1114,7 +1114,7 @@ public class ConsultasDD {
 				return sb.toString();
 	}
 	
-	public String getGastosConSaldo(){
+public String getGastosConSaldo(){
 		
 		StringBuilder sb = new StringBuilder();
 		
@@ -1133,20 +1133,22 @@ public class ConsultasDD {
 				+ "c_procesos.descripcion ");
 		
 		sb.append("FROM c_gastos"
-				+ " INNER JOIN  m_clientes ON c_gastos.cod_tit = m_clientes.cod_tit AND m_clientes.cod_emp = c_gastos.cod_emp "
-				+ " INNER JOIN m_cuentas ON c_gastos.cod_cuenta = m_cuentas.cod_cuenta AND m_cuentas.cod_emp = c_gastos.cod_emp "
-				+ " INNER JOIN m_rubros ON c_gastos.cod_rubro = m_rubros.cod_rubro AND m_rubros.cod_emp = c_gastos.cod_emp "
-				+ " INNER JOIN m_monedas ON c_gastos.cod_moneda = m_monedas.cod_moneda AND m_monedas.cod_emp = c_gastos.cod_emp "
-				+ " INNER JOIN m_impuestos ON m_rubros.cod_impuesto = m_impuestos.cod_impuesto AND m_impuestos.cod_emp = c_gastos.cod_emp "
-				+ " INNER JOIN c_procesos ON c_gastos.cod_proceso = c_procesos.cod_proceso AND c_procesos.cod_emp = c_gastos.cod_emp "
-				+" INNER JOIN sa_docum ON c_gastos.cod_docum = sa_docum.cod_docum AND sa_docum.cod_emp = c_gastos.cod_emp "
+				+ " INNER JOIN  m_clientes ON c_gastos.cod_tit = m_clientes.cod_tit AND c_gastos.cod_emp = m_clientes.cod_emp  "
+				+ " INNER JOIN m_cuentas ON c_gastos.cod_cuenta = m_cuentas.cod_cuenta AND c_gastos.cod_emp = m_cuentas.cod_emp "
+				+ " INNER JOIN m_rubros ON c_gastos.cod_rubro = m_rubros.cod_rubro AND c_gastos.cod_emp = m_rubros.cod_emp "
+				+ " INNER JOIN m_monedas ON c_gastos.cod_moneda = m_monedas.cod_moneda AND c_gastos.cod_emp = m_monedas.cod_emp "
+				+ " INNER JOIN m_impuestos ON m_rubros.cod_impuesto = m_impuestos.cod_impuesto AND c_gastos.cod_emp = m_impuestos.cod_emp "
+				+ " INNER JOIN c_procesos ON c_gastos.cod_proceso = c_procesos.cod_proceso AND c_gastos.cod_emp = c_procesos.cod_emp "
+				+" INNER JOIN sa_docum ON c_gastos.cod_docum = sa_docum.cod_docum  "
 				+" AND c_gastos.serie_docum = sa_docum.serie_docum "
 				+" AND c_gastos.nro_docum = sa_docum.nro_docum "
 				+" AND c_gastos.cod_emp = sa_docum.cod_emp "
 				+" AND c_gastos.cod_tit = sa_docum.cod_tit "
 				+ " AND c_gastos.cod_emp = ? "); 
 		
+		
 		sb.append(" AND c_gastos.cod_tit = ? "
+				+ " AND c_gastos.cod_moneda = ? "
 				+ " AND sa_docum.imp_tot_mo <> 0 ");
 				
 				return sb.toString();

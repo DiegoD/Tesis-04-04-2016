@@ -2458,7 +2458,7 @@ public class FachadaDD {
 	* Obtiene todos los gastos existentes 
 	*/
 	@SuppressWarnings("unchecked")
-	public ArrayList<GastoVO> getGastosConSaldo(String cod_emp, String codTit) throws ObteniendoGastosException, ConexionException
+	public ArrayList<GastoVO> getGastosConSaldo(String cod_emp, String codTit, String codMoneda) throws ObteniendoGastosException, ConexionException
 	{
 	
 		Connection con = null;
@@ -2470,7 +2470,7 @@ public class FachadaDD {
 		{
 			con = this.pool.obtenerConeccion();
 			
-			lstGastos = this.gastos.getGastosConSaldo(con, cod_emp, codTit);
+			lstGastos = this.gastos.getGastosConSaldo(con, cod_emp, codTit, codMoneda);
 			
 			
 			GastoVO aux;
