@@ -70,7 +70,7 @@ public class GastosPanelExtended extends GastosPanel{
 				
 					this.btnNuevoGasto.addClickListener(click -> {
 						
-						sub = new MySub("100%","45%");
+						sub = new MySub("95%","45%");
 						form = new GastoViewExtended(Variables.OPERACION_NUEVO, this);
 						sub.setModal(true);
 						sub.setVista((Component) form);
@@ -187,7 +187,7 @@ public class GastosPanelExtended extends GastosPanel{
 				    	}
 							
 				    	form = new GastoViewExtended(Variables.OPERACION_LECTURA, GastosPanelExtended.this);
-				    	sub = new MySub("100%","45%");
+				    	sub = new MySub("95%","45%");
 						sub.setModal(true);
 						sub.setVista((Component) form);
 						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
@@ -400,16 +400,16 @@ public class GastosPanelExtended extends GastosPanel{
 	
 	public void setSub(String seleccion){
 		if(seleccion.equals("Proceso")){
-			sub.setHeight("90%");
-			sub.setWidth("45%");
+			sub.setHeight("95%");
+			sub.setWidth("50%");
 		}
 		if(seleccion.equals("Empleado")){
-			sub.setHeight("85%");
-			sub.setWidth("45%");
+			sub.setHeight("90%");
+			sub.setWidth("50%");
 		}
 		if(seleccion.equals("Oficina")){
-			sub.setHeight("80%");
-			sub.setWidth("44%");
+			sub.setHeight("85%");
+			sub.setWidth("49%");
 		}
 		
 	}
