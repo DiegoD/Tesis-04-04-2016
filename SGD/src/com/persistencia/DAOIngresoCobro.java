@@ -174,9 +174,9 @@ public class DAOIngresoCobro implements IDAOIngresoCobro{
 			pstmt1.setDouble(18, cobro.getTcMov());
 			pstmt1.setString(19, cobro.getReferencia());
 			pstmt1.setLong(20, cobro.getNroTrans());
-			pstmt1.setTimestamp(21, cobro.getFechaMod());
-			pstmt1.setString(22, cobro.getUsuarioMod());
-			pstmt1.setString(23, cobro.getOperacion());
+			//pstmt1.setTimestamp(21, cobro.getFechaMod());
+			pstmt1.setString(21, cobro.getUsuarioMod());
+			pstmt1.setString(22, cobro.getOperacion());
 			
 			
 			
@@ -217,6 +217,8 @@ public class DAOIngresoCobro implements IDAOIngresoCobro{
     		
     		pstmt1 =  con.prepareStatement(insert);
     		
+    	
+    		
 			pstmt1.setString(1, lin.getCuenta().getCodCuenta());
 			pstmt1.setString(2, codEmp);
 			pstmt1.setString(3, lin.getCodDocum());
@@ -226,23 +228,23 @@ public class DAOIngresoCobro implements IDAOIngresoCobro{
 			pstmt1.setString(7, lin.getRubroInfo().getCodRubro());
 			pstmt1.setString(8, lin.getCuenta().getCodCuenta());
 			pstmt1.setTimestamp(9, lin.getFecDoc());
-			pstmt1.setTimestamp(11, lin.getFecValor());
-			pstmt1.setString(12, lin.getMoneda().getCodMoneda());
-			pstmt1.setString(13, lin.getImpuestoInfo().getCodImpuesto());
-			pstmt1.setDouble(14, lin.getImpImpuMn());
-			pstmt1.setDouble(15, lin.getImpImpuMo());
-			pstmt1.setDouble(16, lin.getImpSubMn());
-			pstmt1.setDouble(17, lin.getImpSubMo());
-			pstmt1.setDouble(18, lin.getImpTotMn());
-			pstmt1.setDouble(19, lin.getImpTotMo());
-			pstmt1.setDouble(20, lin.getTcMov());
+			pstmt1.setTimestamp(10, lin.getFecValor());
+			pstmt1.setString(11, lin.getMoneda().getCodMoneda());
+			pstmt1.setString(12, lin.getImpuestoInfo().getCodImpuesto());
+			pstmt1.setDouble(13, lin.getImpImpuMn());
+			pstmt1.setDouble(14, lin.getImpImpuMo());
+			pstmt1.setDouble(15, lin.getImpSubMn());
+			pstmt1.setDouble(16, lin.getImpSubMo());
+			pstmt1.setDouble(17, lin.getImpTotMn());
+			pstmt1.setDouble(18, lin.getImpTotMo());
+			pstmt1.setDouble(19, lin.getTcMov());
+			pstmt1.setString(20, lin.getReferencia());
 			pstmt1.setString(21, lin.getReferencia());
-			pstmt1.setString(22, lin.getReferencia());
-			pstmt1.setLong(23, lin.getNroTrans());
-			pstmt1.setTimestamp(24, lin.getFechaMod());
-			pstmt1.setString(25, lin.getUsuarioMod());
-			pstmt1.setString(26, lin.getOperacion());
-			pstmt1.setInt(27,linea);
+			pstmt1.setLong(22, lin.getNroTrans());
+			//pstmt1.setTimestamp(23, lin.getFechaMod());
+			pstmt1.setString(23, lin.getUsuarioMod());
+			pstmt1.setString(24, lin.getOperacion());
+			pstmt1.setInt(25,linea);
 		
 			
 			pstmt1.executeUpdate ();

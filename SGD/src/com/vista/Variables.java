@@ -16,4 +16,6 @@ public class Variables {
 	
 	public static final String ERROR_USUARIO_YA_EXISTE = "El usuario ya existe";
 	
+	public static final String CODIGO_MONEDA_NACIONAL = "1";
+	
 }

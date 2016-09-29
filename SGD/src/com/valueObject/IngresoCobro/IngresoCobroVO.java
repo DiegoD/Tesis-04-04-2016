@@ -8,6 +8,7 @@ import com.valueObject.Docum.DatosDocumVO;
 
 public class IngresoCobroVO extends DatosDocumVO{
 
+	
 	private String mPago;
 	private String codDocRef;
 	private String serieDocRef;

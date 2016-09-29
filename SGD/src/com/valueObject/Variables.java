@@ -8,4 +8,6 @@ public class Variables {
 	
 	public static final String OK_INGRESO = "Se ha ingresado correctamete";
 	
+	public static final String CODIGO_MONEDA_OPERATIVA = "1";
+	
 }

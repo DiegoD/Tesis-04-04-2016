@@ -123,6 +123,8 @@ public class DAOCotizaciones implements IDAOCotizaciones{
 		return cotizacion;
 	}
 
+	
+	
 	@Override
 	public void insertarCotizacion(Cotizacion cotizacion, String codEmp, Connection con)
 			throws InsertandoCotizacionException, ConexionException {

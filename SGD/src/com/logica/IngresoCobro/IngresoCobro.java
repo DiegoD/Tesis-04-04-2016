@@ -35,6 +35,8 @@ public class IngresoCobro extends DatosDocum{
 		
 		super(t);
 		
+		this.detalle = new ArrayList<IngresoCobroLinea>();
+		
 		this.mPago = t.getmPago();
 		this.codDocRef = t.getCodDocRef();
 		this.serieDocRef = t.getSerieDocRef();

@@ -835,7 +835,7 @@ public String getProcesosActivos(){
 		sb.append(", cod_emp, fec_doc, fec_valor, cod_bco, cod_ctabco, cod_mpago, cod_doc_ref ");
 		sb.append(", serie_doc_ref, nro_doc_ref, cod_moneda, imp_tot_mn, imp_tot_mo, tc_mov ");
 		sb.append(", observaciones, nro_trans, fecha_mod, usuario_mod, operacion) ");
-		sb.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+		sb.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?) ");
 		
 		return sb.toString();
 	}
@@ -848,7 +848,7 @@ public String getProcesosActivos(){
 		sb.append("cod_rubro, cuenta, fec_doc, fec_valor, cod_moneda, cod_impuesto, imp_impu_mn, imp_impu_mo,  ");
 		sb.append("imp_sub_mn, imp_sub_mo, imp_tot_mn, imp_tot_mo, tc_mov, referencia, referencia2, ");
 		sb.append("nro_trans, fecha_mod, usuario_mod, operacion, linea) ");
-		sb.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+		sb.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?) ");
 		
 		return sb.toString();
 	}

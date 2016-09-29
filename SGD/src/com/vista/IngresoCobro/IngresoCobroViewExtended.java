@@ -247,26 +247,37 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				
 				IngresoCobroVO ingCobroVO = new IngresoCobroVO();	
 				
+				ingCobroVO.setImpTotMo(Double.parseDouble(this.impTotMo.getValue()));
+				
 				/*Obtenemos la cotizacion y calculamos el importe MN*/
 				Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
 				CotizacionVO coti = null;
+				
+				String monedaSelecionada = this.getCodMonedaSeleccionada();
+				
 				try {
-					coti = this.controlador.getCotizacion(permisoAux, fecha, this.getCodMonedaSeleccionada());
-					ingCobroVO.setTcMov(coti.getCotizacionVenta());
+					
+					if(monedaSelecionada.equals(Variables.CODIGO_MONEDA_NACIONAL))
+					{
+						/*Si la moneda es la nacional, el TC es 1 y el importe MN es el mismo*/
+						ingCobroVO.setTcMov(1);
+						ingCobroVO.setImpTotMn(ingCobroVO.getImpTotMo());
+						
+					}else
+					{
+						coti = this.controlador.getCotizacion(permisoAux, fecha, this.getCodMonedaSeleccionada());
+						ingCobroVO.setTcMov(coti.getCotizacionVenta());
+						ingCobroVO.setImpTotMn((ingCobroVO.getImpTotMo()*ingCobroVO.getTcMov()));
+					}
 					
 				} catch (Exception e) {
 					Mensajes.mostrarMensajeError(e.getMessage());
 				}
 				
-				
-				ingCobroVO.setImpTotMo(Double.parseDouble(this.impTotMo.getValue()));
-				
-				
-				
 				ingCobroVO.setFecDoc(new java.sql.Timestamp(fecDoc.getValue().getTime()));
 				ingCobroVO.setFecValor(new java.sql.Timestamp(fecValor.getValue().getTime()));
 				/*Codigo y serie docum se inicializan en constructor*/
-				ingCobroVO.setNroDocum(Integer.parseInt(nroDocum.getValue()));
+				//ingCobroVO.setNroDocum(Integer.parseInt(nroDocum.getValue()));  VER ESTO CON EL NUMERADOR
 				ingCobroVO.setCodEmp(permisos.getCodEmp());
 				ingCobroVO.setReferencia(referencia.getValue());
 				
@@ -289,38 +300,50 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				//ingCobroVO.setImpTotMo(impTotMn);
 				//ingCobroVO.setTcMov(tcMov);
 				
-				ingCobroVO.setmPago((String)comboMPagos.getValue());
 				
-				if(ingCobroVO.getmPago().equals("transferencia"))
-				{
-					ingCobroVO.setCodDocRef("tranrec");
-					ingCobroVO.setNroDocRef(Integer.parseInt(nroDocRef.getValue()));
-					ingCobroVO.setSerieDocRef("0");
-				}
-				else if(ingCobroVO.getmPago().equals("cheque"))
-				{
-					ingCobroVO.setCodDocRef("cheqrec");
-					ingCobroVO.setNroDocRef(Integer.parseInt(nroDocRef.getValue()));
-					ingCobroVO.setSerieDocRef(serieDocRef.getValue());
+				
+				/*Si es banco tomamos estos cmapos de lo contrario caja*/
+				if(this.comboTipo.getValue().toString().trim().equals("Banco")){
 					
-				}else
-				{
-					ingCobroVO.setCodDocRef("0");
-					ingCobroVO.setNroDocRef(0);
-					ingCobroVO.setSerieDocRef("0");
+					ingCobroVO.setmPago((String)comboMPagos.getValue());
+					
+					if(ingCobroVO.getmPago().equals("transferencia"))
+					{
+						ingCobroVO.setCodDocRef("tranrec");
+						ingCobroVO.setNroDocRef(Integer.parseInt(nroDocRef.getValue()));
+						ingCobroVO.setSerieDocRef("0");
+					}
+					else if(ingCobroVO.getmPago().equals("cheque"))
+					{
+						ingCobroVO.setCodDocRef("cheqrec");
+						ingCobroVO.setNroDocRef(Integer.parseInt(nroDocRef.getValue()));
+						ingCobroVO.setSerieDocRef(serieDocRef.getValue());
+						
+					}else
+					{
+						ingCobroVO.setCodDocRef("0");
+						ingCobroVO.setNroDocRef(0);
+						ingCobroVO.setSerieDocRef("0");
+					}
 				}
+				else {
+					
+					if(((String)comboTipo.getValue()).equals("Caja"))
+					{
+						ingCobroVO.setCodCtaBco("0");
+						ingCobroVO.setNomCtaBco("0");
+						
+						ingCobroVO.setCodDocRef("0");
+						ingCobroVO.setNroDocRef(0);
+						ingCobroVO.setSerieDocRef("0");
+					}
+					else
+					{
+						ingCobroVO.setCodCtaBco(comboBancos.getValue().toString());
+						/*Falta poner el nombre de la cuenta*/
+					}
 				
-				if(((String)comboTipo.getValue()).equals("Caja"))
-				{
-					ingCobroVO.setCodCtaBco("0");
-					ingCobroVO.setNomCtaBco("0");
 				}
-				else
-				{
-					ingCobroVO.setCodCtaBco(comboBancos.getValue().toString());
-					/*Falta poner el nombre de la cuenta*/
-				}
-				
 				
 				ingCobroVO.setUsuarioMod(this.permisos.getUsuario());
 				
@@ -337,8 +360,11 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 					}
 				}
 					
-								
+				ingCobroVO.setCodCta("ingcobro");
+				
 				ingCobroVO.setDetalle(this.lstDetalleVO);
+				
+				
 				
 				if(this.operacion.equals(Variables.OPERACION_NUEVO))	
 				{	
