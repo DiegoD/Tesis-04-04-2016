@@ -33,6 +33,7 @@ import com.excepciones.Cuentas.MemberCuentaException;
 import com.excepciones.Cuentas.ModificandoCuentaException;
 import com.excepciones.Cuentas.NoExisteCuentaException;
 import com.excepciones.Cuentas.ObteniendoCuentasException;
+import com.excepciones.DocLog.InsertandoLogException;
 import com.excepciones.Documentos.ExisteDocumentoException;
 import com.excepciones.Documentos.InsertandoDocumentoException;
 import com.excepciones.Documentos.ModificandoDocumentoException;
@@ -2561,8 +2562,9 @@ public class FachadaDD {
 	 * @throws IngresandoSaldoException 
 	 * @throws EliminandoSaldoException 
 	 * @throws ModificandoSaldoException 
+	 * @throws InsertandoLogException 
 	*/
-	public void actualizarGasto(GastoVO gastoVO, String cod_emp) throws ConexionException, ModificandoGastoException, NoExisteGastoException, ExisteGastoException, IngresandoGastoException, ModificandoSaldoException, EliminandoSaldoException, IngresandoSaldoException  
+	public void actualizarGasto(GastoVO gastoVO, String cod_emp) throws ConexionException, ModificandoGastoException, NoExisteGastoException, ExisteGastoException, IngresandoGastoException, ModificandoSaldoException, EliminandoSaldoException, IngresandoSaldoException, InsertandoLogException  
 	{
 	
 		Connection con = null;
@@ -2575,8 +2577,33 @@ public class FachadaDD {
 			Gasto gasto = new Gasto(gastoVO);
 			
 			if(this.gastos.memberGasto(gasto.getNroTrans(), cod_emp, con)){
+				
+				//Modifico gasto
 				this.gastos.modificarGasto(gasto, cod_emp, con);
 				this.saldos.modificarSaldo((DocumDetalle) gasto, cod_emp, con);
+				
+				//Genero log de documento
+				this.logDocum = new DocLog();
+				logDocum.setCod_docum(gasto.getCodDocum());
+				logDocum.setSerie_docum(gasto.getSerieDocum());
+				logDocum.setNro_docum(gasto.getNroDocum());
+				logDocum.setCod_doca(gasto.getCodDocum());
+				logDocum.setSerie_doca(gasto.getSerieDocum());
+				logDocum.setNro_doca(gasto.getNroDocum());
+				logDocum.setCod_doc_ref(gasto.getCodDocum());
+				logDocum.setSerie_doc_ref(gasto.getSerieDocum());
+				logDocum.setNro_doc_ref(gasto.getNroDocum());
+				logDocum.setCod_tit(gasto.getTitInfo().getCodigo());
+				logDocum.setNro_trans(gasto.getNroTrans());
+				logDocum.setCod_moneda(gasto.getMoneda().getCodMoneda());
+				logDocum.setImp_tot_mn(gasto.getImpTotMn());
+				logDocum.setImp_tot_mo(gasto.getImpTotMo());
+				logDocum.setCuenta(gasto.getCodCuentaInd());
+				logDocum.setFechaMod(gasto.getFechaMod());
+				logDocum.setUsuarioMod(gasto.getUsuarioMod());
+				logDocum.setOperacion(gasto.getOperacion());
+				
+				this.logsDocumentos.insertarDocLog(logDocum, cod_emp, con);
 				con.commit();
 			}
 			else

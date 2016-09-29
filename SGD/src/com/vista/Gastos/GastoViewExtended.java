@@ -11,6 +11,7 @@ import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Cuentas.ObteniendoCuentasException;
 import com.excepciones.Cuentas.ObteniendoRubrosException;
+import com.excepciones.DocLog.InsertandoLogException;
 import com.excepciones.Gastos.ExisteGastoException;
 import com.excepciones.Gastos.IngresandoGastoException;
 import com.excepciones.Gastos.ModificandoGastoException;
@@ -185,17 +186,6 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 					gastoVO.setCodRubro(codRubro.getValue().trim());
 					gastoVO.setNomRubro(nomRubro.getValue().trim());
 					
-//					try {
-//			            Integer convertedValue = (Integer) impTotMn
-//			                    .getConvertedValue();
-//			            Notification.show(
-//			                    "UI value (String): " + convertedValue
-//			                            + "<br />Converted value (Integer): "
-//			                            + convertedValue);
-//			        } catch (ConversionException e) {
-//			            Notification.show(
-//			                    "Could not convert value: ");
-//			        }
 					
 					if(impTotMn.getValue() != ""){
 						aux = impTotMn.getValue().toString().trim().replace(",", ".");
@@ -229,8 +219,25 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 						gastoVO.setImpImpuMo(0);
 					}
 					
-					gastoVO.setImpSubMn(0);
-					gastoVO.setImpSubMo(0);
+					
+					if(impImpuMo.getValue() != ""){
+						aux = impImpuMo.getValue().toString().trim().replace(",", ".");
+						gastoVO.setImpImpuMo(Float.parseFloat(aux));
+					}
+					else{
+						gastoVO.setImpImpuMo(0);
+					}
+					
+					if(impImpuMo.getValue() != ""){
+						aux = impImpuMo.getValue().toString().trim().replace(",", ".");
+						gastoVO.setImpImpuMo(Float.parseFloat(aux));
+					}
+					else{
+						gastoVO.setImpImpuMo(0);
+					}
+					
+					gastoVO.setImpSubMn(gastoVO.getImpTotMn() - gastoVO.getImpImpuMn());  
+					gastoVO.setImpSubMo(gastoVO.getImpTotMo() - gastoVO.getImpImpuMo());
 					
 					if(tcMov.getValue() != ""){
 						aux = tcMov.getValue().toString().trim().replace(",", ".");
@@ -286,10 +293,9 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 				}
 					
 			} 
-			catch (ConexionException | ModificandoGastoException | ExisteGastoException | 
-					 InicializandoException | IngresandoGastoException | NoExisteGastoException |
-					 ErrorInesperadoException| ObteniendoPermisosException| NoTienePermisosException | 
-					 ModificandoSaldoException | EliminandoSaldoException | IngresandoSaldoException e) {
+			catch (NoExisteGastoException | ModificandoGastoException | ExisteGastoException | InicializandoException | ObteniendoPermisosException | NoTienePermisosException
+					| ModificandoSaldoException | EliminandoSaldoException | IngresandoSaldoException | InsertandoLogException  
+					| IngresandoGastoException | ConexionException | ErrorInesperadoException  e) {
 				
 				
 				Mensajes.mostrarMensajeError(e.getMessage());
