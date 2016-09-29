@@ -34,6 +34,7 @@ import com.excepciones.Cuentas.ModificandoCuentaException;
 import com.excepciones.Cuentas.NoExisteCuentaException;
 import com.excepciones.Cuentas.ObteniendoCuentasException;
 import com.excepciones.DocLog.InsertandoLogException;
+import com.excepciones.DocLog.ModificandoLogException;
 import com.excepciones.Documentos.ExisteDocumentoException;
 import com.excepciones.Documentos.InsertandoDocumentoException;
 import com.excepciones.Documentos.ModificandoDocumentoException;
@@ -2585,6 +2586,7 @@ public class FachadaDD {
 			logDocum.setFechaMod(gasto.getFechaMod());
 			logDocum.setUsuarioMod(gasto.getUsuarioMod());
 			logDocum.setOperacion(gasto.getOperacion());
+			logDocum.setLinea(1);
 			
 			this.logsDocumentos.insertarDocLog(logDocum, cod_emp, con);
 			
@@ -2617,8 +2619,9 @@ public class FachadaDD {
 	 * @throws EliminandoSaldoException 
 	 * @throws ModificandoSaldoException 
 	 * @throws InsertandoLogException 
+	 * @throws ModificandoLogException 
 	*/
-	public void actualizarGasto(GastoVO gastoVO, String cod_emp) throws ConexionException, ModificandoGastoException, NoExisteGastoException, ExisteGastoException, IngresandoGastoException, ModificandoSaldoException, EliminandoSaldoException, IngresandoSaldoException, InsertandoLogException  
+	public void actualizarGasto(GastoVO gastoVO, String cod_emp) throws ConexionException, ModificandoGastoException, NoExisteGastoException, ExisteGastoException, IngresandoGastoException, ModificandoSaldoException, EliminandoSaldoException, IngresandoSaldoException, InsertandoLogException, ModificandoLogException  
 	{
 	
 		Connection con = null;
@@ -2656,8 +2659,9 @@ public class FachadaDD {
 				logDocum.setFechaMod(gasto.getFechaMod());
 				logDocum.setUsuarioMod(gasto.getUsuarioMod());
 				logDocum.setOperacion(gasto.getOperacion());
+				logDocum.setLinea(1);
 				
-				this.logsDocumentos.insertarDocLog(logDocum, cod_emp, con);
+				this.logsDocumentos.modificarDocLog(logDocum, cod_emp, con);
 				con.commit();
 			}
 			else

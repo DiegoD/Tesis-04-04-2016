@@ -1264,8 +1264,19 @@ public String getGastosConSaldo(){
 				+ " cod_doc_ref, serie_doc_ref, nro_doc_ref, "
 				+ " cod_emp, cod_tit, nro_trans, cod_moneda, "
 				+ " imp_tot_mn, imp_tot_mo, cuenta, "
-				+ " fecha_mod, usuario_mod, operacion ) ");
-		sb.append("VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?) ");
+				+ " fecha_mod, usuario_mod, operacion, linea ) ");
+		sb.append("VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ? ) ");
+		
+		return sb.toString();
+	}
+	
+	public String eliminarLog()
+	{
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("DELETE FROM g_log ");
+		sb.append("WHERE nro_trans = ? AND linea = ? AND cod_emp = ? ");
 		
 		return sb.toString();
 	}

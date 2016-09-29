@@ -7,6 +7,7 @@ public class DocLog extends Auditoria{
 	private String cod_docum;
 	private String serie_docum;
 	private Integer nro_docum;
+	private Integer linea;
 	private String cod_doca;
 	private String serie_doca;
 	private Integer nro_doca;
@@ -23,13 +24,15 @@ public class DocLog extends Auditoria{
 	public DocLog(){
 	}
 
-	public DocLog(String cod_docum, String serie_docum, Integer nro_docum, String cod_doca, String serie_doca,
-			Integer nro_doca, String cod_doc_ref, String serie_doc_ref, Integer nro_doc_ref, String cod_tit,
-			Long nro_trans, String cod_moneda, Double imp_tot_mn, Double imp_tot_mo, String cuenta) {
+
+	public DocLog(String cod_docum, String serie_docum, Integer nro_docum, Integer linea, String cod_doca,
+			String serie_doca, Integer nro_doca, String cod_doc_ref, String serie_doc_ref, Integer nro_doc_ref,
+			String cod_tit, Long nro_trans, String cod_moneda, Double imp_tot_mn, Double imp_tot_mo, String cuenta) {
 		super();
 		this.cod_docum = cod_docum;
 		this.serie_docum = serie_docum;
 		this.nro_docum = nro_docum;
+		this.linea = linea;
 		this.cod_doca = cod_doca;
 		this.serie_doca = serie_doca;
 		this.nro_doca = nro_doca;
@@ -43,6 +46,7 @@ public class DocLog extends Auditoria{
 		this.imp_tot_mo = imp_tot_mo;
 		this.cuenta = cuenta;
 	}
+
 
 	public String getCod_docum() {
 		return cod_docum;
@@ -59,6 +63,17 @@ public class DocLog extends Auditoria{
 	public void setSerie_docum(String serie_docum) {
 		this.serie_docum = serie_docum;
 	}
+
+	
+	public Integer getLinea() {
+		return linea;
+	}
+
+
+	public void setLinea(Integer linea) {
+		this.linea = linea;
+	}
+
 
 	public Integer getNro_docum() {
 		return nro_docum;

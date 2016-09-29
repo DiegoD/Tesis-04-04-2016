@@ -6,11 +6,16 @@ import java.sql.SQLException;
 
 import com.excepciones.ConexionException;
 import com.excepciones.DocLog.InsertandoLogException;
+import com.excepciones.DocLog.ModificandoLogException;
+import com.excepciones.Gastos.IngresandoGastoException;
+import com.excepciones.Gastos.ModificandoGastoException;
 import com.excepciones.Saldos.IngresandoSaldoException;
+import com.logica.Gasto;
 import com.logica.DocLog.DocLog;
 import com.mysql.jdbc.Statement;
 
 public class DAODocLog implements IDAODocLog{
+	
 	public void insertarDocLog(DocLog log, String codEmp, Connection con) throws InsertandoLogException, ConexionException, SQLException{
 		ConsultasDD clts = new ConsultasDD();
 		
@@ -40,6 +45,7 @@ public class DAODocLog implements IDAODocLog{
 			pstmt1.setString(16, log.getCuenta());
 			pstmt1.setString(17, log.getUsuarioMod());
 			pstmt1.setString(18, log.getOperacion());
+			pstmt1.setInt(19, 1);
 			
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
@@ -50,4 +56,32 @@ public class DAODocLog implements IDAODocLog{
 			throw new InsertandoLogException();
 		} 
 	}
+	
+	@Override
+	public void modificarDocLog(DocLog log, String codEmp, Connection con) throws ModificandoLogException, InsertandoLogException, ConexionException {
+		// TODO Auto-generated method stub
+		ConsultasDD consultas = new ConsultasDD();
+		String eliminar = consultas.eliminarLog();
+		PreparedStatement pstmt1;
+		
+		try {
+			
+			pstmt1 =  con.prepareStatement(eliminar);
+			pstmt1.setLong(1, log.getNro_trans());
+			pstmt1.setInt(2, log.getLinea());
+			pstmt1.setString(3, codEmp);
+			
+			pstmt1.executeUpdate ();
+			this.insertarDocLog(log, codEmp, con);
+			
+			pstmt1.close ();
+	
+		} 
+		
+		catch (SQLException e) {
+			
+			throw new ModificandoLogException();
+		}
+	}
+	
 }
