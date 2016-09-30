@@ -432,6 +432,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			{
 				try {
 					
+					
+					
 					BusquedaViewExtended form = new BusquedaViewExtended(this, new GastoVO());
 					
 					sub = new MySub("70%", "70%" );
@@ -668,7 +670,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			this.iniFormNuevo();
 			
 			/*Agregamos los filtros a la grilla*/
-			this.filtroGrilla();
+			//this.filtroGrilla();
 	
 		}else if(this.operacion.equals(Variables.OPERACION_LECTURA))
 		{
