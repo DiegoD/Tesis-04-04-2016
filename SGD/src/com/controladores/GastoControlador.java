@@ -1,5 +1,6 @@
 package com.controladores;
 
+import java.sql.Date;
 import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
@@ -7,6 +8,7 @@ import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
 import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
+import com.excepciones.Cotizaciones.ObteniendoCotizacionesException;
 import com.excepciones.Cuentas.ObteniendoCuentasException;
 import com.excepciones.Cuentas.ObteniendoRubrosException;
 import com.excepciones.DocLog.InsertandoLogException;
@@ -31,6 +33,7 @@ import com.valueObject.ImpuestoVO;
 import com.valueObject.MonedaVO;
 import com.valueObject.RubroVO;
 import com.valueObject.UsuarioPermisosVO;
+import com.valueObject.Cotizacion.CotizacionVO;
 import com.valueObject.Cuenta.CuentaVO;
 import com.valueObject.Gasto.GastoVO;
 import com.valueObject.Numeradores.NumeradoresVO;
@@ -157,5 +160,13 @@ public class GastoControlador {
 		else
 			throw new NoTienePermisosException();
 	}
-
+	
+	public CotizacionVO getCotizacion(UsuarioPermisosVO permisos, Date fecha, String codMoneda) throws ObteniendoCotizacionesException, ConexionException, ObteniendoPermisosException, InicializandoException, NoTienePermisosException{
+		
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			return FachadaDD.getInstance().getCotizacion(permisos.getCodEmp(), fecha, codMoneda);
+		else
+			throw new NoTienePermisosException();
+	}
 }

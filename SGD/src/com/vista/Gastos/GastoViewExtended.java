@@ -582,6 +582,16 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 			}
 		});
 		
+		comboMoneda.setImmediate(true);
+		
+		comboMoneda.addValueChangeListener(new Property.ValueChangeListener(){
+			
+			@Override
+			public void valueChange(ValueChangeEvent event) {
+			   //controlador.getCotizacion(permisoAux, fecValor.getValue().getTime(), comboMoneda.getValue())
+			}
+		});
+		
 	}
 	
 	public  void inicializarForm(){

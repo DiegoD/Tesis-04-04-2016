@@ -400,15 +400,15 @@ public class GastosPanelExtended extends GastosPanel{
 	
 	public void setSub(String seleccion){
 		if(seleccion.equals("Proceso")){
-			sub.setHeight("95%");
+			sub.setHeight("100%");
 			sub.setWidth("46%");
 		}
 		if(seleccion.equals("Empleado")){
-			sub.setHeight("90%");
+			sub.setHeight("95%");
 			sub.setWidth("46%");
 		}
 		if(seleccion.equals("Oficina")){
-			sub.setHeight("85%");
+			sub.setHeight("88%");
 			sub.setWidth("46%");
 		}
 		
