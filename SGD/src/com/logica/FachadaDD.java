@@ -72,6 +72,7 @@ import com.excepciones.Rubros.ModificandoRubroException;
 import com.excepciones.Rubros.NoExisteRubroException;
 import com.excepciones.Rubros.ObteniendoRubrosException;
 import com.excepciones.Saldos.EliminandoSaldoException;
+import com.excepciones.Saldos.ExisteSaldoException;
 import com.excepciones.Saldos.IngresandoSaldoException;
 import com.excepciones.Saldos.ModificandoSaldoException;
 import com.excepciones.TipoRubro.ExisteTipoRubroException;
@@ -2620,8 +2621,9 @@ public class FachadaDD {
 	 * @throws ModificandoSaldoException 
 	 * @throws InsertandoLogException 
 	 * @throws ModificandoLogException 
+	 * @throws ExisteSaldoException 
 	*/
-	public void actualizarGasto(GastoVO gastoVO, String cod_emp) throws ConexionException, ModificandoGastoException, NoExisteGastoException, ExisteGastoException, IngresandoGastoException, ModificandoSaldoException, EliminandoSaldoException, IngresandoSaldoException, InsertandoLogException, ModificandoLogException  
+	public void actualizarGasto(GastoVO gastoVO, String cod_emp) throws ConexionException, ModificandoGastoException, NoExisteGastoException, ExisteGastoException, IngresandoGastoException, ModificandoSaldoException, EliminandoSaldoException, IngresandoSaldoException, InsertandoLogException, ModificandoLogException, ExisteSaldoException  
 	{
 	
 		Connection con = null;
