@@ -1361,6 +1361,14 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		
 		lstGastos.setColumnOrder("nroDocum", "referencia", "impTotMo", "impTotMo", "codProceso");
 		
+		//List<Column> lstColumn
+
+
+		/*Formateamos los tamaños*/
+		lstGastos.getColumn("referencia").setWidth(100);
+		
+		
+		
 	}
 	
 	public void inicializarComboMoneda(String cod){
