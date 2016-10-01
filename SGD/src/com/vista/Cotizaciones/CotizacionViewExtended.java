@@ -552,4 +552,10 @@ public class CotizacionViewExtended extends CotizacionView implements IBusqueda{
 		this.comboMoneda.setItemCaptionPropertyId("descripcion");
 		this.comboMoneda.setValue(moneda);
 	}
+
+	@Override
+	public void setInfoLst(ArrayList<Object> lstDatos) {
+		// TODO Auto-generated method stub
+		
+	}
 }

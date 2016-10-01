@@ -1484,23 +1484,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			this.codTitular.setValue(String.valueOf(clienteVO.getCodigo()));
 			this.nomTitular.setValue(clienteVO.getNombre());
 		}
-		if(datos instanceof GastoVO){
-			
-			IngresoCobroDetalleVO g = new IngresoCobroDetalleVO();
-			g.copiar((DocumDetalleVO)datos);
-			
-			this.lstDetalleVO.add(g);
-			
-			/*Actualizamos el container y la grilla*/
-			container.removeAllItems();
-			container.addAll(lstDetalleVO);
-			//lstFormularios.setContainerDataSource(container);
-			this.actualizarGrillaContainer(container);
-			
-			/*Calculamos el importe total de todos los gastos*/
-			this.calcularImporteTotal();
-			
-		}
+		
 	}
 	
 	/**
@@ -1583,6 +1567,30 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		}
 		
 		return codMoneda;
+	}
+
+	@Override
+	public void setInfoLst(ArrayList<Object> lstDatos) {
+		
+		IngresoCobroDetalleVO g;
+		for (Object obj : lstDatos) {
+			
+			g = new IngresoCobroDetalleVO();
+			g.copiar((DocumDetalleVO)obj);
+			
+			this.lstDetalleVO.add(g);
+			
+		}
+			
+			/*Actualizamos el container y la grilla*/
+			container.removeAllItems();
+			container.addAll(lstDetalleVO);
+			//lstFormularios.setContainerDataSource(container);
+			this.actualizarGrillaContainer(container);
+			
+			/*Calculamos el importe total de todos los gastos*/
+			this.calcularImporteTotal();
+		
 	}
 	
 }

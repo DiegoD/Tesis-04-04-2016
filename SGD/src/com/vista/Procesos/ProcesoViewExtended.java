@@ -742,6 +742,12 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 		this.comboDocumento.setItemCaptionPropertyId("descripcion");
 		this.comboDocumento.setValue(documento);
 	}
+
+	@Override
+	public void setInfoLst(ArrayList<Object> lstDatos) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	
 	

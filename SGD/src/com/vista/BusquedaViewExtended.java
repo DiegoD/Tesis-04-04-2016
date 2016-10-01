@@ -3,6 +3,7 @@ package com.vista;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
@@ -18,9 +19,11 @@ import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.ui.Grid.Column;
+import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.TextField;
 import com.valueObject.CodigoGeneralizadoVO;
 import com.valueObject.DocumDGIVO;
+import com.valueObject.FormularioVO;
 import com.valueObject.FuncionarioVO;
 import com.valueObject.ImpuestoVO;
 import com.valueObject.MonedaVO;
@@ -49,6 +52,12 @@ public class BusquedaViewExtended extends BusquedaView{
 	IBusqueda main;
 	
 	public BusquedaViewExtended(IBusqueda main, Object obj){
+		
+		/*Ocultamos el boton de agresgar, solamente
+		 * se utiliza para los casos de la ventana
+		 * multiseleccion*/
+		this.btnAgregar.setEnabled(false);
+		this.btnAgregar.setVisible(false);
 		
 		this.main = main;
 		if(obj instanceof ImpuestoVO){
@@ -105,6 +114,13 @@ public class BusquedaViewExtended extends BusquedaView{
 			this.seleccionado = new CuentaVO();
 		}
 		else if(obj instanceof GastoVO){
+			
+			/*Dejamos que sea multi seleccion la grilla*/
+			grid.setSelectionMode(SelectionMode.MULTI);
+			
+			/*Mostramos el boton de agregar*/
+			this.btnAgregar.setEnabled(true);
+			this.btnAgregar.setVisible(true);
 			
 			this.containerGasto = new BeanItemContainer<GastoVO>(GastoVO.class);
 			this.lblNombre.setValue("Gastos");
@@ -207,13 +223,10 @@ public class BusquedaViewExtended extends BusquedaView{
 		    		}
 		    		
 		    		else if(seleccionado instanceof GastoVO){
-			    		if(grid.getSelectedRow() != null){
-			    			
-			    			BeanItem<GastoVO> item = containerGasto.getItem(grid.getSelectedRow());
-					    	seleccionado = item.getBean(); 
-					    	main.setInfo(seleccionado);	
-					    	main.cerrarVentana();
-					    }
+			    		/*Si es Gasto no hacemos nada, ya que es multi seleccion
+			    		 *se maneja desde el boton de agregar*/
+		    			
+		    		
 		    		}
 		    		
 		    		else if(seleccionado instanceof FuncionarioVO){
@@ -736,6 +749,47 @@ public class BusquedaViewExtended extends BusquedaView{
 		catch(Exception e)	{
 			 System.out.println(e.getStackTrace());
 		}
+		
+		
+		/**
+		 * Listener boton agregar
+		 * Se utiliza para los casos que la grilla
+		 * es multi seleccion
+		 *
+		 */
+		this.btnAgregar.addClickListener(click -> {
+			
+    		try {
+			
+			/*ACA*/
+			ArrayList<Object> lstSeleccionados = new ArrayList<Object>();
+			
+			/*Obtenemos los formularios seleccionados y se los pasamos a
+			 * la View de Grupos para agregarlos*/
+			Collection<Object> col= grid.getSelectedRows();
+			
+			GastoVO aux;
+			for (Object object : col) {
+				aux = (GastoVO)object;
+				
+									
+				lstSeleccionados.add(aux);
+				
+			}
+			
+	    	main.setInfoLst(lstSeleccionados);	
+	    	main.cerrarVentana();
+	    	
+	    	
+			} catch (Exception e) {
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}	
+		    
+			
+		});
 	}
+	
+	
+	
 
 }

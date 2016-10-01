@@ -1150,4 +1150,10 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		this.codTitular.setRequired(false);
 		this.mainView.setSub("Oficina");
 	}
+
+	@Override
+	public void setInfoLst(ArrayList<Object> lstDatos) {
+		// TODO Auto-generated method stub
+		
+	}
 }

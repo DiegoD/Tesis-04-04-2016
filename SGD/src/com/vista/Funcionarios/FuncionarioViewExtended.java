@@ -635,4 +635,10 @@ public class FuncionarioViewExtended extends FuncionarioView implements IBusqued
 		
 		UI.getCurrent().removeWindow(sub);
 	}
+
+	@Override
+	public void setInfoLst(ArrayList<Object> lstDatos) {
+		// TODO Auto-generated method stub
+		
+	}
 }
