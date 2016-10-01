@@ -2457,10 +2457,10 @@ public class FachadaDD {
 	}
 	
 	/**
-	* Obtiene todos los gastos existentes 
+	* Obtiene todos los gastos existentes por moenda
 	*/
 	@SuppressWarnings("unchecked")
-	public ArrayList<GastoVO> getGastosConSaldo(String cod_emp, String codTit, String codMoneda) throws ObteniendoGastosException, ConexionException
+	public ArrayList<GastoVO> getGastosConSaldoxMoneda(String cod_emp, String codTit, String codMoneda) throws ObteniendoGastosException, ConexionException
 	{
 	
 		Connection con = null;
@@ -2472,7 +2472,7 @@ public class FachadaDD {
 		{
 			con = this.pool.obtenerConeccion();
 			
-			lstGastos = this.gastos.getGastosConSaldo(con, cod_emp, codTit, codMoneda);
+			lstGastos = this.gastos.getGastosConSaldoxMoneda(con, cod_emp, codTit, codMoneda);
 			
 			
 			GastoVO aux;
@@ -2532,6 +2532,82 @@ public class FachadaDD {
 		return lstGastosVO;
 	}
 
+	/**
+	* Obtiene todos los gastos existentes 
+	*/
+	@SuppressWarnings("unchecked")
+	public ArrayList<GastoVO> getGastosConSaldo(String cod_emp, String codTit) throws ObteniendoGastosException, ConexionException
+	{
+	
+		Connection con = null;
+		
+		ArrayList<Gasto> lstGastos;
+		ArrayList<GastoVO> lstGastosVO = new ArrayList<GastoVO>();
+		
+		try
+		{
+			con = this.pool.obtenerConeccion();
+			
+			lstGastos = this.gastos.getGastosConSaldo(con, cod_emp, codTit);
+			
+			
+			GastoVO aux;
+			for (Gasto gasto : lstGastos) 
+			{
+				aux = new GastoVO();
+				
+				aux.setFecDoc(gasto.getFecDoc());
+				aux.setCodDocum(gasto.getCodDocum());
+				aux.setSerieDocum(gasto.getSerieDocum());
+				aux.setNroDocum(gasto.getNroDocum());
+				aux.setCodEmp(gasto.getCodEmp());
+				aux.setCodMoneda(gasto.getMoneda().getCodMoneda());
+				aux.setNomMoneda(gasto.getMoneda().getDescripcion());
+				aux.setReferencia(gasto.getReferencia());
+				aux.setCodTitular(gasto.getTitInfo().getCodigo());
+				aux.setNomTitular(gasto.getTitInfo().getNombre());
+				aux.setNroTrans(gasto.getNroTrans());
+				aux.setFecValor(gasto.getFecValor());
+				aux.setCodProceso(gasto.getCodProceso());
+				aux.setReferencia(gasto.getReferencia());
+				aux.setImpImpuMn(gasto.getImpImpuMn());
+				aux.setImpImpuMo(gasto.getImpImpuMo());
+				aux.setImpSubMn(gasto.getImpSubMn());
+				aux.setImpSubMo(gasto.getImpSubMo());
+				aux.setImpTotMn(gasto.getImpTotMn());
+				aux.setImpTotMo(gasto.getImpTotMo());
+				aux.setTcMov(gasto.getTcMov());
+				aux.setCodCuenta(gasto.getCuenta().getCodCuenta());
+				aux.setNomCuenta(gasto.getCuenta().getNomCuenta());
+				aux.setCodRubro(gasto.getRubroInfo().getCodRubro());
+				aux.setNomRubro(gasto.getRubroInfo().getNomRubro());
+				aux.setCodCtaInd(gasto.getCodCuentaInd());
+				aux.setFechaMod(gasto.getFechaMod());
+				aux.setUsuarioMod(gasto.getUsuarioMod());
+				aux.setOperacion(gasto.getOperacion());
+				aux.setDescProceso(gasto.getDescProceso());
+				aux.setCodImpuesto(gasto.getImpuestoInfo().getCodImpuesto());
+				aux.setNomImpuesto(gasto.getImpuestoInfo().getNomImpuesto());
+				aux.setPorcentajeImpuesto(gasto.getImpuestoInfo().getPorcentaje());
+				lstGastosVO.add(aux);
+			}
+		
+		}
+		catch(ObteniendoGastosException e){
+			throw e;
+		
+		} 
+		catch (ConexionException e) {
+		
+			throw e;
+		} 
+		finally{
+			this.pool.liberarConeccion(con);
+		}
+		
+		return lstGastosVO;
+	}
+	
 
 	/**
 	* Inserta un nuevo gasto en la base

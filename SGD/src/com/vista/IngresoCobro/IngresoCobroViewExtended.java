@@ -475,7 +475,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 					}
 					
 					/*Obtenemos los gastos con saldo del cliente*/
-					ArrayList<GastoVO> lstGastosConSaldo = this.controlador.getGastosConSaldo(permisoAux, codCliente, auxMoneda.getCodMoneda());
+					ArrayList<GastoVO> lstGastosConSaldo = this.controlador.getGastosConSaldo(permisoAux, codCliente);
 					
 					/*Hacemos una lista auxliar para pasarselo al BusquedaViewExtended*/
 					ArrayList<Object> lst = new ArrayList<Object>();
