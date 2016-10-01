@@ -172,7 +172,11 @@ public class GastosPanelExtended extends GastosPanel{
 		
 		gridGastos.addSelectionListener(new SelectionListener() {
 						
-		    @Override
+		    /**
+			 * 
+			 */
+
+			@Override
 		    public void select(SelectionEvent event) {
 		       
 		    	try{
@@ -210,7 +214,6 @@ public class GastosPanelExtended extends GastosPanel{
 			/**
 			 * 
 			 */
-			private static final long serialVersionUID = 1L;
 
 			@Override
 

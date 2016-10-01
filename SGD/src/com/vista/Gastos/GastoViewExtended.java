@@ -9,6 +9,7 @@ import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
 import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
+import com.excepciones.Cotizaciones.ObteniendoCotizacionesException;
 import com.excepciones.Cuentas.ObteniendoCuentasException;
 import com.excepciones.Cuentas.ObteniendoRubrosException;
 import com.excepciones.DocLog.InsertandoLogException;
@@ -45,6 +46,7 @@ import com.valueObject.ImpuestoVO;
 import com.valueObject.MonedaVO;
 import com.valueObject.RubroVO;
 import com.valueObject.UsuarioPermisosVO;
+import com.valueObject.Cotizacion.CotizacionVO;
 import com.valueObject.Cuenta.CuentaVO;
 import com.valueObject.Gasto.GastoVO;
 import com.valueObject.Numeradores.NumeradoresVO;
@@ -222,22 +224,6 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 					}
 					
 					
-					if(impImpuMo.getValue() != ""){
-						aux = impImpuMo.getValue().toString().trim().replace(",", ".");
-						gastoVO.setImpImpuMo(Float.parseFloat(aux));
-					}
-					else{
-						gastoVO.setImpImpuMo(0);
-					}
-					
-					if(impImpuMo.getValue() != ""){
-						aux = impImpuMo.getValue().toString().trim().replace(",", ".");
-						gastoVO.setImpImpuMo(Float.parseFloat(aux));
-					}
-					else{
-						gastoVO.setImpImpuMo(0);
-					}
-					
 					gastoVO.setImpSubMn(gastoVO.getImpTotMn() - gastoVO.getImpImpuMn());  
 					gastoVO.setImpSubMo(gastoVO.getImpTotMo() - gastoVO.getImpImpuMo());
 					
@@ -293,7 +279,6 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 				{
 					Mensajes.mostrarMensajeWarning(Variables.WARNING_CAMPOS_NO_VALIDOS);
 				}
-					
 			} 
 			catch (ErrorInesperadoException | ConexionException | NoExisteGastoException | 
 					ModificandoGastoException | ExisteGastoException | InicializandoException | 
@@ -564,7 +549,6 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 			
 		});
 		
-		comboSeleccion.setImmediate(true);
 		
 		comboSeleccion.addValueChangeListener(new Property.ValueChangeListener(){
 			
@@ -583,15 +567,59 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 			}
 		});
 		
-		comboMoneda.setImmediate(true);
 		
 		comboMoneda.addValueChangeListener(new Property.ValueChangeListener(){
 			
 			@Override
 			public void valueChange(ValueChangeEvent event) {
-			   //controlador.getCotizacion(permisoAux, fecValor.getValue().getTime(), comboMoneda.getValue())
+				
+				if("ProgramaticallyChanged".equals(comboMoneda.getData())){
+					comboMoneda.setData(null);
+		            return;
+		        }
+				
+				MonedaVO auxMoneda = new MonedaVO();
+				CotizacionVO cotizacion = new CotizacionVO();
+				auxMoneda = (MonedaVO) comboMoneda.getValue();
+//				try {
+//					if(auxMoneda.getCodMoneda() != null){
+//						cotizacion = controlador.getCotizacion(permisoAux, SimpleDateFormat.format("01/01/01"), auxMoneda.getCodMoneda());
+//						//(java.sql.Date)fecValor.getValue()
+//					}
+//				} catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
+//						| InicializandoException | NoTienePermisosException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+				System.out.println("cambia combo monedas");
 			}
 		});
+		
+		this.impTotMo.addValueChangeListener(new Property.ValueChangeListener() {
+		    public void valueChange(ValueChangeEvent event) {
+		        // Assuming that the value type is a String
+		    	Double totalMo, impuestoMo, porcImp;
+		    	
+		        String value = (String) event.getProperty().getValue();
+		        
+		        fieldGroup =  new BeanFieldGroup<GastoVO>(GastoVO.class);
+		        fieldGroup.getItemDataSource().getBean().setImpTotMo(Double.parseDouble(impTotMn.getValue()));
+		        // Do something with the value
+		        System.out.println("cambia importe " + impTotMn.getValue() + " pepe");
+		        
+		        if(impTotMn.getValue() != ""){
+		        	
+					aux = impTotMn.getValue().toString().trim().replace(",", ".");
+					totalMo = Double.parseDouble(aux);
+					aux = porcentajeImpuesto.getValue().toString().trim().replace(",", ".");
+					porcImp = Double.parseDouble(aux);
+					impuestoMo = (porcImp * totalMo)/100;
+					impImpuMo.setValue(String.valueOf(impuestoMo));
+					
+				}
+		    }
+		});
+		
 		
 	}
 	
@@ -828,7 +856,9 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		this.fecValor.setReadOnly(false);
 		this.tcMov.setReadOnly(false);
 		this.impImpuMn.setReadOnly(false);
+		this.impImpuMn.setEnabled(false);
 		this.impImpuMo.setReadOnly(false);
+		this.impImpuMo.setEnabled(false);
 		this.impTotMn.setReadOnly(false);
 		this.impTotMo.setReadOnly(false);
 		this.referencia.setReadOnly(false);
@@ -939,7 +969,9 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		this.fecValor.setReadOnly(setear);
 		this.tcMov.setReadOnly(setear);
 		this.impImpuMn.setReadOnly(setear);
+		this.impImpuMn.setEnabled(false);
 		this.impImpuMo.setReadOnly(setear);
+		this.impImpuMo.setEnabled(false);
 		this.impTotMn.setReadOnly(setear);
 		this.impTotMo.setReadOnly(setear);
 		this.referencia.setReadOnly(setear);
@@ -1150,10 +1182,10 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		this.codTitular.setRequired(false);
 		this.mainView.setSub("Oficina");
 	}
-
+	
 	@Override
-	public void setInfoLst(ArrayList<Object> lstDatos) {
-		// TODO Auto-generated method stub
-		
-	}
+	 public void setInfoLst(ArrayList<Object> lstDatos) {
+	  // TODO Auto-generated method stub
+	  
+	 }
 }
