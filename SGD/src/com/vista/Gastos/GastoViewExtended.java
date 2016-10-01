@@ -21,6 +21,7 @@ import com.excepciones.Impuestos.ObteniendoImpuestosException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
 import com.excepciones.Procesos.ObteniendoProcesosException;
 import com.excepciones.Saldos.EliminandoSaldoException;
+import com.excepciones.Saldos.ExisteSaldoException;
 import com.excepciones.Saldos.IngresandoSaldoException;
 import com.excepciones.Saldos.ModificandoSaldoException;
 import com.excepciones.funcionarios.ObteniendoFuncionariosException;
@@ -298,7 +299,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 					ModificandoGastoException | ExisteGastoException | InicializandoException | 
 					ObteniendoPermisosException | NoTienePermisosException | IngresandoGastoException | 
 					ModificandoSaldoException | EliminandoSaldoException | IngresandoSaldoException | 
-					InsertandoLogException | ModificandoLogException e) {
+					InsertandoLogException | ModificandoLogException | ExisteSaldoException e) {
 				
 				
 				Mensajes.mostrarMensajeError(e.getMessage());

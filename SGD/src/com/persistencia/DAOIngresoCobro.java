@@ -186,6 +186,9 @@ public class DAOIngresoCobro implements IDAOIngresoCobro{
 			int linea = 1;
 			for (IngresoCobroLinea lin : cobro.getDetalle()) {
 				
+				/*A cada linea le seteamos el nroTrans*/
+				lin.setNroTrans(cobro.getNroTrans());
+				
 				this.insertarLineaCobro(lin, codEmp,linea, con);
 				
 				linea++;

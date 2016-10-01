@@ -1232,8 +1232,8 @@ public String getGastosConSaldo(){
 	
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("SELECT cod_docum, serie_documm, nro_docum, cod_emp, cod_tit ");
-		sb.append("FROM sa_docum WHERE cod_docum = ? AND serie_documm = ? "
+		sb.append("SELECT cod_docum ");
+		sb.append("FROM sa_docum WHERE cod_docum = ? AND serie_docum = ? "
 				+ "AND nro_docum = ? AND cod_emp = ? AND cod_tit = ? ");
 		
 		return sb.toString();

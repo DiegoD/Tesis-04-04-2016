@@ -52,9 +52,11 @@ import com.excepciones.grupos.ModificandoGrupoException;
 import com.excepciones.grupos.NoExisteGrupoException;
 import com.excepciones.grupos.ObteniendoFormulariosException;
 import com.excepciones.grupos.ObteniendoGruposException;
+import com.logica.Docum.DocumDetalle;
 import com.logica.IngresoCobro.IngresoCobro;
 import com.valueObject.*;
 import com.valueObject.IngresoCobro.IngresoCobroVO;
+import com.valueObject.Numeradores.NumeradoresVO;
 import com.valueObject.banco.BancoVO;
 import com.valueObject.banco.CtaBcoVO;
 import com.valueObject.cliente.ClienteVO;
@@ -77,6 +79,8 @@ public class Fachada {
 	private IDAODocumDgi documentosDGI;
 	private IDAOBancos bancos;
 	private IDAOIngresoCobro ingresoCobro;
+	private IDAOSaldos saldos;
+	private IDAONumeradores numeradores;
 	
 	private AbstractFactoryBuilder fabrica;
 	private IAbstractFactory fabricaConcreta;
@@ -96,6 +100,8 @@ public class Fachada {
         this.documentosDGI = fabricaConcreta.crearDAODocumDgi();
         this.bancos = fabricaConcreta.crearDAOBancos();
         this.ingresoCobro = fabricaConcreta.crearDAOIngresoCobro();
+        this.saldos = fabricaConcreta.crearDAOSaldos();
+        this.numeradores = fabricaConcreta.crearDAONumeradores();
         
     }
     
@@ -1271,6 +1277,8 @@ public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 
 	Connection con = null;
 	boolean existe = false;
+	Integer codigo;
+	NumeradoresVO codigos = new NumeradoresVO();
 	
 	try 
 	{
@@ -1279,11 +1287,25 @@ public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 		
 		IngresoCobro ing = new IngresoCobro(ingVO); 
 		
+		//Obtengo numerador de gastos
+		codigos.setCodigo(numeradores.getNumero(con, "ingcobro", codEmp)); //Ingreso Cobro
+		codigos.setNumeroTrans(numeradores.getNumero(con, "03", codEmp)); //nro trans
+		
+		ing.setNroDocum(codigos.getCodigo()); /*Seteamos el nroDocum*/
+		ing.setNroTrans(codigos.getNumeroTrans()); /*Seteamos el nroTrans*/
+		
+		
 		/*Verificamos que no exista un cliente con el mismo documento*/
 		if(!this.ingresoCobro.memberIngresoCobro(ing.getNroDocum(), codEmp, con))
 		{
+			/*Ingresamos el cobro*/
 			this.ingresoCobro.insertarIngresoCobro(ing, codEmp, con);
-		
+			
+			/*Para cada linea ingresamos el saldo*/
+			for (DocumDetalle docum : ing.getDetalle()) {
+				this.saldos.modificarSaldo(docum, codEmp, con);
+			}
+			
 			con.commit();
 		}
 		else{

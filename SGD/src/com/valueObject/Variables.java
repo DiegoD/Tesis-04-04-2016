@@ -10,4 +10,9 @@ public class Variables {
 	
 	public static final String CODIGO_MONEDA_OPERATIVA = "1";
 	
+	public static final String NUMERADOR_PROCESO = "01";
+	public static final String NUMERADOR_GASTOS = "02";
+	public static final String NUMERADOR_TRANS = "03";
+	public static final String NUMERADOR_INGRESO_COBRO = "ingcobro";
+	
 }
