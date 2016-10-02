@@ -22,6 +22,11 @@ import com.excepciones.Bancos.ModificandoCuentaBcoException;
 import com.excepciones.Bancos.ObteniendoBancosException;
 import com.excepciones.Bancos.ObteniendoCuentasBcoException;
 import com.excepciones.Bancos.VerificandoBancosException;
+import com.excepciones.Cheques.EliminandoChequeException;
+import com.excepciones.Cheques.ExisteChequeException;
+import com.excepciones.Cheques.InsertandoChequeException;
+import com.excepciones.Cheques.ModificandoChequeException;
+import com.excepciones.Cheques.NoExisteChequeException;
 import com.excepciones.Documentos.ExisteDocumentoException;
 import com.excepciones.Documentos.InsertandoDocumentoException;
 import com.excepciones.Documentos.ModificandoDocumentoException;
@@ -33,6 +38,11 @@ import com.excepciones.IngresoCobros.InsertandoIngresoCobroException;
 import com.excepciones.IngresoCobros.ModificandoIngresoCobroException;
 import com.excepciones.IngresoCobros.ObteniendoIngresoCobroException;
 import com.excepciones.Login.LoginException;
+import com.excepciones.SaldoCuentas.EliminandoSaldoCuetaException;
+import com.excepciones.SaldoCuentas.ExisteSaldoCuentaException;
+import com.excepciones.SaldoCuentas.InsertandoSaldoCuentaException;
+import com.excepciones.SaldoCuentas.ModificandoSaldoCuentaException;
+import com.excepciones.SaldoCuentas.NoExisteSaldoCuentaException;
 import com.excepciones.Usuarios.ExisteUsuarioException;
 import com.excepciones.clientes.ExisteClienteExeption;
 import com.excepciones.clientes.ExisteDocumentoClienteException;
@@ -52,9 +62,13 @@ import com.excepciones.grupos.ModificandoGrupoException;
 import com.excepciones.grupos.NoExisteGrupoException;
 import com.excepciones.grupos.ObteniendoFormulariosException;
 import com.excepciones.grupos.ObteniendoGruposException;
+import com.logica.Docum.DatosDocum;
 import com.logica.Docum.DocumDetalle;
+import com.logica.Docum.DocumSaldo;
 import com.logica.IngresoCobro.IngresoCobro;
 import com.valueObject.*;
+import com.valueObject.Docum.DatosDocumVO;
+import com.valueObject.Docum.DocumSaldoVO;
 import com.valueObject.IngresoCobro.IngresoCobroVO;
 import com.valueObject.Numeradores.NumeradoresVO;
 import com.valueObject.banco.BancoVO;
@@ -82,6 +96,8 @@ public class Fachada {
 	private IDAOSaldos saldos;
 	private IDAONumeradores numeradores;
 	private IDAOCotizaciones cotizaciones;
+	private IDAOCheques cheques;
+	private IDAOSaldosCuentas saldosCuentas;
 	
 	private AbstractFactoryBuilder fabrica;
 	private IAbstractFactory fabricaConcreta;
@@ -104,6 +120,8 @@ public class Fachada {
         this.saldos = fabricaConcreta.crearDAOSaldos();
         this.numeradores = fabricaConcreta.crearDAONumeradores();
         this.cotizaciones = fabricaConcreta.crearDAOCotizaciones();
+        this.cheques = fabricaConcreta.crearDAOCheques(); 
+        this.saldosCuentas = fabricaConcreta.crearDAOSaldosCuenta();
         
     }
     
@@ -1315,7 +1333,7 @@ public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 				cotiAux = this.cotizaciones.getCotizacion(codEmp, new Date(ingVO.getFecValor().getTime()), docum.getMoneda().getCodMoneda(), con);
 				
 				/*Signo -1 porque resta al saldo del documento el cobro*/
-				this.saldos.modificarSaldo(docum, -1, cotiAux.getCotizacion_venta(), codEmp, con);
+				this.saldos.modificarSaldo(docum, -1, cotiAux.getCotizacion_venta(), con);
 			}
 			
 			con.commit();
@@ -1384,9 +1402,291 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws  C
 	}
 }
 
-
-
 /////////////////////////////////FIN-INGRESO COBRO/////////////////////////
+
+/////////////////////////////////CHEQUES//////////////////////////////////
+
+public void insertarCheque(DatosDocumVO documento)
+		throws InsertandoChequeException, ExisteChequeException, ConexionException, SQLException{
+
+	Connection con = null;
+	boolean existe = false;
+	NumeradoresVO codigos = new NumeradoresVO();
+	
+	try 
+	{
+		con = this.pool.obtenerConeccion();
+		con.setAutoCommit(false);
+		
+		//Obtenemos nroTrans 
+		//Obtengo numerador de gastos
+		codigos.setNumeroTrans(numeradores.getNumero(con, "03", documento.getCodEmp())); //nro trans
+		
+		
+		DatosDocum cheque = new DatosDocum(documento);
+		
+		cheque.setNroTrans(codigos.getNumeroTrans()); /*Seteamos el nroTrans*/
+		
+		/*Verificamos que no exista el cheque*/
+		if(!this.cheques.memberCheque(cheque, con))
+		{
+			/*Ingresamos el cheque*/
+			this.cheques.insertarCheque(cheque, con);
+			
+			/*Ingresamos el saldo para el documento*/
+			this.saldos.modificarSaldo(cheque, 1, cheque.getTcMov(), con);
+		
+			con.commit();
+		}
+		else{
+			existe = true;
+		}
+	
+	}catch(Exception e){
+		
+		try {
+			con.rollback();
+		
+		} catch (SQLException ex) {
+		
+			throw new InsertandoChequeException();
+		}
+	
+		throw new InsertandoChequeException();
+	}
+	finally
+	{
+		pool.liberarConeccion(con);
+	}
+	if (existe){
+		throw new ExisteChequeException();
+	}
+	
+}
+
+public void modificarCheque(DatosDocumVO chequeVO, int signo, double tc ) throws ModificandoChequeException, ConexionException, EliminandoChequeException, InsertandoChequeException, ExisteChequeException, NoExisteChequeException{
+
+	Connection con = null;
+	
+	try 
+	{
+		con = this.pool.obtenerConeccion();
+		con.setAutoCommit(false);
+		
+		DatosDocum cheque = new DatosDocum(chequeVO);
+		
+		/*Verificamos que exista el cheque*/
+		if(this.cheques.memberCheque(cheque, con))
+		{
+			this.cheques.modificarCheque(cheque, signo, tc, con);
+			
+			con.commit();
+		}
+		else
+		throw new ModificandoChequeException();
+	
+	}catch(ModificandoChequeException| ConexionException| EliminandoChequeException| InsertandoChequeException| ExisteChequeException| NoExisteChequeException | SQLException  e)
+	{
+		try {
+		con.rollback();
+		
+		} catch (SQLException e1) {
+		
+		throw new ConexionException();
+		}
+			throw new ModificandoChequeException();
+	}
+	finally
+	{
+		pool.liberarConeccion(con);
+	}
+}
+
+
+
+public void eliminarCheque(DatosDocumVO chequeVO ) throws ConexionException, ExisteChequeException, EliminandoChequeException, NoExisteChequeException{
+
+	Connection con = null;
+	
+	try 
+	{
+		con = this.pool.obtenerConeccion();
+		con.setAutoCommit(false);
+		
+		DatosDocum cheque = new DatosDocum(chequeVO);
+		
+		/*Verificamos que exista el cheque*/
+		if(this.cheques.memberCheque(cheque, con))
+		{
+			this.cheques.eliminarCheque(cheque, con);
+			
+			con.commit();
+		}
+		else
+		throw new NoExisteChequeException();
+	
+	}catch( ConexionException| EliminandoChequeException| SQLException | ExisteChequeException  e)
+	{
+		try {
+		con.rollback();
+		
+		} catch (SQLException e1) {
+		
+		throw new ConexionException();
+		}
+			throw new EliminandoChequeException();
+	}
+	finally
+	{
+		pool.liberarConeccion(con);
+	}
+}
+
+/////////////////////////////////FIN-CHEQUES/////////////////////////////////////
+
+
+
+/////////////////////////////////SALDO CUENTAS///////////////////////////////////
+
+public void insertarSaldoCuenta(DocumSaldoVO documento)
+		throws InsertandoSaldoCuentaException, ExisteSaldoCuentaException, ConexionException, SQLException{
+
+	Connection con = null;
+	boolean existe = false;
+	NumeradoresVO codigos = new NumeradoresVO();
+	
+	try 
+	{
+		con = this.pool.obtenerConeccion();
+		con.setAutoCommit(false);
+		
+		//Obtenemos nroTrans 
+		//Obtengo numerador de gastos
+		codigos.setNumeroTrans(numeradores.getNumero(con, "03", documento.getCodEmp())); //nro trans
+		
+		
+		
+		DocumSaldo docum = new DocumSaldo(documento);
+		
+		docum.setNroTrans(codigos.getNumeroTrans()); /*Seteamos el nroTrans*/
+		
+		/*Verificamos que no exista el documento*/
+		if(!this.saldosCuentas.memberSaldoCta(docum, con))
+		{
+			/*Ingresamos el cheque*/
+			this.saldosCuentas.insertarSaldoCuenta(docum, con);
+			
+			/*Ingresamos el saldo para el documento*/
+			this.saldosCuentas.modificarSaldoCuenta(docum, con);
+		
+			con.commit();
+		}
+		else{
+			existe = true;
+		}
+	
+	}catch(Exception e){
+		
+		try {
+			con.rollback();
+		
+		} catch (SQLException ex) {
+		
+			throw new InsertandoSaldoCuentaException();
+		}
+	
+		throw new InsertandoSaldoCuentaException();
+	}
+	finally
+	{
+		pool.liberarConeccion(con);
+	}
+	if (existe){
+		throw new ExisteSaldoCuentaException();
+	}
+	
+}
+
+public void modificarSaldoCuenta(DocumSaldoVO docum) throws ModificandoSaldoCuentaException, ConexionException, EliminandoSaldoCuetaException, InsertandoSaldoCuentaException, ExisteSaldoCuentaException, NoExisteSaldoCuentaException{
+
+	Connection con = null;
+	
+	try 
+	{
+		con = this.pool.obtenerConeccion();
+		con.setAutoCommit(false);
+		
+		DocumSaldo doc = new DocumSaldo(docum);
+		
+		/*Verificamos que exista el doc*/
+		if(this.saldosCuentas.memberSaldoCta(doc, con))
+		{
+			this.saldosCuentas.modificarSaldoCuenta(doc, con);
+			
+			con.commit();
+		}
+		else
+		throw new ModificandoSaldoCuentaException();
+	
+	}catch(ModificandoSaldoCuentaException| ConexionException| EliminandoSaldoCuetaException| InsertandoSaldoCuentaException| ExisteSaldoCuentaException| NoExisteSaldoCuentaException | SQLException  e)
+	{
+		try {
+		con.rollback();
+		
+		} catch (SQLException e1) {
+		
+		throw new ConexionException();
+		}
+			throw new ModificandoSaldoCuentaException();
+	}
+	finally
+	{
+		pool.liberarConeccion(con);
+	}
+}
+
+
+
+public void eliminarSaldoCuenta(DocumSaldoVO documVO ) throws ConexionException, ExisteSaldoCuentaException, EliminandoSaldoCuetaException, NoExisteSaldoCuentaException{
+
+	Connection con = null;
+	
+	try 
+	{
+		con = this.pool.obtenerConeccion();
+		con.setAutoCommit(false);
+		
+		DocumSaldo docum = new DocumSaldo(documVO);
+		
+		/*Verificamos que exista el cheque*/
+		if(this.saldosCuentas.memberSaldoCta(docum, con))
+		{
+			this.saldosCuentas.eliminarSaldoCuenta(docum, con);
+			
+			con.commit();
+		}
+		else
+		throw new NoExisteSaldoCuentaException();
+	
+	}catch( ConexionException| EliminandoSaldoCuetaException| SQLException | ExisteSaldoCuentaException  e)
+	{
+		try {
+		con.rollback();
+		
+		} catch (SQLException e1) {
+		
+		throw new ConexionException();
+		}
+			throw new EliminandoSaldoCuetaException();
+	}
+	finally
+	{
+		pool.liberarConeccion(con);
+	}
+}
+
+
+/////////////////////////////////FIN- SALDO CUENTAS//////////////////////////////
 	
 	
 }

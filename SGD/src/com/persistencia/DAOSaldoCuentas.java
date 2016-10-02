@@ -4,38 +4,32 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
-import com.excepciones.Cheques.*;
+import com.excepciones.SaldoCuentas.*;
 import com.logica.Docum.DatosDocum;
-import com.logica.Docum.DocumDetalle;
-import com.mysql.jdbc.Statement;
+import com.logica.Docum.DocumSaldo;
 
-public class DAOCheques implements IDAOCheques{
+public class DAOSaldoCuentas implements IDAOSaldosCuentas{
 
 	
 	/**
 	 * Dado el documento, valida si existe
 	 * @throws ExisteSaldoException 
 	 */
-	public boolean memberCheque(DatosDocum docum, Connection con) throws ExisteChequeException{
+	public boolean memberSaldoCta(DocumSaldo docum, Connection con) throws ExisteSaldoCuentaException{
 		
 		boolean existe = false;
 		
 		try{
 			
 			ConsultasDD consultas = new ConsultasDD ();
-			String query = consultas.memberCheque();
+			String query = consultas.memberSaldoCuenta();
 			
 			
 			PreparedStatement pstmt1 = con.prepareStatement(query);
 			
-			pstmt1.setString(1, docum.getCodDocum());
-			pstmt1.setString(2, docum.getSerieDocum());
-			pstmt1.setInt(3, docum.getNroDocum());
-			pstmt1.setString(4, docum.getCodEmp());
-			pstmt1.setString(5, docum.getTitInfo().getCodigo());
+			pstmt1.setLong(1, docum.getNroTrans());
 			
 			ResultSet rs = pstmt1.executeQuery();
 			
@@ -49,18 +43,18 @@ public class DAOCheques implements IDAOCheques{
 			
 		}catch(SQLException e){
 			
-			throw new ExisteChequeException();
+			throw new ExisteSaldoCuentaException();
 		}
 	}
 	
 
 
-	public void insertarCheque(DatosDocum documento, Connection con)
-			throws InsertandoChequeException, ConexionException, SQLException {
+	public void insertarSaldoCuenta(DocumSaldo documento, Connection con)
+			throws InsertandoSaldoCuentaException, ConexionException, SQLException {
 		
 		ConsultasDD clts = new ConsultasDD();
 		
-    	String insert = clts.insertarCheque();
+    	String insert = clts.insertarSaldoCuenta();
     	
     	
     	PreparedStatement pstmt1;
@@ -84,32 +78,34 @@ public class DAOCheques implements IDAOCheques{
 			pstmt1.setString(13, documento.getReferencia());
 			pstmt1.setLong(14, documento.getNroTrans());
 			
+			pstmt1.setString(15, documento.getCodDocumRef());
+			pstmt1.setString(16, documento.getSerieDocumRef());
+			pstmt1.setInt(17, documento.getNroDocumRef());
+			pstmt1.setString(18, documento.getCodBco());
+			pstmt1.setString(19, documento.getCodCtaBco());
+			pstmt1.setString(20, documento.getMovimiento());
+			
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
 					
 		} 
     	catch (SQLException e) 
     	{
-			throw new InsertandoChequeException();
+			throw new InsertandoSaldoCuentaException();
 		} 
 		
 	}
 
-	public void eliminarCheque(DatosDocum documento, Connection con)
-			throws EliminandoChequeException, ConexionException {
-		// TODO Auto-generated method stub
+	public void eliminarSaldoCuenta(DocumSaldo documento, Connection con)
+			throws EliminandoSaldoCuetaException, ConexionException {
 		ConsultasDD consultas = new ConsultasDD();
-		String eliminar = consultas.eliminarCheque();
+		String eliminar = consultas.eliminarSaldoCuenta();
 		PreparedStatement pstmt1;
 		
 		try {
 			
 			pstmt1 =  con.prepareStatement(eliminar);
-			pstmt1.setString(1, documento.getCodDocum());
-			pstmt1.setString(2, documento.getSerieDocum());
-			pstmt1.setInt(3, documento.getNroDocum());
-			pstmt1.setString(4, documento.getCodEmp());
-			pstmt1.setString(5, documento.getTitInfo().getCodigo());
+			pstmt1.setLong(1, documento.getNroTrans());
 			
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
@@ -118,34 +114,31 @@ public class DAOCheques implements IDAOCheques{
 		
 		catch (SQLException e) {
 			
-			throw new EliminandoChequeException();
+			throw new EliminandoSaldoCuetaException();
 		}
 	}
 	
-	public void modificarCheque(DatosDocum cheque, int signo, double tc   , Connection con)
-			throws ModificandoChequeException, ConexionException, EliminandoChequeException, InsertandoChequeException, ExisteChequeException, NoExisteChequeException {
+	public void modificarSaldoCuenta(DocumSaldo saldo, Connection con)
+			throws ModificandoSaldoCuentaException, ConexionException, EliminandoSaldoCuetaException, InsertandoSaldoCuentaException, ExisteSaldoCuentaException, NoExisteSaldoCuentaException {
 		
 		try {
 			
 			/*Verificamos si existe el documento en la tabla de saldos
 			 * si existe eliminamos e insertamos con la nueva info*/
-			if(this.memberCheque(cheque, con))
+			if(this.memberSaldoCta(saldo, con))
 			{
-				this.eliminarCheque(cheque, con);
-				this.insertarCheque(cheque, con);
+				this.eliminarSaldoCuenta(saldo, con);
+				this.insertarSaldoCuenta(saldo, con);
 			}
 			else /*Si no existe,tiramos exception*/
 			{
-				throw new NoExisteChequeException();
+				throw new NoExisteSaldoCuentaException();
 			} 
 		} 
 		
 		catch (SQLException e) {
 			
-			throw new ModificandoChequeException();
+			throw new ModificandoSaldoCuentaException();
 		}
 	}
-	
-
-	
 }

@@ -18,8 +18,8 @@ public interface IDAOSaldos {
 	
 	public ArrayList<DocumDetalle> getSaldos(Connection con, String codEmp) throws ObteniendoSaldosException, ConexionException;
 	public boolean memberSaldo(DatosDocum docum, Connection con) throws ExisteSaldoException, ConexionException;
-	public void insertarSaldo(DocumDetalle documento, String codEmp, Connection con) throws IngresandoSaldoException, ConexionException, SQLException;
-	public void eliminarSaldo(DocumDetalle documento, String codEmp, Connection con) throws EliminandoSaldoException, ConexionException;
-	public void modificarSaldo(DocumDetalle documento, int signo, double tc  ,String codEmp , Connection con)
+	public void insertarSaldo(DatosDocum documento, Connection con) throws IngresandoSaldoException, ConexionException, SQLException;
+	public void eliminarSaldo(DatosDocum documento, Connection con) throws EliminandoSaldoException, ConexionException;
+	public void modificarSaldo(DatosDocum documento, int signo, double tc , Connection con)
 			throws ModificandoSaldoException, ConexionException, EliminandoSaldoException, IngresandoSaldoException, ExisteSaldoException; 
 }

@@ -1,6 +1,7 @@
 package com.abstractFactory;
 
 import com.persistencia.IDAOBancos;
+import com.persistencia.IDAOCheques;
 import com.persistencia.IDAOClientes;
 import com.persistencia.IDAOCodigosGeneralizados;
 import com.persistencia.IDAOCotizaciones;
@@ -20,6 +21,7 @@ import com.persistencia.IDAONumeradores;
 import com.persistencia.IDAOProcesos;
 import com.persistencia.IDAORubros;
 import com.persistencia.IDAOSaldos;
+import com.persistencia.IDAOSaldosCuentas;
 import com.persistencia.IDAOTipoRubro;
 import com.persistencia.IDAOUsuarios;
 
@@ -68,5 +70,9 @@ public interface IAbstractFactory
 	public IDAOSaldos crearDAOSaldos();
 	
 	public IDAODocLog crearDAODocLog();
+	
+	public IDAOCheques crearDAOCheques();
+	
+	public IDAOSaldosCuentas crearDAOSaldosCuenta();
 
 }

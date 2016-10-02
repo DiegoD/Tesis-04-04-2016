@@ -1,0 +1,88 @@
+package com.valueObject.Docum;
+
+public class DocumSaldoVO extends DatosDocumVO{
+
+	private String codBco;
+	private String codCtaBco;
+	private String movimiento;
+	
+	private String codDocumRef;
+	private String serieDocumRef;
+	private int nroDocumRef;
+	
+	
+	public void copiar(DocumSaldoVO t){
+		
+		super.copiar(t);
+		
+		this.codBco = t.codBco;
+		this.codCtaBco = t.codCtaBco;
+		this.movimiento = t.movimiento;
+		
+		this.codDocumRef = t.codDocumRef;
+		this.serieDocumRef = t.serieDocumRef;
+		this.nroDocumRef = t.nroDocumRef;
+	}
+
+
+	public String getCodBco() {
+		return codBco;
+	}
+
+
+	public void setCodBco(String codBco) {
+		this.codBco = codBco;
+	}
+
+
+	public String getCodCtaBco() {
+		return codCtaBco;
+	}
+
+
+	public void setCodCtaBco(String codCtaBco) {
+		this.codCtaBco = codCtaBco;
+	}
+
+
+	public String getMovimiento() {
+		return movimiento;
+	}
+
+
+	public void setMovimiento(String movimiento) {
+		this.movimiento = movimiento;
+	}
+
+
+	public String getCodDocumRef() {
+		return codDocumRef;
+	}
+
+
+	public void setCodDocumRef(String codDocumRef) {
+		this.codDocumRef = codDocumRef;
+	}
+
+
+	public String getSerieDocumRef() {
+		return serieDocumRef;
+	}
+
+
+	public void setSerieDocumRef(String serieDocumRef) {
+		this.serieDocumRef = serieDocumRef;
+	}
+
+
+	public int getNroDocumRef() {
+		return nroDocumRef;
+	}
+
+
+	public void setNroDocumRef(int nroDocumRef) {
+		this.nroDocumRef = nroDocumRef;
+	}
+	
+	
+}

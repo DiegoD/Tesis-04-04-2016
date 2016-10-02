@@ -8,7 +8,7 @@ import com.logica.MonedaInfo;
 import com.valueObject.Docum.DatosDocumVO;
 import com.valueObject.cliente.ClienteVO;
 
-public abstract class DatosDocum extends Auditoria{
+public class DatosDocum extends Auditoria{
 
 	
 	private Timestamp fecDoc;
@@ -25,6 +25,8 @@ public abstract class DatosDocum extends Auditoria{
 	private double impTotMo;
 	private double tcMov;
 	private Timestamp fecValor;
+	
+	
 	
 	private CuentaInfo cuenta;
 	

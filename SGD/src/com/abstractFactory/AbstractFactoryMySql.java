@@ -135,4 +135,15 @@ public class AbstractFactoryMySql implements IAbstractFactory
 		return new DAODocLog();
 	}
 
+	@Override
+	public IDAOCheques crearDAOCheques() {
+		
+		return new DAOCheques();
+	}
+
+	@Override
+	public IDAOSaldosCuentas crearDAOSaldosCuenta() {
+
+		return new DAOSaldoCuentas();
+	}
 }

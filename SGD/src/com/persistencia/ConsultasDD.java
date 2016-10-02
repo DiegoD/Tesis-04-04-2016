@@ -1324,8 +1324,8 @@ public String getGastosConSaldo(){
 		sb.append("INSERT INTO c_cheques ( cod_docum, serie_docum, nro_docum, "
 				+ " cod_emp, cod_moneda, cod_tit, "
 				+ " imp_tot_mn, imp_tot_mo, cuenta, "
-				+ " fecha_mod, usuario_mod, operacion, cod_cta ) ");
-		sb.append("VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?) ");
+				+ " fecha_mod, usuario_mod, operacion, cod_cta, referencia, nro_trans ) ");
+		sb.append("VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?, ?) ");
 		
 		return sb.toString();
 	}
@@ -1342,6 +1342,45 @@ public String getGastosConSaldo(){
 	}	
 	
 ////////////////////////FIN CHEQUES//////////////////////////////////////////////
+	
+////////////////////////SALDO CUENTAS////////////////////////////////////////////
+	
+public String memberSaldoCuenta(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_docum ");
+		sb.append("FROM sa_cuentas WHERE nro_trans = ? ");
+		
+		return sb.toString();
+	}
+
+public String insertarSaldoCuenta()
+{
+
+	StringBuilder sb = new StringBuilder();
+	
+	sb.append("INSERT INTO sa_cuentas ( cod_docum, serie_docum, nro_docum, "
+			+ " cod_emp, cod_moneda, cod_tit, "
+			+ " imp_tot_mn, imp_tot_mo, cuenta, "
+			+ " fecha_mod, usuario_mod, operacion, cod_cta, referencia, nro_trans, cod_doc_ref"
+			+ " serie_doc_ref, nro_doc_ref, cod_bco, cod_ctabco, movimiento ) ");
+	sb.append("VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+	
+	return sb.toString();
+}
+
+public String eliminarSaldoCuenta(){
+	
+	StringBuilder sb = new StringBuilder();
+	
+	sb.append("DELETE FROM sa_cuentas ");
+	sb.append("WHERE nro_trans = ? ");
+	
+	return sb.toString();
+}	
+	
+////////////////////////FIN SALO CUENTAS/////////////////////////////////////////
 	
 ////////////////////////INI LOGS///////////////////////////////////////////////
 	public String insertarLog()

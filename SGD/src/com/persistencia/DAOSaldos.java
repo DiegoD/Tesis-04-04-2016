@@ -70,7 +70,7 @@ public class DAOSaldos implements IDAOSaldos{
 	
 
 	@Override
-	public void insertarSaldo(DocumDetalle documento, String codEmp, Connection con)
+	public void insertarSaldo(DatosDocum documento, Connection con)
 			throws IngresandoSaldoException, ConexionException, SQLException {
 		ConsultasDD clts = new ConsultasDD();
 		
@@ -106,7 +106,7 @@ public class DAOSaldos implements IDAOSaldos{
 	}
 
 	@Override
-	public void eliminarSaldo(DocumDetalle documento, String codEmp, Connection con)
+	public void eliminarSaldo(DatosDocum documento, Connection con)
 			throws EliminandoSaldoException, ConexionException {
 		// TODO Auto-generated method stub
 		ConsultasDD consultas = new ConsultasDD();
@@ -134,7 +134,7 @@ public class DAOSaldos implements IDAOSaldos{
 	}
 	
 	@Override
-	public void modificarSaldo(DocumDetalle documento, int signo, double tc  ,String codEmp , Connection con)
+	public void modificarSaldo(DatosDocum documento, int signo, double tc , Connection con)
 			throws ModificandoSaldoException, ConexionException, EliminandoSaldoException, IngresandoSaldoException, ExisteSaldoException {
 		
 		double saldoAnteriorMO;
@@ -151,7 +151,7 @@ public class DAOSaldos implements IDAOSaldos{
 				saldoAnteriorMO = this.getSaldo(documento, con);
 				
 				/*Resto en la moneda operativa*/
-				saldoCalcMO = documento.getImpImpuMo() - saldoAnteriorMO;
+				saldoCalcMO = saldoAnteriorMO +(documento.getImpTotMo()* signo);
 				documento.setImpTotMo(saldoCalcMO);
 				
 				/*Calculamos el saldo resto a la fecha valor pasada por parametro, si es que quedea saldo en MO*/
@@ -165,12 +165,12 @@ public class DAOSaldos implements IDAOSaldos{
 					documento.setImpTotMo(0);
 				}
 				
-				this.eliminarSaldo(documento, codEmp, con);
-				this.insertarSaldo(documento, codEmp, con);
+				this.eliminarSaldo(documento, con);
+				this.insertarSaldo(documento, con);
 			}
 			else /*Si no existe, es nuevo y solamente insertamos*/
 			{
-				this.insertarSaldo(documento, codEmp, con);
+				this.insertarSaldo(documento, con);
 			} 
 		} 
 		
@@ -184,7 +184,7 @@ public class DAOSaldos implements IDAOSaldos{
 	 * Nos retorna el saldo del documento en moneda operativa
 	 * @throws ExisteSaldoException 
 	 */
-	private double getSaldo(DocumDetalle docum, Connection con) throws ExisteSaldoException{
+	private double getSaldo(DatosDocum docum, Connection con) throws ExisteSaldoException{
 		
 		ConsultasDD consultas = new ConsultasDD ();
 		String query = consultas.getSaldoMo();
