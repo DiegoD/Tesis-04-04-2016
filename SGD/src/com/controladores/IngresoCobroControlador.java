@@ -129,13 +129,19 @@ public class IngresoCobroControlador {
 	 * @throws InicializandoException 
 	 * @throws ObteniendoPermisosException 
 	 */
-	public CotizacionVO getCotizacion(UsuarioPermisosVO permisos, Date fecha, String codMoneda) throws ObteniendoCotizacionesException, ConexionException, ObteniendoPermisosException, InicializandoException, NoTienePermisosException{
+	public CotizacionVO getCotizacion(UsuarioPermisosVO permisoAux, Date fecha, String codMonedaSeleccionada) throws ObteniendoCotizacionesException, ConexionException, ObteniendoPermisosException, InicializandoException, NoTienePermisosException{
 		
 		/*Primero se verifican los permisos*/
-		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			return FachadaDD.getInstance().getCotizacion(permisos.getCodEmp(), fecha, codMoneda);
+		if(Fachada.getInstance().permisoEnFormulario(permisoAux))
+			return FachadaDD.getInstance().getCotizacion(permisoAux.getCodEmp(), fecha, codMonedaSeleccionada);
 		else
 			throw new NoTienePermisosException();
 	}
+
+
+	
+
+
+	
 	
 }

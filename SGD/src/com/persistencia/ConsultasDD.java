@@ -1253,6 +1253,17 @@ public String getGastosConSaldo(){
 		return sb.toString();
 	}
 	
+	public String getSaldoMo(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT imp_tot_mo "
+				+ "FROM sa_docum WHERE cod_docum = ? "
+				+ "AND serie_docum = AND nro_docum = AND cod_emp = ? AND cod_tit = ?");		
+		
+		return sb.toString();
+	}
+	
 	public String insertarSaldo()
 	{
 	

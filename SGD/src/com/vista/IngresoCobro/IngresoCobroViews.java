@@ -41,6 +41,7 @@ public class IngresoCobroViews extends FormLayout {
 	protected ComboBox comboMPagos;
 	protected TextField serieDocRef;
 	protected TextField nroDocRef;
+	protected TextField tcMov;
 	protected HorizontalLayout name_wrapper2;
 	protected ComboBox comboMoneda;
 	protected TextField impTotMo;

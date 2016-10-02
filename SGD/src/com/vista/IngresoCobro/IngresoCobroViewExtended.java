@@ -14,6 +14,7 @@ import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Bancos.ObteniendoBancosException;
 import com.excepciones.Bancos.ObteniendoCuentasBcoException;
+import com.excepciones.Cotizaciones.ObteniendoCotizacionesException;
 import com.excepciones.IngresoCobros.ExisteIngresoCobroException;
 import com.excepciones.IngresoCobros.InsertandoIngresoCobroException;
 import com.excepciones.IngresoCobros.ModificandoIngresoCobroException;
@@ -87,8 +88,9 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	/*Inicializamos los permisos para el usuario*/
 	this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
 	
-	/*Inicializamos listener al combo de bancos, para que inicialice las cuentas asociadas al banco*/
-;
+
+	
+	
 	
 	this.operacion = opera;
 	this.mainView = main;
@@ -1502,12 +1504,81 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	 */
 	private void calcularImporteTotal(){
 		
+		/*Inicializamos el permisos auxilar, para obterer el TC de moneda no nacional en detalle y distinta a la moneda del cabezal*/
+		UsuarioPermisosVO permisoAux = 
+				new UsuarioPermisosVO(this.permisos.getCodEmp(),
+						this.permisos.getUsuario(),
+						VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+						VariablesPermisos.OPERACION_NUEVO_EDITAR);	
+		
 		double impMoCab = 0;
 		double impMo = 0;
+		double tcMonedaNacional = 0;
+		
+		double aux;
+		double aux2;
+		double tcAux;
+		CotizacionVO cotAux = null;
+		
+		Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
+		
+		try{
+			tcMonedaNacional = Double.parseDouble(this.tcMov.getValue().toString().trim());
+		}
+		catch(Exception e)
+		{
+			/*Si hay error en el formato del tipo de cambio quitamos todosl
+			 * los detalles seleccionados*/
+			
+			this.tcMov.setValue(""); /*limpiamos el campo*/
+			
+			/*Actualizamos el container y la grilla*/
+			container.removeAllItems();
+			this.lstDetalleVO.clear();
+			container.addAll(lstDetalleVO);
+			this.actualizarGrillaContainer(container);
+			
+			Mensajes.mostrarMensajeError("Error en formato de Tipo de Cambio");
+		}
+		
+		String codMonedaCab = this.getCodMonedaSeleccionada();
 		
 		for (IngresoCobroDetalleVO det : lstDetalleVO) {
 
-			impMo += det.getImpTotMo();
+			/*Si la moneda del cobro es igual  a la del documento*/
+			if(codMonedaCab.equals(det.getCodMoneda()))
+			{
+				impMo += det.getImpTotMo();
+			}
+			/*Si la moneda del cobro es distinta a la del documento pero
+			 * igual a la moneda nacional, hago el calculo al tipo de cambio
+			 * de la fecha valor del cobro*/
+			else if(det.getCodMoneda().equals(Variables.CODIGO_MONEDA_NACIONAL))
+			{
+				aux = det.getImpTotMo() / tcMonedaNacional;
+				impMo += aux;
+			}
+			else  /*Si no es moneda nacional y es distinto al moneda del cobro*/
+			{
+				
+				/*Obtenemos el tipo de cambio a pesos de la moneda de la linea */
+				try {
+					cotAux = this.controlador.getCotizacion(permisoAux, fecha, det.getCodMoneda());
+					
+				} catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
+						| InicializandoException | NoTienePermisosException e) {
+					
+					Mensajes.mostrarMensajeError(e.getMessage());
+				}
+				
+				tcAux = cotAux.getCotizacionVenta();
+				
+				aux = det.getImpTotMo() * tcAux; /*Paso a moneda nacional*/
+				
+				aux2 = aux / tcMonedaNacional; /*Paso la moneda nacional a la del cobro*/
+				
+				impMo += aux2;
+			}
 		}
 		
 		this.impTotMo.setValue(Double.toString(impMo));
@@ -1600,5 +1671,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			this.calcularImporteTotal();
 		
 	}
+	
+	
 	
 }

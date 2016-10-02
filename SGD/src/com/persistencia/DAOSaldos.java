@@ -1,6 +1,7 @@
 package com.persistencia;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,9 +28,6 @@ public class DAOSaldos implements IDAOSaldos{
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-
-	
 
 	
 	/**
@@ -136,9 +134,12 @@ public class DAOSaldos implements IDAOSaldos{
 	}
 	
 	@Override
-	public void modificarSaldo(DocumDetalle documento, String codEmp, Connection con)
+	public void modificarSaldo(DocumDetalle documento, int signo, double tc  ,String codEmp , Connection con)
 			throws ModificandoSaldoException, ConexionException, EliminandoSaldoException, IngresandoSaldoException, ExisteSaldoException {
-		// TODO Auto-generated method stub
+		
+		double saldoAnteriorMO;
+		double saldoCalcMO;
+		double saldoCalcMN;
 		
 		try {
 			
@@ -146,6 +147,24 @@ public class DAOSaldos implements IDAOSaldos{
 			 * si existe eliminamos e insertamos con la nueva info*/
 			if(this.memberSaldo((DatosDocum)documento, con))
 			{
+				/*Obtenemos primero el saldo anterior*/
+				saldoAnteriorMO = this.getSaldo(documento, con);
+				
+				/*Resto en la moneda operativa*/
+				saldoCalcMO = documento.getImpImpuMo() - saldoAnteriorMO;
+				documento.setImpTotMo(saldoCalcMO);
+				
+				/*Calculamos el saldo resto a la fecha valor pasada por parametro, si es que quedea saldo en MO*/
+				if(saldoCalcMO != 0)
+				{
+					saldoCalcMN = saldoCalcMO * tc;
+					documento.setImpTotMn(saldoCalcMN);
+				}
+				else
+				{
+					documento.setImpTotMo(0);
+				}
+				
 				this.eliminarSaldo(documento, codEmp, con);
 				this.insertarSaldo(documento, codEmp, con);
 			}
@@ -159,6 +178,43 @@ public class DAOSaldos implements IDAOSaldos{
 			
 			throw new ModificandoSaldoException();
 		}
+	}
+	
+	/**
+	 * Nos retorna el saldo del documento en moneda operativa
+	 * @throws ExisteSaldoException 
+	 */
+	private double getSaldo(DocumDetalle docum, Connection con) throws ExisteSaldoException{
+		
+		ConsultasDD consultas = new ConsultasDD ();
+		String query = consultas.getSaldoMo();
+		
+		Double aux;
+		
+		try {
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			
+			pstmt1.setString(1, docum.getCodDocum());
+			pstmt1.setString(2, docum.getSerieDocum());
+			pstmt1.setInt(3, docum.getNroDocum());
+			pstmt1.setString(4, docum.getCodEmp());
+			pstmt1.setString(5, docum.getTitInfo().getCodigo());
+			
+			ResultSet rs = pstmt1.executeQuery();
+			
+			aux = (rs.getDouble("imp_tot_mo"));
+						
+			rs.close ();
+			pstmt1.close ();
+			
+			return aux;
+		
+		}catch(SQLException e){
+		
+		throw new ExisteSaldoException();
+	}
+		
+		
 	}
 	
 

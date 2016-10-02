@@ -1,6 +1,7 @@
 package com.persistencia;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -19,5 +20,6 @@ public interface IDAOSaldos {
 	public boolean memberSaldo(DatosDocum docum, Connection con) throws ExisteSaldoException, ConexionException;
 	public void insertarSaldo(DocumDetalle documento, String codEmp, Connection con) throws IngresandoSaldoException, ConexionException, SQLException;
 	public void eliminarSaldo(DocumDetalle documento, String codEmp, Connection con) throws EliminandoSaldoException, ConexionException;
-	public void modificarSaldo(DocumDetalle documento, String codEmp, Connection con) throws ModificandoSaldoException, ConexionException, EliminandoSaldoException, IngresandoSaldoException, ExisteSaldoException;
+	public void modificarSaldo(DocumDetalle documento, int signo, double tc  ,String codEmp , Connection con)
+			throws ModificandoSaldoException, ConexionException, EliminandoSaldoException, IngresandoSaldoException, ExisteSaldoException; 
 }

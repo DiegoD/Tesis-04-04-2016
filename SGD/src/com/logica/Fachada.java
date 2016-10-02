@@ -81,6 +81,7 @@ public class Fachada {
 	private IDAOIngresoCobro ingresoCobro;
 	private IDAOSaldos saldos;
 	private IDAONumeradores numeradores;
+	private IDAOCotizaciones cotizaciones;
 	
 	private AbstractFactoryBuilder fabrica;
 	private IAbstractFactory fabricaConcreta;
@@ -102,6 +103,7 @@ public class Fachada {
         this.ingresoCobro = fabricaConcreta.crearDAOIngresoCobro();
         this.saldos = fabricaConcreta.crearDAOSaldos();
         this.numeradores = fabricaConcreta.crearDAONumeradores();
+        this.cotizaciones = fabricaConcreta.crearDAOCotizaciones();
         
     }
     
@@ -1286,6 +1288,7 @@ public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 		con.setAutoCommit(false);
 		
 		IngresoCobro ing = new IngresoCobro(ingVO); 
+		Cotizacion cotiAux;
 		
 		//Obtengo numerador de gastos
 		codigos.setCodigo(numeradores.getNumero(con, "ingcobro", codEmp)); //Ingreso Cobro
@@ -1301,9 +1304,18 @@ public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 			/*Ingresamos el cobro*/
 			this.ingresoCobro.insertarIngresoCobro(ing, codEmp, con);
 			
+			/*Obtenemos el tipo de cambio de la moneda del detalle a la
+			 * fecha valor del cabezal*/
+		
+			
+			
 			/*Para cada linea ingresamos el saldo*/
 			for (DocumDetalle docum : ing.getDetalle()) {
-				this.saldos.modificarSaldo(docum, codEmp, con);
+				
+				cotiAux = this.cotizaciones.getCotizacion(codEmp, new Date(ingVO.getFecValor().getTime()), docum.getMoneda().getCodMoneda(), con);
+				
+				/*Signo -1 porque resta al saldo del documento el cobro*/
+				this.saldos.modificarSaldo(docum, -1, cotiAux.getCotizacion_venta(), codEmp, con);
 			}
 			
 			con.commit();
