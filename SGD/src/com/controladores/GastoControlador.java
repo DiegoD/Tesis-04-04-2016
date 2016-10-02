@@ -166,8 +166,9 @@ public class GastoControlador {
 	public CotizacionVO getCotizacion(UsuarioPermisosVO permisos, Date fecha, String codMoneda) throws ObteniendoCotizacionesException, ConexionException, ObteniendoPermisosException, InicializandoException, NoTienePermisosException{
 		
 		/*Primero se verifican los permisos*/
-		if(Fachada.getInstance().permisoEnFormulario(permisos))
+		if(Fachada.getInstance().permisoEnFormulario(permisos)){
 			return FachadaDD.getInstance().getCotizacion(permisos.getCodEmp(), fecha, codMoneda);
+		}
 		else
 			throw new NoTienePermisosException();
 	}

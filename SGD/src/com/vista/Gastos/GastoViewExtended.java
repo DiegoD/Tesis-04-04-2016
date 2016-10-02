@@ -1,5 +1,6 @@
 package com.vista.Gastos;
 
+import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
@@ -73,6 +74,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 	Integer codigoInsert;
 	String aux;
 	NumeradoresVO codigos;
+	Double importeMoneda = null, porcImpuesto = null;
 	
 	public GastoViewExtended(String opera, GastosPanelExtended main){
 		
@@ -82,6 +84,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		
 		this.inicializarForm();
 		
+	
 		/*Inicializamos listener de boton aceptar*/
 		this.aceptar.addClickListener(click -> {
 				
@@ -96,7 +99,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 				else if(this.comboSeleccion.getValue().equals("Oficina")){
 					this.inicializoOficina();
 				}
-				
+				impImpuMn.setValue("0");
 				/*Validamos los campos antes de invocar al controlador*/
 				if(this.fieldsValidos())
 				{
@@ -573,50 +576,80 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 			@Override
 			public void valueChange(ValueChangeEvent event) {
 				
-				if("ProgramaticallyChanged".equals(comboMoneda.getData())){
-					comboMoneda.setData(null);
-		            return;
-		        }
-				
+				 //Inorder to avoid recursive action
+//		        if("ProgramaticallyChanged".equals(comboMoneda.getData())){
+//		        	comboMoneda.setData(null);
+//		            return;
+//		        }
+//		        
+				CotizacionVO cotizacion =  new CotizacionVO();
 				MonedaVO auxMoneda = new MonedaVO();
-				CotizacionVO cotizacion = new CotizacionVO();
-				auxMoneda = (MonedaVO) comboMoneda.getValue();
-//				try {
-//					if(auxMoneda.getCodMoneda() != null){
-//						cotizacion = controlador.getCotizacion(permisoAux, SimpleDateFormat.format("01/01/01"), auxMoneda.getCodMoneda());
-//						//(java.sql.Date)fecValor.getValue()
+				
+				if(operacion != Variables.OPERACION_LECTURA){
+					//comboMoneda.setData("ProgramaticallyChanged");
+					
+					auxMoneda = (MonedaVO) comboMoneda.getValue();
+					Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
+					
+					try {
+						
+						if(auxMoneda.getCodMoneda() != null){
+							cotizacion = getCotizacion(permisoAux, fecha,auxMoneda.getCodMoneda());
+						}
+					}
+					catch (Exception e){
+						e.printStackTrace();
+					}
+//					catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
+//							| InicializandoException | NoTienePermisosException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
 //					}
-//				} catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
-//						| InicializandoException | NoTienePermisosException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-				System.out.println("cambia combo monedas");
+					System.out.println("cambia combo monedas");
+				}
+				
 			}
 		});
 		
+		
+		
 		this.impTotMo.addValueChangeListener(new Property.ValueChangeListener() {
+			
 		    public void valueChange(ValueChangeEvent event) {
-		        // Assuming that the value type is a String
-		    	Double totalMo, impuestoMo, porcImp;
-		    	
+		    	Double impuesto;
 		        String value = (String) event.getProperty().getValue();
-		        
-		        fieldGroup =  new BeanFieldGroup<GastoVO>(GastoVO.class);
-		        fieldGroup.getItemDataSource().getBean().setImpTotMo(Double.parseDouble(impTotMn.getValue()));
-		        // Do something with the value
-		        System.out.println("cambia importe " + impTotMn.getValue() + " pepe");
-		        
-		        if(impTotMn.getValue() != ""){
+		        if(value != ""){
+		        	importeMoneda = Double.parseDouble(value);
 		        	
-					aux = impTotMn.getValue().toString().trim().replace(",", ".");
-					totalMo = Double.parseDouble(aux);
-					aux = porcentajeImpuesto.getValue().toString().trim().replace(",", ".");
-					porcImp = Double.parseDouble(aux);
-					impuestoMo = (porcImp * totalMo)/100;
-					impImpuMo.setValue(String.valueOf(impuestoMo));
-					
-				}
+		        	if(operacion != Variables.OPERACION_LECTURA){
+
+		        		// Assuming that the value type is a String
+			        	impuesto = calculoImpuesto();
+			        	if(impuesto != null){
+			        		impImpuMo.setValue(String.valueOf(impuesto).replace(".", ","));
+			        	}
+			        }
+		    	}
+		    }
+		});
+		
+		this.porcentajeImpuesto.addValueChangeListener(new Property.ValueChangeListener() {
+			
+		    public void valueChange(ValueChangeEvent event) {
+		    	Double impuesto;
+		        String value = (String) event.getProperty().getValue();
+		        if(value != ""){
+		        	porcImpuesto = Double.parseDouble(value);
+		        	
+		        	if(operacion != Variables.OPERACION_LECTURA){
+		        		// Assuming that the value type is a String
+			        	impuesto = calculoImpuesto();
+			        	if(impuesto != null){
+			        		impImpuMo.setValue(String.valueOf(impuesto).replace(".", ","));
+			        	}
+				        
+			        }
+		    	}
 		    }
 		});
 		
@@ -656,6 +689,10 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 			this.iniFormLectura();
 		} 
 		
+		
+		
+//		CotizacionVO cotizacion;
+//		cotizacion = getCotizacion(permisoAux, this.convertFromJAVADateToSQLDate(this.fecValor.getValue()),"1");
 	}
 	
 	/**
@@ -1087,11 +1124,14 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		}
 		
 		if(datos instanceof ImpuestoVO){
+			
 			ImpuestoVO impuestoVO = (ImpuestoVO) datos;
+			String aux = String.valueOf(impuestoVO.getPorcentaje());
+			aux = aux.replace(".", ",");
 			this.codImpuesto.setValue(impuestoVO.getcodImpuesto());
 			this.nomImpuesto.setValue(impuestoVO.getDescripcion());
-			this.porcentajeImpuesto.setValue(String.valueOf(impuestoVO.getPorcentaje()));
-			
+			//this.porcentajeImpuesto.setValue(String.valueOf(impuestoVO.getPorcentaje()));
+			this.porcentajeImpuesto.setValue(aux);
 		}
 		
 		if(datos instanceof FuncionarioVO){
@@ -1183,9 +1223,47 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		this.mainView.setSub("Oficina");
 	}
 	
+	public Double calculoImpuesto(){
+		double aux;
+		double aux2;
+		if(porcImpuesto != null && importeMoneda != null){
+			aux = (porcImpuesto/100)+1;
+			aux2 = importeMoneda/aux;
+			
+			return importeMoneda - aux2;
+		}
+		else{
+			return null;
+		}
+	}
+	
 	@Override
 	 public void setInfoLst(ArrayList<Object> lstDatos) {
 	  // TODO Auto-generated method stub
 	  
-	 }
+	}
+	
+	public static java.sql.Date convertFromJAVADateToSQLDate(
+            java.util.Date javaDate) {
+        java.sql.Date sqlDate = null;
+        if (javaDate != null) {
+            sqlDate = new Date(javaDate.getTime());
+        }
+        return sqlDate;
+    }
+	
+	private CotizacionVO getCotizacion(UsuarioPermisosVO permisosAux, Date fecha, String codMoneda){
+		CotizacionVO aux = null;
+		
+		try {
+			aux =  controlador.getCotizacion(permisoAux, fecha, codMoneda);
+			
+		} catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
+				| InicializandoException | NoTienePermisosException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return aux;
+	}
 }
