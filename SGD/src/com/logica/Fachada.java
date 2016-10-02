@@ -1300,7 +1300,7 @@ public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 	Integer codigo;
 	NumeradoresVO codigos = new NumeradoresVO();
 	
-	Datos
+	//Datos
 	
 	try 
 	{
@@ -1338,8 +1338,8 @@ public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 			if(ingVO.getCodDocRef().equals("cheqrec"))
 			{
 				/*Primero obtenemos el DatosDocum para el cheque dado el ingreso cobro*/
-				asd
-				this.insertarChequeIntFachada()
+				//asd
+				//this.insertarChequeIntFachada()
 				
 			}
 			

@@ -2643,7 +2643,7 @@ public class FachadaDD {
 			this.gastos.insertarGasto(gasto, cod_emp, con);
 			
 			//Genero saldo del gasto insertado
-			this.saldos.insertarSaldo((DocumDetalle) gasto, cod_emp, con);
+			this.saldos.insertarSaldo((DocumDetalle) gasto, con);
 			
 			//Genero log de documento
 			this.logDocum = new DocLog();
@@ -2717,7 +2717,7 @@ public class FachadaDD {
 				
 				//Modifico gasto
 				this.gastos.modificarGasto(gasto, cod_emp, con);
-				this.saldos.modificarSaldo((DocumDetalle) gasto, cod_emp, con);
+				this.saldos.modificarSaldo((DocumDetalle) gasto, 1, gasto.getTcMov(), con);
 				
 				//Genero log de documento
 				this.logDocum = new DocLog();

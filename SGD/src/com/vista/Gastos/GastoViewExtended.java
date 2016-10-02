@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+import com.controladores.CotizacionControlador;
 import com.controladores.GastoControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.ErrorInesperadoException;
@@ -74,7 +75,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 	Integer codigoInsert;
 	String aux;
 	NumeradoresVO codigos;
-	Double importeMoneda = null, porcImpuesto = null;
+	Double importeMoneda = null, porcImpuesto = null, tipoCambio = null;
 	
 	public GastoViewExtended(String opera, GastosPanelExtended main){
 		
@@ -584,6 +585,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 //		        
 				CotizacionVO cotizacion =  new CotizacionVO();
 				MonedaVO auxMoneda = new MonedaVO();
+				Double importeNacional, impuestoNacional;
 				
 				if(operacion != Variables.OPERACION_LECTURA){
 					//comboMoneda.setData("ProgramaticallyChanged");
@@ -594,17 +596,21 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 					try {
 						
 						if(auxMoneda.getCodMoneda() != null){
-							cotizacion = getCotizacion(permisoAux, fecha,auxMoneda.getCodMoneda());
+							cotizacion = controlador.getCotizacion(permisoAux, fecha, auxMoneda.getCodMoneda());
+							tcMov.setValue(String.valueOf(cotizacion.getCotizacionVenta()).replace(".", ","));
+							
+							//cotizacion = getCotizacion(permisoAux, fecha,auxMoneda.getCodMoneda());
+							importeNacional = calculoImporteMonedaNacional();
+							impuestoNacional = calculoImpuestoMonedaNacional();
+							impTotMn.setValue(String.valueOf(importeNacional).replace(".", ","));
+							impImpuMn.setValue(String.valueOf(impuestoNacional).replace(".", ","));
 						}
 					}
-					catch (Exception e){
+					catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
+							| InicializandoException | NoTienePermisosException e) {
+						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-//					catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
-//							| InicializandoException | NoTienePermisosException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
 					System.out.println("cambia combo monedas");
 				}
 				
@@ -1252,18 +1258,23 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
         return sqlDate;
     }
 	
-	private CotizacionVO getCotizacion(UsuarioPermisosVO permisosAux, Date fecha, String codMoneda){
-		CotizacionVO aux = null;
+	public Double calculoImporteMonedaNacional(){
 		
-		try {
-			aux =  controlador.getCotizacion(permisoAux, fecha, codMoneda);
-			
-		} catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
-				| InicializandoException | NoTienePermisosException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		double tipoCambio, importeNacional;
 		
-		return aux;
+		tipoCambio = Double.parseDouble(tcMov.getValue());
+		
+		return importeMoneda * tipoCambio;
+		
+	}
+	
+	public Double calculoImpuestoMonedaNacional(){
+		
+		double tipoCambio, impuesto;
+		
+		tipoCambio = Double.parseDouble(tcMov.getValue());
+		impuesto = Double.parseDouble(impImpuMo.getValue());
+		
+		return impuesto * tipoCambio;	
 	}
 }

@@ -189,7 +189,7 @@ public class DAOSaldos implements IDAOSaldos{
 		ConsultasDD consultas = new ConsultasDD ();
 		String query = consultas.getSaldoMo();
 		
-		Double aux;
+		Double aux = null;
 		
 		try {
 			PreparedStatement pstmt1 = con.prepareStatement(query);
@@ -202,7 +202,10 @@ public class DAOSaldos implements IDAOSaldos{
 			
 			ResultSet rs = pstmt1.executeQuery();
 			
-			aux = (rs.getDouble("imp_tot_mo"));
+			if (rs.next ()) {
+				aux = (rs.getDouble("imp_tot_mo"));
+			}
+			
 						
 			rs.close ();
 			pstmt1.close ();
