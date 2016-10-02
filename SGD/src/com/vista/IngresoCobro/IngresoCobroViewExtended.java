@@ -88,9 +88,6 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	/*Inicializamos los permisos para el usuario*/
 	this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
 	
-
-	
-	
 	
 	this.operacion = opera;
 	this.mainView = main;

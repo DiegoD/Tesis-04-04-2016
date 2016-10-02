@@ -1300,6 +1300,8 @@ public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 	Integer codigo;
 	NumeradoresVO codigos = new NumeradoresVO();
 	
+	Datos
+	
 	try 
 	{
 		con = this.pool.obtenerConeccion();
@@ -1322,10 +1324,6 @@ public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 			/*Ingresamos el cobro*/
 			this.ingresoCobro.insertarIngresoCobro(ing, codEmp, con);
 			
-			/*Obtenemos el tipo de cambio de la moneda del detalle a la
-			 * fecha valor del cabezal*/
-		
-			
 			
 			/*Para cada linea ingresamos el saldo*/
 			for (DocumDetalle docum : ing.getDetalle()) {
@@ -1334,6 +1332,15 @@ public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 				
 				/*Signo -1 porque resta al saldo del documento el cobro*/
 				this.saldos.modificarSaldo(docum, -1, cotiAux.getCotizacion_venta(), con);
+			}
+			
+			/*Si el ingreso de cobro es con cheque, ingresamos el cheque*/
+			if(ingVO.getCodDocRef().equals("cheqrec"))
+			{
+				/*Primero obtenemos el DatosDocum para el cheque dado el ingreso cobro*/
+				asd
+				this.insertarChequeIntFachada()
+				
 			}
 			
 			con.commit();
@@ -1406,284 +1413,354 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws  C
 
 /////////////////////////////////CHEQUES//////////////////////////////////
 
-public void insertarCheque(DatosDocumVO documento)
-		throws InsertandoChequeException, ExisteChequeException, ConexionException, SQLException{
-
-	Connection con = null;
-	boolean existe = false;
-	NumeradoresVO codigos = new NumeradoresVO();
+	/**
+	*Nos retorna un DatosDocum para ingresar el cheque dado un IngresoCobro
+	 * 
+	*
+	*/
+	private DatosDocumVO getDatosDocumDadoIngCobro(IngresoCobroVO ingVO){
+		
+		DatosDocumVO aux = new DatosDocumVO();
+		
+		aux.copiar(ingVO);
+		
+		aux.setCodDocum(ingVO.getCodDocRef());
+		aux.setSerieDocum(ingVO.getSerieDocRef());
+		aux.setNroDocum(ingVO.getNroDocRef());
+		
+		return aux;
+		
+	}
 	
-	try 
-	{
-		con = this.pool.obtenerConeccion();
-		con.setAutoCommit(false);
+	/**
+	*Para ingresar cheque, sin pasar connection, para
+	*ser invocado desde fuera de fachada
+	*
+	*/
+	public void insertarCheque(DatosDocumVO documento)
+			throws InsertandoChequeException, ExisteChequeException, ConexionException, SQLException{
+	
+		Connection con = null;
+		boolean existe = false;
+		NumeradoresVO codigos = new NumeradoresVO();
 		
-		//Obtenemos nroTrans 
-		//Obtengo numerador de gastos
-		codigos.setNumeroTrans(numeradores.getNumero(con, "03", documento.getCodEmp())); //nro trans
-		
-		
-		DatosDocum cheque = new DatosDocum(documento);
-		
-		cheque.setNroTrans(codigos.getNumeroTrans()); /*Seteamos el nroTrans*/
-		
-		/*Verificamos que no exista el cheque*/
-		if(!this.cheques.memberCheque(cheque, con))
+		try 
 		{
-			/*Ingresamos el cheque*/
-			this.cheques.insertarCheque(cheque, con);
+			con = this.pool.obtenerConeccion();
+			con.setAutoCommit(false);
 			
-			/*Ingresamos el saldo para el documento*/
-			this.saldos.modificarSaldo(cheque, 1, cheque.getTcMov(), con);
+			//Obtenemos nroTrans 
+			//Obtengo numerador de gastos
+			codigos.setNumeroTrans(numeradores.getNumero(con, "03", documento.getCodEmp())); //nro trans
+			
+			
+			DatosDocum cheque = new DatosDocum(documento);
+			
+			cheque.setNroTrans(codigos.getNumeroTrans()); /*Seteamos el nroTrans*/
+			
+			/*Verificamos que no exista el cheque*/
+			if(!this.cheques.memberCheque(cheque, con))
+			{
+				/*Ingresamos el cheque*/
+				this.cheques.insertarCheque(cheque, con);
+				
+				/*Ingresamos el saldo para el documento*/
+				this.saldos.modificarSaldo(cheque, 1, cheque.getTcMov(), con);
+			
+				con.commit();
+			}
+			else{
+				existe = true;
+			}
 		
-			con.commit();
-		}
-		else{
-			existe = true;
-		}
-	
-	}catch(Exception e){
-		
-		try {
-			con.rollback();
-		
-		} catch (SQLException ex) {
+		}catch(Exception e){
+			
+			try {
+				con.rollback();
+			
+			} catch (SQLException ex) {
+			
+				throw new InsertandoChequeException();
+			}
 		
 			throw new InsertandoChequeException();
 		}
-	
-		throw new InsertandoChequeException();
-	}
-	finally
-	{
-		pool.liberarConeccion(con);
-	}
-	if (existe){
-		throw new ExisteChequeException();
-	}
-	
-}
-
-public void modificarCheque(DatosDocumVO chequeVO, int signo, double tc ) throws ModificandoChequeException, ConexionException, EliminandoChequeException, InsertandoChequeException, ExisteChequeException, NoExisteChequeException{
-
-	Connection con = null;
-	
-	try 
-	{
-		con = this.pool.obtenerConeccion();
-		con.setAutoCommit(false);
-		
-		DatosDocum cheque = new DatosDocum(chequeVO);
-		
-		/*Verificamos que exista el cheque*/
-		if(this.cheques.memberCheque(cheque, con))
+		finally
 		{
-			this.cheques.modificarCheque(cheque, signo, tc, con);
-			
-			con.commit();
+			pool.liberarConeccion(con);
 		}
-		else
-		throw new ModificandoChequeException();
+		if (existe){
+			throw new ExisteChequeException();
+		}
+		
+	}
 	
-	}catch(ModificandoChequeException| ConexionException| EliminandoChequeException| InsertandoChequeException| ExisteChequeException| NoExisteChequeException | SQLException  e)
-	{
-		try {
-		con.rollback();
+	/**
+	*Para ingresar cheque, pasando como parametro la connection,
+	*para ser invocado desde fachada
+	*
+	*/
+	private void insertarChequeIntFachada(DatosDocumVO documento, Connection con)
+			throws InsertandoChequeException, ExisteChequeException, ConexionException, SQLException{
+	
+		boolean existe = false;
+		NumeradoresVO codigos = new NumeradoresVO();
 		
-		} catch (SQLException e1) {
+		try 
+		{
+						
+			DatosDocum cheque = new DatosDocum(documento);
+			
+			/*El nro trans es el de la transaccion de cheque*/
+			
+			/*Verificamos que no exista el cheque*/
+			if(!this.cheques.memberCheque(cheque, con))
+			{
+				/*Ingresamos el cheque*/
+				this.cheques.insertarCheque(cheque, con);
+				
+				/*Ingresamos el saldo para el documento*/
+				this.saldos.modificarSaldo(cheque, 1, cheque.getTcMov(), con);
+			
+			}
+			else{
+				existe = true;
+			}
 		
-		throw new ConexionException();
+		}catch(Exception e){
+			
+			throw new InsertandoChequeException();
 		}
+		finally
+		{
+			pool.liberarConeccion(con);
+		}
+		if (existe){
+			throw new ExisteChequeException();
+		}
+		
+	}
+	
+	public void modificarCheque(DatosDocumVO chequeVO, int signo, double tc ) throws ModificandoChequeException, ConexionException, EliminandoChequeException, InsertandoChequeException, ExisteChequeException, NoExisteChequeException{
+	
+		Connection con = null;
+		
+		try 
+		{
+			con = this.pool.obtenerConeccion();
+			con.setAutoCommit(false);
+			
+			DatosDocum cheque = new DatosDocum(chequeVO);
+			
+			/*Verificamos que exista el cheque*/
+			if(this.cheques.memberCheque(cheque, con))
+			{
+				this.cheques.modificarCheque(cheque, signo, tc, con);
+				
+				con.commit();
+			}
+			else
 			throw new ModificandoChequeException();
-	}
-	finally
-	{
-		pool.liberarConeccion(con);
-	}
-}
-
-
-
-public void eliminarCheque(DatosDocumVO chequeVO ) throws ConexionException, ExisteChequeException, EliminandoChequeException, NoExisteChequeException{
-
-	Connection con = null;
-	
-	try 
-	{
-		con = this.pool.obtenerConeccion();
-		con.setAutoCommit(false);
 		
-		DatosDocum cheque = new DatosDocum(chequeVO);
-		
-		/*Verificamos que exista el cheque*/
-		if(this.cheques.memberCheque(cheque, con))
+		}catch(ModificandoChequeException| ConexionException| EliminandoChequeException| InsertandoChequeException| ExisteChequeException| NoExisteChequeException | SQLException  e)
 		{
-			this.cheques.eliminarCheque(cheque, con);
-			
-			con.commit();
-		}
-		else
-		throw new NoExisteChequeException();
-	
-	}catch( ConexionException| EliminandoChequeException| SQLException | ExisteChequeException  e)
-	{
-		try {
-		con.rollback();
-		
-		} catch (SQLException e1) {
-		
-		throw new ConexionException();
-		}
-			throw new EliminandoChequeException();
-	}
-	finally
-	{
-		pool.liberarConeccion(con);
-	}
-}
-
-/////////////////////////////////FIN-CHEQUES/////////////////////////////////////
-
-
-
-/////////////////////////////////SALDO CUENTAS///////////////////////////////////
-
-public void insertarSaldoCuenta(DocumSaldoVO documento)
-		throws InsertandoSaldoCuentaException, ExisteSaldoCuentaException, ConexionException, SQLException{
-
-	Connection con = null;
-	boolean existe = false;
-	NumeradoresVO codigos = new NumeradoresVO();
-	
-	try 
-	{
-		con = this.pool.obtenerConeccion();
-		con.setAutoCommit(false);
-		
-		//Obtenemos nroTrans 
-		//Obtengo numerador de gastos
-		codigos.setNumeroTrans(numeradores.getNumero(con, "03", documento.getCodEmp())); //nro trans
-		
-		
-		
-		DocumSaldo docum = new DocumSaldo(documento);
-		
-		docum.setNroTrans(codigos.getNumeroTrans()); /*Seteamos el nroTrans*/
-		
-		/*Verificamos que no exista el documento*/
-		if(!this.saldosCuentas.memberSaldoCta(docum, con))
-		{
-			/*Ingresamos el cheque*/
-			this.saldosCuentas.insertarSaldoCuenta(docum, con);
-			
-			/*Ingresamos el saldo para el documento*/
-			this.saldosCuentas.modificarSaldoCuenta(docum, con);
-		
-			con.commit();
-		}
-		else{
-			existe = true;
-		}
-	
-	}catch(Exception e){
-		
-		try {
+			try {
 			con.rollback();
+			
+			} catch (SQLException e1) {
+			
+			throw new ConexionException();
+			}
+				throw new ModificandoChequeException();
+		}
+		finally
+		{
+			pool.liberarConeccion(con);
+		}
+	}
+	
+	
+	
+	public void eliminarCheque(DatosDocumVO chequeVO ) throws ConexionException, ExisteChequeException, EliminandoChequeException, NoExisteChequeException{
+	
+		Connection con = null;
 		
-		} catch (SQLException ex) {
+		try 
+		{
+			con = this.pool.obtenerConeccion();
+			con.setAutoCommit(false);
+			
+			DatosDocum cheque = new DatosDocum(chequeVO);
+			
+			/*Verificamos que exista el cheque*/
+			if(this.cheques.memberCheque(cheque, con))
+			{
+				this.cheques.eliminarCheque(cheque, con);
+				
+				con.commit();
+			}
+			else
+			throw new NoExisteChequeException();
+		
+		}catch( ConexionException| EliminandoChequeException| SQLException | ExisteChequeException  e)
+		{
+			try {
+			con.rollback();
+			
+			} catch (SQLException e1) {
+			
+			throw new ConexionException();
+			}
+				throw new EliminandoChequeException();
+		}
+		finally
+		{
+			pool.liberarConeccion(con);
+		}
+	}
+	
+	/////////////////////////////////FIN-CHEQUES/////////////////////////////////////
+	
+	
+	
+	/////////////////////////////////SALDO CUENTAS///////////////////////////////////
+	
+	public void insertarSaldoCuenta(DocumSaldoVO documento)
+			throws InsertandoSaldoCuentaException, ExisteSaldoCuentaException, ConexionException, SQLException{
+	
+		Connection con = null;
+		boolean existe = false;
+		NumeradoresVO codigos = new NumeradoresVO();
+		
+		try 
+		{
+			con = this.pool.obtenerConeccion();
+			con.setAutoCommit(false);
+			
+			//Obtenemos nroTrans 
+			//Obtengo numerador de gastos
+			codigos.setNumeroTrans(numeradores.getNumero(con, "03", documento.getCodEmp())); //nro trans
+			
+			
+			
+			DocumSaldo docum = new DocumSaldo(documento);
+			
+			docum.setNroTrans(codigos.getNumeroTrans()); /*Seteamos el nroTrans*/
+			
+			/*Verificamos que no exista el documento*/
+			if(!this.saldosCuentas.memberSaldoCta(docum, con))
+			{
+				/*Ingresamos el cheque*/
+				this.saldosCuentas.insertarSaldoCuenta(docum, con);
+				
+				/*Ingresamos el saldo para el documento*/
+				this.saldosCuentas.modificarSaldoCuenta(docum, con);
+			
+				con.commit();
+			}
+			else{
+				existe = true;
+			}
+		
+		}catch(Exception e){
+			
+			try {
+				con.rollback();
+			
+			} catch (SQLException ex) {
+			
+				throw new InsertandoSaldoCuentaException();
+			}
 		
 			throw new InsertandoSaldoCuentaException();
 		}
-	
-		throw new InsertandoSaldoCuentaException();
-	}
-	finally
-	{
-		pool.liberarConeccion(con);
-	}
-	if (existe){
-		throw new ExisteSaldoCuentaException();
-	}
-	
-}
-
-public void modificarSaldoCuenta(DocumSaldoVO docum) throws ModificandoSaldoCuentaException, ConexionException, EliminandoSaldoCuetaException, InsertandoSaldoCuentaException, ExisteSaldoCuentaException, NoExisteSaldoCuentaException{
-
-	Connection con = null;
-	
-	try 
-	{
-		con = this.pool.obtenerConeccion();
-		con.setAutoCommit(false);
-		
-		DocumSaldo doc = new DocumSaldo(docum);
-		
-		/*Verificamos que exista el doc*/
-		if(this.saldosCuentas.memberSaldoCta(doc, con))
+		finally
 		{
-			this.saldosCuentas.modificarSaldoCuenta(doc, con);
-			
-			con.commit();
+			pool.liberarConeccion(con);
 		}
-		else
-		throw new ModificandoSaldoCuentaException();
+		if (existe){
+			throw new ExisteSaldoCuentaException();
+		}
+		
+	}
 	
-	}catch(ModificandoSaldoCuentaException| ConexionException| EliminandoSaldoCuetaException| InsertandoSaldoCuentaException| ExisteSaldoCuentaException| NoExisteSaldoCuentaException | SQLException  e)
-	{
-		try {
-		con.rollback();
+	public void modificarSaldoCuenta(DocumSaldoVO docum) throws ModificandoSaldoCuentaException, ConexionException, EliminandoSaldoCuetaException, InsertandoSaldoCuentaException, ExisteSaldoCuentaException, NoExisteSaldoCuentaException{
+	
+		Connection con = null;
 		
-		} catch (SQLException e1) {
-		
-		throw new ConexionException();
-		}
+		try 
+		{
+			con = this.pool.obtenerConeccion();
+			con.setAutoCommit(false);
+			
+			DocumSaldo doc = new DocumSaldo(docum);
+			
+			/*Verificamos que exista el doc*/
+			if(this.saldosCuentas.memberSaldoCta(doc, con))
+			{
+				this.saldosCuentas.modificarSaldoCuenta(doc, con);
+				
+				con.commit();
+			}
+			else
 			throw new ModificandoSaldoCuentaException();
-	}
-	finally
-	{
-		pool.liberarConeccion(con);
-	}
-}
-
-
-
-public void eliminarSaldoCuenta(DocumSaldoVO documVO ) throws ConexionException, ExisteSaldoCuentaException, EliminandoSaldoCuetaException, NoExisteSaldoCuentaException{
-
-	Connection con = null;
-	
-	try 
-	{
-		con = this.pool.obtenerConeccion();
-		con.setAutoCommit(false);
 		
-		DocumSaldo docum = new DocumSaldo(documVO);
-		
-		/*Verificamos que exista el cheque*/
-		if(this.saldosCuentas.memberSaldoCta(docum, con))
+		}catch(ModificandoSaldoCuentaException| ConexionException| EliminandoSaldoCuetaException| InsertandoSaldoCuentaException| ExisteSaldoCuentaException| NoExisteSaldoCuentaException | SQLException  e)
 		{
-			this.saldosCuentas.eliminarSaldoCuenta(docum, con);
+			try {
+			con.rollback();
 			
-			con.commit();
+			} catch (SQLException e1) {
+			
+			throw new ConexionException();
+			}
+				throw new ModificandoSaldoCuentaException();
 		}
-		else
-		throw new NoExisteSaldoCuentaException();
+		finally
+		{
+			pool.liberarConeccion(con);
+		}
+	}
 	
-	}catch( ConexionException| EliminandoSaldoCuetaException| SQLException | ExisteSaldoCuentaException  e)
-	{
-		try {
-		con.rollback();
+	
+	
+	public void eliminarSaldoCuenta(DocumSaldoVO documVO ) throws ConexionException, ExisteSaldoCuentaException, EliminandoSaldoCuetaException, NoExisteSaldoCuentaException{
+	
+		Connection con = null;
 		
-		} catch (SQLException e1) {
+		try 
+		{
+			con = this.pool.obtenerConeccion();
+			con.setAutoCommit(false);
+			
+			DocumSaldo docum = new DocumSaldo(documVO);
+			
+			/*Verificamos que exista el cheque*/
+			if(this.saldosCuentas.memberSaldoCta(docum, con))
+			{
+				this.saldosCuentas.eliminarSaldoCuenta(docum, con);
+				
+				con.commit();
+			}
+			else
+			throw new NoExisteSaldoCuentaException();
 		
-		throw new ConexionException();
+		}catch( ConexionException| EliminandoSaldoCuetaException| SQLException | ExisteSaldoCuentaException  e)
+		{
+			try {
+			con.rollback();
+			
+			} catch (SQLException e1) {
+			
+			throw new ConexionException();
+			}
+				throw new EliminandoSaldoCuetaException();
 		}
-			throw new EliminandoSaldoCuetaException();
+		finally
+		{
+			pool.liberarConeccion(con);
+		}
 	}
-	finally
-	{
-		pool.liberarConeccion(con);
-	}
-}
 
 
 /////////////////////////////////FIN- SALDO CUENTAS//////////////////////////////
