@@ -1303,6 +1303,46 @@ public String getGastosConSaldo(){
 
 ////////////////////////FIN SALDOS//////////////////////////////////////////////
 	
+////////////////////////CHEQUES /////////////////////////////////////////////////
+	
+	public String memberCheque(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_docum ");
+		sb.append("FROM c_cheques WHERE cod_docum = ? AND serie_docum = ? "
+				+ "AND nro_docum = ? AND cod_emp = ? AND cod_tit = ? ");
+		
+		return sb.toString();
+	}
+	
+	public String insertarCheque()
+	{
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO c_cheques ( cod_docum, serie_docum, nro_docum, "
+				+ " cod_emp, cod_moneda, cod_tit, "
+				+ " imp_tot_mn, imp_tot_mo, cuenta, "
+				+ " fecha_mod, usuario_mod, operacion, cod_cta ) ");
+		sb.append("VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?) ");
+		
+		return sb.toString();
+	}
+
+	public String eliminarCheque(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("DELETE FROM c_cheques ");
+		sb.append("WHERE cod_docum = ? AND serie_docum = ? "
+				+ "AND nro_docum = ? AND cod_emp = ? AND cod_tit = ? ");
+		
+		return sb.toString();
+	}	
+	
+////////////////////////FIN CHEQUES//////////////////////////////////////////////
+	
 ////////////////////////INI LOGS///////////////////////////////////////////////
 	public String insertarLog()
 	{

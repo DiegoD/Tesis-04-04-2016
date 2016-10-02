@@ -26,10 +26,15 @@ public abstract class DatosDocum extends Auditoria{
 	private double tcMov;
 	private Timestamp fecValor;
 	
+	private CuentaInfo cuenta;
+	
+	private String codCuentaInd; /*cuenta interna del sistema*/
+	
 	public DatosDocum(){
 
 		this.moneda = new MonedaInfo();
 		this.titInfo = new TitularInfo();
+		this.cuenta = new CuentaInfo();
 	}
 	
 	public DatosDocum(DatosDocumVO d){
@@ -39,6 +44,7 @@ public abstract class DatosDocum extends Auditoria{
 		this.serieDocum = d.getSerieDocum();
 		this.nroDocum = d.getNroDocum();
 		this.codEmp = d.getCodEmp();
+		this.cuenta = new CuentaInfo(d.getCodCuenta(), d.getNomCuenta());
 		
 		this.moneda = new MonedaInfo(d.getCodMoneda(), d.getNomMoneda(), d.getSimboloMoneda());
 		
@@ -55,6 +61,7 @@ public abstract class DatosDocum extends Auditoria{
 		this.setFechaMod(d.getFechaMod());
 		this.setUsuarioMod(d.getUsuarioMod());
 		this.setOperacion(d.getOperacion());
+		this.codCuentaInd = d.getCodCtaInd();
 		
 	}
 	
@@ -84,7 +91,10 @@ public abstract class DatosDocum extends Auditoria{
 		aux.setOperacion(this.getOperacion());
 		aux.setNroTrans(this.nroTrans);
 		
+		aux.setCodCuenta(this.cuenta.getCodCuenta());
+		aux.setNomCuenta(this.cuenta.getNomCuenta());
 		
+		aux.setCodCtaInd(this.codCuentaInd);
 		
 		return aux;
 	}
@@ -200,6 +210,22 @@ public abstract class DatosDocum extends Auditoria{
 
 	public void setFecValor(Timestamp fecValor) {
 		this.fecValor = fecValor;
+	}
+	
+	public CuentaInfo getCuenta() {
+		return cuenta;
+	}
+
+	public void setCuenta(CuentaInfo cuenta) {
+		this.cuenta = cuenta;
+	}
+
+	public String getCodCuentaInd() {
+		return codCuentaInd;
+	}
+
+	public void setCodCuentaInd(String codCuentaInd) {
+		this.codCuentaInd = codCuentaInd;
 	}
 	
 	

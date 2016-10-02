@@ -32,8 +32,10 @@ public class DatosDocumVO extends AuditoriaVO{
 	private double impTotMo;
 	private double tcMov;
 	
-	
+	private String codCuenta;
+	private String nomCuenta;
 
+	private String codCtaInd; /*Cuenta interna del sistema*/
 	
 	public DatosDocumVO(){
 		
@@ -69,7 +71,10 @@ public class DatosDocumVO extends AuditoriaVO{
 		this.setFechaMod(t.getFechaMod());
 		this.setOperacion(t.getOperacion());
 		
-
+		this.codCuenta = t.codCuenta;
+		this.nomCuenta = t.nomCuenta;
+		this.codCtaInd = t.codCtaInd;
+		
 		
 	}
 	
@@ -200,5 +205,31 @@ public class DatosDocumVO extends AuditoriaVO{
 	public void setSimboloMoneda(String simboloMoneda) {
 		this.simboloMoneda = simboloMoneda;
 	}
+
+	public String getCodCuenta() {
+		return codCuenta;
+	}
+
+	public void setCodCuenta(String codCuenta) {
+		this.codCuenta = codCuenta;
+	}
+
+	public String getNomCuenta() {
+		return nomCuenta;
+	}
+
+	public void setNomCuenta(String nomCuenta) {
+		this.nomCuenta = nomCuenta;
+	}
+
+	public String getCodCtaInd() {
+		return codCtaInd;
+	}
+
+	public void setCodCtaInd(String codCtaInd) {
+		this.codCtaInd = codCtaInd;
+	}
+	
+	
 	
 }

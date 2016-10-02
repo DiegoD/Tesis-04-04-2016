@@ -171,7 +171,7 @@ public class DAOSaldos implements IDAOSaldos{
 			else /*Si no existe, es nuevo y solamente insertamos*/
 			{
 				this.insertarSaldo(documento, codEmp, con);
-			}
+			} 
 		} 
 		
 		catch (SQLException e) {

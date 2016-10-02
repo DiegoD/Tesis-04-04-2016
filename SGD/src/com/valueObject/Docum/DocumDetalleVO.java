@@ -14,8 +14,8 @@ public class DocumDetalleVO extends DatosDocumVO{
 	private double impSubMo ;
 	
 	private double tcMov;
-	private String codCuenta;
-	private String nomCuenta;
+//	private String codCuenta;
+//	private String nomCuenta;
 	
 	private String codProceso;
 	private String descProceso;
@@ -25,7 +25,7 @@ public class DocumDetalleVO extends DatosDocumVO{
 	private String nomRubro;
 	private String codRubro;
 	
-	private String codCtaInd; /*Cuenta interna del sistema*/
+	//private String codCtaInd; /*Cuenta interna del sistema*/
 	
 	private int linea;
 	
@@ -43,12 +43,12 @@ public class DocumDetalleVO extends DatosDocumVO{
 		this.impSubMn = t.impSubMn;
 		this.impSubMo = t.impSubMo;
 		this.tcMov = t.tcMov;
-		this.codCuenta = t.codCuenta;
-		this.nomCuenta = t.nomCuenta;
+		//this.codCuenta = t.codCuenta;
+		//this.nomCuenta = t.nomCuenta;
 		this.codProceso = t.codProceso;
 		this.nomRubro = t.nomRubro;
 		this.codRubro = t.codRubro;
-		this.codCtaInd = t.codCtaInd;
+		//this.codCtaInd = t.codCtaInd;
 		this.linea = t.linea;
 		this.descProceso = t.descProceso;
 		
@@ -114,29 +114,6 @@ public class DocumDetalleVO extends DatosDocumVO{
 		this.tcMov = tcMov;
 	}
 
-	public String getCuenta() {
-		return codCuenta;
-	}
-
-	public void setCuenta(String cuenta) {
-		this.codCuenta = cuenta;
-	}
-
-	public String getCodCuenta() {
-		return codCuenta;
-	}
-
-	public void setCodCuenta(String codCuenta) {
-		this.codCuenta = codCuenta;
-	}
-
-	public String getNomCuenta() {
-		return nomCuenta;
-	}
-
-	public void setNomCuenta(String nomCuenta) {
-		this.nomCuenta = nomCuenta;
-	}
 
 	public String getCodProceso() {
 		return codProceso;
@@ -176,14 +153,6 @@ public class DocumDetalleVO extends DatosDocumVO{
 
 	public void setCodRubro(String codRubro) {
 		this.codRubro = codRubro;
-	}
-
-	public String getCodCtaInd() {
-		return codCtaInd;
-	}
-
-	public void setCodCtaInd(String codCtaInd) {
-		this.codCtaInd = codCtaInd;
 	}
 
 	public int getLinea() {
