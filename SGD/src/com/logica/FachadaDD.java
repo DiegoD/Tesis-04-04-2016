@@ -1611,7 +1611,7 @@ public class FachadaDD {
 		
 		Cotizacion cotizacion;
 		ArrayList<CotizacionVO> lstCotizacionesVO = new ArrayList<CotizacionVO>();
-		CotizacionVO aux;
+		CotizacionVO aux = new CotizacionVO();
 		
 		try
 		{
@@ -1621,19 +1621,21 @@ public class FachadaDD {
 			
 			aux = new CotizacionVO();
 			
-			
-			aux.setFecha(cotizacion.getFecha());
-			aux.setCotizacionCompra(cotizacion.getCotizacion_compra());
-			aux.setCotizacionVenta(cotizacion.getCotizacion_venta());
-			aux.setFechaMod(cotizacion.getFechaMod());
-			aux.setUsuarioMod(cotizacion.getUsuarioMod());
-			aux.setOperacion(cotizacion.getOperacion());
-			
-			aux.setCodMoneda(cotizacion.getMoneda().getCod_moneda());
-			aux.setDescripcionMoneda(cotizacion.getMoneda().getDescripcion());
-			aux.setSimboloMoneda(cotizacion.getMoneda().getSimbolo());
-			aux.setAceptaCotizacionMoneda(cotizacion.getMoneda().isAcepta_cotizacion());
-			aux.setActivoMoneda(cotizacion.getMoneda().isActivo());
+			if(cotizacion != null)
+			{
+				aux.setFecha(cotizacion.getFecha());
+				aux.setCotizacionCompra(cotizacion.getCotizacion_compra());
+				aux.setCotizacionVenta(cotizacion.getCotizacion_venta());
+				aux.setFechaMod(cotizacion.getFechaMod());
+				aux.setUsuarioMod(cotizacion.getUsuarioMod());
+				aux.setOperacion(cotizacion.getOperacion());
+				
+				aux.setCodMoneda(cotizacion.getMoneda().getCod_moneda());
+				aux.setDescripcionMoneda(cotizacion.getMoneda().getDescripcion());
+				aux.setSimboloMoneda(cotizacion.getMoneda().getSimbolo());
+				aux.setAceptaCotizacionMoneda(cotizacion.getMoneda().isAcepta_cotizacion());
+				aux.setActivoMoneda(cotizacion.getMoneda().isActivo());
+			}
 		
 		}
 		catch(ObteniendoCotizacionesException e){
