@@ -1300,7 +1300,13 @@ public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 	Integer codigo;
 	NumeradoresVO codigos = new NumeradoresVO();
 	
+<<<<<<< .mine
+||||||| .r282
+	Datos
+=======
 	//Datos
+>>>>>>> .r283
+	
 	
 	try 
 	{
@@ -1338,10 +1344,21 @@ public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 			if(ingVO.getCodDocRef().equals("cheqrec"))
 			{
 				/*Primero obtenemos el DatosDocum para el cheque dado el ingreso cobro*/
-				//asd
-				//this.insertarChequeIntFachada()
-				
+
+				DatosDocumVO auxCheque = getDatosDocumChequeDadoIngCobro(ingVO);
+				this.insertarChequeIntFachada(auxCheque, con);
+
+				/*Ingresamos el saldo para el cheque */
+				DatosDocum auxCheque2 = new DatosDocum(auxCheque);
+				this.saldos.modificarSaldo(auxCheque2,1, ingVO.getTcMov() , con);
 			}
+			
+			/*Ingresamos el saldo a la cuenta (Banco o caja)*/
+			DocumSaldo saldoCuenta = this.getDocumSaldoChequeDadoIngCobro(ingVO);
+			this.saldosCuentas.insertarSaldoCuenta(saldoCuenta, con);
+//			VER COMO FUNCIONA LO DE ACA ARRIBA CUANDO ES CAJA, BANCO, ETC..ACA.
+//			VER EL METODO getDocumSaldoChequeDadoIngCobro para obtener el objeto saldo
+//			dado el ingreso de cobro
 			
 			con.commit();
 		}
@@ -1414,11 +1431,11 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws  C
 /////////////////////////////////CHEQUES//////////////////////////////////
 
 	/**
-	*Nos retorna un DatosDocum para ingresar el cheque dado un IngresoCobro
-	 * 
+	*Nos retorna un DatosDocumVO para ingresar el cheque dado un IngresoCobro
+	 * Lo utilizamos para ingresar el cheque
 	*
 	*/
-	private DatosDocumVO getDatosDocumDadoIngCobro(IngresoCobroVO ingVO){
+	private DatosDocumVO getDatosDocumChequeDadoIngCobro(IngresoCobroVO ingVO){
 		
 		DatosDocumVO aux = new DatosDocumVO();
 		
@@ -1431,6 +1448,40 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws  C
 		return aux;
 		
 	}
+	
+	/**
+	*Nos retorna un DocumSaldo para ingresar el saldo a la cuenta correspondiente
+	*dado el ingreso cobro
+	*
+	*/
+	private DocumSaldo getDocumSaldoChequeDadoIngCobro(IngresoCobroVO ingVO){
+		
+		DatosDocumVO aux = new DatosDocumVO();
+		
+		aux.copiar(ingVO);
+		
+		DatosDocum doc = new DatosDocum(aux);
+		
+		DocumSaldo docSaldo = (DocumSaldo)doc;
+		
+		docSaldo.setCodDocum(ingVO.getCodDocRef());
+		docSaldo.setSerieDocum(ingVO.getSerieDocRef());
+		docSaldo.setNroDocum(ingVO.getNroDocRef());
+		
+		//private String codBco;
+		//private String codCtaBco;
+		//private String movimiento;
+		
+		docSaldo.setCodBco(ingVO.getCodBanco());
+		docSaldo.setCodCtaBco(ingVO.getCodCtaBco());
+		docSaldo.setMovimiento(ingVO.getReferencia());
+		
+		docSaldo.setSigno(1); /*Signo positivo*/
+		
+		return docSaldo;
+		
+	}
+	
 	
 	/**
 	*Para ingresar cheque, sin pasar connection, para

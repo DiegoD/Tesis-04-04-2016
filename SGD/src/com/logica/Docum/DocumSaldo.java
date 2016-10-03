@@ -12,6 +12,7 @@ public class DocumSaldo extends DatosDocum{
 	private String codDocumRef;
 	private String serieDocumRef;
 	private int nroDocumRef;
+	private int signo;
 	
 	public DocumSaldo(){
 		
@@ -29,6 +30,8 @@ public class DocumSaldo extends DatosDocum{
 		this.codDocumRef = d.getCodDocumRef();
 		this.serieDocumRef = d.getSerieDocumRef();
 		this.nroDocumRef = d.getNroDocumRef();
+		
+		this.signo = d.getSigno();
 	}
 	
 
@@ -73,6 +76,8 @@ public class DocumSaldo extends DatosDocum{
 		aux.setSerieDocumRef(this.getSerieDocumRef());
 		aux.setNroDocumRef(this.getNroDocumRef());
 		
+		aux.setSigno(this.getSigno());
+		
 		
 		return aux;
 	}
@@ -112,6 +117,14 @@ public class DocumSaldo extends DatosDocum{
 	}
 	public void setNroDocumRef(int nroDocumRef) {
 		this.nroDocumRef = nroDocumRef;
+	}
+
+	public int getSigno() {
+		return signo;
+	}
+
+	public void setSigno(int signo) {
+		this.signo = signo;
 	}
 	
 	

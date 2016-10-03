@@ -1364,8 +1364,8 @@ public String insertarSaldoCuenta()
 			+ " cod_emp, cod_moneda, cod_tit, "
 			+ " imp_tot_mn, imp_tot_mo, cuenta, "
 			+ " fecha_mod, usuario_mod, operacion, cod_cta, referencia, nro_trans, cod_doc_ref"
-			+ " serie_doc_ref, nro_doc_ref, cod_bco, cod_ctabco, movimiento ) ");
-	sb.append("VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+			+ " serie_doc_ref, nro_doc_ref, cod_bco, cod_ctabco, movimiento, signo ) ");
+	sb.append("VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
 	
 	return sb.toString();
 }

@@ -10,6 +10,8 @@ public class DocumSaldoVO extends DatosDocumVO{
 	private String serieDocumRef;
 	private int nroDocumRef;
 	
+	private int signo;
+	
 	
 	public void copiar(DocumSaldoVO t){
 		
@@ -22,6 +24,8 @@ public class DocumSaldoVO extends DatosDocumVO{
 		this.codDocumRef = t.codDocumRef;
 		this.serieDocumRef = t.serieDocumRef;
 		this.nroDocumRef = t.nroDocumRef;
+		
+		this.signo = t.signo;
 	}
 
 
@@ -82,6 +86,16 @@ public class DocumSaldoVO extends DatosDocumVO{
 
 	public void setNroDocumRef(int nroDocumRef) {
 		this.nroDocumRef = nroDocumRef;
+	}
+
+
+	public int getSigno() {
+		return signo;
+	}
+
+
+	public void setSigno(int signo) {
+		this.signo = signo;
 	}
 	
 	
