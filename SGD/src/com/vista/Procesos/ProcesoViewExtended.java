@@ -408,7 +408,8 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 		    		 tcMov.setData(null);
 		             return;
 		         }
-		    	 
+		    	
+		    	tcMov.setConversionError("No se puede ");
 		        String value = (String) event.getProperty().getValue();
 		        if(value != ""){
 		        	
