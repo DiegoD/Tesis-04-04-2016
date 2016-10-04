@@ -632,7 +632,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		        	impTotMo.setValue(value);
 		        	
 		        	
-		        	importeMoneda = Double.parseDouble(impTotMo.getValue());
+		        	importeMoneda = Double.parseDouble(value);
 		        	
 		        	
 		        	Double truncatedDouble = new BigDecimal(importeMoneda)
