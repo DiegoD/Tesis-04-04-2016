@@ -74,9 +74,6 @@ public class DAOProcesos implements IDAOProcesos{
 						, rs.getString(25)
 						, rs.getString(26)));
 				
-				System.out.println("siguiente");
-				System.out.print(Double.valueOf(aux.getImpMo()));
-				
 				lstProcesos.add(aux);
 				
 			}

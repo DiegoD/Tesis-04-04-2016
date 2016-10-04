@@ -606,7 +606,6 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					System.out.println("cambia combo monedas");
 				}
 			}
 		});
