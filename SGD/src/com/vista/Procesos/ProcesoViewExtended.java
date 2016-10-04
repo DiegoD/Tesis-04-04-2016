@@ -116,68 +116,53 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 					
 					
 					procesoVO.setObservaciones(obseAux.getValue());
-					String aux;
 					
-					impMo.setConverter(Double.class);
-					System.out.println(impMo.getConvertedValue());
-					
-					aux = impMo.getValue().toString().trim().replace(".", "");
-					System.out.println(aux);
-					
-					if(impMo.getValue() != ""){
-						aux = aux.replace(",", ".");
+					if(impMo.getValue() != "" && impMo.getValue() != null){
 						procesoVO.setImpMo((double) impMo.getConvertedValue());
 					}
 					else{
 						procesoVO.setImpMo(0);
 					}
 					
-					if(impMn.getValue() != ""){
-						aux = impMn.getValue().toString().trim().replace(",", ".");
+					if(impMn.getValue() != "" && impMn.getValue() != null){
 						procesoVO.setImpMn((double) impMn.getConvertedValue());
 					}
 					else{
 						procesoVO.setImpMn(0);
 					}
 					
-					if(tcMov.getValue() != ""){
-						aux = tcMov.getValue().toString().trim().replace(",", ".");
+					if(tcMov.getValue() != "" && tcMov.getValue() != null){
 						procesoVO.setTcMov((double) tcMov.getConvertedValue());
 					}
 					else{
 						procesoVO.setTcMov(0);
 					}
 					
-					//procesoVO.setImpTr(Float.parseFloat(impTr.getValue().trim()));
-					
 					if(this.operacion.equals(Variables.OPERACION_NUEVO)){
 						procesoVO.setCodigo(0);
 					}
 					else{
-						procesoVO.setCodigo(Integer.parseInt(codigo.getValue().trim()));
+						procesoVO.setCodigo((Integer) codigo.getConvertedValue());
 					}
 					
 					procesoVO.setFecha(new java.sql.Timestamp(fecha.getValue().getTime()));
 					
-					if(nroMega.getValue() != ""){
-						aux = nroMega.getValue().trim().replace(".", "");
-						procesoVO.setNroMega(Integer.parseInt(aux));
+					if(nroMega.getValue() != "" && nroMega.getValue() != null){
+						procesoVO.setNroMega((Integer) nroMega.getConvertedValue());
 					}
 					else{
 						procesoVO.setNroMega(0);
 					}
 					
-					if(nroDocum.getValue() != ""){
-						aux = nroDocum.getValue().trim().replace(".", "");
-						procesoVO.setNroDocum(Integer.parseInt(aux));
+					if(nroDocum.getValue() != "" && nroDocum.getValue() != null){
+						procesoVO.setNroDocum((Integer) nroDocum.getConvertedValue());
 					}
 					else{
 						procesoVO.setNroDocum(0);
 					}
 						
-					if(Kilos.getValue() != ""){
-						aux = Kilos.getValue().trim().replace(".", "");
-						procesoVO.setKilos(Integer.parseInt(aux));
+					if(Kilos.getValue() != "" && Kilos.getValue() != null){
+						procesoVO.setKilos((double) Kilos.getConvertedValue());
 					}
 					else{
 						procesoVO.setKilos(0);
@@ -339,7 +324,6 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 		         }
 				
 				MonedaVO auxMoneda = new MonedaVO();
-				Double importeNacional = null, impuestoNacional = null;
 				
 				if(operacion != Variables.OPERACION_LECTURA){
 					
@@ -351,8 +335,6 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 						if(auxMoneda.getCodMoneda() != null){
 							cotizacion = controlador.getCotizacion(permisoAux, fechaproces, auxMoneda.getCodMoneda());
 							cotizacionVenta = cotizacion.getCotizacionVenta();
-							tcMov.setData("ProgramaticallyChanged");
-							tcMov.setValue(String.valueOf(cotizacionVenta).replace(".", ","));
 							calculos();
 						}
 					}
@@ -361,7 +343,6 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					System.out.println("cambia combo monedas");
 				}
 			}
 		});
@@ -379,19 +360,12 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 		        
 		        if(value != ""){
 		        	
-		        	impMo.setConverter(Double.class);
-		        	impMo.setValue(value);
-		        	
-		        	impMo.setConversionError("El formato de número no es correcto");
-		        	
 		        	try {
 		        		importeMoneda = (Double) impMo.getConvertedValue();
 					} catch (Exception e) {
 						// TODO: handle exception
 						Mensajes.mostrarMensajeError("Formato de número incorrecto");
 					}
-		        	
-		        	
 		        	
 		        	Double truncatedDouble = new BigDecimal(importeMoneda)
 						    .setScale(2, BigDecimal.ROUND_HALF_UP)
@@ -416,27 +390,29 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 		             return;
 		         }
 		    	
-		    	tcMov.setConversionError("No se puede ");
 		        String value = (String) event.getProperty().getValue();
+		        
 		        if(value != ""){
 		        	
-		        	//cotizacionVenta   = Double.parseDouble(value);
-		        	//tcMov.setData("ProgramaticallyChanged");
-		        	//tcMov.setConverter(Double.class);
-		        	//tcMov.setConvertedValue(value);
-		        	tcMov.setConverter(Double.class);
-		    		cotizacionVenta = (Double) tcMov.getConvertedValue();
-		    		
-		    		Double truncatedDouble = new BigDecimal(cotizacionVenta)
+		        	try {
+		        		cotizacionVenta = (Double) tcMov.getConvertedValue();
+					} catch (Exception e) {
+						// TODO: handle exception
+						Mensajes.mostrarMensajeError("Formato de número incorrecto");
+					}
+		        	
+		        	
+		        	Double truncatedDouble = new BigDecimal(cotizacionVenta)
 						    .setScale(2, BigDecimal.ROUND_HALF_UP)
 						    .doubleValue();
 					
-		    		cotizacionVenta = truncatedDouble;
-		    		
+		        	cotizacionVenta = truncatedDouble;
+		        	
 		        	if(operacion != Variables.OPERACION_LECTURA){
 
 			        	calculos();
 			        }
+		        	
 		    	}
 		    }
 		});
@@ -451,6 +427,8 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 		//inicializar los valores de los combos impuesto y tipo de rubro
 		inicializarComboMoneda(null);
 		inicializarComboDocuemnto(null);
+		
+		this.inicializarCampos();
 		
 		//Seteamos info del form si es requerido
 		if(fieldGroup != null)
@@ -493,13 +471,6 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 	 */
 	public void setDataSourceFormulario(BeanItem<ProcesoVO> item)
 	{
-		comboMoneda.setData("ProgramaticallyChanged");
-		impMo.setData("ProgramaticallyChanged");
-		impMo.setConverter(Double.class);
-		tcMov.setData("ProgramaticallyChanged");
-		tcMov.setConverter(Double.class);
-		
-
 		this.fieldGroup.setItemDataSource(item);
 		
 		ProcesoVO proceso = new ProcesoVO();
@@ -515,6 +486,8 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 		
 		this.inicializarComboMoneda(proceso.getCodMoneda());
 		this.inicializarComboDocuemnto(proceso.getCodDocum());
+		
+		
 		
 		/*SETEAMOS LA OPERACION EN MODO LECUTA
 		 * ES CUANDO LLAMAMOS ESTE METODO*/
@@ -906,9 +879,49 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 				    .setScale(2, BigDecimal.ROUND_HALF_UP)
 				    .doubleValue();
 			
-			impMn.setConverter(Double.class);
-			impMn.setConvertedValue(truncatedDouble);
+			try {
+				impMn.setConvertedValue(truncatedDouble);
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+			
 		}
+		
+		if(cotizacionVenta != null){
+			try {
+				tcMov.setConvertedValue(cotizacionVenta);
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+		
+	}
+	
+	public void inicializarCampos(){
+		
+		impMo.setConverter(Double.class);
+		impMo.setConversionError("Error en formato de número");
+		
+		impMn.setConverter(Double.class);
+		impMn.setConversionError("Error en formato de número");
+		
+		impTr.setConverter(Double.class);
+		impTr.setConversionError("Error en formato de número");
+		
+		tcMov.setConverter(Double.class);
+		tcMov.setConversionError("Error en formato de número");
+		
+		Kilos.setConverter(Double.class);
+		Kilos.setConversionError("Error en formato de número");
+		
+		nroMega .setConverter(Integer.class);
+		nroMega .setConversionError("Ingrese un número entero");
+		
+		nroDocum .setConverter(Integer.class);
+		nroDocum .setConversionError("Ingrese un número entero");
+		
+		impMo.setData("ProgramaticallyChanged");
+		tcMov.setData("ProgramaticallyChanged");
 		
 	}
 	
