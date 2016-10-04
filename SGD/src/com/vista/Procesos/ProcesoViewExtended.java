@@ -382,8 +382,15 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 		        	impMo.setConverter(Double.class);
 		        	impMo.setValue(value);
 		        	
+		        	impMo.setConversionError("El formato de número no es correcto");
 		        	
-		        	importeMoneda = (Double) impMo.getConvertedValue();
+		        	try {
+		        		importeMoneda = (Double) impMo.getConvertedValue();
+					} catch (Exception e) {
+						// TODO: handle exception
+						Mensajes.mostrarMensajeError("Formato de número incorrecto");
+					}
+		        	
 		        	
 		        	
 		        	Double truncatedDouble = new BigDecimal(importeMoneda)
@@ -632,6 +639,7 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 		this.fecDocum.setReadOnly(false);
 		this.carpeta.setReadOnly(false);
 		this.impMn.setReadOnly(false);
+		this.impMn.setEnabled(false);
 		this.impMo.setReadOnly(false);
 		this.tcMov.setReadOnly(false);
 		this.Kilos.setReadOnly(false);
@@ -711,6 +719,7 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 		this.fecDocum.setReadOnly(setear);
 		this.carpeta.setReadOnly(setear);
 		this.impMn.setReadOnly(setear);
+		this.impMn.setEnabled(false);
 		this.impMo.setReadOnly(setear);
 		this.tcMov.setReadOnly(setear);
 		this.Kilos.setReadOnly(setear);
