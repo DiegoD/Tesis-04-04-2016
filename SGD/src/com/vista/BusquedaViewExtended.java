@@ -118,6 +118,7 @@ public class BusquedaViewExtended extends BusquedaView{
 			/*Dejamos que sea multi seleccion la grilla*/
 			grid.setSelectionMode(SelectionMode.MULTI);
 			
+			
 			/*Mostramos el boton de agregar*/
 			this.btnAgregar.setEnabled(true);
 			this.btnAgregar.setVisible(true);
@@ -489,6 +490,9 @@ public class BusquedaViewExtended extends BusquedaView{
 			grid.removeColumn("fechaMod");
 			grid.removeColumn("usuarioMod");
 			grid.removeColumn("operacion");
+			
+			grid.setEditorEnabled(true);
+			grid.getColumn("impTotMn").setEditable(true);
 			
 			this.arreglarGrillaGasto(); /*FaltaImplementar*/
 			this.filtroGrilla();
