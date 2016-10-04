@@ -19,11 +19,11 @@ public class Proceso extends Auditoria{
 	private int nroDocum;
 	private Timestamp fecDocum;
 	private String carpeta;
-	private float impMo;
-	private float impMn;
-	private float impTr;
-	private float tcMov;
-	private float kilos;
+	private double impMo;
+	private double impMn;
+	private double impTr;
+	private double tcMov;
+	private double kilos;
 	private Timestamp fecCruce;
 	private String marca;
 	private String medio;
@@ -34,8 +34,8 @@ public class Proceso extends Auditoria{
 	
 	
 	public Proceso(ClienteInfo clienteInfo, DocumentoAduanero documento, int codigo, Timestamp fecha, int nroMega,
-			Integer nroDocum, Timestamp fecDocum, String carpeta, float impMo, float impMn, float impTr, float tcMov,
-			float kilos, Timestamp fecCruce, String marca, String medio, String descripcion, String observaciones,
+			Integer nroDocum, Timestamp fecDocum, String carpeta, double impMo, double impMn, double impTr, double tcMov,
+			double kilos, Timestamp fecCruce, String marca, String medio, String descripcion, String observaciones,
 			MonedaInfo monedaInfo) {
 		super();
 		this.clienteInfo = clienteInfo;
@@ -181,34 +181,34 @@ public class Proceso extends Auditoria{
 	public void setCarpeta(String carpeta) {
 		this.carpeta = carpeta;
 	}
-	public float getImpMo() {
+	public double getImpMo() {
 		return impMo;
 	}
-	public void setImpMo(float impMo) {
+	public void setImpMo(double impMo) {
 		this.impMo = impMo;
 	}
-	public float getImpMn() {
+	public double getImpMn() {
 		return impMn;
 	}
-	public void setImpMn(float impMn) {
+	public void setImpMn(double impMn) {
 		this.impMn = impMn;
 	}
-	public float getImpTr() {
+	public double getImpTr() {
 		return impTr;
 	}
-	public void setImpTr(float impTr) {
+	public void setImpTr(double impTr) {
 		this.impTr = impTr;
 	}
-	public float getTcMov() {
+	public double getTcMov() {
 		return tcMov;
 	}
-	public void setTcMov(float tcMov) {
+	public void setTcMov(double tcMov) {
 		this.tcMov = tcMov;
 	}
-	public float getKilos() {
+	public double getKilos() {
 		return kilos;
 	}
-	public void setKilos(float kilos) {
+	public void setKilos(double kilos) {
 		this.kilos = kilos;
 	}
 	

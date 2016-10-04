@@ -110,9 +110,15 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 					
 					procesoVO.setObservaciones(obseAux.getValue());
 					String aux;
+					
+					impMo.setConverter(Double.class);
+					System.out.println(impMo.getConvertedValue());
+					
+					aux = impMo.getValue().toString().trim().replace(".", "");
+					System.out.println(aux);
 					if(impMo.getValue() != ""){
-						aux = impMo.getValue().toString().trim().replace(",", ".");
-						procesoVO.setImpMo(Float.parseFloat(aux));
+						aux = aux.replace(",", ".");
+						procesoVO.setImpMo((double) impMo.getConvertedValue());
 					}
 					else{
 						procesoVO.setImpMo(0);
@@ -120,7 +126,7 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 					
 					if(impMn.getValue() != ""){
 						aux = impMn.getValue().toString().trim().replace(",", ".");
-						procesoVO.setImpMn(Float.parseFloat(aux));
+						procesoVO.setImpMn(Double.parseDouble(aux));
 					}
 					else{
 						procesoVO.setImpMn(0);
@@ -128,7 +134,7 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 					
 					if(tcMov.getValue() != ""){
 						aux = tcMov.getValue().toString().trim().replace(",", ".");
-						procesoVO.setTcMov(Float.parseFloat(aux));
+						procesoVO.setTcMov(Double.parseDouble(aux));
 					}
 					else{
 						procesoVO.setTcMov(0);

@@ -51,11 +51,11 @@ public class DAOProcesos implements IDAOProcesos{
 				aux.setFecDocum(rs.getTimestamp(4));
 				aux.setNroMega(rs.getInt(5));
 				aux.setCarpeta(rs.getString(6));
-				aux.setImpMo(rs.getFloat(7));
-				aux.setImpMn(rs.getFloat(8));
-				aux.setImpTr(rs.getFloat(9));
-				aux.setTcMov(rs.getFloat(10));
-				aux.setKilos(rs.getFloat(11));
+				aux.setImpMo(rs.getDouble(7));
+				aux.setImpMn(rs.getDouble(8));
+				aux.setImpTr(rs.getDouble(9));
+				aux.setTcMov(rs.getDouble(10));
+				aux.setKilos(rs.getDouble(11));
 				aux.setFecCruce(rs.getTimestamp(12));
 				aux.setMarca(rs.getString(13));
 				aux.setMedio(rs.getString(14));
@@ -73,6 +73,9 @@ public class DAOProcesos implements IDAOProcesos{
 				aux.setMonedaInfo(new MonedaInfo(rs.getString(24)
 						, rs.getString(25)
 						, rs.getString(26)));
+				
+				System.out.println("siguiente");
+				System.out.print(Double.valueOf(aux.getImpMo()));
 				
 				lstProcesos.add(aux);
 				
@@ -214,11 +217,11 @@ public class DAOProcesos implements IDAOProcesos{
 			pstmt1.setTimestamp(3, proceso.getFecDocum());
 			pstmt1.setInt(4, proceso.getNroMega());
 			pstmt1.setString(5, proceso.getCarpeta());
-			pstmt1.setFloat(6, proceso.getImpMo());
-			pstmt1.setFloat(7, proceso.getImpMn());
-			pstmt1.setFloat(8, proceso.getImpTr());
-			pstmt1.setFloat(9, proceso.getTcMov());
-			pstmt1.setFloat(10, proceso.getKilos());
+			pstmt1.setDouble(6, proceso.getImpMo());
+			pstmt1.setDouble(7, proceso.getImpMn());
+			pstmt1.setDouble(8, proceso.getImpTr());
+			pstmt1.setDouble(9, proceso.getTcMov());
+			pstmt1.setDouble(10, proceso.getKilos());
 			pstmt1.setTimestamp(11, proceso.getFecCruce());
 			pstmt1.setString(12, proceso.getMarca());
 			pstmt1.setString(13, proceso.getMedio());
@@ -273,11 +276,11 @@ public class DAOProcesos implements IDAOProcesos{
 			pstmt1.setTimestamp(3, proceso.getFecDocum());
 			pstmt1.setInt(4, proceso.getNroMega());
 			pstmt1.setString(5, proceso.getCarpeta());
-			pstmt1.setFloat(6, proceso.getImpMo());
-			pstmt1.setFloat(7, proceso.getImpMn());
-			pstmt1.setFloat(8, proceso.getImpTr());
-			pstmt1.setFloat(9, proceso.getTcMov());
-			pstmt1.setFloat(10, proceso.getKilos());
+			pstmt1.setDouble(6, proceso.getImpMo());
+			pstmt1.setDouble(7, proceso.getImpMn());
+			pstmt1.setDouble(8, proceso.getImpTr());
+			pstmt1.setDouble(9, proceso.getTcMov());
+			pstmt1.setDouble(10, proceso.getKilos());
 			pstmt1.setTimestamp(11, proceso.getFecCruce());
 			pstmt1.setString(12, proceso.getMarca());
 			pstmt1.setString(13, proceso.getMedio());

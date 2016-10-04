@@ -81,10 +81,10 @@ public class CotizacionViewExtended extends CotizacionView implements IBusqueda{
 					cotizacionVO.setFecha(new java.sql.Timestamp(fecha.getValue().getTime()));
 					
 					String aux = cotizacionCompra.getValue().toString().trim().replace(",", ".");
-					cotizacionVO.setCotizacionCompra(Float.parseFloat(aux));
+					cotizacionVO.setCotizacionCompra(Double.parseDouble(aux));
 					
 					aux = cotizacionVenta.getValue().toString().trim().replace(",", ".");
-					cotizacionVO.setCotizacionVenta(Float.parseFloat(aux));
+					cotizacionVO.setCotizacionVenta(Double.parseDouble(aux));
 					
 					MonedaVO auxMoneda = new MonedaVO();
 					auxMoneda = (MonedaVO) this.comboMoneda.getValue();

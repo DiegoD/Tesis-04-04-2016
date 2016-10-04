@@ -63,13 +63,13 @@ public class DAOGastos implements IDAOGastos{
 				aux.setNroTrans(rs.getLong(7));
 				aux.setFecValor(rs.getTimestamp(8));
 				aux.setCodProceso(rs.getString(9));
-				aux.setImpImpuMn(rs.getFloat(11));
-				aux.setImpImpuMo(rs.getFloat(12));
-				aux.setImpSubMn(rs.getFloat(13));
-				aux.setImpSubMo(rs.getFloat(14));
-				aux.setImpTotMn(rs.getFloat(15));
-				aux.setImpTotMo(rs.getFloat(16));
-				aux.setTcMov(rs.getFloat(17));
+				aux.setImpImpuMn(rs.getDouble(11));
+				aux.setImpImpuMo(rs.getDouble(12));
+				aux.setImpSubMn(rs.getDouble(13));
+				aux.setImpSubMo(rs.getDouble(14));
+				aux.setImpTotMn(rs.getDouble(15));
+				aux.setImpTotMo(rs.getDouble(16));
+				aux.setTcMov(rs.getDouble(17));
 				aux.setCodCuentaInd(rs.getString(18));
 				aux.setFechaMod(rs.getTimestamp(19));
 				aux.setUsuarioMod(rs.getString(20));
@@ -81,7 +81,7 @@ public class DAOGastos implements IDAOGastos{
 				ImpuestoInfo imp = new ImpuestoInfo();
 				imp.setCodImpuesto(rs.getString(33));
 				imp.setNomImpuesto(rs.getString(34));
-				imp.setPorcentaje(rs.getFloat(35));
+				imp.setPorcentaje(rs.getDouble(35));
 				aux.setImpuestoInfo(imp);
 				aux.setDescProceso(rs.getString(36));
 				
@@ -106,13 +106,13 @@ public class DAOGastos implements IDAOGastos{
 				aux.setNroTrans(rs.getLong(7));
 				aux.setFecValor(rs.getTimestamp(8));
 				aux.setCodProceso(rs.getString(9));
-				aux.setImpImpuMn(rs.getFloat(11));
-				aux.setImpImpuMo(rs.getFloat(12));
-				aux.setImpSubMn(rs.getFloat(13));
-				aux.setImpSubMo(rs.getFloat(14));
-				aux.setImpTotMn(rs.getFloat(15));
-				aux.setImpTotMo(rs.getFloat(16));
-				aux.setTcMov(rs.getFloat(17));
+				aux.setImpImpuMn(rs.getDouble(11));
+				aux.setImpImpuMo(rs.getDouble(12));
+				aux.setImpSubMn(rs.getDouble(13));
+				aux.setImpSubMo(rs.getDouble(14));
+				aux.setImpTotMn(rs.getDouble(15));
+				aux.setImpTotMo(rs.getDouble(16));
+				aux.setTcMov(rs.getDouble(17));
 				aux.setCodCuentaInd(rs.getString(18));
 				aux.setFechaMod(rs.getTimestamp(19));
 				aux.setUsuarioMod(rs.getString(20));
@@ -124,7 +124,7 @@ public class DAOGastos implements IDAOGastos{
 				ImpuestoInfo imp = new ImpuestoInfo();
 				imp.setCodImpuesto(rs.getString(33));
 				imp.setNomImpuesto(rs.getString(34));
-				imp.setPorcentaje(rs.getFloat(35));
+				imp.setPorcentaje(rs.getDouble(35));
 				aux.setImpuestoInfo(imp);
 				
 				lstGastos.add(aux);
@@ -147,13 +147,13 @@ public class DAOGastos implements IDAOGastos{
 				aux.setNroTrans(rs.getLong(7));
 				aux.setFecValor(rs.getTimestamp(8));
 				aux.setCodProceso(rs.getString(9));
-				aux.setImpImpuMn(rs.getFloat(11));
-				aux.setImpImpuMo(rs.getFloat(12));
-				aux.setImpSubMn(rs.getFloat(13));
-				aux.setImpSubMo(rs.getFloat(14));
-				aux.setImpTotMn(rs.getFloat(15));
-				aux.setImpTotMo(rs.getFloat(16));
-				aux.setTcMov(rs.getFloat(17));
+				aux.setImpImpuMn(rs.getDouble(11));
+				aux.setImpImpuMo(rs.getDouble(12));
+				aux.setImpSubMn(rs.getDouble(13));
+				aux.setImpSubMo(rs.getDouble(14));
+				aux.setImpTotMn(rs.getDouble(15));
+				aux.setImpTotMo(rs.getDouble(16));
+				aux.setTcMov(rs.getDouble(17));
 				aux.setCodCuentaInd(rs.getString(18));
 				aux.setFechaMod(rs.getTimestamp(19));
 				aux.setUsuarioMod(rs.getString(20));
@@ -165,7 +165,7 @@ public class DAOGastos implements IDAOGastos{
 				ImpuestoInfo imp = new ImpuestoInfo();
 				imp.setCodImpuesto(rs.getString(33));
 				imp.setNomImpuesto(rs.getString(34));
-				imp.setPorcentaje(rs.getFloat(35));
+				imp.setPorcentaje(rs.getDouble(35));
 				aux.setImpuestoInfo(imp);
 				
 				lstGastos.add(aux);
@@ -327,13 +327,13 @@ public class DAOGastos implements IDAOGastos{
 					aux.setNroTrans(rs.getLong(7));
 					aux.setFecValor(rs.getTimestamp(8));
 					aux.setCodProceso(rs.getString(9));
-					aux.setImpImpuMn(rs.getFloat(11));
-					aux.setImpImpuMo(rs.getFloat(12));
-					aux.setImpSubMn(rs.getFloat(13));
-					aux.setImpSubMo(rs.getFloat(14));
-					aux.setImpTotMn(rs.getFloat(15));
-					aux.setImpTotMo(rs.getFloat(16));
-					aux.setTcMov(rs.getFloat(17));
+					aux.setImpImpuMn(rs.getDouble(11));
+					aux.setImpImpuMo(rs.getDouble(12));
+					aux.setImpSubMn(rs.getDouble(13));
+					aux.setImpSubMo(rs.getDouble(14));
+					aux.setImpTotMn(rs.getDouble(15));
+					aux.setImpTotMo(rs.getDouble(16));
+					aux.setTcMov(rs.getDouble(17));
 					aux.setCodCuentaInd(rs.getString(18));
 					aux.setFechaMod(rs.getTimestamp(19));
 					aux.setUsuarioMod(rs.getString(20));
@@ -345,7 +345,7 @@ public class DAOGastos implements IDAOGastos{
 					ImpuestoInfo imp = new ImpuestoInfo();
 					imp.setCodImpuesto(rs.getString(33));
 					imp.setNomImpuesto(rs.getString(34));
-					imp.setPorcentaje(rs.getFloat(35));
+					imp.setPorcentaje(rs.getDouble(35));
 					aux.setImpuestoInfo(imp);
 					aux.setDescProceso(rs.getString(36));
 					
@@ -397,13 +397,13 @@ public class DAOGastos implements IDAOGastos{
 							aux.setNroTrans(rs.getLong(7));
 							aux.setFecValor(rs.getTimestamp(8));
 							aux.setCodProceso(rs.getString(9));
-							aux.setImpImpuMn(rs.getFloat(11));
-							aux.setImpImpuMo(rs.getFloat(12));
-							aux.setImpSubMn(rs.getFloat(13));
-							aux.setImpSubMo(rs.getFloat(14));
-							aux.setImpTotMn(rs.getFloat(15));
-							aux.setImpTotMo(rs.getFloat(16));
-							aux.setTcMov(rs.getFloat(17));
+							aux.setImpImpuMn(rs.getDouble(11));
+							aux.setImpImpuMo(rs.getDouble(12));
+							aux.setImpSubMn(rs.getDouble(13));
+							aux.setImpSubMo(rs.getDouble(14));
+							aux.setImpTotMn(rs.getDouble(15));
+							aux.setImpTotMo(rs.getDouble(16));
+							aux.setTcMov(rs.getDouble(17));
 							aux.setCodCuentaInd(rs.getString(18));
 							aux.setFechaMod(rs.getTimestamp(19));
 							aux.setUsuarioMod(rs.getString(20));
@@ -415,7 +415,7 @@ public class DAOGastos implements IDAOGastos{
 							ImpuestoInfo imp = new ImpuestoInfo();
 							imp.setCodImpuesto(rs.getString(33));
 							imp.setNomImpuesto(rs.getString(34));
-							imp.setPorcentaje(rs.getFloat(35));
+							imp.setPorcentaje(rs.getDouble(35));
 							aux.setImpuestoInfo(imp);
 							aux.setDescProceso(rs.getString(36));
 							

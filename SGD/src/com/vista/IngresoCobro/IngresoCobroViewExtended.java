@@ -1336,7 +1336,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		//lstGastos.getColumn("codProceso").setHidden(true);
 		lstGastos.getColumn("codRubro").setHidden(true);
 		lstGastos.getColumn("codTitular").setHidden(true);
-		lstGastos.getColumn("cuenta").setHidden(true);
+		//lstGastos.getColumn("cuenta").setHidden(true);
 		lstGastos.getColumn("descProceso").setHidden(true);
 		lstGastos.getColumn("fecDoc").setHidden(true);
 		lstGastos.getColumn("fecValor").setHidden(true);

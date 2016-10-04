@@ -1,5 +1,6 @@
 package com.vista.Gastos;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -75,7 +76,9 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 	Integer codigoInsert;
 	String aux;
 	NumeradoresVO codigos;
-	Double importeMoneda = null, porcImpuesto = null, tipoCambio = null;
+	Double importeMoneda = null, porcImpuesto = null, tipoCambio = null, importeImpuesto = null, cotizacionVenta = null;
+	CotizacionVO cotizacion =  new CotizacionVO();
+	
 	
 	public GastoViewExtended(String opera, GastosPanelExtended main){
 		
@@ -100,7 +103,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 				else if(this.comboSeleccion.getValue().equals("Oficina")){
 					this.inicializoOficina();
 				}
-				impImpuMn.setValue("0");
+				
 				/*Validamos los campos antes de invocar al controlador*/
 				if(this.fieldsValidos())
 				{
@@ -134,6 +137,8 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 					gastoVO.setSerieDocum("A");
 					gastoVO.setCodImpuesto(codImpuesto.getValue().trim());
 					gastoVO.setNomImpuesto(nomImpuesto.getValue().trim());
+					aux = porcentajeImpuesto.getValue().toString().trim().replace(",", ".");
+					gastoVO.setPorcentajeImpuesto(Float.parseFloat(aux));
 					
 					if(comboSeleccion.getValue().equals("Proceso")){
 						gastoVO.setCodCtaInd("IngGastoProceso");
@@ -174,20 +179,6 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 					}
 					
 					
-//					//Impuesto
-//					if(this.descripcionImpuesto.getValue() != null){
-//						gastoVO.setCodImpuesto(codImpuesto.getValue().trim());
-//						gastoVO.setDescripcionImpuesto(descripcionImpuesto.getValue().trim());
-//						
-//						aux = porcentajeImpuesto.getValue().toString().trim().replace(",", ".");
-//						gastoVO.setPorcentajeImpuesto(Float.parseFloat(aux));
-//					}
-//					else{
-//						gastoVO.setCodImpuesto("");
-//						gastoVO.setDescripcionImpuesto("");
-//						gastoVO.setPorcentajeImpuesto(0);
-//					}
-					
 					gastoVO.setReferencia(referencia.getValue().trim());
 					gastoVO.setCodCuenta(codCuenta.getValue().trim());
 					gastoVO.setNomCuenta(nomCuenta.getValue().trim());
@@ -196,32 +187,32 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 					
 					
 					if(impTotMn.getValue() != ""){
-						aux = impTotMn.getValue().toString().trim().replace(",", ".");
-						gastoVO.setImpTotMn(Float.parseFloat(aux));
+						impTotMn.setConverter(Double.class);
+						gastoVO.setImpTotMn((double) impTotMn.getConvertedValue());
 					}
 					else{
 						gastoVO.setImpTotMn(0);
 					}
 					
 					if(impTotMo.getValue() != ""){
-						aux = impTotMo.getValue().toString().trim().replace(",", ".");
-						gastoVO.setImpTotMo(Float.parseFloat(aux));
+						impTotMo.setConverter(Double.class);
+						gastoVO.setImpTotMo((double) impTotMo.getConvertedValue());
 					}
 					else{
 						gastoVO.setImpTotMo(0);
 					}
 					
 					if(impImpuMn.getValue() != ""){
-						aux = impImpuMn.getValue().toString().trim().replace(",", ".");
-						gastoVO.setImpImpuMn(Float.parseFloat(aux));
+						impImpuMn.setConverter(Double.class);
+						gastoVO.setImpImpuMn((double) impImpuMn.getConvertedValue());
 					}
 					else{
 						gastoVO.setImpImpuMn(0);
 					}
 					
 					if(impImpuMo.getValue() != ""){
-						aux = impImpuMo.getValue().toString().trim().replace(",", ".");
-						gastoVO.setImpImpuMo(Float.parseFloat(aux));
+						impImpuMo.setConverter(Double.class);
+						gastoVO.setImpImpuMo((double) impImpuMo.getConvertedValue());
 					}
 					else{
 						gastoVO.setImpImpuMo(0);
@@ -232,8 +223,9 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 					gastoVO.setImpSubMo(gastoVO.getImpTotMo() - gastoVO.getImpImpuMo());
 					
 					if(tcMov.getValue() != ""){
-						aux = tcMov.getValue().toString().trim().replace(",", ".");
-						gastoVO.setTcMov(Float.parseFloat(aux));
+						
+						tcMov.setConverter(Double.class);
+						gastoVO.setTcMov((double) tcMov.getConvertedValue());
 					}
 					else{
 						gastoVO.setTcMov(0);
@@ -556,9 +548,15 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		
 		comboSeleccion.addValueChangeListener(new Property.ValueChangeListener(){
 			
+			
 			@Override
 			public void valueChange(ValueChangeEvent event) {
 			   
+				if("ProgramaticallyChanged".equals(comboSeleccion.getData())){
+					comboSeleccion.setData(null);
+		             return;
+		         }
+				
 				if(comboSeleccion.getValue().equals("Empleado")){
 					inicializoEmpleado();
 				}
@@ -577,15 +575,14 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 			@Override
 			public void valueChange(ValueChangeEvent event) {
 				
-				 //Inorder to avoid recursive action
-//		        if("ProgramaticallyChanged".equals(comboMoneda.getData())){
-//		        	comboMoneda.setData(null);
-//		            return;
-//		        }
-//		        
-				CotizacionVO cotizacion =  new CotizacionVO();
+				
+				if("ProgramaticallyChanged".equals(comboMoneda.getData())){
+					comboMoneda.setData(null);
+		             return;
+		         }
+				
 				MonedaVO auxMoneda = new MonedaVO();
-				Double importeNacional, impuestoNacional;
+				Double importeNacional = null, impuestoNacional = null;
 				
 				if(operacion != Variables.OPERACION_LECTURA){
 					//comboMoneda.setData("ProgramaticallyChanged");
@@ -597,13 +594,10 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 						
 						if(auxMoneda.getCodMoneda() != null){
 							cotizacion = controlador.getCotizacion(permisoAux, fecha, auxMoneda.getCodMoneda());
-							tcMov.setValue(String.valueOf(cotizacion.getCotizacionVenta()).replace(".", ","));
-							
-							//cotizacion = getCotizacion(permisoAux, fecha,auxMoneda.getCodMoneda());
-							importeNacional = calculoImporteMonedaNacional();
-							impuestoNacional = calculoImpuestoMonedaNacional();
-							impTotMn.setValue(String.valueOf(importeNacional).replace(".", ","));
-							impImpuMn.setValue(String.valueOf(impuestoNacional).replace(".", ","));
+							cotizacionVenta = cotizacion.getCotizacionVenta();
+							tcMov.setData("ProgramaticallyChanged");
+							tcMov.setValue(String.valueOf(cotizacionVenta).replace(".", ","));
+							calculos();
 						}
 					}
 					catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
@@ -613,7 +607,6 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 					}
 					System.out.println("cambia combo monedas");
 				}
-				
 			}
 		});
 		
@@ -622,38 +615,85 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		this.impTotMo.addValueChangeListener(new Property.ValueChangeListener() {
 			
 		    public void valueChange(ValueChangeEvent event) {
+		    	
+		    	if("ProgramaticallyChanged".equals(impTotMo.getData())){
+		    		impTotMo.setData(null);
+		             return;
+		         }
+		    	
 		    	Double impuesto;
+		    	
 		        String value = (String) event.getProperty().getValue();
+		        
 		        if(value != ""){
-		        	importeMoneda = Double.parseDouble(value);
+		        	
+		        	impTotMo.setConverter(Double.class);
+		        	impTotMo.setData("ProgramaticallyChanged");
+		        	impTotMo.setValue(value);
+		        	
+		        	
+		        	importeMoneda = Double.parseDouble(impTotMo.getValue());
+		        	
+		        	
+		        	Double truncatedDouble = new BigDecimal(importeMoneda)
+						    .setScale(2, BigDecimal.ROUND_HALF_UP)
+						    .doubleValue();
+					
+		        	importeMoneda = truncatedDouble;
 		        	
 		        	if(operacion != Variables.OPERACION_LECTURA){
 
-		        		// Assuming that the value type is a String
-			        	impuesto = calculoImpuesto();
-			        	if(impuesto != null){
-			        		impImpuMo.setValue(String.valueOf(impuesto).replace(".", ","));
-			        	}
+			        	calculos();
 			        }
 		    	}
 		    }
 		});
 		
-		this.porcentajeImpuesto.addValueChangeListener(new Property.ValueChangeListener() {
+		this.tcMov.addValueChangeListener(new Property.ValueChangeListener() {
 			
 		    public void valueChange(ValueChangeEvent event) {
+		    	
+		    	 if("ProgramaticallyChanged".equals(tcMov.getData())){
+		    		 tcMov.setData(null);
+		             return;
+		         }
+		    	 
 		    	Double impuesto;
 		        String value = (String) event.getProperty().getValue();
 		        if(value != ""){
-		        	porcImpuesto = Double.parseDouble(value);
+		        	
+		        	
+		        	cotizacionVenta   = Double.parseDouble(value);
 		        	
 		        	if(operacion != Variables.OPERACION_LECTURA){
-		        		// Assuming that the value type is a String
-			        	impuesto = calculoImpuesto();
-			        	if(impuesto != null){
-			        		impImpuMo.setValue(String.valueOf(impuesto).replace(".", ","));
-			        	}
-				        
+
+			        	calculos();
+			        }
+		    	}
+		    }
+		});
+
+		this.porcentajeImpuesto.addValueChangeListener(new Property.ValueChangeListener() {
+			
+		    public void valueChange(ValueChangeEvent event) {
+		    	
+		    	if("ProgramaticallyChanged".equals(porcentajeImpuesto.getData())){
+		    		porcentajeImpuesto.setData(null);
+		             return;
+		         }
+		    	
+		    	Double impuesto;
+		        String value = (String) event.getProperty().getValue();
+		        if(value != ""){
+		        	
+		        	porcentajeImpuesto.setValue(value);
+		        	porcentajeImpuesto.setData("ProgramaticallyChanged");
+		        	porcImpuesto = (double) porcentajeImpuesto.getConvertedValue();
+		        	
+		        	//porcImpuesto = Double.parseDouble(value.replace(",", "."));
+		        	
+		        	if(operacion != Variables.OPERACION_LECTURA){
+		        		calculos();
 			        }
 		    	}
 		    }
@@ -780,8 +820,34 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 			this.iniFormLectura();
 			this.comboSeleccion.setEnabled(false);
 		}
-			
-				
+		
+		impTotMo.setConverter(Double.class);
+		impTotMn.setConverter(Double.class);
+		impImpuMn.setConverter(Double.class);
+		impImpuMo.setConverter(Double.class);
+		tcMov.setConverter(Double.class);
+		porcentajeImpuesto.setConverter(Double.class);
+		
+		impTotMo.setConversionError("Debe ingresar un número");
+		impTotMn.setConversionError("Debe ingresar un número");
+		impImpuMn.setConversionError("Debe ingresar un número");
+		impImpuMo.setConversionError("Debe ingresar un número");
+		tcMov.setConversionError("Debe ingresar un número");
+		porcentajeImpuesto.setConversionError("Debe ingresar un número");
+		
+		
+		
+//		importeMoneda = Double.parseDouble(impTotMo.getValue().replace(",", ".")); 
+//		porcImpuesto = Double.parseDouble(porcentajeImpuesto.getValue().replace(",", "."));
+//		tipoCambio = Double.parseDouble(tcMov.getValue().replace(",", "."));
+//		importeImpuesto = Double.parseDouble(impImpuMo.getValue().replace(",", "."));
+//		cotizacionVenta = Double.parseDouble(tcMov.getValue().replace(",", "."));
+		
+//		impTotMo.setData("ProgramaticallyChanged");
+//		porcentajeImpuesto.setData("ProgramaticallyChanged");
+//		tcMov.setData("ProgramaticallyChanged");
+//		impImpuMo.setData("ProgramaticallyChanged");
+		
 	}
 	
 	/**
@@ -903,6 +969,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		this.impImpuMo.setReadOnly(false);
 		this.impImpuMo.setEnabled(false);
 		this.impTotMn.setReadOnly(false);
+		this.impTotMn.setEnabled(false);
 		this.impTotMo.setReadOnly(false);
 		this.referencia.setReadOnly(false);
 		
@@ -1015,6 +1082,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		this.impImpuMn.setEnabled(false);
 		this.impImpuMo.setReadOnly(setear);
 		this.impImpuMo.setEnabled(false);
+		this.impTotMn.setEnabled(false);
 		this.impTotMn.setReadOnly(setear);
 		this.impTotMo.setReadOnly(setear);
 		this.referencia.setReadOnly(setear);
@@ -1119,7 +1187,15 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 			this.nomRubro.setValue(rubroVO.getDescripcion());
  			this.nomImpuesto.setValue(rubroVO.getDescripcionImpuesto());
 			this.codImpuesto.setValue(rubroVO.getCodigoImpuesto());
-			this.porcentajeImpuesto.setValue(String.valueOf(rubroVO.getPorcentajeImpuesto()));
+			porcentajeImpuesto.setData("ProgramaticallyChanged");
+        	
+        	Double truncatedDouble = new BigDecimal(rubroVO.getPorcentajeImpuesto())
+				    .setScale(2, BigDecimal.ROUND_HALF_UP)
+				    .doubleValue();
+        	
+			porcentajeImpuesto.setConverter(Double.class);
+			porcentajeImpuesto.setConvertedValue(truncatedDouble);
+			porcImpuesto = truncatedDouble;
 		}
 		
 		if(datos instanceof CuentaVO){
@@ -1137,7 +1213,17 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 			this.codImpuesto.setValue(impuestoVO.getcodImpuesto());
 			this.nomImpuesto.setValue(impuestoVO.getDescripcion());
 			//this.porcentajeImpuesto.setValue(String.valueOf(impuestoVO.getPorcentaje()));
-			this.porcentajeImpuesto.setValue(aux);
+        	porcentajeImpuesto.setData("ProgramaticallyChanged");
+        	
+        	Double truncatedDouble = new BigDecimal(impuestoVO.getPorcentaje())
+				    .setScale(2, BigDecimal.ROUND_HALF_UP)
+				    .doubleValue();
+        	
+			porcentajeImpuesto.setConverter(Double.class);
+			porcentajeImpuesto.setConvertedValue(truncatedDouble);
+			porcImpuesto = truncatedDouble;
+			
+			calculos();
 		}
 		
 		if(datos instanceof FuncionarioVO){
@@ -1276,5 +1362,48 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		impuesto = Double.parseDouble(impImpuMo.getValue());
 		
 		return impuesto * tipoCambio;	
+	}
+	
+	public void calculos(){
+		double aux;
+		double aux2;
+		
+		if(porcImpuesto != null && importeMoneda != null){
+			
+			
+			
+			aux = (porcImpuesto/100)+1;
+			aux2 = importeMoneda/aux;
+			importeImpuesto = importeMoneda - aux2;
+			
+			Double truncatedDouble = new BigDecimal(importeImpuesto)
+				    .setScale(2, BigDecimal.ROUND_HALF_UP)
+				    .doubleValue();
+			
+			importeImpuesto = truncatedDouble;
+			impImpuMo.setConverter(Double.class);
+			impImpuMo.setConvertedValue(truncatedDouble);
+		}
+		
+		if(importeMoneda != null && cotizacionVenta != null){
+			
+			Double truncatedDouble = new BigDecimal(importeMoneda.doubleValue() * cotizacionVenta.doubleValue())
+				    .setScale(2, BigDecimal.ROUND_HALF_UP)
+				    .doubleValue();
+			
+			impTotMn.setConverter(Double.class);
+			impTotMn.setConvertedValue(truncatedDouble);
+		}
+		
+		if(importeImpuesto != null && cotizacionVenta != null){
+			
+			Double truncatedDouble = new BigDecimal(importeImpuesto.doubleValue() * cotizacionVenta.doubleValue())
+				    .setScale(2, BigDecimal.ROUND_HALF_UP)
+				    .doubleValue();
+			
+			impImpuMn.setConverter(Double.class);
+			impImpuMn.setConvertedValue(truncatedDouble);
+		}
+		
 	}
 }

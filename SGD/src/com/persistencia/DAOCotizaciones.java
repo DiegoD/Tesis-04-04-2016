@@ -143,8 +143,8 @@ public class DAOCotizaciones implements IDAOCotizaciones{
 			pstmt1 =  con.prepareStatement(insert);
 			pstmt1.setString(1, cotizacion.getMoneda().getCod_moneda());
 			pstmt1.setTimestamp(2, cotizacion.getFecha());
-			pstmt1.setFloat(3, cotizacion.getCotizacion_compra());
-			pstmt1.setFloat(4, cotizacion.getCotizacion_venta());
+			pstmt1.setDouble(3, cotizacion.getCotizacion_compra());
+			pstmt1.setDouble(4, cotizacion.getCotizacion_venta());
 			pstmt1.setString(5, cotizacion.getUsuarioMod());
 			pstmt1.setString(6, cotizacion.getOperacion());
 			pstmt1.setString(7, codEmp);
@@ -206,8 +206,8 @@ public class DAOCotizaciones implements IDAOCotizaciones{
 			/*Updateamos la info de la cotizacion*/
      		pstmt1 =  con.prepareStatement(update);
     		
-    		pstmt1.setFloat(1, cotizacion.getCotizacion_compra());
-    		pstmt1.setFloat(2, cotizacion.getCotizacion_venta());
+    		pstmt1.setDouble(1, cotizacion.getCotizacion_compra());
+    		pstmt1.setDouble(2, cotizacion.getCotizacion_venta());
     		pstmt1.setString(3, cotizacion.getUsuarioMod());
     		pstmt1.setString(4, cotizacion.getOperacion());
     		pstmt1.setString(5, cotizacion.getMoneda().getCod_moneda());

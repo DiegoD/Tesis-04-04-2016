@@ -10,8 +10,8 @@ public class CotizacionVO extends AuditoriaVO{
 	
 	//private Timestamp fecha;
 	private Date fecha;
-	private float cotizacionCompra;
-	private float cotizacionVenta;
+	private double cotizacionCompra;
+	private double cotizacionVenta;
 	private String codMoneda;
 	private String descripcionMoneda;
 	private String simboloMoneda;
@@ -22,7 +22,7 @@ public class CotizacionVO extends AuditoriaVO{
 		
 	}
 	
-	public CotizacionVO(Date fecha, float cotizacion_compra, float cotizacion_venta, String codMoneda, 
+	public CotizacionVO(Date fecha, double cotizacion_compra, double cotizacion_venta, String codMoneda, 
 			String descripcionMoneda, String simboloMoneda, boolean aceptaCotizacionMoneda, boolean activoMoneda) {
 		super();
 		this.fecha = fecha;
@@ -105,19 +105,19 @@ public class CotizacionVO extends AuditoriaVO{
 		this.activoMoneda = activoMoneda;
 	}
 
-	public float getCotizacionCompra() {
+	public double getCotizacionCompra() {
 		return cotizacionCompra;
 	}
 
-	public void setCotizacionCompra(float cotizacion_compra) {
+	public void setCotizacionCompra(double cotizacion_compra) {
 		this.cotizacionCompra = cotizacion_compra;
 	}
 
-	public float getCotizacionVenta() {
+	public double getCotizacionVenta() {
 		return cotizacionVenta;
 	}
 
-	public void setCotizacionVenta(float cotizacion_venta) {
+	public void setCotizacionVenta(double cotizacion_venta) {
 		this.cotizacionVenta = cotizacion_venta;
 	}
 	

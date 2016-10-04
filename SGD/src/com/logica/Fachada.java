@@ -1300,14 +1300,7 @@ public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 	Integer codigo;
 	NumeradoresVO codigos = new NumeradoresVO();
 	
-<<<<<<< .mine
-||||||| .r282
-	Datos
-=======
 	//Datos
->>>>>>> .r283
-	
-	
 	try 
 	{
 		con = this.pool.obtenerConeccion();
