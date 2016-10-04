@@ -417,7 +417,14 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 		        	//tcMov.setData("ProgramaticallyChanged");
 		        	//tcMov.setConverter(Double.class);
 		        	//tcMov.setConvertedValue(value);
+		        	tcMov.setConverter(Double.class);
 		    		cotizacionVenta = (Double) tcMov.getConvertedValue();
+		    		
+		    		Double truncatedDouble = new BigDecimal(cotizacionVenta)
+						    .setScale(2, BigDecimal.ROUND_HALF_UP)
+						    .doubleValue();
+					
+		    		cotizacionVenta = truncatedDouble;
 		    		
 		        	if(operacion != Variables.OPERACION_LECTURA){
 
