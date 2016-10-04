@@ -1,5 +1,6 @@
 package com.vista.Procesos;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
 import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
+import com.excepciones.Cotizaciones.ObteniendoCotizacionesException;
 import com.excepciones.Documentos.ObteniendoDocumentosException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
 import com.excepciones.Procesos.ExisteProcesoException;
@@ -17,6 +19,8 @@ import com.excepciones.Procesos.IngresandoProcesoException;
 import com.excepciones.Procesos.ModificandoProcesoException;
 import com.excepciones.Procesos.NoExisteProcesoException;
 import com.excepciones.clientes.ObteniendoClientesException;
+import com.vaadin.data.Property;
+import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
@@ -26,6 +30,7 @@ import com.vaadin.ui.UI;
 import com.valueObject.DocumentoAduaneroVO;
 import com.valueObject.MonedaVO;
 import com.valueObject.UsuarioPermisosVO;
+import com.valueObject.Cotizacion.CotizacionVO;
 import com.valueObject.cliente.ClienteVO;
 import com.valueObject.proceso.ProcesoVO;
 import com.vista.BusquedaViewExtended;
@@ -46,6 +51,8 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 	private PermisosUsuario permisos;
 	UsuarioPermisosVO permisoAux;
 	int codigoInsert;
+	CotizacionVO cotizacion = new CotizacionVO();
+	Double cotizacionVenta = null, importeMoneda = null;
 	
 	public ProcesoViewExtended(String opera, ProcesosPanelExtended main){
 		
@@ -116,6 +123,7 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 					
 					aux = impMo.getValue().toString().trim().replace(".", "");
 					System.out.println(aux);
+					
 					if(impMo.getValue() != ""){
 						aux = aux.replace(",", ".");
 						procesoVO.setImpMo((double) impMo.getConvertedValue());
@@ -126,7 +134,7 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 					
 					if(impMn.getValue() != ""){
 						aux = impMn.getValue().toString().trim().replace(",", ".");
-						procesoVO.setImpMn(Double.parseDouble(aux));
+						procesoVO.setImpMn((double) impMn.getConvertedValue());
 					}
 					else{
 						procesoVO.setImpMn(0);
@@ -134,7 +142,7 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 					
 					if(tcMov.getValue() != ""){
 						aux = tcMov.getValue().toString().trim().replace(",", ".");
-						procesoVO.setTcMov(Double.parseDouble(aux));
+						procesoVO.setTcMov((double) tcMov.getConvertedValue());
 					}
 					else{
 						procesoVO.setTcMov(0);
@@ -237,6 +245,9 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 			
 				/*Inicializamos el Form en modo Edicion*/
 				this.iniFormEditar();
+				cotizacionVenta = (Double) tcMov.getConvertedValue();
+				importeMoneda = (Double) impMo.getConvertedValue();
+				
 			}
 			catch(Exception e)	{
 				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
@@ -315,6 +326,105 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 			}
 		});
+		
+		comboMoneda.addValueChangeListener(new Property.ValueChangeListener(){
+			
+			@Override
+			public void valueChange(ValueChangeEvent event) {
+				
+				
+				if("ProgramaticallyChanged".equals(comboMoneda.getData())){
+					comboMoneda.setData(null);
+		             return;
+		         }
+				
+				MonedaVO auxMoneda = new MonedaVO();
+				Double importeNacional = null, impuestoNacional = null;
+				
+				if(operacion != Variables.OPERACION_LECTURA){
+					
+					auxMoneda = (MonedaVO) comboMoneda.getValue();
+					Date fechaproces = convertFromJAVADateToSQLDate(fecha.getValue());
+					
+					try {
+						
+						if(auxMoneda.getCodMoneda() != null){
+							cotizacion = controlador.getCotizacion(permisoAux, fechaproces, auxMoneda.getCodMoneda());
+							cotizacionVenta = cotizacion.getCotizacionVenta();
+							tcMov.setData("ProgramaticallyChanged");
+							tcMov.setValue(String.valueOf(cotizacionVenta).replace(".", ","));
+							calculos();
+						}
+					}
+					catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
+							| InicializandoException | NoTienePermisosException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					System.out.println("cambia combo monedas");
+				}
+			}
+		});
+		
+		this.impMo.addValueChangeListener(new Property.ValueChangeListener() {
+			
+		    public void valueChange(ValueChangeEvent event) {
+		    	
+		    	if("ProgramaticallyChanged".equals(impMo.getData())){
+		    		impMo.setData(null);
+		            return;
+		         }
+		    	
+		        String value = (String) event.getProperty().getValue();
+		        
+		        if(value != ""){
+		        	
+		        	impMo.setConverter(Double.class);
+		        	impMo.setValue(value);
+		        	
+		        	
+		        	importeMoneda = (Double) impMo.getConvertedValue();
+		        	
+		        	
+		        	Double truncatedDouble = new BigDecimal(importeMoneda)
+						    .setScale(2, BigDecimal.ROUND_HALF_UP)
+						    .doubleValue();
+					
+		        	importeMoneda = truncatedDouble;
+		        	
+		        	if(operacion != Variables.OPERACION_LECTURA){
+
+			        	calculos();
+			        }
+		    	}
+		    }
+		});
+		
+		this.tcMov.addValueChangeListener(new Property.ValueChangeListener() {
+			
+		    public void valueChange(ValueChangeEvent event) {
+		    	
+		    	 if("ProgramaticallyChanged".equals(tcMov.getData())){
+		    		 tcMov.setData(null);
+		             return;
+		         }
+		    	 
+		        String value = (String) event.getProperty().getValue();
+		        if(value != ""){
+		        	
+		        	//cotizacionVenta   = Double.parseDouble(value);
+		        	//tcMov.setData("ProgramaticallyChanged");
+		        	//tcMov.setConverter(Double.class);
+		        	//tcMov.setConvertedValue(value);
+		    		cotizacionVenta = (Double) tcMov.getConvertedValue();
+		    		
+		        	if(operacion != Variables.OPERACION_LECTURA){
+
+			        	calculos();
+			        }
+		    	}
+		    }
+		});
 	}
 	
 	public  void inicializarForm(){
@@ -368,6 +478,13 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 	 */
 	public void setDataSourceFormulario(BeanItem<ProcesoVO> item)
 	{
+		comboMoneda.setData("ProgramaticallyChanged");
+		impMo.setData("ProgramaticallyChanged");
+		impMo.setConverter(Double.class);
+		tcMov.setData("ProgramaticallyChanged");
+		tcMov.setConverter(Double.class);
+		
+
 		this.fieldGroup.setItemDataSource(item);
 		
 		ProcesoVO proceso = new ProcesoVO();
@@ -755,6 +872,27 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 		
 	}
 	
+	public static java.sql.Date convertFromJAVADateToSQLDate(
+            java.util.Date javaDate) {
+        java.sql.Date sqlDate = null;
+        if (javaDate != null) {
+            sqlDate = new Date(javaDate.getTime());
+        }
+        return sqlDate;
+    }
 	
+	public void calculos(){
+		
+		if(importeMoneda != null && cotizacionVenta != null){
+			
+			Double truncatedDouble = new BigDecimal(importeMoneda.doubleValue() * cotizacionVenta.doubleValue())
+				    .setScale(2, BigDecimal.ROUND_HALF_UP)
+				    .doubleValue();
+			
+			impMn.setConverter(Double.class);
+			impMn.setConvertedValue(truncatedDouble);
+		}
+		
+	}
 	
 }
