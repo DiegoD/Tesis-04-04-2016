@@ -588,6 +588,48 @@ public class BusquedaViewExtended extends BusquedaView{
 			}
 
 		});*/
+		
+		//grid.getColumn("operacion").setHidden(true);
+//		grid.getColumn("fechaMod").setHidden(true);
+		
+	try{	
+		grid.getColumn("codCtaInd").setHidden(true);
+		grid.getColumn("codCuenta").setHidden(true);
+		grid.getColumn("codDocum").setHidden(true);
+		grid.getColumn("codEmp").setHidden(true);
+		grid.getColumn("codImpuesto").setHidden(true);
+		grid.getColumn("codMoneda").setHidden(true);
+		//lstGastos.getColumn("codProceso").setHidden(true);
+		grid.getColumn("codRubro").setHidden(true);
+		grid.getColumn("codTitular").setHidden(true);
+		//lstGastos.getColumn("cuenta").setHidden(true);
+		grid.getColumn("descProceso").setHidden(true);
+		grid.getColumn("fecDoc").setHidden(true);
+		grid.getColumn("fecValor").setHidden(true);
+		grid.getColumn("impImpuMn").setHidden(true);
+		grid.getColumn("impImpuMo").setHidden(true);
+		grid.getColumn("impSubMn").setHidden(true);
+		grid.getColumn("impSubMo").setHidden(true);
+		grid.getColumn("linea").setHidden(true);
+		grid.getColumn("impTotMn").setHidden(true);
+		grid.getColumn("nomCuenta").setHidden(true);
+		grid.getColumn("nomImpuesto").setHidden(true);
+		grid.getColumn("nomMoneda").setHidden(true);
+		grid.getColumn("nomRubro").setHidden(true);
+		grid.getColumn("nomTitular").setHidden(true);
+		grid.getColumn("nroTrans").setHidden(true);
+		grid.getColumn("porcentajeImpuesto").setHidden(true);
+		grid.getColumn("serieDocum").setHidden(true);
+		grid.getColumn("simboloMoneda").setHidden(true);
+		grid.getColumn("tcMov").setHidden(true);
+		grid.getColumn("usuarioMod").setHidden(true);
+		
+		grid.setColumnOrder("nroDocum", "referencia", "impTotMo", "impTotMo", "codProceso");
+		
+	}catch(Exception e){
+		
+	}
+	
 	}
 	
 	/*Este falta implementarlo es copia del de proceso*/

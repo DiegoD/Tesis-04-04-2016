@@ -5,6 +5,8 @@ import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+import org.vaadin.csvalidation.CSValidator;
+
 import com.controladores.CotizacionControlador;
 import com.controladores.GastoControlador;
 import com.excepciones.ConexionException;
@@ -33,9 +35,11 @@ import com.vaadin.data.Container.ItemSetChangeEvent;
 import com.vaadin.data.Container.ItemSetChangeListener;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
+import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.converter.Converter.ConversionException;
+import com.vaadin.data.validator.RegexpValidator;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
@@ -66,6 +70,7 @@ import com.vaadin.data.Property.ValueChangeEvent;
 
 public class GastoViewExtended extends GastoView implements IBusqueda{
 	
+	final FieldGroup binder = new FieldGroup();
 	private BeanFieldGroup<GastoVO> fieldGroup;
 	private GastoControlador controlador;
 	private String operacion;
@@ -81,6 +86,15 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 	
 	
 	public GastoViewExtended(String opera, GastosPanelExtended main){
+		
+		final CSValidator validator = new CSValidator();
+		validator.extend(impTotMo);
+		        
+		String js = "if (value.match(\"^[0-9]*$\"))\n" +
+		        "    null; // Success\n" +
+		        "else\n" +
+		        "    \"Fail\";\n";
+		validator.setJavaScript(js);
 		
 		this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
 		this.operacion = opera;
@@ -627,24 +641,47 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		        
 		        if(value != ""){
 		        	
-		        	impTotMo.setConverter(Double.class);
+//		        	impTotMo.setConverter(Double.class);
 		        	impTotMo.setData("ProgramaticallyChanged");
 		        	impTotMo.setValue(value);
+//		        	
+//		        	
+//		        	importeMoneda = Double.parseDouble(value);
+//		        	
+//		        	
+//		        	Double truncatedDouble = new BigDecimal(importeMoneda)
+//						    .setScale(2, BigDecimal.ROUND_HALF_UP)
+//						    .doubleValue();
+//					
+//		        	importeMoneda = truncatedDouble;
+//		        	
+//		        	if(operacion != Variables.OPERACION_LECTURA){
+//
+//			        	calculos();
+//			        }
 		        	
 		        	
-		        	importeMoneda = Double.parseDouble(value);
-		        	
-		        	
-		        	Double truncatedDouble = new BigDecimal(importeMoneda)
-						    .setScale(2, BigDecimal.ROUND_HALF_UP)
-						    .doubleValue();
-					
-		        	importeMoneda = truncatedDouble;
-		        	
-		        	if(operacion != Variables.OPERACION_LECTURA){
+		        	// Validate the input both on client and server-side.
+		        	CSValidator validator = new CSValidator();
+		        	validator.extend(impTotMo);
+		        	//String regexp = "[0-9]*";  
+		        	String regexp = "[0-9]+\\,*[0-9]*";
+		        	validator.setRegExp(regexp);
+		        	validator.setPreventInvalidTyping(true);
+		        	validator.setErrorMessage("Must be a number");
+		        	impTotMo.addValidator(new RegexpValidator(regexp, "Not es un importe valido"));
+		        	impTotMo.setRequired(true);
+		        	impTotMo.setRequiredError("Value is required");
 
-			        	calculos();
-			        }
+//		        	
+//		        	binder.bind(impTotMo, "number");
+//		        	
+//		        	 try {
+//		                 binder.commit();
+//		             } catch (Exception e) {
+//		                 Notification.show("Server-side validation failed");
+//		             }
+		        	
 		    	}
 		    }
 		});

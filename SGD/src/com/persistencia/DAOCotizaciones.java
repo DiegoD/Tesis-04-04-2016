@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
@@ -79,6 +80,10 @@ public class DAOCotizaciones implements IDAOCotizaciones{
 		
 		try
 		{
+//			SimpleDateFormat sdf = new SimpleDateFormat(
+//				    "mm-dd-yyyy");
+			//sdf.format(fecha)
+			
 			ConsultasDD consultas = new ConsultasDD ();
 			String query = consultas.getCotizacion();
 			
