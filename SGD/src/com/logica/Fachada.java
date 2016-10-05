@@ -1299,8 +1299,8 @@ public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 	boolean existe = false;
 	Integer codigo;
 	NumeradoresVO codigos = new NumeradoresVO();
-	
-	//Datos
+
+
 	try 
 	{
 		con = this.pool.obtenerConeccion();
