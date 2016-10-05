@@ -12,15 +12,15 @@
     <vaadin-link caption="Auditoria" _id="auditoria" :middle :right></vaadin-link> 
    </vaadin-horizontal-layout> 
    <vaadin-horizontal-layout responsive size-full> 
-    <vaadin-form-layout size-full> 
-     <vaadin-text-field caption="Codigo" readonly _id="codigo"></vaadin-text-field> 
-     <vaadin-text-field caption="Nombre" readonly _id="nombre"></vaadin-text-field> 
-     <vaadin-combo-box caption="Moneda" item-caption-mode="id" width="206px" _id="comboMoneda"> 
+    <vaadin-form-layout spacing="false" size-full> 
+     <vaadin-text-field caption="Codigo" style-name="tiny" readonly _id="codigo"></vaadin-text-field> 
+     <vaadin-text-field caption="Nombre" style-name="tiny" readonly _id="nombre"></vaadin-text-field> 
+     <vaadin-combo-box caption="Moneda" style-name="tiny" item-caption-mode="id" width="187px" _id="comboMoneda"> 
       <option>Option 1</option> 
       <option>Option 2</option> 
       <option>Option 3</option> 
      </vaadin-combo-box> 
-     <vaadin-check-box caption="Activo" id="activo" responsive _id="activo"></vaadin-check-box> 
+     <vaadin-check-box caption="Activo" id="activo" style-name="tiny" responsive _id="activo"></vaadin-check-box> 
      <vaadin-horizontal-layout width="187px"> 
       <vaadin-button style-name="primary tiny" plain-text _id="btnAgregar" :middle>
         Guardar 

@@ -80,11 +80,9 @@ public class CotizacionViewExtended extends CotizacionView implements IBusqueda{
 					//cotizacionVO.setFecha(new java.sql.Timestamp(fechaCotiz.getTime()));
 					cotizacionVO.setFecha(new java.sql.Timestamp(fecha.getValue().getTime()));
 					
-					String aux = cotizacionCompra.getValue().toString().trim().replace(",", ".");
-					cotizacionVO.setCotizacionCompra(Double.parseDouble(aux));
+					cotizacionVO.setCotizacionCompra((Double) cotizacionCompra.getConvertedValue());
 					
-					aux = cotizacionVenta.getValue().toString().trim().replace(",", ".");
-					cotizacionVO.setCotizacionVenta(Double.parseDouble(aux));
+					cotizacionVO.setCotizacionVenta((Double) cotizacionVenta.getConvertedValue());
 					
 					MonedaVO auxMoneda = new MonedaVO();
 					auxMoneda = (MonedaVO) this.comboMoneda.getValue();
@@ -212,6 +210,8 @@ public class CotizacionViewExtended extends CotizacionView implements IBusqueda{
 		
 		//inicializar los valores de los combos impuesto y tipo de rubro
 		inicializarComboMoneda(null);
+		
+		this.inicializarCampos();
 		
 		//Seteamos info del form si es requerido
 		if(fieldGroup != null)
@@ -558,4 +558,15 @@ public class CotizacionViewExtended extends CotizacionView implements IBusqueda{
 		// TODO Auto-generated method stub
 		
 	}
+	
+	public void inicializarCampos(){
+		
+		cotizacionCompra.setConverter(Double.class);
+		cotizacionCompra.setConversionError("Error en formato de número");
+		
+		cotizacionVenta.setConverter(Double.class);
+		cotizacionVenta.setConversionError("Error en formato de número");
+		
+	}
+	
 }

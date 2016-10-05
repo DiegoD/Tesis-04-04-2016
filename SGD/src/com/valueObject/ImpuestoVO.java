@@ -6,14 +6,14 @@ public class ImpuestoVO extends AuditoriaVO{
 	
 	private String codImpuesto;
 	private String descripcion;
-	private float porcentaje;
+	private double porcentaje;
 	private boolean activo;
 	
 	public ImpuestoVO(){
 		
 	}
 	
-	public ImpuestoVO(String codImpuesto, String descripcion, float porcentaje, boolean activo) {
+	public ImpuestoVO(String codImpuesto, String descripcion, double porcentaje, boolean activo) {
 		super();
 		this.codImpuesto = codImpuesto;
 		this.descripcion = descripcion;
@@ -55,11 +55,11 @@ public class ImpuestoVO extends AuditoriaVO{
 		this.descripcion = descripcion;
 	}
 
-	public float getPorcentaje() {
+	public double getPorcentaje() {
 		return porcentaje;
 	}
 
-	public void setPorcentaje(float porcentaje) {
+	public void setPorcentaje(double porcentaje) {
 		this.porcentaje = porcentaje;
 	}
 

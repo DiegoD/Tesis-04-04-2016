@@ -246,7 +246,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				
 				IngresoCobroVO ingCobroVO = new IngresoCobroVO();	
 				
-				ingCobroVO.setImpTotMo(Double.parseDouble(this.impTotMo.getValue()));
+				ingCobroVO.setImpTotMo((Double) impTotMo.getConvertedValue());
 				
 				/*Obtenemos la cotizacion y calculamos el importe MN*/
 				Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
@@ -309,13 +309,13 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 					if(ingCobroVO.getmPago().equals("transferencia"))
 					{
 						ingCobroVO.setCodDocRef("tranrec");
-						ingCobroVO.setNroDocRef(Integer.parseInt(nroDocRef.getValue()));
+						
 						ingCobroVO.setSerieDocRef("0");
 					}
 					else if(ingCobroVO.getmPago().equals("cheque"))
 					{
 						ingCobroVO.setCodDocRef("cheqrec");
-						ingCobroVO.setNroDocRef(Integer.parseInt(nroDocRef.getValue()));
+						ingCobroVO.setNroDocRef((Integer) nroDocRef.getConvertedValue());
 						ingCobroVO.setSerieDocRef(serieDocRef.getValue());
 						
 					}else
@@ -657,6 +657,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		this.inicializarComboBancos(null);
 		this.inicializarComboCuentas(null);
 		this.inicializarComboMoneda(null);
+		
+		inicializarCampos();
 		
 		//Seteamos info del form si es requerido
 		if(fieldGroup != null)
@@ -1055,7 +1057,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	{
 		nroDocRef.addValidator(new RegexpValidator("^[0-9]*(\\.[0-9]+)?$", true, "Dato numerico"));
 		
-		impTotMo.addValidator(new RegexpValidator("^[0-9]*(\\.[0-9]+)?$", true, "Dato numerico"));
+		//impTotMo.addValidator(new RegexpValidator("^[0-9]*(\\.[0-9]+)?$", true, "Dato numerico"));
 		
         this.serieDocRef.addValidator(
                 new StringLengthValidator(
@@ -1520,7 +1522,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
 		
 		try{
-			tcMonedaNacional = Double.parseDouble(this.tcMov.getValue().toString().trim());
+			tcMonedaNacional = (Double) tcMov.getConvertedValue();
 		}
 		catch(Exception e)
 		{
@@ -1578,8 +1580,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			}
 		}
 		
-		this.impTotMo.setValue(Double.toString(impMo));
-		
+		//this.impTotMo.setValue(Double.toString(impMo));
+		this.impTotMo.setConvertedValue(impMo);
 	}
 	
 	public void setLstDetalle(ArrayList<IngresoCobroDetalleVO> lst) {
@@ -1667,6 +1669,21 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			/*Calculamos el importe total de todos los gastos*/
 			this.calcularImporteTotal();
 		
+	}
+	
+	public void inicializarCampos(){
+		
+		nroDocum.setConverter(Integer.class);
+		nroDocum.setConversionError("Ingrese un número entero");
+		
+		nroDocRef.setConverter(Integer.class);
+		nroDocRef.setConversionError("Ingrese un número entero");
+		
+		tcMov.setConverter(Double.class);
+		tcMov.setConversionError("Error en formato de número");
+		
+		impTotMo.setConverter(Double.class);
+		impTotMo.setConversionError("Error en formato de número");
 	}
 	
 	

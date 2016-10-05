@@ -12,15 +12,15 @@
     <vaadin-link caption="Auditoria" _id="auditoria" :middle :right></vaadin-link> 
    </vaadin-horizontal-layout> 
    <vaadin-horizontal-layout responsive size-full> 
-    <vaadin-form-layout size-full> 
-     <vaadin-combo-box caption="Moneda" item-caption-mode="id" width="206px" _id="comboMoneda"> 
+    <vaadin-form-layout spacing="false" size-full> 
+     <vaadin-combo-box caption="Moneda" style-name="tiny" item-caption-mode="id" width="125px" _id="comboMoneda"> 
       <option>Option 1</option> 
       <option>Option 2</option> 
       <option>Option 3</option> 
      </vaadin-combo-box> 
-     <vaadin-date-field caption="Fecha Cotización" width="206px" _id="fecha"></vaadin-date-field> 
-     <vaadin-text-field caption="Cotización Compra" width="103px" readonly _id="cotizacionCompra"></vaadin-text-field> 
-     <vaadin-text-field caption="Cotización Venta" width="103px" readonly _id="cotizacionVenta"></vaadin-text-field> 
+     <vaadin-date-field caption="Fecha Cotización" style-name="tiny" width="125px" _id="fecha"></vaadin-date-field> 
+     <vaadin-text-field caption="Cotización Compra" style-name="tiny" null-representation="0" width="103px" readonly _id="cotizacionCompra"></vaadin-text-field> 
+     <vaadin-text-field caption="Cotización Venta" style-name="tiny" null-representation="0" width="103px" readonly _id="cotizacionVenta"></vaadin-text-field> 
      <vaadin-horizontal-layout width="187px"> 
       <vaadin-button style-name="primary tiny" plain-text _id="aceptar" :middle>
         Guardar 

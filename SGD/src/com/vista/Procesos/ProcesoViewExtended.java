@@ -361,10 +361,12 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 		        if(value != ""){
 		        	
 		        	try {
+		        		impMo.setValue(value);
 		        		importeMoneda = (Double) impMo.getConvertedValue();
 					} catch (Exception e) {
+						return;
 						// TODO: handle exception
-						Mensajes.mostrarMensajeError("Formato de número incorrecto");
+						//Mensajes.mostrarMensajeError("Formato de número incorrecto");
 					}
 		        	
 		        	Double truncatedDouble = new BigDecimal(importeMoneda)
@@ -395,10 +397,12 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 		        if(value != ""){
 		        	
 		        	try {
+		        		tcMov.setValue(value);
 		        		cotizacionVenta = (Double) tcMov.getConvertedValue();
 					} catch (Exception e) {
+						return;
 						// TODO: handle exception
-						Mensajes.mostrarMensajeError("Formato de número incorrecto");
+						//Mensajes.mostrarMensajeError("Formato de número incorrecto");
 					}
 		        	
 		        	

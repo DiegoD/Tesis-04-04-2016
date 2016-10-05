@@ -12,20 +12,20 @@
     <vaadin-link caption="Auditoria" _id="auditoria" :middle :right></vaadin-link> 
    </vaadin-horizontal-layout> 
    <vaadin-horizontal-layout responsive size-full> 
-    <vaadin-form-layout size-full> 
-     <vaadin-text-field caption="Codigo" readonly _id="codRubro"></vaadin-text-field> 
-     <vaadin-text-field caption="Descripción" width="187px" readonly _id="descripcion"></vaadin-text-field> 
-     <vaadin-combo-box caption="Impuesto" item-caption-mode="id" _id="comboImpuestos"> 
+    <vaadin-form-layout spacing="false" size-full> 
+     <vaadin-text-field caption="Codigo" style-name="tiny" readonly _id="codRubro"></vaadin-text-field> 
+     <vaadin-text-field caption="Descripción" style-name="tiny" width="187px" readonly _id="descripcion"></vaadin-text-field> 
+     <vaadin-combo-box caption="Impuesto" style-name="tiny" item-caption-mode="id" _id="comboImpuestos"> 
       <option>Option 1</option> 
       <option>Option 2</option> 
       <option>Option 3</option> 
      </vaadin-combo-box> 
-     <vaadin-combo-box caption="Tipo Rubro" item-caption-mode="id" _id="comboTipoRubro"> 
+     <vaadin-combo-box caption="Tipo Rubro" style-name="tiny" item-caption-mode="id" _id="comboTipoRubro"> 
       <option>Option 1</option> 
       <option>Option 2</option> 
       <option>Option 3</option> 
      </vaadin-combo-box> 
-     <vaadin-check-box caption="Activo" id="activo" responsive _id="activo"></vaadin-check-box> 
+     <vaadin-check-box caption="Activo" id="activo" style-name="tiny" responsive _id="activo"></vaadin-check-box> 
      <vaadin-horizontal-layout width="187px"> 
       <vaadin-button style-name="primary tiny" plain-text _id="aceptar" :middle>
         Guardar 

@@ -629,7 +629,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		        		importeMoneda = (Double) impTotMo.getConvertedValue();
 					} catch (Exception e) {
 						// TODO: handle exception
-						Mensajes.mostrarMensajeError("Formato de número incorrecto");
+						return;
 					}
 		        	
 		        	Double truncatedDouble = new BigDecimal(importeMoneda)
@@ -700,7 +700,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		        		cotizacionVenta = (Double) tcMov.getConvertedValue();
 					} catch (Exception e) {
 						// TODO: handle exception
-						Mensajes.mostrarMensajeError("Formato de número incorrecto");
+						return;
 					}
 		        	
 		        	
@@ -736,7 +736,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		        		porcImpuesto = (Double) porcentajeImpuesto.getConvertedValue();
 					} catch (Exception e) {
 						// TODO: handle exception
-						Mensajes.mostrarMensajeError("Formato de número incorrecto");
+						return;
 					}
 		        	
 		        	

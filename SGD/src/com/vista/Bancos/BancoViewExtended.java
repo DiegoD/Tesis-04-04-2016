@@ -171,7 +171,7 @@ public class BancoViewExtended extends BancoView{
 				
 				CtaBcoViewExtended form = new CtaBcoViewExtended(this);
 				
-				sub = new MySub("53%", "40%");
+				sub = new MySub("50%", "30%");
 				sub.setModal(true);
 				sub.setVista(form);
 				//sub.setWidth("50%");
@@ -290,7 +290,7 @@ public class BancoViewExtended extends BancoView{
 					
 					this.frmFCtaBcos = new CtaBcoViewExtended(this, ctaBcoSelecccionado, Variables.OPERACION_EDITAR);
 					
-					sub = new MySub("53%", "40%" );
+					sub = new MySub("50%", "30%" );
 					sub.setModal(true);
 					sub.setVista(this.frmFCtaBcos);
 					sub.center();

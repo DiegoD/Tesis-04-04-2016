@@ -64,7 +64,7 @@ public class EmpresasPanelExtended extends EmpresasPanel{
 				
 					this.btnNuevaEmpresa.addClickListener(click -> {
 						
-						sub = new MySub("60%","37%");
+						sub = new MySub("50%","32%");
 						form = new EmpresaViewExtended(Variables.OPERACION_NUEVO, this);
 						sub.setModal(true);
 						sub.setVista(form);

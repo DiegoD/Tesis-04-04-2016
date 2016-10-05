@@ -67,8 +67,7 @@ public class ImpuestoViewExtended extends ImpuestoView{
 					impuestoVO.setcodImpuesto(codImpuesto.getValue().trim());
 					impuestoVO.setDescripcion(descripcion.getValue().trim());
 					
-					String aux = porcentaje.getValue().toString().trim().replace(",", ".");
-					impuestoVO.setPorcentaje(Float.parseFloat(aux));
+					impuestoVO.setPorcentaje((double) porcentaje.getConvertedValue());
 					impuestoVO.setActivo(activo.getValue());
 					impuestoVO.setUsuarioMod(this.permisos.getUsuario());
 					impuestoVO.setOperacion(operacion);
@@ -133,6 +132,8 @@ public class ImpuestoViewExtended extends ImpuestoView{
 		this.controlador = new ImpuestoControlador();
 					
 		this.fieldGroup =  new BeanFieldGroup<ImpuestoVO>(ImpuestoVO.class);
+		
+		inicializarCampos();
 		
 		//Seteamos info del form si es requerido
 		if(fieldGroup != null)
@@ -429,6 +430,12 @@ public class ImpuestoViewExtended extends ImpuestoView{
 		return ok;
 	}
 	
+	public void inicializarCampos(){
+		
+		porcentaje.setConverter(Double.class);
+		porcentaje.setConversionError("Error en formato de número");
+		
+	}
 	
 	
 }

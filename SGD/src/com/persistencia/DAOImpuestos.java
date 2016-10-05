@@ -53,7 +53,7 @@ public class DAOImpuestos implements IDAOImpuestos{
 				
 				impuesto.setCod_imp(rs.getString(1));
 				impuesto.setDescripcion(rs.getString(2));
-				impuesto.setPorcentaje(rs.getFloat(3));
+				impuesto.setPorcentaje(rs.getDouble(3));
 				impuesto.setActivo(rs.getBoolean(4));
 				impuesto.setFechaMod(rs.getTimestamp(5));
 				impuesto.setUsuarioMod(rs.getString(6));
@@ -102,7 +102,7 @@ public class DAOImpuestos implements IDAOImpuestos{
 				
 				impuesto.setCod_imp(rs.getString(1));
 				impuesto.setDescripcion(rs.getString(2));
-				impuesto.setPorcentaje(rs.getFloat(3));
+				impuesto.setPorcentaje(rs.getDouble(3));
 				impuesto.setActivo(rs.getBoolean(4));
 				impuesto.setFechaMod(rs.getTimestamp(5));
 				impuesto.setUsuarioMod(rs.getString(6));
@@ -145,7 +145,7 @@ public class DAOImpuestos implements IDAOImpuestos{
 			pstmt1 =  con.prepareStatement(insert);
 			pstmt1.setString(1, impuesto.getCod_imp());
 			pstmt1.setString(2, impuesto.getDescripcion());
-			pstmt1.setFloat(3, impuesto.getPorcentaje());
+			pstmt1.setDouble(3, impuesto.getPorcentaje());
 			pstmt1.setBoolean(4, impuesto.isActivo());
 			pstmt1.setString(5, impuesto.getUsuarioMod());
 			pstmt1.setString(6, impuesto.getOperacion());
@@ -220,7 +220,7 @@ public class DAOImpuestos implements IDAOImpuestos{
 			/*Updateamos la info del usuario*/
      		pstmt1 =  con.prepareStatement(update);
 			pstmt1.setString(1, impuesto.getDescripcion());
-			pstmt1.setFloat(2, impuesto.getPorcentaje());
+			pstmt1.setDouble(2, impuesto.getPorcentaje());
 			pstmt1.setBoolean(3, impuesto.isActivo());
 			pstmt1.setString(4, impuesto.getUsuarioMod());
 			pstmt1.setString(5, impuesto.getOperacion());

@@ -12,11 +12,11 @@
     <vaadin-link caption="Auditoria" _id="auditoria" :middle :right></vaadin-link> 
    </vaadin-horizontal-layout> 
    <vaadin-horizontal-layout responsive size-full> 
-    <vaadin-form-layout size-full> 
-     <vaadin-text-field caption="Codigo" readonly _id="codImpuesto"></vaadin-text-field> 
-     <vaadin-text-field caption="Descripción" readonly _id="descripcion"></vaadin-text-field> 
-     <vaadin-text-field caption="Porcentaje" _id="porcentaje"></vaadin-text-field> 
-     <vaadin-check-box caption="Activo" id="activo" responsive _id="activo"></vaadin-check-box> 
+    <vaadin-form-layout spacing="false" size-full> 
+     <vaadin-text-field caption="Codigo" style-name="tiny" readonly _id="codImpuesto"></vaadin-text-field> 
+     <vaadin-text-field caption="Descripción" style-name="tiny" readonly _id="descripcion"></vaadin-text-field> 
+     <vaadin-text-field caption="Porcentaje" style-name="tiny" null-representation="0" _id="porcentaje"></vaadin-text-field> 
+     <vaadin-check-box caption="Activo" id="activo" style-name="tiny" responsive _id="activo"></vaadin-check-box> 
      <vaadin-horizontal-layout width="187px"> 
       <vaadin-button style-name="primary tiny" plain-text _id="aceptar" :middle>
         Guardar 

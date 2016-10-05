@@ -75,7 +75,7 @@ public class DAORubros implements IDAORubros{
 					impuesto = new Impuesto();
 					impuesto.setCod_imp(rs2.getString(1));
 					impuesto.setDescripcion(rs2.getString(2));
-					impuesto.setPorcentaje(rs2.getFloat(3));
+					impuesto.setPorcentaje(rs2.getDouble(3));
 					impuesto.setActivo(rs2.getBoolean(4));
 					impuesto.setFechaMod(rs2.getTimestamp(5));
 					impuesto.setUsuarioMod(rs2.getString(6));
@@ -169,7 +169,7 @@ public class DAORubros implements IDAORubros{
 					impuesto = new Impuesto();
 					impuesto.setCod_imp(rs2.getString(1));
 					impuesto.setDescripcion(rs2.getString(2));
-					impuesto.setPorcentaje(rs2.getFloat(3));
+					impuesto.setPorcentaje(rs2.getDouble(3));
 					impuesto.setActivo(rs2.getBoolean(4));
 					impuesto.setFechaMod(rs2.getTimestamp(5));
 					impuesto.setUsuarioMod(rs2.getString(6));

@@ -66,7 +66,7 @@ public class TipoRubrosPanelExtended extends TipoRubrosPanel{
 				
 					this.btnNuevoTipoRubro.addClickListener(click -> {
 						
-						sub = new MySub("50%","32%");
+						sub = new MySub("40%","28%");
 						form = new TipoRubroViewExtended(Variables.OPERACION_NUEVO, this);
 						sub.setModal(true);
 						sub.setVista(form);
@@ -147,7 +147,7 @@ public class TipoRubrosPanelExtended extends TipoRubrosPanel{
 				    	}
 							
 				    	form = new TipoRubroViewExtended(Variables.OPERACION_LECTURA, TipoRubrosPanelExtended.this);
-				    	sub = new MySub("50%","32%");
+				    	sub = new MySub("40%","28%");
 						sub.setModal(true);
 						sub.setVista(form);
 						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/

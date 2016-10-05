@@ -10,7 +10,7 @@ public class RubroVO extends Auditoria{
 	private boolean activo;
 	private String codigoImpuesto;
 	private String descripcionImpuesto;
-	private float porcentajeImpuesto;
+	private double porcentajeImpuesto;
 	private boolean activoImpuesto;
 	private String descripcionTipoRubro;
 	private String codTipoRubro;
@@ -24,7 +24,7 @@ public class RubroVO extends Auditoria{
 	
 
 	public RubroVO(String codRubro, String descripcion, boolean activo, String cod_impuesto, String descripcionImpuesto,
-			float porcentajeImpuesto, boolean activoImpuesto, String tipoRubro, String descripcionTipoRubro) {
+			double porcentajeImpuesto, boolean activoImpuesto, String tipoRubro, String descripcionTipoRubro) {
 		super();
 		this.codRubro = codRubro;
 		this.descripcion = descripcion;
@@ -38,7 +38,7 @@ public class RubroVO extends Auditoria{
 	}
 	
 	public RubroVO(String codRubro, String descripcion, boolean activo, String cod_impuesto, String descripcionImpuesto,
-			float porcentajeImpuesto, boolean activoImpuesto, String tipoRubro, String descripcionTipoRubro,
+			double porcentajeImpuesto, boolean activoImpuesto, String tipoRubro, String descripcionTipoRubro,
 			boolean oficina, boolean proceso, boolean persona) {
 		super();
 		this.codRubro = codRubro;
@@ -146,12 +146,12 @@ public class RubroVO extends Auditoria{
 	}
 
 
-	public float getPorcentajeImpuesto() {
+	public double getPorcentajeImpuesto() {
 		return porcentajeImpuesto;
 	}
 
 
-	public void setPorcentajeImpuesto(float porcentajeImpuesto) {
+	public void setPorcentajeImpuesto(double porcentajeImpuesto) {
 		this.porcentajeImpuesto = porcentajeImpuesto;
 	}
 

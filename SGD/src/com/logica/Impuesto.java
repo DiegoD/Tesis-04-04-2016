@@ -9,7 +9,7 @@ public class Impuesto extends Auditoria{
 	
 	private String cod_impuesto;
 	private String descripcion;
-	private float porcentaje;
+	private double porcentaje;
 	private boolean activo;
 	
 	public Impuesto(){
@@ -19,13 +19,13 @@ public class Impuesto extends Auditoria{
 	public Impuesto(String cod_imp){
 		this.cod_impuesto = cod_imp;
 	}
-	public Impuesto(String cod_imp, String descripcion, float porcentaje){
+	public Impuesto(String cod_imp, String descripcion, double porcentaje){
 		this.cod_impuesto = cod_imp;
 		this.descripcion = descripcion;
 		this.porcentaje = porcentaje;
 	}
 	
-	public Impuesto(String cod_imp, String descripcion, float porcentaje, boolean activo) {
+	public Impuesto(String cod_imp, String descripcion, double porcentaje, boolean activo) {
 		
 		super();
 		this.cod_impuesto = cod_imp;
@@ -60,11 +60,11 @@ public class Impuesto extends Auditoria{
 		this.descripcion = descripcion;
 	}
 
-	public float getPorcentaje() {
+	public double getPorcentaje() {
 		return porcentaje;
 	}
 
-	public void setPorcentaje(float porcentaje) {
+	public void setPorcentaje(double porcentaje) {
 		this.porcentaje = porcentaje;
 	}
 

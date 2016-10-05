@@ -64,7 +64,7 @@ public class FuncionariosPanelExtended extends FuncionariosPanel {
 					
 						this.btnNuevo.addClickListener(click -> {
 							
-							sub = new MySub("80%","44%");
+							sub = new MySub("65%","44%");
 							FuncionarioViewExtended form = new FuncionarioViewExtended(Variables.OPERACION_NUEVO, this);
 							sub.setModal(true);
 							sub.setVista(form);
@@ -150,7 +150,7 @@ public class FuncionariosPanelExtended extends FuncionariosPanel {
 					    	}
 								
 					    	FuncionarioViewExtended form = new FuncionarioViewExtended(Variables.OPERACION_LECTURA, FuncionariosPanelExtended.this);
-					    	sub = new MySub("80%","44%");
+					    	sub = new MySub("65%","44%");
 							sub.setModal(true);
 							sub.setVista(form);
 							/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/

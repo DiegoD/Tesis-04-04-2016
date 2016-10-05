@@ -47,8 +47,8 @@ public class DAOCotizaciones implements IDAOCotizaciones{
 				Moneda moneda = new Moneda();
 				
 				cotizacion.setFecha(rs.getTimestamp(2));
-				cotizacion.setCotizacion_compra(rs.getFloat(3));
-				cotizacion.setCotizacion_venta(rs.getFloat(4));
+				cotizacion.setCotizacion_compra(rs.getDouble(3));
+				cotizacion.setCotizacion_venta(rs.getDouble(4));
 				cotizacion.setFechaMod(rs.getTimestamp(5));
 				cotizacion.setUsuarioMod(rs.getString(6));
 				cotizacion.setOperacion(rs.getString(7));
@@ -103,8 +103,8 @@ public class DAOCotizaciones implements IDAOCotizaciones{
 				Moneda moneda = new Moneda();
 				
 				cotizacion.setFecha(rs.getTimestamp(2));
-				cotizacion.setCotizacion_compra(rs.getFloat(3));
-				cotizacion.setCotizacion_venta(rs.getFloat(4));
+				cotizacion.setCotizacion_compra(rs.getDouble(3));
+				cotizacion.setCotizacion_venta(rs.getDouble(4));
 				cotizacion.setFechaMod(rs.getTimestamp(5));
 				cotizacion.setUsuarioMod(rs.getString(6));
 				cotizacion.setOperacion(rs.getString(7));
