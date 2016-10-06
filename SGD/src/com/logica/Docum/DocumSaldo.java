@@ -19,6 +19,11 @@ public class DocumSaldo extends DatosDocum{
 		super();
 	}
 	
+	public DocumSaldo(DatosDocumVO d){
+		
+		super(d);
+	}
+	
 	public DocumSaldo(DocumSaldoVO d){
 		
 		super(d);

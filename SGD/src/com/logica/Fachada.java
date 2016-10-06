@@ -1453,9 +1453,8 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws  C
 		
 		aux.copiar(ingVO);
 		
-		DatosDocum doc = new DatosDocum(aux);
-		
-		DocumSaldo docSaldo = (DocumSaldo)doc;
+		DocumSaldo docSaldo = new DocumSaldo(aux);//new DocumSaldo(); //(DocumSaldo)doc;
+		//docSaldo
 		
 		docSaldo.setCodDocum(ingVO.getCodDocRef());
 		docSaldo.setSerieDocum(ingVO.getSerieDocRef());

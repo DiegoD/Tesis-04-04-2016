@@ -643,44 +643,6 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 			        	calculos();
 			        }
 		    	}
-		        	
-//		        	
-//		        	
-//		        	importeMoneda = Double.parseDouble(value);
-//		        	
-//		        	
-//		        	Double truncatedDouble = new BigDecimal(importeMoneda)
-//						    .setScale(2, BigDecimal.ROUND_HALF_UP)
-//						    .doubleValue();
-//					
-//		        	importeMoneda = truncatedDouble;
-//		        	
-//		        	if(operacion != Variables.OPERACION_LECTURA){
-//
-//			        	calculos();
-//			        }
-		        	
-		        	// Validate the input both on client and server-side.
-//		        	CSValidator validator = new CSValidator();
-//		        	validator.extend(impTotMo);
-//		        	//String regexp = "[0-9]*";  
-//		        	String regexp = "[0-9]+\\,*[0-9]*";
-//		        	validator.setRegExp(regexp);
-//		        	validator.setPreventInvalidTyping(true);
-//		        	validator.setErrorMessage("Must be a number");
-//		        	impTotMo.addValidator(new RegexpValidator(regexp, "Not es un importe valido"));
-//		        	impTotMo.setRequired(true);
-//		        	impTotMo.setRequiredError("Value is required");
-
-//		        	
-//		        	binder.bind(impTotMo, "number");
-//		        	
-//		        	 try {
-//		                 binder.commit();
-//		             } catch (Exception e) {
-//		                 Notification.show("Server-side validation failed");
-//		             }
-		        	
 		    }
 		});
 		

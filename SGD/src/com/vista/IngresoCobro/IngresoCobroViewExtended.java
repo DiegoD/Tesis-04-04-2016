@@ -1,5 +1,6 @@
 package com.vista.IngresoCobro;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -67,6 +68,9 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	BeanItemContainer<IngresoCobroDetalleVO> container;
 	private IngresoCobroDetalleVO formSelecccionado; /*Variable utilizada cuando se selecciona
 	 										  un detalle, para poder quitarlo de la lista*/
+	UsuarioPermisosVO permisoAux;
+	CotizacionVO cotizacion =  new CotizacionVO();
+	Double cotizacionVenta = null;
 	
 	boolean cambioMoneda;
 	
@@ -192,36 +196,72 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
    		@Override
 		public void valueChange(ValueChangeEvent event) {
    			
+   			UsuarioPermisosVO permisoAux = 
+   					new UsuarioPermisosVO(permisos.getCodEmp(),
+   							permisos.getUsuario(),
+   							VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+   							VariablesPermisos.OPERACION_NUEVO_EDITAR);
+   			
+   			MonedaVO auxMoneda = new MonedaVO();
+   			Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
+   			
+   			auxMoneda = (MonedaVO) comboMoneda.getValue();
+   			
+   			if(auxMoneda.getCodMoneda() != null){
+   				try {
+   					
+					cotizacion = controlador.getCotizacion(permisoAux, fecha, auxMoneda.getCodMoneda());
+					cotizacionVenta = cotizacion.getCotizacionVenta();
+					calculos();
+				} 
+   				catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
+						| InicializandoException | NoTienePermisosException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+   			}
    			/*Si ya hay ingresado un gasto no lo dejamos cambiar la moneda*/
    			if(lstDetalleVO.size()>0)
    			{
-   				cambioMoneda = true;
-   				
-   				Mensajes.mostrarMensajeError("No se puede cambiar la moneda con gastos ya ingresados");
-   				
-   				/*Cuando salga del combo ejectura el blur y vuelve a la moneda anterior*/
+   				calcularImporteTotal();
    			}
 		}
     });
-  //  combobox.setImmediate(true);
-    comboMoneda.addBlurListener(new BlurListener() {
-        
-		@Override
-		public void blur(BlurEvent event) {
-			
-			if(cambioMoneda)
-			{
-				/*Volvemos a inicializar el combo de la moneda, con la moneda anterior*/
-   				inicializarComboMoneda(lstDetalleVO.get(0).getCodMoneda());
-   				
-   				cambioMoneda = false;
-			}
-			
-		}
-    });
     
-    
-    
+    this.tcMov.addValueChangeListener(new Property.ValueChangeListener() {
+		
+	    public void valueChange(ValueChangeEvent event) {
+	    	
+	    	 if("ProgramaticallyChanged".equals(tcMov.getData())){
+	    		 tcMov.setData(null);
+	             return;
+	         }
+	    	 
+	        String value = (String) event.getProperty().getValue();
+	        if(value != ""){
+	        	
+	        	try {
+	        		cotizacionVenta = (Double) tcMov.getConvertedValue();
+				} catch (Exception e) {
+					// TODO: handle exception
+					return;
+				}
+	        	
+	        	
+	        	Double truncatedDouble = new BigDecimal(cotizacionVenta)
+					    .setScale(2, BigDecimal.ROUND_HALF_UP)
+					    .doubleValue();
+				
+	        	cotizacionVenta = truncatedDouble;
+	        	
+	        	if(operacion != Variables.OPERACION_LECTURA){
+
+		        	calculos();
+		        }
+	        	
+	    	}
+	    }
+	});
 	
 	/*Inicializamos listener de boton aceptar*/
 	this.aceptar.addClickListener(click -> {
@@ -1684,8 +1724,22 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		
 		impTotMo.setConverter(Double.class);
 		impTotMo.setConversionError("Error en formato de número");
+		
+		tcMov.setData("ProgramaticallyChanged");
 	}
 	
+	public void calculos(){
+	
+		if(cotizacionVenta != null){
+			try {
+				tcMov.setConvertedValue(cotizacionVenta);
+			} catch (Exception e) {
+				return;
+				// TODO: handle exception
+			}
+		}
+		
+	}
 	
 	
 }

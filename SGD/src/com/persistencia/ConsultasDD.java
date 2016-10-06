@@ -1363,7 +1363,7 @@ public String insertarSaldoCuenta()
 	sb.append("INSERT INTO sa_cuentas ( cod_docum, serie_docum, nro_docum, "
 			+ " cod_emp, cod_moneda, cod_tit, "
 			+ " imp_tot_mn, imp_tot_mo, cuenta, "
-			+ " fecha_mod, usuario_mod, operacion, cod_cta, referencia, nro_trans, cod_doc_ref"
+			+ " fecha_mod, usuario_mod, operacion, cod_cta, referencia, nro_trans, cod_doc_ref, "
 			+ " serie_doc_ref, nro_doc_ref, cod_bco, cod_ctabco, movimiento, signo ) ");
 	sb.append("VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
 	
