@@ -320,6 +320,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				ingCobroVO.setCodEmp(permisos.getCodEmp());
 				ingCobroVO.setReferencia(referencia.getValue());
 				
+				ingCobroVO.setCodCtaInd("ingcobro");
+				
 				//Moneda
 				if(this.comboMoneda.getValue() != null){
 					MonedaVO auxMoneda = new MonedaVO();
@@ -360,7 +362,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 						
 					}else
 					{
-						ingCobroVO.setmPago("Caja");
+						
 						ingCobroVO.setCodDocRef("0");
 						ingCobroVO.setNroDocRef(0);
 						ingCobroVO.setSerieDocRef("0");
@@ -376,6 +378,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 						ingCobroVO.setCodDocRef("0");
 						ingCobroVO.setNroDocRef(0);
 						ingCobroVO.setSerieDocRef("0");
+						
+						ingCobroVO.setmPago("Caja");
 					}
 					else
 					{
