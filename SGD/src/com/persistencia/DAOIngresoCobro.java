@@ -69,7 +69,7 @@ public class DAOIngresoCobro implements IDAOIngresoCobro{
 				
 				aux.setCuentaBcoInfo(new CuentaBcoInfo(rs.getString("cod_ctabco"), rs.getString("nom_cta")));
 				
-				aux.setCuentaInfo(new CuentaInfo(rs.getString("cod_cuenta"), rs.getString("nom_cuenta")));
+				//aux.setCuentaInfo(new CuentaInfo(rs.getString("cod_cuenta"), rs.getString("nom_cuenta")));
 				
 				
 				aux.setFecValor(rs.getTimestamp("fec_valor"));

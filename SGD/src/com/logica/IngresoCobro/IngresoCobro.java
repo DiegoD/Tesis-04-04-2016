@@ -62,7 +62,8 @@ public class IngresoCobro extends DatosDocum{
 		//IngresoCobroVO aux = (IngresoCobroVO)super.retornarDatosDocumVO();
 		
 		IngresoCobroVO aux = new IngresoCobroVO();
-		aux.copiar((IngresoCobroVO)super.retornarDatosDocumVO());
+		
+		aux.copiar(super.retornarDatosDocumVO());
 				
 		aux.setmPago(mPago);
 		aux.setCodDocRef(codDocRef);
@@ -70,8 +71,9 @@ public class IngresoCobro extends DatosDocum{
 		aux.setNroDocRef(nroDocRef);
 		aux.setCodBanco(bancoInfo.getCodBanco());
 		aux.setNomBanco(bancoInfo.getNomBanco());
-		aux.setCodCta(cuentaInfo.getCodCuenta());
-		aux.setNomCta(cuentaInfo.getNomCuenta());
+		
+		//aux.setCodCta(cuentaInfo.getCodCuenta());
+		//aux.setNomCta(cuentaInfo.getNomCuenta());
 		
 		aux.setNomCtaBco(this.bancoInfo.getNomBanco());
 		aux.setCodCtaBco(this.bancoInfo.getCodBanco());

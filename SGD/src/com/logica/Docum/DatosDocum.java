@@ -78,6 +78,7 @@ public class DatosDocum extends Auditoria{
 		
 		aux.setNomMoneda(this.moneda.getDescripcion());
 		aux.setCodMoneda(this.moneda.getCodMoneda());
+		aux.setSimboloMoneda(this.moneda.getSimbolo());
 		
 		aux.setNomTitular(this.titInfo.getNombre());
 		aux.setCodTitular(this.titInfo.getCodigo());
@@ -93,8 +94,10 @@ public class DatosDocum extends Auditoria{
 		aux.setOperacion(this.getOperacion());
 		aux.setNroTrans(this.nroTrans);
 		
-		aux.setCodCuenta(this.cuenta.getCodCuenta());
-		aux.setNomCuenta(this.cuenta.getNomCuenta());
+		if(this.cuenta.getCodCuenta() != null){
+			aux.setCodCuenta(this.cuenta.getCodCuenta());
+			aux.setNomCuenta(this.cuenta.getNomCuenta());
+		}
 		
 		aux.setCodCtaInd(this.codCuentaInd);
 		

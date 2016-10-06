@@ -857,27 +857,36 @@ public String getProcesosActivos(){
 		
 		StringBuilder sb = new StringBuilder();
 		 
-		sb.append("SELECT cod_docum, serie_docum, nro_docum, m_clientes.cod_tit, m_clientes.nom_tit, m_cuentas.cod_cuenta, m_cuentas.descripcion nom_cuenta, c_ingcobro.cod_emp, fec_doc,  ");
-		sb.append("fec_valor, m_bancos.cod_bco, m_bancos.nom_bco, m_ctasbcos.cod_ctabco, m_ctasbcos.nom_cta, cod_mpago, cod_doc_ref, serie_doc_ref, nro_doc_ref,  ");
-		sb.append("m_monedas.cod_moneda, m_monedas.descripcion, m_monedas.simbolo, imp_tot_mn, imp_tot_mo, tc_mov, observaciones, nro_trans,  ");
-		sb.append("c_ingcobro.fecha_mod, c_ingcobro.usuario_mod, c_ingcobro.operacion, m_monedas.descripcion, m_monedas.simbolo ");
-		sb.append("FROM c_ingcobro, m_monedas, m_clientes, m_ctasbcos, m_cuentas, m_bancos WHERE c_ingcobro.cod_emp = ?  ");
-		
-		sb.append(" AND c_ingcobro.cod_moneda = m_monedas.cod_moneda ");
-		sb.append("AND c_ingcobro.cod_emp = m_monedas.cod_emp ");
-		
-		sb.append("AND c_ingcobro.cod_emp = m_clientes.cod_emp  ");
-		sb.append("AND c_ingcobro.cod_tit = m_clientes.cod_tit  ");
-		
-		sb.append("AND c_ingcobro.cod_bco = m_bancos.cod_bco  ");
-		sb.append("AND c_ingcobro.cod_emp = m_bancos.cod_emp  ");
-		
-		sb.append(" AND c_ingcobro.cod_emp = m_ctasbcos.cod_emp  ");
-		sb.append(" AND c_ingcobro.cod_ctabco = m_ctasbcos.cod_ctabco  ");
-		sb.append(" AND c_ingcobro.cod_bco = m_ctasbcos.cod_bco  ");
-		
-		sb.append(" AND c_ingcobro.cod_emp = m_cuentas.cod_emp  ");
-		sb.append(" AND c_ingcobro.cod_cuenta = m_cuentas.cod_cuenta  ");
+		sb.append("SELECT cod_docum, serie_docum, nro_docum, m_titulares.cod_tit, m_titulares.nom_tit ");
+		sb.append(",c_ingcobro.cod_emp, fec_doc, fec_valor, COALESCE(m_bancos.cod_bco,'0') cod_bco ");
+		sb.append(", COALESCE(m_bancos.nom_bco,'0') nom_bco, COALESCE(m_ctasbcos.cod_ctabco,'0') cod_ctabco");
+		sb.append(", COALESCE(m_ctasbcos.nom_cta,'0') nom_cta, COALESCE(cod_mpago,'0') cod_mpago, cod_doc_ref, serie_doc_ref ");
+		sb.append(", nro_doc_ref,	m_monedas.cod_moneda, m_monedas.descripcion, m_monedas.simbolo, imp_tot_mn ");
+		sb.append(", imp_tot_mo, tc_mov, observaciones, nro_trans, c_ingcobro.fecha_mod, c_ingcobro.usuario_mod ");
+		sb.append(", c_ingcobro.operacion, m_monedas.descripcion, m_monedas.simbolo "); 
+		sb.append("	FROM c_ingcobro ");
+	
+		sb.append("INNER JOIN m_monedas "); 
+	 	sb.append("ON c_ingcobro.cod_moneda = m_monedas.cod_moneda  ");
+		sb.append("AND c_ingcobro.cod_emp = m_monedas.cod_emp  ");
+	
+		sb.append("INNER JOIN m_titulares ");
+	
+		sb.append("ON c_ingcobro.cod_emp = m_titulares.cod_emp ");  
+		sb.append("AND c_ingcobro.cod_tit = m_titulares.cod_tit  ");
+	
+  		
+		sb.append("LEFT JOIN  m_ctasbcos "); 
+		sb.append("ON c_ingcobro.cod_emp = m_ctasbcos.cod_emp ");  
+		sb.append("AND c_ingcobro.cod_ctabco = m_ctasbcos.cod_ctabco ");  
+		sb.append("AND c_ingcobro.cod_bco = m_ctasbcos.cod_bco ");  
+	
+		sb.append("LEFT JOIN m_bancos ");
+	
+		sb.append("ON c_ingcobro.cod_bco = m_bancos.cod_bco  ");
+		sb.append("AND c_ingcobro.cod_emp = m_bancos.cod_emp  "); 
+		 
+		sb.append("WHERE c_ingcobro.cod_emp = ? "); 
 		
 		return sb.toString();
 	}
