@@ -360,6 +360,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 						
 					}else
 					{
+						ingCobroVO.setmPago("Caja");
 						ingCobroVO.setCodDocRef("0");
 						ingCobroVO.setNroDocRef(0);
 						ingCobroVO.setSerieDocRef("0");
