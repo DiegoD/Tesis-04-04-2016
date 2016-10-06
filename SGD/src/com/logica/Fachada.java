@@ -1574,6 +1574,8 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws  C
 		
 		aux.copiar(ingVO);
 		
+		aux.setNroTrans(ingVO.getNroTrans());
+		
 		DocumSaldo docSaldo = new DocumSaldo(aux);
 		
 		docSaldo.setCodDocum(ingVO.getCodDocum()); /*Documento del cobro*/
