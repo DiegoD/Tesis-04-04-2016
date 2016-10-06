@@ -1316,7 +1316,7 @@ public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 		
 		ing.setNroDocum(codigos.getCodigo()); /*Seteamos el nroDocum*/
 		ing.setNroTrans(codigos.getNumeroTrans()); /*Seteamos el nroTrans*/
-		
+		ingVO.setNroTrans(codigos.getNumeroTrans()); /*Seteamos el nroTrans al VO para obtener el DocumSaldo*/ 
 		
 		/*Verificamos que no exista un cobro con el mismo numero*/
 		if(!this.ingresoCobro.memberIngresoCobro(ing.getNroDocum(), codEmp, con))
