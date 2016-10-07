@@ -154,7 +154,7 @@ public class DAOSaldos implements IDAOSaldos{
 				saldoCalcMO = saldoAnteriorMO +(documento.getImpTotMo()* signo);
 				documento.setImpTotMo(saldoCalcMO);
 				
-				/*Calculamos el saldo resto a la fecha valor pasada por parametro, si es que quedea saldo en MO*/
+				/*Calculamos el saldo resto a la fecha valor pasada por parametro, si es que quedea saldo en MN*/
 				if(saldoCalcMO != 0)
 				{
 					saldoCalcMN = saldoCalcMO * tc;
@@ -162,7 +162,7 @@ public class DAOSaldos implements IDAOSaldos{
 				}
 				else
 				{
-					documento.setImpTotMo(0);
+					documento.setImpTotMn(0);
 				}
 				
 				this.eliminarSaldo(documento, con);

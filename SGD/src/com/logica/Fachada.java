@@ -1397,14 +1397,6 @@ public void eliminarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 		IngresoCobro ing = new IngresoCobro(ingVO); 
 		Cotizacion cotiAux;
 		
-		//Obtengo numerador de gastos
-		//codigos.setCodigo(numeradores.getNumero(con, "ingcobro", codEmp)); //Ingreso Cobro
-		//codigos.setNumeroTrans(numeradores.getNumero(con, "03", codEmp)); //nro trans
-		
-		//ing.setNroDocum(codigos.getCodigo()); /*Seteamos el nroDocum*/
-		//ing.setNroTrans(codigos.getNumeroTrans()); /*Seteamos el nroTrans*/
-		
-		
 		/*Verificamos no exista un el cobro*/
 		if(this.ingresoCobro.memberIngresoCobro(ing.getNroDocum(), codEmp, con))
 		{
