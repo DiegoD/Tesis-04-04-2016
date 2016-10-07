@@ -7,6 +7,7 @@ public class MonedaInfo {
 	private String codMoneda;
 	private String descripcion;
 	private String simbolo;
+	private boolean nacional;
 	
 	public MonedaInfo(){}
 	
@@ -15,6 +16,7 @@ public class MonedaInfo {
 		this.codMoneda = monedaInfoVO.getCod_moneda();
 		this.descripcion = monedaInfoVO.getDescripcion();
 		this.simbolo = monedaInfoVO.getSimbolo();
+		this.nacional = monedaInfoVO.isNacional();
 		
 	}
 	
@@ -23,6 +25,15 @@ public class MonedaInfo {
 		this.codMoneda = codMoneda;
 		this.descripcion = descripcion;
 		this.simbolo = simbolo;
+		
+	}
+	
+	public MonedaInfo(String codMoneda, String descripcion, String simbolo, boolean nacional){
+		
+		this.codMoneda = codMoneda;
+		this.descripcion = descripcion;
+		this.simbolo = simbolo;
+		this.nacional = nacional;
 		
 	}
 	
@@ -44,5 +55,15 @@ public class MonedaInfo {
 	public void setSimbolo(String simbolo) {
 		this.simbolo = simbolo;
 	}
+
+	public boolean isNacional() {
+		return nacional;
+	}
+
+	public void setNacional(boolean nacional) {
+		this.nacional = nacional;
+	}
+	
+	
 
 }

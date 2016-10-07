@@ -12,6 +12,7 @@ import com.excepciones.Impuestos.InsertandoImpuestoException;
 import com.excepciones.Impuestos.ModificandoImpuestoException;
 import com.excepciones.Impuestos.ObteniendoImpuestosException;
 import com.excepciones.Monedas.ExisteMonedaException;
+import com.excepciones.Monedas.ExisteNacional;
 import com.excepciones.Monedas.InsertandoMonedaException;
 import com.excepciones.Monedas.ModificandoMonedaException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
@@ -49,6 +50,7 @@ public class DAOMonedas implements IDAOMonedas{
 				moneda.setFechaMod(rs.getTimestamp(6));
 				moneda.setUsuarioMod(rs.getString(7));
 				moneda.setOperacion(rs.getString(8));
+				moneda.setNacional(rs.getBoolean(9));
 				
 				lstMonedas.add(moneda);
 			}
@@ -97,7 +99,7 @@ public class DAOMonedas implements IDAOMonedas{
 				moneda.setFechaMod(rs.getTimestamp(6));
 				moneda.setUsuarioMod(rs.getString(7));
 				moneda.setOperacion(rs.getString(8));
-				
+				moneda.setNacional(rs.getBoolean(9));
 				lstMonedas.add(moneda);
 			}
 			
@@ -140,6 +142,7 @@ public class DAOMonedas implements IDAOMonedas{
 			pstmt1.setString(6, moneda.getUsuarioMod());
 			pstmt1.setString(7, moneda.getOperacion());
 			pstmt1.setString(8, codEmp);
+			pstmt1.setBoolean(9, moneda.isNacional());
 			
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
@@ -183,6 +186,37 @@ public class DAOMonedas implements IDAOMonedas{
 	}
 
 	@Override
+	public boolean existeNacional(String codMoneda, String codEmp, Connection con) throws ExisteNacional, ConexionException {
+		// TODO Auto-generated method stub
+		boolean existe = false;
+		
+		try{
+			
+			
+			ConsultasDD consultas = new ConsultasDD ();
+			String query = consultas.existeNacional();
+			
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			
+			pstmt1.setString(1, codEmp);
+			
+			ResultSet rs = pstmt1.executeQuery();
+			
+			if (rs.next ()) 
+				existe = true;
+						
+			rs.close ();
+			pstmt1.close ();
+			
+			return existe;
+			
+		}catch(SQLException e){
+			
+			throw new ExisteNacional();
+		}
+	}
+	
+	@Override
 	public void eliminarMoneda(String cod_moneda, String codEmp, Connection con) throws ModificandoMonedaException, ConexionException {
 		// TODO Auto-generated method stub
 		
@@ -210,8 +244,9 @@ public class DAOMonedas implements IDAOMonedas{
 			pstmt1.setBoolean(4, moneda.isActivo());
 			pstmt1.setString(5, moneda.getUsuarioMod());
 			pstmt1.setString(6, moneda.getOperacion());
-			pstmt1.setString(7, moneda.getCod_moneda());
-			pstmt1.setString(8, codEmp);
+			pstmt1.setBoolean(7, moneda.isNacional());
+			pstmt1.setString(8, moneda.getCod_moneda());
+			pstmt1.setString(9, codEmp);
 			
 			pstmt1.executeUpdate ();
 			

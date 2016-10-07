@@ -57,6 +57,7 @@ import com.excepciones.Impuestos.NoExisteImpuestoException;
 import com.excepciones.Impuestos.ObteniendoImpuestosException;
 import com.excepciones.Login.LoginException;
 import com.excepciones.Monedas.ExisteMonedaException;
+import com.excepciones.Monedas.ExisteNacional;
 import com.excepciones.Monedas.InsertandoMonedaException;
 import com.excepciones.Monedas.ModificandoMonedaException;
 import com.excepciones.Monedas.NoExisteMonedaException;
@@ -594,6 +595,7 @@ public class FachadaDD {
     			aux.setFechaMod(moneda.getFechaMod());
     			aux.setOperacion(moneda.getOperacion());
     			aux.setUsuarioMod(moneda.getUsuarioMod());
+    			aux.setNacional(moneda.isNacional());
     			
     			lstMonedasVO.add(aux);
 			}
@@ -649,6 +651,7 @@ public class FachadaDD {
     			aux.setFechaMod(moneda.getFechaMod());
     			aux.setOperacion(moneda.getOperacion());
     			aux.setUsuarioMod(moneda.getUsuarioMod());
+    			aux.setNacional(moneda.isNacional());
     			
     			lstMonedasVO.add(aux);
 			}
@@ -675,12 +678,13 @@ public class FachadaDD {
     /**
 	 * Inserta un impuesto en la base
 	 * Valida que no exista un impuesto con el mismo código
+     * @throws ExisteNacional 
 	 */
-    public void insertarMoneda(MonedaVO monedaVO, String codEmp) throws InsertandoMonedaException, ConexionException, ExisteMonedaException 
+    public void insertarMoneda(MonedaVO monedaVO, String codEmp) throws InsertandoMonedaException, ConexionException, ExisteMonedaException, ExisteNacional 
     {
     	
     	Connection con = null;
-    	boolean existe = false;
+    	boolean existe = false, existeNacional = false;
     	
     	try 
     	{
@@ -690,9 +694,21 @@ public class FachadaDD {
 	    	Moneda moneda = new Moneda(monedaVO); 
 	    	
 	    	if(!this.monedas.memberMoneda(moneda.getCod_moneda(), codEmp, con)) 	{
+	    	
+	    		if(moneda.isNacional()){
+	    			if(!this.monedas.existeNacional(moneda.getCod_moneda(), codEmp, con)){
+	    				this.monedas.insertarMoneda(moneda,codEmp, con);
+	    	    		con.commit();
+	    			}
+	    			else{
+	    				existeNacional = true;
+	    			}
+	    		}
+	    		else{
+	    			this.monedas.insertarMoneda(moneda,codEmp, con);
+	    			con.commit();
+	    		}
 	    		
-	    		this.monedas.insertarMoneda(moneda,codEmp, con);
-	    		con.commit();
 	    	}
 	    	else{
 	    		existe = true;
@@ -718,16 +734,21 @@ public class FachadaDD {
     	if (existe){
     		throw new ExisteMonedaException();
     	}
+    	if(existeNacional){
+    		throw new ExisteNacional();
+    	}
     }
 
     /**
 	 * Actualiza los datos de una moneda dado su código
 	 * valida que exista el código 
+     * @throws ExisteNacional 
 	 */
-    public void actualizarMoneda(MonedaVO monedaVO, String codEmp) throws ConexionException, NoExisteMonedaException, ModificandoMonedaException, ExisteMonedaException  
+    public void actualizarMoneda(MonedaVO monedaVO, String codEmp) throws ConexionException, NoExisteMonedaException, ModificandoMonedaException, ExisteMonedaException, ExisteNacional  
 	{
 	    	
 	    	Connection con = null;
+	    	boolean existeNacional = false;
 	    	
 	    	try 
 	    	{
@@ -738,8 +759,20 @@ public class FachadaDD {
 		    	
 		    	if(this.monedas.memberMoneda(moneda.getCod_moneda(), codEmp, con))
 		    	{
-		    		monedas.actualizarMoneda(moneda, codEmp, con);
-		    		con.commit();
+		    		if(moneda.isNacional()){
+		    			if(!this.monedas.existeNacional(moneda.getCod_moneda(), codEmp, con)){
+		    				monedas.actualizarMoneda(moneda, codEmp, con);
+				    		con.commit();
+		    			}
+		    			else{
+		    				existeNacional = true;
+		    			}
+		    		}
+		    		else{
+		    			monedas.actualizarMoneda(moneda, codEmp, con);
+			    		con.commit();
+		    		}
+		    			
 		    	}
 		    	
 		    	else
@@ -760,6 +793,9 @@ public class FachadaDD {
 	    	finally
 	    	{
 	    		pool.liberarConeccion(con);
+	    	}
+	    	if(existeNacional){
+	    		throw new ExisteNacional();
 	    	}
 	    }
     

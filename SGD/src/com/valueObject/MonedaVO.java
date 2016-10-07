@@ -7,18 +7,20 @@ public class MonedaVO extends AuditoriaVO{
 	private String simbolo;
 	private boolean aceptaCotizacion;
 	private boolean activo;
+	private boolean nacional;
 	
 	public MonedaVO(){
 		
 	}
 
-	public MonedaVO(String cod_moneda, String descripcion, String simbolo, boolean acepta_cotizacion, boolean activo) {
+	public MonedaVO(String cod_moneda, String descripcion, String simbolo, boolean acepta_cotizacion, boolean activo, boolean nacional) {
 		super();
 		this.codMoneda = cod_moneda;
 		this.descripcion = descripcion;
 		this.simbolo = simbolo;
 		this.aceptaCotizacion = acepta_cotizacion;
 		this.activo = activo;
+		this.nacional = nacional;
 	}
 	
 	/**
@@ -36,6 +38,7 @@ public class MonedaVO extends AuditoriaVO{
 		this.setUsuarioMod(monedaVO.getUsuarioMod());
 		this.setFechaMod(monedaVO.getFechaMod());
 		this.setOperacion(monedaVO.getOperacion());
+		this.setNacional(monedaVO.isNacional());
 
 	}
 
@@ -77,6 +80,14 @@ public class MonedaVO extends AuditoriaVO{
 
 	public void setActivo(boolean activo) {
 		this.activo = activo;
+	}
+
+	public boolean isNacional() {
+		return nacional;
+	}
+
+	public void setNacional(boolean nacional) {
+		this.nacional = nacional;
 	}
 
 	

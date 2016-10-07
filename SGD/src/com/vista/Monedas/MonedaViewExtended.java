@@ -9,6 +9,7 @@ import com.excepciones.InicializandoException;
 import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Monedas.ExisteMonedaException;
+import com.excepciones.Monedas.ExisteNacional;
 import com.excepciones.Monedas.InsertandoMonedaException;
 import com.excepciones.Monedas.ModificandoMonedaException;
 import com.excepciones.Monedas.NoExisteMonedaException;
@@ -64,6 +65,7 @@ public class MonedaViewExtended extends MonedaView{
 					monedaVO.setSimbolo(simbolo.getValue().trim());
 					monedaVO.setAceptaCotizacion(aceptaCotizacion.getValue());
 					monedaVO.setActivo(activo.getValue());
+					monedaVO.setNacional(nacional.getValue());
 					monedaVO.setUsuarioMod(this.permisos.getUsuario());
 					monedaVO.setOperacion(operacion);
 					
@@ -92,11 +94,12 @@ public class MonedaViewExtended extends MonedaView{
 				{
 					Mensajes.mostrarMensajeWarning(Variables.WARNING_CAMPOS_NO_VALIDOS);
 				}
-					
+				
 				} 
+			
 				catch (ConexionException | ModificandoMonedaException | ExisteMonedaException | 
 						 InicializandoException | InsertandoMonedaException | NoExisteMonedaException |
-						 ErrorInesperadoException| ObteniendoPermisosException| NoTienePermisosException e) {
+						 ErrorInesperadoException| ObteniendoPermisosException| NoTienePermisosException | ExisteNacional e) {
 					
 					Mensajes.mostrarMensajeError(e.getMessage());
 				}
@@ -297,6 +300,7 @@ public class MonedaViewExtended extends MonedaView{
 		this.simbolo.setReadOnly(false);
 		this.aceptaCotizacion.setReadOnly(false);
 		this.activo.setReadOnly(false);
+		this.nacional.setReadOnly(false);
 	}
 	
 	
@@ -354,6 +358,7 @@ public class MonedaViewExtended extends MonedaView{
 		this.simbolo.setReadOnly(setear);
 		this.aceptaCotizacion.setReadOnly(setear);
 		this.activo.setReadOnly(setear);
+		this.nacional.setReadOnly(setear);
 				
 	}
 	

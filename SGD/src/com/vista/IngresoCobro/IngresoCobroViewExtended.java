@@ -1598,7 +1598,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			/*Si la moneda del cobro es distinta a la del documento pero
 			 * igual a la moneda nacional, hago el calculo al tipo de cambio
 			 * de la fecha valor del cobro*/
-			else if(det.getCodMoneda().equals(Variables.CODIGO_MONEDA_NACIONAL))
+			else if(det.getCodMoneda().equals(Variables.CODIGO_MONEDA_NACIONAL) &&  !codMonedaCab.equals(det.getCodMoneda()))
 			{
 				aux = det.getImpTotMo() / tcMonedaNacional;
 				impMo += aux;

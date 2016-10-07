@@ -317,7 +317,8 @@ public class ConsultasDD {
 	
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("SELECT cod_moneda, descripcion, simbolo, acepta_cotizacion, activo, fecha_mod, usuario_mod, operacion ");
+		sb.append("SELECT cod_moneda, descripcion, simbolo, acepta_cotizacion, activo, fecha_mod, usuario_mod, operacion, "
+				+ "nacional ");
 		sb.append("FROM m_monedas WHERE cod_emp = ?");
 		
 		return sb.toString();
@@ -327,7 +328,8 @@ public class ConsultasDD {
 		
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("SELECT cod_moneda, descripcion, simbolo, acepta_cotizacion, activo, fecha_mod, usuario_mod, operacion ");
+		sb.append("SELECT cod_moneda, descripcion, simbolo, acepta_cotizacion, activo, fecha_mod, usuario_mod, operacion, "
+				+ "nacional ");
 		sb.append("FROM m_monedas WHERE cod_emp = ? and activo = 1 ");
 		
 		return sb.toString();
@@ -338,8 +340,9 @@ public class ConsultasDD {
 	
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("INSERT INTO vaadin.m_monedas (cod_moneda, descripcion, simbolo, acepta_cotizacion, activo, fecha_mod, usuario_mod, operacion, cod_emp )");
-		sb.append("VALUES (?, ?, ?, ?, ?, NOW(), ?, ?, ?) ");
+		sb.append("INSERT INTO vaadin.m_monedas (cod_moneda, descripcion, simbolo, acepta_cotizacion, activo, fecha_mod, "
+				+ "usuario_mod, operacion, cod_emp, nacional )");
+		sb.append("VALUES (?, ?, ?, ?, ?, NOW(), ?, ?, ?, ? ) ");
 		
 		return sb.toString();
 	
@@ -353,6 +356,18 @@ public class ConsultasDD {
 		sb.append("SELECT cod_moneda ");
 		sb.append("FROM m_monedas  ");
 		sb.append("WHERE cod_moneda = ? AND cod_emp = ?");
+		
+		return sb.toString();
+	}
+	
+	public String existeNacional()
+	{
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_moneda ");
+		sb.append("FROM m_monedas  ");
+		sb.append("WHERE cod_emp = ? and nacional = 1 ");
 		
 		return sb.toString();
 	}
@@ -379,9 +394,9 @@ public class ConsultasDD {
 		sb.append("activo = ?, ");
 		sb.append("fecha_mod = NOW(), ");
 		sb.append("usuario_mod = ?, ");
-		sb.append("operacion = ?");
+		sb.append("operacion = ?, ");
+		sb.append("nacional = ? ");
 		sb.append("WHERE cod_moneda = ? AND cod_emp = ?");
-		
 		return sb.toString();
 	}
     

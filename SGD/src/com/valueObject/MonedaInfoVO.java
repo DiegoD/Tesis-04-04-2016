@@ -2,18 +2,22 @@ package com.valueObject;
 
 public class MonedaInfoVO {
 	
+	private String cod_moneda;
+	private String descripcion;
+	private String simbolo;
+	private boolean nacional;
+	
 	public MonedaInfoVO(){}
 	
-	public MonedaInfoVO(String codMoneda, String descripcion, String simbolo){
+	public MonedaInfoVO(String codMoneda, String descripcion, String simbolo, boolean nacional){
 		
 		this.cod_moneda = codMoneda;
 		this.descripcion = descripcion;
 		this.simbolo = simbolo;
+		this.nacional = nacional;
 	}
 	
-	private String cod_moneda;
-	private String descripcion;
-	private String simbolo;
+	
 	
 	public String getCod_moneda() {
 		return cod_moneda;
@@ -33,6 +37,16 @@ public class MonedaInfoVO {
 	public void setSimbolo(String simbolo) {
 		this.simbolo = simbolo;
 	}
+
+	public boolean isNacional() {
+		return nacional;
+	}
+
+	public void setNacional(boolean nacional) {
+		this.nacional = nacional;
+	}
+	
+	
 	
 	
 

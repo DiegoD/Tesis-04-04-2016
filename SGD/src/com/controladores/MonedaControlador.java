@@ -13,6 +13,7 @@ import com.excepciones.Impuestos.ModificandoImpuestoException;
 import com.excepciones.Impuestos.NoExisteImpuestoException;
 import com.excepciones.Impuestos.ObteniendoImpuestosException;
 import com.excepciones.Monedas.ExisteMonedaException;
+import com.excepciones.Monedas.ExisteNacional;
 import com.excepciones.Monedas.InsertandoMonedaException;
 import com.excepciones.Monedas.ModificandoMonedaException;
 import com.excepciones.Monedas.NoExisteMonedaException;
@@ -47,8 +48,9 @@ public class MonedaControlador {
 	 * Inserta una nueva moneda
 	 * @throws NoTienePermisosException 
 	 * @throws ObteniendoPermisosException 
+	 * @throws ExisteNacional 
 	 */
-	public void insertarMoneda(MonedaVO monedaVO, UsuarioPermisosVO permisos) throws InsertandoMonedaException, ExisteMonedaException, InicializandoException, ConexionException, ErrorInesperadoException, ObteniendoPermisosException, NoTienePermisosException
+	public void insertarMoneda(MonedaVO monedaVO, UsuarioPermisosVO permisos) throws InsertandoMonedaException, ExisteMonedaException, InicializandoException, ConexionException, ErrorInesperadoException, ObteniendoPermisosException, NoTienePermisosException, ExisteNacional
 	{
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
@@ -61,8 +63,9 @@ public class MonedaControlador {
 	 * Actualiza los datos de una moneda
 	 * @throws NoTienePermisosException 
 	 * @throws ObteniendoPermisosException 
+	 * @throws ExisteNacional 
 	 */
-	public void actualizarMoneda(MonedaVO monedaVO, UsuarioPermisosVO permisos) throws ConexionException, NoExisteMonedaException, ModificandoMonedaException, ExisteMonedaException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException {
+	public void actualizarMoneda(MonedaVO monedaVO, UsuarioPermisosVO permisos) throws ConexionException, NoExisteMonedaException, ModificandoMonedaException, ExisteMonedaException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ExisteNacional {
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))

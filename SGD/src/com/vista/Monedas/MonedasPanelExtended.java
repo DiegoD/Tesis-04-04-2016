@@ -64,7 +64,7 @@ public class MonedasPanelExtended extends MonedasPanel{
 				
 					this.btnNuevaMoneda.addClickListener(click -> {
 						
-						sub = new MySub("50%","30%");
+						sub = new MySub("60%","35%");
 						form = new MonedaViewExtended(Variables.OPERACION_NUEVO, this);
 						sub.setModal(true);
 						sub.setVista(form);
@@ -122,6 +122,7 @@ public class MonedasPanelExtended extends MonedasPanel{
 		gridMonedas.removeColumn("usuarioMod");
 		gridMonedas.removeColumn("operacion");
 		gridMonedas.removeColumn("aceptaCotizacion");
+		gridMonedas.removeColumn("nacional");
 		
 		/*Agregamos los filtros a la grilla*/
 		this.filtroGrilla();
@@ -144,7 +145,7 @@ public class MonedasPanelExtended extends MonedasPanel{
 				    	}
 							
 				    	form = new MonedaViewExtended(Variables.OPERACION_LECTURA, MonedasPanelExtended.this);
-				    	sub = new MySub("50%","30%");
+				    	sub = new MySub("60%","35%");
 						sub.setModal(true);
 						sub.setVista(form);
 						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
