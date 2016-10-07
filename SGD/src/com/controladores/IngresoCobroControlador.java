@@ -19,6 +19,7 @@ import com.excepciones.Gastos.ObteniendoGastosException;
 import com.excepciones.IngresoCobros.ExisteIngresoCobroException;
 import com.excepciones.IngresoCobros.InsertandoIngresoCobroException;
 import com.excepciones.IngresoCobros.ModificandoIngresoCobroException;
+import com.excepciones.IngresoCobros.NoExisteIngresoCobroException;
 import com.excepciones.IngresoCobros.ObteniendoIngresoCobroException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
 import com.excepciones.clientes.ObteniendoClientesException;
@@ -64,12 +65,13 @@ public class IngresoCobroControlador {
 	
 	/**
 	 * Modifica los datos de un cobro
+	 * @throws NoExisteIngresoCobroException 
 	 */
-	public void modificarIngresoCobro(IngresoCobroVO ingVO, UsuarioPermisosVO permisos) throws ConexionException, ModificandoIngresoCobroException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ExisteIngresoCobroException 
+	public void modificarIngresoCobro(IngresoCobroVO ingVO, UsuarioPermisosVO permisos) throws ConexionException, ModificandoIngresoCobroException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ExisteIngresoCobroException, NoExisteIngresoCobroException 
 	{
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			Fachada.getInstance().modificarIngresoCobro(ingVO, permisos.getCodEmp());
+			Fachada.getInstance().modificarIngresoCobro(ingVO);
 		else
 			throw new NoTienePermisosException();
 	}

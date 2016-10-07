@@ -844,7 +844,7 @@ public String getProcesosActivos(){
 		
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("INSERT INTO vaadin.d_ingcobro (cod_cuenta, cod_emp, cod_docum, serie_docum, nro_docum, cod_proceso,  ");
+		sb.append("INSERT INTO d_ingcobro (cod_cuenta, cod_emp, cod_docum, serie_docum, nro_docum, cod_proceso,  ");
 		sb.append("cod_rubro, cuenta, fec_doc, fec_valor, cod_moneda, cod_impuesto, imp_impu_mn, imp_impu_mo,  ");
 		sb.append("imp_sub_mn, imp_sub_mo, imp_tot_mn, imp_tot_mo, tc_mov, referencia, referencia2, ");
 		sb.append("nro_trans, fecha_mod, usuario_mod, operacion, linea) ");
@@ -852,6 +852,27 @@ public String getProcesosActivos(){
 		
 		return sb.toString();
 	}
+	
+	public String eliminarIngresoCobroCab(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("DELETE FROM c_ingcobro WHERE nro_trans = ? ");
+		
+		return sb.toString();
+	}
+	
+	public String deleteIngresoCobroCabDet(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("DELETE FROM d_ingcobro WHERE nro_trans = ?");
+	
+		
+		return sb.toString();
+	}
+	
+	
 
 	public String getIngresoCobroCabTodos(){
 		

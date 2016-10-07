@@ -63,6 +63,7 @@ import com.excepciones.grupos.ModificandoGrupoException;
 import com.excepciones.grupos.NoExisteGrupoException;
 import com.excepciones.grupos.ObteniendoFormulariosException;
 import com.excepciones.grupos.ObteniendoGruposException;
+import com.logica.Docum.ConvertirDocumento;
 import com.logica.Docum.DatosDocum;
 import com.logica.Docum.DocumDetalle;
 import com.logica.Docum.DocumSaldo;
@@ -1323,7 +1324,7 @@ public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 		if(!this.ingresoCobro.memberIngresoCobro(ing.getNroDocum(), codEmp, con))
 		{
 			/*Ingresamos el cobro*/
-			this.ingresoCobro.insertarIngresoCobro(ing, codEmp, con);
+			this.ingresoCobro.insertarIngresoCobro(ing, con);
 			
 			
 			/*Para cada linea ingresamos el saldo*/
@@ -1340,7 +1341,7 @@ public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 			{
 				/*Primero obtenemos el DatosDocum para el cheque dado el ingreso cobro*/
 
-				DatosDocumVO auxCheque = getDatosDocumChequeDadoIngCobro(ingVO);
+				DatosDocumVO auxCheque = ConvertirDocumento.getDatosDocumChequeDadoIngCobro(ingVO);
 				this.insertarChequeIntFachada(auxCheque, con);
 
 				/*Ingresamos el saldo para el cheque */
@@ -1349,7 +1350,7 @@ public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 			}
 			
 			/*Ingresamos el saldo a la cuenta (Banco o caja)*/
-			DocumSaldo saldoCuenta = this.getDocumSaldoSaCuentasIngCobro(ingVO);
+			DocumSaldo saldoCuenta = ConvertirDocumento.getDocumSaldoSaCuentasIngCobro(ingVO);
 			this.saldosCuentas.insertarSaldoCuenta(saldoCuenta, con);
 
 			
@@ -1378,7 +1379,6 @@ public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 	if (existe){
 		throw new ExisteIngresoCobroException();
 	}
-	
 }
 
 public void eliminarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws InsertandoIngresoCobroException, ConexionException, ExisteIngresoCobroException, NoExisteIngresoCobroException{
@@ -1414,7 +1414,7 @@ public void eliminarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 				
 				//cotiAux = this.cotizaciones.getCotizacion(codEmp, new Date(ingVO.getFecValor().getTime()), docum.getMoneda().getCodMoneda(), con);
 				
-				/*Signo 1 que restarue los saldos del documento sin este cobro*/
+				/*Signo 1 para que restarue los saldos del documento sin este cobro*/
 				this.saldos.modificarSaldo(docum, 1, ingVO.getTcMov(), con);
 			}
 			
@@ -1422,26 +1422,26 @@ public void eliminarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 			if(ingVO.getCodDocRef().equals("cheqrec"))
 			{
 				/*Primero obtenemos el DatosDocum para el cheque dado el ingreso cobro*/
-				DatosDocumVO auxCheque = getDatosDocumChequeDadoIngCobro(ingVO);
+				DatosDocumVO auxCheque = ConvertirDocumento.getDatosDocumChequeDadoIngCobro(ingVO);
 				
 				/*Eliminamos el saldo para el cheque */
 				DatosDocum auxCheque2 = new DatosDocum(auxCheque);
 				this.saldos.eliminarSaldo(auxCheque2, con);
 				
-				/*Eliminamos el cheque de tabla base*/                                            //asdas
-				this.insertarChequeIntFachada(auxCheque, con);
+				
+				/*Eliminamos el cheque de tabla base*/                                           
+				DatosDocum chequeL = new DatosDocum(auxCheque); /*Lo convertimos a objeto de logica para pasarlo al DAO*/
+				this.cheques.eliminarCheque(chequeL, con);
 			}
 			
-			/*Ingresamos el saldo a la cuenta (Banco o caja)*/
-			DocumSaldo saldoCuenta = this.getDocumSaldoChequeDadoIngCobro(ingVO);
-			this.saldosCuentas.insertarSaldoCuenta(saldoCuenta, con);
-//			VER COMO FUNCIONA LO DE ACA ARRIBA CUANDO ES CAJA, BANCO, ETC..ACA.
-//			VER EL METODO getDocumSaldoChequeDadoIngCobro para obtener el objeto saldo
-//			dado el ingreso de cobro
+			/*Bajamos el saldo a la cuenta (Banco o caja)*/
+			/*Obtenemos el objeto DocumSaldo dado el ingreso de cobro*/
+			DocumSaldo saldoCuenta = ConvertirDocumento.getDocumSaldoChequeDadoIngCobro(ingVO);
+			this.saldosCuentas.eliminarSaldoCuenta(saldoCuenta, con);
 			
-			
-			/*Ingresamos el cobro*/
-			this.ingresoCobro.insertarIngresoCobro(ing, codEmp, con);
+			/*Una vez hechos todos los movimientos de saldos y documentos
+			 * procedemos a eliminar el cobro*/
+			this.ingresoCobro.eliminarIngresoCobro(ing, con); 
 			
 			con.commit();
 		}
@@ -1468,10 +1468,9 @@ public void eliminarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 	if (existe){
 		throw new ExisteIngresoCobroException();
 	}
-	
 }
 
-public void modificarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws  ConexionException, ModificandoIngresoCobroException, ExisteIngresoCobroException{
+public void modificarIngresoCobro(IngresoCobroVO ingVO) throws  ConexionException, ModificandoIngresoCobroException, ExisteIngresoCobroException, NoExisteIngresoCobroException{
 
 	Connection con = null;
 	
@@ -1483,9 +1482,13 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws  C
 		IngresoCobro ing = new IngresoCobro(ingVO);
 		
 		/*Verificamos que exista el nro de cobro*/
-		if(this.ingresoCobro.memberIngresoCobro(ing.getNroDocum(), codEmp, con))
+		if(this.ingresoCobro.memberIngresoCobro(ing.getNroDocum(), ingVO.getCodEmp(), con))
 		{
-			this.ingresoCobro.modificarIngresoCobro(ing, codEmp, con);
+			/*Primero eliminamos la transaccion*/
+			this.eliminarIngresoCobroxModificacion(ingVO, con);
+			
+			/*Luego insertamos el cobro con las modificaciones realizadas*/
+			this.insertarIngresoCobroxModificacion(ingVO, con);
 			
 			con.commit();
 		}
@@ -1509,126 +1512,147 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws  C
 	}
 }
 
+/**
+ * Este metodo lo utilizamos para el modificar cobro.
+ * lo utilizamos internamente en fachada
+ * Primero eliminamos el cobro y luego lo volvemos a insertar con 
+ * las nuevas modificaciones
+ * @throws ModificandoIngresoCobroException 
+ * 
+ */
+ private void insertarIngresoCobroxModificacion(IngresoCobroVO ingVO, Connection con) throws ConexionException, ExisteIngresoCobroException, ModificandoIngresoCobroException{
+	
+	boolean existe = false;
+	Integer codigo;
+
+	try 
+	{
+		IngresoCobro ing = new IngresoCobro(ingVO); 
+		Cotizacion cotiAux;
+		
+		/*Verificamos que no exista un cobro con el mismo numero*/
+		if(!this.ingresoCobro.memberIngresoCobro(ing.getNroDocum(), ing.getCodEmp(), con))
+		{
+			/*Ingresamos el cobro*/
+			this.ingresoCobro.insertarIngresoCobro(ing, con);
+			
+			
+			/*Para cada linea ingresamos el saldo*/
+			for (DocumDetalle docum : ing.getDetalle()) {
+				
+				//cotiAux = this.cotizaciones.getCotizacion(codEmp, new Date(ingVO.getFecValor().getTime()), docum.getMoneda().getCodMoneda(), con);
+				
+				/*Signo -1 porque resta al saldo del documento el cobro*/
+				this.saldos.modificarSaldo(docum, -1, ingVO.getTcMov(), con);
+			}
+			
+			/*Si el ingreso de cobro es con cheque, ingresamos el cheque*/
+			if(ingVO.getCodDocRef().equals("cheqrec"))
+			{
+				/*Primero obtenemos el DatosDocum para el cheque dado el ingreso cobro*/
+
+				DatosDocumVO auxCheque = ConvertirDocumento.getDatosDocumChequeDadoIngCobro(ingVO);
+				this.insertarChequeIntFachada(auxCheque, con);
+
+				/*Ingresamos el saldo para el cheque */
+				DatosDocum auxCheque2 = new DatosDocum(auxCheque);
+				this.saldos.modificarSaldo(auxCheque2,1, ingVO.getTcMov() , con);
+			}
+			
+			/*Ingresamos el saldo a la cuenta (Banco o caja)*/
+			DocumSaldo saldoCuenta = ConvertirDocumento.getDocumSaldoSaCuentasIngCobro(ingVO);
+			this.saldosCuentas.insertarSaldoCuenta(saldoCuenta, con);
+
+		}
+		else{
+			existe = true;
+		}
+	
+	}catch(Exception e){
+		
+		throw new ModificandoIngresoCobroException();
+	}
+	if (existe){
+		throw new ExisteIngresoCobroException();
+	}
+	
+}
+ 
+ /**
+  * Este metodo lo utilizamos para el modificar cobro.
+  * lo utilizamos internamente en fachada
+  * Primero eliminamos el cobro y luego lo volvemos a insertar con 
+  * las nuevas modificaciones
+ * @throws ModificandoIngresoCobroException 
+  * 
+  */
+ private void eliminarIngresoCobroxModificacion(IngresoCobroVO ingVO, Connection con) throws ConexionException, ExisteIngresoCobroException, NoExisteIngresoCobroException, ModificandoIngresoCobroException{
+
+		boolean existe = false;
+		Integer codigo;
+	
+		try 
+		{
+			IngresoCobro ing = new IngresoCobro(ingVO); 
+			Cotizacion cotiAux;
+			
+			/*Verificamos no exista un el cobro*/
+			if(this.ingresoCobro.memberIngresoCobro(ing.getNroDocum(), ing.getCodEmp(), con))
+			{
+				/*Para cada linea volvemos el saldo sin este cobro*/
+				for (DocumDetalle docum : ing.getDetalle()) {
+					
+					//cotiAux = this.cotizaciones.getCotizacion(codEmp, new Date(ingVO.getFecValor().getTime()), docum.getMoneda().getCodMoneda(), con);
+					
+					/*Signo 1 para que restarue los saldos del documento sin este cobro*/
+					this.saldos.modificarSaldo(docum, 1, ingVO.getTcMov(), con);
+				}
+				
+				/*Si el ingreso de cobro es con cheque, eliminamos el cheque de los saldos y de los cheques*/
+				if(ingVO.getCodDocRef().equals("cheqrec"))
+				{
+					/*Primero obtenemos el DatosDocum para el cheque dado el ingreso cobro*/
+					DatosDocumVO auxCheque = ConvertirDocumento.getDatosDocumChequeDadoIngCobro(ingVO);
+					
+					/*Eliminamos el saldo para el cheque */
+					DatosDocum auxCheque2 = new DatosDocum(auxCheque);
+					this.saldos.eliminarSaldo(auxCheque2, con);
+					
+					
+					/*Eliminamos el cheque de tabla base*/                                           
+					DatosDocum chequeL = new DatosDocum(auxCheque); /*Lo convertimos a objeto de logica para pasarlo al DAO*/
+					this.cheques.eliminarCheque(chequeL, con);
+				}
+				
+				/*Bajamos el saldo a la cuenta (Banco o caja)*/
+				/*Obtenemos el objeto DocumSaldo dado el ingreso de cobro*/
+				DocumSaldo saldoCuenta = ConvertirDocumento.getDocumSaldoChequeDadoIngCobro(ingVO);
+				this.saldosCuentas.eliminarSaldoCuenta(saldoCuenta, con);
+				
+				/*Una vez hechos todos los movimientos de saldos y documentos
+				 * procedemos a eliminar el cobro*/
+				this.ingresoCobro.eliminarIngresoCobro(ing, con); 
+				
+				con.commit();
+			}
+			else{
+				throw new NoExisteIngresoCobroException();
+			}
+		
+		}catch(Exception e){
+			
+			throw new ModificandoIngresoCobroException();
+		}
+		if (existe){
+			throw new ExisteIngresoCobroException();
+		}
+		
+	}
+
+
 /////////////////////////////////FIN-INGRESO COBRO/////////////////////////
 
 /////////////////////////////////CHEQUES//////////////////////////////////
-
-	/**
-	*Nos retorna un DatosDocumVO para ingresar el cheque dado un IngresoCobro
-	 * Lo utilizamos para ingresar el cheque
-	*
-	*/
-	private DatosDocumVO getDatosDocumChequeDadoIngCobro(IngresoCobroVO ingVO){
-		
-		DatosDocumVO aux = new DatosDocumVO();
-		
-		aux.copiar(ingVO);
-		
-		aux.setCodDocum(ingVO.getCodDocRef());
-		aux.setSerieDocum(ingVO.getSerieDocRef());
-		aux.setNroDocum(ingVO.getNroDocRef());
-		
-		return aux;
-		
-	}
-	
-	/**
-	*Nos retorna un DocumSaldo para ingresar el saldo a la cuenta correspondiente
-	*dado el ingreso cobro
-	*
-	*/
-	private DocumSaldo getDocumSaldoChequeDadoIngCobro(IngresoCobroVO ingVO){
-		
-		DatosDocumVO aux = new DatosDocumVO();
-		
-		aux.copiar(ingVO);
-		
-		DocumSaldo docSaldo = new DocumSaldo(aux);//new DocumSaldo(); //(DocumSaldo)doc;
-		//docSaldo
-		
-		docSaldo.setCodDocum(ingVO.getCodDocRef());
-		docSaldo.setSerieDocum(ingVO.getSerieDocRef());
-		docSaldo.setNroDocum(ingVO.getNroDocRef());
-		
-		//private String codBco;
-		//private String codCtaBco;
-		//private String movimiento;
-		
-		docSaldo.setCodBco(ingVO.getCodBanco());
-		docSaldo.setCodCtaBco(ingVO.getCodCtaBco());
-		docSaldo.setMovimiento(ingVO.getReferencia());
-		
-		docSaldo.setSigno(1); /*Signo positivo*/
-		
-		return docSaldo;
-		
-	}
-	
-	/**
-	*Nos retorna un DocumSaldo para ingresar el saldo a la cuenta correspondiente
-	*dado el ingreso cobro
-	*
-	*/
-	private DocumSaldo getDocumSaldoSaCuentasIngCobro(IngresoCobroVO ingVO){
-		
-		DatosDocumVO aux = new DatosDocumVO();
-		
-		aux.copiar(ingVO);
-		
-		aux.setNroTrans(ingVO.getNroTrans());
-		
-		DocumSaldo docSaldo = new DocumSaldo(aux);
-		
-		docSaldo.setCodDocum(ingVO.getCodDocum()); /*Documento del cobro*/
-		docSaldo.setSerieDocum("0");
-		docSaldo.setNroDocum(ingVO.getNroDocum()); /*Nro docum del cobro*/
-		
-		//private String codBco;
-		//private String codCtaBco;
-		//private String movimiento;
-		
-		if(ingVO.getmPago().equals("Caja")) /*Si es caja */
-		{
-			docSaldo.setCodBco("0");
-			docSaldo.setCodCtaBco("0");
-			docSaldo.setMovimiento("0");
-			
-			docSaldo.setCodDocumRef("0"); /*Documento del cobro*/
-			docSaldo.setSerieDocumRef("0");
-			docSaldo.setNroDocumRef(0); /*Nro docum del cobro*/
-		}else if(ingVO.getmPago().toUpperCase().equals("TRANSFERENCIA")){ /*Si es transferencia*/
-			
-			docSaldo.setCodDocumRef(ingVO.getCodDocRef()); /*Documento del cobro*/
-			docSaldo.setSerieDocumRef("0");
-			docSaldo.setNroDocumRef(ingVO.getNroDocRef()); /*Nro docum del cobro*/
-			
-		}else if(ingVO.getmPago().toUpperCase().equals("CHEQUE")){ /*Si es transferencia*/
-			
-			docSaldo.setCodDocumRef(ingVO.getCodDocRef()); /*Documento del cobro*/
-			docSaldo.setSerieDocumRef(ingVO.getSerieDocRef());
-			docSaldo.setNroDocumRef(ingVO.getNroDocRef()); /*Nro docum del cobro*/
-			
-		}
-			
-		
-		if(!ingVO.getmPago().equals("Caja")) {
-			
-			docSaldo.setCodBco(ingVO.getCodBanco());
-			docSaldo.setCodCtaBco(ingVO.getCodCtaBco());
-			docSaldo.setMovimiento(ingVO.getReferencia());
-			
-		}else{
-			docSaldo.setCodBco("0");
-			docSaldo.setCodCtaBco("0");
-			docSaldo.setMovimiento("0");
-		}
-		
-		docSaldo.setSigno(1); /*Signo positivo*/
-		
-		return docSaldo;
-		
-	}
-	
 	
 	/**
 	*Para ingresar cheque, sin pasar connection, para

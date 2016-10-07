@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
+import com.excepciones.IngresoCobros.EliminandoIngresoCobroException;
 import com.excepciones.IngresoCobros.ExisteIngresoCobroException;
 import com.excepciones.IngresoCobros.InsertandoIngresoCobroException;
 import com.excepciones.IngresoCobros.ModificandoIngresoCobroException;
@@ -137,11 +138,10 @@ public class DAOIngresoCobro implements IDAOIngresoCobro{
 	
 
 	/**
-	 * Inserta un banco en la base
-	 * @throws InsertandoCuentaException 
-	 * @throws InsertandoBancoException 
+	 * Inserta un cabezal ingreso cobro
+	 * 
 	 */
-	public void insertarIngresoCobro(IngresoCobro cobro, String codEmp, Connection con) throws InsertandoIngresoCobroException, ConexionException {
+	public void insertarIngresoCobro(IngresoCobro cobro, Connection con) throws InsertandoIngresoCobroException, ConexionException {
 
 		Consultas clts = new Consultas();
     	
@@ -159,7 +159,7 @@ public class DAOIngresoCobro implements IDAOIngresoCobro{
 			pstmt1.setInt(3, cobro.getNroDocum());
 			pstmt1.setString(4, cobro.getTitInfo().getCodigo());
 			pstmt1.setString(5, cobro.getCuentaInfo().getCodCuenta());
-			pstmt1.setString(6, codEmp);
+			pstmt1.setString(6, cobro.getCodEmp());
 			pstmt1.setTimestamp(7, cobro.getFecDoc());
 			pstmt1.setTimestamp(8, cobro.getFecValor());
 			pstmt1.setString(9, cobro.getBancoInfo().getCodBanco());
@@ -189,7 +189,7 @@ public class DAOIngresoCobro implements IDAOIngresoCobro{
 				/*A cada linea le seteamos el nroTrans*/
 				lin.setNroTrans(cobro.getNroTrans());
 				
-				this.insertarLineaCobro(lin, codEmp,linea, con);
+				this.insertarLineaCobro(lin, linea, con);
 				
 				linea++;
 			}
@@ -205,10 +205,71 @@ public class DAOIngresoCobro implements IDAOIngresoCobro{
 	}
 	
 	/**
+	 * Eliminamos el cabezal de un cobro
+	 * @throws EliminandoIngresoCobroException 
+	 *
+	 */
+	public void eliminarIngresoCobro(IngresoCobro cobro, Connection con) throws InsertandoIngresoCobroException, ConexionException, EliminandoIngresoCobroException {
+
+		Consultas clts = new Consultas();
+    	String delete = clts.eliminarIngresoCobroCab();
+    	
+    	PreparedStatement pstmt1;
+
+    	
+    	try {
+    		
+			pstmt1 =  con.prepareStatement(delete);
+			pstmt1.setLong(1, cobro.getNroTrans());
+			
+			pstmt1.executeUpdate ();
+			pstmt1.close ();
+			
+			this.eliminarIngresoCobroDetalle(cobro, con);
+			
+					
+		} 
+    	catch (SQLException e) 
+    	{
+			throw new EliminandoIngresoCobroException();
+		} 
+		
+    	
+	}
+	
+	/**
+	 * Eliminamos el detalle de un cobro
+	 *
+	 */
+	private void eliminarIngresoCobroDetalle(IngresoCobro cobro, Connection con) throws  ConexionException, EliminandoIngresoCobroException {
+
+		Consultas clts = new Consultas();
+    	String delete = clts.deleteIngresoCobroCabDet();
+    	
+    	PreparedStatement pstmt1;
+
+    	
+    	try {
+    		
+			pstmt1 =  con.prepareStatement(delete);
+			pstmt1.setLong(1, cobro.getNroTrans());
+			
+			pstmt1.executeUpdate ();
+			pstmt1.close ();
+			
+					
+		} 
+    	catch (SQLException e) 
+    	{
+			throw new EliminandoIngresoCobroException();
+		} 
+	}
+	
+	/**
 	 * Inserta una linea del cobro
 	 * 
 	 */
-	private void insertarLineaCobro(IngresoCobroLinea lin, String codEmp, int linea, Connection con) throws InsertandoIngresoCobroException, ConexionException {
+	private void insertarLineaCobro(IngresoCobroLinea lin, int linea, Connection con) throws InsertandoIngresoCobroException, ConexionException {
 
 		Consultas clts = new Consultas();
     	
@@ -223,7 +284,7 @@ public class DAOIngresoCobro implements IDAOIngresoCobro{
     	
     		
 			pstmt1.setString(1, lin.getCuenta().getCodCuenta());
-			pstmt1.setString(2, codEmp);
+			pstmt1.setString(2, lin.getCodEmp());
 			pstmt1.setString(3, lin.getCodDocum());
 			pstmt1.setString(4, lin.getSerieDocum());
 			pstmt1.setInt(5, lin.getNroDocum());
@@ -262,42 +323,6 @@ public class DAOIngresoCobro implements IDAOIngresoCobro{
 		
 	}
 	
-	/**
-	 * MOdificamos Ingreso Cobro, hacemos delete y volvemos a ingresar
-	 * @throws ConexionException 
-	 * @throws ModificandoCuentaBcoException 
-	 * 
-	 */
-	public void modificarIngresoCobro(IngresoCobro cobro, String codEmp, Connection con) throws ModificandoIngresoCobroException, ConexionException{
-		
-		Consultas clts = new Consultas();
-    	
-    	String deleteCab = clts.deleteIngresoCobroCab();
-    	String deleteDet = clts.deleteIngresoCobroDet();
-    	
-    	PreparedStatement pstmt1;
-    	PreparedStatement pstmt2;
-
-    	try {
-    		
-			pstmt1 =  con.prepareStatement(deleteCab);
-			pstmt2 =  con.prepareStatement(deleteDet);
-			
-			/*Primero eliminamos la transaccion para luego volverla a insertar*/
-			pstmt1.executeUpdate ();
-			pstmt1.close ();
-			
-			pstmt2.executeUpdate ();
-			pstmt2.close ();
-			
-			this.insertarIngresoCobro(cobro, codEmp, con);
-			
-		} 
-    	catch (SQLException | InsertandoIngresoCobroException e) 
-    	{
-			throw new ModificandoIngresoCobroException();
-		} 
-	}
 /////////////////////////////////////CUENTAS/////////////////////////////////////////////////////
 	
 	/**

@@ -19,6 +19,7 @@ import com.excepciones.Cotizaciones.ObteniendoCotizacionesException;
 import com.excepciones.IngresoCobros.ExisteIngresoCobroException;
 import com.excepciones.IngresoCobros.InsertandoIngresoCobroException;
 import com.excepciones.IngresoCobros.ModificandoIngresoCobroException;
+import com.excepciones.IngresoCobros.NoExisteIngresoCobroException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
 import com.excepciones.clientes.ObteniendoClientesException;
 import com.vaadin.data.Property.ValueChangeListener;
@@ -437,7 +438,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				Mensajes.mostrarMensajeWarning(Variables.WARNING_CAMPOS_NO_VALIDOS);
 			}
 				
-			} catch (ModificandoIngresoCobroException| InsertandoIngresoCobroException| ExisteIngresoCobroException | InicializandoException| ConexionException | NoTienePermisosException| ObteniendoPermisosException e) {
+			} catch (ModificandoIngresoCobroException| NoExisteIngresoCobroException |InsertandoIngresoCobroException| ExisteIngresoCobroException | InicializandoException| ConexionException | NoTienePermisosException| ObteniendoPermisosException e) {
 				
 				ExisteIngresoCobroException a;
 				
