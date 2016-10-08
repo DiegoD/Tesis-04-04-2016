@@ -49,7 +49,7 @@ public class DAOIngresoCobro implements IDAOIngresoCobro{
 							
 				aux = new IngresoCobro();
 				
-				
+				aux.setCodCuentaInd("0");
 				aux.setFecDoc(rs.getTimestamp("fec_doc"));
 				aux.setCodDocum(rs.getString("cod_docum"));
 				aux.setSerieDocum(rs.getString("serie_docum"));
