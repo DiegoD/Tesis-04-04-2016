@@ -25,7 +25,7 @@ public class MonedaInfo {
 		this.codMoneda = codMoneda;
 		this.descripcion = descripcion;
 		this.simbolo = simbolo;
-		
+ 		
 	}
 	
 	public MonedaInfo(String codMoneda, String descripcion, String simbolo, boolean nacional){
