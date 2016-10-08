@@ -1275,11 +1275,11 @@ public ArrayList<IngresoCobroVO> getIngresoCobroTodos(String codEmp) throws Obte
 		{
 			IngresoCobroVO aux = ing.retornarIngresoCobroVO();
 			
-			aux.setCodCtaInd("0");
-			aux.setCodCta("0");
-			aux.setNomCta("0");
-			aux.setNomCuenta("0");
-			aux.setCodCuenta("0");
+//			aux.setCodCtaInd("0");
+//			aux.setCodCta("0");
+//			aux.setNomCta("0");
+//			aux.setNomCuenta("0");
+//			aux.setCodCuenta("0");
 			
 			lstVO.add(aux);
 		}
