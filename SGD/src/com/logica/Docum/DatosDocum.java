@@ -48,7 +48,7 @@ public class DatosDocum extends Auditoria{
 		this.codEmp = d.getCodEmp();
 		this.cuenta = new CuentaInfo(d.getCodCuenta(), d.getNomCuenta());
 		
-		this.moneda = new MonedaInfo(d.getCodMoneda(), d.getNomMoneda(), d.getSimboloMoneda());
+		this.moneda = new MonedaInfo(d.getCodMoneda(), d.getNomMoneda(), d.getSimboloMoneda(), d.isNacional());
 		
 		this.referencia = d.getReferencia();
 		this.nroTrans = d.getNroTrans();

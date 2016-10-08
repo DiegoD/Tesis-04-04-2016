@@ -16,6 +16,7 @@ public class DatosDocumVO extends AuditoriaVO{
 	private String serieDocum;
 	private int nroDocum;
 	private String codEmp;
+	private boolean nacional;
 	
 	private String referencia;
 	
@@ -74,7 +75,7 @@ public class DatosDocumVO extends AuditoriaVO{
 		this.codCuenta = t.codCuenta;
 		this.nomCuenta = t.nomCuenta;
 		this.codCtaInd = t.codCtaInd;
-		
+		this.nacional = t.nacional;
 		
 	}
 	
@@ -228,6 +229,14 @@ public class DatosDocumVO extends AuditoriaVO{
 
 	public void setCodCtaInd(String codCtaInd) {
 		this.codCtaInd = codCtaInd;
+	}
+
+	public boolean isNacional() {
+		return nacional;
+	}
+
+	public void setNacional(boolean nacional) {
+		this.nacional = nacional;
 	}
 	
 	
