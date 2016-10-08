@@ -94,6 +94,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	@SuppressWarnings({ "unchecked", "deprecation" })
 	public IngresoCobroViewExtended(String opera, IngresoCobroPanelExtended main){
 	
+	
 	this.cambioMoneda = false;
 		
 	/*Inicializamos los permisos para el usuario*/
@@ -734,7 +735,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		
 		this.controlador = new IngresoCobroControlador();
 					
-		this.fieldGroup =  new BeanFieldGroup<IngresoCobroVO>(IngresoCobroVO.class);
+		//this.fieldGroup =  new BeanFieldGroup<IngresoCobroVO>(IngresoCobroVO.class);
 		
 		/*Mostramos o ocultamos los datos del Banco, dependiendo del combo tipo (banco, caja)*/
 		this.mostrarDatosDeBanco();
@@ -746,6 +747,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		
 		inicializarCampos();
 		
+	
 		//Seteamos info del form si es requerido
 		if(fieldGroup != null)
 			fieldGroup.buildAndBindMemberFields(this);
@@ -828,12 +830,26 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		}
 		else
 		{
+			this.serieDocRef.setReadOnly(false);
+			this.nroDocRef.setReadOnly(false);
+			this.comboBancos.setReadOnly(false);
+			this.comboCuentas.setReadOnly(false);
+			this.comboMPagos.setReadOnly(false);
+			
 			this.serieDocRef.setValue("0");
 			this.serieDocRef.setRequired(false);
 			this.nroDocRef.setRequired(false);
 			this.comboBancos.setRequired(false);
 			this.comboCuentas.setRequired(false);
 			this.comboMPagos.setRequired(false);
+			
+			this.serieDocRef.setReadOnly(true);
+			this.nroDocRef.setReadOnly(true);
+			this.comboBancos.setReadOnly(true);
+			this.comboCuentas.setReadOnly(true);
+			this.comboMPagos.setReadOnly(true);
+			
+		
 		}
 		
 	}
@@ -1663,7 +1679,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			/*Si la moneda del cobro es distinta a la del documento pero
 			 * igual a la moneda nacional, hago el calculo al tipo de cambio
 			 * de la fecha valor del cobro*/
-			else if(det.getCodMoneda().equals(Variables.CODIGO_MONEDA_NACIONAL) &&  !codMonedaCab.equals(det.getCodMoneda()))
+			else if(det.isNacional() &&  !codMonedaCab.equals(det.getCodMoneda()))
 			{
 				aux = det.getImpTotMo() / tcMonedaNacional;
 				impMo += aux;

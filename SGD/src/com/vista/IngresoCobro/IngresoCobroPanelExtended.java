@@ -14,6 +14,7 @@ import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Bancos.ObteniendoBancosException;
 import com.excepciones.Bancos.ObteniendoCuentasBcoException;
 import com.excepciones.IngresoCobros.ObteniendoIngresoCobroException;
+import com.logica.IngresoCobro.IngresoCobro;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.filter.SimpleStringFilter;
@@ -128,19 +129,27 @@ public class IngresoCobroPanelExtended extends IngresoCobroPanel{
 		    		if(grid.getSelectedRow() != null){
 		    			BeanItem<IngresoCobroVO> item = container.getItem(grid.getSelectedRow());
 				    	
+		    			//IngresoCobroVO aux = item.getBean();
 				    	/*Puede ser null si accedemos luego de haberlo agregado, ya que no va a la base*/
 				    	if(item.getBean().getFechaMod() == null)
 				    	{
 				    		item.getBean().setFechaMod(new Timestamp(System.currentTimeMillis()));
 				    	}
-							
-						form = new IngresoCobroViewExtended(Variables.OPERACION_LECTURA, IngresoCobroPanelExtended.this);
+				    	
+				    	form = new IngresoCobroViewExtended(Variables.OPERACION_LECTURA, IngresoCobroPanelExtended.this);
 						//form.fieldGroup.setItemDataSource(item);
 						sub = new MySub("72%","70%");
 						sub.setModal(true);
 						sub.setVista(form);
+						
+						IngresoCobro c = new IngresoCobro(item.getBean());
+						
+						IngresoCobroVO asd = item.getBean();
+						
+				    	form.setDataSourceFormulario(item);
+						
 						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
-						form.setDataSourceFormulario(item);
+						
 						form.setLstDetalle(item.getBean().getDetalle());
 						
 						UI.getCurrent().addWindow(sub);
