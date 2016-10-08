@@ -242,9 +242,10 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
    			
    			auxMoneda = (MonedaVO) comboMoneda.getValue();
    			
-   			if(auxMoneda.getCodMoneda() != null){
+   			if(auxMoneda.getCodMoneda() != null && !auxMoneda.isNacional()){
    				try {
    					
+   					tcMov.setVisible(true);
 					cotizacion = controlador.getCotizacion(permisoAux, fecha, auxMoneda.getCodMoneda());
 					cotizacionVenta = cotizacion.getCotizacionVenta();
 					calculos();
@@ -254,6 +255,11 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+   			}
+   			else{
+   				tcMov.setVisible(false);
+   				cotizacionVenta = (double)1;
+   				calculos();
    			}
    			/*Si ya hay ingresado un gasto no lo dejamos cambiar la moneda*/
    			if(lstDetalleVO.size()>0)
@@ -1411,39 +1417,39 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		
 		//lstGastos.getColumn("impTotMo").setHidden(true);
 		
-		lstGastos.removeColumn("operacion");
-		lstGastos.removeColumn("fechaMod");
-		
-		lstGastos.removeColumn("codCtaInd");
-		lstGastos.removeColumn("codCuenta");
-		lstGastos.removeColumn("codDocum");
-		lstGastos.removeColumn("codEmp");
-		lstGastos.removeColumn("codImpuesto");
-		lstGastos.removeColumn("codMoneda");
-		//lstGastos.removeColumn("codProceso");
-		lstGastos.removeColumn("codRubro");
-		lstGastos.removeColumn("codTitular");
-		//lstGastos.removeColumn("cuenta");
-		lstGastos.removeColumn("descProceso");
-		lstGastos.removeColumn("fecDoc");
-		lstGastos.removeColumn("fecValor");
-		lstGastos.removeColumn("impImpuMn");
-		lstGastos.removeColumn("impImpuMo");
-		lstGastos.removeColumn("impSubMn");
-		lstGastos.removeColumn("impSubMo");
-		lstGastos.removeColumn("linea");
-		lstGastos.removeColumn("impTotMn");
-		lstGastos.removeColumn("nomCuenta");
-		lstGastos.removeColumn("nomImpuesto");
-		lstGastos.removeColumn("nomMoneda");
-		lstGastos.removeColumn("nomRubro");
-		lstGastos.removeColumn("nomTitular");
-		lstGastos.removeColumn("nroTrans");
-		lstGastos.removeColumn("porcentajeImpuesto");
-		lstGastos.removeColumn("serieDocum");
-		lstGastos.removeColumn("simboloMoneda");
-		lstGastos.removeColumn("tcMov");
-		lstGastos.removeColumn("usuarioMod");
+		 lstGastos.getColumn("operacion").setHidable(true);;
+		  lstGastos.getColumn("fechaMod").setHidable(true);;
+		  
+		  lstGastos.getColumn("codCtaInd").setHidable(true);;
+		  lstGastos.getColumn("codCuenta").setHidable(true);;
+		  lstGastos.getColumn("codDocum").setHidable(true);;
+		  lstGastos.getColumn("codEmp").setHidable(true);;
+		  lstGastos.getColumn("codImpuesto").setHidable(true);;
+		  lstGastos.getColumn("codMoneda").setHidable(true);;
+		  //lstGastos.getColumn("codProceso").setHidable(true);;
+		  lstGastos.getColumn("codRubro").setHidable(true);;
+		  lstGastos.getColumn("codTitular").setHidable(true);;
+		  //lstGastos.getColumn("cuenta").setHidable(true);;
+		  lstGastos.getColumn("descProceso").setHidable(true);;
+		  lstGastos.getColumn("fecDoc").setHidable(true);;
+		  lstGastos.getColumn("fecValor").setHidable(true);;
+		  lstGastos.getColumn("impImpuMn").setHidable(true);;
+		  lstGastos.getColumn("impImpuMo").setHidable(true);;
+		  lstGastos.getColumn("impSubMn").setHidable(true);;
+		  lstGastos.getColumn("impSubMo");
+		  lstGastos.getColumn("linea").setHidable(true);;
+		  lstGastos.getColumn("impTotMn").setHidable(true);;
+		  lstGastos.getColumn("nomCuenta").setHidable(true);;
+		  lstGastos.getColumn("nomImpuesto").setHidable(true);;
+		  lstGastos.getColumn("nomMoneda").setHidable(true);;
+		  lstGastos.getColumn("nomRubro").setHidable(true);;
+		  lstGastos.getColumn("nomTitular").setHidable(true);;
+		  lstGastos.getColumn("nroTrans").setHidable(true);;
+		  lstGastos.getColumn("porcentajeImpuesto").setHidable(true);;
+		  lstGastos.getColumn("serieDocum").setHidable(true);;
+		  lstGastos.getColumn("simboloMoneda").setHidable(true);;
+		  lstGastos.getColumn("tcMov").setHidable(true);;
+		  lstGastos.getColumn("usuarioMod").setHidable(true);;
 		
 		lstGastos.setColumnOrder("nroDocum", "referencia", "impTotMo", "codProceso");
 		
