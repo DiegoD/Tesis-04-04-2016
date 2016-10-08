@@ -1279,6 +1279,7 @@ public ArrayList<IngresoCobroVO> getIngresoCobroTodos(String codEmp) throws Obte
 			aux.setCodCta("0");
 			aux.setNomCta("0");
 			aux.setNomCuenta("0");
+			aux.setCodCuenta("0");
 			
 			lstVO.add(aux);
 		}
