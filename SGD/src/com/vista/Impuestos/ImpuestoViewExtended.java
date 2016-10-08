@@ -171,9 +171,6 @@ public class ImpuestoViewExtended extends ImpuestoView{
 		this.porcentaje.setRequired(setear);
 		this.porcentaje.setRequiredError("Es requerido");
 		
-		this.activo.setRequired(setear);
-		this.activo.setRequiredError("Es requerido");
-		
 	}
 	
 	/**
