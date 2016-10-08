@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 
 import com.controladores.IngresoCobroControlador;
 import com.excepciones.ConexionException;
@@ -24,6 +25,10 @@ import com.excepciones.Monedas.ObteniendoMonedaException;
 import com.excepciones.clientes.ObteniendoClientesException;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
+import com.vaadin.data.fieldgroup.FieldGroup;
+import com.vaadin.data.fieldgroup.FieldGroup.CommitEvent;
+import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
+import com.vaadin.data.fieldgroup.FieldGroup.CommitHandler;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.filter.SimpleStringFilter;
@@ -35,6 +40,7 @@ import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.valueObject.DocumDGIVO;
@@ -96,12 +102,14 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	
 	this.operacion = opera;
 	this.mainView = main;
+	lstGastos.setEditorBuffered(true);
 	
 	/*Esta lista es utilizada solamente para los formularios nuevos
 	 * agregados*/
 	this.lstDetalleAgregar = new ArrayList<IngresoCobroDetalleVO>();
 	
 	this.inicializarForm();
+	
 	
 	
 	this.btnBuscarCliente.addClickListener(click -> {
@@ -172,6 +180,32 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			}		
 		}
     });
+	
+//	lstGastos.getEditorFieldGroup().addCommitHandler(new FieldGroup.CommitHandler() {
+//        @Override
+//        public void preCommit(FieldGroup.CommitEvent commitEvent) throws     FieldGroup.CommitException {
+//        	calcularImporteTotal();
+//        }
+//
+//        @Override
+//        public void postCommit(FieldGroup.CommitEvent commitEvent) throws     FieldGroup.CommitException {
+//        	calcularImporteTotal();
+//        }
+//	 });
+	
+	 // register save listener
+	lstGastos.getEditorFieldGroup().addCommitHandler(new CommitHandler() {
+        @Override
+        public void preCommit(CommitEvent commitEvent) throws CommitException {
+        	calcularImporteTotal();
+        }
+        @Override
+        public void postCommit(CommitEvent commitEvent) throws CommitException {
+            // You can persist your data here
+        	calcularImporteTotal();
+        }
+    });
+	
 	
 	/**
 	* Agregamos listener al combo de tipo (banco, caja), determinamos si mostramos
@@ -1372,49 +1406,74 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		
 		//lstFormularios.getColumn("borrar").setHidable(true);
 		
-		lstGastos.getColumn("operacion").setHidden(true);
-		lstGastos.getColumn("fechaMod").setHidden(true);
+		List<Column> lst = lstGastos.getColumns();
 		
-		lstGastos.getColumn("codCtaInd").setHidden(true);
-		lstGastos.getColumn("codCuenta").setHidden(true);
-		lstGastos.getColumn("codDocum").setHidden(true);
-		lstGastos.getColumn("codEmp").setHidden(true);
-		lstGastos.getColumn("codImpuesto").setHidden(true);
-		lstGastos.getColumn("codMoneda").setHidden(true);
-		//lstGastos.getColumn("codProceso").setHidden(true);
-		lstGastos.getColumn("codRubro").setHidden(true);
-		lstGastos.getColumn("codTitular").setHidden(true);
-		//lstGastos.getColumn("cuenta").setHidden(true);
-		lstGastos.getColumn("descProceso").setHidden(true);
-		lstGastos.getColumn("fecDoc").setHidden(true);
-		lstGastos.getColumn("fecValor").setHidden(true);
-		lstGastos.getColumn("impImpuMn").setHidden(true);
-		lstGastos.getColumn("impImpuMo").setHidden(true);
-		lstGastos.getColumn("impSubMn").setHidden(true);
-		lstGastos.getColumn("impSubMo").setHidden(true);
-		lstGastos.getColumn("linea").setHidden(true);
-		lstGastos.getColumn("impTotMn").setHidden(true);
-		lstGastos.getColumn("nomCuenta").setHidden(true);
-		lstGastos.getColumn("nomImpuesto").setHidden(true);
-		lstGastos.getColumn("nomMoneda").setHidden(true);
-		lstGastos.getColumn("nomRubro").setHidden(true);
-		lstGastos.getColumn("nomTitular").setHidden(true);
-		lstGastos.getColumn("nroTrans").setHidden(true);
-		lstGastos.getColumn("porcentajeImpuesto").setHidden(true);
-		lstGastos.getColumn("serieDocum").setHidden(true);
-		lstGastos.getColumn("simboloMoneda").setHidden(true);
-		lstGastos.getColumn("tcMov").setHidden(true);
-		lstGastos.getColumn("usuarioMod").setHidden(true);
 		
-		lstGastos.setColumnOrder("nroDocum", "referencia", "impTotMo", "impTotMo", "codProceso");
+		//lstGastos.getColumn("impTotMo").setHidden(true);
+		
+		lstGastos.removeColumn("operacion");
+		lstGastos.removeColumn("fechaMod");
+		
+		lstGastos.removeColumn("codCtaInd");
+		lstGastos.removeColumn("codCuenta");
+		lstGastos.removeColumn("codDocum");
+		lstGastos.removeColumn("codEmp");
+		lstGastos.removeColumn("codImpuesto");
+		lstGastos.removeColumn("codMoneda");
+		//lstGastos.removeColumn("codProceso");
+		lstGastos.removeColumn("codRubro");
+		lstGastos.removeColumn("codTitular");
+		//lstGastos.removeColumn("cuenta");
+		lstGastos.removeColumn("descProceso");
+		lstGastos.removeColumn("fecDoc");
+		lstGastos.removeColumn("fecValor");
+		lstGastos.removeColumn("impImpuMn");
+		lstGastos.removeColumn("impImpuMo");
+		lstGastos.removeColumn("impSubMn");
+		lstGastos.removeColumn("impSubMo");
+		lstGastos.removeColumn("linea");
+		lstGastos.removeColumn("impTotMn");
+		lstGastos.removeColumn("nomCuenta");
+		lstGastos.removeColumn("nomImpuesto");
+		lstGastos.removeColumn("nomMoneda");
+		lstGastos.removeColumn("nomRubro");
+		lstGastos.removeColumn("nomTitular");
+		lstGastos.removeColumn("nroTrans");
+		lstGastos.removeColumn("porcentajeImpuesto");
+		lstGastos.removeColumn("serieDocum");
+		lstGastos.removeColumn("simboloMoneda");
+		lstGastos.removeColumn("tcMov");
+		lstGastos.removeColumn("usuarioMod");
+		
+		lstGastos.setColumnOrder("nroDocum", "referencia", "impTotMo", "codProceso");
+		
+		//lst.get(1).setWidth(400);
 		
 		//List<Column> lstColumn
 
 
 		/*Formateamos los tamaños*/
-		lstGastos.getColumn("referencia").setWidth(100);
+		lstGastos.getColumn("referencia").setWidth(350);
 		
+		lstGastos.getColumn("nroDocum").setEditable(false);
+		lstGastos.getColumn("referencia").setEditable(false);
+		lstGastos.getColumn("codProceso").setEditable(false);
+		lstGastos.getColumn("impTotMo").setEditable(true);
 		
+		lstGastos.setEditorSaveCaption("Guardar");
+		lstGastos.setEditorCancelCaption("Cancelar");
+		
+		lstGastos.getEditorFieldGroup().addCommitHandler(new FieldGroup.CommitHandler() {
+      @Override
+      public void preCommit(FieldGroup.CommitEvent commitEvent) throws     FieldGroup.CommitException {
+      	calcularImporteTotal();
+      }
+
+      @Override
+      public void postCommit(FieldGroup.CommitEvent commitEvent) throws     FieldGroup.CommitException {
+      	calcularImporteTotal();
+      }
+	 });
 		
 	}
 	
