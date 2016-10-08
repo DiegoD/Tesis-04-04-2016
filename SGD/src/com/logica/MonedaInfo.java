@@ -25,7 +25,6 @@ public class MonedaInfo {
 		this.codMoneda = codMoneda;
 		this.descripcion = descripcion;
 		this.simbolo = simbolo;
-		this.nacional = nacional;
 		
 	}
 	
