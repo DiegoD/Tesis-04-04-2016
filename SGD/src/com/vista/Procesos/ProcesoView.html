@@ -69,7 +69,7 @@
       <vaadin-text-field style-name="tiny" width="504px" readonly _id="descripcion"></vaadin-text-field> 
      </vaadin-horizontal-layout> 
      <vaadin-text-area visible="false" _id="obseAux"></vaadin-text-area> 
-     <vaadin-horizontal-layout width="187px"> 
+     <vaadin-horizontal-layout width="187px" _id="botones"> 
       <vaadin-button style-name="primary tiny" plain-text _id="aceptar" :middle>
         Guardar 
       </vaadin-button> 
@@ -78,6 +78,9 @@
       </vaadin-button> 
       <vaadin-button style-name="tiny primary" id="btnCancelar" plain-text _id="cancelar" :middle>
         Cancelar 
+      </vaadin-button> 
+      <vaadin-button style-name="danger tiny primary" plain-text _id="eliminar">
+        Eliminar 
       </vaadin-button> 
      </vaadin-horizontal-layout> 
     </vaadin-form-layout> 

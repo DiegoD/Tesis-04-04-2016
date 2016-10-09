@@ -14,6 +14,7 @@ import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Cotizaciones.ObteniendoCotizacionesException;
 import com.excepciones.Documentos.ObteniendoDocumentosException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
+import com.excepciones.Procesos.EliminandoProcesoException;
 import com.excepciones.Procesos.ExisteProcesoException;
 import com.excepciones.Procesos.IngresandoProcesoException;
 import com.excepciones.Procesos.ModificandoProcesoException;
@@ -242,7 +243,26 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 		this.cancelar.addClickListener(click -> {
 			main.cerrarVentana();
 		});
+		
+		this.eliminar.addClickListener(click -> {
+			UsuarioPermisosVO permisoAux = 
+					new UsuarioPermisosVO(this.permisos.getCodEmp(),
+							this.permisos.getUsuario(),
+							VariablesPermisos.FORMULARIO_PROCESOS,
+							VariablesPermisos.OPERACION_NUEVO_EDITAR);
 			
+			try {
+				controlador.eliminarProceso((Integer)codigo.getConvertedValue(), permisoAux);
+				this.mainView.actuilzarGrillaEliminado((Integer)codigo.getConvertedValue());
+				Mensajes.mostrarMensajeOK("Se ha eliminado el proceso");
+				main.cerrarVentana();
+				
+			} catch (ConexionException | NoExisteProcesoException | ExisteProcesoException | InicializandoException | ObteniendoPermisosException | NoTienePermisosException | EliminandoProcesoException e) {
+				// TODO Auto-generated catch block
+				Mensajes.mostrarMensajeError(e.getMessage());
+			}
+		});
+		
 		this.btnBuscarCliente.addClickListener(click -> {
 			
 			BusquedaViewExtended form = new BusquedaViewExtended(this, new ClienteVO());
@@ -523,6 +543,7 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 		
 		/*Deshabilitamos botn aceptar*/
 		this.disableBotonAceptar();
+		this.disableBotonEliminar();
 		
 		/*No mostramos las validaciones*/
 		this.setearValidaciones(false);
@@ -549,6 +570,7 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 			
 			/*Oculatamos Editar y mostramos el de guardar y de agregar formularios*/
 			this.enableBotonAceptar();
+			this.enableBotonEliminar();
 			this.disableBotonLectura();
 
 			/*Dejamos los textfields que se pueden editar
@@ -583,6 +605,7 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 		}
 		
 		this.enableBotonAceptar();
+		this.enableBotonEliminar();
 		this.disableBotonLectura();
 		
 		/*Seteamos validaciones en nuevo, cuando es editar
@@ -668,6 +691,15 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 		this.btnBuscarCliente.setVisible(false);
 	}
 	
+	private void disableBotonEliminar()
+	{
+		this.eliminar.setEnabled(false);
+		this.eliminar.setVisible(false);
+		this.botones.setWidth("187px");
+		
+		
+	}
+	
 	/**
 	 * Habilitamos el boton aceptar
 	 *
@@ -679,6 +711,18 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 		
 		this.btnBuscarCliente.setEnabled(true);
 		this.btnBuscarCliente.setVisible(true);
+	}
+	
+	private void enableBotonEliminar()
+	{
+		if(operacion != Variables.OPERACION_NUEVO){
+			this.eliminar.setEnabled(true);
+			this.eliminar.setVisible(true);
+			this.botones.setWidth("270px");
+		}
+		else{
+			disableBotonEliminar();
+		}
 	}
 	
 	/**

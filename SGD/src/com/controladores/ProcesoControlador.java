@@ -11,6 +11,7 @@ import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Cotizaciones.ObteniendoCotizacionesException;
 import com.excepciones.Documentos.ObteniendoDocumentosException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
+import com.excepciones.Procesos.EliminandoProcesoException;
 import com.excepciones.Procesos.ExisteProcesoException;
 import com.excepciones.Procesos.IngresandoProcesoException;
 import com.excepciones.Procesos.ModificandoProcesoException;
@@ -71,6 +72,22 @@ public class ProcesoControlador {
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
 			FachadaDD.getInstance().actualizarProceso(procesoVO, permisos.getCodEmp());
+		else
+			throw new NoTienePermisosException();
+	}
+	
+	/**
+	 * Elimina un proceso
+	 * @throws NoTienePermisosException 
+	 * @throws ObteniendoPermisosException 
+	 * @throws EliminandoProcesoException 
+	 */
+	public void eliminarProceso(int codigo, UsuarioPermisosVO permisos) throws ConexionException, NoExisteProcesoException, ExisteProcesoException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, EliminandoProcesoException {
+		
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			FachadaDD.getInstance().eliminarProceso(codigo, permisos.getCodEmp());
+			
 		else
 			throw new NoTienePermisosException();
 	}

@@ -62,6 +62,7 @@ import com.excepciones.Monedas.InsertandoMonedaException;
 import com.excepciones.Monedas.ModificandoMonedaException;
 import com.excepciones.Monedas.NoExisteMonedaException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
+import com.excepciones.Procesos.EliminandoProcesoException;
 import com.excepciones.Procesos.ExisteProcesoException;
 import com.excepciones.Procesos.IngresandoProcesoException;
 import com.excepciones.Procesos.ModificandoProcesoException;
@@ -2414,6 +2415,47 @@ public class FachadaDD {
     		pool.liberarConeccion(con);
     	}
 	}
+    
+    /**
+   	 * Elimina un proceso
+   	 * valida que exista el código 
+     * @throws EliminandoProcesoException 
+   	 */
+       public void eliminarProceso(int codigo, String cod_emp) throws ConexionException, NoExisteProcesoException, ExisteProcesoException, EliminandoProcesoException  
+   	{
+   	    	
+       	Connection con = null;
+       	
+       	try 
+       	{
+   			con = this.pool.obtenerConeccion();
+   			con.setAutoCommit(false);
+   			
+   	    	
+   			if(this.procesos.memberProceso(codigo, cod_emp, con)){
+   				this.procesos.eliminarProceso(codigo, cod_emp, con);
+   				con.commit();
+   			}
+   	    	else
+   	    		throw new NoExisteProcesoException();
+       	
+       	}
+       	catch(NoExisteProcesoException| ConexionException | SQLException | EliminandoProcesoException e){
+       		try {
+   				con.rollback();
+   				
+   			} 
+       		catch (SQLException e1) {
+   				
+   				throw new ConexionException();
+   			}
+       		throw new EliminandoProcesoException();
+       	}
+       	finally
+       	{
+       		pool.liberarConeccion(con);
+       	}
+   	}
 /////////////////////////////////FIN-PROCESOS/////////////////////////////////
  
 /////////////////////////////////INI-GASTOS/////////////////////////////////

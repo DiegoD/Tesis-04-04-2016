@@ -261,6 +261,34 @@ public class ProcesosPanelExtended extends ProcesosPanel{
 
 	}
 	
+	public void actuilzarGrillaEliminado(int codigo){
+		
+		int i =0;
+		boolean salir = false;
+		int index = 0;
+		
+		ProcesoVO procesoEnLista;
+		
+		while( i < this.lstProcesos.size() && !salir)
+		{
+			procesoEnLista = this.lstProcesos.get(i);
+			
+			if(codigo == procesoEnLista.getCodigo()){
+				
+				index = i;
+				salir = true;
+			}
+			
+			i++;
+		}
+		
+		this.lstProcesos.remove(index);
+		this.container.removeAllItems();
+		this.container.addAll(this.lstProcesos);
+		
+		this.gridProcesos.setContainerDataSource(container);
+	}
+	
 	/**
 	 * Modificamos un procesoVO de la lista cuando
 	 * se hace una acutalizacion de un proceso

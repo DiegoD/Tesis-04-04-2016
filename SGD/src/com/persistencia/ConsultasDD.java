@@ -983,6 +983,16 @@ public class ConsultasDD {
 		
 		return sb.toString();
 	}
+		
+	public String eliminarProceso(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("DELETE FROM c_procesos ");
+		sb.append("WHERE cod_proceso = ? AND cod_emp = ? ");
+		
+		return sb.toString();
+	}
 
 ////////////////////////FIN PROCESOS//////////////////////////////////////////////
 		

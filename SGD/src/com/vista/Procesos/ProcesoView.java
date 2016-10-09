@@ -56,9 +56,11 @@ public class ProcesoView extends CssLayout {
 	protected TextField impTr;
 	protected TextField descripcion;
 	protected TextArea obseAux;
+	protected HorizontalLayout botones;
 	protected Button aceptar;
 	protected Button btnEditar;
 	protected Button cancelar;
+	protected Button eliminar;
 
 	public ProcesoView() {
 		Design.read(this);
