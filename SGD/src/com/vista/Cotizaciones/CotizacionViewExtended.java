@@ -539,7 +539,9 @@ public class CotizacionViewExtended extends CotizacionView implements IBusqueda{
 		
 		for (MonedaVO monedaVO : lstMonedas) {
 			
-			monedasObj.addBean(monedaVO);
+			if(!monedaVO.isNacional()){
+				monedasObj.addBean(monedaVO);
+			}
 			
 			if(cod != null){
 				if(cod.equals(monedaVO.getCodMoneda())){

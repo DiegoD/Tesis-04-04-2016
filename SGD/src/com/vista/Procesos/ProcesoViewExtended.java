@@ -352,9 +352,15 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 					
 					try {
 						
-						if(auxMoneda.getCodMoneda() != null){
+						if(auxMoneda.getCodMoneda() != null && !auxMoneda.isNacional()){
 							cotizacion = controlador.getCotizacion(permisoAux, fechaproces, auxMoneda.getCodMoneda());
 							cotizacionVenta = cotizacion.getCotizacionVenta();
+							tcMov.setEnabled(true);
+							calculos();
+						}
+						else if(auxMoneda.getCodMoneda() != null){
+							cotizacionVenta = (double) 1;
+							tcMov.setEnabled(false);
 							calculos();
 						}
 					}
@@ -867,6 +873,12 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 		this.comboMoneda.setContainerDataSource(monedasObj);
 		this.comboMoneda.setItemCaptionPropertyId("descripcion");
 		this.comboMoneda.setValue(moneda);
+		if(!moneda.isNacional()){
+			tcMov.setEnabled(true);
+		}
+		else{
+			tcMov.setEnabled(false);
+		}
 	}
 	
 	public void inicializarComboDocuemnto(String cod){

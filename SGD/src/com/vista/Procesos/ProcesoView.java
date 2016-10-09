@@ -46,6 +46,7 @@ public class ProcesoView extends CssLayout {
 	protected TextField tcMov;
 	protected HorizontalLayout importe;
 	protected TextField impMo;
+	protected Label lblimpMn;
 	protected TextField impMn;
 	protected TextField Kilos;
 	protected DateField fecCruce;

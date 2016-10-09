@@ -595,9 +595,15 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 					
 					try {
 						
-						if(auxMoneda.getCodMoneda() != null){
+						if(auxMoneda.getCodMoneda() != null && !auxMoneda.isNacional()){
 							cotizacion = controlador.getCotizacion(permisoAux, fecha, auxMoneda.getCodMoneda());
 							cotizacionVenta = cotizacion.getCotizacionVenta();
+							tcMov.setEnabled(true);
+							calculos();
+						}
+						else if(auxMoneda.getCodMoneda() != null){
+							cotizacionVenta = (double) 1;
+							tcMov.setEnabled(false);
 							calculos();
 						}
 					}
@@ -1276,6 +1282,12 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		this.comboMoneda.setContainerDataSource(monedasObj);
 		this.comboMoneda.setItemCaptionPropertyId("descripcion");
 		this.comboMoneda.setValue(moneda);
+		if(!moneda.isNacional()){
+			tcMov.setEnabled(true);
+		}
+		else{
+			tcMov.setEnabled(false);
+		}
 	}
 	
 	public void inicializarComboSeleccion(String cod){
@@ -1313,6 +1325,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		this.codProceso.setRequired(false);
 		this.codTitular.setRequired(true);
 		this.mainView.setSub("Empleado");
+		
 	}
 	
 	public void inicializoOficina(){
