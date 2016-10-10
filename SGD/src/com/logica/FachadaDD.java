@@ -45,6 +45,7 @@ import com.excepciones.Empresas.InsertandoEmpresaException;
 import com.excepciones.Empresas.ModificandoEmpresaException;
 import com.excepciones.Empresas.NoExisteEmpresaException;
 import com.excepciones.Empresas.ObteniendoEmpresasException;
+import com.excepciones.Gastos.EliminandoGastoException;
 import com.excepciones.Gastos.ExisteGastoException;
 import com.excepciones.Gastos.IngresandoGastoException;
 import com.excepciones.Gastos.ModificandoGastoException;
@@ -2421,7 +2422,7 @@ public class FachadaDD {
    	 * valida que exista el código 
      * @throws EliminandoProcesoException 
    	 */
-       public void eliminarProceso(int codigo, String cod_emp) throws ConexionException, NoExisteProcesoException, ExisteProcesoException, EliminandoProcesoException  
+    public void eliminarProceso(int codigo, String cod_emp) throws ConexionException, NoExisteProcesoException, ExisteProcesoException, EliminandoProcesoException  
    	{
    	    	
        	Connection con = null;
@@ -2841,5 +2842,49 @@ public class FachadaDD {
 			pool.liberarConeccion(con);
 		}
 	}
+	
+	/**
+   	 * Elimina un gasto
+   	 * valida que exista el código 
+	 * @throws EliminandoGastoException 
+	 * @throws ExisteGastoException 
+	 * @throws ConexionException 
+	 * @throws EliminandoProcesoException 
+   	 */
+    public void eliminarGasto(GastoVO gastoVO, String cod_emp) throws ExisteGastoException, EliminandoGastoException, ConexionException, EliminandoProcesoException 
+   	{
+   	    	
+       	Connection con = null;
+       	
+       	try 
+       	{
+       		con = this.pool.obtenerConeccion();
+   			con.setAutoCommit(false);
+       		if(this.gastos.memberGasto(gastoVO.getNroTrans(), cod_emp, con)){
+       			this.gastos.eliminarGasto(gastoVO.getNroTrans(), cod_emp, con);
+       			
+       			con.commit();
+       		}
+   			
+   	    	else
+   	    		throw new NoExisteGastoException();
+       	
+       	}
+       	catch(NoExisteGastoException| ConexionException | ExisteGastoException |SQLException e){
+       		try {
+   				con.rollback();
+   				
+   			} 
+       		catch (SQLException e1) {
+   				
+   				throw new ConexionException();
+   			}
+       		throw new EliminandoGastoException();
+       	}
+       	finally
+       	{
+       		pool.liberarConeccion(con);
+       	}
+   	}
 /////////////////////////////////FIN-GASTOS/////////////////////////////////
 }

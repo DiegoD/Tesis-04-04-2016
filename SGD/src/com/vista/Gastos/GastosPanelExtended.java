@@ -286,6 +286,34 @@ public class GastosPanelExtended extends GastosPanel{
 
 	}
 	
+	public void actuilzarGrillaEliminado(long codigo){
+		
+		int i =0;
+		boolean salir = false;
+		int index = 0;
+		
+		GastoVO gastoEnLista;
+		
+		while( i < this.lstGastos.size() && !salir)
+		{
+			gastoEnLista = this.lstGastos.get(i);
+			
+			if(codigo == gastoEnLista.getNroTrans()){
+				
+				index = i;
+				salir = true;
+			}
+			
+			i++;
+		}
+		
+		this.lstGastos.remove(index);
+		this.container.removeAllItems();
+		this.container.addAll(this.lstGastos);
+		
+		this.gridGastos.setContainerDataSource(container);
+	}
+
 	/**
 	 * Modificamos un gastoVO de la lista cuando
 	 * se hace una acutalizacion de un gasto

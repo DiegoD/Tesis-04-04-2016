@@ -1139,7 +1139,7 @@ public class ConsultasDD {
 				return sb.toString();
 	}
 	
-public String getGastosConSaldoxMoneda(){
+	public String getGastosConSaldoxMoneda(){
 		
 		StringBuilder sb = new StringBuilder();
 		
@@ -1179,7 +1179,7 @@ public String getGastosConSaldoxMoneda(){
 				return sb.toString();
 	}
 
-public String getGastosConSaldo(){
+	public String getGastosConSaldo(){
 	
 	StringBuilder sb = new StringBuilder();
 	

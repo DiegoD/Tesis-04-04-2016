@@ -19,12 +19,14 @@ import com.excepciones.Cuentas.ObteniendoCuentasException;
 import com.excepciones.Cuentas.ObteniendoRubrosException;
 import com.excepciones.DocLog.InsertandoLogException;
 import com.excepciones.DocLog.ModificandoLogException;
+import com.excepciones.Gastos.EliminandoGastoException;
 import com.excepciones.Gastos.ExisteGastoException;
 import com.excepciones.Gastos.IngresandoGastoException;
 import com.excepciones.Gastos.ModificandoGastoException;
 import com.excepciones.Gastos.NoExisteGastoException;
 import com.excepciones.Impuestos.ObteniendoImpuestosException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
+import com.excepciones.Procesos.EliminandoProcesoException;
 import com.excepciones.Procesos.ObteniendoProcesosException;
 import com.excepciones.Saldos.EliminandoSaldoException;
 import com.excepciones.Saldos.ExisteSaldoException;
@@ -312,6 +314,29 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		
 		this.cancelar.addClickListener(click -> {
 			main.cerrarVentana();
+		});
+		
+		this.btnEliminar.addClickListener(click -> {
+			
+			UsuarioPermisosVO permisoAux = 
+			new UsuarioPermisosVO(this.permisos.getCodEmp(),
+					this.permisos.getUsuario(),
+					VariablesPermisos.FORMULARIO_PROCESOS,
+					VariablesPermisos.OPERACION_NUEVO_EDITAR);
+			
+			try {
+				
+				controlador.eliminarGasto((Long) nroTrans.getConvertedValue(), permisoAux);
+				this.mainView.actuilzarGrillaEliminado((long) nroTrans.getConvertedValue());
+				Mensajes.mostrarMensajeOK("Se ha eliminado el gasto");
+				main.cerrarVentana();
+				
+			} catch (ObteniendoPermisosException | ConexionException | InicializandoException | ExisteGastoException |
+					EliminandoGastoException | EliminandoProcesoException | NoTienePermisosException e) {
+				// TODO Auto-generated catch block
+				Mensajes.mostrarMensajeError(e.getMessage());
+			}
+			
 		});
 			
 		this.btnBuscarProceso.addClickListener(click -> {
@@ -883,6 +908,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		
 		/*Deshabilitamos botn aceptar*/
 		this.disableBotonAceptar();
+		this.disableBotonEliminar();
 		
 		/*No mostramos las validaciones*/
 		this.setearValidaciones(false);
@@ -909,6 +935,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 			
 			/*Oculatamos Editar y mostramos el de guardar y de agregar formularios*/
 			this.enableBotonAceptar();
+			this.enableBotonEliminar();
 			this.disableBotonLectura();
 
 			/*Dejamos los textfields que se pueden editar
@@ -951,6 +978,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		}
 		
 		this.enableBotonAceptar();
+		this.enableBotonEliminar();
 		this.disableBotonLectura();
 		
 		/*Seteamos validaciones en nuevo, cuando es editar
@@ -1083,6 +1111,27 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		
 		this.btnBuscarEmpleado.setEnabled(true);
 		this.btnBuscarEmpleado.setVisible(true);
+		
+	}
+	
+	private void enableBotonEliminar()
+	{
+		if(operacion != Variables.OPERACION_NUEVO){
+			this.btnEliminar.setEnabled(true);
+			this.btnEliminar.setVisible(true);
+			this.botones.setWidth("270px");
+		}
+		else{
+			disableBotonEliminar();
+		}
+	}
+	
+	private void disableBotonEliminar()
+	{
+		this.btnEliminar.setEnabled(false);
+		this.btnEliminar.setVisible(false);
+		this.botones.setWidth("187px");
+		
 		
 	}
 	

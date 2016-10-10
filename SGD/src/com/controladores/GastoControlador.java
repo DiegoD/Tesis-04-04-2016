@@ -13,6 +13,7 @@ import com.excepciones.Cuentas.ObteniendoCuentasException;
 import com.excepciones.Cuentas.ObteniendoRubrosException;
 import com.excepciones.DocLog.InsertandoLogException;
 import com.excepciones.DocLog.ModificandoLogException;
+import com.excepciones.Gastos.EliminandoGastoException;
 import com.excepciones.Gastos.ExisteGastoException;
 import com.excepciones.Gastos.IngresandoGastoException;
 import com.excepciones.Gastos.ModificandoGastoException;
@@ -20,6 +21,7 @@ import com.excepciones.Gastos.NoExisteGastoException;
 import com.excepciones.Gastos.ObteniendoGastosException;
 import com.excepciones.Impuestos.ObteniendoImpuestosException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
+import com.excepciones.Procesos.EliminandoProcesoException;
 import com.excepciones.Procesos.ObteniendoProcesosException;
 import com.excepciones.Saldos.EliminandoSaldoException;
 import com.excepciones.Saldos.ExisteSaldoException;
@@ -75,6 +77,23 @@ public class GastoControlador {
 			throw new NoTienePermisosException();
 	}
 	
+	/**
+	 * elimina un gasto
+	 * @throws EliminandoProcesoException 
+	 * @throws EliminandoGastoException 
+	 * @throws ExisteGastoException 
+	 * @throws InicializandoException 
+	 * @throws ConexionException 
+	 * @throws NoTienePermisosException 
+	 * @throws ObteniendoPermisosException 
+	 */
+	public void eliminarGasto(long transaccion, UsuarioPermisosVO permisos) throws ObteniendoPermisosException, ConexionException, InicializandoException, ExisteGastoException, EliminandoGastoException, EliminandoProcesoException, NoTienePermisosException  {
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			FachadaDD.getInstance().eliminarGasto(transaccion, permisos.getCodEmp());
+		else
+			throw new NoTienePermisosException();
+	}
 	
 	/**
 	 * Actualiza los datos de un gasto

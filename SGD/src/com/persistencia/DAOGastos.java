@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
+import com.excepciones.Gastos.EliminandoGastoException;
 import com.excepciones.Gastos.ExisteGastoException;
 import com.excepciones.Gastos.IngresandoGastoException;
 import com.excepciones.Gastos.ModificandoGastoException;
@@ -290,6 +291,30 @@ public class DAOGastos implements IDAOGastos{
 		catch (SQLException e) {
 			
 			throw new ModificandoGastoException();
+		}
+	}
+	
+	@Override
+	public void eliminarGasto(long  transaccion, String codEmp, Connection con) throws EliminandoGastoException, ConexionException {
+		// TODO Auto-generated method stub
+		ConsultasDD consultas = new ConsultasDD();
+		String eliminar = consultas.eliminarGasto();
+		PreparedStatement pstmt1;
+		
+		try {
+			
+			pstmt1 =  con.prepareStatement(eliminar);
+			pstmt1.setLong(1, transaccion);
+			pstmt1.setString(2, codEmp);
+			
+			pstmt1.executeUpdate ();
+			pstmt1.close ();
+	
+		} 
+		
+		catch (SQLException e) {
+			
+			throw new EliminandoGastoException();
 		}
 	}
 	

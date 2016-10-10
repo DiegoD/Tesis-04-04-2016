@@ -57,9 +57,11 @@ public class GastoView extends CssLayout {
 	protected TextField impImpuMo;
 	protected TextField impImpuMn;
 	protected TextField referencia;
+	protected HorizontalLayout botones;
 	protected Button aceptar;
 	protected Button btnEditar;
 	protected Button cancelar;
+	protected Button btnEliminar;
 
 	public GastoView() {
 		Design.read(this);
