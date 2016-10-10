@@ -25,6 +25,7 @@ import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.valueObject.UsuarioPermisosVO;
+import com.valueObject.IngresoCobro.IngresoCobroDetalleVO;
 import com.valueObject.IngresoCobro.IngresoCobroVO;
 import com.valueObject.banco.BancoVO;
 import com.vista.Mensajes;
@@ -142,15 +143,20 @@ public class IngresoCobroPanelExtended extends IngresoCobroPanel{
 						sub.setModal(true);
 						sub.setVista(form);
 						
-						IngresoCobro c = new IngresoCobro(item.getBean());
+						IngresoCobro c = new IngresoCobro(item.getBean()); //BORRAR
 						
-						IngresoCobroVO asd = item.getBean();
+						IngresoCobroVO asd = item.getBean(); //BORRAR
+						
+						IngresoCobroDetalleVO detBorar = asd.getDetalle().get(0);
+						
+						
 						
 				    	form.setDataSourceFormulario(item);
+				    	form.setLstDetalle(item.getBean().getDetalle());
 						
 						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
 						
-						form.setLstDetalle(item.getBean().getDetalle());
+						
 						
 						UI.getCurrent().addWindow(sub);
 		    		}
@@ -350,7 +356,7 @@ public class IngresoCobroPanelExtended extends IngresoCobroPanel{
 		
 		grid.getColumn("codTitular").setHidden(true);
 		grid.getColumn("codBanco").setHidden(true);
-		grid.getColumn("codCta").setHidden(true);
+		
 		grid.getColumn("codCtaBco").setHidden(true);
 		grid.getColumn("codDocRef").setHidden(true);
 		grid.getColumn("codDocum").setHidden(true);
@@ -361,7 +367,7 @@ public class IngresoCobroPanelExtended extends IngresoCobroPanel{
 		grid.getColumn("impTotMn").setHidden(true);
 		grid.getColumn("mPago").setHidden(true);
 		grid.getColumn("nomBanco").setHidden(true);
-		grid.getColumn("nomCta").setHidden(true);
+		
 		grid.getColumn("nomCtaBco").setHidden(true);
 		grid.getColumn("nomMoneda").setHidden(true);
 		grid.getColumn("nroDocRef").setHidden(true);
@@ -370,6 +376,9 @@ public class IngresoCobroPanelExtended extends IngresoCobroPanel{
 		grid.getColumn("serieDocRef").setHidden(true);
 		grid.getColumn("serieDocum").setHidden(true);
 		grid.getColumn("tcMov").setHidden(true);
+		
+		grid.getColumn("codCuenta").setHidden(true);
+		grid.getColumn("nomCuenta").setHidden(true);
 		
 		grid.setColumnOrder("nomTitular", "nroDocum", "simboloMoneda", "impTotMo", "fecDoc");
 		

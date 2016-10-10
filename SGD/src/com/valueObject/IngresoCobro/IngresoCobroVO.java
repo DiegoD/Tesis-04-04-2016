@@ -17,9 +17,6 @@ public class IngresoCobroVO extends DatosDocumVO{
 	private String codBanco;
 	private String nomBanco;
 	
-	private String codCta;
-	private String nomCta;
-	
 	private String codCtaBco;
 	private String nomCtaBco;
 	
@@ -42,10 +39,11 @@ public class IngresoCobroVO extends DatosDocumVO{
 		this.serieDocRef = t.serieDocRef;
 		this.nroDocRef = t.nroDocRef;
 		
+		
 		this.codBanco = t.codBanco;
 		this.nomBanco = t.nomBanco;
-		this.codCta = t.codCta;
-		this.nomCta = t.nomCta;
+		this.setCodCuenta(t.getCodCuenta());
+		this.setNomCuenta(t.getNomCuenta());
 		this.nomCtaBco = t.nomCtaBco;
 		this.codCtaBco = t.codCtaBco;
 		
@@ -101,21 +99,6 @@ public class IngresoCobroVO extends DatosDocumVO{
 		this.nomBanco = nomBanco;
 	}
 
-	public String getCodCta() {
-		return codCta;
-	}
-
-	public void setCodCta(String codCta) {
-		this.codCta = codCta;
-	}
-
-	public String getNomCta() {
-		return nomCta;
-	}
-
-	public void setNomCta(String nomCta) {
-		this.nomCta = nomCta;
-	}
 
 	public ArrayList<IngresoCobroDetalleVO> getDetalle() {
 		return detalle;

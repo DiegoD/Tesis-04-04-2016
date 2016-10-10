@@ -44,6 +44,8 @@ import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.valueObject.DocumDGIVO;
+import com.valueObject.FormularioVO;
+import com.valueObject.GrupoVO;
 import com.valueObject.MonedaVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.Cotizacion.CotizacionVO;
@@ -446,7 +448,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 					}
 				}
 					
-				ingCobroVO.setCodCta("ingcobro");
+				ingCobroVO.setCodCuenta("ingcobro");
 				
 				ingCobroVO.setDetalle(this.lstDetalleVO);
 				
@@ -735,7 +737,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		
 		this.controlador = new IngresoCobroControlador();
 					
-		//this.fieldGroup =  new BeanFieldGroup<IngresoCobroVO>(IngresoCobroVO.class);
+		this.fieldGroup =  new BeanFieldGroup<IngresoCobroVO>(IngresoCobroVO.class);
 		
 		/*Mostramos o ocultamos los datos del Banco, dependiendo del combo tipo (banco, caja)*/
 		this.mostrarDatosDeBanco();
@@ -860,7 +862,15 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	 */
 	public void setDataSourceFormulario(BeanItem<IngresoCobroVO> item)
 	{
+		try{
+			
+		//this.fieldGroup =  new BeanFieldGroup<IngresoCobroVO>(IngresoCobroVO.class);	
+			
 		this.fieldGroup.setItemDataSource(item);
+		
+		//Seteamos info del form si es requerido
+		//if(fieldGroup != null)
+			//fieldGroup.buildAndBindMemberFields(this);
 		
 		IngresoCobroVO ing = new IngresoCobroVO();
 		ing = fieldGroup.getItemDataSource().getBean();
@@ -869,7 +879,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		/*Inicializamos los combos*/
 		this.inicializarComboBancos(ing.getCodBanco());
 		this.inicializarComboCuentas(ing.getCodCtaBco());
-		this.inicializarComboMoneda(ing.getCodMoneda());
+		//this.inicializarComboMoneda(ing.getCodMoneda());
 		
 		auditoria.setDescription(
 			
@@ -881,6 +891,12 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		 * ES CUANDO LLAMAMOS ESTE METODO*/
 		if(this.operacion.equals(Variables.OPERACION_LECTURA))
 			this.iniFormLectura();
+		
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+		}
 				
 	}
 	
@@ -1433,40 +1449,41 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		
 		//lstGastos.getColumn("impTotMo").setHidden(true);
 		
-		 lstGastos.getColumn("operacion").setHidable(true);;
-		  lstGastos.getColumn("fechaMod").setHidable(true);;
+		 lstGastos.getColumn("operacion").setHidden(true);
+		  lstGastos.getColumn("fechaMod").setHidden(true);
 		  
-		  lstGastos.getColumn("codCtaInd").setHidable(true);;
-		  lstGastos.getColumn("codCuenta").setHidable(true);;
-		  lstGastos.getColumn("codDocum").setHidable(true);;
-		  lstGastos.getColumn("codEmp").setHidable(true);;
-		  lstGastos.getColumn("codImpuesto").setHidable(true);;
-		  lstGastos.getColumn("codMoneda").setHidable(true);;
+		  lstGastos.getColumn("codCtaInd").setHidden(true);
+		  lstGastos.getColumn("codCuenta").setHidden(true);
+		  lstGastos.getColumn("codDocum").setHidden(true);
+		  lstGastos.getColumn("codEmp").setHidden(true);
+		  lstGastos.getColumn("codImpuesto").setHidden(true);
+		  lstGastos.getColumn("codMoneda").setHidden(true);
 		  //lstGastos.getColumn("codProceso").setHidable(true);;
-		  lstGastos.getColumn("codRubro").setHidable(true);;
-		  lstGastos.getColumn("codTitular").setHidable(true);;
+		  lstGastos.getColumn("codRubro").setHidden(true);
+		  lstGastos.getColumn("codTitular").setHidden(true);
 		  //lstGastos.getColumn("cuenta").setHidable(true);;
-		  lstGastos.getColumn("descProceso").setHidable(true);;
-		  lstGastos.getColumn("fecDoc").setHidable(true);;
-		  lstGastos.getColumn("fecValor").setHidable(true);;
-		  lstGastos.getColumn("impImpuMn").setHidable(true);;
-		  lstGastos.getColumn("impImpuMo").setHidable(true);;
-		  lstGastos.getColumn("impSubMn").setHidable(true);;
-		  lstGastos.getColumn("impSubMo");
-		  lstGastos.getColumn("linea").setHidable(true);;
-		  lstGastos.getColumn("impTotMn").setHidable(true);;
-		  lstGastos.getColumn("nomCuenta").setHidable(true);;
-		  lstGastos.getColumn("nomImpuesto").setHidable(true);;
-		  lstGastos.getColumn("nomMoneda").setHidable(true);;
-		  lstGastos.getColumn("nomRubro").setHidable(true);;
-		  lstGastos.getColumn("nomTitular").setHidable(true);;
-		  lstGastos.getColumn("nroTrans").setHidable(true);;
-		  lstGastos.getColumn("porcentajeImpuesto").setHidable(true);;
-		  lstGastos.getColumn("serieDocum").setHidable(true);;
-		  lstGastos.getColumn("simboloMoneda").setHidable(true);;
-		  lstGastos.getColumn("tcMov").setHidable(true);;
-		  lstGastos.getColumn("usuarioMod").setHidable(true);;
-		
+		  lstGastos.getColumn("descProceso").setHidden(true);
+		  lstGastos.getColumn("fecDoc").setHidden(true);
+		  lstGastos.getColumn("fecValor").setHidden(true);
+		  lstGastos.getColumn("impImpuMn").setHidden(true);
+		  lstGastos.getColumn("impImpuMo").setHidden(true);
+		  lstGastos.getColumn("impSubMn").setHidden(true);
+		  lstGastos.getColumn("impSubMo").setHidden(true);
+		  lstGastos.getColumn("linea").setHidden(true);
+		  lstGastos.getColumn("impTotMn").setHidden(true);
+		  lstGastos.getColumn("nomCuenta").setHidden(true);
+		  lstGastos.getColumn("nomImpuesto").setHidden(true);
+		  lstGastos.getColumn("nomMoneda").setHidden(true);
+		  lstGastos.getColumn("nomRubro").setHidden(true);
+		  lstGastos.getColumn("nomTitular").setHidden(true);
+		  lstGastos.getColumn("nroTrans").setHidden(true);
+		  lstGastos.getColumn("porcentajeImpuesto").setHidden(true);
+		  lstGastos.getColumn("serieDocum").setHidden(true);
+		  lstGastos.getColumn("simboloMoneda").setHidden(true);
+		  lstGastos.getColumn("tcMov").setHidden(true);
+		  lstGastos.getColumn("usuarioMod").setHidden(true);
+		  lstGastos.getColumn("nacional").setHidden(true);
+		  
 		lstGastos.setColumnOrder("nroDocum", "referencia", "impTotMo", "codProceso");
 		
 		//lst.get(1).setWidth(400);
@@ -1711,8 +1728,33 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		this.impTotMo.setConvertedValue(impMo);
 	}
 	
-	public void setLstDetalle(ArrayList<IngresoCobroDetalleVO> lst) {
+	public void setLstDetalle2(ArrayList<IngresoCobroDetalleVO> lst) {
 		this.lstDetalleVO = lst;
+	}
+	
+	/**
+	 * Seteamos la lista de los formularios para mostrarlos
+	 * en la grilla
+	 */
+	public void setLstDetalle(ArrayList<IngresoCobroDetalleVO> lst)
+	{
+		this.lstDetalleVO = lst;
+		
+		/*Seteamos la grilla con los formularios*/
+		this.container = 
+				new BeanItemContainer<IngresoCobroDetalleVO>(IngresoCobroDetalleVO.class);
+		
+		
+		if(this.lstDetalleVO != null)
+		{
+			for (IngresoCobroDetalleVO det : this.lstDetalleVO) {
+				container.addBean(det);
+			}
+		}
+
+		//lstFormularios.setContainerDataSource(container);
+		this.actualizarGrillaContainer(container);
+		
 	}
 	
 	

@@ -49,7 +49,10 @@ public class DAOIngresoCobro implements IDAOIngresoCobro{
 							
 				aux = new IngresoCobro();
 				
-				//aux.setCodCuentaInd("0");
+				aux.setCodCuentaInd(rs.getString("cod_cuenta")); /*El cabezal de ingreso cobro solamente tiene la cuenta interna*/
+				
+				aux.setCuenta(new CuentaInfo(aux.getCodCuentaInd(), "Ingreso Cobro"));
+				
 				aux.setFecDoc(rs.getTimestamp("fec_doc"));
 				aux.setCodDocum(rs.getString("cod_docum"));
 				aux.setSerieDocum(rs.getString("serie_docum"));
@@ -85,7 +88,9 @@ public class DAOIngresoCobro implements IDAOIngresoCobro{
 				
 				
 				/*Obtenemos las lineas de la transaccion*/				
-				aux.setDetalle(this.getIngresoCobroLineaxTrans(con, codEmp, aux.getNroTrans()));
+				aux.setDetalle(this.getIngresoCobroLineaxTrans(con,aux));
+				
+				
 				lst.add(aux);
 				
 			}
@@ -158,7 +163,7 @@ public class DAOIngresoCobro implements IDAOIngresoCobro{
 			pstmt1.setString(2, cobro.getSerieDocum());
 			pstmt1.setInt(3, cobro.getNroDocum());
 			pstmt1.setString(4, cobro.getTitInfo().getCodigo());
-			pstmt1.setString(5, cobro.getCuentaInfo().getCodCuenta());
+			pstmt1.setString(5, cobro.getCuenta().getCodCuenta());
 			pstmt1.setString(6, cobro.getCodEmp());
 			pstmt1.setTimestamp(7, cobro.getFecDoc());
 			pstmt1.setTimestamp(8, cobro.getFecValor());
@@ -326,9 +331,9 @@ public class DAOIngresoCobro implements IDAOIngresoCobro{
 /////////////////////////////////////CUENTAS/////////////////////////////////////////////////////
 	
 	/**
-	 * Nos retorna una lista con todos los Bancos del sistema para la emrpesa
+	 * Nos retorna una lista con todas las lineas del cobro, pasandole el cobro
 	 */
-	public ArrayList<IngresoCobroLinea> getIngresoCobroLineaxTrans(Connection con, String codEmp, long nroTrans) throws ObteniendoIngresoCobroException, ConexionException {
+	private ArrayList<IngresoCobroLinea> getIngresoCobroLineaxTrans(Connection con, IngresoCobro cab) throws ObteniendoIngresoCobroException, ConexionException {
 		
 		ArrayList<IngresoCobroLinea> lst = new ArrayList<IngresoCobroLinea>();
 	
@@ -340,7 +345,7 @@ public class DAOIngresoCobro implements IDAOIngresoCobro{
 	    	
 	    	ResultSet rs;
 	    	
-	    	pstmt1.setLong(1, nroTrans);
+	    	pstmt1.setLong(1, cab.getNroTrans());
 			rs = pstmt1.executeQuery();
 			
 			IngresoCobroLinea aux;
@@ -350,17 +355,26 @@ public class DAOIngresoCobro implements IDAOIngresoCobro{
 				
 				aux = new IngresoCobroLinea();
 				
+				/*Cuenta ind es el del cabezal (en la linea solo tenemos la cuenta)*/
+				aux.setCodCuentaInd(cab.getCuenta().getCodCuenta());
+				
+				/*El titular es el del Cabezal*/
+				
+				aux.setTitInfo(new TitularInfo(cab.getTitInfo().getCodigo(), cab.getTitInfo().getNombre()) );
+				
+				
 				aux.setCuenta(new CuentaInfo(rs.getString("cod_cuenta"), rs.getString("nom_cuenta")));
 				
-				aux.setCodEmp(codEmp);
+				aux.setCodEmp(cab.getCodEmp());
 				aux.setCodDocum(rs.getString("cod_docum"));
 				aux.setSerieDocum(rs.getString("serie_docum"));
 				aux.setNroDocum(rs.getInt("nro_docum"));
 				aux.setCodProceso(rs.getString("cod_proceso"));
+				aux.setDescProceso(rs.getString("nom_proceso"));
 				
 				aux.setRubroInfo(new RubroInfo(rs.getString("cod_rubro"), rs.getString("nom_rubro")));
 				
-				aux.setCodCuentaInd(rs.getString("cuenta"));
+				//aux.setCodCuentaInd(rs.getString("cuenta"));
 				aux.setFecDoc(rs.getTimestamp("fec_doc"));
 				aux.setFecValor(rs.getTimestamp("fec_valor"));
 				

@@ -17,15 +17,15 @@ public class IngresoCobro extends DatosDocum{
 	private String serieDocRef;
 	private int nroDocRef;
 	private BancoInfo bancoInfo;
-	private CuentaInfo cuentaInfo;
 	private CuentaBcoInfo cuentaBcoInfo;
 	
 	ArrayList<IngresoCobroLinea> detalle;
 	
 	public IngresoCobro(){
 	
+		super();
 		this.bancoInfo = new BancoInfo();
-		this.cuentaInfo = new CuentaInfo();
+		//this.cuentaInfo = new CuentaInfo();
 		this.cuentaBcoInfo = new CuentaBcoInfo();
 		this.detalle = new ArrayList<IngresoCobroLinea>();
 	}
@@ -42,7 +42,7 @@ public class IngresoCobro extends DatosDocum{
 		this.serieDocRef = t.getSerieDocRef();
 		this.nroDocRef = t.getNroDocRef();
 		this.bancoInfo = new BancoInfo(t.getCodBanco(), t.getNomBanco());
-		this.cuentaInfo = new CuentaInfo(t.getCodCta(), t.getNomCta());
+		this.setCuenta(new CuentaInfo(t.getCodCuenta(), t.getNomCuenta()));
 		
 		this.cuentaBcoInfo = new CuentaBcoInfo(t.getCodCtaBco(), t.getNomCtaBco());
 		
@@ -59,8 +59,6 @@ public class IngresoCobro extends DatosDocum{
 	public IngresoCobroVO retornarIngresoCobroVO(){
 			
 		
-		//IngresoCobroVO aux = (IngresoCobroVO)super.retornarDatosDocumVO();
-		
 		IngresoCobroVO aux = new IngresoCobroVO();
 		
 		aux.copiar(super.retornarDatosDocumVO());
@@ -74,12 +72,15 @@ public class IngresoCobro extends DatosDocum{
 		aux.setCodCtaInd("0");
 		aux.setFecValor(aux.getFecDoc());
 		
+		aux.setCodCtaInd(this.getCodCuentaInd());
 		
-		//aux.setCodCta(cuentaInfo.getCodCuenta());
-		//aux.setNomCta(cuentaInfo.getNomCuenta());
+		aux.setCodCuenta(this.getCuenta().getCodCuenta());
+		aux.setNomCuenta(this.getCuenta().getNomCuenta());
 		
 		aux.setNomCtaBco(this.bancoInfo.getNomBanco());
 		aux.setCodCtaBco(this.bancoInfo.getCodBanco());
+		
+		aux.setCodEmp(this.getCodEmp());
 		
 		IngresoCobroDetalleVO auxDet;
 		for (IngresoCobroLinea ingresoCobroLinea : detalle) {
@@ -141,16 +142,6 @@ public class IngresoCobro extends DatosDocum{
 
 	public void setBancoInfo(BancoInfo bancoInfo) {
 		this.bancoInfo = bancoInfo;
-	}
-
-
-	public CuentaInfo getCuentaInfo() {
-		return cuentaInfo;
-	}
-
-
-	public void setCuentaInfo(CuentaInfo cuentaInfo) {
-		this.cuentaInfo = cuentaInfo;
 	}
 
 

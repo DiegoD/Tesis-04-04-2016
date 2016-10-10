@@ -16,9 +16,7 @@ public abstract class DocumDetalle extends DatosDocum{
 	private double impSubMo ;
 	
 	private double tcMov;
-	//private CuentaInfo cuenta;
 	private RubroInfo rubroInfo;
-	//private String codCuentaInd; /*cuenta interna del sistema*/
 	
 	private ImpuestoInfo impuestoInfo;
 	
@@ -26,7 +24,6 @@ public abstract class DocumDetalle extends DatosDocum{
 	
 	public DocumDetalle(){
 		super();
-		//this.cuenta = new CuentaInfo();
 		this.impuestoInfo = new ImpuestoInfo();
 		this.rubroInfo = new RubroInfo();
 	}
@@ -41,14 +38,10 @@ public abstract class DocumDetalle extends DatosDocum{
 		this.impImpuMo = t.getImpImpuMo();
 		this.impSubMn = t.getImpSubMn();
 		this.impSubMo = t.getImpSubMo();
-		//this.impTotMn = t.getImpTotMn();
-		//this.impTtotMo = t.getImpTtotMo();
 		this.tcMov = t.getTcMov();
-		//this.cuenta = new CuentaInfo(t.getCodCuenta(), t.getNomCuenta());
 		this.codProceso = t.getCodProceso();
 		this.descProceso = t.getDescProceso();
 		this.rubroInfo = new RubroInfo(t.getCodRubro(), t.getNomRubro());
-		//this.codCuentaInd = t.getCodCtaInd();
 		this.linea = t.getLinea();
 		this.referencia = t.getReferencia();
 	}
@@ -57,7 +50,16 @@ public abstract class DocumDetalle extends DatosDocum{
 		
 		IngresoCobroDetalleVO aux = new IngresoCobroDetalleVO();
 		
+		aux.setCodCuenta(this.getCuenta().getCodCuenta());
+		aux.setNomCuenta(this.getCuenta().getNomCuenta());
+		
+		aux.setCodCtaInd(this.getCodCuentaInd());
+		
+		aux.setCodProceso(this.getCodProceso());
+		aux.setDescProceso(this.getDescProceso());
+		
 		aux.setFecDoc(this.getFecDoc());
+		aux.setFecValor(this.getFecValor());
 		aux.setCodDocum(this.getCodDocum());
 		aux.setSerieDocum(this.getSerieDocum());
 		aux.setNroDocum(this.getNroDocum());
@@ -65,6 +67,8 @@ public abstract class DocumDetalle extends DatosDocum{
 		
 		aux.setNomMoneda(this.getMoneda().getDescripcion());
 		aux.setCodMoneda(this.getMoneda().getCodMoneda());
+		
+		aux.setSimboloMoneda(this.getMoneda().getSimbolo());
 		
 		aux.setNomTitular(this.getTitInfo().getNombre());
 		aux.setCodTitular(this.getTitInfo().getCodigo());
@@ -87,10 +91,6 @@ public abstract class DocumDetalle extends DatosDocum{
 		aux.setImpTotMn(this.getImpTotMn());
 		aux.setImpTotMo(this.getImpTotMo());
 		aux.setTcMov(this.tcMov);
-		
-		
-		//aux.setCodCuenta(this.cuenta.getCodCuenta());
-		//aux.setNomCuenta(this.cuenta.getNomCuenta());
 		
 		aux.setNomRubro(this.rubroInfo.getNomRubro());
 		aux.setCodRubro(this.rubroInfo.getCodRubro());

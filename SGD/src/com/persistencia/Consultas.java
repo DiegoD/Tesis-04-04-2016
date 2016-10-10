@@ -884,7 +884,7 @@ public String getProcesosActivos(){
 		sb.append(", COALESCE(m_ctasbcos.nom_cta,'0') nom_cta, COALESCE(cod_mpago,'0') cod_mpago, cod_doc_ref, serie_doc_ref ");
 		sb.append(", nro_doc_ref,	m_monedas.cod_moneda, m_monedas.descripcion, m_monedas.simbolo, imp_tot_mn ");
 		sb.append(", imp_tot_mo, tc_mov, observaciones, nro_trans, c_ingcobro.fecha_mod, c_ingcobro.usuario_mod ");
-		sb.append(", c_ingcobro.operacion, m_monedas.descripcion, m_monedas.simbolo   "); 
+		sb.append(", c_ingcobro.operacion, m_monedas.descripcion, m_monedas.simbolo, c_ingcobro.cod_cuenta   "); 
 		sb.append("	FROM c_ingcobro ");
 	
 		sb.append("INNER JOIN m_monedas "); 
@@ -916,12 +916,14 @@ public String getProcesosActivos(){
 		
 		StringBuilder sb = new StringBuilder();
 		 
-		sb.append("SELECT m_cuentas.cod_cuenta, m_cuentas.descripcion nom_cuenta, d_ingcobro.cod_emp, cod_docum, serie_docum, nro_docum, cod_proceso,  ");
+		sb.append("SELECT m_cuentas.cod_cuenta, m_cuentas.descripcion nom_cuenta, d_ingcobro.cod_emp, cod_docum, serie_docum, nro_docum, ");
+		sb.append("COALESCE(cod_proceso,0) cod_proceso, (SELECT COALESCE(descripcion,'Sin-Asignar') FROM c_procesos WHERE cod_proceso =d_ingcobro.cod_proceso AND cod_emp = d_ingcobro.cod_emp ) nom_proceso,  ");
 		sb.append("m_rubros.cod_rubro, m_rubros.descripcion nom_rubro, cuenta, fec_doc, fec_valor, m_monedas.cod_moneda, m_monedas.simbolo, m_monedas.descripcion nom_moneda ");
 		sb.append(", m_impuestos.cod_impuesto, m_impuestos.descripcion nom_impuesto, m_impuestos.porcentaje, imp_impu_mn,  ");
 		sb.append("imp_impu_mo, imp_sub_mn, imp_sub_mo, imp_tot_mn, imp_tot_mo, tc_mov, referencia,  ");
 		sb.append("referencia2, nro_trans, d_ingcobro.fecha_mod, d_ingcobro.usuario_mod, d_ingcobro.operacion, d_ingcobro.linea ");
-
+		
+		
 		sb.append("FROM d_ingcobro, m_monedas, m_impuestos, m_rubros, m_cuentas  ");
 
 		sb.append("WHERE d_ingcobro.cod_moneda = m_monedas.cod_moneda  ");
