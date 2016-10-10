@@ -23,6 +23,7 @@ import com.excepciones.IngresoCobros.ModificandoIngresoCobroException;
 import com.excepciones.IngresoCobros.NoExisteIngresoCobroException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
 import com.excepciones.clientes.ObteniendoClientesException;
+import com.sun.org.apache.xpath.internal.operations.Variable;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup;
@@ -977,6 +978,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			
 			/*Seteamos las validaciones*/
 			this.setearValidaciones(true);
+			
+			this.comboTipo.setReadOnly(false);
 		}
 		else{
 			
@@ -1142,6 +1145,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	 */
 	private void readOnlyFields(boolean setear)
 	{
+		
 		this.comboTipo.setReadOnly(setear);
 		
 		this.comboBancos.setReadOnly(setear);
@@ -1174,7 +1178,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	 */
 	private void agregarFieldsValidaciones()
 	{
-		nroDocRef.addValidator(new RegexpValidator("^[0-9]*(\\.[0-9]+)?$", true, "Dato numerico"));
+		//nroDocRef.addValidator(new RegexpValidator("^[0-9]*(\\.[0-9]+)?$", true, "Dato numerico"));
 		
 		//impTotMo.addValidator(new RegexpValidator("^[0-9]*(\\.[0-9]+)?$", true, "Dato numerico"));
 		
