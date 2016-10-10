@@ -626,6 +626,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 						//lstFormularios.setContainerDataSource(container);
 						this.actualizarGrillaContainer(container);
 						
+						this.calcularImporteTotal();
 					}
 					
 				}
