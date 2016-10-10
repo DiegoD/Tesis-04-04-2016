@@ -139,7 +139,7 @@ public class IngresoCobroPanelExtended extends IngresoCobroPanel{
 				    	
 				    	form = new IngresoCobroViewExtended(Variables.OPERACION_LECTURA, IngresoCobroPanelExtended.this);
 						//form.fieldGroup.setItemDataSource(item);
-						sub = new MySub("72%","70%");
+						sub = new MySub("85%","85%");
 						sub.setModal(true);
 						sub.setVista(form);
 						
@@ -148,7 +148,6 @@ public class IngresoCobroPanelExtended extends IngresoCobroPanel{
 						IngresoCobroVO asd = item.getBean(); //BORRAR
 						
 						IngresoCobroDetalleVO detBorar = asd.getDetalle().get(0);
-						
 						
 						
 				    	form.setDataSourceFormulario(item);

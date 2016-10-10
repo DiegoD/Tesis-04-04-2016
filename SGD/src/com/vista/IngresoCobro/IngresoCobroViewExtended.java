@@ -868,9 +868,12 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			
 		this.fieldGroup.setItemDataSource(item);
 		
-		//Seteamos info del form si es requerido
-		//if(fieldGroup != null)
-			//fieldGroup.buildAndBindMemberFields(this);
+		/*Seteamos el tipo*/
+		this.comboTipo = new ComboBox();
+		if(item.getBean().getCodBanco() == "0")
+			this.comboTipo.setValue("Caja");
+		else
+			this.comboTipo.setValue("Banco");
 		
 		IngresoCobroVO ing = new IngresoCobroVO();
 		ing = fieldGroup.getItemDataSource().getBean();
@@ -879,7 +882,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		/*Inicializamos los combos*/
 		this.inicializarComboBancos(ing.getCodBanco());
 		this.inicializarComboCuentas(ing.getCodCtaBco());
-		//this.inicializarComboMoneda(ing.getCodMoneda());
+		this.inicializarComboMoneda(ing.getCodMoneda());
 		
 		auditoria.setDescription(
 			
@@ -943,9 +946,6 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				container.addBean(detVO);
 			}
 		}
-		
-		
-		//lstFormularios.setContainerDataSource(container);
 		this.actualizarGrillaContainer(container);
 						
 	}
@@ -1493,6 +1493,11 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 
 		/*Formateamos los tamaños*/
 		lstGastos.getColumn("referencia").setWidth(350);
+		lstGastos.getColumn("nroDocum").setWidth(70);
+		lstGastos.getColumn("codProceso").setWidth(70);
+		
+		lstGastos.getColumn("nroDocum").setHeaderCaption("Doc");
+		lstGastos.getColumn("codProceso").setHeaderCaption("Proceso");
 		
 		lstGastos.getColumn("nroDocum").setEditable(false);
 		lstGastos.getColumn("referencia").setEditable(false);
@@ -1518,6 +1523,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	
 	public void inicializarComboMoneda(String cod){
 		
+		//this.comboMoneda = new ComboBox();
 		BeanItemContainer<MonedaVO> monedasObj = new BeanItemContainer<MonedaVO>(MonedaVO.class);
 		MonedaVO moneda = new MonedaVO();
 		ArrayList<MonedaVO> lstMonedas = new ArrayList<MonedaVO>();
@@ -1548,9 +1554,21 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			}
 		}
 		
+		
 		this.comboMoneda.setContainerDataSource(monedasObj);
 		this.comboMoneda.setItemCaptionPropertyId("descripcion");
-		this.comboMoneda.setValue(moneda);
+		
+		
+		if(cod!=null)
+		{
+			try{
+				this.comboMoneda.setReadOnly(false);
+				this.comboMoneda.setValue(moneda);
+				this.comboMoneda.setReadOnly(true);
+			}catch(Exception e)
+			{}
+		}
+		
 	}
 	
 	public void inicializarComboCuentas(String cod){
@@ -1589,7 +1607,23 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		
 		this.comboCuentas.setContainerDataSource(ctaObj);
 		this.comboCuentas.setItemCaptionPropertyId("nombre");
-		this.comboCuentas.setValue(cta);
+		
+		
+		if(cod!=null)
+		{
+			try{
+				this.comboCuentas.setReadOnly(false);
+				this.comboCuentas.setValue(cta);
+				this.comboCuentas.setReadOnly(true);
+			}catch(Exception e)
+			{}
+		}
+		
+		if(this.operacion.equals(Variables.OPERACION_EDITAR) || this.operacion.equals(Variables.OPERACION_NUEVO))
+		{
+			this.comboCuentas.setReadOnly(false);
+		}
+		
 	}
 	
 	public void inicializarComboBancos(String cod){
@@ -1620,13 +1654,20 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			if(cod != null){
 				if(cod.equals(bco.getCodigo())){
 					bcoVO = bco;
+					bcoVO.setCodEmp("0");
 				}
 			}
 		}
 		
 		this.comboBancos.setContainerDataSource(bcoObj);
 		this.comboBancos.setItemCaptionPropertyId("nombre");
-		this.comboBancos.setValue(bcoObj);
+		
+		if(cod!=null)
+		{
+			this.comboBancos.setReadOnly(false);
+			this.comboBancos.setValue(bcoVO);
+			this.comboBancos.setReadOnly(true);
+		}
 	}
 	
 	
