@@ -1466,7 +1466,7 @@ public void eliminarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 	}
 }
 
-public void modificarIngresoCobro(IngresoCobroVO ingVO) throws  ConexionException, ModificandoIngresoCobroException, ExisteIngresoCobroException, NoExisteIngresoCobroException{
+public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) throws  ConexionException, ModificandoIngresoCobroException, ExisteIngresoCobroException, NoExisteIngresoCobroException{
 
 	Connection con = null;
 	
@@ -1480,8 +1480,9 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO) throws  ConexionExceptio
 		/*Verificamos que exista el nro de cobro*/
 		if(this.ingresoCobro.memberIngresoCobro(ing.getNroDocum(), ingVO.getCodEmp(), con))
 		{
-			/*Primero eliminamos la transaccion*/
-			this.eliminarIngresoCobroxModificacion(ingVO, con);
+			/*Primero eliminamos la transaccion, con la copia, para poder detectar las lineas
+			 * eliminadas*/
+			this.eliminarIngresoCobroxModificacion(copiaVO, con);
 			
 			/*Luego insertamos el cobro con las modificaciones realizadas*/
 			this.insertarIngresoCobroxModificacion(ingVO, con);
@@ -1629,7 +1630,7 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO) throws  ConexionExceptio
 				 * procedemos a eliminar el cobro*/
 				this.ingresoCobro.eliminarIngresoCobro(ing, con); 
 				
-				con.commit();
+			
 			}
 			else{
 				throw new NoExisteIngresoCobroException();

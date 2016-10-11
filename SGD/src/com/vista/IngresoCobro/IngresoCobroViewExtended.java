@@ -48,10 +48,12 @@ import com.valueObject.DocumDGIVO;
 import com.valueObject.FormularioVO;
 import com.valueObject.GrupoVO;
 import com.valueObject.MonedaVO;
+import com.valueObject.TipoInCobVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.Cotizacion.CotizacionVO;
 import com.valueObject.Docum.DocumDetalleVO;
 import com.valueObject.Gasto.GastoVO;
+import com.valueObject.Gasto.GtoSaldoAux;
 import com.valueObject.IngresoCobro.IngresoCobroDetalleVO;
 import com.valueObject.IngresoCobro.IngresoCobroVO;
 import com.valueObject.banco.BancoVO;
@@ -82,6 +84,13 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	CotizacionVO cotizacion =  new CotizacionVO();
 	Double cotizacionVenta = null;
 	
+	private Hashtable<Integer, GtoSaldoAux> saldoOriginalGastos; /*Variable auxliar para poder
+	 															 controlar que el saldo del gasto quede
+	 															 en negativo*/
+	
+	IngresoCobroVO ingresoCopia; /*Variable utilizada para la modificacion del cobro,
+	 							 para poder detectar las lineas eliminadas del cobro */
+	
 	boolean cambioMoneda;
 	
 	MySub sub;
@@ -103,6 +112,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	/*Inicializamos los permisos para el usuario*/
 	this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
 	
+	saldoOriginalGastos = new Hashtable<Integer, GtoSaldoAux>();
 	
 	this.operacion = opera;
 	this.mainView = main;
@@ -185,30 +195,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		}
     });
 	
-//	lstGastos.getEditorFieldGroup().addCommitHandler(new FieldGroup.CommitHandler() {
-//        @Override
-//        public void preCommit(FieldGroup.CommitEvent commitEvent) throws     FieldGroup.CommitException {
-//        	calcularImporteTotal();
-//        }
-//
-//        @Override
-//        public void postCommit(FieldGroup.CommitEvent commitEvent) throws     FieldGroup.CommitException {
-//        	calcularImporteTotal();
-//        }
-//	 });
 	
-	 // register save listener
-	lstGastos.getEditorFieldGroup().addCommitHandler(new CommitHandler() {
-        @Override
-        public void preCommit(CommitEvent commitEvent) throws CommitException {
-        	calcularImporteTotal();
-        }
-        @Override
-        public void postCommit(CommitEvent commitEvent) throws CommitException {
-            // You can persist your data here
-        	calcularImporteTotal();
-        }
-    });
+	 
 	
 	
 	/**
@@ -337,11 +325,20 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
 				CotizacionVO coti = null;
 				
-				String monedaSelecionada = this.getCodMonedaSeleccionada();
 				
 				try {
 					
-					if(monedaSelecionada.equals(Variables.CODIGO_MONEDA_NACIONAL))
+					//Obtenemos la moneda
+					MonedaVO auxMoneda = new MonedaVO();
+					if(this.comboMoneda.getValue() != null){
+						
+						auxMoneda = (MonedaVO) this.comboMoneda.getValue();
+						ingCobroVO.setCodMoneda(auxMoneda.getCodMoneda());
+						ingCobroVO.setNomMoneda(auxMoneda.getDescripcion());
+						ingCobroVO.setSimboloMoneda(auxMoneda.getSimbolo());
+					}
+					
+					if(auxMoneda.isNacional()) /*Si la moneda seleccionada es nacional*/
 					{
 						/*Si la moneda es la nacional, el TC es 1 y el importe MN es el mismo*/
 						ingCobroVO.setTcMov(1);
@@ -367,14 +364,6 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				
 				ingCobroVO.setCodCtaInd("ingcobro");
 				
-				//Moneda
-				if(this.comboMoneda.getValue() != null){
-					MonedaVO auxMoneda = new MonedaVO();
-					auxMoneda = (MonedaVO) this.comboMoneda.getValue();
-					ingCobroVO.setCodMoneda(auxMoneda.getCodMoneda());
-					ingCobroVO.setNomMoneda(auxMoneda.getDescripcion());
-					ingCobroVO.setSimboloMoneda(auxMoneda.getSimbolo());
-				}
 				
 				ingCobroVO.setCodTitular(codTitular.getValue());
 				ingCobroVO.setNomTitular(nomTitular.getValue());
@@ -386,11 +375,12 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				//ingCobroVO.setImpTotMo(impTotMn);
 				//ingCobroVO.setTcMov(tcMov);
 				
+				ingCobroVO.setNroDocum(Integer.parseInt(this.nroDocum.getValue().toString().trim()));
 				
 				
 				/*Si es banco tomamos estos cmapos de lo contrario caja*/
-				if(this.comboTipo.getValue().toString().trim().equals("Banco")){
-					
+				if(this.comboTipo.getValue().toString().equals("Banco")){
+				
 					ingCobroVO.setmPago((String)comboMPagos.getValue());
 					
 					if(ingCobroVO.getmPago().equals("transferencia"))
@@ -417,6 +407,9 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 					
 					if(((String)comboTipo.getValue()).equals("Caja"))
 					{
+						ingCobroVO.setCodBanco("0");
+						ingCobroVO.setNomBanco("0");
+						
 						ingCobroVO.setCodCtaBco("0");
 						ingCobroVO.setNomCtaBco("0");
 						
@@ -436,6 +429,10 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				
 				ingCobroVO.setUsuarioMod(this.permisos.getUsuario());
 				
+				IngresoCobroVO aux33 = fieldGroup.getItemDataSource().getBean();
+				long nnn = aux33.getNroTrans();
+				
+				ingCobroVO.setNroTrans(this.fieldGroup.getItemDataSource().getBean().getNroTrans());
 				
 				/*Si hay detalle nuevo agregado
 				 * lo agregamos a la lista del formulario*/
@@ -450,9 +447,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				}
 					
 				ingCobroVO.setCodCuenta("ingcobro");
-				
 				ingCobroVO.setDetalle(this.lstDetalleVO);
-				
 				
 				
 				if(this.operacion.equals(Variables.OPERACION_NUEVO))	
@@ -466,8 +461,12 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				
 				}else if(this.operacion.equals(Variables.OPERACION_EDITAR))
 				{
+					/*Si es edicion tomamos una copia del ingreso cobro, para detectar
+					 * que lineas del cobro se eliminaron*/
+					
+					
 					/*VER DE IMPLEMENTAR PARA EDITAR BORRO TODO E INSERTO NUEVAMENTE*/
-					this.controlador.modificarIngresoCobro(ingCobroVO, permisoAux);
+					this.controlador.modificarIngresoCobro(ingCobroVO,ingresoCopia, permisoAux);
 					
 					this.mainView.actulaizarGrilla(ingCobroVO);
 					
@@ -570,9 +569,14 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 					ArrayList<Object> lst = new ArrayList<Object>();
 					Object obj;
 					for (GastoVO i: lstGastosConSaldo) {
-						obj = new Object();
-						obj = (Object)i;
-						lst.add(obj);
+						
+						/*Verificamos que el gasto ya no esta en la grilla*/
+						if(!this.existeFormularioenLista(i.getNroDocum()))
+						{
+							obj = new Object();
+							obj = (Object)i;
+							lst.add(obj);
+						}
 					}
 					
 					form.inicializarGrilla(lst);
@@ -609,9 +613,14 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 					{
 						if(lstDetalleVO.get(i).getNroDocum()==formSelecccionado.getNroDocum())
 						{
+							/*Tambien lo quitamos de la lista de los saldos originales
+							 * para poder controlar que no ingresen un saldo mayor al que tien el gasto*/
+							GtoSaldoAux saldoAux =  new GtoSaldoAux(lstDetalleVO.get(i).getNroDocum(), lstDetalleVO.get(i).getImpTotMo());
+							this.saldoOriginalGastos.remove(saldoAux.getNroDocum(),saldoAux);
+							
 							/*Quitamos el formulario seleccionado de la lista*/
 							lstDetalleVO.remove(lstDetalleVO.get(i));
-							
+						
 							esta = true;
 						}
 
@@ -866,16 +875,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	{
 		try{
 			
-		//this.fieldGroup =  new BeanFieldGroup<IngresoCobroVO>(IngresoCobroVO.class);	
-			
 		this.fieldGroup.setItemDataSource(item);
 		
-		/*Seteamos el tipo*/
-		this.comboTipo = new ComboBox();
-		if(item.getBean().getCodBanco() == "0")
-			this.comboTipo.setValue("Caja");
-		else
-			this.comboTipo.setValue("Banco");
 		
 		IngresoCobroVO ing = new IngresoCobroVO();
 		ing = fieldGroup.getItemDataSource().getBean();
@@ -885,6 +886,27 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		this.inicializarComboBancos(ing.getCodBanco());
 		this.inicializarComboCuentas(ing.getCodCtaBco());
 		this.inicializarComboMoneda(ing.getCodMoneda());
+		
+		
+		//Obtenemos bco
+		BancoVO auxBco = new BancoVO();
+		if(this.comboBancos.getValue() != null){
+			
+			auxBco = (BancoVO) this.comboBancos.getValue();
+			
+		}
+		this.comboTipo.setImmediate(true);
+		this.comboTipo.setReadOnly(false);
+		this.comboTipo.setNullSelectionAllowed(false);
+		this.comboTipo.setBuffered(true);
+		
+		/*Seteamos el tipo*/
+		//this.comboTipo = new ComboBox();
+		if(auxBco.getCodigo().equals("0"))
+			this.comboTipo.setValue("Caja");
+		else
+			this.comboTipo.setValue("Banco");
+		
 		
 		auditoria.setDescription(
 			
@@ -897,13 +919,21 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		if(this.operacion.equals(Variables.OPERACION_LECTURA))
 			this.iniFormLectura();
 		
+		/*Copiamos la variable para la modificacion*/
+		this.ingresoCopia = new IngresoCobroVO();
+		this.ingresoCopia.copiar(ing);
+		
 		}catch(Exception e)
 		{
 			e.printStackTrace();
 			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 		}
-				
+			
+		
+		
 	}
+	
+
 	
 	
 	/**
@@ -1355,7 +1385,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	}
 	
 	
-	/////////////////////////////////////////////////NUEVOOOOOOOOOOOOOO
+	/////////////////////////////////////////////////
 	
 	
 	/**
@@ -1512,18 +1542,70 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		lstGastos.setEditorSaveCaption("Guardar");
 		lstGastos.setEditorCancelCaption("Cancelar");
 		
-		lstGastos.getEditorFieldGroup().addCommitHandler(new FieldGroup.CommitHandler() {
-      @Override
+		
+		
+	lstGastos.getEditorFieldGroup().addCommitHandler(new FieldGroup.CommitHandler() {
+		IngresoCobroDetalleVO aux;
+		GtoSaldoAux gtoSaldo;
+		
+	@Override
       public void preCommit(FieldGroup.CommitEvent commitEvent) throws     FieldGroup.CommitException {
-      	calcularImporteTotal();
+      	
+    	  
+      	
+      	if(formSelecccionado != null){
+      		
+      		
+      		IngresoCobroDetalleVO aux = obtenerGastoEnLista(formSelecccionado.getNroDocum());
+	    	gtoSaldo = saldoOriginalGastos.get(formSelecccionado.getNroDocum());
+	    	
+  		}
+    	  
       }
 
       @Override
       public void postCommit(FieldGroup.CommitEvent commitEvent) throws     FieldGroup.CommitException {
-      	calcularImporteTotal();
+      	
+    	  
+    	  IngresoCobroDetalleVO aux2 = obtenerGastoEnLista(formSelecccionado.getNroDocum());
+    	  
+    	  /*Si el importe modificado es mayor al saldo no dejamos modificar*/
+    	  
+	    	if(aux2.getImpTotMo()> gtoSaldo.getSaldo())
+	    	{
+	    		throw new FieldGroup.CommitException("El importe no puede ser mayor al saldo ");
+	    	}
+	    	
+    	  calcularImporteTotal();
       }
 	 });
 		
+	}
+	
+	/**
+	 * Retornanoms true si esta el grupoVO en la lista
+	 * de grupos de la vista
+	 *
+	 */
+	private IngresoCobroDetalleVO obtenerGastoEnLista(int nro)
+	{
+		int i =0;
+		boolean esta = false;
+		
+		IngresoCobroDetalleVO aux = null;
+		
+		while( i < this.lstDetalleVO.size() && !esta)
+		{
+			aux = this.lstDetalleVO.get(i);
+			if(nro==aux.getNroDocum())
+			{
+				esta = true;
+			}
+			
+			i++;
+		}
+		
+		return aux;
 	}
 	
 	public void inicializarComboMoneda(String cod){
@@ -1774,9 +1856,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		this.impTotMo.setConvertedValue(impMo);
 	}
 	
-	public void setLstDetalle2(ArrayList<IngresoCobroDetalleVO> lst) {
-		this.lstDetalleVO = lst;
-	}
+
 	
 	/**
 	 * Seteamos la lista de los formularios para mostrarlos
@@ -1794,7 +1874,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		if(this.lstDetalleVO != null)
 		{
 			for (IngresoCobroDetalleVO det : this.lstDetalleVO) {
-				container.addBean(det);
+				container.addBean(det); /*Lo agregamos a la grilla*/
 			}
 		}
 
@@ -1872,6 +1952,11 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			g.copiar((DocumDetalleVO)obj);
 			
 			this.lstDetalleVO.add(g);
+			
+			/*Tambien agrefamos a la lista de los saldos originales
+			 * para poder controlar que no ingresen un saldo mayor al que tien el gasto*/
+			GtoSaldoAux saldoAux =  new GtoSaldoAux(g.getNroDocum(), g.getImpTotMo());
+			this.saldoOriginalGastos.put(saldoAux.getNroDocum(),saldoAux);
 			
 		}
 			

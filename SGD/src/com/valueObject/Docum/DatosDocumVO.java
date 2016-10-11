@@ -69,11 +69,16 @@ public class DatosDocumVO extends AuditoriaVO{
 		
 		this.nroTrans = t.nroTrans;
 		this.setUsuarioMod(t.getUsuarioMod());
-		this.setFechaMod(t.getFechaMod());
+		
+		if(t.getFechaMod() !=null)
+			this.setFechaMod(t.getFechaMod());
 		this.setOperacion(t.getOperacion());
 		
 		this.codCuenta = t.codCuenta;
-		this.nomCuenta = t.nomCuenta;
+		
+		if(t.nomCuenta != null)
+			this.nomCuenta = t.nomCuenta;
+		
 		this.codCtaInd = t.codCtaInd;
 		this.nacional = t.nacional;
 		

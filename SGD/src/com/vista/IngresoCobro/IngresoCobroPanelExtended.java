@@ -143,14 +143,7 @@ public class IngresoCobroPanelExtended extends IngresoCobroPanel{
 						sub.setModal(true);
 						sub.setVista(form);
 						
-						IngresoCobro c = new IngresoCobro(item.getBean()); //BORRAR
-						
-						IngresoCobroVO asd = item.getBean(); //BORRAR
-						
-						IngresoCobroDetalleVO detBorar = asd.getDetalle().get(0);
-						
-						
-				    	form.setDataSourceFormulario(item);
+				    	form.setDataSourceFormulario(item); 
 				    	form.setLstDetalle(item.getBean().getDetalle());
 						
 						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
@@ -177,7 +170,7 @@ public class IngresoCobroPanelExtended extends IngresoCobroPanel{
 	 */
 	private ArrayList<IngresoCobroVO> getCobros(){
 		
-		ArrayList<IngresoCobroVO> lstBancos = new ArrayList<IngresoCobroVO>();
+		ArrayList<IngresoCobroVO> lst = new ArrayList<IngresoCobroVO>();
 
 		try {
 			
@@ -190,7 +183,7 @@ public class IngresoCobroPanelExtended extends IngresoCobroPanel{
 							VariablesPermisos.OPERACION_LEER);
 
 			
-			lstBancos = controlador.getIngresoCobroTodos(permisoAux);
+			lst = controlador.getIngresoCobroTodos(permisoAux);
 
 		} catch (InicializandoException | ConexionException | ObteniendoPermisosException | NoTienePermisosException | ObteniendoIngresoCobroException e) {
 			
@@ -198,7 +191,7 @@ public class IngresoCobroPanelExtended extends IngresoCobroPanel{
 		}
 		
 			
-		return lstBancos;
+		return lst;
 	}
 	
 	/**
@@ -211,20 +204,31 @@ public class IngresoCobroPanelExtended extends IngresoCobroPanel{
 
 		/*Si esta el banco en la lista, es una acutalizacion
 		 * y modificamos el objeto en la lista*/
-		if(this.existeEnLista(ingVO.getNroDocum()))
-		{
-			this.actualizarBancoenLista(ingVO);
-		}
-		else  /*De lo contrario es uno nuevo y lo agregamos a la lista*/
-		{
-			this.lstIngresoCobro.add(ingVO);
-		}
-			
+//		if(this.existeEnLista(ingVO.getNroDocum()))
+//		{
+//			this.actualizarBancoenLista(ingVO);
+//		}
+//		else  /*De lo contrario es uno nuevo y lo agregamos a la lista*/
+//		{
+//			this.lstIngresoCobro.add(ingVO);
+//		}
+//			
+//		/*Actualizamos la grilla*/
+//		this.container.removeAllItems();
+//		this.container.addAll(this.lstIngresoCobro);
+//		
+//		this.grid.setContainerDataSource(container);
+		
+		
 		/*Actualizamos la grilla*/
 		this.container.removeAllItems();
-		this.container.addAll(this.lstIngresoCobro);
 		
-		this.grid.setContainerDataSource(container);
+		//Obtenemos lista de bancos del sistema
+		this.lstIngresoCobro = this.getCobros(); 
+		
+		
+		this.container.addAll(this.lstIngresoCobro);
+		grid.setContainerDataSource(container);
 
 	}
 	
