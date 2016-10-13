@@ -375,7 +375,9 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				//ingCobroVO.setImpTotMo(impTotMn);
 				//ingCobroVO.setTcMov(tcMov);
 				
-				ingCobroVO.setNroDocum(Integer.parseInt(this.nroDocum.getValue().toString().trim()));
+				/*Si es nuevo aun no tenemos el nro del cobro*/
+				if(this.nroDocum.getValue() != null)
+					ingCobroVO.setNroDocum(Integer.parseInt(this.nroDocum.getValue().toString().trim()));
 				
 				
 				/*Si es banco tomamos estos cmapos de lo contrario caja*/
@@ -429,10 +431,9 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				
 				ingCobroVO.setUsuarioMod(this.permisos.getUsuario());
 				
-				IngresoCobroVO aux33 = fieldGroup.getItemDataSource().getBean();
-				long nnn = aux33.getNroTrans();
 				
-				ingCobroVO.setNroTrans(this.fieldGroup.getItemDataSource().getBean().getNroTrans());
+				ingCobroVO.setNroTrans((long)this.nroTrans.getConvertedValue());
+				
 				
 				/*Si hay detalle nuevo agregado
 				 * lo agregamos a la lista del formulario*/
@@ -1027,6 +1028,9 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		/*Si es nuevo ocultamos el nroDocum (ya que aun no tenemos el numero)*/
 		this.nroDocum.setVisible(false);
 		this.nroDocum.setEnabled(false);
+		
+		this.nroDocum.setValue("0");
+		this.nroTrans.setValue("0");
 		
 		/*Chequeamos si tiene permiso de editar*/
 		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_COBRO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
@@ -1972,6 +1976,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	}
 	
 	public void inicializarCampos(){
+		
+		this.nroTrans.setConvertedValue(long.class);
 		
 		nroDocum.setConverter(Integer.class);
 		nroDocum.setConversionError("Ingrese un número entero");

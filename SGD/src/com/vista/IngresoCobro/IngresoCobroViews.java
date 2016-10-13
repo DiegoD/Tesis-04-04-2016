@@ -26,6 +26,7 @@ import com.vaadin.ui.declarative.Design;
 public class IngresoCobroViews extends FormLayout {
 	protected Link auditoria;
 	protected FormLayout formLay1;
+	protected TextField nroTrans;
 	protected TextField nroDocum;
 	protected ComboBox comboTipo;
 	protected DateField fecDoc;
