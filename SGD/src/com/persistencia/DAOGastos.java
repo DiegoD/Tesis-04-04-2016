@@ -159,7 +159,7 @@ public class DAOGastos implements IDAOGastos{
 				aux.setFechaMod(rs.getTimestamp(19));
 				aux.setUsuarioMod(rs.getString(20));
 				aux.setOperacion(rs.getString(21));
-				aux.setTitInfo(new TitularInfo("Oficina", "Oficina"));
+				aux.setTitInfo(new TitularInfo("Oficina", "0"));
 				aux.setMoneda(new MonedaInfo (rs.getString(24), rs.getString(25), rs.getString(26)));
 				aux.setCuenta(new CuentaInfo(rs.getString(27), rs.getString(28)));
 				aux.setRubroInfo(new RubroInfo(rs.getString(29), rs.getString(30)));

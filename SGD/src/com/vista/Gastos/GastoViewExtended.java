@@ -326,13 +326,22 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 			
 			try {
 				
-				controlador.eliminarGasto((Long) nroTrans.getConvertedValue(), permisoAux);
+				GastoVO gastoVO = new GastoVO();
+				
+				gastoVO.setCodDocum(codDocum.getValue());
+				gastoVO.setSerieDocum(serieDocum.getValue());
+				gastoVO.setNroDocum((Integer) nroDocum.getConvertedValue());
+				gastoVO.setCodEmp(permisoAux.getCodEmp());
+				gastoVO.setCodTitular(codTitular.getValue());
+				gastoVO.setNroTrans((long) nroTrans.getConvertedValue());
+				
+				controlador.eliminarGasto(gastoVO, permisoAux);
 				this.mainView.actuilzarGrillaEliminado((long) nroTrans.getConvertedValue());
 				Mensajes.mostrarMensajeOK("Se ha eliminado el gasto");
 				main.cerrarVentana();
 				
 			} catch (ObteniendoPermisosException | ConexionException | InicializandoException | ExisteGastoException |
-					EliminandoGastoException | EliminandoProcesoException | NoTienePermisosException e) {
+					EliminandoGastoException | EliminandoProcesoException | NoTienePermisosException | EliminandoSaldoException e) {
 				// TODO Auto-generated catch block
 				Mensajes.mostrarMensajeError(e.getMessage());
 			}

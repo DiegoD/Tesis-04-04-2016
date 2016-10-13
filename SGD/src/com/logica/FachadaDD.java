@@ -95,6 +95,7 @@ import com.excepciones.grupos.NoExisteGrupoException;
 import com.excepciones.grupos.ObteniendoFormulariosException;
 import com.excepciones.grupos.ObteniendoGruposException;
 import com.logica.DocLog.DocLog;
+import com.logica.Docum.DatosDocum;
 import com.logica.Docum.DocumDetalle;
 import com.valueObject.*;
 import com.valueObject.Cotizacion.CotizacionVO;
@@ -2850,19 +2851,21 @@ public class FachadaDD {
 	 * @throws ExisteGastoException 
 	 * @throws ConexionException 
 	 * @throws EliminandoProcesoException 
+	 * @throws EliminandoSaldoException 
    	 */
-    public void eliminarGasto(GastoVO gastoVO, String cod_emp) throws ExisteGastoException, EliminandoGastoException, ConexionException, EliminandoProcesoException 
+    public void eliminarGasto(GastoVO gastoVO, String cod_emp) throws ExisteGastoException, EliminandoGastoException, ConexionException, EliminandoProcesoException, EliminandoSaldoException 
    	{
    	    	
        	Connection con = null;
        	
        	try 
        	{
+       		Gasto gasto = new Gasto(gastoVO);
        		con = this.pool.obtenerConeccion();
    			con.setAutoCommit(false);
        		if(this.gastos.memberGasto(gastoVO.getNroTrans(), cod_emp, con)){
        			this.gastos.eliminarGasto(gastoVO.getNroTrans(), cod_emp, con);
-       			
+       			this.saldos.eliminarSaldo((DocumDetalle) gasto, con);
        			con.commit();
        		}
    			

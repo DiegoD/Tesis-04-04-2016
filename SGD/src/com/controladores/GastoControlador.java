@@ -86,11 +86,12 @@ public class GastoControlador {
 	 * @throws ConexionException 
 	 * @throws NoTienePermisosException 
 	 * @throws ObteniendoPermisosException 
+	 * @throws EliminandoSaldoException 
 	 */
-	public void eliminarGasto(long transaccion, UsuarioPermisosVO permisos) throws ObteniendoPermisosException, ConexionException, InicializandoException, ExisteGastoException, EliminandoGastoException, EliminandoProcesoException, NoTienePermisosException  {
+	public void eliminarGasto(GastoVO gastoVO, UsuarioPermisosVO permisos) throws ObteniendoPermisosException, ConexionException, InicializandoException, ExisteGastoException, EliminandoGastoException, EliminandoProcesoException, NoTienePermisosException, EliminandoSaldoException  {
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			FachadaDD.getInstance().eliminarGasto(transaccion, permisos.getCodEmp());
+			FachadaDD.getInstance().eliminarGasto(gastoVO, permisos.getCodEmp());
 		else
 			throw new NoTienePermisosException();
 	}
