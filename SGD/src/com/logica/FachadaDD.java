@@ -160,7 +160,7 @@ public class FachadaDD {
         this.gastos = fabricaConcreta.crearDAOGastos();
         this.saldos = fabricaConcreta.crearDAOSaldos();
         this.logsDocumentos = fabricaConcreta.crearDAODocLog();
-        //this.saldosProceso = fabricaConcreta.crearDAOSaldosProceso();
+        this.saldosProceso = fabricaConcreta.crearDAOSaldosProceso();
     }
     
     public static FachadaDD getInstance() throws InicializandoException {

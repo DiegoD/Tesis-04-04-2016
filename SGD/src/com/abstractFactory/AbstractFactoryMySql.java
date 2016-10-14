@@ -146,4 +146,10 @@ public class AbstractFactoryMySql implements IAbstractFactory
 
 		return new DAOSaldoCuentas();
 	}
+
+	@Override
+	public IDAOSaldosProc crearDAOSaldosProceso() {
+		
+		return new DAOSaldoProceso();
+	}
 }

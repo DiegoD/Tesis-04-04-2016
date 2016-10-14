@@ -22,6 +22,7 @@ import com.persistencia.IDAOProcesos;
 import com.persistencia.IDAORubros;
 import com.persistencia.IDAOSaldos;
 import com.persistencia.IDAOSaldosCuentas;
+import com.persistencia.IDAOSaldosProc;
 import com.persistencia.IDAOTipoRubro;
 import com.persistencia.IDAOUsuarios;
 
@@ -74,5 +75,7 @@ public interface IAbstractFactory
 	public IDAOCheques crearDAOCheques();
 	
 	public IDAOSaldosCuentas crearDAOSaldosCuenta();
+	
+	public IDAOSaldosProc crearDAOSaldosProceso();
 
 }
