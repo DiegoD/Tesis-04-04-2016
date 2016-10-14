@@ -270,6 +270,7 @@ public class BusquedaViewExtended extends BusquedaView{
 			grid.removeColumn("usuarioMod");
 			grid.removeColumn("operacion");
 			
+			
 			this.arreglarGrilla();
 		}
 		
@@ -490,9 +491,13 @@ public class BusquedaViewExtended extends BusquedaView{
 			grid.removeColumn("fechaMod");
 			grid.removeColumn("usuarioMod");
 			grid.removeColumn("operacion");
+			grid.removeColumn("nacional");
 			
 			grid.setEditorEnabled(true);
 			grid.getColumn("impTotMn").setEditable(true);
+			
+			grid.getColumn("simboloMoneda").setHeaderCaption("Monedad");
+			grid.getColumn("impTotMo").setHeaderCaption("Importe");
 			
 			this.arreglarGrillaGasto(); /*FaltaImplementar*/
 			this.filtroGrilla();
@@ -620,13 +625,14 @@ public class BusquedaViewExtended extends BusquedaView{
 		grid.getColumn("nroTrans").setHidden(true);
 		grid.getColumn("porcentajeImpuesto").setHidden(true);
 		grid.getColumn("serieDocum").setHidden(true);
-		grid.getColumn("simboloMoneda").setHidden(true);
+		//grid.getColumn("simboloMoneda").setHidden(true);
 		grid.getColumn("tcMov").setHidden(true);
-		grid.getColumn("usuarioMod").setHidden(true);
+		//grid.getColumn("usuarioMod").setHidden(true);
 		
-		grid.setColumnOrder("nroDocum", "referencia", "impTotMo", "impTotMo", "codProceso");
+		grid.setColumnOrder("nroDocum", "referencia", "impTotMo", "simboloMoneda", "codProceso");
 		
 	}catch(Exception e){
+		int i = 0;
 		
 	}
 	

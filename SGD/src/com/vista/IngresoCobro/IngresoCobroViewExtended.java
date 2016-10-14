@@ -431,8 +431,12 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				
 				ingCobroVO.setUsuarioMod(this.permisos.getUsuario());
 				
-				
-				ingCobroVO.setNroTrans((long)this.nroTrans.getConvertedValue());
+				if(this.operacion != Variables.OPERACION_NUEVO){
+					ingCobroVO.setNroTrans((long)this.nroTrans.getConvertedValue());
+				}
+				else{
+					ingCobroVO.setNroTrans(0);
+				}
 				
 				
 				/*Si hay detalle nuevo agregado
@@ -1029,8 +1033,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		this.nroDocum.setVisible(false);
 		this.nroDocum.setEnabled(false);
 		
-		this.nroDocum.setValue("0");
-		this.nroTrans.setValue("0");
+//		this.nroDocum.setValue("0");
+//		this.nroTrans.setValue("0");
 		
 		/*Chequeamos si tiene permiso de editar*/
 		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_COBRO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
@@ -1518,7 +1522,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		  lstGastos.getColumn("nroTrans").setHidden(true);
 		  lstGastos.getColumn("porcentajeImpuesto").setHidden(true);
 		  lstGastos.getColumn("serieDocum").setHidden(true);
-		  lstGastos.getColumn("simboloMoneda").setHidden(true);
+		  //lstGastos.getColumn("simboloMoneda").setHidden(true);
 		  lstGastos.getColumn("tcMov").setHidden(true);
 		  lstGastos.getColumn("usuarioMod").setHidden(true);
 		  lstGastos.getColumn("nacional").setHidden(true);
@@ -1977,7 +1981,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	
 	public void inicializarCampos(){
 		
-		this.nroTrans.setConvertedValue(long.class);
+		nroTrans.setConverter(Long.class);
 		
 		nroDocum.setConverter(Integer.class);
 		nroDocum.setConversionError("Ingrese un número entero");
