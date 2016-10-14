@@ -391,7 +391,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 						
 						ingCobroVO.setSerieDocRef("0");
 					}
-					else if(ingCobroVO.getmPago().equals("cheque"))
+					else if(ingCobroVO.getmPago().equals("Cheque"))
 					{
 						ingCobroVO.setCodDocRef("cheqrec");
 						ingCobroVO.setNroDocRef((Integer) nroDocRef.getConvertedValue());
@@ -423,6 +423,14 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 					}
 					else
 					{
+						//Obtenemos bco
+						BancoVO auxBco = new BancoVO();
+						if(this.comboBancos.getValue() != null){
+							
+							auxBco = (BancoVO) this.comboBancos.getValue();
+							
+						}
+						ingCobroVO.setCodBanco(auxBco.getCodigo());
 						ingCobroVO.setCodCtaBco(comboBancos.getValue().toString());
 						/*Falta poner el nombre de la cuenta*/
 					}

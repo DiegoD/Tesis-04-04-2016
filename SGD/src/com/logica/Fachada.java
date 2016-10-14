@@ -1353,12 +1353,13 @@ public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 			{
 				/*Primero obtenemos el DatosDocum para el cheque dado el ingreso cobro*/
 
+				/*Insertamos el cheque y saldo*/
 				DatosDocumVO auxCheque = ConvertirDocumento.getDatosDocumChequeDadoIngCobro(ingVO);
 				this.insertarChequeIntFachada(auxCheque, con);
 
-				/*Ingresamos el saldo para el cheque */
-				DatosDocum auxCheque2 = new DatosDocum(auxCheque);
-				this.saldos.modificarSaldo(auxCheque2,1, ingVO.getTcMov() , con);
+//				/*Ingresamos el saldo para el cheque */
+//				DatosDocum auxCheque2 = new DatosDocum(auxCheque);
+//				this.saldos.modificarSaldo(auxCheque2,1, ingVO.getTcMov() , con);
 			}
 			
 			/*Ingresamos el saldo a la cuenta (Banco o caja)*/
@@ -1775,10 +1776,7 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 			
 			throw new InsertandoChequeException();
 		}
-		finally
-		{
-			pool.liberarConeccion(con);
-		}
+		
 		if (existe){
 			throw new ExisteChequeException();
 		}
