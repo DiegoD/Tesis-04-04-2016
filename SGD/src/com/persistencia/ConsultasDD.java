@@ -1267,11 +1267,11 @@ public class ConsultasDD {
 				+ "sa_docum.nro_docum, sa_docum.cod_emp, sa_docum.cod_moneda, "
 				+ "sa_docum.cod_tit, sa_docum.imp_tot_mn, sa_docum.cuenta, "
 				+ "sa_docum.fecha_mod, sa_docum.usuario_mod, sa_docum.operacion, "
-				+ "m_clientes.cod_tit, m_clientes.nom_tit, "
+				+ "m_titulares.cod_tit, m_titulares.nom_tit, "
 				+ "m_monedas.cod_moneda, m_monedas.descripcion, m_monedas.simbolo ");
 		
 		sb.append("FROM sa_docum"
-				+ " INNER JOIN  m_clientes ON sa_docum.cod_tit = m_clientes.cod_tit AND sa_docum.cod_emp = m_clientes.cod_emp "
+				+ " INNER JOIN  m_titulares ON sa_docum.cod_tit = m_titulares.cod_tit AND sa_docum.cod_emp = m_titulares.cod_emp "
 				+ " INNER JOIN m_monedas ON sa_docum.cod_moneda = m_monedas.cod_moneda AND sa_docum.cod_emp = m_monedas.cod_emp "
 				+ " AND sa_docum.cod_emp = ? "); 
 		
@@ -1327,6 +1327,77 @@ public class ConsultasDD {
 	}		
 
 ////////////////////////FIN SALDOS//////////////////////////////////////////////
+	
+////////////////////////SALDOS PROCESOS////////////////////////////////////////
+
+	public String getSaldosProcesos(){
+	
+	StringBuilder sb = new StringBuilder();
+	
+		sb.append("SELECT sa_proceso.cod_proceso , sa_proceso.cod_doca, sa_proceso.serie_doca, "
+		+ "sa_proceso.nro_doca, sa_proceso.cod_emp, sa_proceso.cod_moneda, "
+		+ "sa_proceso.cod_tit, sa_proceso.imp_tot_mn, "
+		+ "sa_proceso.fecha_mod, sa_proceso.usuario_mod, sa_proceso.operacion, "
+		+ "m_titulares.cod_tit, m_titulares.nom_tit, "
+		+ "m_monedas.cod_moneda, m_monedas.descripcion, m_monedas.simbolo ");
+		
+		sb.append("FROM sa_proceso"
+		+ " INNER JOIN  m_titulares ON sa_proceso.cod_tit = m_titulares.cod_tit AND sa_proceso.cod_emp = m_titulares.cod_emp "
+		+ " INNER JOIN m_monedas ON sa_proceso.cod_moneda = m_monedas.cod_moneda AND sa_proceso.cod_emp = m_monedas.cod_emp "
+		+ " AND sa_proceso.cod_emp = ? "); 
+	
+	return sb.toString();
+	}
+
+	public String getSaldoMnProceso(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT imp_tot_mn "
+		+ "FROM sa_proceso WHERE cod_proceso = ? "
+		+ "AND cod_emp = ? AND cod_tit = ? ");		
+		
+		return sb.toString();
+	}
+
+	public String insertarSaldoProceso()
+	{
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO sa_proceso ( cod_proceso,cod_doca, serie_doca, nro_doca, "
+		+ " cod_emp, cod_moneda, cod_tit, "
+		+ " imp_tot_mn, imp_tot_mo, cuenta, "
+		+ " fecha_mod, usuario_mod, operacion ) ");
+		sb.append("VALUES ( ?,?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?) ");
+		
+		return sb.toString();
+	}
+
+	public String memberSaldoProceso(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_proceso ");
+		sb.append("FROM sa_proceso WHERE cod_proceso = ? "
+		+ "AND cod_emp = ? AND cod_tit = ? ");
+		
+		return sb.toString();
+	}
+
+
+	public String eliminarSaldoProceso(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("DELETE FROM sa_proceso ");
+		sb.append("WHERE cod_proceso = ? "
+		+ "cod_emp = ? AND cod_tit = ? ");
+		
+		return sb.toString();
+	}		
+
+////////////////////////FIN SALDOS///////////////////////////////////////////////
 	
 ////////////////////////CHEQUES /////////////////////////////////////////////////
 	

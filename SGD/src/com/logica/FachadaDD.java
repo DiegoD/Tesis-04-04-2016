@@ -134,6 +134,7 @@ public class FachadaDD {
 	private IDAOGastos gastos;
 	private IDAOSaldos saldos;
 	private IDAODocLog logsDocumentos;
+	private IDAOSaldosProc saldosProceso;
 	
 	
     private FachadaDD() throws InstantiationException, IllegalAccessException, ClassNotFoundException, FileNotFoundException, IOException
@@ -159,6 +160,7 @@ public class FachadaDD {
         this.gastos = fabricaConcreta.crearDAOGastos();
         this.saldos = fabricaConcreta.crearDAOSaldos();
         this.logsDocumentos = fabricaConcreta.crearDAODocLog();
+        //this.saldosProceso = fabricaConcreta.crearDAOSaldosProceso();
     }
     
     public static FachadaDD getInstance() throws InicializandoException {
@@ -2671,6 +2673,7 @@ public class FachadaDD {
 				aux.setCodImpuesto(gasto.getImpuestoInfo().getCodImpuesto());
 				aux.setNomImpuesto(gasto.getImpuestoInfo().getNomImpuesto());
 				aux.setPorcentajeImpuesto(gasto.getImpuestoInfo().getPorcentaje());
+				aux.setSimboloMoneda(gasto.getMoneda().getSimbolo());
 				lstGastosVO.add(aux);
 			}
 		
