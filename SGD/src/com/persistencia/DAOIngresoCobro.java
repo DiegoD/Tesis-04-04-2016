@@ -33,7 +33,7 @@ public class DAOIngresoCobro implements IDAOIngresoCobro{
 		ArrayList<IngresoCobro> lst = new ArrayList<IngresoCobro>();
 	
 		try {
-			
+			//
 	    	Consultas clts = new Consultas();
 	    	String query = clts.getIngresoCobroCabTodos();
 	    	PreparedStatement pstmt1 = con.prepareStatement(query);
