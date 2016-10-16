@@ -23,6 +23,7 @@ public class BusquedaView extends VerticalLayout {
 	protected Label lblNombre;
 	protected Grid grid;
 	protected Button btnAgregar;
+	protected Button btnCancelar;
 
 	public BusquedaView() {
 		Design.read(this);

@@ -13,9 +13,14 @@
    <vaadin-panel size-full :expand="95"> 
     <vaadin-grid width-full height="99.78%" _id="grid"></vaadin-grid> 
    </vaadin-panel> 
-   <vaadin-button style-name="primary tiny" plain-text _id="btnAgregar">
-     Agregar 
-   </vaadin-button> 
+   <vaadin-horizontal-layout spacing :middle> 
+    <vaadin-button style-name="primary tiny" plain-text _id="btnAgregar">
+      Agregar 
+    </vaadin-button> 
+    <vaadin-button style-name="primary tiny" plain-text _id="btnCancelar">
+      Cancelar 
+    </vaadin-button> 
+   </vaadin-horizontal-layout> 
   </vaadin-vertical-layout>  
  </body>
 </html>

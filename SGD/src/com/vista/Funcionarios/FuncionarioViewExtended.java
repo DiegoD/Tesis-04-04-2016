@@ -86,10 +86,7 @@ public class FuncionarioViewExtended extends FuncionarioView implements IBusqued
 						
 						
 						int codigo = controlador.insertarFuncionario(funcionarioVO, permisoAux);
-						
-						/*Seteamos el nuevo codigo del funcionario*/
 						funcionarioVO.setCodigo(codigo);
-						
 						this.mainView.actulaizarGrilla(funcionarioVO);
 						
 						Mensajes.mostrarMensajeOK("Se ha guardado el funcionario");

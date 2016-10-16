@@ -537,7 +537,9 @@ public class Fachada {
 		    	/*Verificamos que no exista un cliente con el mismo documento*/
 		    	if(!this.clientes.memberClienteDocumentoNuevo(cliente.getDocumento(), codEmp, con))
 		    	{
-		    		codigo = this.clientes.insertarCliente(cliente, codEmp, con);
+		    		codigo = numeradores.getNumero(con, "04", codEmp);
+		    		cliente.setCodigo(codigo);
+		    		this.clientes.insertarCliente(cliente, codEmp, con);
 		    		
 		    		con.commit();
 		    	}
@@ -895,12 +897,16 @@ public class Fachada {
 			
 			Funcionario funcionario = new Funcionario(funcionarioVO); 
 			
+			funcionario.setCodigo(0);
+			
 			if(!this.funcionarios.memberFuncionario(funcionario.getCodigo(), codEmp, con))
 			{
 				/*Chequeamos que no haya un otro funcionario con el mismo documento*/
 				if(!this.funcionarios.memberFuncionarioDocumentoNuevo(funcionario.getDocumento(),codEmp, con)){
 					
-					codigo = this.funcionarios.insertarFuncionario(funcionario, codEmp, con);
+					codigo = numeradores.getNumero(con, "04", codEmp);
+					funcionario.setCodigo(codigo);
+					this.funcionarios.insertarFuncionario(funcionario, codEmp, con);
 					
 					con.commit();
 				}

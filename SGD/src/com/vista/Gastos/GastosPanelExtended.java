@@ -116,6 +116,9 @@ public class GastosPanelExtended extends GastosPanel{
 		}
 		
 		for (GastoVO gastoVO: lstGastos) {
+			if(gastoVO.getNomTitular().equals("0")){
+				gastoVO.setNomTitular("Oficina");
+			}
 			container.addBean(gastoVO);
 		}
 		
@@ -162,7 +165,7 @@ public class GastosPanelExtended extends GastosPanel{
 		gridGastos.removeColumn("codCtaInd");
 		gridGastos.removeColumn("linea");
 		gridGastos.removeColumn("codCuenta");
-		//gridGastos.removeColumn("cuenta");
+		gridGastos.removeColumn("nacional");
 		
 		gridGastos.setColumnOrder("fecDoc", "nomTitular", "nroDocum", "referencia", "descProceso");
 	

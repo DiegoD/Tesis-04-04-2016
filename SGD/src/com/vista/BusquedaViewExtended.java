@@ -59,6 +59,9 @@ public class BusquedaViewExtended extends BusquedaView{
 		this.btnAgregar.setEnabled(false);
 		this.btnAgregar.setVisible(false);
 		
+		this.btnCancelar.setEnabled(false);
+		this.btnCancelar.setVisible(false);
+		
 		this.main = main;
 		if(obj instanceof ImpuestoVO){
 			this.containerImpuesto = new BeanItemContainer<ImpuestoVO>(ImpuestoVO.class);
@@ -122,6 +125,9 @@ public class BusquedaViewExtended extends BusquedaView{
 			/*Mostramos el boton de agregar*/
 			this.btnAgregar.setEnabled(true);
 			this.btnAgregar.setVisible(true);
+			
+			this.btnCancelar.setEnabled(true);
+			this.btnCancelar.setVisible(true);
 			
 			this.containerGasto = new BeanItemContainer<GastoVO>(GastoVO.class);
 			this.lblNombre.setValue("Gastos");
@@ -499,6 +505,15 @@ public class BusquedaViewExtended extends BusquedaView{
 			grid.getColumn("simboloMoneda").setHeaderCaption("Monedad");
 			grid.getColumn("impTotMo").setHeaderCaption("Importe");
 			
+			grid.getColumn("referencia").setWidth(300);
+			grid.getColumn("nroDocum").setWidth(90);
+			grid.getColumn("codProceso").setWidth(90);
+			grid.getColumn("simboloMoneda").setWidth(100);
+			grid.getColumn("impTotMo").setWidth(200);
+			
+			grid.getColumn("nroDocum").setHeaderCaption("Doc");
+			grid.getColumn("codProceso").setHeaderCaption("Proceso");
+			
 			this.arreglarGrillaGasto(); /*FaltaImplementar*/
 			this.filtroGrilla();
 			
@@ -629,7 +644,7 @@ public class BusquedaViewExtended extends BusquedaView{
 		grid.getColumn("tcMov").setHidden(true);
 		//grid.getColumn("usuarioMod").setHidden(true);
 		
-		grid.setColumnOrder("nroDocum", "referencia", "impTotMo", "simboloMoneda", "codProceso");
+		grid.setColumnOrder("nroDocum", "referencia", "simboloMoneda", "impTotMo", "codProceso");
 		
 	}catch(Exception e){
 		int i = 0;
@@ -837,6 +852,12 @@ public class BusquedaViewExtended extends BusquedaView{
 				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 			}	
 		    
+			
+		});
+		
+		this.btnCancelar.addClickListener(click -> {
+			
+			main.cerrarVentana();
 			
 		});
 	}

@@ -372,8 +372,8 @@ public class Consultas {
 		StringBuilder sb = new StringBuilder();
 		
 	 	sb.append("INSERT INTO m_clientes ( nom_tit, cod_emp, razon_social, tel, nro_dgi, cod_docdgi ");
-	 	sb.append(", direccion, mail, activo, usuario_mod, operacion, fecha_mod) ");
-		sb.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+	 	sb.append(", direccion, mail, activo, usuario_mod, operacion, fecha_mod, cod_tit ) ");
+		sb.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ) ");
 			
 		return sb.toString();
 	}
@@ -467,8 +467,8 @@ public class Consultas {
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("INSERT INTO m_funcionarios ( nom_tit, cod_emp, tel, nro_dgi, cod_docdgi ");
-		sb.append(", direccion, mail, activo, usuario_mod, operacion, fecha_mod) ");
-		sb.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+		sb.append(", direccion, mail, activo, usuario_mod, operacion, fecha_mod, cod_tit) ");
+		sb.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
 		
 		return sb.toString();
 	}

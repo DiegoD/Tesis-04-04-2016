@@ -3,7 +3,10 @@ package com.vista.IngresoCobro;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import com.controladores.BancoControlador;
 import com.controladores.IngresoCobroControlador;
@@ -17,6 +20,7 @@ import com.excepciones.IngresoCobros.ObteniendoIngresoCobroException;
 import com.logica.IngresoCobro.IngresoCobro;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.util.converter.StringToDateConverter;
 import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
@@ -375,7 +379,7 @@ public class IngresoCobroPanelExtended extends IngresoCobroPanel{
 		grid.getColumn("nomMoneda").setHidden(true);
 		grid.getColumn("nroDocRef").setHidden(true);
 		grid.getColumn("nroTrans").setHidden(true);
-		grid.getColumn("referencia").setHidden(true);
+		//grid.getColumn("referencia").setHidden(true);
 		grid.getColumn("serieDocRef").setHidden(true);
 		grid.getColumn("serieDocum").setHidden(true);
 		grid.getColumn("tcMov").setHidden(true);
@@ -383,7 +387,33 @@ public class IngresoCobroPanelExtended extends IngresoCobroPanel{
 		grid.getColumn("codCuenta").setHidden(true);
 		grid.getColumn("nomCuenta").setHidden(true);
 		
-		grid.setColumnOrder("nomTitular", "nroDocum", "simboloMoneda", "impTotMo", "fecDoc");
+		grid.removeColumn("nacional");
+		grid.removeColumn("codCtaInd");
+		grid.getColumn("simboloMoneda").setHeaderCaption("Moneda");
+		
+		grid.getColumn("fecDoc").setConverter(new StringToDateConverter(){
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+
+			public DateFormat getFormat(Locale locale){
+
+				return new SimpleDateFormat("dd/MM/yyyy");
+
+			}
+
+		});
+		
+		grid.getColumn("nroDocum").setWidth(150);
+		grid.getColumn("simboloMoneda").setWidth(150);
+		grid.getColumn("impTotMo").setWidth(150);
+		grid.getColumn("fecDoc").setWidth(150);
+		grid.getColumn("referencia").setWidth(300);
+		
+		grid.setColumnOrder("nomTitular", "referencia", "nroDocum", "simboloMoneda", "impTotMo", "fecDoc");
 		
 	
 	}

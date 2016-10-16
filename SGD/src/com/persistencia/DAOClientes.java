@@ -288,6 +288,7 @@ public class DAOClientes implements IDAOClientes{
 			pstmt1.setString(10, cliente.getUsuarioMod());
 			pstmt1.setString(11, cliente.getOperacion());
 			pstmt1.setTimestamp(12, cliente.getFechaMod());
+			pstmt1.setInt(13, cliente.getCodigo());
 			
 			//codigo = pstmt1.executeUpdate(Statement.RETURN_GENERATED_KEYS);
 			

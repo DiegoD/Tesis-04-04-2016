@@ -274,6 +274,7 @@ public class DAOFuncionarios implements IDAOFuncionarios{
 			pstmt1.setString(9, funcionario.getUsuarioMod());
 			pstmt1.setString(10, funcionario.getOperacion());
 			pstmt1.setTimestamp(11, funcionario.getFechaMod());
+			pstmt1.setInt(12, funcionario.getCodigo());
 			
 			//codigo = pstmt1.executeUpdate(Statement.RETURN_GENERATED_KEYS);
 			
@@ -282,7 +283,7 @@ public class DAOFuncionarios implements IDAOFuncionarios{
 			/*Obtenemos el codigo del cliente insertado*/
 			ResultSet rs = pstmt1.getGeneratedKeys();
 			if (rs.next()){
-			    codigo=rs.getInt(1);
+			    codigo=funcionario.getCodigo();
 			}
 			
 			pstmt1.close ();

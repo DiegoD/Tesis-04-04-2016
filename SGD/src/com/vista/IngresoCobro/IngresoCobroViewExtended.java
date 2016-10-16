@@ -541,7 +541,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 					
 					BusquedaViewExtended form = new BusquedaViewExtended(this, new GastoVO());
 					
-					sub = new MySub("70%", "70%" );
+					sub = new MySub("80%", "64%" );
 					sub.setModal(true);
 					sub.setVista(form);
 					//sub.setWidth("50%");
@@ -1539,7 +1539,10 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		  lstGastos.getColumn("usuarioMod").setHidden(true);
 		  lstGastos.getColumn("nacional").setHidden(true);
 		  
-		lstGastos.setColumnOrder("nroDocum", "referencia", "impTotMo", "codProceso");
+		lstGastos.setColumnOrder("nroDocum", "referencia", "simboloMoneda", "impTotMo", "codProceso");
+		
+		lstGastos.getColumn("simboloMoneda").setHeaderCaption("Moneda");
+		lstGastos.getColumn("impTotMo").setHeaderCaption("Importe");
 		
 		//lst.get(1).setWidth(400);
 		
@@ -1547,9 +1550,11 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 
 
 		/*Formateamos los tamaños*/
-		lstGastos.getColumn("referencia").setWidth(350);
-		lstGastos.getColumn("nroDocum").setWidth(70);
-		lstGastos.getColumn("codProceso").setWidth(70);
+		lstGastos.getColumn("referencia").setWidth(250);
+		lstGastos.getColumn("nroDocum").setWidth(90);
+		lstGastos.getColumn("codProceso").setWidth(90);
+		lstGastos.getColumn("simboloMoneda").setWidth(95);
+		lstGastos.getColumn("impTotMo").setWidth(100);
 		
 		lstGastos.getColumn("nroDocum").setHeaderCaption("Doc");
 		lstGastos.getColumn("codProceso").setHeaderCaption("Proceso");
