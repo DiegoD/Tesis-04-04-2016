@@ -1507,4 +1507,18 @@ public String eliminarSaldoCuenta(){
 	}
 	
 ////////////////////////FIN LOGS///////////////////////////////////////////////
+
+////////////////////////INI TITULARES///////////////////////////////////////////////
+	public String getTitularesActivos()
+	{
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_tit, nom_tit, cod_docdgi, nro_dgi, tipo, nro_dgi, cod_emp ");
+		sb.append("FROM m_titulares WHERE cod_emp = ? and activo = 1 ");
+
+		return sb.toString();
+	}
+	
+////////////////////////FNI TITULARES///////////////////////////////////////////////
+	
 }

@@ -83,10 +83,12 @@ import com.excepciones.TipoRubro.InsertandoTipoRubroException;
 import com.excepciones.TipoRubro.ModificandoTipoRubroException;
 import com.excepciones.TipoRubro.NoExisteTipoRubroException;
 import com.excepciones.TipoRubro.ObteniendoTipoRubroException;
+import com.excepciones.Titulares.ObteniendoTitularesException;
 import com.excepciones.Usuarios.ExisteUsuarioException;
 import com.excepciones.Usuarios.InsertandoUsuarioException;
 import com.excepciones.Usuarios.ObteniendoUsuariosException;
 import com.excepciones.Usuarios.ObteniendoUsuariosxEmpExeption;
+import com.excepciones.clientes.ObteniendoClientesException;
 import com.excepciones.grupos.ExisteGrupoException;
 import com.excepciones.grupos.InsertandoGrupoException;
 import com.excepciones.grupos.MemberGrupoException;
@@ -103,6 +105,7 @@ import com.valueObject.Cuenta.CuentaVO;
 import com.valueObject.Gasto.GastoVO;
 import com.valueObject.Numeradores.NumeradoresVO;
 import com.valueObject.TipoRubro.TipoRubroVO;
+import com.valueObject.cliente.ClienteVO;
 import com.valueObject.empresa.EmpresaUsuVO;
 import com.valueObject.empresa.EmpresaVO;
 import com.valueObject.proceso.ProcesoVO;
@@ -135,6 +138,7 @@ public class FachadaDD {
 	private IDAOSaldos saldos;
 	private IDAODocLog logsDocumentos;
 	private IDAOSaldosProc saldosProceso;
+	private IDAOTitulares titulares;
 	
 	
     private FachadaDD() throws InstantiationException, IllegalAccessException, ClassNotFoundException, FileNotFoundException, IOException
@@ -161,6 +165,7 @@ public class FachadaDD {
         this.saldos = fabricaConcreta.crearDAOSaldos();
         this.logsDocumentos = fabricaConcreta.crearDAODocLog();
         this.saldosProceso = fabricaConcreta.crearDAOSaldosProceso();
+        this.titulares = fabricaConcreta.crearDAOTitulares();
     }
     
     public static FachadaDD getInstance() throws InicializandoException {
@@ -2893,4 +2898,48 @@ public class FachadaDD {
        	}
    	}
 /////////////////////////////////FIN-GASTOS/////////////////////////////////
+    
+/////////////////////////////////INI-TITULARES/////////////////////////////////
+    
+    public ArrayList<TitularVO> getTitularesActivos(String codEmp) throws ObteniendoTitularesException, ConexionException {
+    	
+    	Connection con = null;
+    	
+    	ArrayList<Titular> lstTitulares;
+    	ArrayList<TitularVO> lstTitularesVO = new ArrayList<TitularVO>();
+    	    	
+    	try
+    	{
+    		con = this.pool.obtenerConeccion();
+    		
+    		lstTitulares = this.titulares.getTitularesActivos(con, codEmp);
+    		
+    		
+    		TitularVO aux;
+    		for (Titular titular : lstTitulares) 
+			{
+    			aux = new TitularVO();
+    			
+    			aux = titular.retornarTitularVO();
+
+    			lstTitularesVO.add(aux);
+			}
+	
+    	}catch(ObteniendoTitularesException  e)
+    	{
+    		throw e;
+    		
+    	} catch (ConexionException e) {
+			
+    		throw e;
+    	} 
+    	finally
+    	{
+    		this.pool.liberarConeccion(con);
+    	}
+    	    
+    	
+    	return lstTitularesVO;
+    }	 
+/////////////////////////////////FNI-TITULARES/////////////////////////////////
 }

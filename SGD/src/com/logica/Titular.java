@@ -1,22 +1,41 @@
 package com.logica;
 
-public abstract class Titular extends Auditoria{
+import com.valueObject.TitularVO;
+import com.valueObject.cliente.ClienteVO;
+
+public  class Titular extends Auditoria{
 
 	private Documento documento;
-	
-	public Titular(){
-		
-		this.documento = new Documento();
-	}
-	
-	
 	private int codigo;
 	private String nombre;
 	private String tel;
 	private String direccion;
 	private String mail;
 	private boolean activo;
+	
+	
+
+	public Titular(){
 		
+		this.documento = new Documento();
+	}
+	
+	
+	public TitularVO retornarTitularVO(){
+		
+		TitularVO aux = new TitularVO();
+		
+		aux.setCodigo(this.getCodigo());
+		aux.setNombre(this.getNombre());
+		aux.setCodigoDoc(this.getDocumento().getCodigo());
+		aux.setNumeroDoc(this.documento.getNumero());
+		aux.setActivo(this.isActivo());
+		
+		
+		return aux;
+	}
+	
+
 	public Documento getDocumento() {
 		return documento;
 	}
