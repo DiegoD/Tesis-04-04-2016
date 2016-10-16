@@ -924,6 +924,24 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		else
 			this.comboTipo.setValue("Banco");
 		
+		this.comboMPagos = new ComboBox();
+		
+		this.comboMPagos.setImmediate(true);
+		this.comboMPagos.setNullSelectionAllowed(false);
+		
+		this.comboMPagos.addItem("Sin Asignar");
+		this.comboMPagos.addItem("Cheque");
+		this.comboMPagos.addItem("Transferencia");
+		/*Seteamos el combo de medio de pago*/
+		if(item.getBean().getmPago().equals("0"))
+		{
+			this.comboMPagos.setValue("Sin Asignar");
+			
+		}else {
+			this.comboMPagos.setValue(item.getBean().getmPago());
+		}
+		
+		
 		
 		auditoria.setDescription(
 			
