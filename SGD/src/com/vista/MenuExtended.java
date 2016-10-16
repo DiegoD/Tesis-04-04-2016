@@ -16,6 +16,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.valueObject.FormularioVO;
 import com.vista.Documentos.DocumentosPanelExtended;
+import com.vista.Egreso.IngresoEgresoPanelExtended;
 //import com.vista.Clientes.ClienteView;
 import com.vista.Bancos.BancosPanelExtended;
 import com.vista.Clientes.ClientesPanelExtended;
@@ -125,6 +126,7 @@ public class MenuExtended extends Menu{
 			}
 	    }
 	};
+	
 	
 	public MenuExtended(Principal principalView){
 		
@@ -457,6 +459,21 @@ public class MenuExtended extends Menu{
 				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 			}
 		});
+		
+		this.ingEgreso.addClickListener(click -> {
+			
+			setSizeFull();
+			
+			this.content.removeAllComponents();
+			try {
+				
+				IngresoEgresoPanelExtended u = new IngresoEgresoPanelExtended(); 
+				this.content.addComponent(u);
+				
+			} catch (Exception e) {
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}
+		});
 	}
 	
 	
@@ -514,6 +531,7 @@ public class MenuExtended extends Menu{
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_PROCESOS) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_GASTOS) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_INGRESO_COBRO) ||
+				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_INGRESO_EGRESO) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_RUBROS))
 			{
 				lstFormsMenuMant.add(formularioVO);
@@ -611,6 +629,10 @@ public class MenuExtended extends Menu{
 					case VariablesPermisos.FORMULARIO_INGRESO_COBRO:
 						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_COBRO, VariablesPermisos.OPERACION_LEER))
 							this.habilitarIngresoCobro();
+						
+					case VariablesPermisos.FORMULARIO_INGRESO_EGRESO:
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO, VariablesPermisos.OPERACION_LEER))
+							this.habilitarIngresoEgreso();
 						
 					break;
 					
@@ -737,6 +759,9 @@ public class MenuExtended extends Menu{
 		
 		this.ingCobro.setVisible(false);
 		this.ingCobro.setEnabled(false);
+		
+		this.ingEgreso.setVisible(false);
+		this.ingEgreso.setEnabled(false);
 	}
 	
 	
@@ -851,6 +876,12 @@ public class MenuExtended extends Menu{
 		this.ingCobro.setVisible(true);
 		this.ingCobro.setEnabled(true);
 		this.tabMantenimientos.addComponent(ingCobro);
+	}
+	
+	private void habilitarIngresoEgreso(){
+		this.ingEgreso.setVisible(true);
+		this.ingEgreso.setEnabled(true);
+		this.tabMantenimientos.addComponent(ingEgreso);
 	}
 	
 	public PermisosUsuario getPermisosUsuario()

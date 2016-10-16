@@ -318,6 +318,32 @@ public class DAOGastos implements IDAOGastos{
 		}
 	}
 	
+	@Override
+	public void eliminarGastoPK(int nroDocum, String serieDocum, String codDocum, String codEmp, Connection con) throws EliminandoGastoException, ConexionException {
+		// TODO Auto-generated method stub
+		ConsultasDD consultas = new ConsultasDD();
+		String eliminar = consultas.eliminarGastoPK();
+		PreparedStatement pstmt1;
+		
+		try {
+			
+			pstmt1 =  con.prepareStatement(eliminar);
+			pstmt1.setInt(1, nroDocum);
+			pstmt1.setString(2, codEmp);
+			pstmt1.setString(3, serieDocum);
+			pstmt1.setString(4, codDocum);
+			
+			pstmt1.executeUpdate ();
+			pstmt1.close ();
+	
+		} 
+		
+		catch (SQLException e) {
+			
+			throw new EliminandoGastoException();
+		}
+	}
+	
 	//Nos retorna los gastos con saldo para el titular por moneda
 		@Override
 		public ArrayList<Gasto> getGastosConSaldoxMoneda(Connection con, String codEmp, String codTit, String codMoneda)

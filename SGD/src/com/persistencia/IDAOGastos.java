@@ -21,5 +21,6 @@ public interface IDAOGastos {
 	public ArrayList<Gasto> getGastosConSaldo(Connection con, String codEmp, String codTit) throws ObteniendoGastosException, ConexionException;
 	public ArrayList<Gasto> getGastosConSaldoxMoneda(Connection con, String codEmp, String codTit, String codMoneda) throws ObteniendoGastosException, ConexionException;
 	public void eliminarGasto(long  transaccion, String codEmp, Connection con) throws EliminandoGastoException, ConexionException;
+	public void eliminarGastoPK(int nroDocum, String serieDocum, String codDocum, String codEmp, Connection con) throws EliminandoGastoException, ConexionException;
 	
 }

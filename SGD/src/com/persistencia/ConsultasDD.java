@@ -1277,6 +1277,16 @@ public class ConsultasDD {
 		
 		return sb.toString();
 	}
+	
+	public String eliminarGastoPK(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("DELETE FROM c_gastos ");
+		sb.append("WHERE nro_docum = ? AND cod_emp = ? AND serie_docum = ? AND cod_docum = ?");
+		
+		return sb.toString();
+	}
 
 ////////////////////////FIN GASTOS//////////////////////////////////////////////
 

@@ -152,10 +152,20 @@ public class AbstractFactoryMySql implements IAbstractFactory
 		
 		return new DAOSaldoProceso();
 	}
+
+
+	@Override
+	public IDAOEgresoCobro crearDAOEgresoCobro() {
+		
+		return new DAOEgresoCobro();
+	}
+
+
 	
 	@Override
 	public IDAOTitulares crearDAOTitulares() {
 		
 		return new DAOTitulares();
 	}
+
 }
