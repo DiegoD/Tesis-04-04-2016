@@ -52,7 +52,7 @@ public class IngresoCobroViews extends FormLayout {
 	protected FormLayout formLay2;
 	protected Grid lstGastos;
 	protected Button btnAgregar;
-	protected Button btnEditarForm;
+	protected Button btnProceso;
 	protected Button btnQuitar;
 
 	public IngresoCobroViews() {

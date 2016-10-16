@@ -22,6 +22,7 @@ import com.excepciones.IngresoCobros.ModificandoIngresoCobroException;
 import com.excepciones.IngresoCobros.NoExisteIngresoCobroException;
 import com.excepciones.IngresoCobros.ObteniendoIngresoCobroException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
+import com.excepciones.Procesos.ObteniendoProcesosException;
 import com.excepciones.clientes.ObteniendoClientesException;
 import com.logica.Fachada;
 import com.logica.FachadaDD;
@@ -33,6 +34,7 @@ import com.valueObject.IngresoCobro.IngresoCobroVO;
 import com.valueObject.banco.BancoVO;
 import com.valueObject.banco.CtaBcoVO;
 import com.valueObject.cliente.ClienteVO;
+import com.valueObject.proceso.ProcesoVO;
 
 public class IngresoCobroControlador {
 
@@ -136,6 +138,15 @@ public class IngresoCobroControlador {
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisoAux))
 			return FachadaDD.getInstance().getCotizacion(permisoAux.getCodEmp(), fecha, codMonedaSeleccionada);
+		else
+			throw new NoTienePermisosException();
+	}
+	
+	public ArrayList<ProcesoVO> getProcesosCliente(UsuarioPermisosVO permisos, String cod_cliente) throws ObteniendoProcesosException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException {
+		
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			return FachadaDD.getInstance().getProcesosCliente(permisos.getCodEmp(), cod_cliente);
 		else
 			throw new NoTienePermisosException();
 	}

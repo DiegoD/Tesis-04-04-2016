@@ -19,6 +19,6 @@ public interface IDAOProcesos {
 	public void insertarProceso(Proceso proceso, String codEmp, Connection con) throws IngresandoProcesoException, ConexionException, SQLException;
 	public void modificarProceso(Proceso proceso, String codEmp, Connection con) throws ModificandoProcesoException;
 	public void eliminarProceso(int codProceso, String codEmp, Connection con) throws EliminandoProcesoException, ConexionException;
-	
+	public ArrayList<Proceso> getProcesosCliente(Connection con, String codEmp, String cod_cliente) throws ObteniendoProcesosException, ConexionException;
 
 }

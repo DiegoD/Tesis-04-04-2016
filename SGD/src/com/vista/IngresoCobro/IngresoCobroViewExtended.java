@@ -59,6 +59,7 @@ import com.valueObject.IngresoCobro.IngresoCobroVO;
 import com.valueObject.banco.BancoVO;
 import com.valueObject.banco.CtaBcoVO;
 import com.valueObject.cliente.ClienteVO;
+import com.valueObject.proceso.ProcesoVO;
 import com.vista.BusquedaViewExtended;
 import com.vista.IBusqueda;
 import com.vista.Mensajes;
@@ -691,38 +692,74 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			
 			
 			/*Listener boton editar de la grilla de formularios*/
-			this.btnEditarForm.addClickListener(click -> {
-			
-				/* ESTO LO DEJAMOS COMENTADO POR EL MOMENTO, VER COMO SE EDITA SI SE EDITA EL GTO
-			boolean esta = false;	
-	
-			try {
+			this.btnProceso.addClickListener(click -> {
 				
-				//Verificamos que haya un formulario seleccionado para eliminar
-				if(formSelecccionado != null)
+				if(this.codTitular.getValue() != null)
 				{
-					
-					this.frmFormPermisos = new GrupoFormularioPermisosExtended(this, formSelecccionado, Variables.OPERACION_EDITAR);
-					
-					sub = new MySub("35%", "30%" );
-					sub.setModal(true);
-					sub.setVista(this.frmFormPermisos);
-					sub.center();
-					
-					UI.getCurrent().addWindow(sub);
-					
-				}
-				else //De lo contrario mostramos mensaje que debe selcionar un formulario
-				{
-					Mensajes.mostrarMensajeError("Debe seleccionar un formulario para editar");
-				}
-		
-				}catch(Exception e)
-				{
-					Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
-				}
+					try {
+						
+						BusquedaViewExtended form = new BusquedaViewExtended(this, new ProcesoVO());
+						
+						sub = new MySub("80%", "64%" );
+						sub.setModal(true);
+						sub.setVista(form);
+						sub.center();
+						
+						String codCliente;/*Codigo del cliente para obtener los gastos a cobrar del mismo*/
+						
+						/*Obtenemos los formularios que no estan en el grupo
+						 * para mostrarlos en la grilla para seleccionar*/
+						if(this.operacion.equals(Variables.OPERACION_NUEVO) )
+						{
+							/*Si la operacion es nuevo, ponemos el  codGrupo vacio
+							 * asi nos trae todos los grupos disponibles*/
+							codCliente = this.codTitular.getValue().toString().trim();
+						}
+						else 
+						{
+							/*Si es operacion Editar tomamos el codGrupo de el fieldGroup*/
+							codCliente = fieldGroup.getItemDataSource().getBean().getCodTitular();
+						}
+						
+						/*Inicializamos VO de permisos para el usuario, formulario y operacion
+						 * para confirmar los permisos del usuario*/
+						UsuarioPermisosVO permisoAux = 
+								new UsuarioPermisosVO(this.permisos.getCodEmp(),
+										this.permisos.getUsuario(),
+										VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+										VariablesPermisos.OPERACION_NUEVO_EDITAR);
+						
+
+						/*Obtenemos los gastos con saldo del cliente*/
+						ArrayList<ProcesoVO> lstProcesos = this.controlador.getProcesosCliente(permisoAux, codCliente);
+						
+						/*Hacemos una lista auxliar para pasarselo al BusquedaViewExtended*/
+						ArrayList<Object> lst = new ArrayList<Object>();
+						Object obj;
+						for (ProcesoVO i: lstProcesos) {
+							
+							/*Verificamos que el proceso ya no esta en la grilla*/
+							if(!this.existeFormularioenLista(i.getCodigo()))
+							{
+								obj = new Object();
+								obj = (Object)i;
+								lst.add(obj);
+							}
+						}
+						
+						form.inicializarGrilla(lst);
+						
+						UI.getCurrent().addWindow(sub);
+
+						}catch(Exception e)
+						{
+							Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+						}
+					}
+			
 			});
 			
+			/*
 			//Listener boton permisos
 			this.btnVerPermisos.addClickListener(click -> {
 				
@@ -754,8 +791,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 					Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 				}
 			
-			*/
-			});
+			
+			});*/
 			
 			
 	///////////////////
@@ -1164,8 +1201,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		this.btnQuitar.setEnabled(true);
 		this.btnQuitar.setVisible(true);
 		
-		this.btnEditarForm.setEnabled(true);
-		this.btnEditarForm.setVisible(true);
+		this.btnProceso.setEnabled(true);
+		this.btnProceso.setVisible(true);
 		
 	}
 	
@@ -1181,8 +1218,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		this.btnQuitar.setEnabled(false);
 		this.btnQuitar.setVisible(false);
 		
-		this.btnEditarForm.setEnabled(false);
-		this.btnEditarForm.setVisible(false);
+		this.btnProceso.setEnabled(false);
+		this.btnProceso.setVisible(false);
 	}
 	
 	/**
@@ -1491,6 +1528,27 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	 *
 	 */
 	private boolean existeFormularioenLista(int nro)
+	{
+		int i =0;
+		boolean esta = false;
+		
+		IngresoCobroDetalleVO aux;
+		
+		while( i < this.lstDetalleVO.size() && !esta)
+		{
+			aux = this.lstDetalleVO.get(i);
+			if(nro==aux.getNroDocum())
+			{
+				esta = true;
+			}
+			
+			i++;
+		}
+		
+		return esta;
+	}
+	
+	private boolean existeProcesoenLista(int nro)
 	{
 		int i =0;
 		boolean esta = false;
