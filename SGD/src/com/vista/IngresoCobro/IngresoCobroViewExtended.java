@@ -1965,7 +1965,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			aux = impTotalIngresado * tcMonedaNacional;
 			impMo = aux;
 		}
-		else  /*Si no es moneda nacional y es distinto al moneda del cobro*/
+		 else  /*Si no es moneda nacional y es distinto al moneda del cobro*/
 		{
 			
 			/*Obtenemos el tipo de cambio a pesos de la moneda del cobro */

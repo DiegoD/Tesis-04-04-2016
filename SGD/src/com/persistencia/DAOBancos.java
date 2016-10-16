@@ -343,6 +343,7 @@ public class DAOBancos implements IDAOBancos{
 			rs = pstmt1.executeQuery();
 			
 			CtaBco aux;
+			Moneda monedaAux;
 			while(rs.next ()) {
 				
 							
@@ -359,6 +360,14 @@ public class DAOBancos implements IDAOBancos{
 				aux.setOperacion(rs.getString("operacion"));
 				aux.setFechaMod(rs.getTimestamp("fecha_mod"));
 				
+				monedaAux = new Moneda();
+				monedaAux.setAcepta_cotizacion(rs.getBoolean("acepta_cotizacion"));
+				monedaAux.setActivo(rs.getBoolean("activoMoneda"));
+				monedaAux.setCod_moneda(rs.getString("cod_moneda"));
+				monedaAux.setDescripcion(rs.getString("descripcion"));
+				monedaAux.setSimbolo(rs.getString("simbolo"));
+				
+				aux.setMoneda(monedaAux);
 							
 				
 				lstCtaBancos.add(aux);

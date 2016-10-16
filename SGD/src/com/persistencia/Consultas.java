@@ -770,8 +770,12 @@ public String getProcesosActivos(){
 	
 	StringBuilder sb = new StringBuilder();
 	
-	sb.append("SELECT cod_ctabco, nom_cta, cod_bco, cod_emp, activo, usuario_mod, operacion, fecha_mod ");
-	sb.append("FROM m_ctasbcos WHERE cod_bco = ? AND cod_emp = ? AND activo = 1 ");
+	sb.append("SELECT b.cod_ctabco, b.nom_cta, b.cod_bco, b.cod_emp, b.activo, b.cod_moneda, b.usuario_mod, "
+			+ " b.operacion, b.fecha_mod, m.descripcion, m.simbolo, m.acepta_cotizacion, m.activo activoMoneda, "
+			+ " m.fecha_mod m_fecha_mod, m.usuario_mod m_usuario_mod, m.operacion m_operacion, m.cod_emp, nacional ");
+	sb.append("FROM m_ctasbcos b, m_monedas m "
+			+ " WHERE cod_bco = ? AND b.cod_emp = ? AND b.activo = 1 "
+			+ " AND b.cod_moneda = m.cod_moneda AND b.cod_emp = m.cod_emp ");
 		
 		
 		return sb.toString();
