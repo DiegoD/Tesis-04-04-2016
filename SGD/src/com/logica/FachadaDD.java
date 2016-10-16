@@ -2800,7 +2800,7 @@ public class FachadaDD {
 				
 				//Modifico gasto
 				this.gastos.modificarGasto(gasto, cod_emp, con);
-				this.saldos.modificarSaldo((DocumDetalle) gasto, 1, gasto.getTcMov(), con);
+				this.saldos.modificarSaldoSinSA((DocumDetalle) gasto, con);
 				
 				//Genero log de documento
 				this.logDocum = new DocLog();

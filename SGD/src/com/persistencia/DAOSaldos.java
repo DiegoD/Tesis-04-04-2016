@@ -31,7 +31,7 @@ public class DAOSaldos implements IDAOSaldos{
 
 	
 	/**
-	 * Dado el codigo de rubro, valida si existe
+	 * Dado documento, valida si existe
 	 * @throws ExisteSaldoException 
 	 */
 	public boolean memberSaldo(DatosDocum docum, Connection con) throws ExisteSaldoException{
@@ -69,6 +69,9 @@ public class DAOSaldos implements IDAOSaldos{
 	}
 	
 
+	/**
+	 * Inserta saldo
+	 */
 	@Override
 	public void insertarSaldo(DatosDocum documento, Connection con)
 			throws IngresandoSaldoException, ConexionException, SQLException {
@@ -105,6 +108,10 @@ public class DAOSaldos implements IDAOSaldos{
 		
 	}
 
+	
+	/**
+	 * Elimina Saldo
+	 */
 	@Override
 	public void eliminarSaldo(DatosDocum documento, Connection con)
 			throws EliminandoSaldoException, ConexionException {
@@ -133,6 +140,10 @@ public class DAOSaldos implements IDAOSaldos{
 		}
 	}
 	
+	
+	/**
+	 * Modifica saldo verificando el saldo anterior
+	 */
 	@Override
 	public void modificarSaldo(DatosDocum documento, int signo, double tc , Connection con)
 			throws ModificandoSaldoException, ConexionException, EliminandoSaldoException, IngresandoSaldoException, ExisteSaldoException {
@@ -165,6 +176,34 @@ public class DAOSaldos implements IDAOSaldos{
 					documento.setImpTotMn(0);
 				}
 				
+				this.eliminarSaldo(documento, con);
+				this.insertarSaldo(documento, con);
+			}
+			else /*Si no existe, es nuevo y solamente insertamos*/
+			{
+				this.insertarSaldo(documento, con);
+			} 
+		} 
+		
+		catch (SQLException e) {
+			
+			throw new ModificandoSaldoException();
+		}
+	}
+	
+	/**
+	 * Modifica saldo verificando el saldo anterior
+	 */
+	@Override
+	public void modificarSaldoSinSA(DatosDocum documento, Connection con)
+			throws ModificandoSaldoException, ConexionException, EliminandoSaldoException, IngresandoSaldoException, ExisteSaldoException {
+		
+		try {
+			
+			/*Verificamos si existe el documento en la tabla de saldos
+			 * si existe eliminamos e insertamos con la nueva info*/
+			if(this.memberSaldo((DatosDocum)documento, con))
+			{
 				this.eliminarSaldo(documento, con);
 				this.insertarSaldo(documento, con);
 			}
