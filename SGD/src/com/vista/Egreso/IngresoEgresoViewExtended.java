@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
-import com.controladores.IngresoCobroControlador;
 import com.controladores.IngresoEgresoControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.ErrorInesperadoException;
@@ -18,10 +17,7 @@ import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Bancos.ObteniendoBancosException;
 import com.excepciones.Bancos.ObteniendoCuentasBcoException;
 import com.excepciones.Cotizaciones.ObteniendoCotizacionesException;
-import com.excepciones.IngresoCobros.ExisteIngresoCobroException;
-import com.excepciones.IngresoCobros.InsertandoIngresoCobroException;
-import com.excepciones.IngresoCobros.ModificandoIngresoCobroException;
-import com.excepciones.IngresoCobros.NoExisteIngresoCobroException;
+import com.excepciones.Egresos.*;
 import com.excepciones.Monedas.ObteniendoMonedaException;
 import com.excepciones.clientes.ObteniendoClientesException;
 import com.sun.org.apache.xpath.internal.operations.Variable;
@@ -499,12 +495,9 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 				Mensajes.mostrarMensajeWarning(Variables.WARNING_CAMPOS_NO_VALIDOS);
 			}
 				
-			} catch (ModificandoIngresoCobroException| NoExisteIngresoCobroException |InsertandoIngresoCobroException| ExisteIngresoCobroException | InicializandoException| ConexionException | NoTienePermisosException| ObteniendoPermisosException e) {
-				
-				ExisteIngresoCobroException a;
+			} catch (ModificandoEgresoCobroException| NoExisteEgresoCobroException |InsertandoEgresoCobroException| ExisteEgresoCobroException | InicializandoException| ConexionException | NoTienePermisosException| ObteniendoPermisosException e) {
 				
 				Mensajes.mostrarMensajeError(e.getMessage());
-				
 			}
 			
 		});

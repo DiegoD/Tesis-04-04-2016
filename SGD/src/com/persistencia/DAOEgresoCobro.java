@@ -8,7 +8,6 @@ import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
 import com.excepciones.Egresos.*;
-import com.logica.Moneda;
 import com.logica.MonedaInfo;
 import com.logica.Docum.BancoInfo;
 import com.logica.Docum.CuentaBcoInfo;

@@ -15,12 +15,8 @@ import com.excepciones.Bancos.ObteniendoBancosException;
 import com.excepciones.Bancos.ObteniendoCuentasBcoException;
 import com.excepciones.Bancos.VerificandoBancosException;
 import com.excepciones.Cotizaciones.ObteniendoCotizacionesException;
+import com.excepciones.Egresos.*;
 import com.excepciones.Gastos.ObteniendoGastosException;
-import com.excepciones.IngresoCobros.ExisteIngresoCobroException;
-import com.excepciones.IngresoCobros.InsertandoIngresoCobroException;
-import com.excepciones.IngresoCobros.ModificandoIngresoCobroException;
-import com.excepciones.IngresoCobros.NoExisteIngresoCobroException;
-import com.excepciones.IngresoCobros.ObteniendoIngresoCobroException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
 import com.excepciones.clientes.ObteniendoClientesException;
 import com.logica.Fachada;
@@ -39,11 +35,11 @@ public class IngresoEgresoControlador {
 	/**
 	 * Obtiene los cobros del sistema
 	 */
-	public ArrayList<IngresoCobroVO> getIngresoEgresoTodos(UsuarioPermisosVO permisos) throws ObteniendoIngresoCobroException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException  
+	public ArrayList<IngresoCobroVO> getIngresoEgresoTodos(UsuarioPermisosVO permisos) throws ObteniendoEgresoCobroException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException  
 	{
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			return Fachada.getInstance().getIngresoCobroTodos(permisos.getCodEmp());
+			return Fachada.getInstance().getEgresoCobroTodos(permisos.getCodEmp());
 		else
 			throw new NoTienePermisosException();
     }
@@ -52,12 +48,12 @@ public class IngresoEgresoControlador {
 	/**
 	 * Inserta un cobro 
 	 */
-	public void insertarIngresoEgreso(IngresoCobroVO ingVO, UsuarioPermisosVO permisos) throws InsertandoIngresoCobroException, ConexionException, ExisteIngresoCobroException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException 
+	public void insertarIngresoEgreso(IngresoCobroVO ingVO, UsuarioPermisosVO permisos) throws InsertandoEgresoCobroException, ConexionException, ExisteEgresoCobroException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException 
 	{
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			Fachada.getInstance().insertarIngresoCobro(ingVO, permisos.getCodEmp());
+			Fachada.getInstance().insertarEgresoCobro(ingVO, permisos.getCodEmp());
 		else
 			throw new NoTienePermisosException();
 		
@@ -67,11 +63,11 @@ public class IngresoEgresoControlador {
 	 * Modifica los datos de un cobro
 	 * @throws NoExisteIngresoCobroException 
 	 */
-	public void modificarIngresoEgreso(IngresoCobroVO ingVO, IngresoCobroVO copiaVO, UsuarioPermisosVO permisos) throws ConexionException, ModificandoIngresoCobroException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ExisteIngresoCobroException, NoExisteIngresoCobroException 
+	public void modificarIngresoEgreso(IngresoCobroVO ingVO, IngresoCobroVO copiaVO, UsuarioPermisosVO permisos) throws ConexionException, ModificandoEgresoCobroException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ExisteEgresoCobroException, NoExisteEgresoCobroException 
 	{
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			Fachada.getInstance().modificarIngresoCobro(ingVO, copiaVO);
+			Fachada.getInstance().modificarEgresoCobro(ingVO, copiaVO);
 		else
 			throw new NoTienePermisosException();
 	}

@@ -8,15 +8,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import com.controladores.BancoControlador;
-import com.controladores.IngresoCobroControlador;
+import com.controladores.IngresoEgresoControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.InicializandoException;
 import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
-import com.excepciones.Bancos.ObteniendoBancosException;
-import com.excepciones.Bancos.ObteniendoCuentasBcoException;
-import com.excepciones.IngresoCobros.ObteniendoIngresoCobroException;
+import com.excepciones.Egresos.*;
 import com.logica.IngresoCobro.IngresoCobro;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
@@ -43,23 +40,23 @@ import com.vista.Bancos.BancosPanelExtended;
 public class IngresoEgresoPanelExtended extends IngresoEgresoPanel{
 	
 	private IngresoEgresoViewExtended form; 
-	private ArrayList<IngresoCobroVO> lstIngresoCobro; /*Lista con los cobros*/
+	private ArrayList<IngresoCobroVO> lstEgresos; /*Lista con los cobros*/
 	private BeanItemContainer<IngresoCobroVO> container;
-	private IngresoCobroControlador controlador;
+	private IngresoEgresoControlador controlador;
 	PermisosUsuario permisos;
 	MySub sub = new MySub("75%", "65%");
 	
 	public IngresoEgresoPanelExtended(){
 		
-		controlador = new IngresoCobroControlador();
-		this.lstIngresoCobro = new ArrayList<IngresoCobroVO>();
+		controlador = new IngresoEgresoControlador();
+		this.lstEgresos = new ArrayList<IngresoCobroVO>();
 		
 		String usuario = (String)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("usuario");
 		this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
 		
 			
         /*Verificamos que el usuario tenga permisos de lectura para mostrar la vista*/
-		boolean permisoLectura = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_COBRO, VariablesPermisos.OPERACION_LEER);
+		boolean permisoLectura = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO, VariablesPermisos.OPERACION_LEER);
 		
 		if(permisoLectura){
         
@@ -68,7 +65,7 @@ public class IngresoEgresoPanelExtended extends IngresoEgresoPanel{
 				this.inicializarGrilla();
 				
 				/*Para el boton de nuevo, verificamos que tenga permisos de nuevoEditar*/
-				boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_COBRO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+				boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 				if(permisoNuevoEditar)
 				{
 				
@@ -110,9 +107,9 @@ public class IngresoEgresoPanelExtended extends IngresoEgresoPanel{
 				new BeanItemContainer<IngresoCobroVO>(IngresoCobroVO.class);
 		
 		//Obtenemos lista de bancos del sistema
-		this.lstIngresoCobro = this.getCobros(); 
+		this.lstEgresos = this.getCobros(); 
 		
-		for (IngresoCobroVO ingVO : lstIngresoCobro) {
+		for (IngresoCobroVO ingVO : lstEgresos) {
 			container.addBean(ingVO);
 		}
 		
@@ -187,9 +184,9 @@ public class IngresoEgresoPanelExtended extends IngresoEgresoPanel{
 							VariablesPermisos.OPERACION_LEER);
 
 			
-			lst = controlador.getIngresoCobroTodos(permisoAux);
+			lst = controlador.getIngresoEgresoTodos(permisoAux);
 
-		} catch (InicializandoException | ConexionException | ObteniendoPermisosException | NoTienePermisosException | ObteniendoIngresoCobroException e) {
+		} catch (InicializandoException | ConexionException | ObteniendoPermisosException | NoTienePermisosException | ObteniendoEgresoCobroException e) {
 			
 			Mensajes.mostrarMensajeError(e.getMessage());
 		}
@@ -228,10 +225,10 @@ public class IngresoEgresoPanelExtended extends IngresoEgresoPanel{
 		this.container.removeAllItems();
 		
 		//Obtenemos lista de bancos del sistema
-		this.lstIngresoCobro = this.getCobros(); 
+		this.lstEgresos = this.getCobros(); 
 		
 		
-		this.container.addAll(this.lstIngresoCobro);
+		this.container.addAll(this.lstEgresos);
 		grid.setContainerDataSource(container);
 
 	}
@@ -249,12 +246,12 @@ public class IngresoEgresoPanelExtended extends IngresoEgresoPanel{
 		
 		IngresoCobroVO ingEnLista;
 		
-		while( i < this.lstIngresoCobro.size() && !salir)
+		while( i < this.lstEgresos.size() && !salir)
 		{
-			ingEnLista = this.lstIngresoCobro.get(i);
+			ingEnLista = this.lstEgresos.get(i);
 			if(ingVO.getNroDocum()==ingEnLista.getNroDocum())
 			{
-				this.lstIngresoCobro.get(i).copiar(ingVO);
+				this.lstEgresos.get(i).copiar(ingVO);
 
 				salir = true;
 			}
@@ -276,9 +273,9 @@ public class IngresoEgresoPanelExtended extends IngresoEgresoPanel{
 		
 		IngresoCobroVO aux;
 		
-		while( i < this.lstIngresoCobro.size() && !esta)
+		while( i < this.lstEgresos.size() && !esta)
 		{
-			aux = this.lstIngresoCobro.get(i);
+			aux = this.lstEgresos.get(i);
 			if(nro==aux.getNroDocum())
 			{
 				esta = true;
