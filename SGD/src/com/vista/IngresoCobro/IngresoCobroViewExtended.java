@@ -533,11 +533,11 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		
 		/*Inicalizamos listener para boton de Agregar gastos a cobrar*/
 		this.btnAgregar.addClickListener(click -> {
-					
-			if(this.codTitular.getValue() != null)
+			
+			if(this.codTitular.getValue() != null && this.codTitular.getValue() != "" 
+					&& this.fecValor.getValue() != null && this.comboMoneda.getValue() != null)
 			{
 				try {
-					
 					
 					
 					BusquedaViewExtended form = new BusquedaViewExtended(this, new GastoVO());
@@ -606,6 +606,9 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 						Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 					}
 				}
+			else{
+				Mensajes.mostrarMensajeError("Debe ingresar los datos de cabecera");
+			}
 			});
 			
 			this.cancelar.addClickListener(click -> {
@@ -694,7 +697,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			/*Listener boton editar de la grilla de formularios*/
 			this.btnProceso.addClickListener(click -> {
 				
-				if(this.codTitular.getValue() != null)
+				if(this.codTitular.getValue() != null && this.codTitular.getValue() != "" 
+						&& this.fecValor.getValue() != null && this.comboMoneda.getValue() != null)
 				{
 					try {
 						
@@ -756,7 +760,9 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 							Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 						}
 					}
-			
+				else{
+					Mensajes.mostrarMensajeError("Debe ingresar los datos de cabecera");
+				}
 			});
 			
 			/*
@@ -1649,19 +1655,16 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		IngresoCobroDetalleVO aux;
 		GtoSaldoAux gtoSaldo;
 		
-	@Override
-      public void preCommit(FieldGroup.CommitEvent commitEvent) throws     FieldGroup.CommitException {
+		@Override
+		public void preCommit(FieldGroup.CommitEvent commitEvent) throws     FieldGroup.CommitException {
       	
-    	  
-      	
-      	if(formSelecccionado != null){
-      		
-      		
-      		IngresoCobroDetalleVO aux = obtenerGastoEnLista(formSelecccionado.getNroDocum());
-	    	gtoSaldo = saldoOriginalGastos.get(formSelecccionado.getNroDocum());
-	    	
-  		}
-    	  
+	      	if(formSelecccionado != null && (formSelecccionado.getSerieDocum() != "Proc")){
+	      		
+	      		
+	      		IngresoCobroDetalleVO aux = obtenerGastoEnLista(formSelecccionado.getNroDocum());
+		    	gtoSaldo = saldoOriginalGastos.get(formSelecccionado.getNroDocum());
+		    	
+	  		}
       }
 
       @Override
@@ -1670,12 +1673,16 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
     	  
     	  IngresoCobroDetalleVO aux2 = obtenerGastoEnLista(formSelecccionado.getNroDocum());
     	  
-    	  /*Si el importe modificado es mayor al saldo no dejamos modificar*/
-    	  
-	    	if(aux2.getImpTotMo()> gtoSaldo.getSaldo())
-	    	{
-	    		throw new FieldGroup.CommitException("El importe no puede ser mayor al saldo ");
-	    	}
+    	  /*Verifico si es a cuenta de proceso no tiene saldo*/
+    	  if(aux2.getSerieDocum() != "Proc"){
+    	
+    		  /*Si el importe modificado es mayor al saldo no dejamos modificar*/
+			  if(aux2.getImpTotMo()> gtoSaldo.getSaldo())
+			  {
+				  throw new FieldGroup.CommitException("El importe no puede ser mayor al saldo ");
+			  }
+    	  }
+	    	
 	    	
     	  calcularImporteTotal();
       }
@@ -1861,10 +1868,57 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	
 	@Override
 	public void setInfo(Object datos) {
+		
 		if(datos instanceof ClienteVO){
 			ClienteVO clienteVO = (ClienteVO) datos;
 			this.codTitular.setValue(String.valueOf(clienteVO.getCodigo()));
 			this.nomTitular.setValue(clienteVO.getNombre());
+		}
+		
+		if(datos instanceof ProcesoVO){
+			ProcesoVO procesoVO = (ProcesoVO) datos;
+			IngresoCobroDetalleVO docum = new IngresoCobroDetalleVO();
+			docum = (IngresoCobroDetalleVO) procesoVO.crearDocumDetalle(procesoVO);
+			MonedaVO auxMoneda = new MonedaVO();
+			UsuarioPermisosVO permisosAux;
+			
+   			
+   			auxMoneda = (MonedaVO) comboMoneda.getValue();
+   			permisosAux = 
+					new UsuarioPermisosVO(this.permisos.getCodEmp(),
+							this.permisos.getUsuario(),
+							VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+							VariablesPermisos.OPERACION_NUEVO_EDITAR);
+   			
+   			/*Seteo la moneda del cobro a cuenta de proceso con la moneda ingresada de cobro*/
+   			docum.setCodMoneda(auxMoneda.getCodMoneda());
+   			docum.setNomMoneda(auxMoneda.getDescripcion());
+   			docum.setSimboloMoneda(auxMoneda.getSimbolo());
+   			docum.setCodDocum("Proc");
+   			docum.setSerieDocum("Proc");
+   			docum.setNroDocum(procesoVO.getCodigo());
+   			docum.setUsuarioMod(permisosAux.getUsuario());
+   			docum.setOperacion("NUEVO");
+   			docum.setCodEmp(permisosAux.getCodEmp());
+   			docum.setFecValor(new java.sql.Timestamp(fecValor.getValue().getTime()));
+   			docum.setFecDoc(new java.sql.Timestamp(fecDoc.getValue().getTime()));
+   			/*VER*/ docum.setCodRubro("01");
+   			docum.setCodCuenta("01");
+   			docum.setCodImpuesto("01");
+   			
+			this.lstDetalleVO.add(docum);
+				
+//			/*Tambien agrefamos a la lista de los saldos originales
+//			 * para poder controlar que no ingresen un saldo mayor al que tien el gasto*/
+//			GtoSaldoAux saldoAux =  new GtoSaldoAux(g.getNroDocum(), g.getImpTotMo());
+//			this.saldoOriginalGastos.put(saldoAux.getNroDocum(),saldoAux);
+				
+			/*Actualizamos el container y la grilla*/
+			container.removeAllItems();
+			container.addAll(lstDetalleVO);
+			//lstFormularios.setContainerDataSource(container);
+			this.actualizarGrillaContainer(container);
+			
 		}
 		
 	}
@@ -2151,14 +2205,14 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			
 		}
 			
-			/*Actualizamos el container y la grilla*/
-			container.removeAllItems();
-			container.addAll(lstDetalleVO);
-			//lstFormularios.setContainerDataSource(container);
-			this.actualizarGrillaContainer(container);
-			
-			/*Calculamos el importe total de todos los gastos*/
-			this.calcularImporteTotal();
+		/*Actualizamos el container y la grilla*/
+		container.removeAllItems();
+		container.addAll(lstDetalleVO);
+		//lstFormularios.setContainerDataSource(container);
+		this.actualizarGrillaContainer(container);
+		
+		/*Calculamos el importe total de todos los gastos*/
+		this.calcularImporteTotal();
 		
 	}
 	

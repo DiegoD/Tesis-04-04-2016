@@ -1351,7 +1351,7 @@ public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 					/*Signo -1 porque resta al saldo del documento el cobro*/
 					this.saldos.modificarSaldo(docum, -1, ingVO.getTcMov(), con);
 				}
-				else if(docum.getCodDocum().equals("Proceso")) /*Modificamos el saldo para el proceso ingresado*/
+				else if(docum.getCodDocum().equals("Proc")) /*Modificamos el saldo para el proceso ingresado*/
 				{
 					/*Para el proceso esl signo es 1 porque subo el saldo a la cuenta del proceso*/
 					this.saldosProceso.modificarSaldo(docum, 1, ingVO.getTcMov(), con);
@@ -1567,7 +1567,7 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 					/*Signo -1 porque resta al saldo del documento el cobro*/
 					this.saldos.modificarSaldo(docum, -1, ingVO.getTcMov(), con);
 				}
-				else if(docum.getCodDocum().equals("Proceso")) /*Modificamos el saldo para el proceso ingresado*/
+				else if(docum.getCodDocum().equals("Proc")) /*Modificamos el saldo para el proceso ingresado*/
 				{
 					/*EL signo es 1 en proceso para que le agregue saldo al proceso*/
 					this.saldosProceso.modificarSaldo(docum, 1, ingVO.getTcMov(), con);

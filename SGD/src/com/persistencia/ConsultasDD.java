@@ -961,7 +961,7 @@ public class ConsultasDD {
 				+ "AND m_documentos_aduaneros.cod_emp = c_procesos.cod_emp "
 				+ " LEFT JOIN  m_clientes ON c_procesos.cod_cliente = m_clientes.cod_tit AND m_clientes.cod_emp = c_procesos.cod_emp "
 				+ " LEFT JOIN m_monedas ON c_procesos.cod_moneda = m_monedas.cod_moneda AND m_monedas.cod_emp = c_procesos.cod_emp "
-				+ " AND c_procesos.cod_emp = ? AND cod_cliente = ? ");  
+				+ " WHERE c_procesos.cod_emp = ? AND cod_cliente = ? ");  
 		
 		return sb.toString();
 	}

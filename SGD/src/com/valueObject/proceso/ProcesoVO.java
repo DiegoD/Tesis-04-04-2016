@@ -4,6 +4,8 @@ import java.sql.Timestamp;
 
 import com.valueObject.AuditoriaVO;
 import com.valueObject.MonedaInfoVO;
+import com.valueObject.Docum.DocumDetalleVO;
+import com.valueObject.IngresoCobro.IngresoCobroDetalleVO;
 import com.valueObject.cliente.ClienteInfoVO;
 
 public class ProcesoVO extends AuditoriaVO{
@@ -118,6 +120,39 @@ public class ProcesoVO extends AuditoriaVO{
 		this.medio = procesoVO.getMedio();
 		this.descripcion = procesoVO.getDescripcion();
 		this.observaciones = procesoVO.getObservaciones();
+	}
+	
+	public IngresoCobroDetalleVO crearDocumDetalle(ProcesoVO procesoVO){
+		IngresoCobroDetalleVO docum = new IngresoCobroDetalleVO();
+		
+		docum.setCodCtaInd(String.valueOf(procesoVO.getCodigo()));
+		docum.setCodCuenta(String.valueOf(procesoVO.getCodigo()));
+		docum.setCodDocum(String.valueOf(procesoVO.getCodigo()));
+		docum.setReferencia(procesoVO.getDescripcion());
+		docum.setCodImpuesto("0");
+		docum.setNomImpuesto("");
+		docum.setPorcentajeImpuesto(0);
+		docum.setImpImpuMn(0);
+		docum.setImpImpuMo(0);
+		docum.setImpSubMn(0);
+		docum.setImpSubMo(0);
+		docum.setImpTotMn(0);
+		docum.setImpTotMo(0);
+		docum.setTcMov(0);
+		docum.setCodCuenta("");
+		docum.setNomCuenta("");
+		docum.setCodProceso(String.valueOf(procesoVO.getCodigo()));
+		docum.setDescProceso(procesoVO.getDescripcion());
+		docum.setNomRubro("");
+		docum.setCodRubro("");
+		
+		/***VER DE DONDE SACAR***/
+		docum.setUsuarioMod(procesoVO.getUsuarioMod());
+		docum.setOperacion(procesoVO.getOperacion());
+		
+		
+		
+		return docum;
 	}
 	
 	public int getCodigo() {
