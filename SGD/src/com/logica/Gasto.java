@@ -16,4 +16,5 @@ public class Gasto extends DocumDetalle{
 		super(gastoVO);
 	}
 	
+	
 }

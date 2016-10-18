@@ -76,7 +76,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 	private BeanFieldGroup<GastoVO> fieldGroup;
 	private GastoControlador controlador;
 	private String operacion;
-	private GastosPanelExtended mainView;
+	private IGastosMain mainView;
 	MySub sub;
 	private PermisosUsuario permisos;
 	UsuarioPermisosVO permisoAux;
@@ -87,7 +87,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 	CotizacionVO cotizacion =  new CotizacionVO();
 	
 	
-	public GastoViewExtended(String opera, GastosPanelExtended main){
+	public GastoViewExtended(String opera, IGastosMain main){
 		
 //		final CSValidator validator = new CSValidator();
 //		validator.extend(impTotMo);
@@ -262,23 +262,40 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 					
 					if(this.operacion.equals(Variables.OPERACION_NUEVO)) {	
 		
-						codigos = this.controlador.insertarGasto(gastoVO, permisoAux);
-						gastoVO.setNroDocum(codigos.getCodigo());
-						gastoVO.setNroTrans(codigos.getNumeroTrans());
-						
-						this.mainView.actulaizarGrilla(gastoVO);
-						
-						Mensajes.mostrarMensajeOK("Se ha guardado el gasto");
-						main.cerrarVentana();
+						/*Si el mainView es el panel:*/
+						if(this.mainView.nomForm().equals("Panel")){
+							
+							codigos = this.controlador.insertarGasto(gastoVO, permisoAux);
+							gastoVO.setNroDocum(codigos.getCodigo());
+							gastoVO.setNroTrans(codigos.getNumeroTrans());
+							
+							this.mainView.actulaizarGrilla(gastoVO);
+							
+							Mensajes.mostrarMensajeOK("Se ha guardado el gasto");
+							main.cerrarVentana();
+							
+						}else if(this.mainView.nomForm().equals("Egreso")){ /*Si es del form de Egreso Cobro*/
+							
+							this.mainView.setInfoLst(gastoVO); 
+							main.cerrarVentana();
+						}
 					
 					}
 					else if(this.operacion.equals(Variables.OPERACION_EDITAR))	{
 						
-						this.controlador.actualizarGasto(gastoVO, permisoAux);
-						this.mainView.actulaizarGrilla(gastoVO);
-						
-						Mensajes.mostrarMensajeOK("Se ha modificado el gasto");
-						main.cerrarVentana();
+						/*Si el mainView es el panel:*/
+						if(this.mainView.nomForm().equals("Panel")){
+							this.controlador.actualizarGasto(gastoVO, permisoAux);
+							this.mainView.actulaizarGrilla(gastoVO);
+							
+							Mensajes.mostrarMensajeOK("Se ha modificado el gasto");
+							main.cerrarVentana();
+							
+						}else if(this.mainView.nomForm().equals("Egreso")){ /*Si es del form de Egreso Cobro*/
+							
+							this.mainView.actulaizarGrilla(gastoVO);
+							main.cerrarVentana();
+						}
 						
 					}
 				}

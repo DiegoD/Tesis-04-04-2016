@@ -1768,8 +1768,10 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 				
 					if(docum.getCodDocum().equals("Gasto")){ /*Para los gastos modificamos el saldo al documento*/
 						
+						
 						/*Ingresamos cada uno de los Gastos*/
-						this.gastos.insertarGasto((Gasto)docum, codEmp, con);
+						//this.gastos.insertarGasto((Gasto)docum, codEmp, con);
+						this.gastos.insertarGasto(docum.getDocumDetalle(), codEmp, con);
 						
 						//Genero saldo del gasto 
 						this.saldos.insertarSaldo(docum, con);

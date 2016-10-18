@@ -63,11 +63,17 @@ import com.vista.MySub;
 import com.vista.PermisosUsuario;
 import com.vista.Variables;
 import com.vista.VariablesPermisos;
+import com.vista.Gastos.GastoViewExtended;
+import com.vista.Gastos.IGastosMain;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 
-public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBusqueda{
+public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBusqueda, IGastosMain{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private BeanFieldGroup<IngresoCobroVO> fieldGroup;
 	private ArrayList<IngresoCobroDetalleVO> lstDetalleVO; /*Lista de detalle del Cobro*/
 	private ArrayList<IngresoCobroDetalleVO> lstDetalleAgregar; /*Lista de detalle a agregar*/
@@ -531,15 +537,12 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 			{
 				try {
 					
+					GastoViewExtended form = new GastoViewExtended(Variables.OPERACION_NUEVO, this);
 					
-					
-					BusquedaViewExtended form = new BusquedaViewExtended(this, new GastoVO());
-					
-					sub = new MySub("80%", "64%" );
+					sub = new MySub("95%", "64%" );
 					sub.setModal(true);
 					sub.setVista(form);
-					//sub.setWidth("50%");
-					//sub.setHeight("50%");
+					
 					sub.center();
 					
 					String codCliente;/*Codigo del cliente para obtener los gastos a cobrar del mismo*/
@@ -590,7 +593,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 						}
 					}
 					
-					form.inicializarGrilla(lst);
+					//form.inicializarGrilla(lst);
 					
 					UI.getCurrent().addWindow(sub);
 
@@ -622,13 +625,9 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 					int i = 0;
 					while(i < lstDetalleVO.size() && !esta)
 					{
-						if(lstDetalleVO.get(i).getNroDocum()==formSelecccionado.getNroDocum())
+						if(lstDetalleVO.get(i).getLinea()==formSelecccionado.getLinea())
 						{
-							/*Tambien lo quitamos de la lista de los saldos originales
-							 * para poder controlar que no ingresen un saldo mayor al que tien el gasto*/
-							GtoSaldoAux saldoAux =  new GtoSaldoAux(lstDetalleVO.get(i).getNroDocum(), lstDetalleVO.get(i).getImpTotMo());
-							this.saldoOriginalGastos.remove(saldoAux.getNroDocum(),saldoAux);
-							
+														
 							/*Quitamos el formulario seleccionado de la lista*/
 							lstDetalleVO.remove(lstDetalleVO.get(i));
 						
@@ -2069,34 +2068,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		return codMoneda;
 	}
 
-	@Override
-	public void setInfoLst(ArrayList<Object> lstDatos) {
-		
-		IngresoCobroDetalleVO g;
-		for (Object obj : lstDatos) {
-			
-			g = new IngresoCobroDetalleVO();
-			g.copiar((DocumDetalleVO)obj);
-			
-			this.lstDetalleVO.add(g);
-			
-			/*Tambien agrefamos a la lista de los saldos originales
-			 * para poder controlar que no ingresen un saldo mayor al que tien el gasto*/
-			GtoSaldoAux saldoAux =  new GtoSaldoAux(g.getNroDocum(), g.getImpTotMo());
-			this.saldoOriginalGastos.put(saldoAux.getNroDocum(),saldoAux);
-			
-		}
-			
-			/*Actualizamos el container y la grilla*/
-			container.removeAllItems();
-			container.addAll(lstDetalleVO);
-			//lstFormularios.setContainerDataSource(container);
-			this.actualizarGrillaContainer(container);
-			
-			/*Calculamos el importe total de todos los gastos*/
-			this.calcularImporteTotal();
-		
-	}
+
 	
 	public void inicializarCampos(){
 		
@@ -2127,6 +2099,158 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 				// TODO: handle exception
 			}
 		}
+		
+	}
+	
+	
+	
+	@Override
+	public void setInfoLst(GastoVO gasto) {
+		
+		IngresoCobroDetalleVO g;
+			
+		g = new IngresoCobroDetalleVO();
+		g.copiar((DocumDetalleVO)gasto);
+		
+		/*Seteamos el nro de linea para poder identificarlo 
+		 * si se modifica  */
+		g.setLinea(lstDetalleVO.size() + 1);
+		
+		
+		this.lstDetalleVO.add(g);
+			
+		/*Actualizamos el container y la grilla*/
+		container.removeAllItems();
+		container.addAll(lstDetalleVO);
+		//lstFormularios.setContainerDataSource(container);
+		this.actualizarGrillaContainer(container);
+		
+		/*Calculamos el importe total de todos los gastos*/
+		this.calcularImporteTotal();
+		
+	}
+
+	@Override
+	public void setSub(String seleccion) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void actulaizarGrilla(GastoVO gastoVO) {
+		// TODO Auto-generated method stub
+		
+		/*Tomo la linea selaccionada previamente para 
+		 * tomar el nro de linea para poder acutalizar*/
+		int linea = this.formSelecccionado.getLinea();
+		
+		IngresoCobroDetalleVO g;
+		
+		g = new IngresoCobroDetalleVO();
+		g.copiar((DocumDetalleVO)gastoVO);
+		
+		/*Si esta el proceso en la lista, es una acutalizacion
+		 * y modificamos el objeto en la lista*/
+		if(this.existeGastoenLista(linea))
+		{
+			this.actualizarGastoenLista(gastoVO);
+		}
+		
+			
+		/*Actualizamos la grilla*/
+		this.container.removeAllItems();
+		this.container.addAll(this.lstDetalleVO);
+		
+		this.lstGastos.setContainerDataSource(container);
+		
+		
+	}
+	
+	/**
+	 * Modificamos un gastoVO de la lista cuando
+	 * se hace una acutalizacion de un gasto
+	 *
+	 */
+	private void actualizarGastoenLista(GastoVO gastoVO)
+	{
+		/*Obtengo la linea del gasto seleccionado previamente*/
+		int lineaSeleccionada = this.formSelecccionado.getLinea();
+		
+		/*Convertimos el Gasto en linea del Egreso*/
+		IngresoCobroDetalleVO g;
+		g = new IngresoCobroDetalleVO();
+		g.copiar((DocumDetalleVO)gastoVO);
+		g.setLinea(lineaSeleccionada);
+		
+		int i =0;
+		boolean salir = false;
+		
+		IngresoCobroDetalleVO gastoEnLista;
+		
+		while( i < this.lstDetalleVO.size() && !salir)
+		{
+			gastoEnLista = this.lstDetalleVO.get(i);
+			
+			if(lineaSeleccionada == gastoEnLista.getLinea()){
+				
+				this.lstDetalleVO.get(i).copiar(g);
+				salir = true;
+			}
+			
+			i++;
+		}
+	}
+	
+	/**
+	 * Retornanoms true si esta el gastoVO en la lista
+	 * de gastos de la vista
+	 *
+	 */
+	private boolean existeGastoenLista(int nroLinea)
+	{
+		int i =0;
+		boolean esta = false;
+		
+		IngresoCobroDetalleVO aux;
+		
+		while( i < this.lstDetalleVO.size() && !esta)
+		{
+			aux = this.lstDetalleVO.get(i);
+			if(nroLinea == aux.getLinea())
+			{
+				esta = true;
+			}
+			
+			i++;
+		}
+		
+		return esta;
+	}
+	
+
+	@Override
+	public void actuilzarGrillaEliminado(long codigo) {
+		
+		/*Este no lo implementamos ya que se quita desde la linea
+		 * y no desde el formulario de Gasto*/
+		
+	}
+
+	@Override
+	public void mostrarMensaje(String msj) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String nomForm() {
+		
+		return "Egreso";
+	}
+
+	@Override
+	public void setInfoLst(ArrayList<Object> lstDatos) {
+		// TODO Auto-generated method stub
 		
 	}
 	

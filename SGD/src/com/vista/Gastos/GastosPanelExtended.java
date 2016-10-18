@@ -37,7 +37,7 @@ import com.vista.VariablesPermisos;
 import com.vista.Procesos.ProcesoViewExtended;
 import com.vista.Procesos.ProcesosPanelExtended;
 
-public class GastosPanelExtended extends GastosPanel{
+public class GastosPanelExtended extends GastosPanel implements IGastosMain{
 
 	private GastoViewExtended form; 
 	private ArrayList<GastoVO> lstGastos; /*Lista con las empresas*/
@@ -267,7 +267,7 @@ public class GastosPanelExtended extends GastosPanel{
 	 * desde ProcesoViewExtended
 	 *
 	 */
-	public void actulaizarGrilla(GastoVO gastoVO)
+	public void actulaizarGrilla(GastoVO gastoVO) 
 	{
 
 		/*Si esta el proceso en la lista, es una acutalizacion
@@ -446,6 +446,18 @@ public class GastosPanelExtended extends GastosPanel{
 			sub.setWidth("46%");
 		}
 		
+	}
+
+	@Override
+	public void setInfoLst(GastoVO gasto) {
+		// TODO Auto-generated method stub
+		/*No lo implementamos en este form*/
+	}
+
+	@Override
+	public String nomForm() {
+		
+		return "Panel";
 	}
 	
 }
