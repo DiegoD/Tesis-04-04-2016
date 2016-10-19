@@ -140,7 +140,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		UsuarioPermisosVO permisoAux = 
 				new UsuarioPermisosVO(this.permisos.getCodEmp(),
 						this.permisos.getUsuario(),
-						VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+						VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
 						VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
 		try {
@@ -229,7 +229,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
    			UsuarioPermisosVO permisoAux = 
    					new UsuarioPermisosVO(permisos.getCodEmp(),
    							permisos.getUsuario(),
-   							VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+   							VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
    							VariablesPermisos.OPERACION_NUEVO_EDITAR);
    			
    			MonedaVO auxMoneda = new MonedaVO();
@@ -316,7 +316,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 				UsuarioPermisosVO permisoAux = 
 						new UsuarioPermisosVO(this.permisos.getCodEmp(),
 								this.permisos.getUsuario(),
-								VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+								VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
 								VariablesPermisos.OPERACION_NUEVO_EDITAR);				
 				
 				
@@ -365,7 +365,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 				ingCobroVO.setCodEmp(permisos.getCodEmp());
 				ingCobroVO.setReferencia(referencia.getValue());
 				
-				ingCobroVO.setCodCtaInd("ingcobro");
+				ingCobroVO.setCodCtaInd("egrcobro");
 				
 				
 				ingCobroVO.setCodTitular(codTitular.getValue());
@@ -390,13 +390,13 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 					
 					if(ingCobroVO.getmPago().equals("transferencia"))
 					{
-						ingCobroVO.setCodDocRef("tranrec");
+						ingCobroVO.setCodDocRef("tranemi");
 						
 						ingCobroVO.setSerieDocRef("0");
 					}
 					else if(ingCobroVO.getmPago().equals("Cheque"))
 					{
-						ingCobroVO.setCodDocRef("cheqrec");
+						ingCobroVO.setCodDocRef("cheqemi");
 						ingCobroVO.setNroDocRef((Integer) nroDocRef.getConvertedValue());
 						ingCobroVO.setSerieDocRef(serieDocRef.getValue());
 						
@@ -566,7 +566,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 					UsuarioPermisosVO permisoAux = 
 							new UsuarioPermisosVO(this.permisos.getCodEmp(),
 									this.permisos.getUsuario(),
-									VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+									VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
 									VariablesPermisos.OPERACION_NUEVO_EDITAR);
 					
 
@@ -1815,7 +1815,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		UsuarioPermisosVO permisoAux = 
 				new UsuarioPermisosVO(this.permisos.getCodEmp(),
 						this.permisos.getUsuario(),
-						VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+						VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
 						VariablesPermisos.OPERACION_NUEVO_EDITAR);	
 		
 		double impMoCab = 0;
@@ -1900,6 +1900,15 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 	 *
 	 */
 	private double calcularImporteDeCuentaBanco(){
+		
+		/*Inicializamos VO de permisos para el usuario, formulario y operacion
+		 * para confirmar los permisos del usuario*/
+		UsuarioPermisosVO permisoAux = 
+				new UsuarioPermisosVO(this.permisos.getCodEmp(),
+						this.permisos.getUsuario(),
+						VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
+						VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		
 		
 		double impTotalIngresado = (double) this.impTotMo.getConvertedValue();
 		

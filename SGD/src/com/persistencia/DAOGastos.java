@@ -20,6 +20,7 @@ import com.logica.MonedaInfo;
 import com.logica.Proceso;
 import com.logica.Rubro;
 import com.logica.Docum.CuentaInfo;
+import com.logica.Docum.DocumDetalle;
 import com.logica.Docum.ImpuestoInfo;
 import com.logica.Docum.RubroInfo;
 import com.logica.Docum.TitularInfo;
@@ -219,7 +220,7 @@ public class DAOGastos implements IDAOGastos{
 	}
 
 	@Override
-	public void insertarGasto(Gasto gasto, String codEmp, Connection con)
+	public void insertarGasto(DocumDetalle gasto, String codEmp, Connection con)
 			throws IngresandoGastoException, ConexionException, SQLException {
 		// TODO Auto-generated method stub
 		ConsultasDD clts = new ConsultasDD();
@@ -269,7 +270,7 @@ public class DAOGastos implements IDAOGastos{
 	}
 
 	@Override
-	public void modificarGasto(Gasto gasto, String codEmp, Connection con) throws ModificandoGastoException, IngresandoGastoException, ConexionException {
+	public void modificarGasto(DocumDetalle gasto, String codEmp, Connection con) throws ModificandoGastoException, IngresandoGastoException, ConexionException {
 		// TODO Auto-generated method stub
 		ConsultasDD consultas = new ConsultasDD();
 		String eliminar = consultas.eliminarGasto();

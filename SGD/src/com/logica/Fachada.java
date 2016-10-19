@@ -1735,9 +1735,7 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 	
 		Connection con = null;
 		boolean existe = false;
-		Integer codigo;
 		NumeradoresVO codigos = new NumeradoresVO();
-		
 		
 		try 
 		{
@@ -1747,7 +1745,7 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 			IngresoCobro ing = new IngresoCobro(ingVO); 
 			Cotizacion cotiAux;
 			
-			//Obtengo numerador de gastos
+			//Obtengo numerador de egreso de gasto
 			codigos.setCodigo(numeradores.getNumero(con, "egrcobro", codEmp)); //Ingreso Cobro 
 			codigos.setNumeroTrans(numeradores.getNumero(con, "03", codEmp)); //nro trans
 			
@@ -1768,10 +1766,16 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 				
 					if(docum.getCodDocum().equals("Gasto")){ /*Para los gastos modificamos el saldo al documento*/
 						
+						/*Seteamos el nroTrans con el del cabezal*/
+						docum.setNroTrans(codigos.getNumeroTrans());
+						
+						/*Seteamos el nroDocum del gasto*/
+						docum.setNroDocum(numeradores.getNumero(con, "02", codEmp));
+						
 						
 						/*Ingresamos cada uno de los Gastos*/
 						//this.gastos.insertarGasto((Gasto)docum, codEmp, con);
-						this.gastos.insertarGasto(docum.getDocumDetalle(), codEmp, con);
+						this.gastos.insertarGasto(docum, codEmp, con);
 						
 						//Genero saldo del gasto 
 						this.saldos.insertarSaldo(docum, con);
