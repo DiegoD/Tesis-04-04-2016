@@ -24,6 +24,7 @@ public class DatosDocumVO extends AuditoriaVO{
 	private String nomMoneda;
 	private String simboloMoneda;
 	
+	
 	private String nomTitular;
 	private String codTitular;
 	

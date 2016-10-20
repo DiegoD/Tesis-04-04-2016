@@ -2,6 +2,7 @@ package com.valueObject.IngresoCobro;
 
 import java.util.ArrayList;
 
+import com.logica.Moneda;
 import com.logica.Docum.BancoInfo;
 import com.logica.Docum.CuentaInfo;
 import com.valueObject.Docum.DatosDocumVO;
@@ -19,6 +20,7 @@ public class IngresoCobroVO extends DatosDocumVO{
 	
 	private String codCtaBco;
 	private String nomCtaBco;
+	
 	
 	
 	private ArrayList<IngresoCobroDetalleVO> detalle;

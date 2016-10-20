@@ -1,5 +1,7 @@
 package com.logica.Docum;
 
+import com.logica.Moneda;
+import com.logica.MonedaInfo;
 import com.valueObject.Docum.DatosDocumVO;
 import com.valueObject.IngresoCobro.IngresoCobroVO;
 
@@ -185,25 +187,27 @@ public class ConvertirDocumento {
 	*dado el ingreso cobro
 	*
 	*/
-	public static DocumSaldo getDocumSaldoSaCuentasEgresoCobro(IngresoCobroVO ingVO){
+	public static DocumSaldo getDocumSaldoSaCuentasEgresoCobro(IngresoCobroVO ing, MonedaInfo monedaCtaBCO){
 		
 		DatosDocumVO aux = new DatosDocumVO();
 		
-		aux.copiar(ingVO);
+		aux.copiar(ing);
 		
-		aux.setNroTrans(ingVO.getNroTrans());
+		
+		
+		aux.setNroTrans(ing.getNroTrans());
 		
 		DocumSaldo docSaldo = new DocumSaldo(aux);
 		
-		docSaldo.setCodDocum(ingVO.getCodDocum()); /*Documento del cobro*/
+		docSaldo.setCodDocum(ing.getCodDocum()); /*Documento del cobro*/
 		docSaldo.setSerieDocum("0");
-		docSaldo.setNroDocum(ingVO.getNroDocum()); /*Nro docum del cobro*/
+		docSaldo.setNroDocum(ing.getNroDocum()); /*Nro docum del cobro*/
 		
 		//private String codBco;
 		//private String codCtaBco;
 		//private String movimiento;
 		
-		if(ingVO.getmPago().equals("Caja")) /*Si es caja */
+		if(ing.getmPago().equals("Caja")) /*Si es caja */
 		{
 			docSaldo.setCodBco("0");
 			docSaldo.setCodCtaBco("0");
@@ -212,26 +216,26 @@ public class ConvertirDocumento {
 			docSaldo.setCodDocumRef("0"); /*Documento del cobro*/
 			docSaldo.setSerieDocumRef("0");
 			docSaldo.setNroDocumRef(0); /*Nro docum del cobro*/
-		}else if(ingVO.getmPago().toUpperCase().equals("TRANSFERENCIA")){ /*Si es transferencia*/
+		}else if(ing.getmPago().toUpperCase().equals("TRANSFERENCIA")){ /*Si es transferencia*/
 			
-			docSaldo.setCodDocumRef(ingVO.getCodDocRef()); /*Documento del cobro*/
+			docSaldo.setCodDocumRef(ing.getCodDocRef()); /*Documento del cobro*/
 			docSaldo.setSerieDocumRef("0");
-			docSaldo.setNroDocumRef(ingVO.getNroDocRef()); /*Nro docum del cobro*/
+			docSaldo.setNroDocumRef(ing.getNroDocRef()); /*Nro docum del cobro*/
 			
-		}else if(ingVO.getmPago().toUpperCase().equals("CHEQUE")){ /*Si es transferencia*/
+		}else if(ing.getmPago().toUpperCase().equals("CHEQUE")){ /*Si es transferencia*/
 			
-			docSaldo.setCodDocumRef(ingVO.getCodDocRef()); /*Documento del cobro*/
-			docSaldo.setSerieDocumRef(ingVO.getSerieDocRef());
-			docSaldo.setNroDocumRef(ingVO.getNroDocRef()); /*Nro docum del cobro*/
+			docSaldo.setCodDocumRef(ing.getCodDocRef()); /*Documento del cobro*/
+			docSaldo.setSerieDocumRef(ing.getSerieDocRef());
+			docSaldo.setNroDocumRef(ing.getNroDocRef()); /*Nro docum del cobro*/
 			
 		}
 			
 		
-		if(!ingVO.getmPago().equals("Caja")) {
+		if(!ing.getmPago().equals("Caja")) {
 			
-			docSaldo.setCodBco(ingVO.getCodBanco());
-			docSaldo.setCodCtaBco(ingVO.getCodCtaBco());
-			docSaldo.setMovimiento(ingVO.getReferencia());
+			docSaldo.setCodBco(ing.getCodBanco());
+			docSaldo.setCodCtaBco(ing.getCodCtaBco());
+			docSaldo.setMovimiento(ing.getReferencia());
 			
 		}else{
 			docSaldo.setCodBco("0");
@@ -241,7 +245,27 @@ public class ConvertirDocumento {
 		
 		docSaldo.setSigno(-1); /*Signo negativo por el egreso*/
 		
+		
+		
+		docSaldo.setMoneda(monedaCtaBCO);
+		
 		return docSaldo;
+		
+	}
+	
+	/**
+	*Dado una moneda, nos retorna una MonedaInfo
+	*
+	*/
+	public static MonedaInfo getMonedainfoxMoneda(Moneda moneda){
+		
+		MonedaInfo monedaInf = new MonedaInfo();
+		monedaInf.setCodMoneda(moneda.getCod_moneda());
+		monedaInf.setDescripcion(moneda.getDescripcion());
+		monedaInf.setSimbolo(moneda.getSimbolo());
+		monedaInf.setNacional(moneda.isNacional());
+		
+		return monedaInf;
 		
 	}
 	

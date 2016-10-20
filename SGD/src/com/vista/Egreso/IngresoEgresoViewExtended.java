@@ -331,17 +331,30 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 				
 				try {
 					
-					//Obtenemos la moneda
-					MonedaVO auxMoneda = new MonedaVO();
+					/////////////////////////////MONEDA//////////////////////////////////////////////////
+					
+					MonedaVO auxMoneda = null;
+					
+					//Obtenemos la moneda del cabezal
+					auxMoneda = new MonedaVO();
 					if(this.comboMoneda.getValue() != null){
 						
 						auxMoneda = (MonedaVO) this.comboMoneda.getValue();
-						ingCobroVO.setCodMoneda(auxMoneda.getCodMoneda());
-						ingCobroVO.setNomMoneda(auxMoneda.getDescripcion());
-						ingCobroVO.setSimboloMoneda(auxMoneda.getSimbolo());
+						
+						/*SI EL TIPO ES CAJA TOMAMOS LA MONEDA DEL CABEZAL DEL COBRO*/
+						//if(((String)comboTipo.getValue()).equals("Caja")) { 
+						
+							ingCobroVO.setCodMoneda(auxMoneda.getCodMoneda());
+							ingCobroVO.setNomMoneda(auxMoneda.getDescripcion());
+							ingCobroVO.setSimboloMoneda(auxMoneda.getSimbolo());
+						//}
 					}
 					
-					if(auxMoneda.isNacional()) /*Si la moneda seleccionada es nacional*/
+					
+					/////////////////////////////FIN MONEDA////////////////////////////////////////////
+					
+					/*Si la moneda del cabezal es nacional*/
+					if(auxMoneda.isNacional()) /*Si la moneda del cabezal del cobro seleccionada es nacional*/
 					{
 						/*Si la moneda es la nacional, el TC es 1 y el importe MN es el mismo*/
 						ingCobroVO.setTcMov(1);
@@ -469,6 +482,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 				ingCobroVO.setCodCuenta("ingcobro");
 				ingCobroVO.setDetalle(this.lstDetalleVO);
 				
+				ingCobroVO.setCodDocum("egrcobro");
 				
 				if(this.operacion.equals(Variables.OPERACION_NUEVO))	
 				{	
@@ -1824,7 +1838,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		
 		double aux;
 		double aux2;
-		double tcAux;
+		double tcAux = 0;
 		CotizacionVO cotAux = null;
 		
 		Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
@@ -1849,6 +1863,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		}
 		
 		String codMonedaCab = this.getCodMonedaSeleccionada();
+		//double tcAux;asd
 		
 		for (IngresoCobroDetalleVO det : lstDetalleVO) {
 
@@ -1870,7 +1885,16 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 				
 				/*Obtenemos el tipo de cambio a pesos de la moneda de la linea */
 				try {
-					cotAux = this.controlador.getCotizacion(permisoAux, fecha, det.getCodMoneda());
+					
+					if(det.isNacional()) /*si es moneda nacional el tc es 1*/
+					{
+						tcAux = 1;
+					}
+					else /*si no es nacional tomo la cotizacion de la moneda*/
+					{
+						cotAux = this.controlador.getCotizacion(permisoAux, fecha, det.getCodMoneda());
+						tcAux = cotAux.getCotizacionVenta();
+					}
 					
 				} catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
 						| InicializandoException | NoTienePermisosException e) {
@@ -1878,7 +1902,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 					Mensajes.mostrarMensajeError(e.getMessage());
 				}
 				
-				tcAux = cotAux.getCotizacionVenta();
+				
 				
 				aux = det.getImpTotMo() * tcAux; /*Paso a moneda nacional*/
 				
@@ -1900,6 +1924,8 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 	 *
 	 */
 	private double calcularImporteDeCuentaBanco(){
+		/*Moneda de la cuenta del BCO*/
+		MonedaVO auxMoneda2 = null;
 		
 		/*Inicializamos VO de permisos para el usuario, formulario y operacion
 		 * para confirmar los permisos del usuario*/
@@ -1931,6 +1957,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		if(this.comboCuentas.getValue() != null){
 			
 			auxctaBco = (CtaBcoVO) this.comboCuentas.getValue();
+			auxMoneda2 = auxctaBco.getMonedaVO();
 		}
 		String codMonedaCtaBco = auxctaBco.getMonedaVO().getCodMoneda();
 		
@@ -1970,7 +1997,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		else  /*Si no es moneda nacional y es distinto al moneda del cobro*/
 		{
 			
-			/*Obtenemos el tipo de cambio a pesos de la moneda del cobro */
+			/*Obtenemos el tipo de cambio a pesos de la moneda de la cuenta del banco */
 			try {
 				cotAux = this.controlador.getCotizacion(permisoAux, fecha, auxctaBco.getMonedaVO().getCodMoneda());
 				

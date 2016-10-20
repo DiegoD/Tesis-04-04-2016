@@ -104,6 +104,7 @@ public class Fachada {
 	private IDAOSaldosCuentas saldosCuentas;
 	private IDAOSaldosProc saldosProceso;
 	private IDAOGastos gastos;
+	private IDAOMonedas monedas;
 	
 	private AbstractFactoryBuilder fabrica;
 	private IAbstractFactory fabricaConcreta;
@@ -131,6 +132,7 @@ public class Fachada {
         this.saldosProceso = fabricaConcreta.crearDAOSaldosProceso();
         this.egresoCobro = fabricaConcreta.crearDAOEgresoCobro();
         this.gastos = fabricaConcreta.crearDAOGastos();
+        this.monedas = fabricaConcreta.crearDAOMonedas();
         
     }
     
@@ -1748,6 +1750,7 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 		boolean existe = false;
 		NumeradoresVO codigos = new NumeradoresVO();
 		
+		
 		try 
 		{
 			con = this.pool.obtenerConeccion();
@@ -1811,7 +1814,7 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 				}
 				
 				/*Ingresamos el saldo a la cuenta (Banco o caja)*/
-				DocumSaldo saldoCuenta = ConvertirDocumento.getDocumSaldoSaCuentasEgresoCobro(ingVO);
+				DocumSaldo saldoCuenta = ConvertirDocumento.getDocumSaldoSaCuentasEgresoCobro(ingVO, ing.getMoneda());
 				this.saldosCuentas.insertarSaldoCuenta(saldoCuenta, con);
 				
 				con.commit();

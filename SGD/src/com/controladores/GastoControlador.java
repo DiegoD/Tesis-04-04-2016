@@ -192,4 +192,6 @@ public class GastoControlador {
 		else
 			throw new NoTienePermisosException();
 	}
+	
+	
 }

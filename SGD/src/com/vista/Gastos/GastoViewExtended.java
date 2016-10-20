@@ -188,6 +188,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 						gastoVO.setCodMoneda(auxMoneda.getCodMoneda());
 						gastoVO.setNomMoneda(auxMoneda.getDescripcion());
 						gastoVO.setSimboloMoneda(auxMoneda.getSimbolo());
+						gastoVO.setNacional(auxMoneda.isNacional());
 					}
 					else{
 						gastoVO.setCodMoneda("");
