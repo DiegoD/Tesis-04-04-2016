@@ -2036,7 +2036,7 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 				}
 				
 				/*Ingresamos el saldo a la cuenta (Banco o caja)*/
-				DocumSaldo saldoCuenta = ConvertirDocumento.getDocumSaldoSaCuentasEgresoCobro(ingVO);
+				DocumSaldo saldoCuenta = ConvertirDocumento.getDocumSaldoSaCuentasEgresoCobro(ingVO, ing.getMoneda());
 				this.saldosCuentas.insertarSaldoCuenta(saldoCuenta, con);
 			
 			}
