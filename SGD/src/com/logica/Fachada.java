@@ -1387,7 +1387,7 @@ public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 			}
 			
 			/*Ingresamos el saldo a la cuenta (Banco o caja)*/
-			DocumSaldo saldoCuenta = ConvertirDocumento.getDocumSaldoSaCuentasIngCobro(ingVO);
+			DocumSaldo saldoCuenta = ConvertirDocumento.getDocumSaldoSaCuentasIngCobro(ingVO, ing.getMoneda());
 			this.saldosCuentas.insertarSaldoCuenta(saldoCuenta, con);
 
 			
@@ -1601,7 +1601,7 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 			}
 			
 			/*Ingresamos el saldo a la cuenta (Banco o caja)*/
-			DocumSaldo saldoCuenta = ConvertirDocumento.getDocumSaldoSaCuentasIngCobro(ingVO);
+			DocumSaldo saldoCuenta = ConvertirDocumento.getDocumSaldoSaCuentasIngCobro(ingVO, ing.getMoneda());
 			this.saldosCuentas.insertarSaldoCuenta(saldoCuenta, con);
 
 		}

@@ -122,7 +122,7 @@ public class ConvertirDocumento {
 	*dado el ingreso cobro
 	*
 	*/
-	public static DocumSaldo getDocumSaldoSaCuentasIngCobro(IngresoCobroVO ingVO){
+	public static DocumSaldo getDocumSaldoSaCuentasIngCobro(IngresoCobroVO ingVO, MonedaInfo monedaInfo){
 		
 		DatosDocumVO aux = new DatosDocumVO();
 		
@@ -178,6 +178,7 @@ public class ConvertirDocumento {
 		
 		docSaldo.setSigno(1); /*Signo positivo*/
 		
+		docSaldo.setMoneda(monedaInfo);
 		return docSaldo;
 		
 	}
