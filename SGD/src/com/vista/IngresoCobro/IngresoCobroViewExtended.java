@@ -326,8 +326,9 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
 				CotizacionVO coti = null;
 				
-				/////////////////////////////MONEDA//////////////////////////////////////////////////
 				try {    
+					/////////////////////////////MONEDA//////////////////////////////////////////////////
+									     
 					MonedaVO auxMoneda = null;
 					
 					//Obtenemos la moneda del cabezal
@@ -336,32 +337,17 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 					
 						auxMoneda = (MonedaVO) this.comboMoneda.getValue();
 					
-						/*SI EL TIPO ES CAJA TOMAMOS LA MONEDA DEL CABEZAL DEL COBRO*/
-						if(((String)comboTipo.getValue()).equals("Caja")) { 
+					/*SI EL TIPO ES CAJA TOMAMOS LA MONEDA DEL CABEZAL DEL COBRO*/
+					//if(((String)comboTipo.getValue()).equals("Caja")) { 
 					
-						ingCobroVO.setCodMoneda(auxMoneda.getCodMoneda());
-						ingCobroVO.setNomMoneda(auxMoneda.getDescripcion());
-						ingCobroVO.setSimboloMoneda(auxMoneda.getSimbolo());
-						}
-					}
-					
-					/*SI EL TIPO ES BANCO TOMAMOS LA MONEDA DE LA CUENTA  DEL BANCO COMO MONEDA*/
-					if(((String)comboTipo.getValue()).equals("Banco")) { /*Elegimos la cuenta como la de banco*/
-					
-						//Datos del banco y cuenta
-						CtaBcoVO auxctaBco = new CtaBcoVO();
-						if(this.comboCuentas.getValue() != null){
-					
-							MonedaVO auxMoneda2 = null;
-							
-							auxctaBco = (CtaBcoVO) this.comboCuentas.getValue();
-							auxMoneda2 = auxctaBco.getMonedaVO();
-							
-							ingCobroVO.setCodMoneda(auxMoneda2.getCodMoneda());
-							ingCobroVO.setNomMoneda(auxMoneda2.getDescripcion());
-							ingCobroVO.setSimboloMoneda(auxMoneda2.getSimbolo());
-						}
-					}
+					ingCobroVO.setCodMoneda(auxMoneda.getCodMoneda());
+					ingCobroVO.setNomMoneda(auxMoneda.getDescripcion());
+					ingCobroVO.setSimboloMoneda(auxMoneda.getSimbolo());
+					//}
+				}
+
+
+				/////////////////////////////FIN MONEDA////////////////////////////////////////////
 					if(auxMoneda.isNacional()) /*Si la moneda seleccionada es nacional*/
 					{
 						/*Si la moneda es la nacional, el TC es 1 y el importe MN es el mismo*/
@@ -2043,96 +2029,6 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	 * del cobro
 	 *
 	 */
-	private double calcularImporteDeCuentaBanco(){
-		
-		double impTotalIngresado = (double) this.impTotMo.getConvertedValue();
-		
-		double impMo = 0;
-		double tcMonedaNacional = 0;
-		
-		double aux;
-		double aux2;
-		double tcAux;
-		CotizacionVO cotAux = null;
-		
-		String codMonedaCab = this.getCodMonedaSeleccionada();
-		
-		/*Obtenemos la fecha valor para el tipo de cambio*/
-		Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
-		
-		/*Obtenemos la moneda de la cuenta*/
-		//Datos del banco y cuenta y moneda de la cuenta
-		CtaBcoVO auxctaBco = new CtaBcoVO();
-		if(this.comboCuentas.getValue() != null){
-			
-			auxctaBco = (CtaBcoVO) this.comboCuentas.getValue();
-		}
-		String codMonedaCtaBco = auxctaBco.getMonedaVO().getCodMoneda();
-		
-		
-		try{
-			tcMonedaNacional = (Double) tcMov.getConvertedValue();
-		}
-		catch(Exception e)
-		{
-			/*Si hay error en el formato del tipo de cambio quitamos todosl
-			 * los detalles seleccionados*/
-			
-			this.tcMov.setValue(""); /*limpiamos el campo*/
-			
-			/*Actualizamos el container y la grilla*/
-			container.removeAllItems();
-			this.lstDetalleVO.clear();
-			container.addAll(lstDetalleVO);
-			this.actualizarGrillaContainer(container);
-			
-			Mensajes.mostrarMensajeError("Error en formato de Tipo de Cambio");
-		}
-		
-		/*Si la moneda del cobro es igual  a la de la moneda de la cuenta del banco*/
-		if(codMonedaCab.equals(codMonedaCtaBco))
-		{
-			impMo = impTotalIngresado;  /*El importe es el mismo*/
-		}
-		/*Si la moneda del cobro es distinta a la de la cuenta del banco pero
-		 * igual a la moneda nacional, hago el calculo al tipo de cambio
-		 * de la fecha valor del cobro*/
-		else if(auxctaBco.getMonedaVO().isNacional() &&  !codMonedaCab.equals(auxctaBco.getMonedaVO().getCodMoneda()))
-		{
-			aux = impTotalIngresado * tcMonedaNacional;
-			impMo = aux;
-		}
-		 else  /*Si no es moneda nacional y es distinto al moneda del cobro*/
-		{
-			
-			/*Obtenemos el tipo de cambio a pesos de la moneda del cobro */
-			try {
-				 /*Inicializamos el permisos auxilar, para obterer el TC de moneda no nacional en detalle y distinta a la moneda del cabezal*/
-				  UsuarioPermisosVO permisoAux = 
-				    new UsuarioPermisosVO(this.permisos.getCodEmp(),
-				      this.permisos.getUsuario(),
-				      VariablesPermisos.FORMULARIO_INGRESO_COBRO,
-				      VariablesPermisos.OPERACION_NUEVO_EDITAR);
-				  
-				cotAux = this.controlador.getCotizacion(permisoAux, fecha, auxctaBco.getMonedaVO().getCodMoneda());
-				
-			} catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
-					| InicializandoException | NoTienePermisosException e) {
-				
-				Mensajes.mostrarMensajeError(e.getMessage());
-			}
-			
-			tcAux = cotAux.getCotizacionVenta();
-			
-			aux = impTotalIngresado * tcMonedaNacional; /*Paso a moneda nacional*/
-			
-			aux2 = aux / tcAux; /*Paso la moneda nacional a la de la cuenta*/
-			
-			impMo = aux2;
-		}
-		
-		return impMo;
-	}
 
 	
 	/**
@@ -2218,7 +2114,107 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		
 		return codMoneda;
 	}
-
+	/**
+	  * Nos retorna el importe total a ingresar en la cuenta del banco
+	  * Ya que la moneda de la cuenta bancaria puede ser distinta a la 
+	  * del cobro
+	  *
+	  */
+	 private double calcularImporteDeCuentaBanco(){
+	  /*Moneda de la cuenta del BCO*/
+	  MonedaVO auxMoneda2 = null;
+	  
+	  /*Inicializamos VO de permisos para el usuario, formulario y operacion
+	   * para confirmar los permisos del usuario*/
+	  UsuarioPermisosVO permisoAux = 
+	    new UsuarioPermisosVO(this.permisos.getCodEmp(),
+	      this.permisos.getUsuario(),
+	      VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+	      VariablesPermisos.OPERACION_NUEVO_EDITAR);
+	  
+	  
+	  double impTotalIngresado = (double) this.impTotMo.getConvertedValue();
+	  
+	  double impMo = 0;
+	  double tcMonedaNacional = 0;
+	  
+	  double aux;
+	  double aux2;
+	  double tcAux;
+	  CotizacionVO cotAux = null;
+	  
+	  String codMonedaCab = this.getCodMonedaSeleccionada();
+	  
+	  /*Obtenemos la fecha valor para el tipo de cambio*/
+	  Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
+	  
+	  /*Obtenemos la moneda de la cuenta*/
+	  //Datos del banco y cuenta y moneda de la cuenta
+	  CtaBcoVO auxctaBco = new CtaBcoVO();
+	  if(this.comboCuentas.getValue() != null){
+	   
+	   auxctaBco = (CtaBcoVO) this.comboCuentas.getValue();
+	   auxMoneda2 = auxctaBco.getMonedaVO();
+	  }
+	  String codMonedaCtaBco = auxctaBco.getMonedaVO().getCodMoneda();
+	  
+	  
+	  try{
+	   tcMonedaNacional = (Double) tcMov.getConvertedValue();
+	  }
+	  catch(Exception e)
+	  {
+	   /*Si hay error en el formato del tipo de cambio quitamos todosl
+	    * los detalles seleccionados*/
+	   
+	   this.tcMov.setValue(""); /*limpiamos el campo*/
+	   
+	   /*Actualizamos el container y la grilla*/
+	   container.removeAllItems();
+	   this.lstDetalleVO.clear();
+	   container.addAll(lstDetalleVO);
+	   this.actualizarGrillaContainer(container);
+	   
+	   Mensajes.mostrarMensajeError("Error en formato de Tipo de Cambio");
+	  }
+	  
+	  /*Si la moneda del cobro es igual  a la de la moneda de la cuenta del banco*/
+	  if(codMonedaCab.equals(codMonedaCtaBco))
+	  {
+	   impMo = impTotalIngresado;  /*El importe es el mismo*/
+	  }
+	  /*Si la moneda del cobro es distinta a la de la cuenta del banco pero
+	   * igual a la moneda nacional, hago el calculo al tipo de cambio
+	   * de la fecha valor del cobro*/
+	  else if(auxctaBco.getMonedaVO().isNacional() &&  !codMonedaCab.equals(auxctaBco.getMonedaVO().getCodMoneda()))
+	  {
+	   aux = impTotalIngresado * tcMonedaNacional;
+	   impMo = aux;
+	  }
+	  else  /*Si no es moneda nacional y es distinto al moneda del cobro*/
+	  {
+	   
+	   /*Obtenemos el tipo de cambio a pesos de la moneda de la cuenta del banco */
+	   try {
+	    cotAux = this.controlador.getCotizacion(permisoAux, fecha, auxctaBco.getMonedaVO().getCodMoneda());
+	    
+	   } catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
+	     | InicializandoException | NoTienePermisosException e) {
+	    
+	    Mensajes.mostrarMensajeError(e.getMessage());
+	   }
+	   
+	   tcAux = cotAux.getCotizacionVenta();
+	   
+	   aux = impTotalIngresado * tcMonedaNacional; /*Paso a moneda nacional*/
+	   
+	   aux2 = aux / tcAux; /*Paso la moneda nacional a la de la cuenta*/
+	   
+	   impMo = aux2;
+	  }
+	  
+	  return impMo;
+	 }
 	@Override
 	public void setInfoLst(ArrayList<Object> lstDatos) {
 		
