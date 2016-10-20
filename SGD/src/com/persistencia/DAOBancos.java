@@ -366,6 +366,7 @@ public class DAOBancos implements IDAOBancos{
 				monedaAux.setCod_moneda(rs.getString("cod_moneda"));
 				monedaAux.setDescripcion(rs.getString("descripcion"));
 				monedaAux.setSimbolo(rs.getString("simbolo"));
+				monedaAux.setNacional(rs.getBoolean("nacional"));
 				
 				aux.setMoneda(monedaAux);
 							

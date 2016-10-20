@@ -1353,6 +1353,17 @@ public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 				}
 				else if(docum.getCodDocum().equals("Proc")) /*Modificamos el saldo para el proceso ingresado*/
 				{
+					
+					docum.setCodDocum(ing.getCodDocum());
+					docum.setSerieDocum(ing.getSerieDocum());
+					docum.setNroDocum(ing.getNroDocum());
+					docum.setTitInfo(ing.getTitInfo());
+					docum.setNroTrans(ing.getNroTrans());
+					docum.setFecDoc(ing.getFecDoc());
+					docum.setFecValor(ing.getFecValor());
+					docum.setCodEmp(ing.getCodEmp());
+					
+					
 					/*Para el proceso esl signo es 1 porque subo el saldo a la cuenta del proceso*/
 					this.saldosProceso.modificarSaldo(docum, 1, ingVO.getTcMov(), con);
 				}

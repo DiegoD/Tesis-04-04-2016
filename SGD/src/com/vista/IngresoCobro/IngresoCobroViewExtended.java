@@ -326,19 +326,42 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
 				CotizacionVO coti = null;
 				
-				
-				try {
+				/////////////////////////////MONEDA//////////////////////////////////////////////////
+				try {    
+					MonedaVO auxMoneda = null;
 					
-					//Obtenemos la moneda
-					MonedaVO auxMoneda = new MonedaVO();
+					//Obtenemos la moneda del cabezal
+					auxMoneda = new MonedaVO();
 					if(this.comboMoneda.getValue() != null){
-						
+					
 						auxMoneda = (MonedaVO) this.comboMoneda.getValue();
+					
+						/*SI EL TIPO ES CAJA TOMAMOS LA MONEDA DEL CABEZAL DEL COBRO*/
+						if(((String)comboTipo.getValue()).equals("Caja")) { 
+					
 						ingCobroVO.setCodMoneda(auxMoneda.getCodMoneda());
 						ingCobroVO.setNomMoneda(auxMoneda.getDescripcion());
 						ingCobroVO.setSimboloMoneda(auxMoneda.getSimbolo());
+						}
 					}
 					
+					/*SI EL TIPO ES BANCO TOMAMOS LA MONEDA DE LA CUENTA  DEL BANCO COMO MONEDA*/
+					if(((String)comboTipo.getValue()).equals("Banco")) { /*Elegimos la cuenta como la de banco*/
+					
+						//Datos del banco y cuenta
+						CtaBcoVO auxctaBco = new CtaBcoVO();
+						if(this.comboCuentas.getValue() != null){
+					
+							MonedaVO auxMoneda2 = null;
+							
+							auxctaBco = (CtaBcoVO) this.comboCuentas.getValue();
+							auxMoneda2 = auxctaBco.getMonedaVO();
+							
+							ingCobroVO.setCodMoneda(auxMoneda2.getCodMoneda());
+							ingCobroVO.setNomMoneda(auxMoneda2.getDescripcion());
+							ingCobroVO.setSimboloMoneda(auxMoneda2.getSimbolo());
+						}
+					}
 					if(auxMoneda.isNacional()) /*Si la moneda seleccionada es nacional*/
 					{
 						/*Si la moneda es la nacional, el TC es 1 y el importe MN es el mismo*/
@@ -406,21 +429,21 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 						ingCobroVO.setSerieDocRef("0");
 					}
 												
-						//Datos del banco y cuenta
-						CtaBcoVO auxctaBco = new CtaBcoVO();
-						if(this.comboCuentas.getValue() != null){
-							
-							auxctaBco = (CtaBcoVO) this.comboCuentas.getValue();
-							
-						}
+					//Datos del banco y cuenta
+					CtaBcoVO auxctaBco = new CtaBcoVO();
+					if(this.comboCuentas.getValue() != null){
 						
-						ingCobroVO.setCodBanco(auxctaBco.getCodBco());
-						ingCobroVO.setCodCtaBco(auxctaBco.getCodigo());
-						ingCobroVO.setNomCtaBco(auxctaBco.getNombre());
-						/*Falta poner el nombre de la cuenta*/
+						auxctaBco = (CtaBcoVO) this.comboCuentas.getValue();
 						
-						/*Si es banco calculamos el importe en la moneda de la cuenta*/
-						ingCobroVO.setImpTotMo(this.calcularImporteDeCuentaBanco());
+					}
+					
+					ingCobroVO.setCodBanco(auxctaBco.getCodBco());
+					ingCobroVO.setCodCtaBco(auxctaBco.getCodigo());
+					ingCobroVO.setNomCtaBco(auxctaBco.getNombre());
+					/*Falta poner el nombre de la cuenta*/
+					
+					/*Si es banco calculamos el importe en la moneda de la cuenta*/
+					ingCobroVO.setImpTotMo(this.calcularImporteDeCuentaBanco());
 					
 				}
 				else {
@@ -609,11 +632,11 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			else{
 				Mensajes.mostrarMensajeError("Debe ingresar los datos de cabecera");
 			}
-			});
+		});
 			
-			this.cancelar.addClickListener(click -> {
-				main.cerrarVentana();
-			});
+		this.cancelar.addClickListener(click -> {
+			main.cerrarVentana();
+		});
 			
 			/*Inicalizamos listener para boton de Quitar*/
 			this.btnQuitar.addClickListener(click -> {
@@ -1897,6 +1920,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
    			docum.setCodDocum("Proc");
    			docum.setSerieDocum("Proc");
    			docum.setNroDocum(procesoVO.getCodigo());
+   			docum.setCodCtaInd("Proc");
+   			docum.setCodProceso(String.valueOf(procesoVO.getCodigo()));
    			docum.setUsuarioMod(permisosAux.getUsuario());
    			docum.setOperacion("NUEVO");
    			docum.setCodEmp(permisosAux.getCodEmp());
@@ -2082,6 +2107,13 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			
 			/*Obtenemos el tipo de cambio a pesos de la moneda del cobro */
 			try {
+				 /*Inicializamos el permisos auxilar, para obterer el TC de moneda no nacional en detalle y distinta a la moneda del cabezal*/
+				  UsuarioPermisosVO permisoAux = 
+				    new UsuarioPermisosVO(this.permisos.getCodEmp(),
+				      this.permisos.getUsuario(),
+				      VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+				      VariablesPermisos.OPERACION_NUEVO_EDITAR);
+				  
 				cotAux = this.controlador.getCotizacion(permisoAux, fecha, auxctaBco.getMonedaVO().getCodMoneda());
 				
 			} catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException

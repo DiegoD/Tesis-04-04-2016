@@ -1400,7 +1400,7 @@ public class ConsultasDD {
 		
 		sb.append("INSERT INTO sa_proceso ( cod_proceso,cod_doca, serie_doca, nro_doca, "
 		+ " cod_emp, cod_moneda, cod_tit, "
-		+ " imp_tot_mn, imp_tot_mo, cuenta, "
+		+ " imp_tot_mn, imp_tot_mo, cuenta, nro_trans, fec_doc, fec_valor, "
 		+ " fecha_mod, usuario_mod, operacion ) ");
 		sb.append("VALUES ( ?,?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?) ");
 		
