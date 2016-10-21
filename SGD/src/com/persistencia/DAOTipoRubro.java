@@ -15,8 +15,10 @@ import com.excepciones.TipoRubro.ExisteTipoRubroException;
 import com.excepciones.TipoRubro.InsertandoTipoRubroException;
 import com.excepciones.TipoRubro.ModificandoTipoRubroException;
 import com.excepciones.TipoRubro.ObteniendoTipoRubroException;
+import com.gargoylesoftware.htmlunit.javascript.host.Console;
 import com.logica.Empresa;
 import com.logica.TipoRubro;
+import com.vista.Mensajes;
 
 public class DAOTipoRubro implements IDAOTipoRubro{
 
@@ -57,7 +59,6 @@ public class DAOTipoRubro implements IDAOTipoRubro{
 			pstmt1.close ();
 		}
 		catch (SQLException e) {
-			
 			throw new ObteniendoTipoRubroException();
 		}
 			
