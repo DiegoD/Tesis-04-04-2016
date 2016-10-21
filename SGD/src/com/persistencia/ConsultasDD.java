@@ -715,8 +715,8 @@ public class ConsultasDD {
 	
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("SELECT cod_tiporubro, descripcion, fecha_mod, usuario_mod, operacion, activo, cod_emp ");
-		sb.append("FROM m_tipoRubro WHERE cod_emp = ? ");
+		sb.append("SELECT cod_tipoRubro, descripcion, fecha_mod, usuario_mod, operacion, activo, cod_emp ");
+		sb.append("FROM m_tiporubro WHERE cod_emp = ? ");
 		
 		return sb.toString();
 	}
@@ -725,8 +725,8 @@ public class ConsultasDD {
 		
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("SELECT cod_tiporubro, descripcion, fecha_mod, usuario_mod, operacion, activo, cod_emp ");
-		sb.append("FROM m_tipoRubro WHERE cod_emp = ? and activo = 1 ");
+		sb.append("SELECT cod_tipoRubro, descripcion, fecha_mod, usuario_mod, operacion, activo, cod_emp ");
+		sb.append("FROM m_tiporubro WHERE cod_emp = ? and activo = 1 ");
 		
 		return sb.toString();
 	}
@@ -774,7 +774,7 @@ public class ConsultasDD {
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("SELECT cod_tiporubro, descripcion, fecha_mod, usuario_mod, operacion, activo, cod_emp ");
-		sb.append("FROM m_tipoRubro WHERE cod_tipoRubro = ? AND cod_emp = ? ");
+		sb.append("FROM m_tiporubro WHERE cod_tipoRubro = ? AND cod_emp = ? ");
 		
 		return sb.toString();
 	}
