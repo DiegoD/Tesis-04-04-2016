@@ -178,12 +178,22 @@ public class ConvertirDocumento {
 		
 		docSaldo.setSigno(1); /*Signo positivo*/
 		
-		MonedaInfo mInf = new MonedaInfo();
-	    mInf.setCodMoneda(ingVO.getCodMonedaCtaBco());
-	    mInf.setNacional(ingVO.isNacionalMonedaCtaBco());
-	  
-	    docSaldo.setMoneda(mInf);
-		  
+		MonedaInfo mInf = new MonedaInfo(); /*Moneda a setear*/
+		
+		/*Si es por banco si no la del cabezal*/
+		if(ingVO.getmPago().equals("Banco")) {
+			
+			mInf.setCodMoneda(ingVO.getCodMonedaCtaBco());
+			mInf.setNacional(ingVO.isNacionalMonedaCtaBco());
+	    	
+		}else 
+		{
+			mInf.setCodMoneda(ingVO.getCodMoneda());
+			mInf.setNacional(ingVO.isNacional());
+		}
+		
+		docSaldo.setMoneda(mInf);
+		
 		return docSaldo;
 		
 	}
@@ -251,11 +261,22 @@ public class ConvertirDocumento {
 		
 		docSaldo.setSigno(-1); /*Signo negativo por el egreso*/
 		
-		MonedaInfo mInf = new MonedaInfo();
-		mInf.setCodMoneda(ing.getCodMonedaCtaBco());
-		mInf.setNacional(ing.isNacionalMonedaCtaBco());
+		MonedaInfo mInf = new MonedaInfo(); /*Moneda a setear*/
+		
+		/*Si es por banco si no la del cabezal*/
+		if(ing.getmPago().equals("Banco")) {
+			
+			mInf.setCodMoneda(ing.getCodMonedaCtaBco());
+			mInf.setNacional(ing.isNacionalMonedaCtaBco());
+	    	
+		} else 
+		{
+			mInf.setCodMoneda(ing.getCodMoneda());
+			mInf.setNacional(ing.isNacional());
+		}
 		
 		docSaldo.setMoneda(mInf);
+		
 		
 		return docSaldo;
 		

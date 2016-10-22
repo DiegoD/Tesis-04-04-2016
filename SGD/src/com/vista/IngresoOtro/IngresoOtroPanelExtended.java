@@ -47,7 +47,7 @@ public class IngresoOtroPanelExtended extends IngresoOtroPanel{
 	private BeanItemContainer<IngresoCobroVO> container;
 	private IngresoCobroControlador controlador;
 	PermisosUsuario permisos;
-	MySub sub = new MySub("75%", "65%");
+	MySub sub = new MySub("60%","75%");
 	
 	public IngresoOtroPanelExtended(){
 		
@@ -74,7 +74,7 @@ public class IngresoOtroPanelExtended extends IngresoOtroPanel{
 				
 					this.btnNuevo.addClickListener(click -> {
 						
-							sub = new MySub("83%", "80%");
+							sub = new MySub("60%","75%");
 							form = new IngresoOtroViewExtended(Variables.OPERACION_NUEVO, this);
 							sub.setModal(true);
 							sub.setVista(form);
@@ -143,7 +143,7 @@ public class IngresoOtroPanelExtended extends IngresoOtroPanel{
 				    	
 				    	form = new IngresoOtroViewExtended(Variables.OPERACION_LECTURA, IngresoOtroPanelExtended.this);
 						//form.fieldGroup.setItemDataSource(item);
-						sub = new MySub("90%","90%");
+						sub = new MySub("60%","75%");
 						sub.setModal(true);
 						sub.setVista(form);
 						

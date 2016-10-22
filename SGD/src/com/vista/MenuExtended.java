@@ -29,6 +29,7 @@ import com.vista.Gastos.GastosPanelExtended;
 import com.vista.Grupos.GruposPanelExtended;
 import com.vista.Impuestos.ImpuestosPanelExtended;
 import com.vista.IngresoCobro.IngresoCobroPanelExtended;
+import com.vista.IngresoOtro.IngresoOtroPanelExtended;
 import com.vista.Login.LoginExtended;
 import com.vista.Monedas.MonedasPanelExtended;
 import com.vista.Procesos.ProcesosPanelExtended;
@@ -474,6 +475,21 @@ public class MenuExtended extends Menu{
 				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 			}
 		});
+		
+		this.otroCobro.addClickListener(click -> {
+			
+			setSizeFull();
+			
+			this.content.removeAllComponents();
+			try {
+				
+				IngresoOtroPanelExtended u = new IngresoOtroPanelExtended(); 
+				this.content.addComponent(u);
+				
+			} catch (Exception e) {
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}
+		});
 	}
 	
 	
@@ -531,6 +547,7 @@ public class MenuExtended extends Menu{
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_PROCESOS) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_GASTOS) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_INGRESO_COBRO) ||
+				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_INGRESO_COBRO_OTRO) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_INGRESO_EGRESO) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_RUBROS))
 			{
@@ -629,10 +646,22 @@ public class MenuExtended extends Menu{
 					case VariablesPermisos.FORMULARIO_INGRESO_COBRO:
 						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_COBRO, VariablesPermisos.OPERACION_LEER))
 							this.habilitarIngresoCobro();
-						
+					break;
+					
+					case VariablesPermisos.FORMULARIO_INGRESO_COBRO_OTRO:
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_COBRO_OTRO, VariablesPermisos.OPERACION_LEER))
+							this.habilitarOtroCobro();
+					break;
+					
 					case VariablesPermisos.FORMULARIO_INGRESO_EGRESO:
 						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO, VariablesPermisos.OPERACION_LEER))
 							this.habilitarIngresoEgreso();
+						
+					break;
+					
+					case VariablesPermisos.FORMULARIO_INGRESO_EGRESO_OTRO:
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO_OTRO, VariablesPermisos.OPERACION_LEER))
+							this.habilitarOtroEgreso();
 						
 					break;
 					
@@ -762,6 +791,12 @@ public class MenuExtended extends Menu{
 		
 		this.ingEgreso.setVisible(false);
 		this.ingEgreso.setEnabled(false);
+		
+		this.otroCobro.setVisible(false);
+		this.otroCobro.setEnabled(false);
+		
+		this.otroEgreso.setVisible(false);
+		this.otroEgreso.setEnabled(false);
 	}
 	
 	
@@ -883,6 +918,19 @@ public class MenuExtended extends Menu{
 		this.ingEgreso.setEnabled(true);
 		this.tabMantenimientos.addComponent(ingEgreso);
 	}
+	
+	private void habilitarOtroCobro(){
+		this.otroCobro.setVisible(true);
+		this.otroCobro.setEnabled(true);
+		this.tabMantenimientos.addComponent(otroCobro);
+	}
+	
+	private void habilitarOtroEgreso(){
+		this.otroEgreso.setVisible(true);
+		this.otroEgreso.setEnabled(true);
+		this.tabMantenimientos.addComponent(otroEgreso);
+	}
+	
 	
 	public PermisosUsuario getPermisosUsuario()
 	{

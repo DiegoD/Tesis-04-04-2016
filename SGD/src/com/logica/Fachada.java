@@ -1333,9 +1333,13 @@ public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 		
 		IngresoCobro ing = new IngresoCobro(ingVO); 
 		Cotizacion cotiAux;
+		double impMoCtaBco = 0; /*Variable se utiliza si es banco*/
 		
-		 /*Obtenemos el importe moneda operativa de la cuenta del banco*/
-		 double impMoCtaBco = this.importeMOCtaBanco(ing);
+		if(!ing.getmPago().equals("Caja")) /*Si es banco*/
+		{
+			 /*Obtenemos el importe moneda operativa de la cuenta del banco*/
+			 impMoCtaBco = this.importeMOCtaBanco(ing);
+		}
 		
 		//Obtengo numerador de gastos
 		codigos.setCodigo(numeradores.getNumero(con, "ingcobro", codEmp)); //Ingreso Cobro 
@@ -1397,21 +1401,21 @@ public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 			    auxCheque.setNacional(ing.getCuenta().isNacional());
 			    auxCheque.setImpTotMo(impMoCtaBco);
 				
-				
+				/*Ingresamos el cheque y su saldo*/
 				this.insertarChequeIntFachada(auxCheque, con);
 
-//				/*Ingresamos el saldo para el cheque */
-//				DatosDocum auxCheque2 = new DatosDocum(auxCheque);
-//				this.saldos.modificarSaldo(auxCheque2,1, ingVO.getTcMov() , con);
 			}
 			
-			/*Ingresamos el saldo a la cuenta (Banco o caja)*/
-			DocumSaldo saldoCuenta = ConvertirDocumento.getDocumSaldoSaCuentasIngCobro(ingVO);
-			
-			saldoCuenta.setImpTotMo(impMoCtaBco);
-			
-			this.saldosCuentas.insertarSaldoCuenta(saldoCuenta, con);
-
+			/*Si es cheque no ingresamos el saldo al banco, esto se realiza cuando
+			 * se ingrese el deposito del cheque, para transferencia y caja si se mueven
+			 * sus respectivas cuentas*/
+			if(!ingVO.getCodDocRef().equals("cheqrec")) 
+			{
+				/*Ingresamos el saldo a la cuenta (Banco o caja)*/
+				DocumSaldo saldoCuenta = ConvertirDocumento.getDocumSaldoSaCuentasIngCobro(ingVO);
+				
+				this.saldosCuentas.insertarSaldoCuenta(saldoCuenta, con);
+			}
 			
 			con.commit();
 		}
@@ -1505,13 +1509,20 @@ public void eliminarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 				this.cheques.eliminarCheque(chequeL, con);
 			}
 			
-			/*Bajamos el saldo a la cuenta (Banco o caja)*/
-			/*Obtenemos el objeto DocumSaldo dado el ingreso de cobro*/
-			DocumSaldo saldoCuenta = ConvertirDocumento.getDocumSaldoChequeDadoIngCobro(ingVO);
 			
-			saldoCuenta.setImpTotMo(impMoCtaBco);
-			
-			this.saldosCuentas.eliminarSaldoCuenta(saldoCuenta, con);
+			/*Si es cheque no ingresamos el saldo al banco, esto se realiza cuando
+			 * se ingrese el deposito del cheque, para transferencia y caja si se mueven
+			 * sus respectivas cuentas*/
+			if(!ingVO.getCodDocRef().equals("cheqrec")) 
+			{
+				/*Bajamos el saldo a la cuenta (Banco o caja)*/
+				/*Obtenemos el objeto DocumSaldo dado el ingreso de cobro*/
+				DocumSaldo saldoCuenta = ConvertirDocumento.getDocumSaldoChequeDadoIngCobro(ingVO);
+				
+				saldoCuenta.setImpTotMo(impMoCtaBco);
+				
+				this.saldosCuentas.eliminarSaldoCuenta(saldoCuenta, con);
+			}
 			
 			/*Una vez hechos todos los movimientos de saldos y documentos
 			 * procedemos a eliminar el cobro*/
@@ -1656,10 +1667,16 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 				this.saldos.modificarSaldo(auxCheque2,1, ingVO.getTcMov() , con);
 			}
 			
-			/*Ingresamos el saldo a la cuenta (Banco o caja)*/
-			DocumSaldo saldoCuenta = ConvertirDocumento.getDocumSaldoSaCuentasIngCobro(ingVO);
-			saldoCuenta.setImpTotMo(impMoCtaBco);
-			this.saldosCuentas.insertarSaldoCuenta(saldoCuenta, con);
+			/*Si es cheque no ingresamos el saldo al banco, esto se realiza cuando
+			 * se ingrese el deposito del cheque, para transferencia y caja si se mueven
+			 * sus respectivas cuentas*/
+			if(!ingVO.getCodDocRef().equals("cheqrec")) 
+			{
+				/*Ingresamos el saldo a la cuenta (Banco o caja)*/
+				DocumSaldo saldoCuenta = ConvertirDocumento.getDocumSaldoSaCuentasIngCobro(ingVO);
+				saldoCuenta.setImpTotMo(impMoCtaBco);
+				this.saldosCuentas.insertarSaldoCuenta(saldoCuenta, con);
+			}
 
 		}
 		else{
@@ -1739,13 +1756,19 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 					this.cheques.eliminarCheque(chequeL, con);
 				}
 				
-				/*Bajamos el saldo a la cuenta (Banco o caja)*/
-				/*Obtenemos el objeto DocumSaldo dado el ingreso de cobro*/
-				DocumSaldo saldoCuenta = ConvertirDocumento.getDocumSaldoChequeDadoIngCobro(ingVO);
-				saldoCuenta.setImpTotMo(impMoCtaBco);
 				
-				this.saldosCuentas.eliminarSaldoCuenta(saldoCuenta, con);
-				
+				/*Si es cheque no ingresamos el saldo al banco, esto se realiza cuando
+				 * se ingrese el deposito del cheque, para transferencia y caja si se mueven
+				 * sus respectivas cuentas*/
+				if(!ingVO.getCodDocRef().equals("cheqrec")) 
+				{
+					/*Bajamos el saldo a la cuenta (Banco o caja)*/
+					/*Obtenemos el objeto DocumSaldo dado el ingreso de cobro*/
+					DocumSaldo saldoCuenta = ConvertirDocumento.getDocumSaldoChequeDadoIngCobro(ingVO);
+					saldoCuenta.setImpTotMo(impMoCtaBco);
+					
+					this.saldosCuentas.eliminarSaldoCuenta(saldoCuenta, con);
+				}
 				/*Una vez hechos todos los movimientos de saldos y documentos
 				 * procedemos a eliminar el cobro*/
 				this.ingresoCobro.eliminarIngresoCobro(ing, con); 
@@ -2282,9 +2305,14 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 		   
 		   auxMoneda2 = new MonedaVO();
 		   
-		   auxMoneda2.setCodMoneda(ing.getCuenta().getCodMoneda());
-		   auxMoneda2.setNacional(ing.getCuenta().isNacional());
 		  
+		   auxMoneda2.setCodMoneda(ing.getCuentaBcoInfo().getCodMoneda());
+		   auxMoneda2.setNacional(ing.getCuentaBcoInfo().isNacional());
+		   
+		   //auxMoneda2.setCodMoneda(ing.getCuenta().getCodMoneda());
+		   //auxMoneda2.setNacional(ing.getCuenta().isNacional());
+		  
+		   
 		  String codMonedaCtaBco = auxMoneda2.getCodMoneda();
 		  
 		  double tcMov = ing.getTcMov();

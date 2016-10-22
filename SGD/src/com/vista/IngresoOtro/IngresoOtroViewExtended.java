@@ -363,7 +363,7 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 				ingCobroVO.setCodEmp(permisos.getCodEmp());
 				ingCobroVO.setReferencia(referencia.getValue());
 				
-				ingCobroVO.setCodCtaInd("ingcobro");
+				ingCobroVO.setCodCtaInd("otrcobro");
 				
 				
 				ingCobroVO.setCodTitular(codTitular.getValue());
@@ -417,10 +417,16 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 					ingCobroVO.setCodBanco(auxctaBco.getCodBco());
 					ingCobroVO.setCodCtaBco(auxctaBco.getCodigo());
 					ingCobroVO.setNomCtaBco(auxctaBco.getNombre());
+					ingCobroVO.setCodMonedaCtaBco(auxctaBco.getMonedaVO().getCodMoneda());
+					ingCobroVO.setNacionalMonedaCtaBco(auxctaBco.getMonedaVO().isNacional());
+					
 					/*Falta poner el nombre de la cuenta*/
 					
 					/*Si es banco calculamos el importe en la moneda de la cuenta*/
 					ingCobroVO.setImpTotMo((Double) impTotMo.getConvertedValue());
+					
+					//t.getCodCuenta(), t.getNomCuenta(), t.getCodMonedaCtaBco(), t.isNacionalMonedaCtaBco()
+					
 					
 				}
 				else {
@@ -444,7 +450,8 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 				
 				ingCobroVO.setUsuarioMod(this.permisos.getUsuario());
 				
-				this.ingresoCopia.setDetalle(new ArrayList<IngresoCobroDetalleVO>());
+				
+				//this.ingresoCopia.setDetalle(new ArrayList<IngresoCobroDetalleVO>());
 				
 				if(this.operacion != Variables.OPERACION_NUEVO){
 					ingCobroVO.setNroTrans((long)this.nroTrans.getConvertedValue());

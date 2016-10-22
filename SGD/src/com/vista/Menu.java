@@ -45,6 +45,8 @@ public class Menu extends HorizontalLayout {
 	protected Button gastos;
 	protected Button ingCobro;
 	protected Button ingEgreso;
+	protected Button otroCobro;
+	protected Button otroEgreso;
 	protected Accordion acordion;
 	protected VerticalLayout content;
 

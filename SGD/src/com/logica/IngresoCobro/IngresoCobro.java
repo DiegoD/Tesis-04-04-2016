@@ -44,7 +44,7 @@ public class IngresoCobro extends DatosDocum{
 		this.bancoInfo = new BancoInfo(t.getCodBanco(), t.getNomBanco());
 		this.setCuenta(new CuentaInfo(t.getCodCuenta(), t.getNomCuenta(), t.getCodMonedaCtaBco(), t.isNacionalMonedaCtaBco()));
 		
-		this.cuentaBcoInfo = new CuentaBcoInfo(t.getCodCtaBco(), t.getNomCtaBco());
+		this.cuentaBcoInfo = new CuentaBcoInfo(t.getCodCtaBco(), t.getNomCtaBco(), t.getCodMonedaCtaBco(), t.isNacionalMonedaCtaBco());
 		
 		IngresoCobroLinea aux;
 		for (IngresoCobroDetalleVO detVO : t.getDetalle()) {

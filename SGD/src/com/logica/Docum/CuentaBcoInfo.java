@@ -18,6 +18,15 @@ public class CuentaBcoInfo {
 		this.codCuenta = cod;
 	}
 	
+	public CuentaBcoInfo(String cod, String nom, String codMoneda, boolean nacional){
+		
+		this.nomCuenta = nom;
+		this.codCuenta = cod;
+		this.codMoneda = codMoneda;
+		this.nacional = nacional;
+	}
+	
+	
 	public String getNomCuenta() {
 		return nomCuenta;
 	}
