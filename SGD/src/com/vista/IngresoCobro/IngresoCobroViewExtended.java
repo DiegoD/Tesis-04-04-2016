@@ -405,7 +405,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 					{
 						ingCobroVO.setCodDocRef("cheqrec");
 						ingCobroVO.setNroDocRef((Integer) nroDocRef.getConvertedValue());
-						ingCobroVO.setSerieDocRef(serieDocRef.getValue());
+						ingCobroVO.setSerieDocRef(serieDocRef.getValue().trim());
 						
 					}else
 					{
@@ -426,6 +426,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 					ingCobroVO.setCodBanco(auxctaBco.getCodBco());
 					ingCobroVO.setCodCtaBco(auxctaBco.getCodigo());
 					ingCobroVO.setNomCtaBco(auxctaBco.getNombre());
+					ingCobroVO.setCodMonedaCtaBco(auxctaBco.getMonedaVO().getCodMoneda());
 					/*Falta poner el nombre de la cuenta*/
 					
 				}
@@ -902,46 +903,50 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		this.comboMPagos.setRequiredError("Es requerido");
 		
 		/*De Bco*/
-		if(this.comboTipo.equals("Banco"))
-		{
-			this.comboMPagos.setRequired(setear);
-			this.comboMPagos.setRequiredError("Es requerido");
-			
-			this.serieDocRef.setRequired(setear);
-			this.serieDocRef.setRequiredError("Es requerido");
-			
-			this.nroDocRef.setRequired(setear);
-			this.nroDocRef.setRequiredError("Es requerido");
-			
-			this.comboBancos.setRequired(setear);
-			this.comboBancos.setRequiredError("Es requerido");
-			
-			this.comboCuentas.setRequired(setear);
-			this.comboCuentas.setRequiredError("Es requerido");
+		System.out.println(this.comboTipo.getValue());
+		if(this.comboTipo.getValue()!=null){
+			if(this.comboTipo.getValue().equals("Banco") && this.comboTipo.getValue()!=null)
+			{
+				this.comboMPagos.setRequired(setear);
+				this.comboMPagos.setRequiredError("Es requerido");
+				
+				this.serieDocRef.setRequired(setear);
+				this.serieDocRef.setRequiredError("Es requerido");
+				
+				this.nroDocRef.setRequired(setear);
+				this.nroDocRef.setRequiredError("Es requerido");
+				
+				this.comboBancos.setRequired(setear);
+				this.comboBancos.setRequiredError("Es requerido");
+				
+				this.comboCuentas.setRequired(setear);
+				this.comboCuentas.setRequiredError("Es requerido");
+			}
+			else
+			{
+				this.serieDocRef.setReadOnly(false);
+				this.nroDocRef.setReadOnly(false);
+				this.comboBancos.setReadOnly(false);
+				this.comboCuentas.setReadOnly(false);
+				this.comboMPagos.setReadOnly(false);
+				
+				this.serieDocRef.setValue("0");
+				this.serieDocRef.setRequired(false);
+				this.nroDocRef.setRequired(false);
+				this.comboBancos.setRequired(false);
+				this.comboCuentas.setRequired(false);
+				this.comboMPagos.setRequired(false);
+				
+				this.serieDocRef.setReadOnly(true);
+				this.nroDocRef.setReadOnly(true);
+				this.comboBancos.setReadOnly(true);
+				this.comboCuentas.setReadOnly(true);
+				this.comboMPagos.setReadOnly(true);
+				
+			}
 		}
-		else
-		{
-			this.serieDocRef.setReadOnly(false);
-			this.nroDocRef.setReadOnly(false);
-			this.comboBancos.setReadOnly(false);
-			this.comboCuentas.setReadOnly(false);
-			this.comboMPagos.setReadOnly(false);
-			
-			this.serieDocRef.setValue("0");
-			this.serieDocRef.setRequired(false);
-			this.nroDocRef.setRequired(false);
-			this.comboBancos.setRequired(false);
-			this.comboCuentas.setRequired(false);
-			this.comboMPagos.setRequired(false);
-			
-			this.serieDocRef.setReadOnly(true);
-			this.nroDocRef.setReadOnly(true);
-			this.comboBancos.setReadOnly(true);
-			this.comboCuentas.setReadOnly(true);
-			this.comboMPagos.setReadOnly(true);
-			
 		
-		}
+		
 		
 	}
 	
@@ -985,11 +990,13 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		else
 			this.comboTipo.setValue("Banco");
 		
-		this.comboMPagos = new ComboBox();
+		this.serieDocRef.setReadOnly(false);
+		this.serieDocRef.setValue(item.getBean().getSerieDocRef());
+		//this.comboMPagos = new ComboBox();
 		
 		this.comboMPagos.setImmediate(true);
 		this.comboMPagos.setNullSelectionAllowed(false);
-		
+		this.comboMPagos.setReadOnly(false);
 		this.comboMPagos.addItem("Sin Asignar");
 		this.comboMPagos.addItem("Cheque");
 		this.comboMPagos.addItem("Transferencia");
@@ -1056,17 +1063,18 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		this.disableBotonAceptar();
 		this.disableBotonAgregarQuitar();
 		
-		/*No mostramos las validaciones*/
-		this.setearValidaciones(false);
 		
-		/*Dejamos todods los campos readonly*/
-		this.readOnlyFields(true);
 		
 		
 		/*Seteamos la grilla con los formularios*/
 		this.container = 
 				new BeanItemContainer<IngresoCobroDetalleVO>(IngresoCobroDetalleVO.class);
 		
+		/*No mostramos las validaciones*/
+		this.setearValidaciones(false);
+		
+		/*Dejamos todods los campos readonly*/
+		this.readOnlyFields(true);
 		
 		if(this.lstDetalleVO != null)
 		{
@@ -1813,7 +1821,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			
 			if(cod != null){
 				if(cod.equals(ctav.getCodigo())){
-					ctav = ctav;
+					cta = ctav;
 				}
 			}
 		}
@@ -1827,7 +1835,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			try{
 				this.comboCuentas.setReadOnly(false);
 				this.comboCuentas.setValue(cta);
-				this.comboCuentas.setReadOnly(true);
+				//this.comboCuentas.setReadOnly(true);
 			}catch(Exception e)
 			{}
 		}

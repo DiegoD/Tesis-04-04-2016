@@ -2748,6 +2748,7 @@ public class FachadaDD {
 				aux.setNomImpuesto(gasto.getImpuestoInfo().getNomImpuesto());
 				aux.setPorcentajeImpuesto(gasto.getImpuestoInfo().getPorcentaje());
 				aux.setSimboloMoneda(gasto.getMoneda().getSimbolo());
+				aux.setNacional(gasto.getMoneda().isNacional());
 				lstGastosVO.add(aux);
 			}
 		

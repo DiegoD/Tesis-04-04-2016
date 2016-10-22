@@ -1218,7 +1218,7 @@ public class ConsultasDD {
 			+ "m_cuentas.cod_cuenta, m_cuentas.descripcion, "
 			+ "m_rubros.cod_rubro, m_rubros.descripcion, m_rubros.cod_tipo_rubro, m_rubros.cod_impuesto, "
 			+ "m_impuestos.cod_impuesto, m_impuestos.descripcion, m_impuestos.porcentaje, "
-			+ "c_procesos.descripcion ");
+			+ "c_procesos.descripcion, m_monedas.nacional ");
 	
 	sb.append("FROM c_gastos"
 			+ " INNER JOIN  m_clientes ON c_gastos.cod_tit = m_clientes.cod_tit AND c_gastos.cod_emp = m_clientes.cod_emp  "

@@ -461,7 +461,7 @@ public class DAOGastos implements IDAOGastos{
 							aux.setUsuarioMod(rs.getString(20));
 							aux.setOperacion(rs.getString(21));
 							aux.setTitInfo(new TitularInfo(rs.getString(22), rs.getString(23)));
-							aux.setMoneda(new MonedaInfo (rs.getString(24), rs.getString(25), rs.getString(26)));
+							aux.setMoneda(new MonedaInfo (rs.getString(24), rs.getString(25), rs.getString(26), rs.getBoolean(37)));
 							aux.setCuenta(new CuentaInfo(rs.getString(27), rs.getString(28)));
 							aux.setRubroInfo(new RubroInfo(rs.getString(29), rs.getString(30)));
 							ImpuestoInfo imp = new ImpuestoInfo();
@@ -470,6 +470,7 @@ public class DAOGastos implements IDAOGastos{
 							imp.setPorcentaje(rs.getDouble(35));
 							aux.setImpuestoInfo(imp);
 							aux.setDescProceso(rs.getString(36));
+							
 							
 							lstGastos.add(aux);
 							
