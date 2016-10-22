@@ -192,7 +192,7 @@ public class ConvertirDocumento {
 	*dado el ingreso cobro
 	*
 	*/
-	public static DocumSaldo getDocumSaldoSaCuentasEgresoCobro(IngresoCobroVO ing, MonedaInfo monedaCtaBCO){
+	public static DocumSaldo getDocumSaldoSaCuentasEgresoCobro(IngresoCobroVO ing){
 		
 		DatosDocumVO aux = new DatosDocumVO();
 		
@@ -250,9 +250,11 @@ public class ConvertirDocumento {
 		
 		docSaldo.setSigno(-1); /*Signo negativo por el egreso*/
 		
+		MonedaInfo mInf = new MonedaInfo();
+		mInf.setCodMoneda(ing.getCodMonedaCtaBco());
+		mInf.setNacional(ing.isNacionalMonedaCtaBco());
 		
-		
-		docSaldo.setMoneda(monedaCtaBCO);
+		docSaldo.setMoneda(mInf);
 		
 		return docSaldo;
 		

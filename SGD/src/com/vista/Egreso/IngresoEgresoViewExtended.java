@@ -432,10 +432,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 						ingCobroVO.setCodBanco(auxctaBco.getCodBco());
 						ingCobroVO.setCodCtaBco(auxctaBco.getCodigo());
 						ingCobroVO.setNomCtaBco(auxctaBco.getNombre());
-						/*Falta poner el nombre de la cuenta*/
-						
-						/*Si es banco calculamos el importe en la moneda de la cuenta*/
-						ingCobroVO.setImpTotMo(this.calcularImporteDeCuentaBanco());
+					
 					
 				}
 				else {
@@ -479,8 +476,21 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 					}
 				}
 					
-				ingCobroVO.setCodCuenta("ingcobro");
+				ingCobroVO.setCodCuenta("egrcobro");
 				ingCobroVO.setDetalle(this.lstDetalleVO);
+				
+				/*Obtenemos la moneda de la cuenta*/
+				//Datos del banco y cuenta y moneda de la cuenta
+				CtaBcoVO auxctaBco = new CtaBcoVO();
+				if(this.comboCuentas.getValue() != null){
+					
+					auxctaBco = (CtaBcoVO) this.comboCuentas.getValue();
+					
+				}
+				
+				/*Seteamos la moneda de la cta del banco*/
+				ingCobroVO.setCodMonedaCtaBco(auxctaBco.getMonedaVO().getCodMoneda());
+				ingCobroVO.setNacionalMonedaCtaBco(auxctaBco.getMonedaVO().isNacional());
 				
 				ingCobroVO.setCodDocum("egrcobro");
 				

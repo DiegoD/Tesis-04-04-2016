@@ -20,7 +20,8 @@ public class IngresoCobroVO extends DatosDocumVO{
 	
 	private String codCtaBco;
 	private String nomCtaBco;
-	
+	private String codMonedaCtaBco;
+	boolean nacionalMonedaCtaBco;
 	
 	
 	private ArrayList<IngresoCobroDetalleVO> detalle;
@@ -48,6 +49,9 @@ public class IngresoCobroVO extends DatosDocumVO{
 		//this.setNomCuenta(t.getNomCuenta());
 		this.nomCtaBco = t.nomCtaBco;
 		this.codCtaBco = t.codCtaBco;
+		
+		this.codMonedaCtaBco = t.codMonedaCtaBco;
+		this.nacionalMonedaCtaBco = t.nacionalMonedaCtaBco;
 		
 		IngresoCobroDetalleVO aux;
 		for (IngresoCobroDetalleVO detVO : t.detalle) {
@@ -125,6 +129,24 @@ public class IngresoCobroVO extends DatosDocumVO{
 	public void setNomCtaBco(String nomCtaBco) {
 		this.nomCtaBco = nomCtaBco;
 	}
+
+	public String getCodMonedaCtaBco() {
+		return codMonedaCtaBco;
+	}
+
+	public void setCodMonedaCtaBco(String codMonedaCtaBco) {
+		this.codMonedaCtaBco = codMonedaCtaBco;
+	}
+
+	public boolean isNacionalMonedaCtaBco() {
+		return nacionalMonedaCtaBco;
+	}
+
+	public void setNacionalMonedaCtaBco(boolean nacionalMonedaCtaBco) {
+		this.nacionalMonedaCtaBco = nacionalMonedaCtaBco;
+	}
+
+
 
 	
 	
