@@ -1352,32 +1352,37 @@ public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 			/*Ingresamos el cobro*/
 			this.ingresoCobro.insertarIngresoCobro(ing, con);
 			
-			
-			/*Para cada linea ingresamos el saldo*/
-			for (DocumDetalle docum : ing.getDetalle()) {
+			if(ing.getDetalle().size()> 0) /*Si tiene detalle porque viene del ingreso cobro, de lo contrario
+			 								se consume desde el ingteso cobro otros*/
+			{
 				
-				if(docum.getCodDocum().equals("Gasto")){ /*Para los gastos modificamos el saldo al documento*/
-					/*Signo -1 porque resta al saldo del documento el cobro*/
-					this.saldos.modificarSaldo(docum, -1, ingVO.getTcMov(), con);
+				/*Para cada linea ingresamos el saldo*/
+				for (DocumDetalle docum : ing.getDetalle()) {
+					
+					if(docum.getCodDocum().equals("Gasto")){ /*Para los gastos modificamos el saldo al documento*/
+						/*Signo -1 porque resta al saldo del documento el cobro*/
+						this.saldos.modificarSaldo(docum, -1, ingVO.getTcMov(), con);
+					}
+					else if(docum.getCodDocum().equals("Proc")) /*Modificamos el saldo para el proceso ingresado*/
+					{
+						
+						docum.setCodDocum(ing.getCodDocum());
+						docum.setSerieDocum(ing.getSerieDocum());
+						docum.setNroDocum(ing.getNroDocum());
+						docum.setTitInfo(ing.getTitInfo());
+						docum.setNroTrans(ing.getNroTrans());
+						docum.setFecDoc(ing.getFecDoc());
+						docum.setFecValor(ing.getFecValor());
+						docum.setCodEmp(ing.getCodEmp());
+						
+						
+						/*Para el proceso esl signo es 1 porque subo el saldo a la cuenta del proceso*/
+						this.saldosProceso.modificarSaldo(docum, 1, ingVO.getTcMov(), con);
+					}
+					
 				}
-				else if(docum.getCodDocum().equals("Proc")) /*Modificamos el saldo para el proceso ingresado*/
-				{
-					
-					docum.setCodDocum(ing.getCodDocum());
-					docum.setSerieDocum(ing.getSerieDocum());
-					docum.setNroDocum(ing.getNroDocum());
-					docum.setTitInfo(ing.getTitInfo());
-					docum.setNroTrans(ing.getNroTrans());
-					docum.setFecDoc(ing.getFecDoc());
-					docum.setFecValor(ing.getFecValor());
-					docum.setCodEmp(ing.getCodEmp());
-					
-					
-					/*Para el proceso esl signo es 1 porque subo el saldo a la cuenta del proceso*/
-					this.saldosProceso.modificarSaldo(docum, 1, ingVO.getTcMov(), con);
-				}
-				
 			}
+		
 			
 			/*Si el ingreso de cobro es con cheque, ingresamos el cheque*/
 			if(ingVO.getCodDocRef().equals("cheqrec"))
@@ -1458,19 +1463,25 @@ public void eliminarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 		if(this.ingresoCobro.memberIngresoCobro(ing.getNroDocum(), codEmp, con))
 		{
 			
-			/*Para cada linea volvemos el saldo sin este cobro*/
-			for (DocumDetalle docum : ing.getDetalle()) {
-				
-				if(docum.getCodDocum().equals("Gasto")){ /*Para los gastos modificamos el saldo al documento*/
+			
+			if(ing.getDetalle().size()> 0) /*Si tiene detalle porque viene del ingreso cobro, de lo contrario
+											se consume desde el ingteso cobro otros*/
+			{
+				/*Para cada linea volvemos el saldo sin este cobro*/
+				for (DocumDetalle docum : ing.getDetalle()) {
 					
-					/*Signo 1 para que restarue los saldos del documento sin este cobro*/
-					this.saldos.modificarSaldo(docum, 1, ingVO.getTcMov(), con);
+					if(docum.getCodDocum().equals("Gasto")){ /*Para los gastos modificamos el saldo al documento*/
+						
+						/*Signo 1 para que restarue los saldos del documento sin este cobro*/
+						this.saldos.modificarSaldo(docum, 1, ingVO.getTcMov(), con);
+					}
+					else if(docum.getCodDocum().equals("Proceso")) /*Modificamos el saldo para el proceso ingresado*/
+					{
+						/*Signo -1 para que restarue los saldos del proceso sin este cobro*/
+						this.saldosProceso.modificarSaldo(docum, -1, ingVO.getTcMov(), con);
+					}
 				}
-				else if(docum.getCodDocum().equals("Proceso")) /*Modificamos el saldo para el proceso ingresado*/
-				{
-					/*Signo -1 para que restarue los saldos del proceso sin este cobro*/
-					this.saldosProceso.modificarSaldo(docum, -1, ingVO.getTcMov(), con);
-				}
+				
 			}
 			
 			/*Si el ingreso de cobro es con cheque, eliminamos el cheque de los saldos y de los cheques*/
@@ -1604,19 +1615,26 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 			this.ingresoCobro.insertarIngresoCobro(ing, con);
 			
 			
-			/*Para cada linea ingresamos el saldo*/
-			for (DocumDetalle docum : ing.getDetalle()) {
+			if(ing.getDetalle().size() > 0) /*Si tiene detalle porque viene del ingreso cobro, de lo contrario
+											se consume desde el ingteso cobro otros*/
+			{
 				
-				if(docum.getCodDocum().equals("Gasto")){ /*Para los gastos modificamos el saldo al documento*/
-					/*Signo -1 porque resta al saldo del documento el cobro*/
-					this.saldos.modificarSaldo(docum, -1, ingVO.getTcMov(), con);
+				for (DocumDetalle docum : ing.getDetalle()) {
+					
+					if(docum.getCodDocum().equals("Gasto")){ /*Para los gastos modificamos el saldo al documento*/
+						/*Signo -1 porque resta al saldo del documento el cobro*/
+						this.saldos.modificarSaldo(docum, -1, ingVO.getTcMov(), con);
+					}
+					else if(docum.getCodDocum().equals("Proc")) /*Modificamos el saldo para el proceso ingresado*/
+					{
+						/*EL signo es 1 en proceso para que le agregue saldo al proceso*/
+						this.saldosProceso.modificarSaldo(docum, 1, ingVO.getTcMov(), con);
+					}
 				}
-				else if(docum.getCodDocum().equals("Proc")) /*Modificamos el saldo para el proceso ingresado*/
-				{
-					/*EL signo es 1 en proceso para que le agregue saldo al proceso*/
-					this.saldosProceso.modificarSaldo(docum, 1, ingVO.getTcMov(), con);
-				}
+				
 			}
+			/*Para cada linea ingresamos el saldo*/
+			
 			
 			/*Si el ingreso de cobro es con cheque, ingresamos el cheque*/
 			if(ingVO.getCodDocRef().equals("cheqrec"))
@@ -1682,18 +1700,24 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 			/*Verificamos no exista un el cobro*/
 			if(this.ingresoCobro.memberIngresoCobro(ing.getNroDocum(), ing.getCodEmp(), con))
 			{
-				/*Para cada linea volvemos el saldo sin este cobro*/
-				for (DocumDetalle docum : ing.getDetalle()) {
-					
-					if(docum.getCodDocum().equals("Gasto")){ /*Para los gastos modificamos el saldo al documento*/
+				
+				
+				if(ing.getDetalle().size() > 0) /*Si tiene detalle porque viene del ingreso cobro, de lo contrario
+												se consume desde el ingteso cobro otros*/
+				{
+					/*Para cada linea volvemos el saldo sin este cobro*/
+					for (DocumDetalle docum : ing.getDetalle()) {
 						
-						/*Signo 1 para que restarue los saldos del documento sin este cobro*/
-						this.saldos.modificarSaldo(docum, 1, ingVO.getTcMov(), con);
-					}
-					else if(docum.getCodDocum().equals("Proceso")) /*Modificamos el saldo para el proceso ingresado*/
-					{
-						/*Signo -1 para que le quite el saldo*/
-						this.saldosProceso.modificarSaldo(docum, -1, ingVO.getTcMov(), con);
+						if(docum.getCodDocum().equals("Gasto")){ /*Para los gastos modificamos el saldo al documento*/
+							
+							/*Signo 1 para que restarue los saldos del documento sin este cobro*/
+							this.saldos.modificarSaldo(docum, 1, ingVO.getTcMov(), con);
+						}
+						else if(docum.getCodDocum().equals("Proceso")) /*Modificamos el saldo para el proceso ingresado*/
+						{
+							/*Signo -1 para que le quite el saldo*/
+							this.saldosProceso.modificarSaldo(docum, -1, ingVO.getTcMov(), con);
+						}
 					}
 				}
 				
@@ -1741,7 +1765,6 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 		}
 		
 	}
-
 
 /////////////////////////////////FIN-INGRESO COBRO/////////////////////////
  

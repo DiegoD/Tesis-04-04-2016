@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8" name="design-properties" content="{&quot;RULERS_VISIBLE&quot;:true,&quot;GUIDELINES_VISIBLE&quot;:false,&quot;SNAP_TO_OBJECTS&quot;:true,&quot;SNAP_TO_GRID&quot;:true,&quot;SNAPPING_DISTANCE&quot;:10,&quot;JAVA_SOURCES_ROOT&quot;:&quot;src&quot;,&quot;THEME&quot;:&quot;sgd&quot;}">
+ </head> 
+ <body> 
+  <vaadin-form-layout spacing="false" responsive id="auditoria" size-full margin-left margin-right margin-bottom="false"> 
+   <vaadin-label style-name="colored h2" responsive plain-text :center>
+     Ingreso Cobro 
+   </vaadin-label> 
+   <vaadin-horizontal-layout width-full> 
+    <vaadin-link caption="Auditoria" _id="auditoria" :middle :right></vaadin-link> 
+   </vaadin-horizontal-layout> 
+   <vaadin-horizontal-layout responsive size-full> 
+    <vaadin-form-layout spacing="false" size-full _id="formLay1"> 
+     <vaadin-text-field enabled="false" id="nroTrans" visible="false" _id="nroTrans"></vaadin-text-field> 
+     <vaadin-text-field caption="Nro" style-name="tiny" null-representation="" width="144px" readonly _id="nroDocum"></vaadin-text-field> 
+     <vaadin-combo-box caption="Tipo" style-name="tiny" item-caption-mode="id" width="144px" _id="comboTipo"> 
+      <option>Caja</option> 
+      <option>Banco</option> 
+     </vaadin-combo-box> 
+     <vaadin-date-field caption="Fec Doc" id="fecDoc" style-name="tiny" width="144px" _id="fecDoc"></vaadin-date-field> 
+     <vaadin-date-field caption="Fec Valor" id="fecValor" style-name="tiny" width="144px" _id="fecValor"></vaadin-date-field> 
+     <vaadin-horizontal-layout caption="Titular" style-name="name-wrapper" spacing _id="name_wrapper"> 
+      <vaadin-text-field id="codTitular" style-name="tiny" width="144px" readonly _id="codTitular"></vaadin-text-field> 
+      <vaadin-text-field id="nomTitular" style-name="tiny" _id="nomTitular"></vaadin-text-field> 
+      <vaadin-button icon="fonticon://FontAwesome/f002" style-name="icon-only borderless quiet tiny" _id="btnBuscarCliente"></vaadin-button> 
+     </vaadin-horizontal-layout> 
+     <vaadin-text-field caption="Referencia" id="referencia" style-name="tiny" responsive width="341px" readonly _id="referencia"></vaadin-text-field> 
+    </vaadin-form-layout> 
+    <vaadin-form-layout spacing="false" size-full _id="formLay13"> 
+     <vaadin-combo-box caption="Banco" style-name="tiny" item-caption-mode="id" width="144px" _id="comboBancos"></vaadin-combo-box> 
+     <vaadin-combo-box caption="Cuenta" id="comboCuentas" style-name="tiny" item-caption-mode="id" width="144px" _id="comboCuentas"></vaadin-combo-box> 
+     <vaadin-horizontal-layout caption="Medio Pago" style-name="name-wrapper" spacing _id="name_wrappeer"> 
+      <vaadin-combo-box id="comboMPagos" style-name="tiny" item-caption-mode="id" width="144px" _id="comboMPagos"> 
+       <option>Cheque</option> 
+       <option>Transferencia</option> 
+      </vaadin-combo-box> 
+      <vaadin-text-field id="serieDocRef" input-prompt="Serie" style-name="tiny" null-representation="" width="30px" readonly _id="serieDocRef"></vaadin-text-field> 
+      <vaadin-text-field input-prompt="Nro Mov/Cheq" style-name="tiny" null-representation="" width="145px" readonly _id="nroDocRef"></vaadin-text-field> 
+     </vaadin-horizontal-layout> 
+     <vaadin-text-field caption="TC" id="tcMov" style-name="tiny" null-representation="" width="144px" _id="tcMov"></vaadin-text-field> 
+     <vaadin-horizontal-layout caption="Importe" style-name="name-wrapper" spacing _id="name_wrapper2"> 
+      <vaadin-combo-box id="comboMoneda" style-name="tiny" item-caption-mode="id" width="144px" _id="comboMoneda"></vaadin-combo-box> 
+      <vaadin-text-field id="impTotMo" style-name="tiny" null-representation="" readonly _id="impTotMo"></vaadin-text-field> 
+     </vaadin-horizontal-layout> 
+    </vaadin-form-layout> 
+   </vaadin-horizontal-layout> 
+   <vaadin-form-layout spacing="false" size-full _id="formLay12"> 
+    <vaadin-horizontal-layout width="187px"> 
+     <vaadin-button style-name="primary tiny" plain-text _id="aceptar" :middle>
+       Guardar 
+     </vaadin-button> 
+     <vaadin-button style-name="tiny primary" id="btnEditar" plain-text _id="btnEditar" :middle>
+       Editar 
+     </vaadin-button> 
+     <vaadin-button style-name="tiny primary" id="btnCancelar" plain-text _id="cancelar" :middle>
+       Cancelar 
+     </vaadin-button> 
+    </vaadin-horizontal-layout> 
+   </vaadin-form-layout> 
+  </vaadin-form-layout>  
+ </body>
+</html>
