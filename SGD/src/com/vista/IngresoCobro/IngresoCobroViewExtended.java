@@ -400,6 +400,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 						ingCobroVO.setCodDocRef("tranrec");
 						
 						ingCobroVO.setSerieDocRef("0");
+						
 					}
 					else if(ingCobroVO.getmPago().equals("Cheque"))
 					{
@@ -2181,7 +2182,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	  /*Si la moneda del cobro es igual  a la de la moneda de la cuenta del banco*/
 	  if(codMonedaCab.equals(codMonedaCtaBco))
 	  {
-	   impMo = impTotalIngresado;  /*El importe es el mismo*/
+		  impMo = impTotalIngresado;  /*El importe es el mismo*/
 	  }
 	  /*Si la moneda del cobro es distinta a la de la cuenta del banco pero
 	   * igual a la moneda nacional, hago el calculo al tipo de cambio

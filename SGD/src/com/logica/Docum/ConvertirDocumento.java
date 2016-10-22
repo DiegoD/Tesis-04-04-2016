@@ -179,6 +179,10 @@ public class ConvertirDocumento {
 		docSaldo.setSigno(1); /*Signo positivo*/
 		
 		docSaldo.setMoneda(monedaInfo);
+		
+		
+		
+		
 		return docSaldo;
 		
 	}

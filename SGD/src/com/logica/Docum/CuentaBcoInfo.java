@@ -4,6 +4,8 @@ public class CuentaBcoInfo {
 
 	private String nomCuenta;
 	private String codCuenta;
+	private String codMoneda;
+	private boolean nacional;
 	
 	public CuentaBcoInfo(){
 		
@@ -28,4 +30,22 @@ public class CuentaBcoInfo {
 	public void setCodCuenta(String codCuenta) {
 		this.codCuenta = codCuenta;
 	}
+
+	public String getCodMoneda() {
+		return codMoneda;
+	}
+
+	public void setCodMoneda(String codMoneda) {
+		this.codMoneda = codMoneda;
+	}
+
+	public boolean isNacional() {
+		return nacional;
+	}
+
+	public void setNacional(boolean nacional) {
+		this.nacional = nacional;
+	}
+	
+	
 }
