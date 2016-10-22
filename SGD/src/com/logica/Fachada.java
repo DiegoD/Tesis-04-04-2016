@@ -1334,6 +1334,9 @@ public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 		IngresoCobro ing = new IngresoCobro(ingVO); 
 		Cotizacion cotiAux;
 		
+		 /*Obtenemos el importe moneda operativa de la cuenta del banco*/
+		 double impMoCtaBco = this.importeMOCtaBanco(ing);
+		
 		//Obtengo numerador de gastos
 		codigos.setCodigo(numeradores.getNumero(con, "ingcobro", codEmp)); //Ingreso Cobro 
 		codigos.setNumeroTrans(numeradores.getNumero(con, "03", codEmp)); //nro trans
@@ -1383,6 +1386,13 @@ public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 
 				/*Insertamos el cheque y saldo*/
 				DatosDocumVO auxCheque = ConvertirDocumento.getDatosDocumChequeDadoIngCobro(ingVO);
+				
+				
+				auxCheque.setCodMoneda(ing.getCuenta().getCodMoneda());
+			    auxCheque.setNacional(ing.getCuenta().isNacional());
+			    auxCheque.setImpTotMo(impMoCtaBco);
+				
+				
 				this.insertarChequeIntFachada(auxCheque, con);
 
 //				/*Ingresamos el saldo para el cheque */
@@ -1391,7 +1401,10 @@ public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 			}
 			
 			/*Ingresamos el saldo a la cuenta (Banco o caja)*/
-			DocumSaldo saldoCuenta = ConvertirDocumento.getDocumSaldoSaCuentasIngCobro(ingVO, ing.getMoneda());
+			DocumSaldo saldoCuenta = ConvertirDocumento.getDocumSaldoSaCuentasIngCobro(ingVO);
+			
+			saldoCuenta.setImpTotMo(impMoCtaBco);
+			
 			this.saldosCuentas.insertarSaldoCuenta(saldoCuenta, con);
 
 			
@@ -1438,6 +1451,9 @@ public void eliminarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 		IngresoCobro ing = new IngresoCobro(ingVO); 
 		Cotizacion cotiAux;
 		
+		/*Obtenemos el importe moneda operativa de la cuenta del banco*/
+		double impMoCtaBco = this.importeMOCtaBanco(ing);
+		
 		/*Verificamos no exista un el cobro*/
 		if(this.ingresoCobro.memberIngresoCobro(ing.getNroDocum(), codEmp, con))
 		{
@@ -1466,16 +1482,24 @@ public void eliminarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 				/*Eliminamos el saldo para el cheque */
 				DatosDocum auxCheque2 = new DatosDocum(auxCheque);
 				this.saldos.eliminarSaldo(auxCheque2, con);
-				
+			
+				auxCheque.setImpTotMo(impMoCtaBco);
+			    auxCheque.setCodMoneda(ing.getCuenta().getCodMoneda());
+			    auxCheque.setNacional(ing.getCuenta().isNacional());
 				
 				/*Eliminamos el cheque de tabla base*/                                           
 				DatosDocum chequeL = new DatosDocum(auxCheque); /*Lo convertimos a objeto de logica para pasarlo al DAO*/
+				
+				
 				this.cheques.eliminarCheque(chequeL, con);
 			}
 			
 			/*Bajamos el saldo a la cuenta (Banco o caja)*/
 			/*Obtenemos el objeto DocumSaldo dado el ingreso de cobro*/
 			DocumSaldo saldoCuenta = ConvertirDocumento.getDocumSaldoChequeDadoIngCobro(ingVO);
+			
+			saldoCuenta.setImpTotMo(impMoCtaBco);
+			
 			this.saldosCuentas.eliminarSaldoCuenta(saldoCuenta, con);
 			
 			/*Una vez hechos todos los movimientos de saldos y documentos
@@ -1570,6 +1594,9 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 		IngresoCobro ing = new IngresoCobro(ingVO); 
 		Cotizacion cotiAux;
 		
+		 /*Obtenemos el importe moneda operativa de la cuenta del banco*/
+		 double impMoCtaBco = this.importeMOCtaBanco(ing);
+		
 		/*Verificamos que no exista un cobro con el mismo numero*/
 		if(!this.ingresoCobro.memberIngresoCobro(ing.getNroDocum(), ing.getCodEmp(), con))
 		{
@@ -1597,6 +1624,13 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 				/*Primero obtenemos el DatosDocum para el cheque dado el ingreso cobro*/
 
 				DatosDocumVO auxCheque = ConvertirDocumento.getDatosDocumChequeDadoIngCobro(ingVO);
+				
+				auxCheque.setCodMoneda(ing.getCuenta().getCodMoneda());
+			    auxCheque.setNacional(ing.getCuenta().isNacional());
+			     /*Obtenemos el importe moneda operativa de la cuenta del banco*/
+			    
+			    auxCheque.setImpTotMo(impMoCtaBco);
+			    
 				this.insertarChequeIntFachada(auxCheque, con);
 
 				/*Ingresamos el saldo para el cheque */
@@ -1605,7 +1639,8 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 			}
 			
 			/*Ingresamos el saldo a la cuenta (Banco o caja)*/
-			DocumSaldo saldoCuenta = ConvertirDocumento.getDocumSaldoSaCuentasIngCobro(ingVO, ing.getMoneda());
+			DocumSaldo saldoCuenta = ConvertirDocumento.getDocumSaldoSaCuentasIngCobro(ingVO);
+			saldoCuenta.setImpTotMo(impMoCtaBco);
 			this.saldosCuentas.insertarSaldoCuenta(saldoCuenta, con);
 
 		}
@@ -1641,6 +1676,9 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 			IngresoCobro ing = new IngresoCobro(ingVO); 
 			Cotizacion cotiAux;
 			
+			/*Obtenemos el importe moneda operativa de la cuenta del banco*/
+			double impMoCtaBco = this.importeMOCtaBanco(ing);
+			
 			/*Verificamos no exista un el cobro*/
 			if(this.ingresoCobro.memberIngresoCobro(ing.getNroDocum(), ing.getCodEmp(), con))
 			{
@@ -1669,7 +1707,9 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 					DatosDocum auxCheque2 = new DatosDocum(auxCheque);
 					this.saldos.eliminarSaldo(auxCheque2, con);
 					
-					
+					auxCheque.setImpTotMo(impMoCtaBco);
+				    auxCheque.setCodMoneda(ing.getCuenta().getCodMoneda());
+				    auxCheque.setNacional(ing.getCuenta().isNacional());
 					/*Eliminamos el cheque de tabla base*/                                           
 					DatosDocum chequeL = new DatosDocum(auxCheque); /*Lo convertimos a objeto de logica para pasarlo al DAO*/
 					this.cheques.eliminarCheque(chequeL, con);
@@ -1678,6 +1718,8 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 				/*Bajamos el saldo a la cuenta (Banco o caja)*/
 				/*Obtenemos el objeto DocumSaldo dado el ingreso de cobro*/
 				DocumSaldo saldoCuenta = ConvertirDocumento.getDocumSaldoChequeDadoIngCobro(ingVO);
+				saldoCuenta.setImpTotMo(impMoCtaBco);
+				
 				this.saldosCuentas.eliminarSaldoCuenta(saldoCuenta, con);
 				
 				/*Una vez hechos todos los movimientos de saldos y documentos
@@ -1914,10 +1956,10 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 					
 					/*Eliminamos el cheque de tabla base*/   
 					
-					DatosDocum chequeL = new DatosDocum(auxCheque); /*Lo convertimos a objeto de logica para pasarlo al DAO*/
 					auxCheque.setImpTotMo(impMoCtaBco);
 					auxCheque.setCodMoneda(ing.getCuenta().getCodMoneda());
 					auxCheque.setNacional(ing.getCuenta().isNacional());
+					DatosDocum chequeL = new DatosDocum(auxCheque); /*Lo convertimos a objeto de logica para pasarlo al DAO*/
 					this.cheques.eliminarCheque(chequeL, con);
 				}
 				
@@ -2145,10 +2187,13 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 				*/
 				
 				/*Eliminamos el cheque de tabla base*/    
-				DatosDocum chequeL = new DatosDocum(auxCheque); /*Lo convertimos a objeto de logica para pasarlo al DAO*/
+				
 				auxCheque.setImpTotMo(impMoCtaBco);
 				auxCheque.setCodMoneda(ing.getCuenta().getCodMoneda());
 				auxCheque.setNacional(ing.getCuenta().isNacional());
+				
+				DatosDocum chequeL = new DatosDocum(auxCheque); /*Lo convertimos a objeto de logica para pasarlo al DAO*/
+				
 				this.cheques.eliminarCheque(chequeL, con);
 			}
 			
