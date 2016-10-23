@@ -181,7 +181,7 @@ public class ConvertirDocumento {
 		MonedaInfo mInf = new MonedaInfo(); /*Moneda a setear*/
 		
 		/*Si es por banco si no la del cabezal*/
-		if(ingVO.getmPago().equals("Banco")) {
+		if(!ingVO.getmPago().equals("Caja")) {
 			
 			mInf.setCodMoneda(ingVO.getCodMonedaCtaBco());
 			mInf.setNacional(ingVO.isNacionalMonedaCtaBco());
@@ -193,6 +193,11 @@ public class ConvertirDocumento {
 		}
 		
 		docSaldo.setMoneda(mInf);
+		
+		if(docSaldo.getMoneda().isNacional())
+		{
+			docSaldo.setImpTotMo(docSaldo.getImpTotMn());
+		}
 		
 		return docSaldo;
 		
@@ -264,7 +269,7 @@ public class ConvertirDocumento {
 		MonedaInfo mInf = new MonedaInfo(); /*Moneda a setear*/
 		
 		/*Si es por banco si no la del cabezal*/
-		if(ing.getmPago().equals("Banco")) {
+		if(!ing.getmPago().equals("Caja")) {
 			
 			mInf.setCodMoneda(ing.getCodMonedaCtaBco());
 			mInf.setNacional(ing.isNacionalMonedaCtaBco());
@@ -277,6 +282,10 @@ public class ConvertirDocumento {
 		
 		docSaldo.setMoneda(mInf);
 		
+		if(docSaldo.getMoneda().isNacional())
+		{
+			docSaldo.setImpTotMo(docSaldo.getImpTotMn());
+		}
 		
 		return docSaldo;
 		

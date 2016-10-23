@@ -435,6 +435,8 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 						ingCobroVO.setCodMonedaCtaBco(auxctaBco.getMonedaVO().getCodMoneda());
 						ingCobroVO.setNacionalMonedaCtaBco(auxctaBco.getMonedaVO().isNacional());
 					
+						
+						
 					
 				}
 				else {

@@ -1399,7 +1399,7 @@ public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 				
 				auxCheque.setCodMoneda(ing.getCuenta().getCodMoneda());
 			    auxCheque.setNacional(ing.getCuenta().isNacional());
-			    auxCheque.setImpTotMo(impMoCtaBco);
+			    auxCheque.setImpTotMo(impMoCtaBco); /*Importe en moneda operativa de la cuenta bco*/
 				
 				/*Ingresamos el cheque y su saldo*/
 				this.insertarChequeIntFachada(auxCheque, con);
@@ -1413,7 +1413,7 @@ public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 			{
 				/*Ingresamos el saldo a la cuenta (Banco o caja)*/
 				DocumSaldo saldoCuenta = ConvertirDocumento.getDocumSaldoSaCuentasIngCobro(ingVO);
-				
+				saldoCuenta.setImpTotMo(impMoCtaBco); /*Importe en moneda operativa de la cuenta bco*/
 				this.saldosCuentas.insertarSaldoCuenta(saldoCuenta, con);
 			}
 			

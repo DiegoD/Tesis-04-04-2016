@@ -309,7 +309,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			/*Validamos los campos antes de invocar al controlador*/
 			if(this.fieldsValidos())
 			{
-				/*Inicializamos VO de permisos para el usuario, formulario y operacion
+				/*Inicializamos VO d	e permisos para el usuario, formulario y operacion
 				 * para confirmar los permisos del usuario*/
 				UsuarioPermisosVO permisoAux = 
 						new UsuarioPermisosVO(this.permisos.getCodEmp(),
