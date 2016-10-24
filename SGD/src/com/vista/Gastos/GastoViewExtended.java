@@ -339,8 +339,8 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 			UsuarioPermisosVO permisoAux = 
 			new UsuarioPermisosVO(this.permisos.getCodEmp(),
 					this.permisos.getUsuario(),
-					VariablesPermisos.FORMULARIO_PROCESOS,
-					VariablesPermisos.OPERACION_NUEVO_EDITAR);
+					VariablesPermisos.FORMULARIO_GASTOS,
+					VariablesPermisos.OPERACION_BORRAR);
 			
 			try {
 				
@@ -957,12 +957,15 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		
 		/*Verificamos que tenga permisos*/
 		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GASTOS, VariablesPermisos.OPERACION_NUEVO_EDITAR);
-		
+		boolean permisoEliminar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GASTOS, VariablesPermisos.OPERACION_BORRAR);
 		if(permisoNuevoEditar){
 			
 			/*Oculatamos Editar y mostramos el de guardar y de agregar formularios*/
 			this.enableBotonAceptar();
-			this.enableBotonEliminar();
+			
+			if(permisoEliminar)
+				this.enableBotonEliminar();
+			
 			this.disableBotonLectura();
 
 			/*Dejamos los textfields que se pueden editar
@@ -983,7 +986,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		else{
 			
 			/*Mostramos mensaje Sin permisos para operacion*/
-			Mensajes.mostrarMensajeError(Variables.USUSARIO_SIN_PERMISOS);
+			//Mensajes.mostrarMensajeError(Variables.USUSARIO_SIN_PERMISOS);
 		}
 	}
 	
@@ -1336,7 +1339,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 					new UsuarioPermisosVO(this.permisos.getCodEmp(),
 							this.permisos.getUsuario(),
 							VariablesPermisos.FORMULARIO_GASTOS,
-							VariablesPermisos.OPERACION_NUEVO_EDITAR);
+							VariablesPermisos.OPERACION_LEER);
 			lstMonedas = this.controlador.getMonedas(permisoAux);
 			
 		} catch (ObteniendoMonedaException | InicializandoException | ConexionException | ObteniendoPermisosException | NoTienePermisosException e) {

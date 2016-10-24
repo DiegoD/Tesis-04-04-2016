@@ -85,6 +85,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	CotizacionVO cotizacion =  new CotizacionVO();
 	Double cotizacionVenta = null;
 	
+	MonedaVO monedaNacional = new MonedaVO();
+	
 	private Hashtable<Integer, GtoSaldoAux> saldoOriginalGastos; /*Variable auxliar para poder
 	 															 controlar que el saldo del gasto quede
 	 															 en negativo*/
@@ -93,6 +95,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	 							 para poder detectar las lineas eliminadas del cobro */
 	
 	boolean cambioMoneda;
+	
+	ArrayList<MonedaVO> lstMonedas = new ArrayList<MonedaVO>();
 	
 	MySub sub;
 	//private UsuarioPermisosVO permisos; /*Variable con los permisos del usuario*/
@@ -213,8 +217,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
    			mostrarDatosDeBanco();
 		}
     });
-  //  combobox.setImmediate(true);
 
+    
     /**
 	* Agregamos listener al combo de monedas, para verificar que no modifique la moneda
 	* una vez ingresado un gasto ya 
@@ -240,14 +244,29 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
    					
    					tcMov.setVisible(true);
 					cotizacion = controlador.getCotizacion(permisoAux, fecha, auxMoneda.getCodMoneda());
-					cotizacionVenta = cotizacion.getCotizacionVenta();
-					calculos();
+					if(cotizacion.getCotizacionVenta() != 0 && !auxMoneda.isNacional()){
+						cotizacionVenta = cotizacion.getCotizacionVenta();
+						calculos();
+					}
+					else{
+						Mensajes.mostrarMensajeError("Debe cargar la cotización para la moneda");
+						comboMoneda.setValue(monedaNacional);
+						return;
+					}
 				} 
    				catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
 						| InicializandoException | NoTienePermisosException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+   				if(fecha != null){
+   					
+   					for (MonedaVO monedaVO : lstMonedas) {
+   						
+   						monedaVO = seteaCotizaciones(monedaVO);
+   					}
+   					
+   				}
    			}
    			else{
    				tcMov.setVisible(false);
@@ -334,20 +353,20 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 					//Obtenemos la moneda del cabezal
 					auxMoneda = new MonedaVO();
 					if(this.comboMoneda.getValue() != null){
-					
-						auxMoneda = (MonedaVO) this.comboMoneda.getValue();
-					
-					/*SI EL TIPO ES CAJA TOMAMOS LA MONEDA DEL CABEZAL DEL COBRO*/
-					//if(((String)comboTipo.getValue()).equals("Caja")) { 
-					
-					ingCobroVO.setCodMoneda(auxMoneda.getCodMoneda());
-					ingCobroVO.setNomMoneda(auxMoneda.getDescripcion());
-					ingCobroVO.setSimboloMoneda(auxMoneda.getSimbolo());
-					//}
-				}
+						
+							auxMoneda = (MonedaVO) this.comboMoneda.getValue();
+						
+						/*SI EL TIPO ES CAJA TOMAMOS LA MONEDA DEL CABEZAL DEL COBRO*/
+						//if(((String)comboTipo.getValue()).equals("Caja")) { 
+						
+						ingCobroVO.setCodMoneda(auxMoneda.getCodMoneda());
+						ingCobroVO.setNomMoneda(auxMoneda.getDescripcion());
+						ingCobroVO.setSimboloMoneda(auxMoneda.getSimbolo());
+						//}
+					}
 
 
-				/////////////////////////////FIN MONEDA////////////////////////////////////////////
+					/////////////////////////////FIN MONEDA////////////////////////////////////////////
 					if(auxMoneda.isNacional()) /*Si la moneda seleccionada es nacional*/
 					{
 						/*Si la moneda es la nacional, el TC es 1 y el importe MN es el mismo*/
@@ -532,7 +551,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	
 	
 	
-	/*Inicalizamos listener para boton de Editar*/
+		/*Inicalizamos listener para boton de Editar*/
 		this.btnEditar.addClickListener(click -> {
 				
 		try {
@@ -903,7 +922,6 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		this.comboMPagos.setRequiredError("Es requerido");
 		
 		/*De Bco*/
-		System.out.println(this.comboTipo.getValue());
 		if(this.comboTipo.getValue()!=null){
 			if(this.comboTipo.getValue().equals("Banco") && this.comboTipo.getValue()!=null)
 			{
@@ -990,6 +1008,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		else
 			this.comboTipo.setValue("Banco");
 		
+		this.nroDocum.setReadOnly(true);
 		this.serieDocRef.setReadOnly(false);
 		this.serieDocRef.setValue(item.getBean().getSerieDocRef());
 		//this.comboMPagos = new ComboBox();
@@ -1083,6 +1102,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			}
 		}
 		this.actualizarGrillaContainer(container);
+		
+		this.btnBuscarCliente.setVisible(false);
 						
 	}
 	
@@ -1113,7 +1134,9 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			/*Seteamos las validaciones*/
 			this.setearValidaciones(true);
 			
-			this.comboTipo.setReadOnly(false);
+			
+			
+			
 		}
 		else{
 			
@@ -1175,27 +1198,16 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	 */
 	private void setearFieldsEditar()
 	{
-		/*Agregar control si se puede editar si el mes esta abierto*/
-		//TODO
-		this.comboTipo.setReadOnly(false);
-		
-		this.comboBancos.setReadOnly(false);
-		
-		this.comboCuentas.setReadOnly(false);
 		
 		this.fecDoc.setReadOnly(false);
-		
-		this.fecValor.setReadOnly(false);
-		
-		this.comboMPagos.setReadOnly(false);
 		
 		this.serieDocRef.setReadOnly(false);
 		
 		this.nroDocRef.setReadOnly(false);
 		
-		this.comboMoneda.setReadOnly(false);
-		
 		this.impTotMo.setReadOnly(false);
+		
+		this.impTotMo.setEnabled(false);
 		
 		this.referencia.setReadOnly(false);
 	}
@@ -1283,6 +1295,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	private void readOnlyFields(boolean setear)
 	{
 		
+		this.nomTitular.setReadOnly(setear);
+		
 		this.comboTipo.setReadOnly(setear);
 		
 		this.comboBancos.setReadOnly(setear);
@@ -1306,6 +1320,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		this.referencia.setReadOnly(setear);
 		
 		this.codTitular.setReadOnly(setear);
+		
+		
 	}
 	
 	/**
@@ -1747,17 +1763,20 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		//this.comboMoneda = new ComboBox();
 		BeanItemContainer<MonedaVO> monedasObj = new BeanItemContainer<MonedaVO>(MonedaVO.class);
 		MonedaVO moneda = new MonedaVO();
-		ArrayList<MonedaVO> lstMonedas = new ArrayList<MonedaVO>();
+		
 		UsuarioPermisosVO permisosAux;
+		permisosAux = 
+				new UsuarioPermisosVO(this.permisos.getCodEmp(),
+						this.permisos.getUsuario(),
+						VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+						VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
 		try {
-			permisosAux = 
-					new UsuarioPermisosVO(this.permisos.getCodEmp(),
-							this.permisos.getUsuario(),
-							VariablesPermisos.FORMULARIO_INGRESO_COBRO,
-							VariablesPermisos.OPERACION_NUEVO_EDITAR);
+			
 			
 			lstMonedas = this.controlador.getMonedas(permisosAux);
+			
+			
 			
 		} catch (ObteniendoMonedaException | InicializandoException | ConexionException | ObteniendoPermisosException | NoTienePermisosException e) {
 
@@ -1766,6 +1785,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		
 		for (MonedaVO monedaVO : lstMonedas) {
 			
+			monedaVO = this.seteaCotizaciones(monedaVO);
 			monedasObj.addBean(monedaVO);
 			
 			if(cod != null){
@@ -2134,19 +2154,46 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	@Override
 	public void setInfoLst(ArrayList<Object> lstDatos) {
 		
+		int j = 0;
+		boolean salir = false;
+		MonedaVO monedaVO;
 		IngresoCobroDetalleVO g;
 		for (Object obj : lstDatos) {
+			
 			
 			g = new IngresoCobroDetalleVO();
 			g.copiar((DocumDetalleVO)obj);
 			
-			this.lstDetalleVO.add(g);
-			
-			/*Tambien agrefamos a la lista de los saldos originales
-			 * para poder controlar que no ingresen un saldo mayor al que tien el gasto*/
-			GtoSaldoAux saldoAux =  new GtoSaldoAux(g.getNroDocum(), g.getImpTotMo());
-			this.saldoOriginalGastos.put(saldoAux.getNroDocum(),saldoAux);
-			
+			if(!g.isNacional()){
+				
+				while(lstMonedas.size()>j && !salir){
+					monedaVO = new MonedaVO();
+					monedaVO = lstMonedas.get(j);
+					j++;
+					if(g.getCodMoneda().equals(monedaVO.getCodMoneda())){
+						salir = true;
+						if(monedaVO.getCotizacion() != 0){
+							this.lstDetalleVO.add(g);
+							
+							/*Tambien agrefamos a la lista de los saldos originales
+							 * para poder controlar que no ingresen un saldo mayor al que tien el gasto*/
+							GtoSaldoAux saldoAux =  new GtoSaldoAux(g.getNroDocum(), g.getImpTotMo());
+							this.saldoOriginalGastos.put(saldoAux.getNroDocum(),saldoAux);
+						}
+						else{
+							Mensajes.mostrarMensajeError("Debe ingresar la cotización de la moneda " + monedaVO.getDescripcion());
+						}
+					}
+				}
+			}
+			else{
+				this.lstDetalleVO.add(g);
+				
+				/*Tambien agrefamos a la lista de los saldos originales
+				 * para poder controlar que no ingresen un saldo mayor al que tien el gasto*/
+				GtoSaldoAux saldoAux =  new GtoSaldoAux(g.getNroDocum(), g.getImpTotMo());
+				this.saldoOriginalGastos.put(saldoAux.getNroDocum(),saldoAux);
+			}
 		}
 			
 		/*Actualizamos el container y la grilla*/
@@ -2190,6 +2237,38 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			}
 		}
 		
+	}
+	
+	public MonedaVO seteaCotizaciones(MonedaVO monedaVO){
+		
+		UsuarioPermisosVO permisosAux;
+		permisosAux = 
+				new UsuarioPermisosVO(this.permisos.getCodEmp(),
+						this.permisos.getUsuario(),
+						VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+						VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		
+		Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
+		CotizacionVO cotiz;
+		if(monedaVO.isNacional()){
+			monedaNacional = monedaVO;
+		}
+		else if(fecha!=null){
+			
+			cotiz = new CotizacionVO();
+			
+			try {
+				
+				cotiz = this.controlador.getCotizacion(permisosAux, fecha, monedaVO.getCodMoneda());
+				monedaVO.setCotizacion(cotiz.getCotizacionVenta());
+			} 
+			catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
+					| InicializandoException | NoTienePermisosException e) {
+				// TODO Auto-generated catch block
+				Mensajes.mostrarMensajeError(e.getMessage().toString());
+			}
+		}
+		return monedaVO;
 	}
 	
 	

@@ -8,6 +8,7 @@ public class MonedaVO extends AuditoriaVO{
 	private boolean aceptaCotizacion;
 	private boolean activo;
 	private boolean nacional;
+	private double cotizacion;
 	
 	public MonedaVO(){
 		
@@ -90,5 +91,14 @@ public class MonedaVO extends AuditoriaVO{
 		this.nacional = nacional;
 	}
 
+	public double getCotizacion() {
+		return cotizacion;
+	}
+
+	public void setCotizacion(double cotizacion) {
+		this.cotizacion = cotizacion;
+	}
+
+	
 	
 }

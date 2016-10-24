@@ -249,7 +249,7 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 					new UsuarioPermisosVO(this.permisos.getCodEmp(),
 							this.permisos.getUsuario(),
 							VariablesPermisos.FORMULARIO_PROCESOS,
-							VariablesPermisos.OPERACION_NUEVO_EDITAR);
+							VariablesPermisos.OPERACION_BORRAR);
 			
 			try {
 				controlador.eliminarProceso((Integer)codigo.getConvertedValue(), permisoAux);
@@ -571,12 +571,15 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 		
 		/*Verificamos que tenga permisos*/
 		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_PROCESOS, VariablesPermisos.OPERACION_NUEVO_EDITAR);
-		
+		boolean permisoBorrar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_PROCESOS, VariablesPermisos.OPERACION_BORRAR);
 		if(permisoNuevoEditar){
 			
 			/*Oculatamos Editar y mostramos el de guardar y de agregar formularios*/
 			this.enableBotonAceptar();
-			this.enableBotonEliminar();
+			
+			if(permisoBorrar)
+				this.enableBotonEliminar();
+			
 			this.disableBotonLectura();
 
 			/*Dejamos los textfields que se pueden editar
@@ -851,7 +854,7 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 					new UsuarioPermisosVO(this.permisos.getCodEmp(),
 							this.permisos.getUsuario(),
 							VariablesPermisos.FORMULARIO_PROCESOS,
-							VariablesPermisos.OPERACION_NUEVO_EDITAR);
+							VariablesPermisos.OPERACION_LEER);
 			lstMonedas = this.controlador.getMonedas(permisoAux);
 			
 		} catch (ObteniendoMonedaException | InicializandoException | ConexionException | ObteniendoPermisosException | NoTienePermisosException e) {
@@ -892,7 +895,7 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 					new UsuarioPermisosVO(this.permisos.getCodEmp(),
 							this.permisos.getUsuario(),
 							VariablesPermisos.FORMULARIO_PROCESOS,
-							VariablesPermisos.OPERACION_NUEVO_EDITAR);
+							VariablesPermisos.OPERACION_LEER);
 			lstDocumentos = this.controlador.getDocumentos(permisoAux);
 			
 		} catch (InicializandoException | ObteniendoDocumentosException | ConexionException | ObteniendoPermisosException | NoTienePermisosException e) {
