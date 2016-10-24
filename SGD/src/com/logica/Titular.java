@@ -12,6 +12,7 @@ public  class Titular extends Auditoria{
 	private String direccion;
 	private String mail;
 	private boolean activo;
+	private String tipo;
 	
 	
 
@@ -30,7 +31,8 @@ public  class Titular extends Auditoria{
 		aux.setCodigoDoc(this.getDocumento().getCodigo());
 		aux.setNumeroDoc(this.documento.getNumero());
 		aux.setActivo(this.isActivo());
-		
+		aux.setTipo(this.getTipo());
+		aux.setNombreDoc(this.documento.getNombre());
 		
 		return aux;
 	}
@@ -77,6 +79,16 @@ public  class Titular extends Auditoria{
 	}
 	public void setActivo(boolean activo) {
 		this.activo = activo;
+	}
+
+
+	public String getTipo() {
+		return tipo;
+	}
+
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
 	}
 	
 	

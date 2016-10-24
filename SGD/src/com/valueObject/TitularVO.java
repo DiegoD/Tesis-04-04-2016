@@ -15,6 +15,7 @@ public class TitularVO extends AuditoriaVO{
 	private String codigoDoc;
 	private String nombreDoc;
 	private String numeroDoc;
+	private String tipo;
 	
 	public void copiar(TitularVO t){
 		
@@ -27,7 +28,7 @@ public class TitularVO extends AuditoriaVO{
 		this.codigoDoc = t.getCodigoDoc();
 		this.nombreDoc = t.getNombreDoc();
 		this.numeroDoc = t.getNumeroDoc();
-		
+		this.tipo = t.getTipo();
 	}
 
 
@@ -89,6 +90,16 @@ public class TitularVO extends AuditoriaVO{
 
 	public void setNumeroDoc(String numeroDoc) {
 		this.numeroDoc = numeroDoc;
+	}
+
+
+	public String getTipo() {
+		return tipo;
+	}
+
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
 	}
 	
 }

@@ -607,7 +607,7 @@ public class Consultas {
 
 ////////////////////////PROCESOS//////////////////////////////////////////////////
 
-public String getProcesos(){
+	public String getProcesos(){
 		
 		StringBuilder sb = new StringBuilder();
 		
@@ -626,24 +626,24 @@ public String getProcesos(){
 		return sb.toString();
 	}
 
-public String getProcesosActivos(){
+	public String getProcesosActivos(){
 	
-	StringBuilder sb = new StringBuilder();
-	
-	sb.append("SELECT cod_proceso, cod_cliente, m_clientes.nom_tit, fec_doc, nro_mega ");
-	sb.append(", cod_docum, nro_docum, fec_docum, carpeta ");
-	sb.append(", m_monedas.cod_moneda, m_monedas.descripcion AS nomMoneda, m_monedas.simbolo  ");
-	sb.append(", imp_mo, tc_mov, imp_mn, imp_tr, kilos, marca, medio ");
-	sb.append(", descripcion, observaciones, fecha_mod, usuario_mod ");
-	sb.append(", operacion, activo  ");
-	sb.append("FROM c_procesos , m_clientes, m_monedas  ");
-	sb.append("WHERE c_procesos.cod_cliente = m_clientes.cod_tit   ");
-	sb.append("AND c_procesos.cod_moneda = m_monedas.cod_moneda  ");
-	sb.append("AND cod_emp = ? AND activo = 1");
-	
-	
-	return sb.toString();
-}
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_proceso, cod_cliente, m_clientes.nom_tit, fec_doc, nro_mega ");
+		sb.append(", cod_docum, nro_docum, fec_docum, carpeta ");
+		sb.append(", m_monedas.cod_moneda, m_monedas.descripcion AS nomMoneda, m_monedas.simbolo  ");
+		sb.append(", imp_mo, tc_mov, imp_mn, imp_tr, kilos, marca, medio ");
+		sb.append(", descripcion, observaciones, fecha_mod, usuario_mod ");
+		sb.append(", operacion, activo  ");
+		sb.append("FROM c_procesos , m_clientes, m_monedas  ");
+		sb.append("WHERE c_procesos.cod_cliente = m_clientes.cod_tit   ");
+		sb.append("AND c_procesos.cod_moneda = m_monedas.cod_moneda  ");
+		sb.append("AND cod_emp = ? AND activo = 1");
+		
+		
+		return sb.toString();
+	}
 
 	public String insertarProceso()
 	{
@@ -700,7 +700,7 @@ public String getProcesosActivos(){
 
 	public String getBancosActivos(){
 	
-	StringBuilder sb = new StringBuilder();
+		StringBuilder sb = new StringBuilder();
 	
 		sb.append("SELECT cod_bco, nom_bco, cod_emp, tel, direccion, contacto, activo, usuario_mod, operacion, fecha_mod ");
 		sb.append("FROM m_bancos WHERE cod_emp = ? AND activo = 1");
@@ -768,14 +768,14 @@ public String getProcesosActivos(){
 
 	public String getCtasBancosActivos(){
 	
-	StringBuilder sb = new StringBuilder();
-	
-	sb.append("SELECT b.cod_ctabco, b.nom_cta, b.cod_bco, b.cod_emp, b.activo, b.cod_moneda, b.usuario_mod, "
-			+ " b.operacion, b.fecha_mod, m.descripcion, m.simbolo, m.acepta_cotizacion, m.activo activoMoneda, "
-			+ " m.fecha_mod m_fecha_mod, m.usuario_mod m_usuario_mod, m.operacion m_operacion, m.cod_emp, nacional ");
-	sb.append("FROM m_ctasbcos b, m_monedas m "
-			+ " WHERE cod_bco = ? AND b.cod_emp = ? AND b.activo = 1 "
-			+ " AND b.cod_moneda = m.cod_moneda AND b.cod_emp = m.cod_emp ");
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT b.cod_ctabco, b.nom_cta, b.cod_bco, b.cod_emp, b.activo, b.cod_moneda, b.usuario_mod, "
+				+ " b.operacion, b.fecha_mod, m.descripcion, m.simbolo, m.acepta_cotizacion, m.activo activoMoneda, "
+				+ " m.fecha_mod m_fecha_mod, m.usuario_mod m_usuario_mod, m.operacion m_operacion, m.cod_emp, nacional ");
+		sb.append("FROM m_ctasbcos b, m_monedas m "
+				+ " WHERE cod_bco = ? AND b.cod_emp = ? AND b.activo = 1 "
+				+ " AND b.cod_moneda = m.cod_moneda AND b.cod_emp = m.cod_emp ");
 		
 		
 		return sb.toString();
@@ -972,8 +972,6 @@ public String getProcesosActivos(){
 		
 		sb.append(" AND c_ingcobro.cod_emp = m_cuentas.cod_emp  ");
 		sb.append(" AND c_ingcobro.cod_cuenta = m_cuentas.cod_cuenta  ");
-		
-		
 		
 		return sb.toString();
 	}

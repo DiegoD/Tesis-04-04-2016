@@ -41,10 +41,8 @@ public class DAOTitulares implements IDAOTitulares{
 				
 				aux.setCodigo(rs.getInt("cod_tit"));
 				aux.setNombre(rs.getString("nom_tit"));
-				aux.setDocumento(new Documento(rs.getString("cod_docdgi"), "ver", rs.getString("nro_dgi")));
-				aux.setUsuarioMod(rs.getString("usuario_mod"));
-				aux.setOperacion(rs.getString("operacion"));
-				aux.setFechaMod(rs.getTimestamp("fecha_mod"));
+				aux.setDocumento(new Documento(rs.getString("cod_docdgi"), rs.getString("m_documdgi.nombre"), rs.getString("nro_dgi")));
+				aux.setTipo(rs.getString("tipo").toUpperCase());
 				
 							
 				lstTitulares.add(aux);

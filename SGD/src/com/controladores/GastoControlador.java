@@ -34,6 +34,7 @@ import com.logica.FachadaDD;
 import com.valueObject.FuncionarioVO;
 import com.valueObject.ImpuestoVO;
 import com.valueObject.MonedaVO;
+import com.valueObject.RubroCuentaVO;
 import com.valueObject.RubroVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.Cotizacion.CotizacionVO;
@@ -152,6 +153,21 @@ public class GastoControlador {
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
 			return FachadaDD.getInstance().getRubrosActivos(permisos.getCodEmp());
+		else
+			throw new NoTienePermisosException();
+	}
+	
+	/**
+	 * Obtiene array list de VO de todas los rubros/cuentas ACTIVOS
+	 * @throws NoTienePermisosException 
+	 * @throws ObteniendoPermisosException 
+	 * @throws com.excepciones.Rubros.ObteniendoRubrosException 
+	 */
+	public ArrayList<RubroCuentaVO> getRubrosCuentasActivos(UsuarioPermisosVO permisos) throws ObteniendoRubrosException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, com.excepciones.Rubros.ObteniendoRubrosException {
+		
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))	
+			return FachadaDD.getInstance().getRubrosCuentasActivos(permisos.getCodEmp());
 		else
 			throw new NoTienePermisosException();
 	}

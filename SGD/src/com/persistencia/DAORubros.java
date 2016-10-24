@@ -18,6 +18,7 @@ import com.excepciones.Rubros.ObteniendoRubrosException;
 import com.logica.Empresa;
 import com.logica.Impuesto;
 import com.logica.Rubro;
+import com.logica.RubroCuenta;
 import com.logica.TipoRubro;
 
 public class DAORubros implements IDAORubros{
@@ -211,6 +212,57 @@ public class DAORubros implements IDAORubros{
 			
 		return lstRubros;
 	}
+	
+	
+	@Override
+	public ArrayList<RubroCuenta> getRubrosCuentasActivos(String codEmp, Connection con) throws ObteniendoRubrosException, ConexionException {
+		// TODO Auto-generated method stub
+		ArrayList<RubroCuenta> lstRubros = new ArrayList<RubroCuenta>();
+		
+		try
+		{
+			ConsultasDD consultas = new ConsultasDD ();
+			String query = consultas.rubroCuenta();
+			
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			
+			pstmt1.setString(1, codEmp);
+			
+			ResultSet rs = pstmt1.executeQuery();
+			
+			RubroCuenta rubro;
+			
+			while(rs.next ()) {
+
+				rubro = new RubroCuenta();
+				
+				rubro.setCod_rubro(rs.getString(1));
+				rubro.setDescripcionRubro(rs.getString(2));
+				rubro.setCod_cuenta(rs.getString(3));
+				rubro.setDescripcionCuenta(rs.getString(4));
+				rubro.setCod_impuesto(rs.getString(5));
+				rubro.setDescripcionImpuesto(rs.getString(6));
+				rubro.setPorcentaje(rs.getDouble(7));
+				rubro.setOficina(rs.getBoolean(8));
+				rubro.setProceso(rs.getBoolean(9));
+				rubro.setPersona(rs.getBoolean(10));
+				rubro.setCod_tipoRubro(rs.getString(11));
+				rubro.setDescripcionTipoRubro(rs.getString(12));
+				
+				lstRubros.add(rubro);
+			}
+			
+			rs.close ();
+			pstmt1.close ();
+		}
+		catch (SQLException e) {
+			
+			throw new ObteniendoRubrosException();
+		}
+			
+		return lstRubros;
+	}
+	
 	
 	@Override
 	/**

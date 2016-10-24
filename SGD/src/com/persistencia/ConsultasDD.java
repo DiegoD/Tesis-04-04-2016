@@ -515,6 +515,31 @@ public class ConsultasDD {
 		
 		return sb.toString();
 	}
+	
+	public String rubroCuenta(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT m_rubros.cod_rubro, m_rubros.descripcion, m_cuentas.cod_cuenta, m_cuentas.descripcion,"
+				+ "m_impuestos.cod_impuesto, m_impuestos.descripcion, m_impuestos.porcentaje, "
+				+ "m_rubrosxcuenta.oficina, m_rubrosxcuenta.proceso, m_rubrosxcuenta.persona, "
+				+ "m_tiporubro.cod_tipoRubro, m_tiporubro.descripcion ");
+		
+		sb.append("FROM m_cuentas, m_rubrosxcuenta, m_rubros, m_impuestos, m_tipoRubro ");
+		
+		sb.append("where m_rubrosxcuenta.cod_rubro = m_rubros.cod_rubro AND "
+				+ "m_rubrosxcuenta.cod_cuenta = m_cuentas.cod_cuenta and m_rubrosxcuenta.cod_emp = ? "
+				+ " and m_rubros.cod_emp = m_rubrosxcuenta.cod_emp and m_rubros.activo = 1 "
+				+ " and m_cuentas.cod_emp = m_rubrosxcuenta.cod_emp and m_cuentas.activo = 1 "
+				+ " and m_rubros.activo = 1 AND m_cuentas.cod_cuenta = m_rubrosxcuenta.cod_cuenta "
+				+ " and m_cuentas.cod_emp = m_rubrosxcuenta.cod_emp "
+				+ " and m_impuestos.cod_impuesto = m_rubros.cod_impuesto "
+				+ " and m_impuestos.cod_emp = m_rubrosxcuenta.cod_emp "
+				+ " and m_rubros.cod_tipo_rubro = m_tiporubro.cod_tipoRubro "
+				+ " and m_tiporubro.cod_emp = m_rubrosxcuenta.cod_emp ");
+
+		return sb.toString();
+	}
 
 	
 
@@ -1546,8 +1571,10 @@ public String eliminarSaldoCuenta(){
 	{
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("SELECT cod_tit, nom_tit, cod_docdgi, nro_dgi, tipo, nro_dgi, cod_emp ");
-		sb.append("FROM m_titulares WHERE cod_emp = ? and activo = 1 ");
+		sb.append("SELECT m_titulares.cod_tit, m_titulares.nom_tit, m_titulares.cod_docdgi, m_titulares.nro_dgi, m_titulares.tipo, "
+				+ "m_titulares.nro_dgi, m_titulares.cod_emp, m_documdgi.nombre ");
+		sb.append("FROM m_titulares, m_documdgi WHERE m_titulares.cod_emp = ? and m_titulares.activo = 1 "
+				+ "and m_documdgi.cod_docdgi = m_titulares.cod_docdgi ");
 
 		return sb.toString();
 	}

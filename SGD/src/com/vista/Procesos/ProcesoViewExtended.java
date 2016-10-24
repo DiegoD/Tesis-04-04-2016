@@ -54,6 +54,8 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 	int codigoInsert;
 	CotizacionVO cotizacion = new CotizacionVO();
 	Double cotizacionVenta = null, importeMoneda = null;
+	MonedaVO monedaNacional = new MonedaVO();
+	ArrayList<MonedaVO> lstMonedas = new ArrayList<MonedaVO>();
 	
 	public ProcesoViewExtended(String opera, ProcesosPanelExtended main){
 		
@@ -354,13 +356,21 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 						
 						if(auxMoneda.getCodMoneda() != null && !auxMoneda.isNacional()){
 							cotizacion = controlador.getCotizacion(permisoAux, fechaproces, auxMoneda.getCodMoneda());
-							cotizacionVenta = cotizacion.getCotizacionVenta();
-							tcMov.setEnabled(true);
-							calculos();
+							if(cotizacion.getCotizacionVenta() != 0 && !auxMoneda.isNacional()){
+								cotizacionVenta = cotizacion.getCotizacionVenta();
+								tcMov.setEnabled(true);
+								calculos();
+							}
+							else{
+								Mensajes.mostrarMensajeError("Debe cargar la cotización para la moneda");
+								comboMoneda.setValue(monedaNacional);
+								return;
+							}
 						}
 						else if(auxMoneda.getCodMoneda() != null){
 							cotizacionVenta = (double) 1;
 							tcMov.setEnabled(false);
+							tcMov.setConvertedValue(1);
 							calculos();
 						}
 					}
@@ -369,6 +379,14 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+					if(fecha != null){
+	   					
+	   					for (MonedaVO monedaVO : lstMonedas) {
+	   						
+	   						monedaVO = seteaCotizaciones(monedaVO);
+	   					}
+	   					
+	   				}
 				}
 			}
 		});
@@ -866,6 +884,9 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 			
 			monedasObj.addBean(monedaVO);
 			
+			if(monedaVO.isNacional()){
+				monedaNacional = monedaVO;
+			}
 			if(cod != null){
 				if(cod.equals(monedaVO.getCodMoneda())){
 					moneda = monedaVO;
@@ -987,5 +1008,36 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 		tcMov.setData("ProgramaticallyChanged");
 		
 	}
-	
+
+	public MonedaVO seteaCotizaciones(MonedaVO monedaVO){
+		
+		UsuarioPermisosVO permisosAux;
+		permisosAux = 
+				new UsuarioPermisosVO(this.permisos.getCodEmp(),
+						this.permisos.getUsuario(),
+						VariablesPermisos.FORMULARIO_PROCESOS,
+						VariablesPermisos.OPERACION_LEER);
+		
+		Date fechaValor = convertFromJAVADateToSQLDate(fecha.getValue());
+		CotizacionVO cotiz;
+		if(monedaVO.isNacional()){
+			monedaNacional = monedaVO;
+		}
+		else if(fecha!=null){
+			
+			cotiz = new CotizacionVO();
+			
+			try {
+				
+				cotiz = this.controlador.getCotizacion(permisosAux, fechaValor, monedaVO.getCodMoneda());
+				monedaVO.setCotizacion(cotiz.getCotizacionVenta());
+			} 
+			catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
+					| InicializandoException | NoTienePermisosException e) {
+				// TODO Auto-generated catch block
+				Mensajes.mostrarMensajeError(e.getMessage().toString());
+			}
+		}
+		return monedaVO;
+	}
 }

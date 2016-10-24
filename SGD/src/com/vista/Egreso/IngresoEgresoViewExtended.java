@@ -19,6 +19,7 @@ import com.excepciones.Bancos.ObteniendoCuentasBcoException;
 import com.excepciones.Cotizaciones.ObteniendoCotizacionesException;
 import com.excepciones.Egresos.*;
 import com.excepciones.Monedas.ObteniendoMonedaException;
+import com.excepciones.Titulares.ObteniendoTitularesException;
 import com.excepciones.clientes.ObteniendoClientesException;
 import com.sun.org.apache.xpath.internal.operations.Variable;
 import com.vaadin.data.Property.ValueChangeListener;
@@ -46,6 +47,7 @@ import com.valueObject.FormularioVO;
 import com.valueObject.GrupoVO;
 import com.valueObject.MonedaVO;
 import com.valueObject.TipoInCobVO;
+import com.valueObject.TitularVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.Cotizacion.CotizacionVO;
 import com.valueObject.Docum.DocumDetalleVO;
@@ -131,9 +133,13 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 	
 	this.btnBuscarCliente.addClickListener(click -> {
 		
-		BusquedaViewExtended form = new BusquedaViewExtended(this, new ClienteVO());
+//		BusquedaViewExtended form = new BusquedaViewExtended(this, new ClienteVO());
+//		ArrayList<Object> lst = new ArrayList<Object>();
+//		ArrayList<ClienteVO> lstClientes = new ArrayList<ClienteVO>();
+		
+		BusquedaViewExtended form = new BusquedaViewExtended(this, new TitularVO());
 		ArrayList<Object> lst = new ArrayList<Object>();
-		ArrayList<ClienteVO> lstClientes = new ArrayList<ClienteVO>();
+		ArrayList<TitularVO> lstClientes = new ArrayList<TitularVO>();
 		
 		/*Inicializamos VO de permisos para el usuario, formulario y operacion
 		 * para confirmar los permisos del usuario*/
@@ -144,15 +150,17 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 						VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
 		try {
-			lstClientes = this.controlador.getClientes(permisoAux);
+			
+			lstClientes = this.controlador.getTitulares(permisoAux);
+			//lstClientes = this.controlador.getClientes(permisoAux);
 			
 		} catch ( ConexionException | InicializandoException | ObteniendoPermisosException | NoTienePermisosException |
-				 ObteniendoClientesException e) {
+				 ObteniendoClientesException | ObteniendoTitularesException e) {
 
 			Mensajes.mostrarMensajeError(e.getMessage());
 		}
 		Object obj;
-		for (ClienteVO i: lstClientes) {
+		for (TitularVO i: lstClientes) {
 			obj = new Object();
 			obj = (Object)i;
 			lst.add(obj);
@@ -558,75 +566,75 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 			}
 		});
 		
-		/*Inicalizamos listener para boton de Agregar gastos a cobrar*/
-		this.btnAgregar.addClickListener(click -> {
-					
-			if(this.codTitular.getValue() != null)
-			{
-				try {
-					
-					GastoViewExtended form = new GastoViewExtended(Variables.OPERACION_NUEVO, this);
-					
-					sub = new MySub("95%", "64%" );
-					sub.setModal(true);
-					sub.setVista(form);
-					
-					sub.center();
-					
-					String codCliente;/*Codigo del cliente para obtener los gastos a cobrar del mismo*/
-					
-					/*Obtenemos los formularios que no estan en el grupo
-					 * para mostrarlos en la grilla para seleccionar*/
-					if(this.operacion.equals(Variables.OPERACION_NUEVO) )
-					{
-						/*Si la operacion es nuevo, ponemos el  codGrupo vacio
-						 * asi nos trae todos los grupos disponibles*/
-						codCliente = this.codTitular.getValue().toString().trim();
-					}
-					else 
-					{
-						/*Si es operacion Editar tomamos el codGrupo de el fieldGroup*/
-						codCliente = fieldGroup.getItemDataSource().getBean().getCodTitular();
-					}
-					
-					/*Inicializamos VO de permisos para el usuario, formulario y operacion
-					 * para confirmar los permisos del usuario*/
-					UsuarioPermisosVO permisoAux = 
-							new UsuarioPermisosVO(this.permisos.getCodEmp(),
-									this.permisos.getUsuario(),
-									VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
-									VariablesPermisos.OPERACION_NUEVO_EDITAR);
-					
-
-					//Moneda
-					MonedaVO auxMoneda = new MonedaVO();
-					if(this.comboMoneda.getValue() != null){
-						auxMoneda = (MonedaVO) this.comboMoneda.getValue();
-					}
-					
-					/*Obtenemos los gastos con saldo del cliente*/
-					ArrayList<GastoVO> lstGastosConSaldo = this.controlador.getGastosConSaldo(permisoAux, codCliente);
-					
-					/*Hacemos una lista auxliar para pasarselo al BusquedaViewExtended*/
-					ArrayList<Object> lst = new ArrayList<Object>();
-					Object obj;
-					for (GastoVO i: lstGastosConSaldo) {
+			/*Inicalizamos listener para boton de Agregar gastos a cobrar*/
+			this.btnAgregar.addClickListener(click -> {
 						
-						/*Verificamos que el gasto ya no esta en la grilla*/
-						if(!this.existeFormularioenLista(i.getNroDocum()))
+				if(this.codTitular.getValue() != null)
+				{
+					try {
+					
+						GastoViewExtended form = new GastoViewExtended(Variables.OPERACION_NUEVO, this);
+						
+						sub = new MySub("95%", "64%" );
+						sub.setModal(true);
+						sub.setVista(form);
+						
+						sub.center();
+						
+						String codCliente;/*Codigo del cliente para obtener los gastos a cobrar del mismo*/
+						
+						/*Obtenemos los formularios que no estan en el grupo
+						 * para mostrarlos en la grilla para seleccionar*/
+						if(this.operacion.equals(Variables.OPERACION_NUEVO) )
 						{
-							obj = new Object();
-							obj = (Object)i;
-							lst.add(obj);
+							/*Si la operacion es nuevo, ponemos el  codGrupo vacio
+							 * asi nos trae todos los grupos disponibles*/
+							codCliente = this.codTitular.getValue().toString().trim();
 						}
-					}
-					
-					//form.inicializarGrilla(lst);
-					
-					UI.getCurrent().addWindow(sub);
+						else 
+						{
+							/*Si es operacion Editar tomamos el codGrupo de el fieldGroup*/
+							codCliente = fieldGroup.getItemDataSource().getBean().getCodTitular();
+						}
+						
+						/*Inicializamos VO de permisos para el usuario, formulario y operacion
+						 * para confirmar los permisos del usuario*/
+						UsuarioPermisosVO permisoAux = 
+								new UsuarioPermisosVO(this.permisos.getCodEmp(),
+										this.permisos.getUsuario(),
+										VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
+										VariablesPermisos.OPERACION_NUEVO_EDITAR);
+						
+	
+						//Moneda
+						MonedaVO auxMoneda = new MonedaVO();
+						if(this.comboMoneda.getValue() != null){
+							auxMoneda = (MonedaVO) this.comboMoneda.getValue();
+						}
+						
+						/*Obtenemos los gastos con saldo del cliente*/
+						ArrayList<GastoVO> lstGastosConSaldo = this.controlador.getGastosConSaldo(permisoAux, codCliente);
+						
+						/*Hacemos una lista auxliar para pasarselo al BusquedaViewExtended*/
+						ArrayList<Object> lst = new ArrayList<Object>();
+						Object obj;
+						for (GastoVO i: lstGastosConSaldo) {
+							
+							/*Verificamos que el gasto ya no esta en la grilla*/
+							if(!this.existeFormularioenLista(i.getNroDocum()))
+							{
+								obj = new Object();
+								obj = (Object)i;
+								lst.add(obj);
+							}
+						}
+						
+						//form.inicializarGrilla(lst);
+						
+						UI.getCurrent().addWindow(sub);
 
-					}catch(Exception e)
-					{
+					}
+					catch(Exception e){
 						Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 					}
 				}
@@ -1824,10 +1832,18 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 	
 	@Override
 	public void setInfo(Object datos) {
+		
 		if(datos instanceof ClienteVO){
 			ClienteVO clienteVO = (ClienteVO) datos;
 			this.codTitular.setValue(String.valueOf(clienteVO.getCodigo()));
 			this.nomTitular.setValue(clienteVO.getNombre());
+		}
+		
+		if(datos instanceof TitularVO){
+			TitularVO titularVO = (TitularVO) datos;
+			this.codTitular.setValue(String.valueOf(titularVO.getCodigo()));
+			this.nomTitular.setValue(titularVO.getNombre());
+			this.tipoTitular.setValue(titularVO.getTipo());
 		}
 		
 	}

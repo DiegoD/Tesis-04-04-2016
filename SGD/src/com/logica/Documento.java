@@ -15,6 +15,12 @@ public class Documento {
 		this.numero = numero;
 	}
 	
+	public Documento(String codigo,  String numero){
+		
+		this.codigo =codigo;
+		this.numero = numero;
+	}
+
 	public String getCodigo() {
 		return codigo;
 	}

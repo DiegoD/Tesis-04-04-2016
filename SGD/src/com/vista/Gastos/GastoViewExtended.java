@@ -53,6 +53,7 @@ import com.vaadin.ui.UI;
 import com.valueObject.FuncionarioVO;
 import com.valueObject.ImpuestoVO;
 import com.valueObject.MonedaVO;
+import com.valueObject.RubroCuentaVO;
 import com.valueObject.RubroVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.Cotizacion.CotizacionVO;
@@ -85,18 +86,10 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 	NumeradoresVO codigos;
 	Double importeMoneda = null, porcImpuesto = null, tipoCambio = null, importeImpuesto = null, cotizacionVenta = null;
 	CotizacionVO cotizacion =  new CotizacionVO();
-	
+	MonedaVO monedaNacional = new MonedaVO();
+	ArrayList<MonedaVO> lstMonedas = new ArrayList<MonedaVO>();
 	
 	public GastoViewExtended(String opera, IGastosMain main){
-		
-//		final CSValidator validator = new CSValidator();
-//		validator.extend(impTotMo);
-//		        
-//		String js = "if (value.match(\"^[0-9]*$\"))\n" +
-//		        "    null; // Success\n" +
-//		        "else\n" +
-//		        "    \"Fail\";\n";
-//		validator.setJavaScript(js);
 		
 		this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
 		this.operacion = opera;
@@ -416,9 +409,13 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		
 		this.btnBuscarRubro.addClickListener(click -> {
 			
-			BusquedaViewExtended form = new BusquedaViewExtended(this, new RubroVO());
+//			BusquedaViewExtended form = new BusquedaViewExtended(this, new RubroVO());
+//			ArrayList<Object> lst = new ArrayList<Object>();
+//			ArrayList<RubroVO> lstRubros = new ArrayList<RubroVO>();
+			
+			BusquedaViewExtended form = new BusquedaViewExtended(this, new RubroCuentaVO());
 			ArrayList<Object> lst = new ArrayList<Object>();
-			ArrayList<RubroVO> lstRubros = new ArrayList<RubroVO>();
+			ArrayList<RubroCuentaVO> lstRubros = new ArrayList<RubroCuentaVO>();
 			
 			/*Inicializamos VO de permisos para el usuario, formulario y operacion
 			 * para confirmar los permisos del usuario*/
@@ -429,14 +426,14 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 							VariablesPermisos.OPERACION_NUEVO_EDITAR);
 			
 			try {
-				lstRubros = this.controlador.getRubros(permisoAux);
+				lstRubros = this.controlador.getRubrosCuentasActivos(permisoAux);
 				
 			} catch ( ConexionException | InicializandoException | ObteniendoPermisosException | NoTienePermisosException | ObteniendoRubrosException | com.excepciones.Rubros.ObteniendoRubrosException e) {
 
 				Mensajes.mostrarMensajeError(e.getMessage());
 			}
 			Object obj;
-			for (RubroVO i: lstRubros) {
+			for (RubroCuentaVO i: lstRubros) {
 				obj = new Object();
 				obj = (Object)i;
 				lst.add(obj);
@@ -462,53 +459,53 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 			
 		});
 		
-		this.btnBuscarCuenta.addClickListener(click -> {
-			
-			BusquedaViewExtended form = new BusquedaViewExtended(this, new CuentaVO());
-			ArrayList<Object> lst = new ArrayList<Object>();
-			ArrayList<CuentaVO> lstCuentas = new ArrayList<CuentaVO>();
-			
-			/*Inicializamos VO de permisos para el usuario, formulario y operacion
-			 * para confirmar los permisos del usuario*/
-			UsuarioPermisosVO permisoAux = 
-					new UsuarioPermisosVO(this.permisos.getCodEmp(),
-							this.permisos.getUsuario(),
-							VariablesPermisos.FORMULARIO_GASTOS,
-							VariablesPermisos.OPERACION_NUEVO_EDITAR);
-			
-			try {
-				lstCuentas = this.controlador.getCuentas(permisoAux, this.codRubro.getValue().trim());
-				
-			} catch ( ObteniendoCuentasException | ConexionException | InicializandoException | ObteniendoPermisosException | NoTienePermisosException | ObteniendoRubrosException e) {
-
-				Mensajes.mostrarMensajeError(e.getMessage());
-			}
-			Object obj;
-			for (CuentaVO i: lstCuentas) {
-				obj = new Object();
-				obj = (Object)i;
-				lst.add(obj);
-			}
-			try {
-				
-				form.inicializarGrilla(lst);
-			
-				
-			} catch (Exception e) {
-				
-				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
-			}
-			
-			sub = new MySub("65%", "65%" );
-			sub.setModal(true);
-			sub.center();
-			sub.setModal(true);
-			sub.setVista(form);
-			sub.center();
-			sub.setDraggable(true);
-			UI.getCurrent().addWindow(sub);
-			
-		});
+//		this.btnBuscarCuenta.addClickListener(click -> {
+//			
+//			BusquedaViewExtended form = new BusquedaViewExtended(this, new CuentaVO());
+//			ArrayList<Object> lst = new ArrayList<Object>();
+//			ArrayList<CuentaVO> lstCuentas = new ArrayList<CuentaVO>();
+//			
+//			/*Inicializamos VO de permisos para el usuario, formulario y operacion
+//			 * para confirmar los permisos del usuario*/
+//			UsuarioPermisosVO permisoAux = 
+//					new UsuarioPermisosVO(this.permisos.getCodEmp(),
+//							this.permisos.getUsuario(),
+//							VariablesPermisos.FORMULARIO_GASTOS,
+//							VariablesPermisos.OPERACION_NUEVO_EDITAR);
+//			
+//			try {
+//				lstCuentas = this.controlador.getCuentas(permisoAux, this.codRubro.getValue().trim());
+//				
+//			} catch ( ObteniendoCuentasException | ConexionException | InicializandoException | ObteniendoPermisosException | NoTienePermisosException | ObteniendoRubrosException e) {
+//
+//				Mensajes.mostrarMensajeError(e.getMessage());
+//			}
+//			Object obj;
+//			for (CuentaVO i: lstCuentas) {
+//				obj = new Object();
+//				obj = (Object)i;
+//				lst.add(obj);
+//			}
+//			try {
+//				
+//				form.inicializarGrilla(lst);
+//			
+//				
+//			} catch (Exception e) {
+//				
+//				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+//			}
+//			
+//			sub = new MySub("65%", "65%" );
+//			sub.setModal(true);
+//			sub.center();
+//			sub.setModal(true);
+//			sub.setVista(form);
+//			sub.center();
+//			sub.setDraggable(true);
+//			UI.getCurrent().addWindow(sub);
+//			
+//		});
 		
 		this.btnBuscarImpuesto.addClickListener(click -> {
 			
@@ -649,13 +646,22 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 						
 						if(auxMoneda.getCodMoneda() != null && !auxMoneda.isNacional()){
 							cotizacion = controlador.getCotizacion(permisoAux, fecha, auxMoneda.getCodMoneda());
-							cotizacionVenta = cotizacion.getCotizacionVenta();
-							tcMov.setEnabled(true);
-							calculos();
+							if(cotizacion.getCotizacionVenta() != 0 && !auxMoneda.isNacional()){
+								cotizacionVenta = cotizacion.getCotizacionVenta();
+								tcMov.setEnabled(true);
+								calculos();
+							}
+							else{
+								Mensajes.mostrarMensajeError("Debe cargar la cotización para la moneda");
+								comboMoneda.setValue(monedaNacional);
+								return;
+							}
+							
 						}
 						else if(auxMoneda.getCodMoneda() != null){
 							cotizacionVenta = (double) 1;
 							tcMov.setEnabled(false);
+							tcMov.setConvertedValue(1);
 							calculos();
 						}
 					}
@@ -664,6 +670,14 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+					if(fecha != null){
+	   					
+	   					for (MonedaVO monedaVO : lstMonedas) {
+	   						
+	   						monedaVO = seteaCotizaciones(monedaVO);
+	   					}
+	   					
+	   				}
 				}
 			}
 		});
@@ -784,8 +798,6 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 					
 		this.fieldGroup =  new BeanFieldGroup<GastoVO>(GastoVO.class);
 		
-		
-		
 		//inicializar los valores de los combos impuesto y tipo de rubro
 		inicializarComboMoneda(null);
 		
@@ -897,18 +909,6 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 			this.iniFormLectura();
 			this.comboSeleccion.setEnabled(false);
 		}
-		
-		
-//		importeMoneda = Double.parseDouble(impTotMo.getValue().replace(",", ".")); 
-//		porcImpuesto = Double.parseDouble(porcentajeImpuesto.getValue().replace(",", "."));
-//		tipoCambio = Double.parseDouble(tcMov.getValue().replace(",", "."));
-//		importeImpuesto = Double.parseDouble(impImpuMo.getValue().replace(",", "."));
-//		cotizacionVenta = Double.parseDouble(tcMov.getValue().replace(",", "."));
-		
-//		impTotMo.setData("ProgramaticallyChanged");
-//		porcentajeImpuesto.setData("ProgramaticallyChanged");
-//		tcMov.setData("ProgramaticallyChanged");
-//		impImpuMo.setData("ProgramaticallyChanged");
 		
 	}
 	
@@ -1104,8 +1104,8 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		this.btnBuscarRubro.setEnabled(false);
 		this.btnBuscarRubro.setVisible(false);
 		
-		this.btnBuscarCuenta.setEnabled(false);
-		this.btnBuscarCuenta.setVisible(false);
+//		this.btnBuscarCuenta.setEnabled(false);
+//		this.btnBuscarCuenta.setVisible(false);
 		
 		this.btnBuscarEmpleado.setEnabled(false);
 		this.btnBuscarEmpleado.setVisible(false);
@@ -1133,8 +1133,8 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		this.btnBuscarRubro.setEnabled(true);
 		this.btnBuscarRubro.setVisible(true);
 		
-		this.btnBuscarCuenta.setEnabled(true);
-		this.btnBuscarCuenta.setVisible(true);
+//		this.btnBuscarCuenta.setEnabled(true);
+//		this.btnBuscarCuenta.setVisible(true);
 		
 		this.btnBuscarImpuesto.setEnabled(true);
 		this.btnBuscarImpuesto.setVisible(true);
@@ -1293,6 +1293,23 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 			porcImpuesto = truncatedDouble;
 		}
 		
+		if(datos instanceof RubroCuentaVO){
+			RubroCuentaVO rubroVO = (RubroCuentaVO) datos;
+			this.codRubro.setValue(rubroVO.getCod_rubro());
+			this.nomRubro.setValue(rubroVO.getDescripcionRubro());
+ 			this.nomImpuesto.setValue(rubroVO.getDescripcionImpuesto());
+			this.codImpuesto.setValue(rubroVO.getCod_impuesto());
+			this.codCuenta.setValue(rubroVO.getCod_cuenta());
+			this.nomCuenta.setValue(rubroVO.getDescripcionCuenta());
+        	
+        	Double truncatedDouble = new BigDecimal(rubroVO.getPorcentaje())
+				    .setScale(2, BigDecimal.ROUND_HALF_UP)
+				    .doubleValue();
+        	
+			porcentajeImpuesto.setConvertedValue(truncatedDouble);
+			porcImpuesto = truncatedDouble;
+		}
+		
 		if(datos instanceof CuentaVO){
 			CuentaVO cuentaVO = (CuentaVO) datos;
 			this.codCuenta.setValue(cuentaVO.getCodCuenta());
@@ -1332,7 +1349,6 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		
 		BeanItemContainer<MonedaVO> monedasObj = new BeanItemContainer<MonedaVO>(MonedaVO.class);
 		MonedaVO moneda = new MonedaVO();
-		ArrayList<MonedaVO> lstMonedas = new ArrayList<MonedaVO>();
 		
 		try {
 			permisoAux = 
@@ -1351,6 +1367,9 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 			
 			monedasObj.addBean(monedaVO);
 			
+			if(monedaVO.isNacional()){
+				monedaNacional = monedaVO;
+			}
 			if(cod != null){
 				if(cod.equals(monedaVO.getCodMoneda())){
 					moneda = monedaVO;
@@ -1509,8 +1528,37 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		tcMov.setData("ProgramaticallyChanged");
 		impTotMo.setData("ProgramaticallyChanged");
 		
+	}
+	
+	public MonedaVO seteaCotizaciones(MonedaVO monedaVO){
 		
+		UsuarioPermisosVO permisosAux;
+		permisosAux = 
+				new UsuarioPermisosVO(this.permisos.getCodEmp(),
+						this.permisos.getUsuario(),
+						VariablesPermisos.FORMULARIO_GASTOS,
+						VariablesPermisos.OPERACION_LEER);
 		
-		
+		Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
+		CotizacionVO cotiz;
+		if(monedaVO.isNacional()){
+			monedaNacional = monedaVO;
+		}
+		else if(fecha!=null){
+			
+			cotiz = new CotizacionVO();
+			
+			try {
+				
+				cotiz = this.controlador.getCotizacion(permisosAux, fecha, monedaVO.getCodMoneda());
+				monedaVO.setCotizacion(cotiz.getCotizacionVenta());
+			} 
+			catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
+					| InicializandoException | NoTienePermisosException e) {
+				// TODO Auto-generated catch block
+				Mensajes.mostrarMensajeError(e.getMessage().toString());
+			}
+		}
+		return monedaVO;
 	}
 }

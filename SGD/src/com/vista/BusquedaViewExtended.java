@@ -27,7 +27,9 @@ import com.valueObject.FormularioVO;
 import com.valueObject.FuncionarioVO;
 import com.valueObject.ImpuestoVO;
 import com.valueObject.MonedaVO;
+import com.valueObject.RubroCuentaVO;
 import com.valueObject.RubroVO;
+import com.valueObject.TitularVO;
 import com.valueObject.Cuenta.CuentaVO;
 import com.valueObject.Gasto.GastoVO;
 import com.valueObject.TipoRubro.TipoRubroVO;
@@ -43,11 +45,13 @@ public class BusquedaViewExtended extends BusquedaView{
 	BeanItemContainer<TipoRubroVO> containerTipoRubro;
 	BeanItemContainer<MonedaVO> containerMoneda;
 	BeanItemContainer<ClienteVO> containerCliente;
+	BeanItemContainer<TitularVO> containerTitulares;
 	BeanItemContainer<ProcesoVO> containerProceso;
 	BeanItemContainer<RubroVO> containerRubro;
 	BeanItemContainer<CuentaVO> containerCuenta;
 	BeanItemContainer<GastoVO> containerGasto;
 	BeanItemContainer<FuncionarioVO> containerFuncionario;
+	BeanItemContainer<RubroCuentaVO> containerRubroCuenta;
 	Object seleccionado;
 	IBusqueda main;
 	
@@ -96,6 +100,13 @@ public class BusquedaViewExtended extends BusquedaView{
 			this.seleccionado = new ClienteVO();
 		}
 		
+		else if(obj instanceof TitularVO){
+			
+			this.containerTitulares = new BeanItemContainer<TitularVO>(TitularVO.class);
+			this.lblNombre.setValue("Titulares");
+			this.seleccionado = new TitularVO();
+		}
+		
 		else if(obj instanceof ProcesoVO){
 			
 			this.containerProceso = new BeanItemContainer<ProcesoVO>(ProcesoVO.class);
@@ -139,6 +150,13 @@ public class BusquedaViewExtended extends BusquedaView{
 			this.containerFuncionario = new BeanItemContainer<FuncionarioVO>(FuncionarioVO.class);
 			this.lblNombre.setValue("Funcionarios");
 			this.seleccionado = new FuncionarioVO();
+		}
+		
+		else if(obj instanceof RubroCuentaVO){
+			
+			this.containerRubroCuenta = new BeanItemContainer<RubroCuentaVO>(RubroCuentaVO.class);
+			this.lblNombre.setValue("Rubro/Cuenta");
+			this.seleccionado = new RubroCuentaVO();
 		}
 		
 		grid.addSelectionListener(new SelectionListener() 
@@ -199,6 +217,16 @@ public class BusquedaViewExtended extends BusquedaView{
 					    }
 		    		}
 		    		
+		    		else if(seleccionado instanceof TitularVO){
+			    		if(grid.getSelectedRow() != null){
+			    			
+			    			BeanItem<TitularVO> item = containerTitulares.getItem(grid.getSelectedRow());
+					    	seleccionado = item.getBean(); 
+					    	main.setInfo(seleccionado);	
+					    	main.cerrarVentana();
+					    }
+		    		}
+		    		
 		    		else if(seleccionado instanceof ProcesoVO){
 			    		if(grid.getSelectedRow() != null){
 			    			
@@ -240,6 +268,16 @@ public class BusquedaViewExtended extends BusquedaView{
 			    		if(grid.getSelectedRow() != null){
 			    			
 			    			BeanItem<FuncionarioVO> item = containerFuncionario.getItem(grid.getSelectedRow());
+					    	seleccionado = item.getBean(); 
+					    	main.setInfo(seleccionado);	
+					    	main.cerrarVentana();
+					    }
+		    		}
+		    		
+		    		else if(seleccionado instanceof RubroCuentaVO){
+			    		if(grid.getSelectedRow() != null){
+			    			
+			    			BeanItem<RubroCuentaVO> item = containerRubroCuenta.getItem(grid.getSelectedRow());
 					    	seleccionado = item.getBean(); 
 					    	main.setInfo(seleccionado);	
 					    	main.cerrarVentana();
@@ -377,6 +415,41 @@ public class BusquedaViewExtended extends BusquedaView{
 			
 		
 			this.arreglarGrilla();
+			this.filtroGrilla();
+			
+		}
+		
+		if(seleccionado instanceof TitularVO){
+			
+			ArrayList<TitularVO> lstDoc = new ArrayList<>();
+			
+			TitularVO i;
+			for (Object o : lst) {
+				
+				i = (TitularVO) o;
+				lstDoc.add(i);
+			}
+			
+			this.containerTitulares.addAll(lstDoc);
+			this.grid.setContainerDataSource(containerTitulares);
+			
+			grid.removeColumn("tel");
+			grid.removeColumn("direccion");
+			grid.removeColumn("mail");
+			grid.removeColumn("activo");
+			grid.removeColumn("fechaMod");
+			grid.removeColumn("usuarioMod");
+			grid.removeColumn("operacion");
+			grid.removeColumn("codigoDoc");
+		
+			grid.setColumnOrder("codigo", "nombre", "nombreDoc", "numeroDoc", "tipo");
+			grid.getColumn("codigo").setWidth(100);
+			grid.getColumn("nombreDoc").setWidth(150);
+			grid.getColumn("nombreDoc").setHeaderCaption("Documento");
+			grid.getColumn("numeroDoc").setHeaderCaption("Número");
+			
+			
+			//this.arreglarGrilla();
 			this.filtroGrilla();
 			
 		}
@@ -548,6 +621,33 @@ public class BusquedaViewExtended extends BusquedaView{
 			this.filtroGrilla();
 			
 		}
+		
+		if(seleccionado instanceof RubroCuentaVO){
+			
+			ArrayList<RubroCuentaVO> lstDoc = new ArrayList<>();
+			
+			RubroCuentaVO i;
+			for (Object o : lst) {
+				
+				i = (RubroCuentaVO) o;
+				lstDoc.add(i);
+			}
+			
+			this.containerRubroCuenta.addAll(lstDoc);
+			this.grid.setContainerDataSource(containerRubroCuenta);
+			
+			grid.removeColumn("cod_rubro");
+			grid.removeColumn("cod_cuenta");
+			grid.removeColumn("cod_impuesto");
+			grid.removeColumn("oficina");
+			grid.removeColumn("proceso");
+			grid.removeColumn("persona");
+			grid.removeColumn("cod_tipoRubro");
+			
+			this.arreglarGrillaRubroCuenta(); /*FaltaImplementar*/
+			this.filtroGrilla();
+			
+		}
 	}
 	
 	private void arreglarGrilla()
@@ -660,6 +760,18 @@ public class BusquedaViewExtended extends BusquedaView{
 		lstColumn.get(0).setWidth(150);
 		lstColumn.get(0).setHeaderCaption("Número");
 		//Modifica el formato de fecha en la grilla 
+	}
+	
+	
+	/*Este falta implementarlo es copia del de proceso*/
+	private void arreglarGrillaRubroCuenta(){
+		List<Column> lstColumn = grid.getColumns();
+		grid.setColumnOrder("descripcionRubro", "descripcionCuenta", "descripcionImpuesto", "porcentaje", "descripcionTipoRubro");
+		grid.getColumn("descripcionRubro").setHeaderCaption("Rubro");
+		grid.getColumn("descripcionCuenta").setHeaderCaption("Cuenta");
+		grid.getColumn("descripcionImpuesto").setHeaderCaption("Impuesto");
+		grid.getColumn("porcentaje").setHeaderCaption("Porcentaje");
+		grid.getColumn("descripcionTipoRubro").setHeaderCaption("Tipo Rubro");
 	}
 	
 	private void filtroGrilla()
@@ -803,6 +915,18 @@ public class BusquedaViewExtended extends BusquedaView{
 					        // (Re)create the filter if necessary
 					        if (! change.getText().isEmpty())
 					        	this.containerFuncionario.addContainerFilter(
+					                new SimpleStringFilter(pid,
+					                    change.getText(), true, false));
+				    	}
+				    	
+				    	else if(seleccionado instanceof RubroCuentaVO) /*PARA GASTOS*/
+				    	{
+					    	// Can't modify filters so need to replace
+					    	this.containerRubroCuenta.removeContainerFilters(pid);
+			
+					        // (Re)create the filter if necessary
+					        if (! change.getText().isEmpty())
+					        	this.containerRubroCuenta.addContainerFilter(
 					                new SimpleStringFilter(pid,
 					                    change.getText(), true, false));
 				    	}

@@ -17,6 +17,7 @@ import com.excepciones.TipoRubro.ObteniendoTipoRubroException;
 import com.logica.Fachada;
 import com.logica.FachadaDD;
 import com.valueObject.ImpuestoVO;
+import com.valueObject.RubroCuentaVO;
 import com.valueObject.RubroVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.TipoRubro.TipoRubroVO;
@@ -51,6 +52,20 @@ public class RubroControlador {
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))	
 			return FachadaDD.getInstance().getRubrosActivos(cod_emp);
+		else
+			throw new NoTienePermisosException();
+	}
+	
+	/**
+	 * Obtiene array list de VO de todas los rubros/cuentas ACTIVOS
+	 * @throws NoTienePermisosException 
+	 * @throws ObteniendoPermisosException 
+	 */
+	public ArrayList<RubroCuentaVO> getRubrosCuentasActivos(UsuarioPermisosVO permisos, String cod_emp) throws ObteniendoRubrosException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException {
+		
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))	
+			return FachadaDD.getInstance().getRubrosCuentasActivos(cod_emp);
 		else
 			throw new NoTienePermisosException();
 	}

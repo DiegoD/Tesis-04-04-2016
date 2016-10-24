@@ -1105,6 +1105,51 @@ public class FachadaDD {
     	return lstRubrosVO;
     }
     
+    
+    /**
+   	 * Obtiene todos los rubros existentes
+   	 */
+       @SuppressWarnings("unchecked")
+   	public ArrayList<RubroCuentaVO> getRubrosCuentasActivos(String cod_emp) throws ObteniendoRubrosException, ConexionException
+       {
+       	
+       	Connection con = null;
+       	
+       	ArrayList<RubroCuenta> lstRubros;
+       	ArrayList<RubroCuentaVO> lstRubrosVO = new ArrayList<RubroCuentaVO>();
+       	    	
+       	try
+       	{
+       		con = this.pool.obtenerConeccion();
+       		
+       		lstRubros = this.rubros.getRubrosCuentasActivos(cod_emp, con);
+       		
+       		for (RubroCuenta rubro : lstRubros) 
+   			{
+       			RubroCuentaVO aux = new RubroCuentaVO(rubro);
+       			
+       			lstRubrosVO.add(aux);
+   			}
+   	
+       	}
+       	catch(ObteniendoRubrosException e){
+       		throw e;
+       		
+       	} 
+       	catch (ConexionException e) {
+   			
+       		throw e;
+       	} 
+       	finally
+       	{
+       		this.pool.liberarConeccion(con);
+       	}
+       	    
+       	
+       	return lstRubrosVO;
+       }
+       
+       
     /**
 	 * Inserta un nuevo rubro en la base
 	 * Valida que no exista un rubro con el mismo código
