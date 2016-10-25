@@ -88,7 +88,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 	UsuarioPermisosVO permisoAux;
 	CotizacionVO cotizacion =  new CotizacionVO();
 	Double cotizacionVenta = null;
-	
+	TitularVO titularVO = new TitularVO();
 	private Hashtable<Integer, GtoSaldoAux> saldoOriginalGastos; /*Variable auxliar para poder
 	 															 controlar que el saldo del gasto quede
 	 															 en negativo*/
@@ -569,11 +569,12 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 			/*Inicalizamos listener para boton de Agregar gastos a cobrar*/
 			this.btnAgregar.addClickListener(click -> {
 						
-				if(this.codTitular.getValue() != null)
+				if(this.codTitular.getValue() != null && this.codTitular.getValue() != "" 
+						&& this.fecValor.getValue() != null && this.comboMoneda.getValue() != null)
 				{
 					try {
 					
-						GastoViewExtended form = new GastoViewExtended(Variables.OPERACION_NUEVO, this);
+						GastoViewExtended form = new GastoViewExtended(Variables.OPERACION_NUEVO, this, titularVO);
 						
 						sub = new MySub("95%", "64%" );
 						sub.setModal(true);
@@ -637,6 +638,9 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 					catch(Exception e){
 						Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 					}
+				}
+				else{
+					Mensajes.mostrarMensajeError("Debe ingresar los datos de cabecera");
 				}
 			});
 			
@@ -1840,7 +1844,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		}
 		
 		if(datos instanceof TitularVO){
-			TitularVO titularVO = (TitularVO) datos;
+			titularVO = (TitularVO) datos;
 			this.codTitular.setValue(String.valueOf(titularVO.getCodigo()));
 			this.nomTitular.setValue(titularVO.getNombre());
 			this.tipoTitular.setValue(titularVO.getTipo());

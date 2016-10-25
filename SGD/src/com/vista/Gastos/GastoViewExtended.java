@@ -55,6 +55,7 @@ import com.valueObject.ImpuestoVO;
 import com.valueObject.MonedaVO;
 import com.valueObject.RubroCuentaVO;
 import com.valueObject.RubroVO;
+import com.valueObject.TitularVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.Cotizacion.CotizacionVO;
 import com.valueObject.Cuenta.CuentaVO;
@@ -84,16 +85,28 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 	Integer codigoInsert;
 	String aux;
 	NumeradoresVO codigos;
+	String tipoTitular;
+	String procesosCliente;
 	Double importeMoneda = null, porcImpuesto = null, tipoCambio = null, importeImpuesto = null, cotizacionVenta = null;
 	CotizacionVO cotizacion =  new CotizacionVO();
 	MonedaVO monedaNacional = new MonedaVO();
+	TitularVO titularVO = new TitularVO();
 	ArrayList<MonedaVO> lstMonedas = new ArrayList<MonedaVO>();
 	
-	public GastoViewExtended(String opera, IGastosMain main){
+	public GastoViewExtended(String opera, IGastosMain main, TitularVO titular){
 		
+		this.titularVO = titular;
 		this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
 		this.operacion = opera;
 		this.mainView = main;
+		
+		if(titularVO != null){
+			this.tipoTitular = titular.getTipo();
+		}
+		else{
+			this.tipoTitular = "";
+			this.procesosCliente = "";
+		}
 		
 		this.inicializarForm();
 		
@@ -374,7 +387,13 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 							VariablesPermisos.OPERACION_NUEVO_EDITAR);
 			
 			try {
-				lstProcesos = this.controlador.getProcesos(permisoAux);
+				if(procesosCliente.equals("")){
+					lstProcesos = this.controlador.getProcesos(permisoAux);
+				}
+				else{
+					lstProcesos = this.controlador.getProcesosCliente(permisoAux, procesosCliente);
+				}
+				
 				
 			} catch ( ConexionException | InicializandoException | ObteniendoPermisosException | NoTienePermisosException | ObteniendoProcesosException e) {
 
@@ -811,11 +830,33 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		/*SI LA OPERACION NO ES NUEVO, OCULTAMOS BOTON ACEPTAR*/
 		if(this.operacion.equals(Variables.OPERACION_NUEVO))
 		{
-			this.comboSeleccion.setValue("Proceso");
 			
 			/*Inicializamos al formulario como nuevo*/
+			this.comboSeleccion.setValue("Proceso");
 			this.iniFormNuevo();
 			this.inicializoProceso();
+			
+			if(tipoTitular.equals("FUNCIONARIO")){
+				this.comboSeleccion.setValue("Empleado");
+				this.inicializoEmpleado();
+				this.comboSeleccion.setEnabled(false);
+				this.btnBuscarEmpleado.setEnabled(false);
+				this.codTitular.setValue(String.valueOf(titularVO.getCodigo()));
+				this.nomTitular.setValue(titularVO.getNombre());
+				this.btnBuscarEmpleado.setVisible(false);
+				this.procesosCliente = "";
+			}
+			else if(tipoTitular.equals("CLIENTE")){
+				this.comboSeleccion.setValue("Proceso");
+				this.comboSeleccion.setEnabled(false);
+				this.procesosCliente = String.valueOf(titularVO.getCodigo());
+				this.inicializoProceso();
+			}
+			else{
+				this.comboSeleccion.setValue("Proceso");
+				this.inicializoProceso();
+				this.procesosCliente = "";
+			}
 	
 		}
 		else if(this.operacion.equals(Variables.OPERACION_LECTURA))	{

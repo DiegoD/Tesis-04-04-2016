@@ -71,7 +71,7 @@ public class GastosPanelExtended extends GastosPanel implements IGastosMain{
 					this.btnNuevoGasto.addClickListener(click -> {
 						
 						sub = new MySub("95%","45%");
-						form = new GastoViewExtended(Variables.OPERACION_NUEVO, this);
+						form = new GastoViewExtended(Variables.OPERACION_NUEVO, this, null);
 						sub.setModal(true);
 						sub.setVista((Component) form);
 						
@@ -193,7 +193,7 @@ public class GastosPanelExtended extends GastosPanel implements IGastosMain{
 				    		item.getBean().setFechaMod(new Timestamp(System.currentTimeMillis()));
 				    	}
 							
-				    	form = new GastoViewExtended(Variables.OPERACION_LECTURA, GastosPanelExtended.this);
+				    	form = new GastoViewExtended(Variables.OPERACION_LECTURA, GastosPanelExtended.this, null);
 				    	sub = new MySub("95%","45%");
 						sub.setModal(true);
 						sub.setVista((Component) form);

@@ -18,6 +18,7 @@ import com.excepciones.Cotizaciones.ObteniendoCotizacionesException;
 import com.excepciones.Egresos.*;
 import com.excepciones.Gastos.ObteniendoGastosException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
+import com.excepciones.Procesos.ObteniendoProcesosException;
 import com.excepciones.Titulares.ObteniendoTitularesException;
 import com.excepciones.clientes.ObteniendoClientesException;
 import com.logica.Fachada;
@@ -31,6 +32,7 @@ import com.valueObject.IngresoCobro.IngresoCobroVO;
 import com.valueObject.banco.BancoVO;
 import com.valueObject.banco.CtaBcoVO;
 import com.valueObject.cliente.ClienteVO;
+import com.valueObject.proceso.ProcesoVO;
 
 public class IngresoEgresoControlador {
 
@@ -151,7 +153,14 @@ public class IngresoEgresoControlador {
 			throw new NoTienePermisosException();
 	}
 
-
+	public ArrayList<ProcesoVO> getProcesosCliente(UsuarioPermisosVO permisos, String cod_cliente) throws ObteniendoProcesosException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException {
+		
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			return FachadaDD.getInstance().getProcesosCliente(permisos.getCodEmp(), cod_cliente);
+		else
+			throw new NoTienePermisosException();
+	}
 	
 
 

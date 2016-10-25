@@ -26,6 +26,7 @@ import com.excepciones.IngresoCobros.NoExisteIngresoCobroException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
 import com.excepciones.Procesos.EliminandoProcesoException;
 import com.excepciones.Saldos.EliminandoSaldoException;
+import com.excepciones.Titulares.ObteniendoTitularesException;
 import com.excepciones.clientes.ObteniendoClientesException;
 import com.sun.org.apache.xpath.internal.operations.Variable;
 import com.vaadin.data.Property.ValueChangeListener;
@@ -53,6 +54,7 @@ import com.valueObject.FormularioVO;
 import com.valueObject.GrupoVO;
 import com.valueObject.MonedaVO;
 import com.valueObject.TipoInCobVO;
+import com.valueObject.TitularVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.Cotizacion.CotizacionVO;
 import com.valueObject.Docum.DocumDetalleVO;
@@ -137,9 +139,13 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	
 	this.btnBuscarCliente.addClickListener(click -> {
 		
-		BusquedaViewExtended form = new BusquedaViewExtended(this, new ClienteVO());
+//		BusquedaViewExtended form = new BusquedaViewExtended(this, new ClienteVO());
+//		ArrayList<Object> lst = new ArrayList<Object>();
+//		ArrayList<ClienteVO> lstClientes = new ArrayList<ClienteVO>();
+		
+		BusquedaViewExtended form = new BusquedaViewExtended(this, new TitularVO());
 		ArrayList<Object> lst = new ArrayList<Object>();
-		ArrayList<ClienteVO> lstClientes = new ArrayList<ClienteVO>();
+		ArrayList<TitularVO> lstTitulares = new ArrayList<TitularVO>();
 		
 		/*Inicializamos VO de permisos para el usuario, formulario y operacion
 		 * para confirmar los permisos del usuario*/
@@ -150,15 +156,16 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 						VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
 		try {
-			lstClientes = this.controlador.getClientes(permisoAux);
+			
+			lstTitulares = this.controlador.getTitulares(permisoAux);
 			
 		} catch ( ConexionException | InicializandoException | ObteniendoPermisosException | NoTienePermisosException |
-				 ObteniendoClientesException e) {
+				 ObteniendoClientesException | ObteniendoTitularesException e) {
 
 			Mensajes.mostrarMensajeError(e.getMessage());
 		}
 		Object obj;
-		for (ClienteVO i: lstClientes) {
+		for (TitularVO i: lstTitulares) {
 			obj = new Object();
 			obj = (Object)i;
 			lst.add(obj);
@@ -496,6 +503,10 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 					
 				ingCobroVO.setCodCuenta("ingcobro");
 				ingCobroVO.setDetalle(this.lstDetalleVO);
+				
+				if(ingCobroVO.getDetalle().size() <= 0){
+					Mensajes.mostrarMensajeError("El cobro no tiene detalle");
+				}
 				
 				 /*Obtenemos la moneda de la cuenta*/
 			    //Datos del banco y cuenta y moneda de la cuenta
@@ -1379,6 +1390,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		this.comboMoneda.setReadOnly(setear);
 		
 		this.impTotMo.setReadOnly(setear);
+		this.impTotMo.setEnabled(false);
 		
 		this.referencia.setReadOnly(setear);
 		
@@ -1979,9 +1991,17 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	public void setInfo(Object datos) {
 		
 		if(datos instanceof ClienteVO){
+			
 			ClienteVO clienteVO = (ClienteVO) datos;
 			this.codTitular.setValue(String.valueOf(clienteVO.getCodigo()));
 			this.nomTitular.setValue(clienteVO.getNombre());
+		}
+		
+		if(datos instanceof TitularVO){
+			
+			TitularVO titularVO = (TitularVO) datos;
+			this.codTitular.setValue(String.valueOf(titularVO.getCodigo()));
+			this.nomTitular.setValue(titularVO.getNombre());
 		}
 		
 		if(datos instanceof ProcesoVO){

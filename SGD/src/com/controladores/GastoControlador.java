@@ -209,5 +209,12 @@ public class GastoControlador {
 			throw new NoTienePermisosException();
 	}
 	
-	
+	public ArrayList<ProcesoVO> getProcesosCliente(UsuarioPermisosVO permisos, String cod_cliente) throws ObteniendoProcesosException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException {
+		
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			return FachadaDD.getInstance().getProcesosCliente(permisos.getCodEmp(), cod_cliente);
+		else
+			throw new NoTienePermisosException();
+	}
 }

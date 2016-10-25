@@ -23,10 +23,12 @@ import com.excepciones.IngresoCobros.NoExisteIngresoCobroException;
 import com.excepciones.IngresoCobros.ObteniendoIngresoCobroException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
 import com.excepciones.Procesos.ObteniendoProcesosException;
+import com.excepciones.Titulares.ObteniendoTitularesException;
 import com.excepciones.clientes.ObteniendoClientesException;
 import com.logica.Fachada;
 import com.logica.FachadaDD;
 import com.valueObject.MonedaVO;
+import com.valueObject.TitularVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.Cotizacion.CotizacionVO;
 import com.valueObject.Gasto.GastoVO;
@@ -123,6 +125,19 @@ public class IngresoCobroControlador {
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
 			return Fachada.getInstance().getClientesActivos(permisos.getCodEmp());
+		else
+			throw new NoTienePermisosException();
+	}
+	
+	/**
+	 * Trae los titulares activos
+	 * @throws ObteniendoTitularesException 
+	 */
+	public ArrayList<TitularVO> getTitulares(UsuarioPermisosVO permisos) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoClientesException, ObteniendoTitularesException {
+		
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			return FachadaDD.getInstance().getTitularesActivos(permisos.getCodEmp());
 		else
 			throw new NoTienePermisosException();
 	}
