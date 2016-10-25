@@ -8,6 +8,7 @@ import com.vaadin.server.VaadinService;
 import com.vaadin.shared.Position;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
@@ -43,16 +44,19 @@ public class MenuExtended extends Menu{
 	private Component contentAnterior;
 	public static String nombre = "Menu";
 		
-	private VerticalLayout tabMantenimientos;
-	private VerticalLayout tabAdministracion;
+	private VerticalLayout layoutMenu;
+	//private VerticalLayout tabAdministracion;
 	private PermisosUsuario permisos;
 	private Principal mainPrincipal; /*Variable para poder desloguearse*/
 	MenuBar barmenu;
 	
 	private void inicializarMenu(){
 		
+		/*
 		this.barmenu = new MenuBar();
 		this.barmenu.setStyleName("valo-menu-responsive");
+		
+		
 		
 		// A top-level menu item that opens a submenu
 		MenuItem administracion = barmenu.addItem("Administración", null, null);
@@ -65,7 +69,11 @@ public class MenuExtended extends Menu{
 		
 		MenuItem impuestos = mantenimientos.addItem("Impuestos", cmdImpuestos);
 		
+		
+		
 		this.content.addComponent(barmenu);
+		*/
+		
 		
 	}
 	
@@ -197,6 +205,12 @@ public class MenuExtended extends Menu{
 				c.setSizeFull();
 				this.content.setSizeFull();
 				
+				HorizontalLayout h = new HorizontalLayout();
+				h.setHeight("10px");
+				h.setWidth("100%");
+				h.addComponent(gruposButton);
+				
+				this.content.addComponent(h);
 				this.content.addComponent(c);
 				
 			} catch (Exception e) {
@@ -560,8 +574,12 @@ public class MenuExtended extends Menu{
 		if(lstFormsMenuMant.size()> 0)
 		{
 
-			this.tabMantenimientos = new VerticalLayout();
+			this.layoutMenu = new VerticalLayout();
 			//this.tabMantenimientos.setMargin(true);
+			
+			this.lbMantenimientos.setVisible(true);
+			this.layoutMenu.addComponent(this.lbMantenimientos);
+			
 			
 			for (FormularioVO formularioVO : lstFormsMenuMant) {
 				
@@ -569,99 +587,138 @@ public class MenuExtended extends Menu{
 				{
 										
 					case VariablesPermisos.FORMULARIO_IMPUESTO :
-						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_IMPUESTO, VariablesPermisos.OPERACION_LEER))
-							this.habilitarImpuestoButton();
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_IMPUESTO, VariablesPermisos.OPERACION_LEER)){
+							this.habilitarImpuestoButton(); 
+							
+							this.layoutMenu.addComponent(this.impuestoButton);
+							
+							}
 					break;
 					
 					case VariablesPermisos.FORMULARIO_EMPRESAS :
-						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_EMPRESAS, VariablesPermisos.OPERACION_LEER))
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_EMPRESAS, VariablesPermisos.OPERACION_LEER)){
 							this.habilitarEmpresaButton();
+							this.layoutMenu.addComponent(this.empresaButton);
+						}
 					break;
 					
 					case VariablesPermisos.FORMULARIO_CODIGOS_GENERALIZADOS :
-						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_CODIGOS_GENERALIZADOS, VariablesPermisos.OPERACION_LEER))
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_CODIGOS_GENERALIZADOS, VariablesPermisos.OPERACION_LEER)){
 							this.habilitarCodigosGeneralizadosButton();
+							this.layoutMenu.addComponent(this.codigosGeneralizados);
+						}
+						
 					break;
 					
 					case VariablesPermisos.FORMULARIO_DOCUMENTOS:
-						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_DOCUMENTOS, VariablesPermisos.OPERACION_LEER))
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_DOCUMENTOS, VariablesPermisos.OPERACION_LEER)){
 							this.habilitarDocumentosButton();
+							this.layoutMenu.addComponent(this.documentosButton);
+						}
 					break;
 					
 					case VariablesPermisos.FORMULARIO_MONEDAS:
-						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_MONEDAS, VariablesPermisos.OPERACION_LEER))
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_MONEDAS, VariablesPermisos.OPERACION_LEER)){
 							this.habilitarMonedasButton();
+							this.layoutMenu.addComponent(this.monedasButton);
+						}
 					break;
 					
 					case VariablesPermisos.FORMULARIO_RUBROS:
-						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_RUBROS, VariablesPermisos.OPERACION_LEER))
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_RUBROS, VariablesPermisos.OPERACION_LEER)){
 							this.habilitarRubros();
+							this.layoutMenu.addComponent(this.rubros);
+						}
 						
 					case VariablesPermisos.FORMULARIO_CLIENTES:
-						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_CLIENTES, VariablesPermisos.OPERACION_LEER))
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_CLIENTES, VariablesPermisos.OPERACION_LEER)){
 							this.habilitarClientes();
+							this.layoutMenu.addComponent(this.clientesButton);
+						}
 						
 					case VariablesPermisos.FORMULARIO_FUNCIONARIOS:
-						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_FUNCIONARIOS, VariablesPermisos.OPERACION_LEER))
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_FUNCIONARIOS, VariablesPermisos.OPERACION_LEER)){
 							this.habilitarFuncionarios();
+							this.layoutMenu.addComponent(this.funcionariosButton);
+						}
 						
 					break;
 					
 					case VariablesPermisos.FORMULARIO_COTIZACIONES:
-						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_COTIZACIONES, VariablesPermisos.OPERACION_LEER))
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_COTIZACIONES, VariablesPermisos.OPERACION_LEER)){
 							this.habilitarCotizaciones();
+							this.layoutMenu.addComponent(this.cotizaciones);
+						}
 						
 					break;
 					
 					case VariablesPermisos.FORMULARIO_TIPORUBROS:
-						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_TIPORUBROS, VariablesPermisos.OPERACION_LEER))
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_TIPORUBROS, VariablesPermisos.OPERACION_LEER)){
 							this.habilitarTipoRubros();
+							this.layoutMenu.addComponent(this.tipoRubros);
+						}
 						
 					break;
 					
 					case VariablesPermisos.FORMULARIO_CUENTAS:
-						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_CUENTAS, VariablesPermisos.OPERACION_LEER))
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_CUENTAS, VariablesPermisos.OPERACION_LEER)){
 							this.habilitarCuentas();
+							this.layoutMenu.addComponent(this.cuentas);
+						}
 						
 					break;
 					
 					case VariablesPermisos.FORMULARIO_BANCOS:
-						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_BANCOS, VariablesPermisos.OPERACION_LEER))
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_BANCOS, VariablesPermisos.OPERACION_LEER)){
 							this.habilitarBancos();
+							this.layoutMenu.addComponent(this.bancos);
+						}
 						
 					break;
 					
 					case VariablesPermisos.FORMULARIO_PROCESOS:
-						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_PROCESOS, VariablesPermisos.OPERACION_LEER))
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_PROCESOS, VariablesPermisos.OPERACION_LEER)){
 							this.habilitarProcesos();
+							this.layoutMenu.addComponent(this.procesos);
+						}
 						
 					break;
 					
 					case VariablesPermisos.FORMULARIO_GASTOS:
-						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GASTOS, VariablesPermisos.OPERACION_LEER))
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GASTOS, VariablesPermisos.OPERACION_LEER)){
 							this.habilitarGastos();
+							this.layoutMenu.addComponent(this.gastos);
+						}
 						
 					break;
 					
 					case VariablesPermisos.FORMULARIO_INGRESO_COBRO:
-						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_COBRO, VariablesPermisos.OPERACION_LEER))
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_COBRO, VariablesPermisos.OPERACION_LEER)){
 							this.habilitarIngresoCobro();
+							this.layoutMenu.addComponent(this.ingCobro);
+						}
 					break;
 					
 					case VariablesPermisos.FORMULARIO_INGRESO_COBRO_OTRO:
-						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_COBRO_OTRO, VariablesPermisos.OPERACION_LEER))
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_COBRO_OTRO, VariablesPermisos.OPERACION_LEER)){
 							this.habilitarOtroCobro();
+							this.layoutMenu.addComponent(this.otroCobro);
+						}
 					break;
 					
 					case VariablesPermisos.FORMULARIO_INGRESO_EGRESO:
-						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO, VariablesPermisos.OPERACION_LEER))
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO, VariablesPermisos.OPERACION_LEER)){
 							this.habilitarIngresoEgreso();
+							this.layoutMenu.addComponent(this.ingEgreso);
+						}
 						
 					break;
 					
 					case VariablesPermisos.FORMULARIO_INGRESO_EGRESO_OTRO:
-						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO_OTRO, VariablesPermisos.OPERACION_LEER))
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO_OTRO, VariablesPermisos.OPERACION_LEER)){
 							this.habilitarOtroEgreso();
+							this.layoutMenu.addComponent(this.otroEgreso);
+						}
 						
 					break;
 					
@@ -670,11 +727,14 @@ public class MenuExtended extends Menu{
 				
 			}
 			
-			this.acordion.addTab(tabMantenimientos, "Mantenimientos", null);
+			//TODO
+			//this.acordion.addTab(tabMantenimientos, "Mantenimientos", null);
+			
+			this.menuItems.addComponent(this.layoutMenu);
 			
 		}
 		
-		acordion.setHeight("75%"); /*Seteamos alto  del accordion*/
+		//acordion.setHeight("75%"); /*Seteamos alto  del accordion*/
 	}
 	
 	
@@ -702,34 +762,41 @@ public class MenuExtended extends Menu{
 		/*Si hay formularios para el tab*/
 		if(lstFormsMenuAdmin.size()> 0)
 		{
-
-			this.tabAdministracion = new VerticalLayout();
+			//TODO
+			//this.tabAdministracion = new VerticalLayout();
 			//this.tabAdministracion.setMargin(true);
 			
+			this.lbAdministracion.setVisible(true);
+			this.layoutMenu.addComponent(this.lbAdministracion);
 			
 			for (FormularioVO formularioVO : lstFormsMenuAdmin) {
 				
 				switch(formularioVO.getCodigo())
 				{
 					case VariablesPermisos.FORMULARIO_USUARIO : 
-						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_USUARIO, VariablesPermisos.OPERACION_LEER))
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_USUARIO, VariablesPermisos.OPERACION_LEER)){
 							this.habilitarUserButton();
+							this.layoutMenu.addComponent(this.userButton);
+						}
 					break;
 										
 					case VariablesPermisos.FORMULARIO_GRUPO :
-						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GRUPO, VariablesPermisos.OPERACION_LEER))
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GRUPO, VariablesPermisos.OPERACION_LEER)){
 							this.habilitarGrupoButton();
+							this.layoutMenu.addComponent(this.gruposButton);
+						}
 					break;
 					
 				}
 				
 			}
 			
-			this.acordion.addTab(tabAdministracion, "Administración", null);
+			//TODO
+			//this.acordion.addTab(tabAdministracion, "Administración", null);
 			
 		}
-		
-		acordion.setHeight("75%"); /*Seteamos alto  del accordion*/
+		//TODO
+		//acordion.setHeight("75%"); /*Seteamos alto  del accordion*/
 	}
 	
 	/**
@@ -738,6 +805,14 @@ public class MenuExtended extends Menu{
 	 */
 	private void deshabilitarFuncionalidades()
 	{
+		
+		this.lbMantenimientos.setVisible(false);
+		
+		
+		this.lbAdministracion.setVisible(false);
+		
+		
+		
 		this.userButton.setVisible(false);
 		this.userButton.setEnabled(false);
 		
@@ -805,7 +880,8 @@ public class MenuExtended extends Menu{
 		this.userButton.setVisible(true);
 		this.userButton.setEnabled(true);
 		
-		this.tabAdministracion.addComponent(this.userButton);
+		//TODO
+		//this.tabAdministracion.addComponent(this.userButton);
 	}
 	
 	private void habilitarGrupoButton()
@@ -813,7 +889,8 @@ public class MenuExtended extends Menu{
 		this.gruposButton.setVisible(true);
 		this.gruposButton.setEnabled(true);
 		
-		this.tabAdministracion.addComponent(this.gruposButton);
+		//TODO
+		//this.tabAdministracion.addComponent(this.gruposButton);
 	}
 	
 	private void habilitarImpuestoButton()
@@ -821,7 +898,7 @@ public class MenuExtended extends Menu{
 		this.impuestoButton.setVisible(true);
 		this.impuestoButton.setEnabled(true);
 		
-		this.tabMantenimientos.addComponent(this.impuestoButton);
+		this.layoutMenu.addComponent(this.impuestoButton);
 	}
 	
 	private void habilitarEmpresaButton()
@@ -829,7 +906,7 @@ public class MenuExtended extends Menu{
 		this.empresaButton.setVisible(true);
 		this.empresaButton.setEnabled(true);
 		
-		this.tabMantenimientos.addComponent(this.empresaButton);
+		this.layoutMenu.addComponent(this.empresaButton);
 	}
 	
 	private void habilitarCodigosGeneralizadosButton()
@@ -837,98 +914,98 @@ public class MenuExtended extends Menu{
 		this.codigosGeneralizados.setVisible(true);
 		this.codigosGeneralizados.setEnabled(true);
 		
-		this.tabMantenimientos.addComponent(this.codigosGeneralizados);
+		this.layoutMenu.addComponent(this.codigosGeneralizados);
 	}
 	
 	private void habilitarDocumentosButton(){
 		this.documentosButton.setVisible(true);
 		this.documentosButton.setEnabled(true);
 		
-		this.tabMantenimientos.addComponent(documentosButton);
+		this.layoutMenu.addComponent(documentosButton);
 	}
 	
 	private void habilitarMonedasButton(){
 		this.monedasButton.setVisible(true);
 		this.monedasButton.setEnabled(true);
-		this.tabMantenimientos.addComponent(monedasButton);
+		this.layoutMenu.addComponent(monedasButton);
 	}
 	
 	private void habilitarRubros(){
 		this.rubros.setVisible(true);
 		this.rubros.setEnabled(true);
-		this.tabMantenimientos.addComponent(rubros);
+		this.layoutMenu.addComponent(rubros);
 	}
 	
 	private void habilitarClientes(){
 		this.clientesButton.setVisible(true);
 		this.clientesButton.setEnabled(true);
-		this.tabMantenimientos.addComponent(clientesButton);
+		this.layoutMenu.addComponent(clientesButton);
 	}
 	
 	private void habilitarFuncionarios(){
 		this.funcionariosButton.setVisible(true);
 		this.funcionariosButton.setEnabled(true);
-		this.tabMantenimientos.addComponent(funcionariosButton);
+		this.layoutMenu.addComponent(funcionariosButton);
 	}
 	
 	private void habilitarCotizaciones(){
 		this.cotizaciones.setVisible(true);
 		this.cotizaciones.setEnabled(true);
-		this.tabMantenimientos.addComponent(cotizaciones);
+		this.layoutMenu.addComponent(cotizaciones);
 	}
 	
 	private void habilitarTipoRubros(){
 		this.tipoRubros.setVisible(true);
 		this.tipoRubros.setEnabled(true);
-		this.tabMantenimientos.addComponent(tipoRubros);
+		this.layoutMenu.addComponent(tipoRubros);
 	}
 	
 	private void habilitarCuentas(){
 		this.cuentas.setVisible(true);
 		this.cuentas.setEnabled(true);
-		this.tabMantenimientos.addComponent(cuentas);
+		this.layoutMenu.addComponent(cuentas);
 	}
 	
 	private void habilitarBancos(){
 		this.bancos.setVisible(true);
 		this.bancos.setEnabled(true);
-		this.tabMantenimientos.addComponent(bancos);
+		this.layoutMenu.addComponent(bancos);
 	}
 	
 	private void habilitarProcesos(){
 		this.procesos.setVisible(true);
 		this.procesos.setEnabled(true);
-		this.tabMantenimientos.addComponent(procesos);
+		this.layoutMenu.addComponent(procesos);
 	}
 	
 	private void habilitarGastos(){
 		this.gastos.setVisible(true);
 		this.gastos.setEnabled(true);
-		this.tabMantenimientos.addComponent(gastos);
+		this.layoutMenu.addComponent(gastos);
 	}
 	
 	private void habilitarIngresoCobro(){
 		this.ingCobro.setVisible(true);
 		this.ingCobro.setEnabled(true);
-		this.tabMantenimientos.addComponent(ingCobro);
+		this.layoutMenu.addComponent(ingCobro);
 	}
 	
 	private void habilitarIngresoEgreso(){
 		this.ingEgreso.setVisible(true);
 		this.ingEgreso.setEnabled(true);
-		this.tabMantenimientos.addComponent(ingEgreso);
+		this.layoutMenu.addComponent(ingEgreso);
 	}
 	
 	private void habilitarOtroCobro(){
 		this.otroCobro.setVisible(true);
 		this.otroCobro.setEnabled(true);
-		this.tabMantenimientos.addComponent(otroCobro);
+		this.layoutMenu.addComponent(otroCobro);
 	}
 	
 	private void habilitarOtroEgreso(){
 		this.otroEgreso.setVisible(true);
 		this.otroEgreso.setEnabled(true);
-		this.tabMantenimientos.addComponent(otroEgreso);
+		this.layoutMenu.addComponent(otroEgreso);
 	}
 	
 	

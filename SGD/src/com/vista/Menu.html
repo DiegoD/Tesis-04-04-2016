@@ -14,7 +14,11 @@
      <vaadin-button icon="fonticon://FontAwesome/f03a" style-name="primary small valo-menu-toggle" plain-text _id="menuToggle">
        Menu 
      </vaadin-button> 
-     <vaadin-css-layout style-name="valo-menuitems" _id="menuItems"> 
+     <vaadin-css-layout style-name="valo-menuitems" width="250px" _id="menuItems"> 
+      <vaadin-label style-name="valo-menu-subtitle v-widget h4 valo-menu-subtitle-h4 v-label-undef-w" width="200px" _id="lbMantenimientos">
+        Mantenimientos 
+      </vaadin-label> 
+     
       <vaadin-button icon="fonticon://FontAwesome/f007" primary-style-name="valo-menu-item" width-full plain-text _id="userButton">
         Usuario 
       </vaadin-button> 
@@ -45,6 +49,9 @@
       <vaadin-button icon="fonticon://FontAwesome/f1e7" primary-style-name="valo-menu-item" plain-text _id="rubros">
         Rubros 
       </vaadin-button> 
+      <vaadin-label style-name="valo-menu-subtitle v-widget h4 valo-menu-subtitle-h4 v-label-undef-w" width="200px" _id="lbAdministracion">
+        Administracion 
+      </vaadin-label> 
       <vaadin-button icon="fonticon://FontAwesome/f1e7" primary-style-name="valo-menu-item" plain-text _id="cotizaciones">
         Cotizaciones 
       </vaadin-button> 
@@ -70,13 +77,12 @@
         Ingreso Egreso 
       </vaadin-button> 
       <vaadin-button icon="fonticon://FontAwesome/f1e7" primary-style-name="valo-menu-item" plain-text _id="otroCobro">
-        Otro Cobro
+        Otro Cobro 
       </vaadin-button> 
       <vaadin-button icon="fonticon://FontAwesome/f1e7" primary-style-name="valo-menu-item" plain-text _id="otroEgreso">
         Otro Egreso 
       </vaadin-button> 
      </vaadin-css-layout> 
-     <vaadin-accordion primary-style-name="borderless" _id="acordion"></vaadin-accordion> 
     </vaadin-css-layout> 
    </vaadin-css-layout> 
    <vaadin-vertical-layout spacing size-full margin _id="content" :expand></vaadin-vertical-layout> 
