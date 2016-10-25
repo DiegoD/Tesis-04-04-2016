@@ -1413,7 +1413,9 @@ public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 			{
 				/*Ingresamos el saldo a la cuenta (Banco o caja)*/
 				DocumSaldo saldoCuenta = ConvertirDocumento.getDocumSaldoSaCuentasIngCobro(ingVO);
-				saldoCuenta.setImpTotMo(impMoCtaBco); /*Importe en moneda operativa de la cuenta bco*/
+				
+				if(!ing.getmPago().equals("Caja")) /*Si es banco*/
+					saldoCuenta.setImpTotMo(impMoCtaBco); /*Importe en moneda operativa de la cuenta bco*/ 
 				this.saldosCuentas.insertarSaldoCuenta(saldoCuenta, con);
 			}
 			
@@ -1461,7 +1463,13 @@ public void eliminarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 		Cotizacion cotiAux;
 		
 		/*Obtenemos el importe moneda operativa de la cuenta del banco*/
-		double impMoCtaBco = this.importeMOCtaBanco(ing);
+		double impMoCtaBco = 0;
+		
+		if(!ing.getmPago().equals("Caja")) /*Si es banco*/
+		{
+			 /*Obtenemos el importe moneda operativa de la cuenta del banco*/
+			 impMoCtaBco = this.importeMOCtaBanco(ing);
+		}
 		
 		/*Verificamos no exista un el cobro*/
 		if(this.ingresoCobro.memberIngresoCobro(ing.getNroDocum(), codEmp, con))
@@ -1519,10 +1527,12 @@ public void eliminarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 				/*Obtenemos el objeto DocumSaldo dado el ingreso de cobro*/
 				DocumSaldo saldoCuenta = ConvertirDocumento.getDocumSaldoChequeDadoIngCobro(ingVO);
 				
-				saldoCuenta.setImpTotMo(impMoCtaBco);
+				if(!ing.getmPago().equals("Caja")) /*Si es banco*/
+					saldoCuenta.setImpTotMo(impMoCtaBco);
 				
 				this.saldosCuentas.eliminarSaldoCuenta(saldoCuenta, con);
 			}
+			
 			
 			/*Una vez hechos todos los movimientos de saldos y documentos
 			 * procedemos a eliminar el cobro*/
@@ -1617,7 +1627,13 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 		Cotizacion cotiAux;
 		
 		 /*Obtenemos el importe moneda operativa de la cuenta del banco*/
-		 double impMoCtaBco = this.importeMOCtaBanco(ing);
+		 double impMoCtaBco = 0;
+		 
+		 if(!ing.getmPago().equals("Caja")) /*Si es banco*/
+		 {
+			 /*Obtenemos el importe moneda operativa de la cuenta del banco*/
+			 impMoCtaBco = this.importeMOCtaBanco(ing);
+		 }
 		
 		/*Verificamos que no exista un cobro con el mismo numero*/
 		if(!this.ingresoCobro.memberIngresoCobro(ing.getNroDocum(), ing.getCodEmp(), con))
@@ -1674,7 +1690,10 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 			{
 				/*Ingresamos el saldo a la cuenta (Banco o caja)*/
 				DocumSaldo saldoCuenta = ConvertirDocumento.getDocumSaldoSaCuentasIngCobro(ingVO);
-				saldoCuenta.setImpTotMo(impMoCtaBco);
+				
+				 if(!ing.getmPago().equals("Caja")) /*Si es banco*/
+					 saldoCuenta.setImpTotMo(impMoCtaBco);
+				 
 				this.saldosCuentas.insertarSaldoCuenta(saldoCuenta, con);
 			}
 
@@ -1712,7 +1731,13 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 			Cotizacion cotiAux;
 			
 			/*Obtenemos el importe moneda operativa de la cuenta del banco*/
-			double impMoCtaBco = this.importeMOCtaBanco(ing);
+			double impMoCtaBco = 0;
+			
+			 if(!ing.getmPago().equals("Caja")) /*Si es banco*/
+			 {
+				 /*Obtenemos el importe moneda operativa de la cuenta del banco*/
+				 impMoCtaBco = this.importeMOCtaBanco(ing);
+			 }
 			
 			/*Verificamos no exista un el cobro*/
 			if(this.ingresoCobro.memberIngresoCobro(ing.getNroDocum(), ing.getCodEmp(), con))
@@ -1765,7 +1790,9 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 					/*Bajamos el saldo a la cuenta (Banco o caja)*/
 					/*Obtenemos el objeto DocumSaldo dado el ingreso de cobro*/
 					DocumSaldo saldoCuenta = ConvertirDocumento.getDocumSaldoChequeDadoIngCobro(ingVO);
-					saldoCuenta.setImpTotMo(impMoCtaBco);
+					
+					if(!ing.getmPago().equals("Caja")) /*Si es banco*/
+						saldoCuenta.setImpTotMo(impMoCtaBco);
 					
 					this.saldosCuentas.eliminarSaldoCuenta(saldoCuenta, con);
 				}
@@ -1852,7 +1879,13 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 			Cotizacion cotiAux;
 			
 			/*Obtenemos el importe moneda operativa de la cuenta del banco*/
-			double impMoCtaBco = this.importeMOCtaBanco(ing);
+			double impMoCtaBco = 0; 
+			
+			 if(!ing.getmPago().equals("Caja")) /*Si es banco*/
+			 {
+				 /*Obtenemos el importe moneda operativa de la cuenta del banco*/
+				 impMoCtaBco = this.importeMOCtaBanco(ing);
+			 }
 			
 			//Obtengo numerador de egreso de gasto
 			codigos.setCodigo(numeradores.getNumero(con, "egrcobro", codEmp)); //Ingreso Cobro 
@@ -1918,7 +1951,10 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 				
 				/*Ingresamos el saldo a la cuenta (Banco o caja)*/
 				DocumSaldo saldoCuenta = ConvertirDocumento.getDocumSaldoSaCuentasEgresoCobro(ingVO);
-				saldoCuenta.setImpTotMo(impMoCtaBco);
+				
+				if(!ing.getmPago().equals("Caja")) /*Si es banco*/
+					 saldoCuenta.setImpTotMo(impMoCtaBco);
+				
 				this.saldosCuentas.insertarSaldoCuenta(saldoCuenta, con);
 				
 				con.commit();
@@ -1965,7 +2001,13 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 			Cotizacion cotiAux;
 			
 			/*Obtenemos el importe moneda operativa de la cuenta del banco*/
-			double impMoCtaBco = this.importeMOCtaBanco(ing);
+			double impMoCtaBco = 0;
+			
+			 if(!ing.getmPago().equals("Caja")) /*Si es banco*/
+			 {
+				 /*Obtenemos el importe moneda operativa de la cuenta del banco*/
+				 impMoCtaBco = this.importeMOCtaBanco(ing);
+			 }
 			
 			/*Verificamos no exista un el cobro*/
 			if(this.egresoCobro.memberEgresoCobro(ing.getNroDocum(), codEmp, con))
@@ -2013,7 +2055,10 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 				/*Obtenemos el objeto DocumSaldo dado el egreso de cobro*/
 				
 				DocumSaldo saldoCuenta = ConvertirDocumento.getDocumSaldoChequeDadoEgrCobro(ingVO);
-				saldoCuenta.setImpTotMo(impMoCtaBco);
+				
+				if(!ing.getmPago().equals("Caja")) /*Si es banco*/
+					saldoCuenta.setImpTotMo(impMoCtaBco);
+				
 				this.saldosCuentas.eliminarSaldoCuenta(saldoCuenta, con);
 				
 				/*Una vez hechos todos los movimientos de saldos y documentos
@@ -2110,7 +2155,13 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 			
 			
 			/*Obtenemos el importe moneda operativa de la cuenta del banco*/
-			double impMoCtaBco = this.importeMOCtaBanco(ing);
+			double impMoCtaBco = 0;
+			
+			 if(!ing.getmPago().equals("Caja")) /*Si es banco*/
+			 {
+				 /*Obtenemos el importe moneda operativa de la cuenta del banco*/
+				 impMoCtaBco = this.importeMOCtaBanco(ing);
+			 }
 			
 			/*Verificamos que no exista un egreso con el mismo numero*/
 			if(!this.egresoCobro.memberEgresoCobro(ing.getNroDocum(), ing.getCodEmp(), con))
@@ -2159,7 +2210,10 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 				/*Ingresamos el saldo a la cuenta (Banco o caja)*/
 				/*Obtenemos el importe moneda operativa de la cuenta del banco*/
 				DocumSaldo saldoCuenta = ConvertirDocumento.getDocumSaldoSaCuentasEgresoCobro(ingVO);
-				saldoCuenta.setImpTotMo(impMoCtaBco);
+				
+				if(!ing.getmPago().equals("Caja")) /*Si es banco*/
+					saldoCuenta.setImpTotMo(impMoCtaBco);
+				
 				this.saldosCuentas.insertarSaldoCuenta(saldoCuenta, con);
 			
 			}
@@ -2194,7 +2248,13 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 			IngresoCobro ing = new IngresoCobro(ingVO); 
 			Cotizacion cotiAux;
 			/*Obtenemos el importe moneda operativa de la cuenta del banco*/
-			double impMoCtaBco = this.importeMOCtaBanco(ing);
+			double impMoCtaBco = 0;
+			
+			 if(!ing.getmPago().equals("Caja")) /*Si es banco*/
+			 {
+				 /*Obtenemos el importe moneda operativa de la cuenta del banco*/
+				 impMoCtaBco = this.importeMOCtaBanco(ing);
+			 }
 			
 			/*Verificamos no exista un el cobro*/
 			if(this.egresoCobro.memberEgresoCobro(ing.getNroDocum(), ing.getCodEmp(), con))
@@ -2247,7 +2307,10 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 			/*Obtenemos el objeto DocumSaldo dado el egreso de cobro*/
 		
 			DocumSaldo saldoCuenta = ConvertirDocumento.getDocumSaldoChequeDadoEgrCobro(ingVO);
-			saldoCuenta.setImpTotMo(impMoCtaBco);
+			
+			if(!ing.getmPago().equals("Caja")) /*Si es banco*/
+				saldoCuenta.setImpTotMo(impMoCtaBco);
+			
 			this.saldosCuentas.eliminarSaldoCuenta(saldoCuenta, con);
 			
 			/*Una vez hechos todos los movimientos de saldos y documentos
