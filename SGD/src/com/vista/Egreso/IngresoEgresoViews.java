@@ -47,9 +47,11 @@ public class IngresoEgresoViews extends FormLayout {
 	protected HorizontalLayout name_wrapper2;
 	protected ComboBox comboMoneda;
 	protected TextField impTotMo;
+	protected HorizontalLayout botones;
 	protected Button aceptar;
 	protected Button btnEditar;
 	protected Button cancelar;
+	protected Button btnEliminar;
 	protected FormLayout formLay2;
 	protected Grid lstGastos;
 	protected Button btnAgregar;

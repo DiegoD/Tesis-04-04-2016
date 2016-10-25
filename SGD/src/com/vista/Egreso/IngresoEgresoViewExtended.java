@@ -97,6 +97,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 	 							 para poder detectar las lineas eliminadas del cobro */
 	
 	boolean cambioMoneda;
+	MonedaVO monedaNacional = new MonedaVO();
 	
 	MySub sub;
 	//private UsuarioPermisosVO permisos; /*Variable con los permisos del usuario*/
@@ -113,6 +114,8 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 	
 	
 	this.cambioMoneda = false;
+	
+	ArrayList<MonedaVO> lstMonedas = new ArrayList<MonedaVO>();
 		
 	/*Inicializamos los permisos para el usuario*/
 	this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
@@ -250,14 +253,29 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
    					
    					tcMov.setVisible(true);
 					cotizacion = controlador.getCotizacion(permisoAux, fecha, auxMoneda.getCodMoneda());
-					cotizacionVenta = cotizacion.getCotizacionVenta();
-					calculos();
+					if(cotizacion.getCotizacionVenta() != 0 && !auxMoneda.isNacional()){
+						cotizacionVenta = cotizacion.getCotizacionVenta();
+						calculos();
+					}
+					else{
+						Mensajes.mostrarMensajeError("Debe cargar la cotización para la moneda");
+						comboMoneda.setValue(monedaNacional);
+						return;
+					}
 				} 
    				catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
 						| InicializandoException | NoTienePermisosException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+   				if(fecha != null){
+   					
+   					for (MonedaVO monedaVO : lstMonedas) {
+   						
+   						monedaVO = seteaCotizaciones(monedaVO);
+   					}
+   					
+   				}
    			}
    			else{
    				tcMov.setVisible(false);
@@ -491,6 +509,11 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 				ingCobroVO.setCodCuenta("egrcobro");
 				ingCobroVO.setDetalle(this.lstDetalleVO);
 				
+				if(ingCobroVO.getDetalle().size() <= 0){
+					Mensajes.mostrarMensajeError("El egreso no tiene detalle");
+					return;
+				}
+				
 				/*Obtenemos la moneda de la cuenta*/
 				//Datos del banco y cuenta y moneda de la cuenta
 				CtaBcoVO auxctaBco = new CtaBcoVO();
@@ -565,7 +588,38 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 			}
 		});
-		
+			
+		this.btnEliminar.addClickListener(click -> {
+			
+			UsuarioPermisosVO permisoAux = 
+			new UsuarioPermisosVO(this.permisos.getCodEmp(),
+					this.permisos.getUsuario(),
+					VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
+					VariablesPermisos.OPERACION_BORRAR);
+			
+//			try {
+//				
+//				GastoVO gastoVO = new GastoVO();
+//				
+//				gastoVO.setCodDocum(codDocum.getValue());
+//				gastoVO.setSerieDocum(serieDocum.getValue());
+//				gastoVO.setNroDocum((Integer) nroDocum.getConvertedValue());
+//				gastoVO.setCodEmp(permisoAux.getCodEmp());
+//				gastoVO.setCodTitular(codTitular.getValue());
+//				gastoVO.setNroTrans((long) nroTrans.getConvertedValue());
+//				
+//				controlador.eliminarGasto(gastoVO, permisoAux);
+//				this.mainView.actuilzarGrillaEliminado((long) nroTrans.getConvertedValue());
+//				Mensajes.mostrarMensajeOK("Se ha eliminado el gasto");
+//				main.cerrarVentana();
+//				
+//			} catch (ObteniendoPermisosException | ConexionException | InicializandoException | ExisteGastoException |
+//					EliminandoGastoException | EliminandoProcesoException | NoTienePermisosException | EliminandoSaldoException e) {
+//				// TODO Auto-generated catch block
+//				Mensajes.mostrarMensajeError(e.getMessage());
+//			}
+//			
+		});
 			/*Inicalizamos listener para boton de Agregar gastos a cobrar*/
 			this.btnAgregar.addClickListener(click -> {
 						
@@ -1011,7 +1065,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 	private void iniFormLectura()
 	{
 		/*Verificamos que tenga permisos para editar*/
-		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_COBRO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
 		/*Si tiene permisos de editar habilitamos el boton de 
 		 * edicion*/
@@ -1027,6 +1081,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		/*Deshabilitamos botn aceptar*/
 		this.disableBotonAceptar();
 		this.disableBotonAgregarQuitar();
+		this.disableBotonEliminar();
 		
 		/*No mostramos las validaciones*/
 		this.setearValidaciones(false);
@@ -1061,7 +1116,8 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		
 		
 		/*Verificamos que tenga permisos*/
-		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GRUPO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		boolean permisoEliminar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO, VariablesPermisos.OPERACION_BORRAR);
 		
 		if(permisoNuevoEditar){
 			
@@ -1069,6 +1125,9 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 			this.enableBotonAceptar();
 			this.disableBotonLectura();
 			this.enableBotonAgregarQuitar();
+			
+			if(permisoEliminar)
+				this.enableBotonEliminar();
 			
 			/*Dejamos los textfields que se pueden editar
 			 * en readonly = false asi  se pueden editar*/
@@ -1100,7 +1159,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 //		this.nroTrans.setValue("0");
 		
 		/*Chequeamos si tiene permiso de editar*/
-		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_COBRO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
 		
 		/*Mostramos o ocultamos los datos del Banco, dependiendo del combo tipo (banco, caja)*/
@@ -1114,6 +1173,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		}
 		
 		this.enableBotonAceptar();
+		this.enableBotonEliminar();
 		this.disableBotonLectura();
 		this.enableBotonAgregarQuitar();
 		this.lstDetalleAgregar = new ArrayList<IngresoCobroDetalleVO>();
@@ -1141,25 +1201,15 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 	{
 		/*Agregar control si se puede editar si el mes esta abierto*/
 		//TODO
-		this.comboTipo.setReadOnly(false);
-		
-		this.comboBancos.setReadOnly(false);
-		
-		this.comboCuentas.setReadOnly(false);
-		
 		this.fecDoc.setReadOnly(false);
-		
-		this.fecValor.setReadOnly(false);
-		
-		this.comboMPagos.setReadOnly(false);
 		
 		this.serieDocRef.setReadOnly(false);
 		
 		this.nroDocRef.setReadOnly(false);
 		
-		this.comboMoneda.setReadOnly(false);
-		
 		this.impTotMo.setReadOnly(false);
+		
+		this.impTotMo.setEnabled(false);
 		
 		this.referencia.setReadOnly(false);
 	}
@@ -1239,6 +1289,27 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		
 	}
 	
+	private void enableBotonEliminar()
+	{
+		if(operacion != Variables.OPERACION_NUEVO){
+			this.btnEliminar.setEnabled(true);
+			this.btnEliminar.setVisible(true);
+			this.botones.setWidth("270px");
+		}
+		else{
+			disableBotonEliminar();
+		}
+	}
+	
+	private void disableBotonEliminar()
+	{
+		this.btnEliminar.setEnabled(false);
+		this.btnEliminar.setVisible(false);
+		this.botones.setWidth("187px");
+		
+		
+	}
+	
 	/**
 	 * Dejamos todos los Fields readonly o no,
 	 * dado el boolenao pasado por parametro
@@ -1266,6 +1337,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		this.comboMoneda.setReadOnly(setear);
 		
 		this.impTotMo.setReadOnly(setear);
+		this.impTotMo.setEnabled(false);
 		
 		this.referencia.setReadOnly(setear);
 		
@@ -1696,7 +1768,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 			permisosAux = 
 					new UsuarioPermisosVO(this.permisos.getCodEmp(),
 							this.permisos.getUsuario(),
-							VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+							VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
 							VariablesPermisos.OPERACION_NUEVO_EDITAR);
 			
 			lstMonedas = this.controlador.getMonedas(permisosAux);
@@ -1708,6 +1780,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		
 		for (MonedaVO monedaVO : lstMonedas) {
 			
+			monedaVO = this.seteaCotizaciones(monedaVO);
 			monedasObj.addBean(monedaVO);
 			
 			if(cod != null){
@@ -1745,7 +1818,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 			permisosAux = 
 					new UsuarioPermisosVO(this.permisos.getCodEmp(),
 							this.permisos.getUsuario(),
-							VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+							VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
 							VariablesPermisos.OPERACION_NUEVO_EDITAR);
 			
 			/*Si se selacciona un banco buscamos las cuentas, de lo contrario no*/
@@ -1800,7 +1873,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 			permisosAux = 
 					new UsuarioPermisosVO(this.permisos.getCodEmp(),
 							this.permisos.getUsuario(),
-							VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+							VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
 							VariablesPermisos.OPERACION_NUEVO_EDITAR);
 			
 			lstBcos = this.controlador.getBcos(permisosAux);
@@ -2222,6 +2295,38 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 	public void setInfoLst(ArrayList<Object> lstDatos) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public MonedaVO seteaCotizaciones(MonedaVO monedaVO){
+		
+		UsuarioPermisosVO permisosAux;
+		permisosAux = 
+				new UsuarioPermisosVO(this.permisos.getCodEmp(),
+						this.permisos.getUsuario(),
+						VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
+						VariablesPermisos.OPERACION_LEER);
+		
+		Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
+		CotizacionVO cotiz;
+		if(monedaVO.isNacional()){
+			monedaNacional = monedaVO;
+		}
+		else if(fecha!=null){
+			
+			cotiz = new CotizacionVO();
+			
+			try {
+				
+				cotiz = this.controlador.getCotizacion(permisosAux, fecha, monedaVO.getCodMoneda());
+				monedaVO.setCotizacion(cotiz.getCotizacionVenta());
+			} 
+			catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
+					| InicializandoException | NoTienePermisosException e) {
+				// TODO Auto-generated catch block
+				Mensajes.mostrarMensajeError(e.getMessage().toString());
+			}
+		}
+		return monedaVO;
 	}
 	
 	

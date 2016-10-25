@@ -506,6 +506,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				
 				if(ingCobroVO.getDetalle().size() <= 0){
 					Mensajes.mostrarMensajeError("El cobro no tiene detalle");
+					return;
 				}
 				
 				 /*Obtenemos la moneda de la cuenta*/
@@ -1838,7 +1839,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		//this.comboMoneda = new ComboBox();
 		BeanItemContainer<MonedaVO> monedasObj = new BeanItemContainer<MonedaVO>(MonedaVO.class);
 		MonedaVO moneda = new MonedaVO();
-		
+		ArrayList<MonedaVO> lstMonedas = new ArrayList<MonedaVO>();
 		UsuarioPermisosVO permisosAux;
 		permisosAux = 
 				new UsuarioPermisosVO(this.permisos.getCodEmp(),
