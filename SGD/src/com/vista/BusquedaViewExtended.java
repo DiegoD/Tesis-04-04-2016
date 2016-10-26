@@ -313,6 +313,7 @@ public class BusquedaViewExtended extends BusquedaView{
 			grid.removeColumn("fechaMod");
 			grid.removeColumn("usuarioMod");
 			grid.removeColumn("operacion");
+			grid.removeColumn("tipo");
 			
 			
 			this.arreglarGrilla();
@@ -412,6 +413,7 @@ public class BusquedaViewExtended extends BusquedaView{
 			grid.removeColumn("codigoDoc");
 			grid.removeColumn("nombreDoc");
 			grid.removeColumn("numeroDoc");
+			grid.removeColumn("tipo");
 			
 		
 			this.arreglarGrilla();
@@ -419,7 +421,7 @@ public class BusquedaViewExtended extends BusquedaView{
 			
 		}
 		
-		if(seleccionado instanceof TitularVO){
+		if((seleccionado instanceof TitularVO) && !(seleccionado instanceof ClienteVO )){
 			
 			ArrayList<TitularVO> lstDoc = new ArrayList<>();
 			
@@ -855,6 +857,18 @@ public class BusquedaViewExtended extends BusquedaView{
 					        // (Re)create the filter if necessary
 					        if (! change.getText().isEmpty())
 					        	this.containerCliente.addContainerFilter(
+					                new SimpleStringFilter(pid,
+					                    change.getText(), true, false));
+				    	}
+				    	
+				    	else if(seleccionado instanceof TitularVO) /*PARA CLIENTES*/
+				    	{
+					    	// Can't modify filters so need to replace
+					    	this.containerTitulares.removeContainerFilters(pid);
+			
+					        // (Re)create the filter if necessary
+					        if (! change.getText().isEmpty())
+					        	this.containerTitulares.addContainerFilter(
 					                new SimpleStringFilter(pid,
 					                    change.getText(), true, false));
 				    	}

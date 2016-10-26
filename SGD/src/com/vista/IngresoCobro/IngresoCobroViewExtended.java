@@ -1114,6 +1114,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	{
 		/*Verificamos que tenga permisos para editar*/
 		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_COBRO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		boolean permisoEliminar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_COBRO, VariablesPermisos.OPERACION_BORRAR);
 		
 		/*Si tiene permisos de editar habilitamos el boton de 
 		 * edicion*/
@@ -1129,8 +1130,9 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		/*Deshabilitamos botn aceptar*/
 		this.disableBotonAceptar();
 		this.disableBotonAgregarQuitar();
-		this.disableBotonEliminar();
 		
+		if(permisoEliminar)
+			this.enableBotonEliminar();
 		
 		
 		
@@ -1168,7 +1170,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		
 		/*Verificamos que tenga permisos*/
 		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_COBRO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
-		boolean permisoEliminar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_COBRO, VariablesPermisos.OPERACION_BORRAR);
+		
 		
 		if(permisoNuevoEditar){
 			
@@ -1177,8 +1179,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			this.disableBotonLectura();
 			this.enableBotonAgregarQuitar();
 			
-			if(permisoEliminar)
-				this.enableBotonEliminar();
+			this.disableBotonEliminar();
 			
 			/*Dejamos los textfields que se pueden editar
 			 * en readonly = false asi  se pueden editar*/
@@ -1396,6 +1397,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		this.referencia.setReadOnly(setear);
 		
 		this.codTitular.setReadOnly(setear);
+		this.codTitular.setEnabled(false);
+		this.nomTitular.setEnabled(false);
 		
 		
 	}

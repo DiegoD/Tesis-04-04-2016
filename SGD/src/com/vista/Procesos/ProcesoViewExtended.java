@@ -552,7 +552,7 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 	{
 		/*Verificamos que tenga permisos para editar*/
 		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_PROCESOS, VariablesPermisos.OPERACION_NUEVO_EDITAR);
-		
+		boolean permisoBorrar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_PROCESOS, VariablesPermisos.OPERACION_BORRAR);
 		
 		/*Si tiene permisos de editar habilitamos el boton de 
 		 * edicion*/
@@ -565,9 +565,12 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 			this.disableBotonLectura();
 		}
 		
+		if(permisoBorrar)
+			this.enableBotonEliminar();
+		
 		/*Deshabilitamos botn aceptar*/
 		this.disableBotonAceptar();
-		this.disableBotonEliminar();
+		
 		
 		/*No mostramos las validaciones*/
 		this.setearValidaciones(false);
@@ -585,18 +588,14 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 	{
 		/*Seteamos el form en editar*/
 		this.operacion = Variables.OPERACION_EDITAR;
-		
+		this.disableBotonEliminar();
 		
 		/*Verificamos que tenga permisos*/
 		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_PROCESOS, VariablesPermisos.OPERACION_NUEVO_EDITAR);
-		boolean permisoBorrar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_PROCESOS, VariablesPermisos.OPERACION_BORRAR);
 		if(permisoNuevoEditar){
 			
 			/*Oculatamos Editar y mostramos el de guardar y de agregar formularios*/
 			this.enableBotonAceptar();
-			
-			if(permisoBorrar)
-				this.enableBotonEliminar();
 			
 			this.disableBotonLectura();
 
@@ -675,7 +674,9 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 		this.medio.setReadOnly(false);
 		this.descripcion.setReadOnly(false);
 		this.codCliente.setReadOnly(false);
+		this.codCliente.setEnabled(false);
 		this.nomCliente.setReadOnly(false);
+		this.nomCliente.setEnabled(false);
 		
 		this.comboMoneda.setEnabled(true);
 		this.comboDocumento.setEnabled(true);

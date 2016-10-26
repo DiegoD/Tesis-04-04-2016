@@ -947,6 +947,8 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 		this.referencia.setReadOnly(setear);
 		
 		this.codTitular.setReadOnly(setear);
+		this.codTitular.setEnabled(false);
+		this.nomTitular.setEnabled(false);
 	}
 	
 	/**

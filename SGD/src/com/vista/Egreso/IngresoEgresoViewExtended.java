@@ -39,6 +39,7 @@ import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
@@ -630,9 +631,10 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 					
 						GastoViewExtended form = new GastoViewExtended(Variables.OPERACION_NUEVO, this, titularVO);
 						
-						sub = new MySub("95%", "64%" );
+						sub = new MySub("100%","45%");
 						sub.setModal(true);
-						sub.setVista(form);
+						//sub.setVista(form);
+						sub.setVista((Component) form);
 						
 						sub.center();
 						
@@ -1066,6 +1068,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 	{
 		/*Verificamos que tenga permisos para editar*/
 		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		boolean permisoEliminar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO, VariablesPermisos.OPERACION_BORRAR);
 		
 		/*Si tiene permisos de editar habilitamos el boton de 
 		 * edicion*/
@@ -1081,7 +1084,10 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		/*Deshabilitamos botn aceptar*/
 		this.disableBotonAceptar();
 		this.disableBotonAgregarQuitar();
-		this.disableBotonEliminar();
+		
+		
+		if(permisoEliminar)
+			this.enableBotonEliminar();
 		
 		/*No mostramos las validaciones*/
 		this.setearValidaciones(false);
@@ -1117,7 +1123,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		
 		/*Verificamos que tenga permisos*/
 		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
-		boolean permisoEliminar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO, VariablesPermisos.OPERACION_BORRAR);
+		
 		
 		if(permisoNuevoEditar){
 			
@@ -1126,8 +1132,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 			this.disableBotonLectura();
 			this.enableBotonAgregarQuitar();
 			
-			if(permisoEliminar)
-				this.enableBotonEliminar();
+			this.disableBotonEliminar();
 			
 			/*Dejamos los textfields que se pueden editar
 			 * en readonly = false asi  se pueden editar*/
@@ -1345,7 +1350,9 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		
 		this.referencia.setReadOnly(setear);
 		
-		this.codTitular.setReadOnly(setear);
+		this.codTitular.setReadOnly(false);
+		this.codTitular.setEnabled(false);
+		this.nomTitular.setEnabled(false);
 	}
 	
 	/**

@@ -961,7 +961,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 	{
 		/*Verificamos que tenga permisos para editar*/
 		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GASTOS, VariablesPermisos.OPERACION_NUEVO_EDITAR);
-		
+		boolean permisoEliminar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GASTOS, VariablesPermisos.OPERACION_BORRAR);
 		
 		/*Si tiene permisos de editar habilitamos el boton de 
 		 * edicion*/
@@ -974,9 +974,12 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 			this.disableBotonLectura();
 		}
 		
+		if(permisoEliminar)
+			this.enableBotonEliminar();
+		
 		/*Deshabilitamos botn aceptar*/
 		this.disableBotonAceptar();
-		this.disableBotonEliminar();
+		
 		
 		/*No mostramos las validaciones*/
 		this.setearValidaciones(false);
@@ -994,18 +997,17 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 	{
 		/*Seteamos el form en editar*/
 		this.operacion = Variables.OPERACION_EDITAR;
-		
+		this.disableBotonEliminar();
 		
 		/*Verificamos que tenga permisos*/
 		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GASTOS, VariablesPermisos.OPERACION_NUEVO_EDITAR);
-		boolean permisoEliminar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GASTOS, VariablesPermisos.OPERACION_BORRAR);
+		
 		if(permisoNuevoEditar){
 			
 			/*Oculatamos Editar y mostramos el de guardar y de agregar formularios*/
 			this.enableBotonAceptar();
 			
-			if(permisoEliminar)
-				this.enableBotonEliminar();
+			
 			
 			this.disableBotonLectura();
 
