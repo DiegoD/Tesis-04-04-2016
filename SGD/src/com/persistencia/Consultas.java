@@ -1099,12 +1099,12 @@ public class Consultas {
 	
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("SELECT m_cuentas.cod_cuenta, m_cuentas.descripcion nom_cuenta, d_ingcobro.cod_emp, cod_docum, serie_docum, nro_docum, ");
-		sb.append("COALESCE(cod_proceso,0) cod_proceso, (SELECT COALESCE(descripcion,'Sin-Asignar') FROM c_procesos WHERE cod_proceso =d_ingcobro.cod_proceso AND cod_emp = d_ingcobro.cod_emp ) nom_proceso,  ");
+		sb.append("SELECT m_cuentas.cod_cuenta, m_cuentas.descripcion nom_cuenta, d_egrcobro.cod_emp, cod_docum, serie_docum, nro_docum, ");
+		sb.append("COALESCE(cod_proceso,0) cod_proceso, (SELECT COALESCE(descripcion,'Sin-Asignar') FROM c_procesos WHERE cod_proceso =d_egrcobro.cod_proceso AND cod_emp = d_egrcobro.cod_emp ) nom_proceso,  ");
 		sb.append("m_rubros.cod_rubro, m_rubros.descripcion nom_rubro, cuenta, fec_doc, fec_valor, m_monedas.cod_moneda, m_monedas.simbolo, m_monedas.descripcion nom_moneda ");
 		sb.append(", m_impuestos.cod_impuesto, m_impuestos.descripcion nom_impuesto, m_impuestos.porcentaje, imp_impu_mn,  ");
 		sb.append("imp_impu_mo, imp_sub_mn, imp_sub_mo, imp_tot_mn, imp_tot_mo, tc_mov, referencia,  ");
-		sb.append("referencia2, nro_trans, d_ingcobro.fecha_mod, d_ingcobro.usuario_mod, d_ingcobro.operacion, d_ingcobro.linea ");
+		sb.append("referencia2, nro_trans, d_egrcobro.fecha_mod, d_egrcobro.usuario_mod, d_egrcobro.operacion, d_egrcobro.linea ");
 		
 		
 		sb.append("FROM d_egrcobro, m_monedas, m_impuestos, m_rubros, m_cuentas  ");
@@ -1129,7 +1129,7 @@ public class Consultas {
 	
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("SELECT cod_docum, serie_docum, nro_docum, m_clientes.cod_tit, m_clientes.nom_tit, m_cuentas.cod_cuenta, m_cuentas.descripcion,  c_ingcobro.cod_emp, fec_doc,  ");
+		sb.append("SELECT cod_docum, serie_docum, nro_docum, m_clientes.cod_tit, m_clientes.nom_tit, m_cuentas.cod_cuenta, m_cuentas.descripcion,  c_egrcobro.cod_emp, fec_doc,  ");
 		sb.append("fec_valor, m_bancos.cod_bco, m_bancos.nom_bco, m_ctasbcos.cod_ctabco, m_ctasbcos.nom_cta, cod_mpago, cod_doc_ref, serie_doc_ref, nro_doc_ref,  ");
 		sb.append("m_monedas.cod_moneda, m_monedas.descripcion, m_monedas.simbolo, imp_tot_mn, imp_tot_mo, tc_mov, observaciones, nro_trans,  ");
 		sb.append("fecha_mod, usuario_mod, operacion, m_monedas.descripcion, m_monedas.simbolo ");

@@ -1137,6 +1137,10 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 			this.setearValidaciones(true);
 			
 			this.comboTipo.setReadOnly(false);
+			
+			this.titularVO.setCodigo(Integer.parseInt(codTitular.getValue()));
+			this.titularVO.setNombre(nomTitular.getValue());
+			this.titularVO.setTipo(tipo.getValue());
 		}
 		else{
 			
@@ -1920,7 +1924,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 			titularVO = (TitularVO) datos;
 			this.codTitular.setValue(String.valueOf(titularVO.getCodigo()));
 			this.nomTitular.setValue(titularVO.getNombre());
-			this.tipoTitular.setValue(titularVO.getTipo());
+			this.tipo.setValue(titularVO.getTipo());
 		}
 		
 	}
