@@ -1899,10 +1899,9 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 			/*Verificamos que no exista un cobro con el mismo numero*/
 			if(!this.egresoCobro.memberEgresoCobro(ing.getNroDocum(), codEmp, con))
 			{
-				/*Ingresamos el cobro*/
-				this.egresoCobro.insertarEgresoCobro(ing, con);
+			
 				
-				
+				int i = 0;
 				/*Para cada linea ingresamos el saldo*/
 				for (DocumDetalle docum : ing.getDetalle()) {
 				
@@ -1921,6 +1920,10 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 						
 						//Genero saldo del gasto 
 						this.saldos.insertarSaldo(docum, con);
+						
+						ing.getDetalle().get(i).setNroDocum(docum.getNroDocum());
+						
+						i++;
 					}
 					/*else if(docum.getCodDocum().equals("Proceso")) //Modificamos el saldo para el proceso ingresado
 					{
@@ -1929,6 +1932,7 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 					}
 					*/
 				}
+				
 				
 				/*Si el ingreso de cobro es con cheque, ingresamos el cheque*/
 				if(ingVO.getCodDocRef().equals("cheqemi")) 
@@ -1956,6 +1960,9 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 					 saldoCuenta.setImpTotMo(impMoCtaBco);
 				
 				this.saldosCuentas.insertarSaldoCuenta(saldoCuenta, con);
+				
+				/*Ingresamos el cobro*/
+				this.egresoCobro.insertarEgresoCobro(ing, con);
 				
 				con.commit();
 			}
@@ -2166,9 +2173,8 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 			/*Verificamos que no exista un egreso con el mismo numero*/
 			if(!this.egresoCobro.memberEgresoCobro(ing.getNroDocum(), ing.getCodEmp(), con))
 			{
-				/*Ingresamos el cobro*/
-				this.egresoCobro.insertarEgresoCobro(ing, con);
 				
+				int i = 0;
 				/*Para cada linea ingresamos el saldo*/
 				for (DocumDetalle docum : ing.getDetalle()) {
 				
@@ -2180,13 +2186,9 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 						//Genero saldo del gasto 
 						this.saldos.insertarSaldo(docum, con);
 					}
-					/*
-					else if(docum.getCodDocum().equals("Proceso")) //Modificamos el saldo para el proceso ingresado
-					{
-						//EL signo es 1 en proceso para que le agregue saldo al proceso
-						this.saldosProceso.modificarSaldo(docum, 1, ingVO.getTcMov(), con);
-					}
-					*/
+					ing.getDetalle().get(i).setNroDocum(docum.getNroDocum());
+					
+					i++;
 				}
 				
 				/*Si el ingreso de cobro es con cheque, ingresamos el cheque*/
@@ -2215,7 +2217,10 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 					saldoCuenta.setImpTotMo(impMoCtaBco);
 				
 				this.saldosCuentas.insertarSaldoCuenta(saldoCuenta, con);
-			
+				
+				/*Ingresamos el cobro*/
+				this.egresoCobro.insertarEgresoCobro(ing, con);
+				
 			}
 			else{
 				existe = true;
