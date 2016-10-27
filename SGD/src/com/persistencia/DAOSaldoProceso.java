@@ -10,7 +10,9 @@ import com.excepciones.Saldos.EliminandoSaldoException;
 import com.excepciones.Saldos.ExisteSaldoException;
 import com.excepciones.Saldos.IngresandoSaldoException;
 import com.excepciones.Saldos.ModificandoSaldoException;
+import com.google.gwt.thirdparty.javascript.jscomp.SourceMap.DetailLevel;
 import com.logica.Docum.DatosDocum;
+import com.logica.Docum.DocumDetalle;
 import com.mysql.jdbc.Statement;
 
 public class DAOSaldoProceso implements IDAOSaldosProc {
@@ -59,24 +61,34 @@ public class DAOSaldoProceso implements IDAOSaldosProc {
 		
     	String insert = clts.insertarSaldoProceso();
     	
+    	DocumDetalle detalle = (DocumDetalle) documento;
+    	
     	PreparedStatement pstmt1;
     	
     	try {
     		
 			pstmt1 =  con.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
 			
+//			1 cod_proceso, 2 cod_doca, 3 serie_doca, 4 nro_doca, 
+//		    5 cod_emp, 6 cod_moneda, 7 cod_tit, 
+//			8 imp_tot_mn, 9 imp_tot_mo, 10 cuenta, 11 nro_trans, 12 fec_doc, 13 fec_valor
 			
-			pstmt1.setString(1, documento.getCodDocum());
-			pstmt1.setString(2, documento.getSerieDocum());
-			pstmt1.setInt(3, documento.getNroDocum());
-			pstmt1.setString(4, documento.getCodEmp());
-			pstmt1.setString(5, documento.getMoneda().getCodMoneda());
-			pstmt1.setString(6, documento.getTitInfo().getCodigo());
-			pstmt1.setDouble(7, documento.getImpTotMn());
-			pstmt1.setDouble(8, documento.getImpTotMo());
-			pstmt1.setString(9, documento.getCodCuentaInd()); /*codigo del proceso*/
-			pstmt1.setString(10, documento.getUsuarioMod());
-			pstmt1.setString(11, documento.getOperacion());
+			
+			pstmt1.setString(1, detalle.getCodProceso());
+			pstmt1.setString(2, documento.getCodDocum());
+			pstmt1.setString(3, documento.getSerieDocum());
+			pstmt1.setInt(4, documento.getNroDocum());
+			pstmt1.setString(5, documento.getCodEmp());
+			pstmt1.setString(6, documento.getMoneda().getCodMoneda());
+			pstmt1.setString(7, documento.getTitInfo().getCodigo());
+			pstmt1.setDouble(8, documento.getImpTotMn());
+			pstmt1.setDouble(9, documento.getImpTotMo());
+			pstmt1.setString(10, documento.getCodCuentaInd()); /*codigo del proceso*/
+			pstmt1.setLong(11, documento.getNroTrans());
+			pstmt1.setTimestamp(12, documento.getFecDoc());
+			pstmt1.setTimestamp(13, documento.getFecValor());
+			pstmt1.setString(14, documento.getUsuarioMod());
+			pstmt1.setString(15, documento.getOperacion());
 			
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
@@ -96,11 +108,12 @@ public class DAOSaldoProceso implements IDAOSaldosProc {
 		ConsultasDD consultas = new ConsultasDD();
 		String eliminar = consultas.eliminarSaldoProceso();
 		PreparedStatement pstmt1;
+		DocumDetalle detalle = (DocumDetalle) documento;
 		
 		try {
 			
 			pstmt1 =  con.prepareStatement(eliminar);
-			pstmt1.setString(1, documento.getCodCuentaInd());
+			pstmt1.setString(1, detalle.getCodProceso());
 			pstmt1.setString(2, documento.getCodEmp());
 			pstmt1.setString(3, documento.getTitInfo().getCodigo());
 			

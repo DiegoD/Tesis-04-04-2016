@@ -1150,6 +1150,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		{
 			for (IngresoCobroDetalleVO detVO : this.lstDetalleVO) {
 				container.addBean(detVO);
+				GtoSaldoAux saldoAux =  new GtoSaldoAux(detVO.getNroDocum(), detVO.getImpTotMo());
+				this.saldoOriginalGastos.put(saldoAux.getNroDocum(),saldoAux);
 			}
 		}
 		this.actualizarGrillaContainer(container);
@@ -1261,7 +1263,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		this.nroDocRef.setReadOnly(false);
 		
 		this.impTotMo.setReadOnly(false);
-		
+		this.impTotMo.setEnabled(false);
 		this.impTotMo.setEnabled(false);
 		
 		this.referencia.setReadOnly(false);
@@ -1391,7 +1393,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		
 		this.comboMoneda.setReadOnly(setear);
 		
-		this.impTotMo.setReadOnly(setear);
+		this.impTotMo.setReadOnly(false);
 		this.impTotMo.setEnabled(false);
 		
 		this.referencia.setReadOnly(setear);
@@ -1470,6 +1472,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		{
 			for (IngresoCobroDetalleVO det : this.lstDetalleVO) {
 				container.addBean(det);
+				GtoSaldoAux saldoAux =  new GtoSaldoAux(det.getNroDocum(), det.getImpTotMo());
+				this.saldoOriginalGastos.put(saldoAux.getNroDocum(),saldoAux);
 			}
 		}
 
@@ -1786,6 +1790,11 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		    	gtoSaldo = saldoOriginalGastos.get(formSelecccionado.getNroDocum());
 		    	
 	  		}
+	      	else if(formSelecccionado != null && (formSelecccionado.getSerieDocum() == "Proc")){
+	      		
+	      		IngresoCobroDetalleVO aux = obtenerGastoEnLista(formSelecccionado.getNroDocum());
+		    	gtoSaldo = saldoOriginalGastos.get(formSelecccionado.getNroDocum());
+	      	}
       }
 
       @Override
@@ -1795,7 +1804,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
     	  IngresoCobroDetalleVO aux2 = obtenerGastoEnLista(formSelecccionado.getNroDocum());
     	  
     	  /*Verifico si es a cuenta de proceso no tiene saldo*/
-    	  if(aux2.getSerieDocum() != "Proc"){
+    	  if(!aux2.getCodDocum().equals("Proc")){
     	
     		  /*Si el importe modificado es mayor al saldo no dejamos modificar*/
 			  if(aux2.getImpTotMo()> gtoSaldo.getSaldo())
@@ -2161,6 +2170,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	 */
 	public void setLstDetalle(ArrayList<IngresoCobroDetalleVO> lst)
 	{
+		
 		this.lstDetalleVO = lst;
 		
 		/*Seteamos la grilla con los formularios*/
@@ -2172,6 +2182,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		{
 			for (IngresoCobroDetalleVO det : this.lstDetalleVO) {
 				container.addBean(det); /*Lo agregamos a la grilla*/
+				GtoSaldoAux saldoAux =  new GtoSaldoAux(det.getNroDocum(), det.getImpTotMo());
+				this.saldoOriginalGastos.put(saldoAux.getNroDocum(),saldoAux);
 			}
 		}
 
@@ -2290,6 +2302,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		this.actualizarGrillaContainer(container);
 		
 		/*Calculamos el importe total de todos los gastos*/
+		
 		this.calcularImporteTotal();
 		
 	}

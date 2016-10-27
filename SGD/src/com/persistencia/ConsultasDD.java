@@ -1425,9 +1425,9 @@ public class ConsultasDD {
 		
 		sb.append("INSERT INTO sa_proceso ( cod_proceso,cod_doca, serie_doca, nro_doca, "
 		+ " cod_emp, cod_moneda, cod_tit, "
-		+ " imp_tot_mn, imp_tot_mo, cuenta, nro_trans, fec_doc, fec_valor, "
+		+ " imp_tot_mn, imp_tot_mo, cod_cta, nro_trans, fec_doc, fec_valor, "
 		+ " fecha_mod, usuario_mod, operacion ) ");
-		sb.append("VALUES ( ?,?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?) ");
+		sb.append("VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?) ");
 		
 		return sb.toString();
 	}
@@ -1450,7 +1450,7 @@ public class ConsultasDD {
 		
 		sb.append("DELETE FROM sa_proceso ");
 		sb.append("WHERE cod_proceso = ? "
-		+ "cod_emp = ? AND cod_tit = ? ");
+		+ "AND cod_emp = ? AND cod_tit = ? ");
 		
 		return sb.toString();
 	}		

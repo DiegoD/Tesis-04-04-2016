@@ -1704,6 +1704,8 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		
 		
 	lstGastos.getEditorFieldGroup().addCommitHandler(new FieldGroup.CommitHandler() {
+		
+		
 		IngresoCobroDetalleVO aux;
 		GtoSaldoAux gtoSaldo;
 		

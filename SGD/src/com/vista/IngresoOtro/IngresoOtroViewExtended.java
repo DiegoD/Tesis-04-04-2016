@@ -437,6 +437,7 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 				}
 					
 				ingCobroVO.setCodCuenta("otrcobro");
+				ingCobroVO.setCodDocum("otrcobro");
 
 				if(this.operacion.equals(Variables.OPERACION_NUEVO))	
 				{	
