@@ -911,11 +911,49 @@ public class Consultas {
 		sb.append("ON c_ingcobro.cod_bco = m_bancos.cod_bco  ");
 		sb.append("AND c_ingcobro.cod_emp = m_bancos.cod_emp  "); 
 		 
-		sb.append("WHERE c_ingcobro.cod_emp = ? "); 
+		sb.append("WHERE c_ingcobro.cod_emp = ?  AND c_ingcobro.cod_docum = 'ingcobro' "); 
 		
 		return sb.toString();
 	}
 
+public String getIngresoCobroCabTodosOtros(){
+		
+		StringBuilder sb = new StringBuilder();
+		 
+		sb.append("SELECT cod_docum, serie_docum, nro_docum, m_titulares.cod_tit, m_titulares.nom_tit ");
+		sb.append(",c_ingcobro.cod_emp, fec_doc, fec_valor, COALESCE(m_bancos.cod_bco,'0') cod_bco ");
+		sb.append(", COALESCE(m_bancos.nom_bco,'0') nom_bco, COALESCE(m_ctasbcos.cod_ctabco,'0') cod_ctabco");
+		sb.append(", COALESCE(m_ctasbcos.nom_cta,'0') nom_cta, COALESCE(cod_mpago,'0') cod_mpago, cod_doc_ref, serie_doc_ref ");
+		sb.append(", nro_doc_ref,	m_monedas.cod_moneda, m_monedas.descripcion, m_monedas.simbolo, imp_tot_mn ");
+		sb.append(", imp_tot_mo, tc_mov, observaciones, nro_trans, c_ingcobro.fecha_mod, c_ingcobro.usuario_mod ");
+		sb.append(", c_ingcobro.operacion, m_monedas.descripcion, m_monedas.simbolo, c_ingcobro.cod_cuenta   "); 
+		sb.append("	FROM c_ingcobro ");
+	
+		sb.append("INNER JOIN m_monedas "); 
+	 	sb.append("ON c_ingcobro.cod_moneda = m_monedas.cod_moneda  ");
+		sb.append("AND c_ingcobro.cod_emp = m_monedas.cod_emp  ");
+	
+		sb.append("INNER JOIN m_titulares ");
+	
+		sb.append("ON c_ingcobro.cod_emp = m_titulares.cod_emp ");  
+		sb.append("AND c_ingcobro.cod_tit = m_titulares.cod_tit  ");
+	
+  		
+		sb.append("LEFT JOIN  m_ctasbcos "); 
+		sb.append("ON c_ingcobro.cod_emp = m_ctasbcos.cod_emp ");  
+		sb.append("AND c_ingcobro.cod_ctabco = m_ctasbcos.cod_ctabco ");  
+		sb.append("AND c_ingcobro.cod_bco = m_ctasbcos.cod_bco ");  
+	
+		sb.append("LEFT JOIN m_bancos ");
+	
+		sb.append("ON c_ingcobro.cod_bco = m_bancos.cod_bco  ");
+		sb.append("AND c_ingcobro.cod_emp = m_bancos.cod_emp  "); 
+		 
+		sb.append("WHERE c_ingcobro.cod_emp = ? AND c_ingcobro.cod_docum = 'otrcobro' "); 
+		
+		return sb.toString();
+	}
+	
 	public String getIngresoCobroDetxTrans(){
 		
 		StringBuilder sb = new StringBuilder();

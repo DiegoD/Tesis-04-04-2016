@@ -1316,6 +1316,50 @@ public ArrayList<IngresoCobroVO> getIngresoCobroTodos(String codEmp) throws Obte
 	return lstVO;
 }	 
 
+/**
+*Nos retorna los ingreso de cobro del sistema para la empresa
+ * 
+*
+*/
+@SuppressWarnings("unchecked") 
+public ArrayList<IngresoCobroVO> getIngresoCobroTodosOtro(String codEmp) throws ObteniendoIngresoCobroException, ConexionException {
+	
+	Connection con = null;
+	
+	ArrayList<IngresoCobro> lst;
+	ArrayList<IngresoCobroVO> lstVO = new ArrayList<IngresoCobroVO>();
+	
+	try
+	{
+		con = this.pool.obtenerConeccion();
+		
+		lst = this.ingresoCobro.getIngresoCobroTodosOtro(con, codEmp); 
+		
+		for (IngresoCobro ing : lst) 
+		{
+			IngresoCobroVO aux = ing.retornarIngresoCobroVO();
+			
+
+			
+			lstVO.add(aux);
+		}
+	
+	}catch(ObteniendoIngresoCobroException  e)
+	{
+		throw e;
+	
+	} catch (ConexionException e) {
+	
+		throw e;
+	} 
+	finally
+	{
+		this.pool.liberarConeccion(con);
+	}
+	
+	
+	return lstVO;
+}	
 
 
 public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws InsertandoIngresoCobroException, ConexionException, ExisteIngresoCobroException{
@@ -1354,6 +1398,10 @@ public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 		if(!this.ingresoCobro.memberIngresoCobro(ing.getNroDocum(), codEmp, con))
 		{
 			/*Ingresamos el cobro*/
+			
+			if(ing.getDetalle().size()< 1) /*Si no tiene detalle es otro cobro*/
+				ing.setCodDocum("otrcobro");
+				
 			this.ingresoCobro.insertarIngresoCobro(ing, con);
 			
 			if(ing.getDetalle().size()> 0) /*Si tiene detalle porque viene del ingreso cobro, de lo contrario

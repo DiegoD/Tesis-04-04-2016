@@ -10,6 +10,7 @@ import java.util.Locale;
 
 import com.controladores.BancoControlador;
 import com.controladores.IngresoCobroControlador;
+import com.controladores.IngresoCobroOtroControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.InicializandoException;
 import com.excepciones.NoTienePermisosException;
@@ -25,33 +26,28 @@ import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.server.VaadinService;
-import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.valueObject.UsuarioPermisosVO;
-import com.valueObject.IngresoCobro.IngresoCobroDetalleVO;
 import com.valueObject.IngresoCobro.IngresoCobroVO;
-import com.valueObject.banco.BancoVO;
 import com.vista.Mensajes;
 import com.vista.MySub;
 import com.vista.PermisosUsuario;
 import com.vista.Variables;
 import com.vista.VariablesPermisos;
-import com.vista.Bancos.BancoViewExtended;
-import com.vista.Bancos.BancosPanelExtended;
 
 public class IngresoOtroPanelExtended extends IngresoOtroPanel{
 	
 	private IngresoOtroViewExtended form; 
 	private ArrayList<IngresoCobroVO> lstIngresoCobro; /*Lista con los cobros*/
 	private BeanItemContainer<IngresoCobroVO> container;
-	private IngresoCobroControlador controlador;
+	private IngresoCobroOtroControlador controlador;
 	PermisosUsuario permisos;
 	MySub sub = new MySub("60%","75%");
 	
 	public IngresoOtroPanelExtended(){
 		
-		controlador = new IngresoCobroControlador();
+		controlador = new IngresoCobroOtroControlador();
 		this.lstIngresoCobro = new ArrayList<IngresoCobroVO>();
 		
 		String usuario = (String)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("usuario");
@@ -59,7 +55,7 @@ public class IngresoOtroPanelExtended extends IngresoOtroPanel{
 		
 			
         /*Verificamos que el usuario tenga permisos de lectura para mostrar la vista*/
-		boolean permisoLectura = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_COBRO, VariablesPermisos.OPERACION_LEER);
+		boolean permisoLectura = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_COBRO_OTRO, VariablesPermisos.OPERACION_LEER);
 		
 		if(permisoLectura){
         
@@ -68,7 +64,7 @@ public class IngresoOtroPanelExtended extends IngresoOtroPanel{
 				this.inicializarGrilla();
 				
 				/*Para el boton de nuevo, verificamos que tenga permisos de nuevoEditar*/
-				boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_COBRO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+				boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_COBRO_OTRO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 				if(permisoNuevoEditar)
 				{
 				
@@ -182,7 +178,7 @@ public class IngresoOtroPanelExtended extends IngresoOtroPanel{
 			UsuarioPermisosVO permisoAux = 
 					new UsuarioPermisosVO(this.permisos.getCodEmp(),
 							this.permisos.getUsuario(),
-							VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+							VariablesPermisos.FORMULARIO_INGRESO_COBRO_OTRO,
 							VariablesPermisos.OPERACION_LEER);
 
 			

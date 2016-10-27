@@ -6,12 +6,9 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.List;
 
-import com.controladores.IngresoCobroControlador;
 import com.controladores.IngresoCobroOtroControlador;
 import com.excepciones.ConexionException;
-import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
 import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
@@ -24,43 +21,22 @@ import com.excepciones.IngresoCobros.ModificandoIngresoCobroException;
 import com.excepciones.IngresoCobros.NoExisteIngresoCobroException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
 import com.excepciones.clientes.ObteniendoClientesException;
-import com.sun.org.apache.xpath.internal.operations.Variable;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
-import com.vaadin.data.fieldgroup.FieldGroup;
-import com.vaadin.data.fieldgroup.FieldGroup.CommitEvent;
-import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
-import com.vaadin.data.fieldgroup.FieldGroup.CommitHandler;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.data.util.filter.SimpleStringFilter;
-import com.vaadin.data.validator.RegexpValidator;
 import com.vaadin.data.validator.StringLengthValidator;
-import com.vaadin.event.FieldEvents.BlurEvent;
-import com.vaadin.event.FieldEvents.BlurListener;
-import com.vaadin.event.SelectionEvent;
-import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.Grid.Column;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
-import com.valueObject.DocumDGIVO;
-import com.valueObject.FormularioVO;
-import com.valueObject.GrupoVO;
 import com.valueObject.MonedaVO;
-import com.valueObject.TipoInCobVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.Cotizacion.CotizacionVO;
-import com.valueObject.Docum.DocumDetalleVO;
-import com.valueObject.Gasto.GastoVO;
 import com.valueObject.Gasto.GtoSaldoAux;
 import com.valueObject.IngresoCobro.IngresoCobroDetalleVO;
 import com.valueObject.IngresoCobro.IngresoCobroVO;
 import com.valueObject.banco.BancoVO;
 import com.valueObject.banco.CtaBcoVO;
 import com.valueObject.cliente.ClienteVO;
-import com.valueObject.proceso.ProcesoVO;
 import com.vista.BusquedaViewExtended;
 import com.vista.IBusqueda;
 import com.vista.Mensajes;
@@ -460,7 +436,7 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 					ingCobroVO.setNroTrans(0);
 				}
 					
-				ingCobroVO.setCodCuenta("ingcobro");
+				ingCobroVO.setCodCuenta("otrcobro");
 
 				if(this.operacion.equals(Variables.OPERACION_NUEVO))	
 				{	

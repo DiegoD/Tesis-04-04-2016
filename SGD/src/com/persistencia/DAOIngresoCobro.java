@@ -108,6 +108,88 @@ public class DAOIngresoCobro implements IDAOIngresoCobro{
 	}
 	
 	/**
+	 * Nos retorna una lista con todos los ingresos de cobro del sistema para la emrpesa
+	 */
+	public ArrayList<IngresoCobro> getIngresoCobroTodosOtro(Connection con, String codEmp) throws ObteniendoIngresoCobroException, ConexionException {
+		
+		ArrayList<IngresoCobro> lst = new ArrayList<IngresoCobro>();
+	
+		try {
+			//
+	    	Consultas clts = new Consultas();
+	    	String query = clts.getIngresoCobroCabTodosOtros(); 
+	    	PreparedStatement pstmt1 = con.prepareStatement(query);
+	    	
+	    	ResultSet rs;
+	    	
+	    	pstmt1.setString(1, codEmp);
+			rs = pstmt1.executeQuery();
+			
+			IngresoCobro aux;
+			
+			while(rs.next ()) {
+							
+				aux = new IngresoCobro();
+				
+				aux.setCodCuentaInd(rs.getString("cod_cuenta")); /*El cabezal de ingreso cobro solamente tiene la cuenta interna*/
+				
+				aux.setCuenta(new CuentaInfo(aux.getCodCuentaInd(), "Ingreso Cobro"));
+				
+				aux.setFecDoc(rs.getTimestamp("fec_doc"));
+				aux.setCodDocum(rs.getString("cod_docum"));
+				aux.setSerieDocum(rs.getString("serie_docum"));
+				aux.setNroDocum(rs.getInt("nro_docum"));
+				aux.setCodEmp(rs.getString("cod_emp"));
+				
+				aux.setMoneda(new MonedaInfo(rs.getString("cod_moneda"), rs.getString("descripcion"), rs.getString("simbolo")));
+				
+				aux.setReferencia(rs.getString("observaciones"));
+				aux.setTitInfo(new TitularInfo(rs.getString("cod_tit"), rs.getString("nom_tit")));
+				aux.setNroTrans(rs.getLong("nro_trans"));
+				aux.setmPago(rs.getString("cod_mpago"));
+				aux.setCodDocRef(rs.getString("cod_doc_ref"));
+				aux.setSerieDocRef(rs.getString("serie_doc_ref"));
+				aux.setNroDocRef(rs.getInt("nro_doc_ref"));
+				
+				aux.setBancoInfo(new BancoInfo(rs.getString("cod_bco"), rs.getString("nom_bco")));
+				
+				aux.setCuentaBcoInfo(new CuentaBcoInfo(rs.getString("cod_ctabco"), rs.getString("nom_cta")));
+				
+				//aux.setCuentaInfo(new CuentaInfo(rs.getString("cod_cuenta"), rs.getString("nom_cuenta")));
+				
+				
+				aux.setFecValor(rs.getTimestamp("fec_valor"));
+				
+				aux.setImpTotMn(rs.getDouble("imp_tot_mn"));
+				aux.setImpTotMo(rs.getDouble("imp_tot_mo"));
+				aux.setTcMov(rs.getDouble("tc_mov"));
+				
+				aux.setFechaMod(rs.getTimestamp("fecha_mod"));
+				aux.setUsuarioMod(rs.getString("usuario_mod"));
+				aux.setOperacion(rs.getString("operacion"));
+				
+				
+				/*Obtenemos las lineas de la transaccion*/				
+				aux.setDetalle(this.getIngresoCobroLineaxTrans(con,aux));
+				
+				
+				lst.add(aux);
+				
+			}
+			rs.close ();
+			pstmt1.close ();
+    	}	
+    	
+		
+		catch (SQLException e) {
+			throw new ObteniendoIngresoCobroException();
+			
+		}
+    	
+    	return lst;
+	}
+	
+	/**
 	 * Dado el nro Valida si existe
 	 */
 	public boolean memberIngresoCobro(int nroDocum, String codEmp, Connection con) throws ExisteIngresoCobroException, ConexionException{

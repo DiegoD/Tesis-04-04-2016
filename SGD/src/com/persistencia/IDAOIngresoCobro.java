@@ -19,4 +19,5 @@ public interface IDAOIngresoCobro {
 	public void insertarIngresoCobro(IngresoCobro cobro, Connection con) throws InsertandoIngresoCobroException, ConexionException;
 	//public ArrayList<IngresoCobroLinea> getIngresoCobroLineaxTrans(Connection con, String codEmp, long nroTrans) throws ObteniendoIngresoCobroException, ConexionException;
 	public void eliminarIngresoCobro(IngresoCobro ing, Connection con)throws InsertandoIngresoCobroException, ConexionException, EliminandoIngresoCobroException ;
+	public ArrayList<IngresoCobro> getIngresoCobroTodosOtro(Connection con, String codEmp) throws ObteniendoIngresoCobroException, ConexionException ;
 }

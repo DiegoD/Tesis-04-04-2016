@@ -21,7 +21,7 @@ public class IngresoCobroOtroControlador extends IngresoCobroControlador{
 	{
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			return Fachada.getInstance().getIngresoCobroTodos(permisos.getCodEmp());
+			return Fachada.getInstance().getIngresoCobroTodosOtro(permisos.getCodEmp());
 		else
 			throw new NoTienePermisosException();
     }
