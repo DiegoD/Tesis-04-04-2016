@@ -18,6 +18,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.valueObject.FormularioVO;
 import com.vista.Documentos.DocumentosPanelExtended;
 import com.vista.Egreso.IngresoEgresoPanelExtended;
+import com.vista.EgresoOtro.IngresoEgresoOtroPanelExtended;
 //import com.vista.Clientes.ClienteView;
 import com.vista.Bancos.BancosPanelExtended;
 import com.vista.Clientes.ClientesPanelExtended;
@@ -504,7 +505,25 @@ public class MenuExtended extends Menu{
 				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 			}
 		});
+		
+		this.otroEgreso.addClickListener(click -> {
+			
+			setSizeFull();
+			
+			this.content.removeAllComponents();
+			try {
+				
+				IngresoEgresoOtroPanelExtended u = new IngresoEgresoOtroPanelExtended(); 
+				this.content.addComponent(u);
+				
+			} catch (Exception e) {
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}
+		});
+	
+		
 	}
+	
 	
 	
 	
@@ -563,6 +582,7 @@ public class MenuExtended extends Menu{
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_INGRESO_COBRO) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_INGRESO_COBRO_OTRO) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_INGRESO_EGRESO) ||
+				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_INGRESO_EGRESO_OTRO) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_RUBROS))
 			{
 				lstFormsMenuMant.add(formularioVO);

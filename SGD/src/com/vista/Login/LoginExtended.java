@@ -20,7 +20,9 @@ import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewDisplay;
 import com.vaadin.server.Page;
+import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinService;
+import com.vaadin.ui.Image;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import com.valueObject.EmpLoginVO;
@@ -50,6 +52,16 @@ public class LoginExtended extends Login implements ViewDisplay {
 		this.tfUsuario.focus();
 		this.btnIngresar.setClickShortcut(KeyCode.ENTER);
 		
+		ThemeResource resource = new ThemeResource("Icons/logo.png");
+
+		
+		// Use the resource
+		// Use the resource
+		Image image = new Image("", resource); 
+		image.setHeight("10%");
+		image.setWidth("15%");
+		
+		this.layout.addComponent(image);
 		
 		this.btnIngresar.addClickListener(click -> {
 			
