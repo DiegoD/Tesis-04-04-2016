@@ -1579,6 +1579,18 @@ public String eliminarSaldoCuenta(){
 		return sb.toString();
 	}
 	
+	public String getTitularesActivosFuncionarios()
+	{
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT m_titulares.cod_tit, m_titulares.nom_tit, m_titulares.cod_docdgi, m_titulares.nro_dgi, m_titulares.tipo, "
+				+ "m_titulares.nro_dgi, m_titulares.cod_emp, m_documdgi.nombre ");
+		sb.append("FROM m_titulares, m_documdgi WHERE m_titulares.cod_emp = ? and m_titulares.activo = 1 "
+				+ "and m_documdgi.cod_docdgi = m_titulares.cod_docdgi and m_titulares.tipo = 'funcionario' ");
+
+		return sb.toString();
+	}
+	
 ////////////////////////FNI TITULARES///////////////////////////////////////////////
 	
 }

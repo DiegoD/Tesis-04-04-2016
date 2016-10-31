@@ -3056,5 +3056,46 @@ public class FachadaDD {
     	
     	return lstTitularesVO;
     }	 
+    
+    public ArrayList<TitularVO> getTitularesActivosFuncionarios(String codEmp) throws ObteniendoTitularesException, ConexionException {
+    	
+    	Connection con = null;
+    	
+    	ArrayList<Titular> lstTitulares;
+    	ArrayList<TitularVO> lstTitularesVO = new ArrayList<TitularVO>();
+    	    	
+    	try
+    	{
+    		con = this.pool.obtenerConeccion();
+    		
+    		lstTitulares = this.titulares.getTitularesActivosFuncioanrios(con, codEmp);
+    		
+    		
+    		TitularVO aux;
+    		for (Titular titular : lstTitulares) 
+			{
+    			aux = new TitularVO();
+    			
+    			aux = titular.retornarTitularVO();
+
+    			lstTitularesVO.add(aux);
+			}
+	
+    	}catch(ObteniendoTitularesException  e)
+    	{
+    		throw e;
+    		
+    	} catch (ConexionException e) {
+			
+    		throw e;
+    	} 
+    	finally
+    	{
+    		this.pool.liberarConeccion(con);
+    	}
+    	    
+    	
+    	return lstTitularesVO;
+    }	 
 /////////////////////////////////FNI-TITULARES/////////////////////////////////
 }

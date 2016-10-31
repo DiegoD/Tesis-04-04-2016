@@ -1702,6 +1702,16 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 					}
 					else if(docum.getCodDocum().equals("Proc")) /*Modificamos el saldo para el proceso ingresado*/
 					{
+						
+						docum.setCodDocum(ing.getCodDocum());
+						docum.setSerieDocum(ing.getSerieDocum());
+						docum.setNroDocum(ing.getNroDocum());
+						docum.setTitInfo(ing.getTitInfo());
+						docum.setNroTrans(ing.getNroTrans());
+						docum.setFecDoc(ing.getFecDoc());
+						docum.setFecValor(ing.getFecValor());
+						docum.setCodEmp(ing.getCodEmp());
+						
 						/*EL signo es 1 en proceso para que le agregue saldo al proceso*/
 						this.saldosProceso.modificarSaldo(docum, 1, ingVO.getTcMov(), con);
 					}

@@ -29,11 +29,12 @@ public class DAOSaldoProceso implements IDAOSaldosProc {
 			
 			ConsultasDD consultas = new ConsultasDD ();
 			String query = consultas.memberSaldoProceso();
+			DocumDetalle detalle = (DocumDetalle) docum;
 			
 			
 			PreparedStatement pstmt1 = con.prepareStatement(query);
 			
-			pstmt1.setString(1, docum.getCodCuentaInd()); /*Es el codigo del proceso*/
+			pstmt1.setString(1, detalle.getCodProceso()); /*Es el codigo del proceso*/
 			pstmt1.setString(2, docum.getCodEmp());
 			pstmt1.setString(3, docum.getTitInfo().getCodigo());
 			
@@ -142,6 +143,8 @@ public class DAOSaldoProceso implements IDAOSaldosProc {
 			 * si existe eliminamos e insertamos con la nueva info*/
 			if(this.memberSaldo(documento, con))
 			{
+				
+				
 				/*Obtenemos primero el saldo anterior*/
 				saldoAnteriorMO = this.getSaldo(documento, con);
 				
@@ -188,8 +191,9 @@ public class DAOSaldoProceso implements IDAOSaldosProc {
 		
 		try {
 			PreparedStatement pstmt1 = con.prepareStatement(query);
+			DocumDetalle detalle = (DocumDetalle) docum;
 			
-			pstmt1.setString(1, docum.getCodCuentaInd());
+			pstmt1.setString(1, detalle.getCodProceso());
 			pstmt1.setString(2, docum.getCodEmp());
 			pstmt1.setString(3, docum.getTitInfo().getCodigo());
 			

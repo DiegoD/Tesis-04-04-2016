@@ -6,9 +6,11 @@
  <body> 
   <vaadin-vertical-layout size-full margin-left> 
    <vaadin-form-layout height="100px" margin-bottom="false"> 
-    <vaadin-label style-name="colored h2" responsive id="lblNombre" plain-text _id="lblNombre" :center>
-      Label 
-    </vaadin-label> 
+    <vaadin-horizontal-layout width="845px" height="42px" :middle :right> 
+     <vaadin-label style-name="colored h2" responsive id="lblNombre" plain-text _id="lblNombre" :center>
+       Label 
+     </vaadin-label> 
+    </vaadin-horizontal-layout> 
    </vaadin-form-layout> 
    <vaadin-panel size-full :expand="95"> 
     <vaadin-grid width-full height="99.78%" _id="grid"></vaadin-grid> 

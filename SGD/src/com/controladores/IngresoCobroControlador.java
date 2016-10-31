@@ -68,6 +68,21 @@ public class IngresoCobroControlador {
 	}
 	
 	/**
+	 * Elimina un cobro 
+	 * @throws NoExisteIngresoCobroException 
+	 */
+	public void eliminarIngresoCobro(IngresoCobroVO ingVO, UsuarioPermisosVO permisos) throws InsertandoIngresoCobroException, ConexionException, ExisteIngresoCobroException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, NoExisteIngresoCobroException 
+	{
+		
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			Fachada.getInstance().eliminarIngresoCobro(ingVO, permisos.getCodEmp());
+		else
+			throw new NoTienePermisosException();
+		
+	}
+	
+	/**
 	 * Modifica los datos de un cobro
 	 * @throws NoExisteIngresoCobroException 
 	 */
@@ -137,7 +152,7 @@ public class IngresoCobroControlador {
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			return FachadaDD.getInstance().getTitularesActivos(permisos.getCodEmp());
+			return FachadaDD.getInstance().getTitularesActivosFuncionarios(permisos.getCodEmp());
 		else
 			throw new NoTienePermisosException();
 	}

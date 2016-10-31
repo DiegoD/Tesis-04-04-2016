@@ -59,4 +59,46 @@ public class DAOTitulares implements IDAOTitulares{
 
     	return lstTitulares;
     }
+    
+    public ArrayList<Titular> getTitularesActivosFuncioanrios(Connection con, String codEmp) throws ObteniendoTitularesException, ConexionException {
+    	
+    	ArrayList<Titular> lstTitulares = new ArrayList<Titular>();
+    	
+    	try {
+			
+	    	ConsultasDD clts = new ConsultasDD();
+	    	String query = clts.getTitularesActivosFuncionarios();
+	    	PreparedStatement pstmt1 = con.prepareStatement(query);
+	    	
+	    	ResultSet rs;
+	    	
+	    	pstmt1.setString(1, codEmp);
+			rs = pstmt1.executeQuery();
+			
+			Titular aux;
+			Documento doc;
+			while(rs.next ()) {
+				
+				aux = new Titular();
+				
+				aux.setCodigo(rs.getInt("cod_tit"));
+				aux.setNombre(rs.getString("nom_tit"));
+				aux.setDocumento(new Documento(rs.getString("cod_docdgi"), rs.getString("m_documdgi.nombre"), rs.getString("nro_dgi")));
+				aux.setTipo(rs.getString("tipo").toUpperCase());
+				
+							
+				lstTitulares.add(aux);
+				
+			}
+			rs.close ();
+			pstmt1.close ();
+    	}	
+    	
+		catch (SQLException e) {
+			throw new ObteniendoTitularesException();
+			
+		}
+
+    	return lstTitulares;
+    }
 }
