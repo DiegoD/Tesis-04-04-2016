@@ -33,4 +33,15 @@
   @include valo;
 
   // Insert your own theme rules here
+  
+  //Tamaño de fuente de grilla 
+  .v-grid-cell {
+    font-size: 11px;
+}
+
+//Tamaño de fuente de grilla  header y footer 
+.v-grid-header th, .v-grid-footer td {
+  font-size: 12px;
+}
+  
 }
