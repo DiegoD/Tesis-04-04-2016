@@ -9,6 +9,7 @@ import java.util.Hashtable;
 import java.util.List;
 
 import com.controladores.IngresoEgresoControlador;
+import com.controladores.IngresoEgresoOtroControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
@@ -78,7 +79,7 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 	 */
 	private static final long serialVersionUID = 1L;
 	private BeanFieldGroup<IngresoCobroVO> fieldGroup;
-	private IngresoEgresoControlador controlador;
+	private IngresoEgresoOtroControlador controlador;
 	private String operacion;
 	private IngresoEgresoOtroPanelExtended mainView;
 	BeanItemContainer<IngresoCobroDetalleVO> container;
@@ -607,7 +608,7 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 
 	public  void inicializarForm(){
 		
-		this.controlador = new IngresoEgresoControlador();
+		this.controlador = new IngresoEgresoOtroControlador();
 					
 		this.fieldGroup =  new BeanFieldGroup<IngresoCobroVO>(IngresoCobroVO.class);
 		

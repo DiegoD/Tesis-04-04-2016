@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import com.controladores.IngresoEgresoControlador;
+import com.controladores.IngresoEgresoOtroControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.InicializandoException;
 import com.excepciones.NoTienePermisosException;
@@ -42,13 +43,13 @@ public class IngresoEgresoOtroPanelExtended extends IngresoEgresoOtroPanel{
 	private IngresoEgresoOtroViewExtended form; 
 	private ArrayList<IngresoCobroVO> lstEgresos; /*Lista con los cobros*/
 	private BeanItemContainer<IngresoCobroVO> container;
-	private IngresoEgresoControlador controlador;
+	private IngresoEgresoOtroControlador controlador;
 	PermisosUsuario permisos;
 	MySub sub = new MySub("60%","75%");
 	
 	public IngresoEgresoOtroPanelExtended(){
 		
-		controlador = new IngresoEgresoControlador();
+		controlador = new IngresoEgresoOtroControlador();
 		this.lstEgresos = new ArrayList<IngresoCobroVO>();
 		
 		String usuario = (String)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("usuario");

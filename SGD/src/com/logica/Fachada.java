@@ -1919,6 +1919,47 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 		return lstVO;
 	}	 
 	
+	/**
+	*Nos retorna los ingreso de cobro del sistema para la empresa
+	* 
+	*
+	*/
+	@SuppressWarnings("unchecked") 
+	public ArrayList<IngresoCobroVO> getEgresoCobroOtroTodos(String codEmp) throws ObteniendoEgresoCobroException, ConexionException {
+	
+		Connection con = null;
+		
+		ArrayList<IngresoCobro> lst;
+		ArrayList<IngresoCobroVO> lstVO = new ArrayList<IngresoCobroVO>();
+		
+		try
+		{
+			con = this.pool.obtenerConeccion();
+			
+			lst = this.egresoCobro.getEgresoCobroOtroTodos(con, codEmp); 
+			
+			for (IngresoCobro ing : lst) 
+			{
+				IngresoCobroVO aux = ing.retornarIngresoCobroVO();
+			
+				lstVO.add(aux);
+			}
+			
+			}catch(ObteniendoEgresoCobroException  e)
+			{
+			throw e;
+			
+		} catch (ConexionException e) {
+		
+			throw e;
+		} 
+		finally
+		{
+			this.pool.liberarConeccion(con);
+		}
+		
+		return lstVO;
+	}	 
 	
 	
 	public void insertarEgresoCobro(IngresoCobroVO ingVO, String codEmp) throws InsertandoEgresoCobroException, ConexionException, ExisteEgresoCobroException{
