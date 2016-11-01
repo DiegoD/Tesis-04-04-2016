@@ -15,6 +15,7 @@ import com.excepciones.Bancos.ObteniendoBancosException;
 import com.excepciones.Bancos.ObteniendoCuentasBcoException;
 import com.excepciones.Bancos.VerificandoBancosException;
 import com.excepciones.Cotizaciones.ObteniendoCotizacionesException;
+import com.excepciones.Cuentas.ObteniendoRubrosException;
 import com.excepciones.Gastos.ObteniendoGastosException;
 import com.excepciones.IngresoCobros.ExisteIngresoCobroException;
 import com.excepciones.IngresoCobros.InsertandoIngresoCobroException;
@@ -28,6 +29,7 @@ import com.excepciones.clientes.ObteniendoClientesException;
 import com.logica.Fachada;
 import com.logica.FachadaDD;
 import com.valueObject.MonedaVO;
+import com.valueObject.RubroCuentaVO;
 import com.valueObject.TitularVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.Cotizacion.CotizacionVO;
@@ -182,8 +184,15 @@ public class IngresoCobroControlador {
 	}
 
 
+	public ArrayList<RubroCuentaVO> getRubrosCuentasActivos(UsuarioPermisosVO permisos) throws ObteniendoRubrosException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, com.excepciones.Rubros.ObteniendoRubrosException {
+		
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))	
+			return FachadaDD.getInstance().getRubrosCuentasActivos(permisos.getCodEmp());
+		else
+			throw new NoTienePermisosException();
+	}
 	
-
 
 	
 	

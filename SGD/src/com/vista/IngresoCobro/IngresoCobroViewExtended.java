@@ -324,7 +324,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	   				cuentaBanco.setValue(ctaBcoAux.getCodigo());
 	   				if(comboMoneda.getValue()!= ""){
 	   					auxMoneda = (MonedaVO) comboMoneda.getValue();
-	   					if(!auxMoneda.getCodMoneda().equals(ctaBcoAux.getMonedaVO().getCodMoneda())){
+	   					if(!auxMoneda.getCodMoneda().equals(ctaBcoAux.getMonedaVO().getCodMoneda()) && opera != Variables.OPERACION_LECTURA){
 	   						Mensajes.mostrarMensajeWarning("La moneda del banco es diferente a la moneda del documento");
 	   					}
 	   				}
@@ -1113,56 +1113,24 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				{
 					try {
 						
-						BusquedaViewExtended form = new BusquedaViewExtended(this, new ProcesoVO());
+						ProcesoVO proceso = new ProcesoVO();
+						proceso.setCodCliente(codTitular.getValue());
+						proceso.setNomCliente(nomTitular.getValue());
 						
-						sub = new MySub("80%", "64%" );
+						MonedaVO auxMoneda = new MonedaVO();
+			   			auxMoneda = (MonedaVO) comboMoneda.getValue();
+			   			
+			   			
+						proceso.setCodMoneda(auxMoneda.getCodMoneda());
+						proceso.setDescMoneda(auxMoneda.getDescripcion());
+						proceso.setSimboloMoneda(auxMoneda.getSimbolo());
+						
+						//BusquedaViewExtended form = new BusquedaViewExtended(this, new ProcesoVO());
+						IngresoCobroProcesoViewExtended form = new IngresoCobroProcesoViewExtended("NUEVO", this, proceso);
+						sub = new MySub("80%", "44%" );
 						sub.setModal(true);
 						sub.setVista(form);
 						sub.center();
-						
-						String codCliente;/*Codigo del cliente para obtener los gastos a cobrar del mismo*/
-						
-						/*Obtenemos los formularios que no estan en el grupo
-						 * para mostrarlos en la grilla para seleccionar*/
-						if(this.operacion.equals(Variables.OPERACION_NUEVO) )
-						{
-							/*Si la operacion es nuevo, ponemos el  codGrupo vacio
-							 * asi nos trae todos los grupos disponibles*/
-							codCliente = this.codTitular.getValue().toString().trim();
-						}
-						else 
-						{
-							/*Si es operacion Editar tomamos el codGrupo de el fieldGroup*/
-							codCliente = fieldGroup.getItemDataSource().getBean().getCodTitular();
-						}
-						
-						/*Inicializamos VO de permisos para el usuario, formulario y operacion
-						 * para confirmar los permisos del usuario*/
-						UsuarioPermisosVO permisoAux = 
-								new UsuarioPermisosVO(this.permisos.getCodEmp(),
-										this.permisos.getUsuario(),
-										VariablesPermisos.FORMULARIO_INGRESO_COBRO,
-										VariablesPermisos.OPERACION_NUEVO_EDITAR);
-						
-
-						/*Obtenemos los gastos con saldo del cliente*/
-						ArrayList<ProcesoVO> lstProcesos = this.controlador.getProcesosCliente(permisoAux, codCliente);
-						
-						/*Hacemos una lista auxliar para pasarselo al BusquedaViewExtended*/
-						ArrayList<Object> lst = new ArrayList<Object>();
-						Object obj;
-						for (ProcesoVO i: lstProcesos) {
-							
-							/*Verificamos que el proceso ya no esta en la grilla*/
-							if(!this.existeFormularioenLista(i.getCodigo()))
-							{
-								obj = new Object();
-								obj = (Object)i;
-								lst.add(obj);
-							}
-						}
-						
-						form.inicializarGrilla(lst);
 						
 						UI.getCurrent().addWindow(sub);
 
@@ -1176,43 +1144,6 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				}
 			});
 			
-			/*
-			//Listener boton permisos
-			this.btnVerPermisos.addClickListener(click -> {
-				
-			boolean esta = false;	
-	
-			try {
-				
-				//Verificamos que haya un formulario seleccionado para eliminar
-				if(formSelecccionado != null)
-				{
-					
-					this.frmFormPermisos = new GrupoFormularioPermisosExtended(this, formSelecccionado, Variables.OPERACION_LECTURA);
-					
-					sub = new MySub("53%", "40%" );
-					sub.setModal(true);
-					sub.setVista(this.frmFormPermisos);
-					sub.center();
-					
-					UI.getCurrent().addWindow(sub);
-					
-				}
-				else //De lo contrario mostramos mensaje que debe selcionar un formulario
-				{
-					Mensajes.mostrarMensajeError("Debe seleccionar un formulario");
-				}
-		
-				}catch(Exception e)
-				{
-					Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
-				}
-			
-			
-			});*/
-			
-			
-	///////////////////
 	}
 
 	
@@ -2419,6 +2350,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
    			/*VER*/ docum.setCodRubro("01");
    			docum.setCodCuenta("01");
    			docum.setCodImpuesto("01");
+   			docum.setImpTotMo(procesoVO.getImpMo());
+   			
    			
 			this.lstDetalleVO.add(docum);
 				
@@ -2432,6 +2365,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			container.addAll(lstDetalleVO);
 			//lstFormularios.setContainerDataSource(container);
 			this.actualizarGrillaContainer(container);
+			
+			calcularImporteTotal();
 			
 		}
 		
