@@ -372,7 +372,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 							
 				   			ctaBcoAux = new CtaBcoVO();
 				   			ctaBcoAux = (CtaBcoVO) comboCuentas.getValue();
-				   			if(!auxMoneda.getCodMoneda().equals(ctaBcoAux.getMonedaVO().getCodMoneda())){
+				   			if(!auxMoneda.getCodMoneda().equals(ctaBcoAux.getMonedaVO().getCodMoneda())&& opera != Variables.OPERACION_LECTURA){
 				   				Mensajes.mostrarMensajeWarning("La moneda del banco es diferente a la moneda del documento");
 				   			}
 			   			}
@@ -1127,7 +1127,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 						
 						//BusquedaViewExtended form = new BusquedaViewExtended(this, new ProcesoVO());
 						IngresoCobroProcesoViewExtended form = new IngresoCobroProcesoViewExtended("NUEVO", this, proceso);
-						sub = new MySub("80%", "44%" );
+						sub = new MySub("75%", "42%" );
 						sub.setModal(true);
 						sub.setVista(form);
 						sub.center();
@@ -2351,6 +2351,10 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
    			docum.setCodCuenta("01");
    			docum.setCodImpuesto("01");
    			docum.setImpTotMo(procesoVO.getImpMo());
+   			docum.setCodRubro(procesoVO.getCodRubro());
+   			docum.setNomRubro(procesoVO.getNomRubro());
+   			docum.setCodCuenta(procesoVO.getCodCuenta());
+   			docum.setNomCuenta(procesoVO.getNomCuenta());
    			
    			
 			this.lstDetalleVO.add(docum);

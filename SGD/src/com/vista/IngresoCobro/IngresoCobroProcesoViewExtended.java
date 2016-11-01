@@ -10,6 +10,7 @@ import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Cuentas.ObteniendoRubrosException;
 import com.excepciones.Procesos.ObteniendoProcesosException;
+import com.vaadin.data.validator.IntegerValidator;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.UI;
@@ -56,11 +57,45 @@ public class IngresoCobroProcesoViewExtended extends IngresoCobroProcesoView imp
 				
 				procesoNuevo.setCodCliente(codCliente.getValue());
 				procesoNuevo.setNomCliente(nomCliente.getValue());
-				procesoNuevo.setCodigo(((Integer)codProceso.getConvertedValue()));
+				
+				if(codProceso.getValue()!= null){
+					if(codProceso.getConvertedValue().equals(0)){
+						Mensajes.mostrarMensajeError("Debe seleccionar un proceso");
+						return;
+					}
+					else{
+						procesoNuevo.setCodigo(((Integer)codProceso.getConvertedValue()));
+					}
+				}
+				else{
+					Mensajes.mostrarMensajeError("Debe seleccionar un proceso");
+					return;
+				}
+				
+				
 				procesoNuevo.setDescripcion(descripcion.getValue());
 				procesoNuevo.setNomDocum(documento.getValue());
 				procesoNuevo.setCarpeta(carpeta.getValue());
-				procesoNuevo.setImpMo((double)impMo.getConvertedValue());
+				
+				if(impMo.getValue() !=null){
+					if((double)impMo.getConvertedValue() <= 0){
+						Mensajes.mostrarMensajeError("El importe no es correcto");
+						return;
+					}
+					else{
+						procesoNuevo.setImpMo((double)impMo.getConvertedValue());
+					}
+				}
+				else{
+					Mensajes.mostrarMensajeError("El importe no es correcto");
+					return;
+				}
+				
+				
+				procesoNuevo.setCodRubro(codRubro.getValue());
+				procesoNuevo.setNomRubro(nomRubro.getValue());
+				procesoNuevo.setCodCuenta(codCuenta.getValue());
+				procesoNuevo.setNomCuenta(nomCuenta.getValue());
 				
 				main.setInfo(procesoNuevo);
 				main.cerrarVentana();
@@ -451,6 +486,13 @@ public class IngresoCobroProcesoViewExtended extends IngresoCobroProcesoView imp
                 new StringLengthValidator(
                         " 100 caracteres máximo", 0, 100, true));
         
+        this.codRubro.addValidator(
+                new StringLengthValidator(
+                        " 15 caracteres máximo", 1, 15, true));
+        
+        this.codCuenta.addValidator(
+                new StringLengthValidator(
+                        " 20 caracteres máximo", 1, 20, true));
         
 	}
 	
@@ -468,8 +510,10 @@ public class IngresoCobroProcesoViewExtended extends IngresoCobroProcesoView imp
 				
 		try
 		{
-			if(this.codCliente.isValid())
+			if(this.codCliente.isValid() && this.codProceso.isValid() && this.codRubro.isValid()
+					&& this.codCuenta.isValid() && this.impMo.isValid())
 				valido = true;
+			
 			
 		}catch(Exception e)
 		{

@@ -39,6 +39,11 @@ public class ProcesoVO extends AuditoriaVO{
 	private String medio;
 	private String descripcion;
 	private String observaciones;
+	
+	private String codRubro;
+	private String nomRubro;
+	private String codCuenta;
+	private String nomCuenta;
 	//private boolean activo;
 	
 	
@@ -120,6 +125,10 @@ public class ProcesoVO extends AuditoriaVO{
 		this.medio = procesoVO.getMedio();
 		this.descripcion = procesoVO.getDescripcion();
 		this.observaciones = procesoVO.getObservaciones();
+		this.codCuenta = procesoVO.getCodCuenta();
+		this.nomCuenta = procesoVO.getNomCuenta();
+		this.codRubro = procesoVO.getCodRubro();
+		this.nomRubro = procesoVO.getNomRubro();
 	}
 	
 	public IngresoCobroDetalleVO crearDocumDetalle(ProcesoVO procesoVO){
@@ -139,12 +148,12 @@ public class ProcesoVO extends AuditoriaVO{
 		docum.setImpTotMn(0);
 		docum.setImpTotMo(0);
 		docum.setTcMov(0);
-		docum.setCodCuenta("");
-		docum.setNomCuenta("");
+		docum.setCodCuenta(procesoVO.getCodCuenta());
+		docum.setNomCuenta(procesoVO.getNomCuenta());
 		docum.setCodProceso(String.valueOf(procesoVO.getCodigo()));
 		docum.setDescProceso(procesoVO.getDescripcion());
-		docum.setNomRubro("");
-		docum.setCodRubro("");
+		docum.setNomRubro(procesoVO.getNomRubro());
+		docum.setCodRubro(procesoVO.getCodRubro());
 		
 		/***VER DE DONDE SACAR***/
 		docum.setUsuarioMod(procesoVO.getUsuarioMod());
@@ -305,17 +314,37 @@ public class ProcesoVO extends AuditoriaVO{
 	public void setObservaciones(String observaciones) {
 		this.observaciones = observaciones;
 	}
-//	public boolean isActivo() {
-//		return activo;
-//	}
-//	public void setActivo(boolean activo) {
-//		this.activo = activo;
-//	}
-	
-	
-	
-	
-	
-	
+
+	public String getCodRubro() {
+		return codRubro;
+	}
+
+	public void setCodRubro(String codRubro) {
+		this.codRubro = codRubro;
+	}
+
+	public String getNomRubro() {
+		return nomRubro;
+	}
+
+	public void setNomRubro(String nomRubro) {
+		this.nomRubro = nomRubro;
+	}
+
+	public String getCodCuenta() {
+		return codCuenta;
+	}
+
+	public void setCodCuenta(String codCuenta) {
+		this.codCuenta = codCuenta;
+	}
+
+	public String getNomCuenta() {
+		return nomCuenta;
+	}
+
+	public void setNomCuenta(String nomCuenta) {
+		this.nomCuenta = nomCuenta;
+	}
 	
 }
