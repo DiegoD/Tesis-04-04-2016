@@ -309,9 +309,12 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	   				cuentaBanco.setValue(ctaBcoAux.getCodigo());
 	   				if(comboMoneda.getValue()!= ""){
 	   					auxMoneda = (MonedaVO) comboMoneda.getValue();
-	   					if(!auxMoneda.getCodMoneda().equals(ctaBcoAux.getMonedaVO().getCodMoneda()) && opera != Variables.OPERACION_LECTURA){
-	   						Mensajes.mostrarMensajeWarning("La moneda del banco es diferente a la moneda del documento");
+	   					if(auxMoneda != null){
+	   						if(!auxMoneda.getCodMoneda().equals(ctaBcoAux.getMonedaVO().getCodMoneda()) && opera != Variables.OPERACION_LECTURA){
+		   						Mensajes.mostrarMensajeWarning("La moneda del banco es diferente a la moneda del documento");
+		   					}
 	   					}
+	   					
 	   				}
 	   				
 	   				
