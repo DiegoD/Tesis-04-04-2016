@@ -213,8 +213,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				bcoAux = new BancoVO();
 				bcoAux = (BancoVO) comboBancos.getValue();
 				
-				comboCuentas.setData("ProgramaticallyChanged");
-				inicializarComboCuentas(bcoAux.getCodigo());
+				inicializarComboCuentas(bcoAux.getCodigo(), "Banco");
 			}		
 		}
     });
@@ -228,6 +227,67 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 					
 				monedaVO = seteaCotizaciones(monedaVO);
 			}	
+   			
+   			/*Inicializamos VO de permisos para el usuario, formulario y operacion
+   			 * para confirmar los permisos del usuario*/
+   			UsuarioPermisosVO permisoAux = 
+   					new UsuarioPermisosVO(permisos.getCodEmp(),
+   							permisos.getUsuario(),
+   							VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+   							VariablesPermisos.OPERACION_NUEVO_EDITAR);
+   			
+   			CtaBcoVO ctaBcoAux;
+   			ctaBcoAux = new CtaBcoVO();
+   			if(comboCuentas.getValue() != null){
+   				ctaBcoAux = (CtaBcoVO) comboCuentas.getValue();
+   			
+	   			MonedaVO auxMoneda = new MonedaVO();
+	   			Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
+	   			
+	   			auxMoneda = (MonedaVO) ctaBcoAux.getMonedaVO();
+	   			
+	   			try {
+	   				if(!auxMoneda.isNacional()){
+	   					cotizacion = controlador.getCotizacion(permisoAux, fecha, ctaBcoAux.getMonedaVO().getCodMoneda());
+	   				}
+	   				else{
+	   					cotizacion.setCotizacionVenta(1);
+	   				}
+				} catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
+						| InicializandoException | NoTienePermisosException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				if(cotizacion.getCotizacionVenta() != 0){
+					cotizacionVenta = cotizacion.getCotizacionVenta();
+				}
+				else{
+					Mensajes.mostrarMensajeError("Debe cargar la cotización para la moneda");
+					comboCuentas.setErrorHandler(null);
+					comboCuentas.setData("ProgramaticallyChanged");
+					comboCuentas.setValue(null);
+					monedaBanco.setValue("");
+					cuentaBanco.setValue("");
+					
+					return;
+				}
+				
+	   			if(ctaBcoAux != null && !comboCuentas.getValue().equals("")){
+	   				monedaBanco.setValue(ctaBcoAux.getMonedaVO().getSimbolo());
+	   				cuentaBanco.setValue(ctaBcoAux.getCodigo());
+	   				if(comboMoneda.getValue()!= ""){
+	   					auxMoneda = (MonedaVO) comboMoneda.getValue();
+	   					if(auxMoneda != null){
+	   						if(!auxMoneda.getCodMoneda().equals(ctaBcoAux.getMonedaVO().getCodMoneda()) && opera != Variables.OPERACION_LECTURA){
+		   						Mensajes.mostrarMensajeWarning("La moneda del banco es diferente a la moneda del documento");
+		   					}
+	   					}
+	   					
+	   				}
+	   				
+	   				
+	   			}
+   			}
 		}
     });
 	
@@ -955,7 +1015,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		
 		/*Inicializamos los combos*/
 		this.inicializarComboBancos(null);
-		this.inicializarComboCuentas(null);
+		this.inicializarComboCuentas(null, "");
 		this.inicializarComboMoneda(null);
 		
 		inicializarCampos();
@@ -1087,7 +1147,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		
 		/*Inicializamos los combos*/
 		this.inicializarComboBancos(ing.getCodBanco());
-		this.inicializarComboCuentas(ing.getCodCtaBco());
+		this.inicializarComboCuentas(ing.getCodCtaBco(), "CuentaBanco");
 		this.inicializarComboMoneda(ing.getCodMoneda());
 		
 		
@@ -2000,7 +2060,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		
 	}
 	
-	public void inicializarComboCuentas(String cod ){
+	public void inicializarComboCuentas(String cod, String llamador ){
 		
 		if(cod != "0" && cod != null){
 			BeanItemContainer<CtaBcoVO> ctaObj = new BeanItemContainer<CtaBcoVO>(CtaBcoVO.class);
@@ -2024,18 +2084,22 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				Mensajes.mostrarMensajeError(e.getMessage());
 			}
 			
+			
 			for (CtaBcoVO ctav : lstctas) {
-				
+					
 				ctaObj.addBean(ctav);
 				
-				if(cod != null){
-					if(cod.equals(ctav.getCodigo())){
-						cta = ctav;
-						this.monedaBanco.setValue(cta.getMonedaVO().getSimbolo());
-						this.cuentaBanco.setValue(cta.getCodigo());
+				if(llamador.equals("CuentaBanco")){
+					if(cod != null){
+						if(cod.equals(ctav.getCodigo())){
+							cta = ctav;
+							this.monedaBanco.setValue(cta.getMonedaVO().getSimbolo());
+							this.cuentaBanco.setValue(cta.getCodigo());
+						}
 					}
 				}
 			}
+			
 			
 			if(lstctas.size()>0){
 				
