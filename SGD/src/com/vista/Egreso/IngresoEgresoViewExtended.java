@@ -137,37 +137,58 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 	
 	this.btnBuscarCliente.addClickListener(click -> {
 		
-//		BusquedaViewExtended form = new BusquedaViewExtended(this, new ClienteVO());
-//		ArrayList<Object> lst = new ArrayList<Object>();
-//		ArrayList<ClienteVO> lstClientes = new ArrayList<ClienteVO>();
+		BusquedaViewExtended form;
 		
-		BusquedaViewExtended form = new BusquedaViewExtended(this, new TitularVO());
+		if(this.chkFuncionario.getValue()){
+			form = new BusquedaViewExtended(this, new TitularVO());
+		}
+		else{
+			form = new BusquedaViewExtended(this, new ClienteVO());
+		}	
+		
 		ArrayList<Object> lst = new ArrayList<Object>();
-		ArrayList<TitularVO> lstClientes = new ArrayList<TitularVO>();
+		ArrayList<TitularVO> lstTitulares = new ArrayList<TitularVO>();
+		ArrayList<ClienteVO> lstClientes = new ArrayList<ClienteVO>();
 		
 		/*Inicializamos VO de permisos para el usuario, formulario y operacion
 		 * para confirmar los permisos del usuario*/
 		UsuarioPermisosVO permisoAux = 
 				new UsuarioPermisosVO(this.permisos.getCodEmp(),
 						this.permisos.getUsuario(),
-						VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
+						VariablesPermisos.FORMULARIO_INGRESO_COBRO,
 						VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
 		try {
 			
-			lstClientes = this.controlador.getTitulares(permisoAux);
-			//lstClientes = this.controlador.getClientes(permisoAux);
+			if(this.chkFuncionario.getValue()){
+				lstTitulares = this.controlador.getTitulares(permisoAux);
+			}
+			else{
+				
+				lstClientes = this.controlador.getClientes(permisoAux);
+			}
 			
 		} catch ( ConexionException | InicializandoException | ObteniendoPermisosException | NoTienePermisosException |
 				 ObteniendoClientesException | ObteniendoTitularesException e) {
 
 			Mensajes.mostrarMensajeError(e.getMessage());
 		}
-		Object obj;
-		for (TitularVO i: lstClientes) {
-			obj = new Object();
-			obj = (Object)i;
-			lst.add(obj);
+		
+		if(this.chkFuncionario.getValue()){
+			Object obj;
+			for (TitularVO i: lstTitulares) {
+				obj = new Object();
+				obj = (Object)i;
+				lst.add(obj);
+			}
+		}
+		else{
+			Object obj;
+			for (ClienteVO i: lstClientes) {
+				obj = new Object();
+				obj = (Object)i;
+				lst.add(obj);
+			}
 		}
 		try {
 			
@@ -179,7 +200,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 		}
 		
-		sub = new MySub("65%", "65%" );
+		sub = new MySub("85%", "65%" );
 		sub.setModal(true);
 		sub.center();
 		sub.setModal(true);
@@ -1001,6 +1022,9 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 			auxBco = (BancoVO) this.comboBancos.getValue();
 			
 		}
+		else{
+			auxBco.setCodigo("0");
+		}
 		this.comboTipo.setImmediate(true);
 		this.comboTipo.setReadOnly(false);
 		this.comboTipo.setNullSelectionAllowed(false);
@@ -1070,6 +1094,11 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		boolean permisoEliminar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO, VariablesPermisos.OPERACION_BORRAR);
 		
+		
+		this.chkFuncionario.setVisible(false);
+		this.lblFuncionario.setVisible(false);
+		
+		
 		/*Si tiene permisos de editar habilitamos el boton de 
 		 * edicion*/
 		if(permisoNuevoEditar){
@@ -1120,6 +1149,8 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		/*Seteamos el form en editar*/
 		this.operacion = Variables.OPERACION_EDITAR;
 		
+		this.chkFuncionario.setVisible(false);
+		this.lblFuncionario.setVisible(false);
 		
 		/*Verificamos que tenga permisos*/
 		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
@@ -1163,9 +1194,8 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		/*Si es nuevo ocultamos el nroDocum (ya que aun no tenemos el numero)*/
 		this.nroDocum.setVisible(false);
 		this.nroDocum.setEnabled(false);
-		
-//		this.nroDocum.setValue("0");
-//		this.nroTrans.setValue("0");
+		this.chkFuncionario.setVisible(true);
+		this.lblFuncionario.setVisible(true);
 		
 		/*Chequeamos si tiene permiso de editar*/
 		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO, VariablesPermisos.OPERACION_NUEVO_EDITAR);

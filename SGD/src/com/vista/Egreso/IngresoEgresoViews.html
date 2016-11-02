@@ -15,10 +15,14 @@
     <vaadin-form-layout spacing="false" responsive size-full _id="formLay1"> 
      <vaadin-text-field enabled="false" id="nroTrans" visible="false" responsive _id="nroTrans"></vaadin-text-field> 
      <vaadin-text-field caption="Nro" style-name="tiny" null-representation="" responsive width="144px" readonly _id="nroDocum"></vaadin-text-field> 
-     <vaadin-combo-box caption="Tipo" style-name="tiny" responsive item-caption-mode="id" width="144px" _id="comboTipo"> 
-      <option>Caja</option> 
-      <option>Banco</option> 
-     </vaadin-combo-box> 
+     <vaadin-horizontal-layout caption="Tipo" spacing height="30px" _id="aaa"> 
+      <vaadin-combo-box style-name="tiny" responsive item-caption-mode="id" width="144px" _id="comboTipo"> 
+       <option>Caja</option> 
+       <option>Banco</option> 
+      </vaadin-combo-box> 
+      <vaadin-label caption="Funcionario" width-auto height="1px" _id="lblFuncionario"></vaadin-label> 
+      <vaadin-check-box _id="chkFuncionario"></vaadin-check-box> 
+     </vaadin-horizontal-layout> 
      <vaadin-date-field caption="Fec Doc" id="fecDoc" style-name="tiny" responsive width="144px" _id="fecDoc"></vaadin-date-field> 
      <vaadin-date-field caption="Fec Valor" id="fecValor" style-name="tiny" responsive width="144px" _id="fecValor"></vaadin-date-field> 
      <vaadin-horizontal-layout caption="Titular" style-name="name-wrapper" spacing responsive _id="name_wrapper"> 

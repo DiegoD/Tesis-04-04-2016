@@ -12,12 +12,15 @@ public class SeleccionViewExtended extends SeleccionView{
 		
 		this.aceptar.addClickListener(click -> {
 			
-			if(this.operacion.getValue().equals("Agregar Gasto")){
-				main.agregarGasto();
+			if(operacion.getValue() != null){
+				if(this.operacion.getValue().equals("Agregar Gasto")){
+					main.agregarGasto();
+				}
+				else if(this.operacion.getValue().equals("A cuenta de Proceso")){
+					main.agregarProceso();
+				}
 			}
-			else if(this.operacion.getValue().equals("A cuenta de Proceso")){
-				main.agregarProceso();
-			}
+			
 			else{
 				
 				Mensajes.mostrarMensajeError("Debe seleccionar una opción");

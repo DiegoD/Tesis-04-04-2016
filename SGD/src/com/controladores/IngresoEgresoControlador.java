@@ -133,7 +133,7 @@ public class IngresoEgresoControlador {
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			return FachadaDD.getInstance().getTitularesActivos(permisos.getCodEmp());
+			return FachadaDD.getInstance().getTitularesActivosFuncionarios(permisos.getCodEmp());
 		else
 			throw new NoTienePermisosException();
 	}

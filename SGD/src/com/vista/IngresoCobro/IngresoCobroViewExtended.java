@@ -957,7 +957,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		
 		inicializarCampos();
 		
-	
+		importeTotalCalculado = (Double) impTotMo.getConvertedValue();
 		//Seteamos info del form si es requerido
 		if(fieldGroup != null)
 			fieldGroup.buildAndBindMemberFields(this);
@@ -1173,6 +1173,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		this.chkFuncionario.setVisible(false);
 		this.lblFuncionario.setVisible(false);
 		
+		
 		/*Si tiene permisos de editar habilitamos el boton de 
 		 * edicion*/
 		if(permisoNuevoEditar){
@@ -1200,6 +1201,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		/*No mostramos las validaciones*/
 		this.setearValidaciones(false);
 		
+		this.importeTotalCalculado = (Double)impTotMo.getConvertedValue();
 		/*Dejamos todods los campos readonly*/
 		this.readOnlyFields(true);
 		
@@ -1234,6 +1236,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		/*Verificamos que tenga permisos*/
 		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_COBRO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
+		this.importeTotalCalculado = (Double)impTotMo.getConvertedValue();
 		
 		if(permisoNuevoEditar){
 			
@@ -1458,7 +1461,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		this.comboMoneda.setReadOnly(setear);
 		
 		this.impTotMo.setReadOnly(false);
-		this.impTotMo.setEnabled(false);
+		this.impTotMo.setEnabled(true);
 		
 		this.referencia.setReadOnly(setear);
 		
