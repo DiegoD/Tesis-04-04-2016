@@ -1858,6 +1858,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		lstGastos.getColumn("nroDocum").setEditable(false);
 		lstGastos.getColumn("referencia").setEditable(false);
 		lstGastos.getColumn("codProceso").setEditable(false);
+		lstGastos.getColumn("simboloMoneda").setEditable(false);
 		lstGastos.getColumn("impTotMo").setEditable(true);
 		
 		lstGastos.setEditorSaveCaption("Guardar");
