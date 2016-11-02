@@ -911,7 +911,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			
 				else /*De lo contrario mostramos mensaje que debe selcionar un gasto*/
 				{
-					Mensajes.mostrarMensajeError("Debe seleccionar un gasto para quitar");
+					Mensajes.mostrarMensajeError("Debe seleccionar un gasto para editar");
 				}
 		
 				}catch(Exception e)
