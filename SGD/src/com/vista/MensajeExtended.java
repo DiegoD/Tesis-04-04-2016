@@ -4,16 +4,17 @@ public class MensajeExtended extends Mensaje{
 	
 	
 	Object seleccionado;
-	IBusqueda main;
+	IMensaje main;
 	
-	public MensajeExtended(String mensaje, IBusqueda main){
+	public MensajeExtended(String mensaje, IMensaje main){
 		
 		this.lblMensaje.setCaption(mensaje);
 		this.lblMensaje.setStyleName("center");
+		this.main = main;
 		
 		this.aceptar.addClickListener(click -> {
 			
-			main.cerrarVentana();
+			main.eliminarCobro();
 			
 		});
 		

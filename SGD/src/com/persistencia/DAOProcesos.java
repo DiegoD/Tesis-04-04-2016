@@ -321,5 +321,65 @@ public class DAOProcesos implements IDAOProcesos{
 		}
 	}
 
+	public Proceso getProceso(Connection con, String codEmp, Integer codProceso) throws ObteniendoProcesosException, ConexionException {
+		
+		Proceso aux = new Proceso();
+		try {
+			
+	    	ConsultasDD clts = new ConsultasDD();
+	    	String query = clts.getProceso();
+	    	PreparedStatement pstmt1 = con.prepareStatement(query);
+	    	
+	    	ResultSet rs;
+	    	
+	    	pstmt1.setString(1, codEmp);
+	    	pstmt1.setInt(2, codProceso);
+			rs = pstmt1.executeQuery();
+			
+			
+			while(rs.next ()) {
+				
+							
+				aux.setCodigo(rs.getInt(1));
+				aux.setFecha(rs.getTimestamp(2));
+				aux.setNroDocum(rs.getInt(3));
+				aux.setFecDocum(rs.getTimestamp(4));
+				aux.setNroMega(rs.getInt(5));
+				aux.setCarpeta(rs.getString(6));
+				aux.setImpMo(rs.getDouble(7));
+				aux.setImpMn(rs.getDouble(8));
+				aux.setImpTr(rs.getDouble(9));
+				aux.setTcMov(rs.getDouble(10));
+				aux.setKilos(rs.getDouble(11));
+				aux.setFecCruce(rs.getTimestamp(12));
+				aux.setMarca(rs.getString(13));
+				aux.setMedio(rs.getString(14));
+				aux.setDescripcion(rs.getString(15));
+				aux.setObservaciones(rs.getString(16));
+				aux.setFechaMod(rs.getTimestamp(17));
+				aux.setUsuarioMod(rs.getString(18));
+				aux.setOperacion(rs.getString(19));
+				
+				aux.setDocumento(new DocumentoAduanero((rs.getString(20)), 
+						rs.getString(21)));
+				
+				aux.setClienteInfo(new ClienteInfo(rs.getString(22), rs.getString(23)));
+				
+				aux.setMonedaInfo(new MonedaInfo(rs.getString(24)
+						, rs.getString(25)
+						, rs.getString(26)));
+				
+			}
+			rs.close ();
+			pstmt1.close ();
+    	}	
+    	
+		catch (SQLException e) {
+			throw new ObteniendoProcesosException();
+			
+		}
+    	
+    	return aux;
+	}
 	
 }

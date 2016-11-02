@@ -50,7 +50,7 @@
       <vaadin-combo-box id="comboMoneda" style-name="tiny" item-caption-mode="id" width="144px" _id="comboMoneda"></vaadin-combo-box> 
       <vaadin-text-field id="impTotMo" style-name="tiny" null-representation="" readonly _id="impTotMo"></vaadin-text-field> 
      </vaadin-horizontal-layout> 
-     <vaadin-horizontal-layout width="187px" _id="botones"> 
+     <vaadin-horizontal-layout spacing _id="botones"> 
       <vaadin-button style-name="primary tiny" plain-text _id="aceptar" :middle>
         Guardar 
       </vaadin-button> 
@@ -67,12 +67,12 @@
     </vaadin-form-layout> 
     <vaadin-form-layout spacing="false" size-full _id="formLay2"> 
      <vaadin-grid id="lstGastos" style-name="small" responsive width-full height="356px" editable _id="lstGastos"></vaadin-grid> 
-     <vaadin-horizontal-layout style-name="v-formlayout" responsive width="249px" height-full :middle :right> 
+     <vaadin-horizontal-layout style-name="v-formlayout" spacing responsive :middle :right> 
       <vaadin-button style-name="primary tiny" responsive id="btnAgregar" plain-text _id="btnAgregar" :middle>
-        Gasto 
+        Agregar 
       </vaadin-button> 
-      <vaadin-button style-name="primary tiny" responsive id="btnProceso" plain-text _id="btnProceso" :middle>
-        Proceso 
+      <vaadin-button style-name="primary tiny" responsive id="btnEditarItem" plain-text _id="btnEditarItem">
+        Editar 
       </vaadin-button> 
       <vaadin-button style-name="primary tiny" responsive id="btnQuitar" plain-text _id="btnQuitar" :middle>
         Quitar 

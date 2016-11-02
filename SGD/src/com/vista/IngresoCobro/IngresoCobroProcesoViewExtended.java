@@ -239,9 +239,9 @@ public class IngresoCobroProcesoViewExtended extends IngresoCobroProcesoView imp
 			this.iniFormNuevo();
 	
 		}
-		else if(this.operacion.equals(Variables.OPERACION_LECTURA))	{
+		else if(this.operacion.equals(Variables.OPERACION_EDITAR))	{
 			/*Inicializamos formulario como editar*/
-			this.iniFormLectura();
+			this.iniFormEditar();
 		} 
 	}
 	
@@ -259,41 +259,6 @@ public class IngresoCobroProcesoViewExtended extends IngresoCobroProcesoView imp
 	}
 	
 	
-	/**
-	 * Seteamos el formulario en modo solo Lectura
-	 *
-	 */
-	private void iniFormLectura()
-	{
-		/*Verificamos que tenga permisos para editar*/
-		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_PROCESOS, VariablesPermisos.OPERACION_NUEVO_EDITAR);
-		boolean permisoBorrar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_PROCESOS, VariablesPermisos.OPERACION_BORRAR);
-		
-		/*Si tiene permisos de editar habilitamos el boton de 
-		 * edicion*/
-		if(permisoNuevoEditar){
-			
-			this.enableBotonesLectura();
-			
-		}else{ /*de lo contrario lo deshabilitamos*/
-			
-			this.disableBotonLectura();
-		}
-		
-		if(permisoBorrar)
-			this.enableBotonEliminar();
-		
-		/*Deshabilitamos botn aceptar*/
-		this.disableBotonAceptar();
-		
-		
-		/*No mostramos las validaciones*/
-		this.setearValidaciones(false);
-		
-		/*Dejamos todods los campos readonly*/
-		this.readOnlyFields(true);
-		
-	}
 	
 	/**
 	 * Seteamos el formulario en modo Edicion
@@ -302,12 +267,16 @@ public class IngresoCobroProcesoViewExtended extends IngresoCobroProcesoView imp
 	private void iniFormEditar()
 	{
 		/*Seteamos el form en editar*/
-		this.operacion = Variables.OPERACION_EDITAR;
-		this.disableBotonEliminar();
+		
+		
+		this.btnBuscarCliente.setVisible(false);
+		this.btnBuscarProceso.setVisible(false);
+		
 		
 		/*Verificamos que tenga permisos*/
-		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_PROCESOS, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_COBRO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		if(permisoNuevoEditar){
+			
 			
 			/*Oculatamos Editar y mostramos el de guardar y de agregar formularios*/
 			this.enableBotonAceptar();
@@ -320,6 +289,20 @@ public class IngresoCobroProcesoViewExtended extends IngresoCobroProcesoView imp
 			
 			/*Seteamos las validaciones*/
 			this.setearValidaciones(true);
+			
+			this.codCliente.setValue(procesoParametro.getCodCliente());
+			this.nomCliente.setValue(procesoParametro.getNomCliente());
+			this.moneda.setValue(procesoParametro.getSimboloMoneda());
+			this.codProceso.setValue(String.valueOf(procesoParametro.getCodigo()));
+			this.descripcion.setValue(procesoParametro.getDescripcion());
+			this.documento.setValue(procesoParametro.getNomDocum());
+			this.carpeta.setValue(procesoParametro.getCarpeta());
+			this.codRubro.setValue(procesoParametro.getCodRubro());
+			this.nomRubro.setValue(procesoParametro.getNomRubro());
+			this.codCuenta.setValue(procesoParametro.getCodCuenta());
+			this.nomCuenta.setValue(procesoParametro.getNomCuenta());
+			impMo.setConverter(Double.class);
+			this.impMo.setConvertedValue((procesoParametro.getImpMo()));
 		}
 		else{
 			
@@ -364,6 +347,32 @@ public class IngresoCobroProcesoViewExtended extends IngresoCobroProcesoView imp
 	 */
 	private void setearFieldsEditar()
 	{
+		this.operacion = Variables.OPERACION_EDITAR;
+		this.disableBotonEliminar();
+		this.btnEditar.setEnabled(false);
+		this.btnBuscarCliente.setVisible(false);
+		
+		this.codProceso.setReadOnly(false);
+		this.descripcion.setReadOnly(false);
+		this.codRubro.setReadOnly(false);
+		this.nomRubro.setReadOnly(false);
+		this.codCuenta.setReadOnly(false);
+		this.nomCuenta.setReadOnly(false);
+		this.impMo.setReadOnly(false);
+		this.moneda.setReadOnly(false);
+		
+		this.codCliente.setEnabled(false);
+		this.nomCliente.setEnabled(false);
+		this.documento.setEnabled(false);
+		this.carpeta.setEnabled(false);
+		this.codProceso.setEnabled(false);
+		this.descripcion.setEnabled(false);
+		this.codRubro.setEnabled(false);
+		this.nomRubro.setEnabled(false);
+		this.codCuenta.setEnabled(false);
+		this.nomCuenta.setEnabled(false);
+		this.moneda.setEnabled(false);
+		
 		
 	}
 	

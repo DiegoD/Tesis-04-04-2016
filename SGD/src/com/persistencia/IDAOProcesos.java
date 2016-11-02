@@ -20,5 +20,5 @@ public interface IDAOProcesos {
 	public void modificarProceso(Proceso proceso, String codEmp, Connection con) throws ModificandoProcesoException;
 	public void eliminarProceso(int codProceso, String codEmp, Connection con) throws EliminandoProcesoException, ConexionException;
 	public ArrayList<Proceso> getProcesosCliente(Connection con, String codEmp, String cod_cliente) throws ObteniendoProcesosException, ConexionException;
-
+	public Proceso getProceso(Connection con, String codEmp, Integer codProceso) throws ObteniendoProcesosException, ConexionException;
 }

@@ -8,4 +8,6 @@ public interface IMensaje {
 	public void setInfo(Object datos);
 	
 	public void cerrarVentana();
+	
+	public void eliminarCobro();
 }

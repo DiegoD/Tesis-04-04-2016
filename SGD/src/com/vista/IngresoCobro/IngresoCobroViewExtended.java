@@ -2,7 +2,6 @@ package com.vista.IngresoCobro;
 
 import java.math.BigDecimal;
 import java.sql.Date;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -10,51 +9,32 @@ import java.util.List;
 
 import com.controladores.IngresoCobroControlador;
 import com.excepciones.ConexionException;
-import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
 import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Bancos.ObteniendoBancosException;
 import com.excepciones.Bancos.ObteniendoCuentasBcoException;
 import com.excepciones.Cotizaciones.ObteniendoCotizacionesException;
-import com.excepciones.Gastos.EliminandoGastoException;
-import com.excepciones.Gastos.ExisteGastoException;
 import com.excepciones.IngresoCobros.ExisteIngresoCobroException;
 import com.excepciones.IngresoCobros.InsertandoIngresoCobroException;
 import com.excepciones.IngresoCobros.ModificandoIngresoCobroException;
 import com.excepciones.IngresoCobros.NoExisteIngresoCobroException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
-import com.excepciones.Procesos.EliminandoProcesoException;
-import com.excepciones.Saldos.EliminandoSaldoException;
 import com.excepciones.Titulares.ObteniendoTitularesException;
 import com.excepciones.clientes.ObteniendoClientesException;
-import com.logica.Docum.CuentaBcoInfo;
-import com.sun.org.apache.xpath.internal.operations.Variable;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup;
-import com.vaadin.data.fieldgroup.FieldGroup.CommitEvent;
-import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
-import com.vaadin.data.fieldgroup.FieldGroup.CommitHandler;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.filter.SimpleStringFilter;
-import com.vaadin.data.validator.RegexpValidator;
 import com.vaadin.data.validator.StringLengthValidator;
-import com.vaadin.event.FieldEvents.BlurEvent;
-import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.server.VaadinService;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
-import com.valueObject.DocumDGIVO;
-import com.valueObject.FormularioVO;
-import com.valueObject.GrupoVO;
 import com.valueObject.MonedaVO;
-import com.valueObject.TipoInCobVO;
 import com.valueObject.TitularVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.Cotizacion.CotizacionVO;
@@ -94,6 +74,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	UsuarioPermisosVO permisoAux;
 	CotizacionVO cotizacion =  new CotizacionVO();
 	Double cotizacionVenta = null;
+	Double importeTotalCalculado;
 	
 	MonedaVO monedaNacional = new MonedaVO();
 	
@@ -479,7 +460,12 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 								VariablesPermisos.FORMULARIO_INGRESO_COBRO,
 								VariablesPermisos.OPERACION_NUEVO_EDITAR);				
 				
+				int comp = Double.compare(importeTotalCalculado, (Double)impTotMo.getConvertedValue());
 				
+				if(comp != 0){
+					Mensajes.mostrarMensajeError("El importe total es diferente a la suma del detalle");
+					return;
+				}
 				IngresoCobroVO ingCobroVO = new IngresoCobroVO();	
 				
 				ingCobroVO.setImpTotMo((Double) impTotMo.getConvertedValue());
@@ -722,11 +708,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			
 			MensajeExtended form = new MensajeExtended("Elimina el cobro?",this);
 			
-			UsuarioPermisosVO permisoAux = 
-			new UsuarioPermisosVO(this.permisos.getCodEmp(),
-					this.permisos.getUsuario(),
-					VariablesPermisos.FORMULARIO_INGRESO_COBRO,
-					VariablesPermisos.OPERACION_BORRAR);
+			
 			
 			sub = new MySub("25%", "20%" );
 			sub.setModal(true);
@@ -739,213 +721,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			sub.setDraggable(true);
 			UI.getCurrent().addWindow(sub);
 			
-//			try {
-//				
-//				/*Seteamos validaciones en nuevo, cuando es editar
-//				 * solamente cuando apreta el boton editar*/
-//				this.setearValidaciones(true);
-//				
-//				/*Validamos los campos antes de invocar al controlador*/
-//				if(this.fieldsValidos())
-//				{
-//					/*Inicializamos VO d	e permisos para el usuario, formulario y operacion
-//					 * para confirmar los permisos del usuario*/
-//					
-//					IngresoCobroVO ingCobroVO = new IngresoCobroVO();	
-//					
-//					ingCobroVO.setImpTotMo((Double) impTotMo.getConvertedValue());
-//					
-//					/*Obtenemos la cotizacion y calculamos el importe MN*/
-//					Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
-//					CotizacionVO coti = null;
-//					
-//					try {    
-//						/////////////////////////////MONEDA//////////////////////////////////////////////////
-//										     
-//						MonedaVO auxMoneda = null;
-//						
-//						//Obtenemos la moneda del cabezal
-//						auxMoneda = new MonedaVO();
-//						if(this.comboMoneda.getValue() != null){
-//							
-//								auxMoneda = (MonedaVO) this.comboMoneda.getValue();
-//							
-//							/*SI EL TIPO ES CAJA TOMAMOS LA MONEDA DEL CABEZAL DEL COBRO*/
-//							//if(((String)comboTipo.getValue()).equals("Caja")) { 
-//							
-//							ingCobroVO.setCodMoneda(auxMoneda.getCodMoneda());
-//							ingCobroVO.setNomMoneda(auxMoneda.getDescripcion());
-//							ingCobroVO.setSimboloMoneda(auxMoneda.getSimbolo());
-//							//}
-//						}
-//
-//
-//						/////////////////////////////FIN MONEDA////////////////////////////////////////////
-//						if(auxMoneda.isNacional()) /*Si la moneda seleccionada es nacional*/
-//						{
-//							/*Si la moneda es la nacional, el TC es 1 y el importe MN es el mismo*/
-//							ingCobroVO.setTcMov(1);
-//							ingCobroVO.setImpTotMn(ingCobroVO.getImpTotMo());
-//							
-//						}else
-//						{
-//							coti = this.controlador.getCotizacion(permisoAux, fecha, this.getCodMonedaSeleccionada());
-//							ingCobroVO.setTcMov(coti.getCotizacionVenta());
-//							ingCobroVO.setImpTotMn((ingCobroVO.getImpTotMo()*ingCobroVO.getTcMov()));
-//						}
-//						
-//					} catch (Exception e) {
-//						Mensajes.mostrarMensajeError(e.getMessage());
-//					}
-//					
-//					ingCobroVO.setFecDoc(new java.sql.Timestamp(fecDoc.getValue().getTime()));
-//					ingCobroVO.setFecValor(new java.sql.Timestamp(fecValor.getValue().getTime()));
-//					/*Codigo y serie docum se inicializan en constructor*/
-//					//ingCobroVO.setNroDocum(Integer.parseInt(nroDocum.getValue()));  VER ESTO CON EL NUMERADOR
-//					ingCobroVO.setCodEmp(permisos.getCodEmp());
-//					ingCobroVO.setReferencia(referencia.getValue());
-//					
-//					ingCobroVO.setCodCtaInd("ingcobro");
-//					
-//					
-//					ingCobroVO.setCodTitular(codTitular.getValue());
-//					ingCobroVO.setNomTitular(nomTitular.getValue());
-//					
-//					ingCobroVO.setOperacion(operacion);
-//					
-//					/*Ver los totales y tc*/
-//					//ingCobroVO.setImpTotMn(impTotMn);
-//					//ingCobroVO.setImpTotMo(impTotMn);
-//					//ingCobroVO.setTcMov(tcMov);
-//					
-//					/*Si es nuevo aun no tenemos el nro del cobro*/
-//					if(this.nroDocum.getValue() != null)
-//						ingCobroVO.setNroDocum(Integer.parseInt(this.nroDocum.getValue().toString().trim()));
-//					
-//					
-//					/*Si es banco tomamos estos cmapos de lo contrario caja*/
-//					if(this.comboTipo.getValue().toString().equals("Banco")){
-//					
-//						ingCobroVO.setmPago((String)comboMPagos.getValue());
-//						
-//						if(ingCobroVO.getmPago().equals("transferencia"))
-//						{
-//							ingCobroVO.setCodDocRef("tranrec");
-//							
-//							ingCobroVO.setSerieDocRef("0");
-//						}
-//						else if(ingCobroVO.getmPago().equals("Cheque"))
-//						{
-//							ingCobroVO.setCodDocRef("cheqrec");
-//							ingCobroVO.setNroDocRef((Integer) nroDocRef.getConvertedValue());
-//							ingCobroVO.setSerieDocRef(serieDocRef.getValue().trim());
-//							
-//						}else
-//						{
-//							
-//							ingCobroVO.setCodDocRef("0");
-//							ingCobroVO.setNroDocRef(0);
-//							ingCobroVO.setSerieDocRef("0");
-//						}
-//													
-//						//Datos del banco y cuenta
-//						CtaBcoVO auxctaBco = new CtaBcoVO();
-//						if(this.comboCuentas.getValue() != null){
-//							
-//							auxctaBco = (CtaBcoVO) this.comboCuentas.getValue();
-//							
-//						}
-//						
-//						ingCobroVO.setCodBanco(auxctaBco.getCodBco());
-//						ingCobroVO.setCodCtaBco(auxctaBco.getCodigo());
-//						ingCobroVO.setNomCtaBco(auxctaBco.getNombre());
-//						ingCobroVO.setCodMonedaCtaBco(auxctaBco.getMonedaVO().getCodMoneda());
-//						/*Falta poner el nombre de la cuenta*/
-//						
-//					}
-//					else {
-//						
-//						if(((String)comboTipo.getValue()).equals("Caja"))
-//						{
-//							ingCobroVO.setCodBanco("0");
-//							ingCobroVO.setNomBanco("0");
-//							
-//							ingCobroVO.setCodCtaBco("0");
-//							ingCobroVO.setNomCtaBco("0");
-//							
-//							ingCobroVO.setCodDocRef("0");
-//							ingCobroVO.setNroDocRef(0);
-//							ingCobroVO.setSerieDocRef("0");
-//							
-//							ingCobroVO.setmPago("Caja");
-//						}
-//									
-//					}
-//					
-//					ingCobroVO.setUsuarioMod(this.permisos.getUsuario());
-//					
-//					if(this.operacion != Variables.OPERACION_NUEVO){
-//						ingCobroVO.setNroTrans((long)this.nroTrans.getConvertedValue());
-//					}
-//					else{
-//						ingCobroVO.setNroTrans(0);
-//					}
-//					
-//					
-//					/*Si hay detalle nuevo agregado
-//					 * lo agregamos a la lista del formulario*/
-//					if(this.lstDetalleAgregar.size() > 0)
-//					{
-//						for (IngresoCobroDetalleVO f : this.lstDetalleAgregar) {
-//							
-//							/*Si no esta lo agregamos*/
-//							if(!this.existeFormularioenLista(f.getNroDocum()))
-//								this.lstDetalleVO.add(f);
-//						}
-//					}
-//						
-//					ingCobroVO.setCodCuenta("ingcobro");
-//					ingCobroVO.setDetalle(this.lstDetalleVO);
-//					
-//					if(ingCobroVO.getDetalle().size() <= 0){
-//						Mensajes.mostrarMensajeError("El cobro no tiene detalle");
-//						return;
-//					}
-//					
-//					 /*Obtenemos la moneda de la cuenta*/
-//				    //Datos del banco y cuenta y moneda de la cuenta
-//				    CtaBcoVO auxctaBco = new CtaBcoVO();
-//				    if(this.comboCuentas.getValue() != null){
-//				     
-//				    	auxctaBco = (CtaBcoVO) this.comboCuentas.getValue();
-//				     
-//				    }
-//				    
-//				    /*Seteamos la moneda de la cta del banco*/
-//				    ingCobroVO.setCodMonedaCtaBco(auxctaBco.getMonedaVO().getCodMoneda());
-//				    ingCobroVO.setNacionalMonedaCtaBco(auxctaBco.getMonedaVO().isNacional());
-//					
-//				    this.controlador.eliminarIngresoCobro(ingCobroVO, permisoAux);
-//					
-//					this.mainView.actulaizarGrilla(ingCobroVO);
-//					
-//					Mensajes.mostrarMensajeOK("Se ha eliminado el Cobro");
-//					main.cerrarVentana();
-//					
-//					
-//				}
-//				else /*Si los campos no son válidos mostramos warning*/
-//				{
-//					Mensajes.mostrarMensajeWarning(Variables.WARNING_CAMPOS_NO_VALIDOS);
-//				}
-//					
-//				} catch (NoExisteIngresoCobroException |InsertandoIngresoCobroException| ExisteIngresoCobroException | InicializandoException| ConexionException | NoTienePermisosException| ObteniendoPermisosException e) {
-//					
-//					ExisteIngresoCobroException a;
-//					
-//					Mensajes.mostrarMensajeError(e.getMessage());
-//					
-//				}
+
 		});
 		
 		/*Inicalizamos listener para boton de Agregar gastos a cobrar*/
@@ -954,75 +730,22 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			if(this.codTitular.getValue() != null && this.codTitular.getValue() != "" 
 					&& this.fecValor.getValue() != null && this.comboMoneda.getValue() != null)
 			{
-				try {
-					
-					
-					BusquedaViewExtended form = new BusquedaViewExtended(this, new GastoVO());
-					
-					sub = new MySub("93%", "64%" );
-					sub.setModal(true);
-					sub.setVista(form);
-					//sub.setWidth("50%");
-					//sub.setHeight("50%");
-					sub.center();
-					
-					String codCliente;/*Codigo del cliente para obtener los gastos a cobrar del mismo*/
-					
-					/*Obtenemos los formularios que no estan en el grupo
-					 * para mostrarlos en la grilla para seleccionar*/
-					if(this.operacion.equals(Variables.OPERACION_NUEVO) )
-					{
-						/*Si la operacion es nuevo, ponemos el  codGrupo vacio
-						 * asi nos trae todos los grupos disponibles*/
-						codCliente = this.codTitular.getValue().toString().trim();
-					}
-					else 
-					{
-						/*Si es operacion Editar tomamos el codGrupo de el fieldGroup*/
-						codCliente = fieldGroup.getItemDataSource().getBean().getCodTitular();
-					}
-					
-					/*Inicializamos VO de permisos para el usuario, formulario y operacion
-					 * para confirmar los permisos del usuario*/
-					UsuarioPermisosVO permisoAux = 
-							new UsuarioPermisosVO(this.permisos.getCodEmp(),
-									this.permisos.getUsuario(),
-									VariablesPermisos.FORMULARIO_INGRESO_COBRO,
-									VariablesPermisos.OPERACION_NUEVO_EDITAR);
-					
+				
+				SeleccionViewExtended form = new SeleccionViewExtended(this);
+				
+				sub = new MySub("40%", "25%" );
+				sub.setModal(true);
+				sub.center();
+				sub.setModal(true);
+				sub.setVista(form);
+				sub.center();
+				sub.setClosable(false);
+				sub.setResizable(false);
+				sub.setDraggable(true);
+				UI.getCurrent().addWindow(sub);
+				
 
-					//Moneda
-					MonedaVO auxMoneda = new MonedaVO();
-					if(this.comboMoneda.getValue() != null){
-						auxMoneda = (MonedaVO) this.comboMoneda.getValue();
-					}
-					
-					/*Obtenemos los gastos con saldo del cliente*/
-					ArrayList<GastoVO> lstGastosConSaldo = this.controlador.getGastosConSaldo(permisoAux, codCliente);
-					
-					/*Hacemos una lista auxliar para pasarselo al BusquedaViewExtended*/
-					ArrayList<Object> lst = new ArrayList<Object>();
-					Object obj;
-					for (GastoVO i: lstGastosConSaldo) {
-						
-						/*Verificamos que el gasto ya no esta en la grilla*/
-						if(!this.existeFormularioenLista(i.getNroDocum()))
-						{
-							obj = new Object();
-							obj = (Object)i;
-							lst.add(obj);
-						}
-					}
-					
-					form.inicializarGrilla(lst);
-					
-					UI.getCurrent().addWindow(sub);
-
-					}catch(Exception e)
-					{
-						Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
-					}
-				}
+			}
 			else{
 				Mensajes.mostrarMensajeError("Debe ingresar los datos de cabecera");
 			}
@@ -1060,18 +783,18 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			main.cerrarVentana();
 		});
 			
-			/*Inicalizamos listener para boton de Quitar*/
-			this.btnQuitar.addClickListener(click -> {
-				
+		/*Inicalizamos listener para boton de Quitar*/
+		this.btnQuitar.addClickListener(click -> {
+			
 			boolean esta = false;	
-	
+
 			try {
-				
+			
 				/*Verificamos que haya un formulario seleccionado para
 				 * eliminar*/
 				if(formSelecccionado != null)
 				{
-
+	
 					/*Recorremos los gastos del cobro
 					 * y buscamos el seleccionarlo para quitarlo*/
 					int i = 0;
@@ -1090,7 +813,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 						
 							esta = true;
 						}
-
+	
 						i++;
 					}
 					
@@ -1106,49 +829,44 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 						this.calcularImporteTotal();
 					}
 					
+					formSelecccionado = null;
 				}
 				else /*De lo contrario mostramos mensaje que debe selcionar un gasto*/
 				{
 					Mensajes.mostrarMensajeError("Debe seleccionar un gasto para quitar");
 				}
-		
-				}catch(Exception e)
-				{
-					Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
-				}
-			});
+	
+			}
+			catch(Exception e)
+			{
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}
+		});
 			
-			/*Inicializamos el listener de la grilla de gastos*/
-			lstGastos.addSelectionListener(new SelectionListener() {
+		this.btnEditarItem.addClickListener(click -> {
+			
+			boolean esta = false;	
+
+			try {
 				
-			    @Override
-			    public void select(SelectionEvent event) {
-			       
-			    	try{
-			    		if(lstGastos.getSelectedRow() != null){
-			    			BeanItem<IngresoCobroDetalleVO> item = container.getItem(lstGastos.getSelectedRow());
-					    	formSelecccionado = item.getBean(); /*Seteamos el formulario
-				    	 									seleccionado para poder quitarlo*/
-			    		}
-			    	}
-			    	catch(Exception e){
-			    		Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
-			    	}
-			      
-			    }
-			});
-			
-			
-			
-			/*Listener boton editar de la grilla de formularios*/
-			this.btnProceso.addClickListener(click -> {
-				
-				if(this.codTitular.getValue() != null && this.codTitular.getValue() != "" 
-						&& this.fecValor.getValue() != null && this.comboMoneda.getValue() != null)
-				{
-					try {
+				/*Verificamos que haya un formulario seleccionado para
+				 * eliminar*/
+				if(formSelecccionado != null){
+					
+					if(formSelecccionado.getCodDocum().equals("Proc")){
 						
 						ProcesoVO proceso = new ProcesoVO();
+						ProcesoVO datos = new ProcesoVO();
+						
+						UsuarioPermisosVO permisosAux;
+						permisosAux = 
+								new UsuarioPermisosVO(this.permisos.getCodEmp(),
+										this.permisos.getUsuario(),
+										VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+										VariablesPermisos.OPERACION_LEER);
+						
+						
+						
 						proceso.setCodCliente(codTitular.getValue());
 						proceso.setNomCliente(nomTitular.getValue());
 						
@@ -1159,25 +877,65 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 						proceso.setCodMoneda(auxMoneda.getCodMoneda());
 						proceso.setDescMoneda(auxMoneda.getDescripcion());
 						proceso.setSimboloMoneda(auxMoneda.getSimbolo());
+						proceso.setCodigo(Integer.valueOf(formSelecccionado.getCodProceso()));
+						proceso.setDescripcion(formSelecccionado.getDescProceso());
+						proceso.setCodRubro(formSelecccionado.getCodRubro());
+						proceso.setNomRubro(formSelecccionado.getNomRubro());
+						proceso.setCodCuenta(formSelecccionado.getCodCuenta());
+						proceso.setNomCuenta(formSelecccionado.getNomCuenta());
+						proceso.setImpMo(formSelecccionado.getImpTotMo());
+						
+						datos = controlador.getProceso(permisosAux, proceso.getCodigo());
+						
+						proceso.setCarpeta(datos.getCarpeta());
+						proceso.setNomDocum(datos.getNomDocum());
+						
 						
 						//BusquedaViewExtended form = new BusquedaViewExtended(this, new ProcesoVO());
-						IngresoCobroProcesoViewExtended form = new IngresoCobroProcesoViewExtended("NUEVO", this, proceso);
-						sub = new MySub("75%", "42%" );
+						IngresoCobroProcesoViewExtended form = new IngresoCobroProcesoViewExtended("EDITAR", this, proceso);
+						sub = new MySub("77%", "45%" );
 						sub.setModal(true);
 						sub.setVista(form);
 						sub.center();
 						
 						UI.getCurrent().addWindow(sub);
-
-						}catch(Exception e)
-						{
-							Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
-						}
+						
 					}
-				else{
-					Mensajes.mostrarMensajeError("Debe ingresar los datos de cabecera");
+					else if(formSelecccionado.getCodDocum().equals("Gasto")){
+						Mensajes.mostrarMensajeWarning("El importe del gasto se edita en la grilla directamente");
+					}
 				}
-			});
+			
+				else /*De lo contrario mostramos mensaje que debe selcionar un gasto*/
+				{
+					Mensajes.mostrarMensajeError("Debe seleccionar un gasto para quitar");
+				}
+		
+				}catch(Exception e)
+				{
+					Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+				}
+		});
+		
+		/*Inicializamos el listener de la grilla de gastos*/
+		lstGastos.addSelectionListener(new SelectionListener() {
+			
+		    @Override
+		    public void select(SelectionEvent event) {
+		       
+		    	try{
+		    		if(lstGastos.getSelectedRow() != null){
+		    			BeanItem<IngresoCobroDetalleVO> item = container.getItem(lstGastos.getSelectedRow());
+				    	formSelecccionado = item.getBean(); /*Seteamos el formulario
+			    	 									seleccionado para poder quitarlo*/
+		    		}
+		    	}
+		    	catch(Exception e){
+		    		Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+		    	}
+		      
+		    }
+		});
 			
 	}
 
@@ -1471,6 +1229,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		this.chkFuncionario.setVisible(false);
 		this.lblFuncionario.setVisible(false);
 		
+		//this.botones.setWidth("200");
+		
 		/*Verificamos que tenga permisos*/
 		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_COBRO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
@@ -1567,8 +1327,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		this.nroDocRef.setReadOnly(false);
 		
 		this.impTotMo.setReadOnly(false);
-		this.impTotMo.setEnabled(false);
-		this.impTotMo.setEnabled(false);
+		this.impTotMo.setEnabled(true);
 		this.monedaBanco.setEnabled(false);
 		this.cuentaBanco.setEnabled(false);
 		this.referencia.setReadOnly(false);
@@ -1607,8 +1366,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		this.btnQuitar.setEnabled(true);
 		this.btnQuitar.setVisible(true);
 		
-		this.btnProceso.setEnabled(true);
-		this.btnProceso.setVisible(true);
+		this.btnEditarItem.setEnabled(true);
+		this.btnEditarItem.setVisible(true);
 		
 	}
 	
@@ -1624,8 +1383,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		this.btnQuitar.setEnabled(false);
 		this.btnQuitar.setVisible(false);
 		
-		this.btnProceso.setEnabled(false);
-		this.btnProceso.setVisible(false);
+		this.btnEditarItem.setEnabled(false);
+		this.btnEditarItem.setVisible(false);
 	}
 	
 	/**
@@ -1983,6 +1742,27 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		}
 		
 		return esta;
+	}
+	
+	private void existeFormularioenListaElimina(int nro)
+	{
+		int i =0;
+		boolean esta = false;
+		
+		IngresoCobroDetalleVO aux;
+		
+		while( i < this.lstDetalleVO.size() && !esta)
+		{
+			aux = this.lstDetalleVO.get(i);
+			if(nro==aux.getNroDocum())
+			{
+				esta = true;
+				this.lstDetalleVO.remove(i);
+			}
+			
+			i++;
+		}
+		
 	}
 	
 	private boolean existeProcesoenLista(int nro)
@@ -2392,6 +2172,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
    			docum.setCodCuenta(procesoVO.getCodCuenta());
    			docum.setNomCuenta(procesoVO.getNomCuenta());
    			
+   			existeFormularioenListaElimina(docum.getNroDocum());
    			
 			this.lstDetalleVO.add(docum);
 				
@@ -2497,7 +2278,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		}
 		
 		//this.impTotMo.setValue(Double.toString(impMo));
-		this.impTotMo.setConvertedValue(impMo);
+		//this.impTotMo.setConvertedValue(impMo);
+		importeTotalCalculado = impMo;
 	}
 	
 	
@@ -2719,5 +2501,322 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		return monedaVO;
 	}
 	
+	public void eliminarCobro(){
+		try {
+		
+		UsuarioPermisosVO permisoAux = 
+				new UsuarioPermisosVO(this.permisos.getCodEmp(),
+						this.permisos.getUsuario(),
+						VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+						VariablesPermisos.OPERACION_BORRAR);
+		/*Seteamos validaciones en nuevo, cuando es editar
+		 * solamente cuando apreta el boton editar*/
+		this.setearValidaciones(true);
+		
+		/*Validamos los campos antes de invocar al controlador*/
+		if(this.fieldsValidos())
+		{
+			/*Inicializamos VO d	e permisos para el usuario, formulario y operacion
+			 * para confirmar los permisos del usuario*/
+			
+			IngresoCobroVO ingCobroVO = new IngresoCobroVO();	
+			
+			ingCobroVO.setImpTotMo((Double) impTotMo.getConvertedValue());
+			
+			/*Obtenemos la cotizacion y calculamos el importe MN*/
+			Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
+			CotizacionVO coti = null;
+			
+			try {    
+				/////////////////////////////MONEDA//////////////////////////////////////////////////
+								     
+				MonedaVO auxMoneda = null;
+				
+				//Obtenemos la moneda del cabezal
+				auxMoneda = new MonedaVO();
+				if(this.comboMoneda.getValue() != null){
+					
+						auxMoneda = (MonedaVO) this.comboMoneda.getValue();
+					
+					/*SI EL TIPO ES CAJA TOMAMOS LA MONEDA DEL CABEZAL DEL COBRO*/
+					//if(((String)comboTipo.getValue()).equals("Caja")) { 
+					
+					ingCobroVO.setCodMoneda(auxMoneda.getCodMoneda());
+					ingCobroVO.setNomMoneda(auxMoneda.getDescripcion());
+					ingCobroVO.setSimboloMoneda(auxMoneda.getSimbolo());
+					//}
+				}
+
+
+				/////////////////////////////FIN MONEDA////////////////////////////////////////////
+				if(auxMoneda.isNacional()) /*Si la moneda seleccionada es nacional*/
+				{
+					/*Si la moneda es la nacional, el TC es 1 y el importe MN es el mismo*/
+					ingCobroVO.setTcMov(1);
+					ingCobroVO.setImpTotMn(ingCobroVO.getImpTotMo());
+					
+				}else
+				{
+					coti = this.controlador.getCotizacion(permisoAux, fecha, this.getCodMonedaSeleccionada());
+					ingCobroVO.setTcMov(coti.getCotizacionVenta());
+					ingCobroVO.setImpTotMn((ingCobroVO.getImpTotMo()*ingCobroVO.getTcMov()));
+				}
+				
+			} catch (Exception e) {
+				Mensajes.mostrarMensajeError(e.getMessage());
+			}
+			
+			ingCobroVO.setFecDoc(new java.sql.Timestamp(fecDoc.getValue().getTime()));
+			ingCobroVO.setFecValor(new java.sql.Timestamp(fecValor.getValue().getTime()));
+			/*Codigo y serie docum se inicializan en constructor*/
+			//ingCobroVO.setNroDocum(Integer.parseInt(nroDocum.getValue()));  VER ESTO CON EL NUMERADOR
+			ingCobroVO.setCodEmp(permisos.getCodEmp());
+			ingCobroVO.setReferencia(referencia.getValue());
+			
+			ingCobroVO.setCodCtaInd("ingcobro");
+			
+			
+			ingCobroVO.setCodTitular(codTitular.getValue());
+			ingCobroVO.setNomTitular(nomTitular.getValue());
+			
+			ingCobroVO.setOperacion(operacion);
+			
+			/*Ver los totales y tc*/
+			//ingCobroVO.setImpTotMn(impTotMn);
+			//ingCobroVO.setImpTotMo(impTotMn);
+			//ingCobroVO.setTcMov(tcMov);
+			
+			/*Si es nuevo aun no tenemos el nro del cobro*/
+			if(this.nroDocum.getValue() != null)
+				ingCobroVO.setNroDocum(Integer.parseInt(this.nroDocum.getValue().toString().trim()));
+			
+			
+			/*Si es banco tomamos estos cmapos de lo contrario caja*/
+			if(this.comboTipo.getValue().toString().equals("Banco")){
+			
+				ingCobroVO.setmPago((String)comboMPagos.getValue());
+				
+				if(ingCobroVO.getmPago().equals("transferencia"))
+				{
+					ingCobroVO.setCodDocRef("tranrec");
+					
+					ingCobroVO.setSerieDocRef("0");
+				}
+				else if(ingCobroVO.getmPago().equals("Cheque"))
+				{
+					ingCobroVO.setCodDocRef("cheqrec");
+					ingCobroVO.setNroDocRef((Integer) nroDocRef.getConvertedValue());
+					ingCobroVO.setSerieDocRef(serieDocRef.getValue().trim());
+					
+				}else
+				{
+					
+					ingCobroVO.setCodDocRef("0");
+					ingCobroVO.setNroDocRef(0);
+					ingCobroVO.setSerieDocRef("0");
+				}
+											
+				//Datos del banco y cuenta
+				CtaBcoVO auxctaBco = new CtaBcoVO();
+				if(this.comboCuentas.getValue() != null){
+					
+					auxctaBco = (CtaBcoVO) this.comboCuentas.getValue();
+					
+				}
+				
+				ingCobroVO.setCodBanco(auxctaBco.getCodBco());
+				ingCobroVO.setCodCtaBco(auxctaBco.getCodigo());
+				ingCobroVO.setNomCtaBco(auxctaBco.getNombre());
+				ingCobroVO.setCodMonedaCtaBco(auxctaBco.getMonedaVO().getCodMoneda());
+				/*Falta poner el nombre de la cuenta*/
+				
+			}
+			else {
+				
+				if(((String)comboTipo.getValue()).equals("Caja"))
+				{
+					ingCobroVO.setCodBanco("0");
+					ingCobroVO.setNomBanco("0");
+					
+					ingCobroVO.setCodCtaBco("0");
+					ingCobroVO.setNomCtaBco("0");
+					
+					ingCobroVO.setCodDocRef("0");
+					ingCobroVO.setNroDocRef(0);
+					ingCobroVO.setSerieDocRef("0");
+					
+					ingCobroVO.setmPago("Caja");
+				}
+							
+			}
+			
+			ingCobroVO.setUsuarioMod(this.permisos.getUsuario());
+			
+			if(this.operacion != Variables.OPERACION_NUEVO){
+				ingCobroVO.setNroTrans((long)this.nroTrans.getConvertedValue());
+			}
+			else{
+				ingCobroVO.setNroTrans(0);
+			}
+			
+			
+			/*Si hay detalle nuevo agregado
+			 * lo agregamos a la lista del formulario*/
+			if(this.lstDetalleAgregar.size() > 0)
+			{
+				for (IngresoCobroDetalleVO f : this.lstDetalleAgregar) {
+					
+					/*Si no esta lo agregamos*/
+					if(!this.existeFormularioenLista(f.getNroDocum()))
+						this.lstDetalleVO.add(f);
+				}
+			}
+				
+			ingCobroVO.setCodCuenta("ingcobro");
+			ingCobroVO.setDetalle(this.lstDetalleVO);
+			
+			if(ingCobroVO.getDetalle().size() <= 0){
+				Mensajes.mostrarMensajeError("El cobro no tiene detalle");
+				return;
+			}
+			
+			 /*Obtenemos la moneda de la cuenta*/
+		    //Datos del banco y cuenta y moneda de la cuenta
+		    CtaBcoVO auxctaBco = new CtaBcoVO();
+		    if(this.comboCuentas.getValue() != null){
+		     
+		    	auxctaBco = (CtaBcoVO) this.comboCuentas.getValue();
+		     
+		    }
+		    
+		    /*Seteamos la moneda de la cta del banco*/
+		    ingCobroVO.setCodMonedaCtaBco(auxctaBco.getMonedaVO().getCodMoneda());
+		    ingCobroVO.setNacionalMonedaCtaBco(auxctaBco.getMonedaVO().isNacional());
+			
+		    this.controlador.eliminarIngresoCobro(ingCobroVO, permisoAux);
+			
+			this.mainView.actulaizarGrilla(ingCobroVO);
+			
+			Mensajes.mostrarMensajeOK("Se ha eliminado el Cobro");
+			UI.getCurrent().removeWindow(sub);
+			this.mainView.cerrarVentana();
+			
+			
+		}
+		else /*Si los campos no son válidos mostramos warning*/
+		{
+			Mensajes.mostrarMensajeWarning(Variables.WARNING_CAMPOS_NO_VALIDOS);
+		}
+			
+		} catch (NoExisteIngresoCobroException |InsertandoIngresoCobroException| ExisteIngresoCobroException | InicializandoException| ConexionException | NoTienePermisosException| ObteniendoPermisosException e) {
+			
+			ExisteIngresoCobroException a;
+			
+			Mensajes.mostrarMensajeError(e.getMessage());
+			
+		}
+	}
 	
+	public void agregarGasto(){
+		try {
+		
+		UI.getCurrent().removeWindow(sub);
+		BusquedaViewExtended form = new BusquedaViewExtended(this, new GastoVO());
+		
+		sub = new MySub("93%", "64%" );
+		sub.setModal(true);
+		sub.setVista(form);
+		//sub.setWidth("50%");
+		//sub.setHeight("50%");
+		sub.center();
+		
+		String codCliente;/*Codigo del cliente para obtener los gastos a cobrar del mismo*/
+		
+		/*Obtenemos los formularios que no estan en el grupo
+		 * para mostrarlos en la grilla para seleccionar*/
+		if(this.operacion.equals(Variables.OPERACION_NUEVO) )
+		{
+			/*Si la operacion es nuevo, ponemos el  codGrupo vacio
+			 * asi nos trae todos los grupos disponibles*/
+			codCliente = this.codTitular.getValue().toString().trim();
+		}
+		else 
+		{
+			/*Si es operacion Editar tomamos el codGrupo de el fieldGroup*/
+			codCliente = fieldGroup.getItemDataSource().getBean().getCodTitular();
+		}
+		
+		/*Inicializamos VO de permisos para el usuario, formulario y operacion
+		 * para confirmar los permisos del usuario*/
+		UsuarioPermisosVO permisoAux = 
+				new UsuarioPermisosVO(this.permisos.getCodEmp(),
+						this.permisos.getUsuario(),
+						VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+						VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		
+
+		//Moneda
+		MonedaVO auxMoneda = new MonedaVO();
+		if(this.comboMoneda.getValue() != null){
+			auxMoneda = (MonedaVO) this.comboMoneda.getValue();
+		}
+		
+		/*Obtenemos los gastos con saldo del cliente*/
+		ArrayList<GastoVO> lstGastosConSaldo = this.controlador.getGastosConSaldo(permisoAux, codCliente);
+		
+		/*Hacemos una lista auxliar para pasarselo al BusquedaViewExtended*/
+		ArrayList<Object> lst = new ArrayList<Object>();
+		Object obj;
+		for (GastoVO i: lstGastosConSaldo) {
+			
+			/*Verificamos que el gasto ya no esta en la grilla*/
+			if(!this.existeFormularioenLista(i.getNroDocum()))
+			{
+				obj = new Object();
+				obj = (Object)i;
+				lst.add(obj);
+			}
+		}
+		
+		form.inicializarGrilla(lst);
+		
+		UI.getCurrent().addWindow(sub);
+
+		}catch(Exception e)
+		{
+			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+		}
+	}
+	
+	public void agregarProceso(){
+		
+		try {
+			
+			UI.getCurrent().removeWindow(sub);
+			ProcesoVO proceso = new ProcesoVO();
+			proceso.setCodCliente(codTitular.getValue());
+			proceso.setNomCliente(nomTitular.getValue());
+			
+			MonedaVO auxMoneda = new MonedaVO();
+   			auxMoneda = (MonedaVO) comboMoneda.getValue();
+   			
+   			
+			proceso.setCodMoneda(auxMoneda.getCodMoneda());
+			proceso.setDescMoneda(auxMoneda.getDescripcion());
+			proceso.setSimboloMoneda(auxMoneda.getSimbolo());
+			
+			//BusquedaViewExtended form = new BusquedaViewExtended(this, new ProcesoVO());
+			IngresoCobroProcesoViewExtended form = new IngresoCobroProcesoViewExtended("NUEVO", this, proceso);
+			sub = new MySub("77%", "45%" );
+			sub.setModal(true);
+			sub.setVista(form);
+			sub.center();
+			
+			UI.getCurrent().addWindow(sub);
+
+			}
+		catch(Exception e){
+			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+		}
+	}
 }

@@ -5,12 +5,15 @@
  </head> 
  <body> 
   <vaadin-form-layout style-name="center colored h2" responsive id="auditoria" size-auto margin> 
-   <vaadin-horizontal-layout :middle :center> 
-    <vaadin-label style-name="center" size-auto _id="mensaje" :middle :center></vaadin-label> 
-   </vaadin-horizontal-layout> 
    <vaadin-horizontal-layout> 
-    <vaadin-label style-name="center" size-auto _id="lblMensaje" :middle :center></vaadin-label> 
+    <vaadin-label style-name="colored h2" responsive plain-text :center>
+      Seleccione operación 
+    </vaadin-label> 
    </vaadin-horizontal-layout> 
+   <vaadin-option-group caption="" item-caption-mode="id" _id="operacion"> 
+    <option>Agregar Gasto </option> 
+    <option>A cuenta de Proceso</option> 
+   </vaadin-option-group> 
    <vaadin-horizontal-layout responsive size-full :middle :center> 
     <vaadin-form-layout spacing="false" size-full margin-top="false" margin-bottom="false"> 
      <vaadin-horizontal-layout width="184px" :middle :center> 

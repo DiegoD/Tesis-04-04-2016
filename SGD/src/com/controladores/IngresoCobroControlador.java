@@ -193,7 +193,12 @@ public class IngresoCobroControlador {
 			throw new NoTienePermisosException();
 	}
 	
-
+	public ProcesoVO getProceso(UsuarioPermisosVO permisos, Integer codProceso) throws ObteniendoProcesosException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException{
+		if(Fachada.getInstance().permisoEnFormulario(permisos))	
+			return FachadaDD.getInstance().getProceso(permisos.getCodEmp(), codProceso);
+		else
+			throw new NoTienePermisosException();
+	}
 	
 	
 }

@@ -2579,6 +2579,68 @@ public class FachadaDD {
        		pool.liberarConeccion(con);
        	}
    	}
+    
+    /**
+	 * Obtiene todos los procesos existentes 
+	 */
+    @SuppressWarnings("unchecked")
+	public ProcesoVO getProceso(String cod_emp, Integer codProceso) throws ObteniendoProcesosException, ConexionException
+    {
+    	
+    	Connection con = null;
+    	Proceso proceso = new Proceso();
+    	ProcesoVO aux = new ProcesoVO();
+    	
+    	try
+    	{
+    		con = this.pool.obtenerConeccion();
+    		
+    		proceso = this.procesos.getProceso(con, cod_emp, codProceso);
+    			
+			aux.setOperacion(proceso.getOperacion());
+			aux.setFechaMod(proceso.getFechaMod());
+			aux.setUsuarioMod(proceso.getUsuarioMod());
+			aux.setCodigo(proceso.getCodigo());
+			aux.setCodCliente(proceso.getClienteInfo().getCodigo());
+			aux.setNomCliente(proceso.getClienteInfo().getNombre());
+			aux.setCodMoneda(proceso.getMonedaInfo().getCodMoneda());
+			aux.setDescMoneda(proceso.getMonedaInfo().getDescripcion());
+			aux.setSimboloMoneda(proceso.getMonedaInfo().getSimbolo());
+			aux.setFecha(proceso.getFecha());
+			aux.setNroMega(proceso.getNroMega());
+			aux.setCodDocum(proceso.getDocumento().getCod_docucmento());
+			aux.setNomDocum(proceso.getDocumento().getDescirpcion());
+			aux.setNroDocum(proceso.getNroDocum());
+			aux.setFecDocum(proceso.getFecDocum());
+			aux.setCarpeta(proceso.getCarpeta());
+			aux.setImpMo(proceso.getImpMo());
+			aux.setImpMn(proceso.getImpMn());
+			aux.setImpTr(proceso.getImpTr());
+			aux.setTcMov(proceso.getTcMov());
+			aux.setKilos(proceso.getKilos());
+			aux.setFecCruce(proceso.getFecCruce());
+			aux.setMarca(proceso.getMarca());
+			aux.setMedio(proceso.getMedio());
+			aux.setDescripcion(proceso.getDescripcion());
+			aux.setObservaciones(proceso.getObservaciones());
+    			
+    	}
+    	catch(ObteniendoProcesosException e){
+    		throw e;
+    		
+    	} 
+    	catch (ConexionException e) {
+			
+    		throw e;
+    	} 
+    	finally
+    	{
+    		this.pool.liberarConeccion(con);
+    	}
+    	    
+    	
+    	return aux;
+    }
 /////////////////////////////////FIN-PROCESOS/////////////////////////////////
  
 /////////////////////////////////INI-GASTOS/////////////////////////////////
