@@ -269,23 +269,68 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 					monedaBanco.setValue("");
 					cuentaBanco.setValue("");
 					
-					return;
 				}
-				
-	   			if(ctaBcoAux != null && !comboCuentas.getValue().equals("")){
-	   				monedaBanco.setValue(ctaBcoAux.getMonedaVO().getSimbolo());
-	   				cuentaBanco.setValue(ctaBcoAux.getCodigo());
-	   				if(comboMoneda.getValue()!= ""){
-	   					auxMoneda = (MonedaVO) comboMoneda.getValue();
-	   					if(auxMoneda != null){
-	   						if(!auxMoneda.getCodMoneda().equals(ctaBcoAux.getMonedaVO().getCodMoneda()) && opera != Variables.OPERACION_LECTURA){
-		   						Mensajes.mostrarMensajeWarning("La moneda del banco es diferente a la moneda del documento");
+   			
+				if(comboCuentas.getValue()!=null){
+					if(ctaBcoAux != null && !comboCuentas.getValue().equals("")){
+		   				monedaBanco.setValue(ctaBcoAux.getMonedaVO().getSimbolo());
+		   				cuentaBanco.setValue(ctaBcoAux.getCodigo());
+		   				if(comboMoneda.getValue()!= ""){
+		   					auxMoneda = (MonedaVO) comboMoneda.getValue();
+		   					if(auxMoneda != null){
+		   						if(!auxMoneda.getCodMoneda().equals(ctaBcoAux.getMonedaVO().getCodMoneda()) && opera != Variables.OPERACION_LECTURA){
+			   						Mensajes.mostrarMensajeWarning("La moneda del banco es diferente a la moneda del documento");
+			   					}
 		   					}
+		   					
+		   				}
+		   			}
+				}
+	   			
+   			}
+   			
+   			if(comboMoneda.getValue()!= null){
+   				
+   	   			
+	   			MonedaVO auxMoneda = new MonedaVO();
+	   			Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
+	   			auxMoneda = (MonedaVO) comboMoneda.getValue();
+	   			
+	   			if(auxMoneda.getCodMoneda() != null && !auxMoneda.isNacional()){
+	   				try {
+	   					
+	   					tcMov.setVisible(true);
+						cotizacion = controlador.getCotizacion(permisoAux, fecha, auxMoneda.getCodMoneda());
+						if(cotizacion.getCotizacionVenta() != 0 && !auxMoneda.isNacional()){
+							cotizacionVenta = cotizacion.getCotizacionVenta();
+							if(comboCuentas.getValue() != "" && comboCuentas.getValue()!=null){
+								
+					   			ctaBcoAux = new CtaBcoVO();
+					   			ctaBcoAux = (CtaBcoVO) comboCuentas.getValue();
+					   			if(!auxMoneda.getCodMoneda().equals(ctaBcoAux.getMonedaVO().getCodMoneda())&& opera != Variables.OPERACION_LECTURA){
+					   				Mensajes.mostrarMensajeWarning("La moneda del banco es diferente a la moneda del documento");
+					   			}
+				   			}
+							calculos();
+						}
+						else{
+							Mensajes.mostrarMensajeError("Debe cargar la cotización para la moneda");
+							comboMoneda.setValue(monedaNacional);
+						}
+					} 
+	   				catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
+							| InicializandoException | NoTienePermisosException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+	   				if(fecha != null){
+	   					
+	   					for (MonedaVO monedaVO : lstMonedas) {
+	   						
+	   						monedaVO = seteaCotizaciones(monedaVO);
 	   					}
 	   					
 	   				}
-	   				
-	   				
 	   			}
    			}
 		}
@@ -380,6 +425,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	   				
 	   			}
    			}
+   			
+   			
 			
 		}
     });
