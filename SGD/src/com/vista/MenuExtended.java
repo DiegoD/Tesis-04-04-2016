@@ -35,6 +35,7 @@ import com.vista.IngresoOtro.IngresoOtroPanelExtended;
 import com.vista.Login.LoginExtended;
 import com.vista.Monedas.MonedasPanelExtended;
 import com.vista.Procesos.ProcesosPanelExtended;
+import com.vista.ResumenProceso.ResProcesosPanelExtended;
 import com.vista.Rubros.RubrosPanelExtended;
 import com.vista.TipoRubro.TipoRubrosPanelExtended;
 import com.vista.Usuarios.UsuariosPanelExtend;
@@ -513,7 +514,22 @@ public class MenuExtended extends Menu{
 			this.content.removeAllComponents();
 			try {
 				
-				IngresoEgresoOtroPanelExtended u = new IngresoEgresoOtroPanelExtended(); 
+				ResProcesosPanelExtended u = new ResProcesosPanelExtended(); 
+				this.content.addComponent(u);
+				
+			} catch (Exception e) {
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}
+		});
+		
+		this.resumenProc.addClickListener(click -> {
+			
+			setSizeFull();
+			
+			this.content.removeAllComponents();
+			try {
+				
+				ResProcesosPanelExtended u = new ResProcesosPanelExtended(); 
 				this.content.addComponent(u);
 				
 			} catch (Exception e) {
@@ -583,6 +599,7 @@ public class MenuExtended extends Menu{
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_INGRESO_COBRO_OTRO) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_INGRESO_EGRESO) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_INGRESO_EGRESO_OTRO) ||
+				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_RESUMEN_PROCESO) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_RUBROS))
 			{
 				lstFormsMenuMant.add(formularioVO);
@@ -742,6 +759,13 @@ public class MenuExtended extends Menu{
 						
 					break;
 					
+					case VariablesPermisos.FORMULARIO_RESUMEN_PROCESO:
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_RESUMEN_PROCESO, VariablesPermisos.OPERACION_LEER)){
+							this.habilitarResumenProceso();
+							this.layoutMenu.addComponent(this.resumenProc);
+						}
+						
+					break;
 					
 				}
 				
@@ -892,6 +916,9 @@ public class MenuExtended extends Menu{
 		
 		this.otroEgreso.setVisible(false);
 		this.otroEgreso.setEnabled(false);
+		
+		this.resumenProc.setVisible(false);
+		this.resumenProc.setEnabled(false);
 	}
 	
 	
@@ -1028,6 +1055,11 @@ public class MenuExtended extends Menu{
 		this.layoutMenu.addComponent(otroEgreso);
 	}
 	
+	private void habilitarResumenProceso(){
+		this.resumenProc.setVisible(true);
+		this.resumenProc.setEnabled(true);
+		this.layoutMenu.addComponent(resumenProc);
+	}
 	
 	public PermisosUsuario getPermisosUsuario()
 	{

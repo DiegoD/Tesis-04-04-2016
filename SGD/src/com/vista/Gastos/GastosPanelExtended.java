@@ -43,7 +43,7 @@ public class GastosPanelExtended extends GastosPanel implements IGastosMain{
 	private ArrayList<GastoVO> lstGastos; /*Lista con las empresas*/
 	private BeanItemContainer<GastoVO> container;
 	private GastoControlador controlador;
-	MySub sub = new MySub("100%","70%");
+	MySub sub = new MySub("50%","65%");
 	PermisosUsuario permisos;
 	
 	public GastosPanelExtended(){
@@ -70,7 +70,7 @@ public class GastosPanelExtended extends GastosPanel implements IGastosMain{
 				
 					this.btnNuevoGasto.addClickListener(click -> {
 						
-						sub = new MySub("95%","45%");
+						sub = new MySub("50%","45%");
 						form = new GastoViewExtended(Variables.OPERACION_NUEVO, this, null);
 						sub.setModal(true);
 						sub.setVista((Component) form);
@@ -194,7 +194,7 @@ public class GastosPanelExtended extends GastosPanel implements IGastosMain{
 				    	}
 							
 				    	form = new GastoViewExtended(Variables.OPERACION_LECTURA, GastosPanelExtended.this, null);
-				    	sub = new MySub("95%","45%");
+				    	sub = new MySub("50%","45%");
 						sub.setModal(true);
 						sub.setVista((Component) form);
 						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
