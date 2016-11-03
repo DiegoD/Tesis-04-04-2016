@@ -80,6 +80,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 	private BeanFieldGroup<IngresoCobroVO> fieldGroup;
 	private ArrayList<IngresoCobroDetalleVO> lstDetalleVO; /*Lista de detalle del Cobro*/
 	private ArrayList<IngresoCobroDetalleVO> lstDetalleAgregar; /*Lista de detalle a agregar*/
+	private ArrayList<IngresoCobroDetalleVO> lstDetalleQuitar; /*Lista de detalle a agregar*/
 	private IngresoEgresoControlador controlador;
 	private String operacion;
 	private IngresoEgresoPanelExtended mainView;
@@ -94,6 +95,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 	 															 controlar que el saldo del gasto quede
 	 															 en negativo*/
 	
+	Double importeTotalCalculado;
 	IngresoCobroVO ingresoCopia; /*Variable utilizada para la modificacion del cobro,
 	 							 para poder detectar las lineas eliminadas del cobro */
 	
@@ -103,7 +105,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 	MySub sub;
 	//private UsuarioPermisosVO permisos; /*Variable con los permisos del usuario*/
 	private PermisosUsuario permisos; /*Variable con los permisos del usuario*/
-	
+	ArrayList<MonedaVO> lstMonedas = new ArrayList<MonedaVO>();
 	
 	/**
 	 * Constructor del formulario, conInfo indica
@@ -127,10 +129,11 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 	this.mainView = main;
 	lstGastos.setEditorBuffered(true);
 	
+	
 	/*Esta lista es utilizada solamente para los formularios nuevos
 	 * agregados*/
 	this.lstDetalleAgregar = new ArrayList<IngresoCobroDetalleVO>();
-	
+	this.lstDetalleQuitar = new ArrayList<IngresoCobroDetalleVO>();
 	this.inicializarForm();
 	
 	
@@ -226,13 +229,129 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 				bcoAux = new BancoVO();
 				bcoAux = (BancoVO) comboBancos.getValue();
 				
-				inicializarComboCuentas(bcoAux.getCodigo());
+				inicializarComboCuentas(bcoAux.getCodigo(), "Banco");
 			}		
 		}
     });
 	
 	
-	 
+	fecValor.addValueChangeListener(new Property.ValueChangeListener() {
+
+   		@Override
+		public void valueChange(ValueChangeEvent event) {
+   						
+   			for (MonedaVO monedaVO : lstMonedas) {
+					
+				monedaVO = seteaCotizaciones(monedaVO);
+			}	
+   			
+   			/*Inicializamos VO de permisos para el usuario, formulario y operacion
+   			 * para confirmar los permisos del usuario*/
+   			UsuarioPermisosVO permisoAux = 
+   					new UsuarioPermisosVO(permisos.getCodEmp(),
+   							permisos.getUsuario(),
+   							VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+   							VariablesPermisos.OPERACION_NUEVO_EDITAR);
+   			
+   			CtaBcoVO ctaBcoAux;
+   			ctaBcoAux = new CtaBcoVO();
+   			if(comboCuentas.getValue() != null){
+   				ctaBcoAux = (CtaBcoVO) comboCuentas.getValue();
+   			
+	   			MonedaVO auxMoneda = new MonedaVO();
+	   			Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
+	   			
+	   			auxMoneda = (MonedaVO) ctaBcoAux.getMonedaVO();
+	   			
+	   			try {
+	   				if(!auxMoneda.isNacional()){
+	   					cotizacion = controlador.getCotizacion(permisoAux, fecha, ctaBcoAux.getMonedaVO().getCodMoneda());
+	   				}
+	   				else{
+	   					cotizacion.setCotizacionVenta(1);
+	   				}
+				} catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
+						| InicializandoException | NoTienePermisosException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				if(cotizacion.getCotizacionVenta() != 0){
+					cotizacionVenta = cotizacion.getCotizacionVenta();
+				}
+				else{
+					Mensajes.mostrarMensajeError("Debe cargar la cotización para la moneda");
+					comboCuentas.setErrorHandler(null);
+					comboCuentas.setData("ProgramaticallyChanged");
+					comboCuentas.setValue(null);
+					monedaBanco.setValue("");
+					cuentaBanco.setValue("");
+					
+				}
+   			
+				if(comboCuentas.getValue()!=null){
+					if(ctaBcoAux != null && !comboCuentas.getValue().equals("")){
+		   				monedaBanco.setValue(ctaBcoAux.getMonedaVO().getSimbolo());
+		   				cuentaBanco.setValue(ctaBcoAux.getCodigo());
+		   				if(comboMoneda.getValue()!= ""){
+		   					auxMoneda = (MonedaVO) comboMoneda.getValue();
+		   					if(auxMoneda != null){
+		   						if(!auxMoneda.getCodMoneda().equals(ctaBcoAux.getMonedaVO().getCodMoneda()) && opera != Variables.OPERACION_LECTURA){
+			   						Mensajes.mostrarMensajeWarning("La moneda del banco es diferente a la moneda del documento");
+			   					}
+		   					}
+		   					
+		   				}
+		   			}
+				}
+	   			
+   			}
+   			
+   			if(comboMoneda.getValue()!= null){
+   				
+   	   			
+	   			MonedaVO auxMoneda = new MonedaVO();
+	   			Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
+	   			auxMoneda = (MonedaVO) comboMoneda.getValue();
+	   			
+	   			if(auxMoneda.getCodMoneda() != null && !auxMoneda.isNacional()){
+	   				try {
+	   					
+	   					tcMov.setVisible(true);
+						cotizacion = controlador.getCotizacion(permisoAux, fecha, auxMoneda.getCodMoneda());
+						if(cotizacion.getCotizacionVenta() != 0 && !auxMoneda.isNacional()){
+							cotizacionVenta = cotizacion.getCotizacionVenta();
+							if(comboCuentas.getValue() != "" && comboCuentas.getValue()!=null){
+								
+					   			ctaBcoAux = new CtaBcoVO();
+					   			ctaBcoAux = (CtaBcoVO) comboCuentas.getValue();
+					   			if(!auxMoneda.getCodMoneda().equals(ctaBcoAux.getMonedaVO().getCodMoneda())&& opera != Variables.OPERACION_LECTURA){
+					   				Mensajes.mostrarMensajeWarning("La moneda del banco es diferente a la moneda del documento");
+					   			}
+				   			}
+							calculos();
+						}
+						else{
+							Mensajes.mostrarMensajeError("Debe cargar la cotización para la moneda");
+							comboMoneda.setValue(monedaNacional);
+						}
+					} 
+	   				catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
+							| InicializandoException | NoTienePermisosException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+	   				if(fecha != null){
+	   					
+	   					for (MonedaVO monedaVO : lstMonedas) {
+	   						
+	   						monedaVO = seteaCotizaciones(monedaVO);
+	   					}
+	   					
+	   				}
+	   			}
+   			}
+		}
+    });
 	
 	
 	/**
@@ -249,7 +368,84 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		}
     });
   //  combobox.setImmediate(true);
+    
+    comboCuentas.addValueChangeListener(new Property.ValueChangeListener() {
 
+    	
+    	
+   		@Override
+		public void valueChange(ValueChangeEvent event) {
+   			
+   			if("ProgramaticallyChanged".equals(comboCuentas.getData())){
+   				comboCuentas.setData(null);
+   	            return;
+   	        }
+   			
+   			/*Inicializamos VO de permisos para el usuario, formulario y operacion
+   			 * para confirmar los permisos del usuario*/
+   			UsuarioPermisosVO permisoAux = 
+   					new UsuarioPermisosVO(permisos.getCodEmp(),
+   							permisos.getUsuario(),
+   							VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+   							VariablesPermisos.OPERACION_NUEVO_EDITAR);
+   			
+   			CtaBcoVO ctaBcoAux;
+   			ctaBcoAux = new CtaBcoVO();
+   			if(comboCuentas.getValue() != null){
+   				ctaBcoAux = (CtaBcoVO) comboCuentas.getValue();
+   			
+	   			MonedaVO auxMoneda = new MonedaVO();
+	   			Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
+	   			
+	   			auxMoneda = (MonedaVO) ctaBcoAux.getMonedaVO();
+	   			
+	   			try {
+	   				if(!auxMoneda.isNacional()){
+	   					cotizacion = controlador.getCotizacion(permisoAux, fecha, ctaBcoAux.getMonedaVO().getCodMoneda());
+	   				}
+	   				else{
+	   					cotizacion.setCotizacionVenta(1);
+	   				}
+				} catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
+						| InicializandoException | NoTienePermisosException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				if(cotizacion.getCotizacionVenta() != 0){
+					cotizacionVenta = cotizacion.getCotizacionVenta();
+				}
+				else{
+					Mensajes.mostrarMensajeError("Debe cargar la cotización para la moneda");
+					comboCuentas.setErrorHandler(null);
+					comboCuentas.setData("ProgramaticallyChanged");
+					comboCuentas.setValue(null);
+					monedaBanco.setValue("");
+					cuentaBanco.setValue("");
+					
+					return;
+				}
+				
+	   			if(ctaBcoAux != null && !comboCuentas.getValue().equals("")){
+	   				monedaBanco.setValue(ctaBcoAux.getMonedaVO().getSimbolo());
+	   				cuentaBanco.setValue(ctaBcoAux.getCodigo());
+	   				if(comboMoneda.getValue()!= ""){
+	   					auxMoneda = (MonedaVO) comboMoneda.getValue();
+	   					if(auxMoneda != null){
+	   						if(!auxMoneda.getCodMoneda().equals(ctaBcoAux.getMonedaVO().getCodMoneda()) && opera != Variables.OPERACION_LECTURA){
+		   						Mensajes.mostrarMensajeWarning("La moneda del banco es diferente a la moneda del documento");
+		   					}
+	   					}
+	   					
+	   				}
+	   				
+	   				
+	   			}
+   			}
+   			
+   			
+			
+		}
+    });
     /**
 	* Agregamos listener al combo de monedas, para verificar que no modifique la moneda
 	* una vez ingresado un gasto ya 
@@ -259,16 +455,20 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
    		@Override
 		public void valueChange(ValueChangeEvent event) {
    			
+   			
+   			
    			UsuarioPermisosVO permisoAux = 
    					new UsuarioPermisosVO(permisos.getCodEmp(),
    							permisos.getUsuario(),
-   							VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
+   							VariablesPermisos.FORMULARIO_INGRESO_COBRO,
    							VariablesPermisos.OPERACION_NUEVO_EDITAR);
    			
    			MonedaVO auxMoneda = new MonedaVO();
    			Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
-   			
+   			CtaBcoVO ctaBcoAux;
    			auxMoneda = (MonedaVO) comboMoneda.getValue();
+   			
+   			
    			
    			if(auxMoneda.getCodMoneda() != null && !auxMoneda.isNacional()){
    				try {
@@ -277,6 +477,14 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 					cotizacion = controlador.getCotizacion(permisoAux, fecha, auxMoneda.getCodMoneda());
 					if(cotizacion.getCotizacionVenta() != 0 && !auxMoneda.isNacional()){
 						cotizacionVenta = cotizacion.getCotizacionVenta();
+						if(comboCuentas.getValue() != "" && comboCuentas.getValue()!=null){
+							
+				   			ctaBcoAux = new CtaBcoVO();
+				   			ctaBcoAux = (CtaBcoVO) comboCuentas.getValue();
+				   			if(!auxMoneda.getCodMoneda().equals(ctaBcoAux.getMonedaVO().getCodMoneda())&& opera != Variables.OPERACION_LECTURA){
+				   				Mensajes.mostrarMensajeWarning("La moneda del banco es diferente a la moneda del documento");
+				   			}
+			   			}
 						calculos();
 					}
 					else{
@@ -300,6 +508,15 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
    				}
    			}
    			else{
+   				
+   				if(comboCuentas.getValue() != "" && comboCuentas.getValue()!=null){
+		   			ctaBcoAux = new CtaBcoVO();
+		   			ctaBcoAux = (CtaBcoVO) comboCuentas.getValue();
+		   			
+		   			if(!auxMoneda.getCodMoneda().equals(ctaBcoAux.getMonedaVO().getCodMoneda())){
+		   				Mensajes.mostrarMensajeWarning("La moneda del banco es diferente a la moneda del documento");
+		   			}
+   				}
    				tcMov.setVisible(false);
    				cotizacionVenta = (double)1;
    				calculos();
@@ -594,7 +811,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 	
 	
 	/*Inicalizamos listener para boton de Editar*/
-		this.btnEditar.addClickListener(click -> {
+	this.btnEditar.addClickListener(click -> {
 				
 		try {
 			
@@ -609,7 +826,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 			{
 				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 			}
-		});
+	});
 			
 		this.btnEliminar.addClickListener(click -> {
 			
@@ -642,91 +859,120 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 //			}
 //			
 		});
-			/*Inicalizamos listener para boton de Agregar gastos a cobrar*/
-			this.btnAgregar.addClickListener(click -> {
+		
+		/*Inicalizamos listener para boton de Agregar gastos a cobrar*/
+		this.btnAgregar.addClickListener(click -> {
 						
-				if(this.codTitular.getValue() != null && this.codTitular.getValue() != "" 
-						&& this.fecValor.getValue() != null && this.comboMoneda.getValue() != null)
-				{
-					try {
+			if(this.codTitular.getValue() != null && this.codTitular.getValue() != "" 
+					&& this.fecValor.getValue() != null && this.comboMoneda.getValue() != null)
+			{
+				try {
+				
+					GastoViewExtended form = new GastoViewExtended(Variables.OPERACION_NUEVO, this, titularVO);
 					
-						GastoViewExtended form = new GastoViewExtended(Variables.OPERACION_NUEVO, this, titularVO);
-						
-						sub = new MySub("100%","45%");
-						sub.setModal(true);
-						//sub.setVista(form);
-						sub.setVista((Component) form);
-						
-						sub.center();
-						
-						String codCliente;/*Codigo del cliente para obtener los gastos a cobrar del mismo*/
-						
-						/*Obtenemos los formularios que no estan en el grupo
-						 * para mostrarlos en la grilla para seleccionar*/
-						if(this.operacion.equals(Variables.OPERACION_NUEVO) )
-						{
-							/*Si la operacion es nuevo, ponemos el  codGrupo vacio
-							 * asi nos trae todos los grupos disponibles*/
-							codCliente = this.codTitular.getValue().toString().trim();
-						}
-						else 
-						{
-							/*Si es operacion Editar tomamos el codGrupo de el fieldGroup*/
-							codCliente = fieldGroup.getItemDataSource().getBean().getCodTitular();
-						}
-						
-						/*Inicializamos VO de permisos para el usuario, formulario y operacion
-						 * para confirmar los permisos del usuario*/
-						UsuarioPermisosVO permisoAux = 
-								new UsuarioPermisosVO(this.permisos.getCodEmp(),
-										this.permisos.getUsuario(),
-										VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
-										VariablesPermisos.OPERACION_NUEVO_EDITAR);
-						
-	
-						//Moneda
-						MonedaVO auxMoneda = new MonedaVO();
-						if(this.comboMoneda.getValue() != null){
-							auxMoneda = (MonedaVO) this.comboMoneda.getValue();
-						}
-						
-						/*Obtenemos los gastos con saldo del cliente*/
-						ArrayList<GastoVO> lstGastosConSaldo = this.controlador.getGastosConSaldo(permisoAux, codCliente);
-						
-						/*Hacemos una lista auxliar para pasarselo al BusquedaViewExtended*/
-						ArrayList<Object> lst = new ArrayList<Object>();
-						Object obj;
-						for (GastoVO i: lstGastosConSaldo) {
-							
-							/*Verificamos que el gasto ya no esta en la grilla*/
-							if(!this.existeFormularioenLista(i.getNroDocum()))
-							{
-								obj = new Object();
-								obj = (Object)i;
-								lst.add(obj);
-							}
-						}
-						
-						//form.inicializarGrilla(lst);
-						
-						UI.getCurrent().addWindow(sub);
+					sub = new MySub("100%","45%");
+					sub.setModal(true);
+					//sub.setVista(form);
+					sub.setVista((Component) form);
+					
+					sub.center();
+					
+					String codCliente;/*Codigo del cliente para obtener los gastos a cobrar del mismo*/
+					
+					/*Obtenemos los formularios que no estan en el grupo
+					 * para mostrarlos en la grilla para seleccionar*/
+					if(this.operacion.equals(Variables.OPERACION_NUEVO) )
+					{
+						/*Si la operacion es nuevo, ponemos el  codGrupo vacio
+						 * asi nos trae todos los grupos disponibles*/
+						codCliente = this.codTitular.getValue().toString().trim();
+					}
+					else 
+					{
+						/*Si es operacion Editar tomamos el codGrupo de el fieldGroup*/
+						codCliente = fieldGroup.getItemDataSource().getBean().getCodTitular();
+					}
+					
+					/*Inicializamos VO de permisos para el usuario, formulario y operacion
+					 * para confirmar los permisos del usuario*/
+					UsuarioPermisosVO permisoAux = 
+							new UsuarioPermisosVO(this.permisos.getCodEmp(),
+									this.permisos.getUsuario(),
+									VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
+									VariablesPermisos.OPERACION_NUEVO_EDITAR);
+					
 
+					//Moneda
+					MonedaVO auxMoneda = new MonedaVO();
+					if(this.comboMoneda.getValue() != null){
+						auxMoneda = (MonedaVO) this.comboMoneda.getValue();
 					}
-					catch(Exception e){
-						Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+					
+					/*Obtenemos los gastos con saldo del cliente*/
+					ArrayList<GastoVO> lstGastosConSaldo = this.controlador.getGastosConSaldo(permisoAux, codCliente);
+					
+					/*Hacemos una lista auxliar para pasarselo al BusquedaViewExtended*/
+					ArrayList<Object> lst = new ArrayList<Object>();
+					Object obj;
+					for (GastoVO i: lstGastosConSaldo) {
+						
+						/*Verificamos que el gasto ya no esta en la grilla*/
+						if(!this.existeFormularioenLista(i.getNroDocum()))
+						{
+							obj = new Object();
+							obj = (Object)i;
+							lst.add(obj);
+						}
 					}
+					
+					//form.inicializarGrilla(lst);
+					
+					UI.getCurrent().addWindow(sub);
+
 				}
-				else{
-					Mensajes.mostrarMensajeError("Debe ingresar los datos de cabecera");
+				catch(Exception e){
+					Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 				}
-			});
+			}
+			else{
+				Mensajes.mostrarMensajeError("Debe ingresar los datos de cabecera");
+			}
+		});
 			
-			this.cancelar.addClickListener(click -> {
-				main.cerrarVentana();
-			});
+		this.cancelar.addClickListener(click -> {
 			
-			/*Inicalizamos listener para boton de Quitar*/
-			this.btnQuitar.addClickListener(click -> {
+			if(this.lstDetalleAgregar.size() > 0)
+			{
+				
+				for (IngresoCobroDetalleVO f : this.lstDetalleAgregar) {
+					
+					/*Si no esta lo agregamos*/
+					if(this.existeFormularioenLista(f.getNroDocum()))
+						this.lstDetalleVO.remove(f);
+				}
+				
+				
+				
+				this.calcularImporteTotal();
+			}
+			
+			if(this.lstDetalleQuitar.size() > 0)
+			{
+				for (IngresoCobroDetalleVO f : this.lstDetalleQuitar) {
+					
+					/*Si no esta lo agregamos*/
+					if(!this.existeFormularioenLista(f.getNroDocum()))
+						this.lstDetalleVO.add(f);
+				}
+				
+				this.calcularImporteTotal();
+			}
+			
+			main.cerrarVentana();
+		});
+			
+		/*Inicalizamos listener para boton de Quitar*/
+		this.btnQuitar.addClickListener(click -> {
 				
 			boolean esta = false;	
 	
@@ -776,96 +1022,35 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 				{
 					Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 				}
-			});
+		});
 			
-			/*Inicializamos el listener de la grilla de gastos*/
-			lstGastos.addSelectionListener(new SelectionListener() {
-				
-			    @Override
-			    public void select(SelectionEvent event) {
-			       
-			    	try{
-			    		if(lstGastos.getSelectedRow() != null){
-			    			BeanItem<IngresoCobroDetalleVO> item = container.getItem(lstGastos.getSelectedRow());
-					    	formSelecccionado = item.getBean(); /*Seteamos el formulario
-				    	 									seleccionado para poder quitarlo*/
-			    		}
-			    	}
-			    	catch(Exception e){
-			    		Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
-			    	}
-			      
-			    }
-			});
+		/*Inicializamos el listener de la grilla de gastos*/
+		lstGastos.addSelectionListener(new SelectionListener() {
+			
+		    @Override
+		    public void select(SelectionEvent event) {
+		       
+		    	try{
+		    		if(lstGastos.getSelectedRow() != null){
+		    			BeanItem<IngresoCobroDetalleVO> item = container.getItem(lstGastos.getSelectedRow());
+				    	formSelecccionado = item.getBean(); /*Seteamos el formulario
+			    	 									seleccionado para poder quitarlo*/
+		    		}
+		    	}
+		    	catch(Exception e){
+		    		Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+		    	}
+		      
+		    }
+		});
 			
 			
 			
-			/*Listener boton editar de la grilla de formularios*/
-			this.btnEditarForm.addClickListener(click -> {
+		/*Listener boton editar de la grilla de formularios*/
+		this.btnEditarForm.addClickListener(click -> {
 			
-				/* ESTO LO DEJAMOS COMENTADO POR EL MOMENTO, VER COMO SE EDITA SI SE EDITA EL GTO
-			boolean esta = false;	
-	
-			try {
-				
-				//Verificamos que haya un formulario seleccionado para eliminar
-				if(formSelecccionado != null)
-				{
-					
-					this.frmFormPermisos = new GrupoFormularioPermisosExtended(this, formSelecccionado, Variables.OPERACION_EDITAR);
-					
-					sub = new MySub("35%", "30%" );
-					sub.setModal(true);
-					sub.setVista(this.frmFormPermisos);
-					sub.center();
-					
-					UI.getCurrent().addWindow(sub);
-					
-				}
-				else //De lo contrario mostramos mensaje que debe selcionar un formulario
-				{
-					Mensajes.mostrarMensajeError("Debe seleccionar un formulario para editar");
-				}
 		
-				}catch(Exception e)
-				{
-					Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
-				}
-			});
-			
-			//Listener boton permisos
-			this.btnVerPermisos.addClickListener(click -> {
-				
-			boolean esta = false;	
-	
-			try {
-				
-				//Verificamos que haya un formulario seleccionado para eliminar
-				if(formSelecccionado != null)
-				{
-					
-					this.frmFormPermisos = new GrupoFormularioPermisosExtended(this, formSelecccionado, Variables.OPERACION_LECTURA);
-					
-					sub = new MySub("53%", "40%" );
-					sub.setModal(true);
-					sub.setVista(this.frmFormPermisos);
-					sub.center();
-					
-					UI.getCurrent().addWindow(sub);
-					
-				}
-				else //De lo contrario mostramos mensaje que debe selcionar un formulario
-				{
-					Mensajes.mostrarMensajeError("Debe seleccionar un formulario");
-				}
-		
-				}catch(Exception e)
-				{
-					Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
-				}
-			
-			*/
-			});
+		});
 			
 			
 	///////////////////
@@ -882,12 +1067,13 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		
 		/*Inicializamos los combos*/
 		this.inicializarComboBancos(null);
-		this.inicializarComboCuentas(null);
+		this.inicializarComboCuentas(null, "");
 		this.inicializarComboMoneda(null);
 		
 		inicializarCampos();
 		
-	
+		importeTotalCalculado = (Double) impTotMo.getConvertedValue();
+		
 		//Seteamos info del form si es requerido
 		if(fieldGroup != null)
 			fieldGroup.buildAndBindMemberFields(this);
@@ -1011,7 +1197,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		
 		/*Inicializamos los combos*/
 		this.inicializarComboBancos(ing.getCodBanco());
-		this.inicializarComboCuentas(ing.getCodCtaBco());
+		this.inicializarComboCuentas(ing.getCodCtaBco(), "CuentaBanco");
 		this.inicializarComboMoneda(ing.getCodMoneda());
 		
 		
@@ -1076,9 +1262,6 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 			e.printStackTrace();
 			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 		}
-			
-		
-		
 	}
 	
 
@@ -1216,6 +1399,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		this.disableBotonLectura();
 		this.enableBotonAgregarQuitar();
 		this.lstDetalleAgregar = new ArrayList<IngresoCobroDetalleVO>();
+		this.lstDetalleQuitar = new ArrayList<IngresoCobroDetalleVO>();
 		this.lstDetalleVO = new ArrayList<IngresoCobroDetalleVO>();
 		
 		/*Inicializamos el container*/
@@ -1383,6 +1567,12 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		this.codTitular.setReadOnly(false);
 		this.codTitular.setEnabled(false);
 		this.nomTitular.setEnabled(false);
+		
+		this.codTitular.setReadOnly(setear);
+		this.codTitular.setEnabled(false);
+		this.nomTitular.setEnabled(false);
+		this.monedaBanco.setEnabled(false);
+		this.cuentaBanco.setEnabled(false);
 	}
 	
 	/**
@@ -1657,6 +1847,27 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		return esta;
 	}
 	
+	private void existeFormularioenListaElimina(int nro)
+	{
+		int i =0;
+		boolean esta = false;
+		
+		IngresoCobroDetalleVO aux;
+		
+		while( i < this.lstDetalleVO.size() && !esta)
+		{
+			aux = this.lstDetalleVO.get(i);
+			if(nro==aux.getNroDocum())
+			{
+				esta = true;
+				this.lstDetalleVO.remove(i);
+			}
+			
+			i++;
+		}
+		
+	}
+	
 	private void actualizarGrillaContainer(BeanItemContainer<IngresoCobroDetalleVO> container)
 	{
 		lstGastos.setContainerDataSource(container);
@@ -1735,40 +1946,35 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		
 	lstGastos.getEditorFieldGroup().addCommitHandler(new FieldGroup.CommitHandler() {
 		
-		
-		IngresoCobroDetalleVO aux;
+	    IngresoCobroDetalleVO aux;
 		GtoSaldoAux gtoSaldo;
 		
-	@Override
-      public void preCommit(FieldGroup.CommitEvent commitEvent) throws     FieldGroup.CommitException {
-      	
-    	  
-      	
-      	if(formSelecccionado != null){
-      		
-      		
-      		IngresoCobroDetalleVO aux = obtenerGastoEnLista(formSelecccionado.getNroDocum());
-	    	gtoSaldo = saldoOriginalGastos.get(formSelecccionado.getNroDocum());
-	    	
-  		}
-    	  
-      }
+		@Override
+		public void preCommit(FieldGroup.CommitEvent commitEvent) throws     FieldGroup.CommitException {
 
-      @Override
-      public void postCommit(FieldGroup.CommitEvent commitEvent) throws     FieldGroup.CommitException {
+			if(formSelecccionado != null){
+
+				IngresoCobroDetalleVO aux = obtenerGastoEnLista(formSelecccionado.getNroDocum());
+		    	gtoSaldo = saldoOriginalGastos.get(formSelecccionado.getNroDocum());
+		    	
+	  		}
+		}
+
+        @Override
+        public void postCommit(FieldGroup.CommitEvent commitEvent) throws     FieldGroup.CommitException {
       	
     	  
-    	  IngresoCobroDetalleVO aux2 = obtenerGastoEnLista(formSelecccionado.getNroDocum());
+        	IngresoCobroDetalleVO aux2 = obtenerGastoEnLista(formSelecccionado.getNroDocum());
     	  
-    	  /*Si el importe modificado es mayor al saldo no dejamos modificar*/
+        	/*Si el importe modificado es mayor al saldo no dejamos modificar*/
     	  
 	    	if(aux2.getImpTotMo()> gtoSaldo.getSaldo())
 	    	{
 	    		throw new FieldGroup.CommitException("El importe no puede ser mayor al saldo ");
 	    	}
 	    	
-    	  calcularImporteTotal();
-      }
+	    	calcularImporteTotal();
+        }
 	 });
 		
 	}
@@ -1799,22 +2005,24 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		return aux;
 	}
 	
-	public void inicializarComboMoneda(String cod){
+public void inicializarComboMoneda(String cod){
 		
 		//this.comboMoneda = new ComboBox();
 		BeanItemContainer<MonedaVO> monedasObj = new BeanItemContainer<MonedaVO>(MonedaVO.class);
 		MonedaVO moneda = new MonedaVO();
-		ArrayList<MonedaVO> lstMonedas = new ArrayList<MonedaVO>();
 		UsuarioPermisosVO permisosAux;
+		permisosAux = 
+				new UsuarioPermisosVO(this.permisos.getCodEmp(),
+						this.permisos.getUsuario(),
+						VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+						VariablesPermisos.OPERACION_LEER);
 		
 		try {
-			permisosAux = 
-					new UsuarioPermisosVO(this.permisos.getCodEmp(),
-							this.permisos.getUsuario(),
-							VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
-							VariablesPermisos.OPERACION_NUEVO_EDITAR);
+			
 			
 			lstMonedas = this.controlador.getMonedas(permisosAux);
+			
+			
 			
 		} catch (ObteniendoMonedaException | InicializandoException | ConexionException | ObteniendoPermisosException | NoTienePermisosException e) {
 
@@ -1850,62 +2058,82 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		
 	}
 	
-	public void inicializarComboCuentas(String cod){
+	public void inicializarComboCuentas(String cod, String llamador ){
 		
-		BeanItemContainer<CtaBcoVO> ctaObj = new BeanItemContainer<CtaBcoVO>(CtaBcoVO.class);
-		CtaBcoVO cta = new CtaBcoVO();
-		ArrayList<CtaBcoVO> lstctas = new ArrayList<CtaBcoVO>();
-		UsuarioPermisosVO permisosAux;
-		
-		try {
-			permisosAux = 
-					new UsuarioPermisosVO(this.permisos.getCodEmp(),
-							this.permisos.getUsuario(),
-							VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
-							VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		if(cod != "0" && cod != null){
+			BeanItemContainer<CtaBcoVO> ctaObj = new BeanItemContainer<CtaBcoVO>(CtaBcoVO.class);
+			CtaBcoVO cta = new CtaBcoVO();
+			ArrayList<CtaBcoVO> lstctas = new ArrayList<CtaBcoVO>();
+			UsuarioPermisosVO permisosAux;
 			
-			/*Si se selacciona un banco buscamos las cuentas, de lo contrario no*/
-			if(this.comboBancos.getValue() != null)
-				lstctas = this.controlador.getCtaBcos(permisosAux,((BancoVO) this.comboBancos.getValue()).getCodigo());
-			
-		} catch (ObteniendoCuentasBcoException | InicializandoException | ConexionException | ObteniendoPermisosException | NoTienePermisosException e) {
+			try {
+				permisosAux = 
+						new UsuarioPermisosVO(this.permisos.getCodEmp(),
+								this.permisos.getUsuario(),
+								VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+								VariablesPermisos.OPERACION_LEER);
+				
+				/*Si se selacciona un banco buscamos las cuentas, de lo contrario no*/
+				if(this.comboBancos.getValue() != null)
+					lstctas = this.controlador.getCtaBcos(permisosAux,((BancoVO) this.comboBancos.getValue()).getCodigo());
+				
+			} catch (ObteniendoCuentasBcoException | InicializandoException | ConexionException | ObteniendoPermisosException | NoTienePermisosException e) {
 
-			Mensajes.mostrarMensajeError(e.getMessage());
-		}
-		
-		for (CtaBcoVO ctav : lstctas) {
+				Mensajes.mostrarMensajeError(e.getMessage());
+			}
 			
-			ctaObj.addBean(ctav);
 			
-			if(cod != null){
-				if(cod.equals(ctav.getCodigo())){
-					ctav = ctav;
+			for (CtaBcoVO ctav : lstctas) {
+					
+				ctaObj.addBean(ctav);
+				
+				if(llamador.equals("CuentaBanco")){
+					if(cod != null){
+						if(cod.equals(ctav.getCodigo())){
+							cta = ctav;
+							this.monedaBanco.setValue(cta.getMonedaVO().getSimbolo());
+							this.cuentaBanco.setValue(cta.getCodigo());
+						}
+					}
 				}
 			}
-		}
-		
-		this.comboCuentas.setContainerDataSource(ctaObj);
-		this.comboCuentas.setItemCaptionPropertyId("nombre");
-		
-		
-		if(cod!=null)
-		{
-			try{
+			
+			
+			if(lstctas.size()>0){
+				
+				//this.comboCuentas.setData("ProgramaticallyChanged");
+				
+				this.comboCuentas.setContainerDataSource(ctaObj);
+				
+				this.comboCuentas.setItemCaptionPropertyId("nombre");
+			}
+			
+			
+			
+			
+			if(cod!=null)
+			{
+				try{
+					this.comboCuentas.setReadOnly(false);
+					this.comboCuentas.setValue(cta);
+					//this.comboCuentas.setReadOnly(true);
+				}catch(Exception e)
+				{}
+			}
+			
+			if(this.operacion.equals(Variables.OPERACION_EDITAR) || this.operacion.equals(Variables.OPERACION_NUEVO))
+			{
 				this.comboCuentas.setReadOnly(false);
-				this.comboCuentas.setValue(cta);
-				this.comboCuentas.setReadOnly(true);
-			}catch(Exception e)
-			{}
+			}
 		}
-		
-		if(this.operacion.equals(Variables.OPERACION_EDITAR) || this.operacion.equals(Variables.OPERACION_NUEVO))
-		{
-			this.comboCuentas.setReadOnly(false);
+		else{
+			this.comboCuentas.setEnabled(false);
+			this.cuentaBanco.setValue("");
+			this.monedaBanco.setValue("");
 		}
-		
 	}
 	
-	public void inicializarComboBancos(String cod){
+public void inicializarComboBancos(String cod){
 		
 		BeanItemContainer<BancoVO> bcoObj = new BeanItemContainer<BancoVO>(BancoVO.class);
 		BancoVO bcoVO = new BancoVO();
@@ -1916,8 +2144,8 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 			permisosAux = 
 					new UsuarioPermisosVO(this.permisos.getCodEmp(),
 							this.permisos.getUsuario(),
-							VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
-							VariablesPermisos.OPERACION_NUEVO_EDITAR);
+							VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+							VariablesPermisos.OPERACION_LEER);
 			
 			lstBcos = this.controlador.getBcos(permisosAux);
 			
@@ -1928,14 +2156,20 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		
 		for (BancoVO bco : lstBcos) {
 			
-			bcoObj.addBean(bco);
-			
-			if(cod != null){
-				if(cod.equals(bco.getCodigo())){
-					bcoVO = bco;
-					bcoVO.setCodEmp("0");
+			if(bco.getCodigo().equals("0")){
+				lstBcos.remove(bco);
+			}
+			else{
+				bcoObj.addBean(bco);
+				
+				if(cod != null){
+					if(cod.equals(bco.getCodigo())){
+						bcoVO = bco;
+						bcoVO.setCodEmp("0");
+					}
 				}
 			}
+			
 		}
 		
 		this.comboBancos.setContainerDataSource(bcoObj);
@@ -1957,6 +2191,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 			ClienteVO clienteVO = (ClienteVO) datos;
 			this.codTitular.setValue(String.valueOf(clienteVO.getCodigo()));
 			this.nomTitular.setValue(clienteVO.getNombre());
+			this.tipo.setValue(clienteVO.getTipo());
 		}
 		
 		if(datos instanceof TitularVO){

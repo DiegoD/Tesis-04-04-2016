@@ -33,14 +33,18 @@
      </vaadin-horizontal-layout> 
      <vaadin-text-field caption="Referencia" id="referencia" style-name="tiny" responsive width="341px" readonly _id="referencia"></vaadin-text-field> 
      <vaadin-combo-box caption="Banco" style-name="tiny" responsive item-caption-mode="id" width="144px" _id="comboBancos"></vaadin-combo-box> 
-     <vaadin-combo-box caption="Cuenta" id="comboCuentas" style-name="tiny" responsive item-caption-mode="id" width="144px" _id="comboCuentas"></vaadin-combo-box> 
+     <vaadin-horizontal-layout caption="Cuenta" spacing _id="cuenta"> 
+      <vaadin-combo-box id="comboCuentas" style-name="tiny" item-caption-mode="id" width="144px" _id="comboCuentas"></vaadin-combo-box> 
+      <vaadin-text-field style-name="tiny" width="40px" _id="monedaBanco"></vaadin-text-field> 
+      <vaadin-text-field style-name="tiny" width="133px" _id="cuentaBanco"></vaadin-text-field> 
+     </vaadin-horizontal-layout> 
      <vaadin-horizontal-layout caption="Medio Pago" style-name="name-wrapper" spacing responsive _id="name_wrappeer"> 
       <vaadin-combo-box id="comboMPagos" style-name="tiny" responsive item-caption-mode="id" width="144px" _id="comboMPagos"> 
        <option>Cheque</option> 
        <option>Transferencia</option> 
       </vaadin-combo-box> 
-      <vaadin-text-field id="serieDocRef" input-prompt="Serie" style-name="tiny" null-representation="" responsive width="30px" readonly _id="serieDocRef"></vaadin-text-field> 
-      <vaadin-text-field input-prompt="Nro Mov/Cheq" style-name="tiny" null-representation="" responsive width="145px" readonly _id="nroDocRef"></vaadin-text-field> 
+      <vaadin-text-field id="serieDocRef" input-prompt="Serie" style-name="tiny" null-representation="" responsive width="40px" readonly _id="serieDocRef"></vaadin-text-field> 
+      <vaadin-text-field input-prompt="Nro Mov/Cheq" style-name="tiny" null-representation="" responsive width="133px" readonly _id="nroDocRef"></vaadin-text-field> 
      </vaadin-horizontal-layout> 
      <vaadin-text-field caption="TC" id="tcMov" style-name="tiny" null-representation="" responsive width="144px" _id="tcMov"></vaadin-text-field> 
      <vaadin-horizontal-layout caption="Importe" style-name="name-wrapper" spacing responsive _id="name_wrapper2"> 

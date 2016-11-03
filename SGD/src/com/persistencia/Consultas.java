@@ -405,9 +405,11 @@ public class Consultas {
 	{
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("SELECT cod_tit, nom_tit, cod_emp, razon_social, tel, nro_dgi, m_documdgi.cod_docdgi, m_documdgi.nombre AS nomDoc , direccion, mail ");
-		sb.append(", m_clientes.activo, m_clientes.usuario_mod, m_clientes.operacion, m_clientes.fecha_mod ");
-		sb.append("FROM m_clientes, m_documdgi WHERE m_clientes.cod_docdgi = m_documdgi.cod_docdgi AND cod_emp = ? ");
+		sb.append("SELECT m_clientes.cod_tit, m_clientes.nom_tit, m_clientes.cod_emp, m_clientes.razon_social, m_clientes.tel, m_clientes.nro_dgi, m_documdgi.cod_docdgi, m_documdgi.nombre AS nomDoc , direccion, mail ");
+		sb.append(", m_clientes.activo, m_clientes.usuario_mod, m_clientes.operacion, m_clientes.fecha_mod, m_titulares.tipo ");
+		sb.append("FROM m_clientes, m_documdgi, m_titulares "
+				+ " WHERE m_clientes.cod_docdgi = m_documdgi.cod_docdgi AND m_titulares.cod_tit = m_clientes.cod_tit"
+				+ " m_titulares.cod_emp = m_clientes.cod_emp AND cod_emp = ? ");
 
 		return sb.toString();
 	}
@@ -416,9 +418,11 @@ public class Consultas {
 	{
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("SELECT cod_tit, nom_tit, cod_emp, razon_social, tel, nro_dgi, m_documdgi.cod_docdgi, m_documdgi.nombre AS nomDoc , direccion, mail ");
-		sb.append(", m_clientes.activo, m_clientes.usuario_mod, m_clientes.operacion, m_clientes.fecha_mod ");
-		sb.append("FROM m_clientes, m_documdgi WHERE m_clientes.cod_docdgi = m_documdgi.cod_docdgi AND cod_emp = ? AND m_clientes.activo = 1");
+		sb.append("SELECT m_clientes.cod_tit, m_clientes.nom_tit, m_clientes.cod_emp, m_clientes.razon_social, m_clientes.tel, m_clientes.nro_dgi, m_documdgi.cod_docdgi, m_documdgi.nombre AS nomDoc , direccion, mail ");
+		sb.append(", m_clientes.activo, m_clientes.usuario_mod, m_clientes.operacion, m_clientes.fecha_mod, m_titulares.tipo ");
+		sb.append("FROM m_clientes, m_documdgi, m_titulares "
+				+ " WHERE m_clientes.cod_docdgi = m_documdgi.cod_docdgi AND m_titulares.cod_tit = m_clientes.cod_tit AND "
+				+ " m_titulares.cod_emp = m_clientes.cod_emp AND m_clientes.cod_emp = ? AND m_clientes.activo = 1");
 
 
 		return sb.toString();

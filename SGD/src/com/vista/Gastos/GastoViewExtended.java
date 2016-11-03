@@ -836,7 +836,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 			this.iniFormNuevo();
 			this.inicializoProceso();
 			
-			if(tipoTitular.equals("FUNCIONARIO")){
+			if(tipoTitular.toUpperCase().equals("FUNCIONARIO")){
 				this.comboSeleccion.setValue("Empleado");
 				this.inicializoEmpleado();
 				this.comboSeleccion.setEnabled(false);
@@ -846,7 +846,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 				this.btnBuscarEmpleado.setVisible(false);
 				this.procesosCliente = "";
 			}
-			else if(tipoTitular.equals("CLIENTE")){
+			else if(tipoTitular.toUpperCase().equals("CLIENTE")){
 				this.comboSeleccion.setValue("Proceso");
 				this.comboSeleccion.setEnabled(false);
 				this.procesosCliente = String.valueOf(titularVO.getCodigo());

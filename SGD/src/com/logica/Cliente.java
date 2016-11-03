@@ -44,6 +44,7 @@ public class Cliente extends Titular{
 		aux.setOperacion(this.getOperacion());
 		aux.setUsuarioMod(this.getUsuarioMod());
 		aux.setMail(this.getMail());
+		aux.setTipo(this.getTipo());
 		
 		return aux;
 	}

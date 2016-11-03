@@ -43,7 +43,10 @@ public class IngresoEgresoViews extends FormLayout {
 	protected Button btnBuscarCliente;
 	protected TextField referencia;
 	protected ComboBox comboBancos;
+	protected HorizontalLayout cuenta;
 	protected ComboBox comboCuentas;
+	protected TextField monedaBanco;
+	protected TextField cuentaBanco;
 	protected HorizontalLayout name_wrappeer;
 	protected ComboBox comboMPagos;
 	protected TextField serieDocRef;

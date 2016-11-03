@@ -64,7 +64,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	private BeanFieldGroup<IngresoCobroVO> fieldGroup;
 	private ArrayList<IngresoCobroDetalleVO> lstDetalleVO; /*Lista de detalle del Cobro*/
 	private ArrayList<IngresoCobroDetalleVO> lstDetalleAgregar; /*Lista de detalle a agregar*/
-	private ArrayList<IngresoCobroDetalleVO> lstDetalleQuitar; /*Lista de detalle a agregar*/
+	private ArrayList<IngresoCobroDetalleVO> lstDetalleQuitar; /*Lista de detalle a quitar*/
 	private IngresoCobroControlador controlador;
 	private String operacion;
 	private IngresoCobroPanelExtended mainView;
@@ -1386,6 +1386,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		this.nroDocum.setEnabled(false);
 		this.chkFuncionario.setVisible(true);
 		this.lblFuncionario.setVisible(true);
+		importeTotalCalculado = (double) 0;
 		
 //		this.nroDocum.setValue("0");
 //		this.nroTrans.setValue("0");

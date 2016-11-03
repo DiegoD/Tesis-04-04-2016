@@ -127,6 +127,7 @@ public class DAOClientes implements IDAOClientes{
 				aux.setUsuarioMod(rs.getString("usuario_mod"));
 				aux.setOperacion(rs.getString("operacion"));
 				aux.setFechaMod(rs.getTimestamp("fecha_mod"));
+				aux.setTipo(rs.getString("tipo"));
 				
 				
 				
