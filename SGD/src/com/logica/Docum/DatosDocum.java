@@ -82,6 +82,7 @@ public class DatosDocum extends Auditoria{
 		
 		aux.setNomTitular(this.titInfo.getNombre());
 		aux.setCodTitular(this.titInfo.getCodigo());
+		aux.setTipo(this.titInfo.getTipo());
 		
 		aux.setImpTotMn(this.impTotMn);
 		aux.setImpTotMo(this.impTotMo);

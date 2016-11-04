@@ -409,7 +409,7 @@ public class Consultas {
 		sb.append(", m_clientes.activo, m_clientes.usuario_mod, m_clientes.operacion, m_clientes.fecha_mod, m_titulares.tipo ");
 		sb.append("FROM m_clientes, m_documdgi, m_titulares "
 				+ " WHERE m_clientes.cod_docdgi = m_documdgi.cod_docdgi AND m_titulares.cod_tit = m_clientes.cod_tit"
-				+ " m_titulares.cod_emp = m_clientes.cod_emp AND cod_emp = ? ");
+				+ " AND m_titulares.cod_emp = m_clientes.cod_emp AND m_clientes.cod_emp = ? ");
 
 		return sb.toString();
 	}
@@ -1103,7 +1103,7 @@ public String getIngresoCobroCabTodosOtros(){
 	
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("SELECT cod_docum, serie_docum, nro_docum, m_titulares.cod_tit, m_titulares.nom_tit ");
+		sb.append("SELECT cod_docum, serie_docum, nro_docum, m_titulares.cod_tit, m_titulares.nom_tit, m_titulares.tipo ");
 		sb.append(",c_egrcobro.cod_emp, fec_doc, fec_valor, COALESCE(m_bancos.cod_bco,'0') cod_bco ");
 		sb.append(", COALESCE(m_bancos.nom_bco,'0') nom_bco, COALESCE(m_ctasbcos.cod_ctabco,'0') cod_ctabco");
 		sb.append(", COALESCE(m_ctasbcos.nom_cta,'0') nom_cta, COALESCE(cod_mpago,'0') cod_mpago, cod_doc_ref, serie_doc_ref ");
@@ -1141,7 +1141,7 @@ public String getIngresoCobroCabTodosOtros(){
 		
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("SELECT cod_docum, serie_docum, nro_docum, m_titulares.cod_tit, m_titulares.nom_tit ");
+		sb.append("SELECT cod_docum, serie_docum, nro_docum, m_titulares.cod_tit, m_titulares.nom_tit, tipo ");
 		sb.append(",c_egrcobro.cod_emp, fec_doc, fec_valor, COALESCE(m_bancos.cod_bco,'0') cod_bco ");
 		sb.append(", COALESCE(m_bancos.nom_bco,'0') nom_bco, COALESCE(m_ctasbcos.cod_ctabco,'0') cod_ctabco");
 		sb.append(", COALESCE(m_ctasbcos.nom_cta,'0') nom_cta, COALESCE(cod_mpago,'0') cod_mpago, cod_doc_ref, serie_doc_ref ");

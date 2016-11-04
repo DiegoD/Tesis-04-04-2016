@@ -27,6 +27,7 @@ public class DatosDocumVO extends AuditoriaVO{
 	
 	private String nomTitular;
 	private String codTitular;
+	private String tipo;
 	
 	private long nroTrans;
 	
@@ -54,6 +55,7 @@ public class DatosDocumVO extends AuditoriaVO{
 		
 		this.codTitular = t.codTitular;
 		this.nomTitular = t.nomTitular;
+		this.tipo 		= t.tipo;
 		
 		this.referencia= t.referencia;
 		this.nomTitular = t.nomTitular;
@@ -243,6 +245,14 @@ public class DatosDocumVO extends AuditoriaVO{
 
 	public void setNacional(boolean nacional) {
 		this.nacional = nacional;
+	}
+
+	public String getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
 	}
 	
 	

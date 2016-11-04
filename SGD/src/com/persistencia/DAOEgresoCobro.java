@@ -57,7 +57,7 @@ public class DAOEgresoCobro implements IDAOEgresoCobro{
 				aux.setMoneda(new MonedaInfo(rs.getString("cod_moneda"), rs.getString("descripcion"), rs.getString("simbolo")));
 				
 				aux.setReferencia(rs.getString("observaciones"));
-				aux.setTitInfo(new TitularInfo(rs.getString("cod_tit"), rs.getString("nom_tit")));
+				aux.setTitInfo(new TitularInfo(rs.getString("cod_tit"), rs.getString("nom_tit"), rs.getString("tipo")));
 				aux.setNroTrans(rs.getLong("nro_trans"));
 				aux.setmPago(rs.getString("cod_mpago"));
 				aux.setCodDocRef(rs.getString("cod_doc_ref"));
@@ -139,7 +139,7 @@ public class DAOEgresoCobro implements IDAOEgresoCobro{
 				aux.setMoneda(new MonedaInfo(rs.getString("cod_moneda"), rs.getString("descripcion"), rs.getString("simbolo")));
 				
 				aux.setReferencia(rs.getString("observaciones"));
-				aux.setTitInfo(new TitularInfo(rs.getString("cod_tit"), rs.getString("nom_tit")));
+				aux.setTitInfo(new TitularInfo(rs.getString("cod_tit"), rs.getString("nom_tit"), rs.getString("tipo")));
 				aux.setNroTrans(rs.getLong("nro_trans"));
 				aux.setmPago(rs.getString("cod_mpago"));
 				aux.setCodDocRef(rs.getString("cod_doc_ref"));

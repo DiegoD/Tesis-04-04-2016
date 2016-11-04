@@ -863,6 +863,27 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 			/*Inicializamos formulario como editar*/
 			
 			this.iniFormLectura();
+			if(tipoTitular.toUpperCase().equals("FUNCIONARIO")){
+				this.comboSeleccion.setValue("Empleado");
+				this.inicializoEmpleado();
+				this.comboSeleccion.setEnabled(false);
+				this.btnBuscarEmpleado.setEnabled(false);
+				this.codTitular.setValue(String.valueOf(titularVO.getCodigo()));
+				this.nomTitular.setValue(titularVO.getNombre());
+				this.btnBuscarEmpleado.setVisible(false);
+				this.procesosCliente = "";
+			}
+			else if(tipoTitular.toUpperCase().equals("CLIENTE")){
+				this.comboSeleccion.setValue("Proceso");
+				this.comboSeleccion.setEnabled(false);
+				this.procesosCliente = String.valueOf(titularVO.getCodigo());
+				this.inicializoProceso();
+			}
+			else{
+				this.comboSeleccion.setValue("Proceso");
+				this.inicializoProceso();
+				this.procesosCliente = "";
+			}
 		} 
 		
 		
@@ -1024,6 +1045,12 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 				tipoCambio = (Double) tcMov.getConvertedValue();
 				importeImpuesto = (Double) impImpuMo.getConvertedValue();
 				cotizacionVenta = (Double) tcMov.getConvertedValue();
+			}
+			
+			if(this.mainView.nomForm().equals("Egreso")){
+				this.btnBuscarEmpleado.setEnabled(false);
+				this.btnBuscarEmpleado.setEnabled(false);
+				
 			}
 		}
 		else{

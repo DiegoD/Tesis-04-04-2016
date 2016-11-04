@@ -16,10 +16,18 @@ public class TitularInfo {
 		this.nombre = nombre;
 	}
 	
+	public TitularInfo(String codigo, String nombre, String tipo){
+		
+		this.codigo = codigo;
+		this.nombre = nombre;
+		this.tipo   = tipo;
+	}
+
 	public TitularInfo(TitularInfoVO t){
 		
 		this.codigo = t.getCodigo();
 		this.nombre = t.getNombre();
+		this.tipo   = t.getTipo();
 	}
 	
 	public TitularInfoVO retornarTitularInfoVO(){
@@ -34,6 +42,7 @@ public class TitularInfo {
 	
 	private String codigo;
 	private String nombre;
+	private String tipo;
 	
 	
 	public String getCodigo() {
@@ -48,5 +57,14 @@ public class TitularInfo {
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
+
+	public String getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
+	}
+	
 	
 }

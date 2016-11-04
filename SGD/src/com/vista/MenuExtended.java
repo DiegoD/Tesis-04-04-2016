@@ -35,7 +35,7 @@ import com.vista.IngresoOtro.IngresoOtroPanelExtended;
 import com.vista.Login.LoginExtended;
 import com.vista.Monedas.MonedasPanelExtended;
 import com.vista.Procesos.ProcesosPanelExtended;
-import com.vista.ResumenProceso.ResProcesosPanelExtended;
+//import com.vista.ResumenProceso.ResProcesosPanelExtended;
 import com.vista.Rubros.RubrosPanelExtended;
 import com.vista.TipoRubro.TipoRubrosPanelExtended;
 import com.vista.Usuarios.UsuariosPanelExtend;
@@ -514,8 +514,8 @@ public class MenuExtended extends Menu{
 			this.content.removeAllComponents();
 			try {
 				
-				ResProcesosPanelExtended u = new ResProcesosPanelExtended(); 
-				this.content.addComponent(u);
+				//ResProcesosPanelExtended u = new ResProcesosPanelExtended(); 
+				//this.content.addComponent(u);
 				
 			} catch (Exception e) {
 				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
@@ -529,8 +529,8 @@ public class MenuExtended extends Menu{
 			this.content.removeAllComponents();
 			try {
 				
-				ResProcesosPanelExtended u = new ResProcesosPanelExtended(); 
-				this.content.addComponent(u);
+				//ResProcesosPanelExtended u = new ResProcesosPanelExtended(); 
+				//this.content.addComponent(u);
 				
 			} catch (Exception e) {
 				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);

@@ -313,7 +313,7 @@ public class BusquedaViewExtended extends BusquedaView{
 			grid.removeColumn("fechaMod");
 			grid.removeColumn("usuarioMod");
 			grid.removeColumn("operacion");
-			grid.removeColumn("tipo");
+			//grid.removeColumn("tipo");
 			
 			
 			this.arreglarGrilla();

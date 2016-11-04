@@ -59,6 +59,7 @@ import com.valueObject.IngresoCobro.IngresoCobroVO;
 import com.valueObject.banco.BancoVO;
 import com.valueObject.banco.CtaBcoVO;
 import com.valueObject.cliente.ClienteVO;
+import com.valueObject.proceso.ProcesoVO;
 import com.vista.BusquedaViewExtended;
 import com.vista.IBusqueda;
 import com.vista.Mensajes;
@@ -67,7 +68,9 @@ import com.vista.PermisosUsuario;
 import com.vista.Variables;
 import com.vista.VariablesPermisos;
 import com.vista.Gastos.GastoViewExtended;
+import com.vista.Gastos.GastosPanelExtended;
 import com.vista.Gastos.IGastosMain;
+import com.vista.IngresoCobro.IngresoCobroProcesoViewExtended;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 
@@ -585,6 +588,13 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 								VariablesPermisos.OPERACION_NUEVO_EDITAR);				
 				
 				
+				int comp = Double.compare(importeTotalCalculado, (Double)impTotMo.getConvertedValue());
+				
+				if(comp != 0){
+					Mensajes.mostrarMensajeError("El importe total es diferente a la suma del detalle");
+					return;
+				}
+				
 				IngresoCobroVO ingCobroVO = new IngresoCobroVO();	
 				
 				ingCobroVO.setImpTotMo((Double) impTotMo.getConvertedValue());
@@ -828,7 +838,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 			}
 	});
 			
-		this.btnEliminar.addClickListener(click -> {
+	this.btnEliminar.addClickListener(click -> {
 			
 			UsuarioPermisosVO permisoAux = 
 			new UsuarioPermisosVO(this.permisos.getCodEmp(),
@@ -893,37 +903,37 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 						codCliente = fieldGroup.getItemDataSource().getBean().getCodTitular();
 					}
 					
-					/*Inicializamos VO de permisos para el usuario, formulario y operacion
-					 * para confirmar los permisos del usuario*/
-					UsuarioPermisosVO permisoAux = 
-							new UsuarioPermisosVO(this.permisos.getCodEmp(),
-									this.permisos.getUsuario(),
-									VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
-									VariablesPermisos.OPERACION_NUEVO_EDITAR);
-					
-
-					//Moneda
-					MonedaVO auxMoneda = new MonedaVO();
-					if(this.comboMoneda.getValue() != null){
-						auxMoneda = (MonedaVO) this.comboMoneda.getValue();
-					}
-					
-					/*Obtenemos los gastos con saldo del cliente*/
-					ArrayList<GastoVO> lstGastosConSaldo = this.controlador.getGastosConSaldo(permisoAux, codCliente);
-					
-					/*Hacemos una lista auxliar para pasarselo al BusquedaViewExtended*/
-					ArrayList<Object> lst = new ArrayList<Object>();
-					Object obj;
-					for (GastoVO i: lstGastosConSaldo) {
-						
-						/*Verificamos que el gasto ya no esta en la grilla*/
-						if(!this.existeFormularioenLista(i.getNroDocum()))
-						{
-							obj = new Object();
-							obj = (Object)i;
-							lst.add(obj);
-						}
-					}
+//					/*Inicializamos VO de permisos para el usuario, formulario y operacion
+//					 * para confirmar los permisos del usuario*/
+//					UsuarioPermisosVO permisoAux = 
+//							new UsuarioPermisosVO(this.permisos.getCodEmp(),
+//									this.permisos.getUsuario(),
+//									VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
+//									VariablesPermisos.OPERACION_NUEVO_EDITAR);
+//					
+//
+//					//Moneda
+//					MonedaVO auxMoneda = new MonedaVO();
+//					if(this.comboMoneda.getValue() != null){
+//						auxMoneda = (MonedaVO) this.comboMoneda.getValue();
+//					}
+//					
+//					/*Obtenemos los gastos con saldo del cliente*/
+//					ArrayList<GastoVO> lstGastosConSaldo = this.controlador.getGastosConSaldo(permisoAux, codCliente);
+//					
+//					/*Hacemos una lista auxliar para pasarselo al BusquedaViewExtended*/
+//					ArrayList<Object> lst = new ArrayList<Object>();
+//					Object obj;
+//					for (GastoVO i: lstGastosConSaldo) {
+//						
+//						/*Verificamos que el gasto ya no esta en la grilla*/
+//						if(!this.existeFormularioenLista(i.getNroDocum()))
+//						{
+//							obj = new Object();
+//							obj = (Object)i;
+//							lst.add(obj);
+//						}
+//					}
 					
 					//form.inicializarGrilla(lst);
 					
@@ -993,7 +1003,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 														
 							/*Quitamos el formulario seleccionado de la lista*/
 							lstDetalleVO.remove(lstDetalleVO.get(i));
-						
+							lstDetalleQuitar.add(formSelecccionado);
 							esta = true;
 						}
 
@@ -1049,6 +1059,78 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		/*Listener boton editar de la grilla de formularios*/
 		this.btnEditarForm.addClickListener(click -> {
 			
+			boolean esta = false;
+			
+			this.titularVO.setCodigo(Integer.parseInt(codTitular.getValue()));
+			this.titularVO.setNombre(nomTitular.getValue());
+			this.titularVO.setTipo(tipo.getValue());
+			
+			
+			
+			try {
+				
+				/*Verificamos que haya un formulario seleccionado para
+				 * eliminar*/
+				if(formSelecccionado != null){
+					
+					
+					GastoVO bean = new GastoVO();
+					BeanItem<GastoVO> item = new BeanItem<GastoVO> (bean);
+					
+					item.getBean().setNroDocum(formSelecccionado.getNroDocum());
+					item.getBean().setFecDoc(formSelecccionado.getFecDoc());
+					item.getBean().setFecValor(formSelecccionado.getFecValor());
+					item.getBean().setCodProceso(formSelecccionado.getCodProceso());
+					item.getBean().setDescProceso(formSelecccionado.getDescProceso());
+					item.getBean().setCodTitular(formSelecccionado.getCodTitular());
+					item.getBean().setNomTitular(formSelecccionado.getNomTitular());
+					item.getBean().setCodCuenta(formSelecccionado.getCodCuenta());
+					item.getBean().setNomCuenta(formSelecccionado.getNomCuenta());
+					item.getBean().setCodCtaInd(formSelecccionado.getCodCtaInd());
+					item.getBean().setCodRubro(formSelecccionado.getCodRubro());
+					item.getBean().setNomRubro(formSelecccionado.getNomRubro());
+					item.getBean().setCodImpuesto(formSelecccionado.getCodImpuesto());
+					item.getBean().setNomImpuesto(formSelecccionado.getNomImpuesto());
+					item.getBean().setPorcentajeImpuesto(formSelecccionado.getPorcentajeImpuesto());
+					item.getBean().setCodMoneda(formSelecccionado.getCodMoneda());
+					item.getBean().setNomMoneda(formSelecccionado.getNomMoneda());
+					item.getBean().setSimboloMoneda(formSelecccionado.getSimboloMoneda());
+					item.getBean().setTcMov(formSelecccionado.getTcMov());
+					item.getBean().setImpTotMo(formSelecccionado.getImpTotMo());
+					item.getBean().setImpTotMn(formSelecccionado.getImpTotMn());
+					item.getBean().setImpImpuMo(formSelecccionado.getImpImpuMo());
+					item.getBean().setImpImpuMn(formSelecccionado.getImpImpuMn());
+					item.getBean().setImpSubMo(formSelecccionado.getImpSubMo());
+					item.getBean().setImpSubMn(formSelecccionado.getImpSubMn());
+					item.getBean().setReferencia(formSelecccionado.getReferencia());
+					
+					
+					/*Puede ser null si accedemos luego de haberlo agregado, ya que no va a la base*/
+			    	if(item.getBean().getFechaMod() == null)
+			    	{
+			    		item.getBean().setFechaMod(new Timestamp(System.currentTimeMillis()));
+			    	}
+					
+			    	GastoViewExtended form = new GastoViewExtended(Variables.OPERACION_LECTURA, this, titularVO);
+			    	sub = new MySub("100%","50%");
+					sub.setModal(true);
+					sub.setVista((Component) form);
+					/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
+					form.setDataSourceFormulario(item);
+					
+					UI.getCurrent().addWindow(sub);
+					
+				}
+				else /*De lo contrario mostramos mensaje que debe selcionar un gasto*/
+				{
+					Mensajes.mostrarMensajeError("Debe seleccionar un gasto para editar");
+				}
+		
+			}
+			catch(Exception e)
+			{
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}
 		
 		});
 			
@@ -1135,6 +1217,9 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		
 		this.comboMPagos.setRequired(setear);
 		this.comboMPagos.setRequiredError("Es requerido");
+		
+		this.impTotMo.setRequired(setear);
+		this.impTotMo.setRequiredError("Es requerido");
 		
 		/*De Bco*/
 		if(this.comboTipo.equals("Banco"))
@@ -1280,8 +1365,8 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		
 		this.chkFuncionario.setVisible(false);
 		this.lblFuncionario.setVisible(false);
-		
-		
+		this.btnBuscarCliente.setVisible(false);
+		this.impTotMo.setEnabled(false);
 		/*Si tiene permisos de editar habilitamos el boton de 
 		 * edicion*/
 		if(permisoNuevoEditar){
@@ -1303,6 +1388,8 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		
 		/*No mostramos las validaciones*/
 		this.setearValidaciones(false);
+		
+		this.importeTotalCalculado = (Double)impTotMo.getConvertedValue();
 		
 		/*Dejamos todods los campos readonly*/
 		this.readOnlyFields(true);
@@ -1334,10 +1421,12 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		
 		this.chkFuncionario.setVisible(false);
 		this.lblFuncionario.setVisible(false);
-		
+		this.btnBuscarCliente.setVisible(false);
+		this.impTotMo.setEnabled(true);
 		/*Verificamos que tenga permisos*/
 		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
+		this.importeTotalCalculado = (Double)impTotMo.getConvertedValue();
 		
 		if(permisoNuevoEditar){
 			
@@ -1356,6 +1445,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 			this.setearValidaciones(true);
 			
 			this.comboTipo.setReadOnly(false);
+			this.comboTipo.setEnabled(false);
 			
 			this.titularVO.setCodigo(Integer.parseInt(codTitular.getValue()));
 			this.titularVO.setNombre(nomTitular.getValue());
@@ -1379,6 +1469,9 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		this.nroDocum.setEnabled(false);
 		this.chkFuncionario.setVisible(true);
 		this.lblFuncionario.setVisible(true);
+		this.impTotMo.setEnabled(true);
+		this.impTotMo.setReadOnly(false);
+		importeTotalCalculado = (double) 0;
 		
 		/*Chequeamos si tiene permiso de editar*/
 		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
@@ -1431,8 +1524,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		this.nroDocRef.setReadOnly(false);
 		
 		this.impTotMo.setReadOnly(false);
-		
-		this.impTotMo.setEnabled(false);
+		this.impTotMo.setEnabled(true);
 		
 		this.referencia.setReadOnly(false);
 	}
@@ -1542,6 +1634,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 	{
 		
 		this.comboTipo.setReadOnly(setear);
+		this.nroDocum.setReadOnly(setear);
 		
 		this.comboBancos.setReadOnly(setear);
 		
@@ -1558,9 +1651,6 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		this.nroDocRef.setReadOnly(setear);
 		
 		this.comboMoneda.setReadOnly(setear);
-		
-		this.impTotMo.setReadOnly(setear);
-		this.impTotMo.setEnabled(false);
 		
 		this.referencia.setReadOnly(setear);
 		
@@ -1913,6 +2003,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		  lstGastos.getColumn("tcMov").setHidden(true);
 		  lstGastos.getColumn("usuarioMod").setHidden(true);
 		  lstGastos.getColumn("nacional").setHidden(true);
+		  lstGastos.getColumn("tipo").setHidable(true);
 		  
 		lstGastos.setColumnOrder("nroDocum", "referencia", "simboloMoneda", "impTotMo", "codProceso");
 		
@@ -2298,7 +2389,8 @@ public void inicializarComboBancos(String cod){
 		}
 		
 		//this.impTotMo.setValue(Double.toString(impMo));
-		this.impTotMo.setConvertedValue(impMo);
+		//this.impTotMo.setConvertedValue(impMo);
+		importeTotalCalculado = impMo;
 	}
 	
 	
@@ -2439,7 +2531,8 @@ public void inicializarComboBancos(String cod){
 		
 		
 		this.lstDetalleVO.add(g);
-			
+		this.lstDetalleAgregar.add(g);
+		
 		/*Actualizamos el container y la grilla*/
 		container.removeAllItems();
 		container.addAll(lstDetalleVO);
@@ -2483,6 +2576,8 @@ public void inicializarComboBancos(String cod){
 		this.container.addAll(this.lstDetalleVO);
 		
 		this.lstGastos.setContainerDataSource(container);
+		
+		calcularImporteTotal();
 		
 		
 	}
