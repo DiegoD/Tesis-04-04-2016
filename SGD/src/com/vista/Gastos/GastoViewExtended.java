@@ -1049,7 +1049,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 			
 			if(this.mainView.nomForm().equals("Egreso")){
 				this.btnBuscarEmpleado.setEnabled(false);
-				this.btnBuscarEmpleado.setEnabled(false);
+				this.btnBuscarEmpleado.setVisible(false);
 				
 			}
 		}

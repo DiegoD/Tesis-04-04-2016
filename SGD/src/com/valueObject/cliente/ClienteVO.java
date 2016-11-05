@@ -1,9 +1,16 @@
 package com.valueObject.cliente;
 
+import java.io.Serializable;
+
 import com.valueObject.TitularVO;
 
-public class ClienteVO extends TitularVO{
 
+public class ClienteVO extends TitularVO implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String razonSocial;
 	
 

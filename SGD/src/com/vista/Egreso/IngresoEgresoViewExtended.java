@@ -2003,7 +2003,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		  lstGastos.getColumn("tcMov").setHidden(true);
 		  lstGastos.getColumn("usuarioMod").setHidden(true);
 		  lstGastos.getColumn("nacional").setHidden(true);
-		  lstGastos.getColumn("tipo").setHidable(true);
+		  lstGastos.getColumn("tipo").setHidden(true);
 		  
 		lstGastos.setColumnOrder("nroDocum", "referencia", "simboloMoneda", "impTotMo", "codProceso");
 		
@@ -2035,38 +2035,38 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		
 		
 		
-	lstGastos.getEditorFieldGroup().addCommitHandler(new FieldGroup.CommitHandler() {
+		lstGastos.getEditorFieldGroup().addCommitHandler(new FieldGroup.CommitHandler() {
 		
-	    IngresoCobroDetalleVO aux;
-		GtoSaldoAux gtoSaldo;
-		
-		@Override
-		public void preCommit(FieldGroup.CommitEvent commitEvent) throws     FieldGroup.CommitException {
-
-			if(formSelecccionado != null){
-
-				IngresoCobroDetalleVO aux = obtenerGastoEnLista(formSelecccionado.getNroDocum());
-		    	gtoSaldo = saldoOriginalGastos.get(formSelecccionado.getNroDocum());
+		    IngresoCobroDetalleVO aux;
+			GtoSaldoAux gtoSaldo;
+			
+			@Override
+			public void preCommit(FieldGroup.CommitEvent commitEvent) throws     FieldGroup.CommitException {
+	
+				if(formSelecccionado != null){
+	
+					IngresoCobroDetalleVO aux = obtenerGastoEnLista(formSelecccionado.getNroDocum());
+			    	gtoSaldo = saldoOriginalGastos.get(formSelecccionado.getNroDocum());
+			    	
+		  		}
+			}
+	
+	        @Override
+	        public void postCommit(FieldGroup.CommitEvent commitEvent) throws     FieldGroup.CommitException {
+	      	
+	    	  
+	        	IngresoCobroDetalleVO aux2 = obtenerGastoEnLista(formSelecccionado.getNroDocum());
+	    	  
+	        	/*Si el importe modificado es mayor al saldo no dejamos modificar*/
+	    	  
+		    	if(aux2.getImpTotMo()> gtoSaldo.getSaldo())
+		    	{
+		    		throw new FieldGroup.CommitException("El importe no puede ser mayor al saldo ");
+		    	}
 		    	
-	  		}
-		}
-
-        @Override
-        public void postCommit(FieldGroup.CommitEvent commitEvent) throws     FieldGroup.CommitException {
-      	
-    	  
-        	IngresoCobroDetalleVO aux2 = obtenerGastoEnLista(formSelecccionado.getNroDocum());
-    	  
-        	/*Si el importe modificado es mayor al saldo no dejamos modificar*/
-    	  
-	    	if(aux2.getImpTotMo()> gtoSaldo.getSaldo())
-	    	{
-	    		throw new FieldGroup.CommitException("El importe no puede ser mayor al saldo ");
-	    	}
-	    	
-	    	calcularImporteTotal();
-        }
-	 });
+		    	calcularImporteTotal();
+	        }
+		});
 		
 	}
 	
@@ -2096,7 +2096,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		return aux;
 	}
 	
-public void inicializarComboMoneda(String cod){
+	public void inicializarComboMoneda(String cod){
 		
 		//this.comboMoneda = new ComboBox();
 		BeanItemContainer<MonedaVO> monedasObj = new BeanItemContainer<MonedaVO>(MonedaVO.class);
@@ -2224,7 +2224,7 @@ public void inicializarComboMoneda(String cod){
 		}
 	}
 	
-public void inicializarComboBancos(String cod){
+	public void inicializarComboBancos(String cod){
 		
 		BeanItemContainer<BancoVO> bcoObj = new BeanItemContainer<BancoVO>(BancoVO.class);
 		BancoVO bcoVO = new BancoVO();
@@ -2520,6 +2520,9 @@ public void inicializarComboBancos(String cod){
 	@Override
 	public void setInfoLst(GastoVO gasto) {
 		
+		int j = 0;
+		boolean salir = false;
+		MonedaVO monedaVO;
 		IngresoCobroDetalleVO g;
 			
 		g = new IngresoCobroDetalleVO();
@@ -2529,10 +2532,29 @@ public void inicializarComboBancos(String cod){
 		 * si se modifica  */
 		g.setLinea(lstDetalleVO.size() + 1);
 		
-		
-		this.lstDetalleVO.add(g);
-		this.lstDetalleAgregar.add(g);
-		
+		if(!g.isNacional()){
+			while(lstMonedas.size()>j && !salir){
+				monedaVO = new MonedaVO();
+				monedaVO = lstMonedas.get(j);
+				j++;
+				if(g.getCodMoneda().equals(monedaVO.getCodMoneda())){
+					salir = true;
+					
+					if(monedaVO.getCotizacion() != 0){
+						this.lstDetalleVO.add(g);
+						this.lstDetalleAgregar.add(g);
+						
+					}
+					else{
+						Mensajes.mostrarMensajeError("Debe ingresar la cotización de la moneda " + monedaVO.getDescripcion());
+					}
+				}
+			}
+		}
+		else{
+			this.lstDetalleVO.add(g);
+			this.lstDetalleAgregar.add(g);
+		}
 		/*Actualizamos el container y la grilla*/
 		container.removeAllItems();
 		container.addAll(lstDetalleVO);
