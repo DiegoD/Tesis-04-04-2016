@@ -35,6 +35,9 @@ public class IngresoOtroViews extends FormLayout {
 	protected TextField nomTitular;
 	protected Button btnBuscarCliente;
 	protected TextField referencia;
+	protected Button aceptar;
+	protected Button btnEditar;
+	protected Button cancelar;
 	protected FormLayout formLay13;
 	protected ComboBox comboBancos;
 	protected ComboBox comboCuentas;
@@ -46,10 +49,6 @@ public class IngresoOtroViews extends FormLayout {
 	protected HorizontalLayout name_wrapper2;
 	protected ComboBox comboMoneda;
 	protected TextField impTotMo;
-	protected FormLayout formLay12;
-	protected Button aceptar;
-	protected Button btnEditar;
-	protected Button cancelar;
 
 	public IngresoOtroViews() {
 		Design.read(this);

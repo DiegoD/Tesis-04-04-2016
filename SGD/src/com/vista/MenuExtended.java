@@ -514,8 +514,8 @@ public class MenuExtended extends Menu{
 			this.content.removeAllComponents();
 			try {
 				
-				//ResProcesosPanelExtended u = new ResProcesosPanelExtended(); 
-				//this.content.addComponent(u);
+				IngresoEgresoOtroPanelExtended u = new IngresoEgresoOtroPanelExtended(); 
+				this.content.addComponent(u);
 				
 			} catch (Exception e) {
 				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);

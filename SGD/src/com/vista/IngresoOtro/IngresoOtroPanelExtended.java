@@ -8,17 +8,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import com.controladores.BancoControlador;
-import com.controladores.IngresoCobroControlador;
 import com.controladores.IngresoCobroOtroControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.InicializandoException;
 import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
-import com.excepciones.Bancos.ObteniendoBancosException;
-import com.excepciones.Bancos.ObteniendoCuentasBcoException;
 import com.excepciones.IngresoCobros.ObteniendoIngresoCobroException;
-import com.logica.IngresoCobro.IngresoCobro;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.converter.StringToDateConverter;
@@ -139,7 +134,7 @@ public class IngresoOtroPanelExtended extends IngresoOtroPanel{
 				    	
 				    	form = new IngresoOtroViewExtended(Variables.OPERACION_LECTURA, IngresoOtroPanelExtended.this);
 						//form.fieldGroup.setItemDataSource(item);
-						sub = new MySub("60%","75%");
+						sub = new MySub("65%","75%");
 						sub.setModal(true);
 						sub.setVista(form);
 						

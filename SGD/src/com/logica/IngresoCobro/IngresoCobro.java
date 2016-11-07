@@ -78,8 +78,9 @@ public class IngresoCobro extends DatosDocum{
 		aux.setCodCuenta(this.getCuenta().getCodCuenta());
 		aux.setNomCuenta(this.getCuenta().getNomCuenta());
 		
-		aux.setNomCtaBco(this.bancoInfo.getNomBanco());
-		aux.setCodCtaBco(this.bancoInfo.getCodBanco());
+		
+		aux.setNomCtaBco(this.cuentaBcoInfo.getNomCuenta());
+		aux.setCodCtaBco(this.cuentaBcoInfo.getCodCuenta());
 		
 		aux.setCodEmp(this.getCodEmp());
 		

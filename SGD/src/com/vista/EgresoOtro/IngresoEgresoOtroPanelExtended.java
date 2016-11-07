@@ -141,7 +141,7 @@ public class IngresoEgresoOtroPanelExtended extends IngresoEgresoOtroPanel{
 				    	
 				    	form = new IngresoEgresoOtroViewExtended(Variables.OPERACION_LECTURA, IngresoEgresoOtroPanelExtended.this);
 						//form.fieldGroup.setItemDataSource(item);
-						sub = new MySub("60%","75%");
+						sub = new MySub("65%","85%");
 						sub.setModal(true);
 						sub.setVista(form);
 						

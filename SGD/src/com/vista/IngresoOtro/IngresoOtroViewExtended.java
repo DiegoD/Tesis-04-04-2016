@@ -651,6 +651,10 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 			auxBco = (BancoVO) this.comboBancos.getValue();
 			
 		}
+		else{
+			auxBco.setCodigo("0");
+		}
+				
 		this.comboTipo.setImmediate(true);
 		this.comboTipo.setReadOnly(false);
 		this.comboTipo.setNullSelectionAllowed(false);
