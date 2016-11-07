@@ -2279,6 +2279,9 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 				
 					if(docum.getCodDocum().equals("Gasto")){ /*Para los gastos modificamos el saldo al documento*/
 						
+						if(docum.getCodProceso().equals("0")){
+							docum.setCodProceso(null);
+						}
 						/*Ingresamos cada uno de los Gastos*/
 						this.gastos.insertarGasto(docum, ing.getCodEmp(), con);
 						

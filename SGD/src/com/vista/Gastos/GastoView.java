@@ -27,6 +27,7 @@ public class GastoView extends CssLayout {
 	protected Link auditoria;
 	protected TextField nroDocum;
 	protected ComboBox comboSeleccion;
+	protected ComboBox comboEstado;
 	protected TextField nroTrans;
 	protected TextField codDocum;
 	protected TextField serieDocum;

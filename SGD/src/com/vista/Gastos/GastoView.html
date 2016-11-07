@@ -17,10 +17,15 @@
       <vaadin-form-layout style-name="tiny" spacing="false" responsive size-full margin-top="false" margin-bottom="false"> 
        <vaadin-horizontal-layout caption="Número" style-name="tiny" spacing responsive height="40px"> 
         <vaadin-text-field style-name="tiny" null-representation="0" responsive width="90px" _id="nroDocum"></vaadin-text-field> 
-        <vaadin-combo-box style-name="tiny" responsive item-caption-mode="id" width="135px" _id="comboSeleccion"> 
+        <vaadin-combo-box style-name="tiny" responsive item-caption-mode="id" width="125px" _id="comboSeleccion"> 
          <option>Oficina</option> 
          <option>Proceso</option> 
          <option>Empleado</option> 
+        </vaadin-combo-box> 
+        <vaadin-combo-box style-name="tiny" item-caption-mode="id" width="125px" _id="comboEstado"> 
+         <option>Cobrable </option> 
+         <option>Facturable </option> 
+         <option>No cobrable</option> 
         </vaadin-combo-box> 
         <vaadin-text-field visible="false" _id="nroTrans"></vaadin-text-field> 
         <vaadin-text-field visible="false" style-name="tiny" readonly _id="codDocum"></vaadin-text-field> 

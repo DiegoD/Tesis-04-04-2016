@@ -2701,6 +2701,7 @@ public class FachadaDD {
 				aux.setCodImpuesto(gasto.getImpuestoInfo().getCodImpuesto());
 				aux.setNomImpuesto(gasto.getImpuestoInfo().getNomImpuesto());
 				aux.setPorcentajeImpuesto(gasto.getImpuestoInfo().getPorcentaje());
+				aux.setEstadoGasto(gasto.getEstadoGasto());
 				lstGastosVO.add(aux);
 			}
 		
@@ -2778,6 +2779,7 @@ public class FachadaDD {
 				aux.setCodImpuesto(gasto.getImpuestoInfo().getCodImpuesto());
 				aux.setNomImpuesto(gasto.getImpuestoInfo().getNomImpuesto());
 				aux.setPorcentajeImpuesto(gasto.getImpuestoInfo().getPorcentaje());
+				aux.setEstadoGasto(gasto.getEstadoGasto());
 				lstGastosVO.add(aux);
 			}
 		
@@ -2856,6 +2858,7 @@ public class FachadaDD {
 				aux.setPorcentajeImpuesto(gasto.getImpuestoInfo().getPorcentaje());
 				aux.setSimboloMoneda(gasto.getMoneda().getSimbolo());
 				aux.setNacional(gasto.getMoneda().isNacional());
+				aux.setEstadoGasto(gasto.getEstadoGasto());
 				lstGastosVO.add(aux);
 			}
 		

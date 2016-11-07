@@ -21,6 +21,8 @@ public abstract class DocumDetalle extends DatosDocum{
 	private ImpuestoInfo impuestoInfo;
 	
 	private int linea;
+	private String estadoGasto;
+	
 	
 	public DocumDetalle(){
 		super();
@@ -44,6 +46,7 @@ public abstract class DocumDetalle extends DatosDocum{
 		this.rubroInfo = new RubroInfo(t.getCodRubro(), t.getNomRubro());
 		this.linea = t.getLinea();
 		this.referencia = t.getReferencia();
+		this.estadoGasto = t.getEstadoGasto();
 	}
 	
 	public IngresoCobroDetalleVO retornarDatosDocumVO(){
@@ -94,6 +97,8 @@ public abstract class DocumDetalle extends DatosDocum{
 		
 		aux.setNomRubro(this.rubroInfo.getNomRubro());
 		aux.setCodRubro(this.rubroInfo.getCodRubro());
+		
+		aux.setEstadoGasto(this.getEstadoGasto());
 		
 		return aux;
 	}
@@ -198,6 +203,14 @@ public abstract class DocumDetalle extends DatosDocum{
 
 	public void setLinea(int linea) {
 		this.linea = linea;
+	}
+
+	public String getEstadoGasto() {
+		return estadoGasto;
+	}
+
+	public void setEstadoGasto(String estadoGasto) {
+		this.estadoGasto = estadoGasto;
 	}
 
 	

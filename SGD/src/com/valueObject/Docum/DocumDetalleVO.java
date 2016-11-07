@@ -24,6 +24,7 @@ public class DocumDetalleVO extends DatosDocumVO{
 
 	private String nomRubro;
 	private String codRubro;
+	private String estadoGasto;
 	
 	//private String codCtaInd; /*Cuenta interna del sistema*/
 	
@@ -51,6 +52,7 @@ public class DocumDetalleVO extends DatosDocumVO{
 		//this.codCtaInd = t.codCtaInd;
 		this.linea = t.linea;
 		this.descProceso = t.descProceso;
+		this.estadoGasto = t.getEstadoGasto();
 		
 	}
 
@@ -171,4 +173,13 @@ public class DocumDetalleVO extends DatosDocumVO{
 		this.descProceso = descProceso;
 	}
 
+	public String getEstadoGasto() {
+		return estadoGasto;
+	}
+
+	public void setEstadoGasto(String estadoGasto) {
+		this.estadoGasto = estadoGasto;
+	}
+	
+	
 }

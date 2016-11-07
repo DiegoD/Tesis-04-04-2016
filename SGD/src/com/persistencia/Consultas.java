@@ -1179,15 +1179,15 @@ public String getIngresoCobroCabTodosOtros(){
 	
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("SELECT m_cuentas.cod_cuenta, m_cuentas.descripcion nom_cuenta, d_egrcobro.cod_emp, cod_docum, serie_docum, nro_docum, ");
-		sb.append("COALESCE(cod_proceso,0) cod_proceso, (SELECT COALESCE(descripcion,'Sin-Asignar') FROM c_procesos WHERE cod_proceso =d_egrcobro.cod_proceso AND cod_emp = d_egrcobro.cod_emp ) nom_proceso,  ");
-		sb.append("m_rubros.cod_rubro, m_rubros.descripcion nom_rubro, cuenta, fec_doc, fec_valor, m_monedas.cod_moneda, m_monedas.simbolo, m_monedas.descripcion nom_moneda ");
-		sb.append(", m_impuestos.cod_impuesto, m_impuestos.descripcion nom_impuesto, m_impuestos.porcentaje, imp_impu_mn,  ");
-		sb.append("imp_impu_mo, imp_sub_mn, imp_sub_mo, imp_tot_mn, imp_tot_mo, tc_mov, referencia,  ");
-		sb.append("referencia2, nro_trans, d_egrcobro.fecha_mod, d_egrcobro.usuario_mod, d_egrcobro.operacion, d_egrcobro.linea ");
+		sb.append("SELECT m_cuentas.cod_cuenta, m_cuentas.descripcion nom_cuenta, d_egrcobro.cod_emp, d_egrcobro.cod_docum, d_egrcobro.serie_docum, d_egrcobro.nro_docum, ");
+		sb.append("COALESCE(d_egrcobro.cod_proceso,0) cod_proceso, (SELECT COALESCE(descripcion,'Sin-Asignar') FROM c_procesos WHERE c_procesos.cod_proceso = d_egrcobro.cod_proceso AND c_procesos.cod_emp = d_egrcobro.cod_emp ) nom_proceso,  ");
+		sb.append("m_rubros.cod_rubro, m_rubros.descripcion nom_rubro, d_egrcobro.cuenta, fec_doc, fec_valor, m_monedas.cod_moneda, m_monedas.simbolo, m_monedas.descripcion nom_moneda ");
+		sb.append(", m_impuestos.cod_impuesto, m_impuestos.descripcion nom_impuesto, m_impuestos.porcentaje, d_egrcobro.imp_impu_mn,  ");
+		sb.append("d_egrcobro.imp_impu_mo, d_egrcobro.imp_sub_mn, d_egrcobro.imp_sub_mo, d_egrcobro.imp_tot_mn, d_egrcobro.imp_tot_mo, d_egrcobro.tc_mov, d_egrcobro.referencia,  ");
+		sb.append("d_egrcobro.referencia2, d_egrcobro.nro_trans, d_egrcobro.fecha_mod, d_egrcobro.usuario_mod, d_egrcobro.operacion, d_egrcobro.linea, c_gastos.estado ");
 		
 		
-		sb.append("FROM d_egrcobro, m_monedas, m_impuestos, m_rubros, m_cuentas  ");
+		sb.append("FROM d_egrcobro, m_monedas, m_impuestos, m_rubros, m_cuentas, c_gastos  ");
 		
 		sb.append("WHERE d_egrcobro.cod_moneda = m_monedas.cod_moneda  ");
 		sb.append("AND d_egrcobro.cod_emp = m_monedas.cod_emp "); 
@@ -1200,7 +1200,8 @@ public String getIngresoCobroCabTodosOtros(){
 		sb.append("AND d_egrcobro.nro_trans  = ? ");
 		
 		sb.append(" AND d_egrcobro.cod_cuenta = m_cuentas.cod_cuenta  ");
-		sb.append("AND d_egrcobro.cod_emp = m_cuentas.cod_emp "); 
+		sb.append("AND d_egrcobro.cod_emp = m_cuentas.cod_emp "
+				+ " AND d_egrcobro.nro_docum = c_gastos.nro_docum AND d_egrcobro.cod_emp = c_gastos.cod_emp "); 
 		
 		return sb.toString();
 	}

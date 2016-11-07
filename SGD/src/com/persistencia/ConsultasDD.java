@@ -1134,7 +1134,7 @@ public class ConsultasDD {
 				+ "m_cuentas.cod_cuenta, m_cuentas.descripcion, "
 				+ "m_rubros.cod_rubro, m_rubros.descripcion, m_rubros.cod_tipo_rubro, m_rubros.cod_impuesto, "
 				+ "m_impuestos.cod_impuesto, m_impuestos.descripcion, m_impuestos.porcentaje, "
-				+ "c_procesos.descripcion ");
+				+ "c_procesos.descripcion, c_gastos.estado ");
 		
 		sb.append("FROM c_gastos"
 				+ " INNER JOIN  m_clientes ON c_gastos.cod_tit = m_clientes.cod_tit AND m_clientes.cod_emp = c_gastos.cod_emp "
@@ -1168,7 +1168,8 @@ public class ConsultasDD {
 				+ "m_monedas.cod_moneda, m_monedas.descripcion, m_monedas.simbolo, "
 				+ "m_cuentas.cod_cuenta, m_cuentas.descripcion, "
 				+ "m_rubros.cod_rubro, m_rubros.descripcion, m_rubros.cod_tipo_rubro, m_rubros.cod_impuesto, "
-				+ "m_impuestos.cod_impuesto, m_impuestos.descripcion, m_impuestos.porcentaje ");
+				+ "m_impuestos.cod_impuesto, m_impuestos.descripcion, m_impuestos.porcentaje,"
+				+ "c_gastos.estado ");
 		
 		sb.append("FROM c_gastos"
 				+ " INNER JOIN  m_funcionarios ON c_gastos.cod_tit = m_funcionarios.cod_tit AND m_funcionarios.cod_emp = c_gastos.cod_emp "
@@ -1196,7 +1197,7 @@ public class ConsultasDD {
 				+ "m_monedas.cod_moneda, m_monedas.descripcion, m_monedas.simbolo, "
 				+ "m_cuentas.cod_cuenta, m_cuentas.descripcion, "
 				+ "m_rubros.cod_rubro, m_rubros.descripcion, m_rubros.cod_tipo_rubro, m_rubros.cod_impuesto, "
-				+ "m_impuestos.cod_impuesto, m_impuestos.descripcion, m_impuestos.porcentaje ");
+				+ "m_impuestos.cod_impuesto, m_impuestos.descripcion, m_impuestos.porcentaje, c_gastos.estado ");
 		
 		sb.append("FROM c_gastos"
 				+ " LEFT JOIN  m_funcionarios ON c_gastos.cod_tit = m_funcionarios.cod_tit AND m_funcionarios.cod_emp = c_gastos.cod_emp "
@@ -1297,9 +1298,9 @@ public class ConsultasDD {
 				+ " cod_emp, cod_moneda, referencia, cod_tit, nro_trans, "
 				+ " fecValor, cod_proceso, referenciaDetalle, imp_impu_mn, imp_impu_mo, imp_sub_mn, "
 				+ " imp_sub_mo, imp_tot_mn, imp_tot_mo, tc_mov, cod_cuenta, cod_rubro, cuenta, "
-				+ " fecha_mod, usuario_mod, operacion ) ");
+				+ " fecha_mod, usuario_mod, operacion, estado ) ");
 		sb.append("VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
-				+ " ?, ?, ?, ?, ?, ?, NOW(), ?, ?) ");
+				+ " ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ? ) ");
 		
 		return sb.toString();
 	}

@@ -202,6 +202,10 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 						gastoVO.setSimboloMoneda("");
 					}
 					
+					if(this.comboEstado.getValue()!= null){
+						gastoVO.setEstadoGasto(this.comboEstado.getValue().toString());
+					}
+					
 					
 					gastoVO.setReferencia(referencia.getValue().trim());
 					gastoVO.setCodCuenta(codCuenta.getValue().trim());
@@ -478,53 +482,6 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 			
 		});
 		
-//		this.btnBuscarCuenta.addClickListener(click -> {
-//			
-//			BusquedaViewExtended form = new BusquedaViewExtended(this, new CuentaVO());
-//			ArrayList<Object> lst = new ArrayList<Object>();
-//			ArrayList<CuentaVO> lstCuentas = new ArrayList<CuentaVO>();
-//			
-//			/*Inicializamos VO de permisos para el usuario, formulario y operacion
-//			 * para confirmar los permisos del usuario*/
-//			UsuarioPermisosVO permisoAux = 
-//					new UsuarioPermisosVO(this.permisos.getCodEmp(),
-//							this.permisos.getUsuario(),
-//							VariablesPermisos.FORMULARIO_GASTOS,
-//							VariablesPermisos.OPERACION_NUEVO_EDITAR);
-//			
-//			try {
-//				lstCuentas = this.controlador.getCuentas(permisoAux, this.codRubro.getValue().trim());
-//				
-//			} catch ( ObteniendoCuentasException | ConexionException | InicializandoException | ObteniendoPermisosException | NoTienePermisosException | ObteniendoRubrosException e) {
-//
-//				Mensajes.mostrarMensajeError(e.getMessage());
-//			}
-//			Object obj;
-//			for (CuentaVO i: lstCuentas) {
-//				obj = new Object();
-//				obj = (Object)i;
-//				lst.add(obj);
-//			}
-//			try {
-//				
-//				form.inicializarGrilla(lst);
-//			
-//				
-//			} catch (Exception e) {
-//				
-//				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
-//			}
-//			
-//			sub = new MySub("65%", "65%" );
-//			sub.setModal(true);
-//			sub.center();
-//			sub.setModal(true);
-//			sub.setVista(form);
-//			sub.center();
-//			sub.setDraggable(true);
-//			UI.getCurrent().addWindow(sub);
-//			
-//		});
 		
 		this.btnBuscarImpuesto.addClickListener(click -> {
 			
@@ -845,6 +802,8 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 				this.nomTitular.setValue(titularVO.getNombre());
 				this.btnBuscarEmpleado.setVisible(false);
 				this.procesosCliente = "";
+				this.comboEstado.setValue("Cobrable");
+				this.comboEstado.setEnabled(false);
 			}
 			else if(tipoTitular.toUpperCase().equals("CLIENTE")){
 				this.comboSeleccion.setValue("Proceso");
@@ -872,6 +831,8 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 				this.nomTitular.setValue(titularVO.getNombre());
 				this.btnBuscarEmpleado.setVisible(false);
 				this.procesosCliente = "";
+				this.comboEstado.setValue("Cobrable");
+				this.comboEstado.setEnabled(false);
 			}
 			else if(tipoTitular.toUpperCase().equals("CLIENTE")){
 				this.comboSeleccion.setValue("Proceso");
@@ -941,6 +902,9 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		this.codProceso.setRequired(setear);
 		this.codProceso.setRequiredError("Es requerido");
 		
+		this.comboEstado.setRequired(setear);
+		this.comboEstado.setRequiredError("Es requerido");
+		
 	}
 	
 	/**
@@ -964,6 +928,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		
 		this.inicializarComboMoneda(gasto.getCodMoneda());
 		this.inicializarComboSeleccion(gasto.getCodCtaInd());
+		this.inicializarComboEstado(gasto.getEstadoGasto());
 		
 		/*SETEAMOS LA OPERACION EN MODO LECUTA
 		 * ES CUANDO LLAMAMOS ESTE METODO*/
@@ -1045,6 +1010,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 				tipoCambio = (Double) tcMov.getConvertedValue();
 				importeImpuesto = (Double) impImpuMo.getConvertedValue();
 				cotizacionVenta = (Double) tcMov.getConvertedValue();
+				this.comboEstado.setEnabled(true);
 			}
 			
 			if(this.mainView.nomForm().equals("Egreso")){
@@ -1088,11 +1054,13 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		/*Como es en operacion nuevo, dejamos todos los campos editabls*/
 		this.readOnlyFields(false);
 		
+		
 		this.enableCombos();
 	}
 	
 	private void enableCombos(){
 		this.comboMoneda.setEnabled(true);
+		this.comboEstado.setEnabled(true);
 		//this.comboImpuesto.setEnabled(true);
 		
 	}
@@ -1267,7 +1235,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		this.porcentajeImpuesto.setEnabled(false);
 		this.comboMoneda.setEnabled(false);
 		this.nroDocum.setEnabled(false);
-		
+		this.comboEstado.setEnabled(false);
 		
 	}
 	
@@ -1456,6 +1424,10 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		else{
 			tcMov.setEnabled(false);
 		}
+	}
+	
+	public void inicializarComboEstado(String estado){
+		this.comboEstado.setValue(estado);
 	}
 	
 	public void inicializarComboSeleccion(String cod){

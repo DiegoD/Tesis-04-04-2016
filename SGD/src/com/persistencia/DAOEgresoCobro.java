@@ -477,6 +477,7 @@ public class DAOEgresoCobro implements IDAOEgresoCobro{
 				aux.setFechaMod(rs.getTimestamp("fecha_mod"));
 				aux.setOperacion(rs.getString("operacion"));
 				aux.setLinea(rs.getInt("linea"));
+				aux.setEstadoGasto(rs.getString("estado"));
 				
 				
 				lst.add(aux);
