@@ -203,7 +203,15 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 					}
 					
 					if(this.comboEstado.getValue()!= null){
-						gastoVO.setEstadoGasto(this.comboEstado.getValue().toString());
+						if(this.comboEstado.getValue().equals("Cobrable")){
+							gastoVO.setEstadoGasto("cobr");
+						}
+						else if(this.comboEstado.getValue().equals("No cobrable")){
+							gastoVO.setEstadoGasto("nocobr");
+						}
+						else if(this.comboEstado.getValue().equals("Facturable")){
+							gastoVO.setEstadoGasto("fact");
+						}
 					}
 					
 					
@@ -1427,7 +1435,17 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 	}
 	
 	public void inicializarComboEstado(String estado){
-		this.comboEstado.setValue(estado);
+		
+		if(estado.equals("cobr")){
+			this.comboEstado.setValue("Cobrable");
+		}
+		if(estado.equals("nocobr")){
+			this.comboEstado.setValue("No cobrable");
+		}
+		if(estado.equals("fact")){
+			this.comboEstado.setValue("Facturable");
+		}
+		
 	}
 	
 	public void inicializarComboSeleccion(String cod){

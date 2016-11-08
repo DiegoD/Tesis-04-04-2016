@@ -2702,6 +2702,7 @@ public class FachadaDD {
 				aux.setNomImpuesto(gasto.getImpuestoInfo().getNomImpuesto());
 				aux.setPorcentajeImpuesto(gasto.getImpuestoInfo().getPorcentaje());
 				aux.setEstadoGasto(gasto.getEstadoGasto());
+				
 				lstGastosVO.add(aux);
 			}
 		

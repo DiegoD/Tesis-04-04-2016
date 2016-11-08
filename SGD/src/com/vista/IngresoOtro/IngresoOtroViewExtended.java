@@ -20,6 +20,7 @@ import com.excepciones.IngresoCobros.InsertandoIngresoCobroException;
 import com.excepciones.IngresoCobros.ModificandoIngresoCobroException;
 import com.excepciones.IngresoCobros.NoExisteIngresoCobroException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
+import com.excepciones.Titulares.ObteniendoTitularesException;
 import com.excepciones.clientes.ObteniendoClientesException;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
@@ -29,6 +30,7 @@ import com.vaadin.server.VaadinService;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.UI;
 import com.valueObject.MonedaVO;
+import com.valueObject.TitularVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.Cotizacion.CotizacionVO;
 import com.valueObject.Gasto.GtoSaldoAux;
@@ -39,6 +41,8 @@ import com.valueObject.banco.CtaBcoVO;
 import com.valueObject.cliente.ClienteVO;
 import com.vista.BusquedaViewExtended;
 import com.vista.IBusqueda;
+import com.vista.IMensaje;
+import com.vista.MensajeExtended;
 import com.vista.Mensajes;
 import com.vista.MySub;
 import com.vista.PermisosUsuario;
@@ -47,7 +51,7 @@ import com.vista.VariablesPermisos;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 
-public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusqueda{
+public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusqueda, IMensaje{
 
 	private BeanFieldGroup<IngresoCobroVO> fieldGroup;
 	
@@ -60,6 +64,11 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 	UsuarioPermisosVO permisoAux;
 	CotizacionVO cotizacion =  new CotizacionVO();
 	Double cotizacionVenta = null;
+	TitularVO titularVO = new TitularVO();
+	MonedaVO monedaNacional = new MonedaVO();
+	ArrayList<MonedaVO> lstMonedas = new ArrayList<MonedaVO>();
+	
+	//private UsuarioPermisosVO permisos; /*Variable con los permisos del usuario*/
 	
 	private Hashtable<Integer, GtoSaldoAux> saldoOriginalGastos; /*Variable auxliar para poder
 	 															 controlar que el saldo del gasto quede
@@ -100,8 +109,17 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 	
 	this.btnBuscarCliente.addClickListener(click -> {
 		
-		BusquedaViewExtended form = new BusquedaViewExtended(this, new ClienteVO());
+		BusquedaViewExtended form;
+		
+		if(this.chkFuncionario.getValue()){
+			form = new BusquedaViewExtended(this, new TitularVO());
+		}
+		else{
+			form = new BusquedaViewExtended(this, new ClienteVO());
+		}	
+		
 		ArrayList<Object> lst = new ArrayList<Object>();
+		ArrayList<TitularVO> lstTitulares = new ArrayList<TitularVO>();
 		ArrayList<ClienteVO> lstClientes = new ArrayList<ClienteVO>();
 		
 		/*Inicializamos VO de permisos para el usuario, formulario y operacion
@@ -113,18 +131,36 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 						VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
 		try {
-			lstClientes = this.controlador.getClientes(permisoAux);
+			
+			if(this.chkFuncionario.getValue()){
+				lstTitulares = this.controlador.getTitulares(permisoAux);
+			}
+			else{
+				
+				lstClientes = this.controlador.getClientes(permisoAux);
+			}
 			
 		} catch ( ConexionException | InicializandoException | ObteniendoPermisosException | NoTienePermisosException |
-				 ObteniendoClientesException e) {
+				 ObteniendoClientesException | ObteniendoTitularesException e) {
 
 			Mensajes.mostrarMensajeError(e.getMessage());
 		}
-		Object obj;
-		for (ClienteVO i: lstClientes) {
-			obj = new Object();
-			obj = (Object)i;
-			lst.add(obj);
+		
+		if(this.chkFuncionario.getValue()){
+			Object obj;
+			for (TitularVO i: lstTitulares) {
+				obj = new Object();
+				obj = (Object)i;
+				lst.add(obj);
+			}
+		}
+		else{
+			Object obj;
+			for (ClienteVO i: lstClientes) {
+				obj = new Object();
+				obj = (Object)i;
+				lst.add(obj);
+			}
 		}
 		try {
 			
@@ -136,7 +172,7 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 		}
 		
-		sub = new MySub("65%", "65%" );
+		sub = new MySub("85%", "65%" );
 		sub.setModal(true);
 		sub.center();
 		sub.setModal(true);
@@ -154,7 +190,7 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 	*/
 	comboBancos.addValueChangeListener(new Property.ValueChangeListener() {
 
-   		@Override
+		@Override
 		public void valueChange(ValueChangeEvent event) {
    			BancoVO bcoAux;
 			
@@ -162,74 +198,296 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 				bcoAux = new BancoVO();
 				bcoAux = (BancoVO) comboBancos.getValue();
 				
-				inicializarComboCuentas(bcoAux.getCodigo());
+				inicializarComboCuentas(bcoAux.getCodigo(), "Banco");
 			}		
 		}
     });
 	
-	
-	 
-	
-	
-	/**
-	* Agregamos listener al combo de tipo (banco, caja), determinamos si mostramos
-	* los campos del banco o no;
-	*
-	*/
-    comboTipo.addValueChangeListener(new Property.ValueChangeListener() {
+	fecValor.addValueChangeListener(new Property.ValueChangeListener() {
 
    		@Override
 		public void valueChange(ValueChangeEvent event) {
-
-   			mostrarDatosDeBanco();
-		}
-    });
-  //  combobox.setImmediate(true);
-
-    /**
-	* Agregamos listener al combo de monedas, para verificar que no modifique la moneda
-	* una vez ingresado un gasto ya 
-	*
-	*/
-    comboMoneda.addValueChangeListener(new Property.ValueChangeListener() {
-   		@Override
-		public void valueChange(ValueChangeEvent event) {
+   						
+   			for (MonedaVO monedaVO : lstMonedas) {
+					
+				monedaVO = seteaCotizaciones(monedaVO);
+			}	
    			
+   			/*Inicializamos VO de permisos para el usuario, formulario y operacion
+   			 * para confirmar los permisos del usuario*/
    			UsuarioPermisosVO permisoAux = 
    					new UsuarioPermisosVO(permisos.getCodEmp(),
    							permisos.getUsuario(),
    							VariablesPermisos.FORMULARIO_INGRESO_COBRO,
    							VariablesPermisos.OPERACION_NUEVO_EDITAR);
    			
-   			MonedaVO auxMoneda = new MonedaVO();
-   			Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
+   			CtaBcoVO ctaBcoAux;
+   			ctaBcoAux = new CtaBcoVO();
+   			if(comboCuentas.getValue() != null){
+   				ctaBcoAux = (CtaBcoVO) comboCuentas.getValue();
    			
-   			auxMoneda = (MonedaVO) comboMoneda.getValue();
-   			
-   			if(auxMoneda.getCodMoneda() != null && !auxMoneda.isNacional()){
-   				try {
-   					
-   					tcMov.setVisible(true);
-					cotizacion = controlador.getCotizacion(permisoAux, fecha, auxMoneda.getCodMoneda());
-					cotizacionVenta = cotizacion.getCotizacionVenta();
-					calculos();
-				} 
-   				catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
+	   			MonedaVO auxMoneda = new MonedaVO();
+	   			Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
+	   			
+	   			auxMoneda = (MonedaVO) ctaBcoAux.getMonedaVO();
+	   			
+	   			try {
+	   				if(!auxMoneda.isNacional()){
+	   					cotizacion = controlador.getCotizacion(permisoAux, fecha, ctaBcoAux.getMonedaVO().getCodMoneda());
+	   				}
+	   				else{
+	   					cotizacion.setCotizacionVenta(1);
+	   				}
+				} catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
 						| InicializandoException | NoTienePermisosException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				if(cotizacion.getCotizacionVenta() != 0){
+					cotizacionVenta = cotizacion.getCotizacionVenta();
+				}
+				else{
+					Mensajes.mostrarMensajeError("Debe cargar la cotización para la moneda");
+					comboCuentas.setErrorHandler(null);
+					comboCuentas.setData("ProgramaticallyChanged");
+					comboCuentas.setValue(null);
+					monedaBanco.setValue("");
+					cuentaBanco.setValue("");
+					
+				}
+   			
+				if(comboCuentas.getValue()!=null){
+					if(ctaBcoAux != null && !comboCuentas.getValue().equals("")){
+		   				monedaBanco.setValue(ctaBcoAux.getMonedaVO().getSimbolo());
+		   				cuentaBanco.setValue(ctaBcoAux.getCodigo());
+		   				if(comboMoneda.getValue()!= ""){
+		   					auxMoneda = (MonedaVO) comboMoneda.getValue();
+		   					if(auxMoneda != null){
+		   						if(!auxMoneda.getCodMoneda().equals(ctaBcoAux.getMonedaVO().getCodMoneda()) && opera != Variables.OPERACION_LECTURA){
+			   						Mensajes.mostrarMensajeWarning("La moneda del banco es diferente a la moneda del documento");
+			   					}
+		   					}
+		   					
+		   				}
+		   			}
+				}
+	   			
    			}
-   			else{
-   				tcMov.setVisible(false);
-   				cotizacionVenta = (double)1;
-   				calculos();
+   			
+   			if(comboMoneda.getValue()!= null){
+   				
+   	   			
+	   			MonedaVO auxMoneda = new MonedaVO();
+	   			Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
+	   			auxMoneda = (MonedaVO) comboMoneda.getValue();
+	   			
+	   			if(auxMoneda.getCodMoneda() != null && !auxMoneda.isNacional()){
+	   				try {
+	   					
+	   					tcMov.setVisible(true);
+						cotizacion = controlador.getCotizacion(permisoAux, fecha, auxMoneda.getCodMoneda());
+						if(cotizacion.getCotizacionVenta() != 0 && !auxMoneda.isNacional()){
+							cotizacionVenta = cotizacion.getCotizacionVenta();
+							if(comboCuentas.getValue() != "" && comboCuentas.getValue()!=null){
+								
+					   			ctaBcoAux = new CtaBcoVO();
+					   			ctaBcoAux = (CtaBcoVO) comboCuentas.getValue();
+					   			if(!auxMoneda.getCodMoneda().equals(ctaBcoAux.getMonedaVO().getCodMoneda())&& opera != Variables.OPERACION_LECTURA){
+					   				Mensajes.mostrarMensajeWarning("La moneda del banco es diferente a la moneda del documento");
+					   			}
+				   			}
+							calculos();
+						}
+						else{
+							Mensajes.mostrarMensajeError("Debe cargar la cotización para la moneda");
+							comboMoneda.setValue(monedaNacional);
+						}
+					} 
+	   				catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
+							| InicializandoException | NoTienePermisosException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+	   				if(fecha != null){
+	   					
+	   					for (MonedaVO monedaVO : lstMonedas) {
+	   						
+	   						monedaVO = seteaCotizaciones(monedaVO);
+	   					}
+	   					
+	   				}
+	   			}
    			}
-   		
 		}
     });
+	
+	/**
+	* Agregamos listener al combo de tipo (banco, caja), determinamos si mostramos
+	* los campos del banco o no;
+	*
+	*/
+	comboTipo.addValueChangeListener(new Property.ValueChangeListener() {
+
+	   		@Override
+			public void valueChange(ValueChangeEvent event) {
+
+	   			mostrarDatosDeBanco();
+			}
+	});
+  //  combobox.setImmediate(true);
+
+comboCuentas.addValueChangeListener(new Property.ValueChangeListener() {
+    	
+    	@Override
+		public void valueChange(ValueChangeEvent event) {
+   			
+   			if("ProgramaticallyChanged".equals(comboCuentas.getData())){
+   				comboCuentas.setData(null);
+   	            return;
+   	        }
+   			
+   			/*Inicializamos VO de permisos para el usuario, formulario y operacion
+   			 * para confirmar los permisos del usuario*/
+   			UsuarioPermisosVO permisoAux = 
+   					new UsuarioPermisosVO(permisos.getCodEmp(),
+   							permisos.getUsuario(),
+   							VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+   							VariablesPermisos.OPERACION_NUEVO_EDITAR);
+   			
+   			CtaBcoVO ctaBcoAux;
+   			ctaBcoAux = new CtaBcoVO();
+   			if(comboCuentas.getValue() != null){
+   				ctaBcoAux = (CtaBcoVO) comboCuentas.getValue();
+   			
+	   			MonedaVO auxMoneda = new MonedaVO();
+	   			Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
+	   			
+	   			auxMoneda = (MonedaVO) ctaBcoAux.getMonedaVO();
+	   			
+	   			try {
+	   				if(!auxMoneda.isNacional()){
+	   					cotizacion = controlador.getCotizacion(permisoAux, fecha, ctaBcoAux.getMonedaVO().getCodMoneda());
+	   				}
+	   				else{
+	   					cotizacion.setCotizacionVenta(1);
+	   				}
+				} catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
+						| InicializandoException | NoTienePermisosException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				if(cotizacion.getCotizacionVenta() != 0){
+					cotizacionVenta = cotizacion.getCotizacionVenta();
+				}
+				else{
+					Mensajes.mostrarMensajeError("Debe cargar la cotización para la moneda");
+					comboCuentas.setErrorHandler(null);
+					comboCuentas.setData("ProgramaticallyChanged");
+					comboCuentas.setValue(null);
+					monedaBanco.setValue("");
+					cuentaBanco.setValue("");
+					
+					return;
+				}
+				
+	   			if(ctaBcoAux != null && !comboCuentas.getValue().equals("")){
+	   				monedaBanco.setValue(ctaBcoAux.getMonedaVO().getSimbolo());
+	   				cuentaBanco.setValue(ctaBcoAux.getCodigo());
+	   				if(comboMoneda.getValue()!= ""){
+	   					auxMoneda = (MonedaVO) comboMoneda.getValue();
+	   					if(auxMoneda != null){
+	   						if(!auxMoneda.getCodMoneda().equals(ctaBcoAux.getMonedaVO().getCodMoneda()) && opera != Variables.OPERACION_LECTURA){
+		   						Mensajes.mostrarMensajeWarning("La moneda del banco es diferente a la moneda del documento");
+		   					}
+	   					}
+	   					
+	   				}
+	   			}
+   			}
+		}
+    	
+    });
+
+
+    /**
+	* Agregamos listener al combo de monedas, para verificar que no modifique la moneda
+	* una vez ingresado un gasto ya 
+	*
+	*/
+	comboMoneda.addValueChangeListener(new Property.ValueChangeListener() {
+		@Override
+		public void valueChange(ValueChangeEvent event) {
+			
+			
+			
+			UsuarioPermisosVO permisoAux = 
+					new UsuarioPermisosVO(permisos.getCodEmp(),
+							permisos.getUsuario(),
+							VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+							VariablesPermisos.OPERACION_NUEVO_EDITAR);
+			
+			MonedaVO auxMoneda = new MonedaVO();
+			Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
+			CtaBcoVO ctaBcoAux;
+			auxMoneda = (MonedaVO) comboMoneda.getValue();
+			
+			
+			
+			if(auxMoneda.getCodMoneda() != null && !auxMoneda.isNacional()){
+				try {
+					
+					tcMov.setVisible(true);
+				cotizacion = controlador.getCotizacion(permisoAux, fecha, auxMoneda.getCodMoneda());
+				if(cotizacion.getCotizacionVenta() != 0 && !auxMoneda.isNacional()){
+					cotizacionVenta = cotizacion.getCotizacionVenta();
+					if(comboCuentas.getValue() != "" && comboCuentas.getValue()!=null){
+						
+			   			ctaBcoAux = new CtaBcoVO();
+			   			ctaBcoAux = (CtaBcoVO) comboCuentas.getValue();
+			   			if(!auxMoneda.getCodMoneda().equals(ctaBcoAux.getMonedaVO().getCodMoneda())&& opera != Variables.OPERACION_LECTURA){
+			   				Mensajes.mostrarMensajeWarning("La moneda del banco es diferente a la moneda del documento");
+			   			}
+		   			}
+					calculos();
+				}
+				else{
+					Mensajes.mostrarMensajeError("Debe cargar la cotización para la moneda");
+					comboMoneda.setValue(monedaNacional);
+					return;
+				}
+			} 
+				catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
+					| InicializandoException | NoTienePermisosException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+				if(fecha != null){
+					
+					for (MonedaVO monedaVO : lstMonedas) {
+						
+						monedaVO = seteaCotizaciones(monedaVO);
+					}
+					
+				}
+			}
+			else{
+				
+				if(comboCuentas.getValue() != "" && comboCuentas.getValue()!=null){
+	   			ctaBcoAux = new CtaBcoVO();
+	   			ctaBcoAux = (CtaBcoVO) comboCuentas.getValue();
+	   			
+	   			if(!auxMoneda.getCodMoneda().equals(ctaBcoAux.getMonedaVO().getCodMoneda())){
+	   				Mensajes.mostrarMensajeWarning("La moneda del banco es diferente a la moneda del documento");
+	   			}
+				}
+				tcMov.setVisible(false);
+				cotizacionVenta = (double)1;
+				calculos();
+			}
+		}
+	});
     
-    this.tcMov.addValueChangeListener(new Property.ValueChangeListener() {
+this.tcMov.addValueChangeListener(new Property.ValueChangeListener() {
 		
 	    public void valueChange(ValueChangeEvent event) {
 	    	
@@ -481,24 +739,44 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 		});
 	
 	
-	/*Inicalizamos listener para boton de Editar*/
-		this.btnEditar.addClickListener(click -> {
-				
-		try {
-			
-			/*Inicializamos el Form en modo Edicion*/
-			this.iniFormEditar();
+	this.btnEliminar.addClickListener(click -> {
+		
+		MensajeExtended form = new MensajeExtended("Elimina el cobro?",this);
+		
+		
+		
+		sub = new MySub("25%", "20%" );
+		sub.setModal(true);
+		sub.center();
+		sub.setModal(true);
+		sub.setVista(form);
+		sub.center();
+		sub.setClosable(false);
+		sub.setResizable(false);
+		sub.setDraggable(true);
+		UI.getCurrent().addWindow(sub);
+		
 	
-			}catch(Exception e)
-			{
-				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
-			}
-		});
+	});
+	
+	/*Inicalizamos listener para boton de Editar*/
+	this.btnEditar.addClickListener(click -> {
+			
+	try {
+		
+		/*Inicializamos el Form en modo Edicion*/
+		this.iniFormEditar();
+
+		}catch(Exception e)
+		{
+			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+		}
+	});
 		
 			
-		this.cancelar.addClickListener(click -> {
-			main.cerrarVentana();
-		});
+	this.cancelar.addClickListener(click -> {
+		main.cerrarVentana();
+	});
 			
 	}
 
@@ -513,7 +791,7 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 		
 		/*Inicializamos los combos*/
 		this.inicializarComboBancos(null);
-		this.inicializarComboCuentas(null);
+		this.inicializarComboCuentas(null, "");
 		this.inicializarComboMoneda(null);
 		
 		inicializarCampos();
@@ -579,46 +857,46 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 		this.comboMPagos.setRequired(setear);
 		this.comboMPagos.setRequiredError("Es requerido");
 		
-		/*De Bco*/
-		if(this.comboTipo.equals("Banco"))
-		{
-			this.comboMPagos.setRequired(setear);
-			this.comboMPagos.setRequiredError("Es requerido");
+		if(this.comboTipo.getValue()!=null){
+			if(this.comboTipo.getValue().equals("Banco") && this.comboTipo.getValue()!=null)
+			{
+				this.comboMPagos.setRequired(setear);
+				this.comboMPagos.setRequiredError("Es requerido");
+				
+				this.serieDocRef.setRequired(setear);
+				this.serieDocRef.setRequiredError("Es requerido");
+				
+				this.nroDocRef.setRequired(setear);
+				this.nroDocRef.setRequiredError("Es requerido");
+				
+				this.comboBancos.setRequired(setear);
+				this.comboBancos.setRequiredError("Es requerido");
+				
+				this.comboCuentas.setRequired(setear);
+				this.comboCuentas.setRequiredError("Es requerido");
+			}
+			else
+			{
+				this.serieDocRef.setReadOnly(false);
+				this.nroDocRef.setReadOnly(false);
+				this.comboBancos.setReadOnly(false);
+				this.comboCuentas.setReadOnly(false);
+				this.comboMPagos.setReadOnly(false);
+				
+				this.serieDocRef.setValue("0");
+				this.serieDocRef.setRequired(false);
+				this.nroDocRef.setRequired(false);
+				this.comboBancos.setRequired(false);
+				this.comboCuentas.setRequired(false);
+				this.comboMPagos.setRequired(false);
+				
+				this.serieDocRef.setReadOnly(true);
+				this.nroDocRef.setReadOnly(true);
+				this.comboBancos.setReadOnly(true);
+				this.comboCuentas.setReadOnly(true);
+				this.comboMPagos.setReadOnly(true);
 			
-			this.serieDocRef.setRequired(setear);
-			this.serieDocRef.setRequiredError("Es requerido");
-			
-			this.nroDocRef.setRequired(setear);
-			this.nroDocRef.setRequiredError("Es requerido");
-			
-			this.comboBancos.setRequired(setear);
-			this.comboBancos.setRequiredError("Es requerido");
-			
-			this.comboCuentas.setRequired(setear);
-			this.comboCuentas.setRequiredError("Es requerido");
-		}
-		else
-		{
-			this.serieDocRef.setReadOnly(false);
-			this.nroDocRef.setReadOnly(false);
-			this.comboBancos.setReadOnly(false);
-			this.comboCuentas.setReadOnly(false);
-			this.comboMPagos.setReadOnly(false);
-			
-			this.serieDocRef.setValue("0");
-			this.serieDocRef.setRequired(false);
-			this.nroDocRef.setRequired(false);
-			this.comboBancos.setRequired(false);
-			this.comboCuentas.setRequired(false);
-			this.comboMPagos.setRequired(false);
-			
-			this.serieDocRef.setReadOnly(true);
-			this.nroDocRef.setReadOnly(true);
-			this.comboBancos.setReadOnly(true);
-			this.comboCuentas.setReadOnly(true);
-			this.comboMPagos.setReadOnly(true);
-			
-		
+			}
 		}
 		
 	}
@@ -640,7 +918,7 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 		
 		/*Inicializamos los combos*/
 		this.inicializarComboBancos(ing.getCodBanco());
-		this.inicializarComboCuentas(ing.getCodCtaBco());
+		this.inicializarComboCuentas(ing.getCodCtaBco(), "CuentaBanco");
 		this.inicializarComboMoneda(ing.getCodMoneda());
 		
 		
@@ -660,6 +938,11 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 		this.comboTipo.setNullSelectionAllowed(false);
 		this.comboTipo.setBuffered(true);
 		
+		this.nroDocum.setReadOnly(true);
+		this.serieDocRef.setReadOnly(false);
+		this.serieDocRef.setEnabled(true);
+		this.serieDocRef.setValue(item.getBean().getSerieDocRef());
+		
 		/*Seteamos el tipo*/
 		//this.comboTipo = new ComboBox();
 		if(auxBco.getCodigo().equals("0"))
@@ -667,11 +950,10 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 		else
 			this.comboTipo.setValue("Banco");
 		
-		this.comboMPagos = new ComboBox();
 		
 		this.comboMPagos.setImmediate(true);
 		this.comboMPagos.setNullSelectionAllowed(false);
-		
+		this.comboMPagos.setReadOnly(false);
 		this.comboMPagos.addItem("Sin Asignar");
 		this.comboMPagos.addItem("Cheque");
 		this.comboMPagos.addItem("Transferencia");
@@ -683,8 +965,6 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 		}else {
 			this.comboMPagos.setValue(item.getBean().getmPago());
 		}
-		
-		
 		
 		auditoria.setDescription(
 			
@@ -722,6 +1002,11 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 	{
 		/*Verificamos que tenga permisos para editar*/
 		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_COBRO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		boolean permisoEliminar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO, VariablesPermisos.OPERACION_BORRAR);
+		
+		this.chkFuncionario.setVisible(false);
+		this.lblFuncionario.setVisible(false);
+		this.btnBuscarCliente.setVisible(false);
 		
 		/*Si tiene permisos de editar habilitamos el boton de 
 		 * edicion*/
@@ -733,6 +1018,9 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 			
 			this.disableBotonLectura();
 		}
+		
+		if(permisoEliminar)
+			this.enableBotonEliminar();
 		
 		/*Deshabilitamos botn aceptar*/
 		this.disableBotonAceptar();
@@ -760,9 +1048,15 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 		
 		if(permisoNuevoEditar){
 			
+			this.chkFuncionario.setVisible(false);
+			this.lblFuncionario.setVisible(false);
+			this.btnBuscarCliente.setVisible(false);
+			
 			/*Oculatamos Editar y mostramos el de guardar y de agregar formularios*/
 			this.enableBotonAceptar();
 			this.disableBotonLectura();
+			
+			this.disableBotonEliminar();
 			
 			/*Dejamos los textfields que se pueden editar
 			 * en readonly = false asi  se pueden editar*/
@@ -772,6 +1066,10 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 			this.setearValidaciones(true);
 			
 			this.comboTipo.setReadOnly(false);
+			this.comboTipo.setEnabled(false);
+			
+			this.titularVO.setCodigo(Integer.parseInt(codTitular.getValue()));
+			this.titularVO.setNombre(nomTitular.getValue());
 		}
 		else{
 			
@@ -789,7 +1087,8 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 		/*Si es nuevo ocultamos el nroDocum (ya que aun no tenemos el numero)*/
 		this.nroDocum.setVisible(false);
 		this.nroDocum.setEnabled(false);
-		
+		this.chkFuncionario.setVisible(true);
+		this.lblFuncionario.setVisible(true);
 //		this.nroDocum.setValue("0");
 //		this.nroTrans.setValue("0");
 		
@@ -809,6 +1108,7 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 		
 		this.enableBotonAceptar();
 		this.disableBotonLectura();
+		this.enableBotonEliminar();
 		
 		/*Inicializamos el container*/
 		this.container = 
@@ -832,25 +1132,18 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 	{
 		/*Agregar control si se puede editar si el mes esta abierto*/
 		//TODO
-		this.comboTipo.setReadOnly(false);
-		
-		this.comboBancos.setReadOnly(false);
-		
-		this.comboCuentas.setReadOnly(false);
-		
 		this.fecDoc.setReadOnly(false);
-		
-		this.fecValor.setReadOnly(false);
-		
-		this.comboMPagos.setReadOnly(false);
 		
 		this.serieDocRef.setReadOnly(false);
 		
 		this.nroDocRef.setReadOnly(false);
 		
-		this.comboMoneda.setReadOnly(false);
+		this.serieDocRef.setEnabled(true);
+		
+		this.nroDocRef.setEnabled(true);
 		
 		this.impTotMo.setReadOnly(false);
+		this.impTotMo.setEnabled(true);
 		
 		this.referencia.setReadOnly(false);
 	}
@@ -897,6 +1190,27 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 		
 	}
 	
+	private void enableBotonEliminar()
+	{
+		if(operacion != Variables.OPERACION_NUEVO){
+			this.btnEliminar.setEnabled(true);
+			this.btnEliminar.setVisible(true);
+			this.botones.setWidth("270px");
+		}
+		else{
+			disableBotonEliminar();
+		}
+	}
+	
+	private void disableBotonEliminar()
+	{
+		this.btnEliminar.setEnabled(false);
+		this.btnEliminar.setVisible(false);
+		this.botones.setWidth("187px");
+		
+		
+	}
+	
 	/**
 	 * Dejamos todos los Fields readonly o no,
 	 * dado el boolenao pasado por parametro
@@ -905,7 +1219,7 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 	private void readOnlyFields(boolean setear)
 	{
 		
-		this.comboTipo.setReadOnly(setear);
+this.comboTipo.setReadOnly(setear);
 		
 		this.comboBancos.setReadOnly(setear);
 		
@@ -916,7 +1230,7 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 		this.fecValor.setReadOnly(setear);
 		
 		this.comboMPagos.setReadOnly(setear);
-		
+		this.tcMov.setReadOnly(setear);
 		this.serieDocRef.setReadOnly(setear);
 		
 		this.nroDocRef.setReadOnly(setear);
@@ -924,12 +1238,19 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 		this.comboMoneda.setReadOnly(setear);
 		
 		this.impTotMo.setReadOnly(setear);
+		this.impTotMo.setEnabled(false);
 		
 		this.referencia.setReadOnly(setear);
 		
-		this.codTitular.setReadOnly(setear);
+		this.codTitular.setReadOnly(false);
 		this.codTitular.setEnabled(false);
 		this.nomTitular.setEnabled(false);
+		
+		this.nroDocum.setEnabled(false);
+		this.monedaBanco.setEnabled(false);
+		this.cuentaBanco.setEnabled(false);
+		this.serieDocRef.setEnabled(false);
+		this.nroDocRef.setEnabled(false);
 	}
 	
 	/**
@@ -992,7 +1313,7 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 	/////////////////////////////////////////////////
 	
 	
-	public void inicializarComboMoneda(String cod){
+public void inicializarComboMoneda(String cod){
 		
 		//this.comboMoneda = new ComboBox();
 		BeanItemContainer<MonedaVO> monedasObj = new BeanItemContainer<MonedaVO>(MonedaVO.class);
@@ -1004,7 +1325,7 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 			permisosAux = 
 					new UsuarioPermisosVO(this.permisos.getCodEmp(),
 							this.permisos.getUsuario(),
-							VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+							VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
 							VariablesPermisos.OPERACION_NUEVO_EDITAR);
 			
 			lstMonedas = this.controlador.getMonedas(permisosAux);
@@ -1016,6 +1337,7 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 		
 		for (MonedaVO monedaVO : lstMonedas) {
 			
+			monedaVO = this.seteaCotizaciones(monedaVO);
 			monedasObj.addBean(monedaVO);
 			
 			if(cod != null){
@@ -1042,59 +1364,79 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 		
 	}
 	
-	public void inicializarComboCuentas(String cod){
+	public void inicializarComboCuentas(String cod, String llamador ){
 		
-		BeanItemContainer<CtaBcoVO> ctaObj = new BeanItemContainer<CtaBcoVO>(CtaBcoVO.class);
-		CtaBcoVO cta = new CtaBcoVO();
-		ArrayList<CtaBcoVO> lstctas = new ArrayList<CtaBcoVO>();
-		UsuarioPermisosVO permisosAux;
-		
-		try {
-			permisosAux = 
-					new UsuarioPermisosVO(this.permisos.getCodEmp(),
-							this.permisos.getUsuario(),
-							VariablesPermisos.FORMULARIO_INGRESO_COBRO,
-							VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		if(cod != "0" && cod != null){
+			BeanItemContainer<CtaBcoVO> ctaObj = new BeanItemContainer<CtaBcoVO>(CtaBcoVO.class);
+			CtaBcoVO cta = new CtaBcoVO();
+			ArrayList<CtaBcoVO> lstctas = new ArrayList<CtaBcoVO>();
+			UsuarioPermisosVO permisosAux;
 			
-			/*Si se selacciona un banco buscamos las cuentas, de lo contrario no*/
-			if(this.comboBancos.getValue() != null)
-				lstctas = this.controlador.getCtaBcos(permisosAux,((BancoVO) this.comboBancos.getValue()).getCodigo());
-			
-		} catch (ObteniendoCuentasBcoException | InicializandoException | ConexionException | ObteniendoPermisosException | NoTienePermisosException e) {
+			try {
+				permisosAux = 
+						new UsuarioPermisosVO(this.permisos.getCodEmp(),
+								this.permisos.getUsuario(),
+								VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+								VariablesPermisos.OPERACION_LEER);
+				
+				/*Si se selacciona un banco buscamos las cuentas, de lo contrario no*/
+				if(this.comboBancos.getValue() != null)
+					lstctas = this.controlador.getCtaBcos(permisosAux,((BancoVO) this.comboBancos.getValue()).getCodigo());
+				
+			} catch (ObteniendoCuentasBcoException | InicializandoException | ConexionException | ObteniendoPermisosException | NoTienePermisosException e) {
 
-			Mensajes.mostrarMensajeError(e.getMessage());
-		}
-		
-		for (CtaBcoVO ctav : lstctas) {
+				Mensajes.mostrarMensajeError(e.getMessage());
+			}
 			
-			ctaObj.addBean(ctav);
 			
-			if(cod != null){
-				if(cod.equals(ctav.getCodigo())){
-					ctav = ctav;
+			for (CtaBcoVO ctav : lstctas) {
+					
+				ctaObj.addBean(ctav);
+				
+				if(llamador.equals("CuentaBanco")){
+					if(cod != null){
+						if(cod.equals(ctav.getCodigo())){
+							cta = ctav;
+							this.monedaBanco.setValue(cta.getMonedaVO().getSimbolo());
+							this.cuentaBanco.setValue(cta.getCodigo());
+						}
+					}
 				}
 			}
-		}
-		
-		this.comboCuentas.setContainerDataSource(ctaObj);
-		this.comboCuentas.setItemCaptionPropertyId("nombre");
-		
-		
-		if(cod!=null)
-		{
-			try{
+			
+			
+			if(lstctas.size()>0){
+				
+				//this.comboCuentas.setData("ProgramaticallyChanged");
+				
+				this.comboCuentas.setContainerDataSource(ctaObj);
+				
+				this.comboCuentas.setItemCaptionPropertyId("nombre");
+			}
+			
+			
+			
+			
+			if(cod!=null)
+			{
+				try{
+					this.comboCuentas.setReadOnly(false);
+					this.comboCuentas.setValue(cta);
+					//this.comboCuentas.setReadOnly(true);
+				}catch(Exception e)
+				{}
+			}
+			
+			if(this.operacion.equals(Variables.OPERACION_EDITAR) || this.operacion.equals(Variables.OPERACION_NUEVO))
+			{
 				this.comboCuentas.setReadOnly(false);
-				this.comboCuentas.setValue(cta);
-				this.comboCuentas.setReadOnly(true);
-			}catch(Exception e)
-			{}
+			}
 		}
-		
-		if(this.operacion.equals(Variables.OPERACION_EDITAR) || this.operacion.equals(Variables.OPERACION_NUEVO))
-		{
-			this.comboCuentas.setReadOnly(false);
+		else{
+			this.comboCuentas.setEnabled(false);
+			this.cuentaBanco.setValue("");
+			this.monedaBanco.setValue("");
 		}
-		
 	}
 	
 	public void inicializarComboBancos(String cod){
@@ -1108,7 +1450,7 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 			permisosAux = 
 					new UsuarioPermisosVO(this.permisos.getCodEmp(),
 							this.permisos.getUsuario(),
-							VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+							VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
 							VariablesPermisos.OPERACION_NUEVO_EDITAR);
 			
 			lstBcos = this.controlador.getBcos(permisosAux);
@@ -1151,6 +1493,13 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 			this.nomTitular.setValue(clienteVO.getNombre());
 		}
 		
+		if(datos instanceof TitularVO){
+			titularVO = (TitularVO) datos;
+			this.codTitular.setValue(String.valueOf(titularVO.getCodigo()));
+			this.nomTitular.setValue(titularVO.getNombre());
+			//this.tipo.setValue(titularVO.getTipo());
+		}
+		
 	}
 	
 	
@@ -1168,7 +1517,7 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 	* Si el combo tipo es Banco: mostramos los datos de bando
 	*
 	*/
-	private void mostrarDatosDeBanco(){
+private void mostrarDatosDeBanco(){
 		
 		boolean activo = false;
 		
@@ -1196,6 +1545,8 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 		//this.nroDocRef.setVisible(activo);
 		this.nroDocRef.setEnabled(activo);
 		
+		this.impTotMo.setEnabled(true); /*El importe siempre habilitado*/
+		
 	}
 
 	public static java.sql.Date convertFromJAVADateToSQLDate(
@@ -1220,6 +1571,7 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 		
 		return codMoneda;
 	}
+
 	
 	
 	@Override
@@ -1259,5 +1611,42 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 		
 	}
 	
+	public MonedaVO seteaCotizaciones(MonedaVO monedaVO){
+		
+		UsuarioPermisosVO permisosAux;
+		permisosAux = 
+				new UsuarioPermisosVO(this.permisos.getCodEmp(),
+						this.permisos.getUsuario(),
+						VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
+						VariablesPermisos.OPERACION_LEER);
+		
+		Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
+		CotizacionVO cotiz;
+		if(monedaVO.isNacional()){
+			monedaNacional = monedaVO;
+		}
+		else if(fecha!=null){
+			
+			cotiz = new CotizacionVO();
+			
+			try {
+				
+				cotiz = this.controlador.getCotizacion(permisosAux, fecha, monedaVO.getCodMoneda());
+				monedaVO.setCotizacion(cotiz.getCotizacionVenta());
+			} 
+			catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
+					| InicializandoException | NoTienePermisosException e) {
+				// TODO Auto-generated catch block
+				Mensajes.mostrarMensajeError(e.getMessage().toString());
+			}
+		}
+		return monedaVO;
+	}
+
+	@Override
+	public void eliminarCobro() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

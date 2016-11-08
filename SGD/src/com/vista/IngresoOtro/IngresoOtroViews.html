@@ -15,10 +15,14 @@
     <vaadin-form-layout spacing="false" size-full _id="formLay1"> 
      <vaadin-text-field enabled="false" id="nroTrans" visible="false" _id="nroTrans"></vaadin-text-field> 
      <vaadin-text-field caption="Nro" style-name="tiny" null-representation="" width="144px" readonly _id="nroDocum"></vaadin-text-field> 
-     <vaadin-combo-box caption="Tipo" style-name="tiny" item-caption-mode="id" width="144px" _id="comboTipo"> 
-      <option>Caja</option> 
-      <option>Banco</option> 
-     </vaadin-combo-box> 
+     <vaadin-horizontal-layout caption="Tipo" spacing> 
+      <vaadin-combo-box style-name="tiny" item-caption-mode="id" width="144px" _id="comboTipo"> 
+       <option>Caja</option> 
+       <option>Banco</option> 
+      </vaadin-combo-box> 
+      <vaadin-label caption="Funcionario" size-auto _id="lblFuncionario"></vaadin-label> 
+      <vaadin-check-box _id="chkFuncionario" :middle></vaadin-check-box> 
+     </vaadin-horizontal-layout> 
      <vaadin-date-field caption="Fec Doc" id="fecDoc" style-name="tiny" width="144px" _id="fecDoc"></vaadin-date-field> 
      <vaadin-date-field caption="Fec Valor" id="fecValor" style-name="tiny" width="144px" _id="fecValor"></vaadin-date-field> 
      <vaadin-horizontal-layout caption="Titular" style-name="name-wrapper" spacing _id="name_wrapper"> 
@@ -28,20 +32,29 @@
      </vaadin-horizontal-layout> 
      <vaadin-text-field caption="Referencia" id="referencia" style-name="tiny" responsive width="341px" readonly _id="referencia"></vaadin-text-field> 
      <vaadin-horizontal-layout width="187px"> 
-      <vaadin-button style-name="primary tiny" plain-text _id="aceptar" :middle>
-        Guardar 
-      </vaadin-button> 
-      <vaadin-button style-name="tiny primary" id="btnEditar" plain-text _id="btnEditar" :middle>
-        Editar 
-      </vaadin-button> 
-      <vaadin-button style-name="tiny primary" id="btnCancelar" plain-text _id="cancelar" :middle>
-        Cancelar 
-      </vaadin-button> 
+      <vaadin-horizontal-layout responsive width="187px" _id="botones"> 
+       <vaadin-button style-name="primary tiny" plain-text _id="aceptar" :middle>
+         Guardar 
+       </vaadin-button> 
+       <vaadin-button style-name="tiny primary" id="btnEditar" plain-text _id="btnEditar" :middle>
+         Editar 
+       </vaadin-button> 
+       <vaadin-button style-name="tiny primary" id="btnCancelar" plain-text _id="cancelar" :middle>
+         Cancelar 
+       </vaadin-button> 
+       <vaadin-button style-name="tiny primary danger" plain-text _id="btnEliminar">
+         Eliminar 
+       </vaadin-button> 
+      </vaadin-horizontal-layout> 
      </vaadin-horizontal-layout> 
     </vaadin-form-layout> 
     <vaadin-form-layout spacing="false" size-full _id="formLay13"> 
      <vaadin-combo-box caption="Banco" style-name="tiny" item-caption-mode="id" width="144px" _id="comboBancos"></vaadin-combo-box> 
-     <vaadin-combo-box caption="Cuenta" id="comboCuentas" style-name="tiny" item-caption-mode="id" width="144px" _id="comboCuentas"></vaadin-combo-box> 
+     <vaadin-horizontal-layout caption="Cuenta" spacing _id="cuenta"> 
+      <vaadin-combo-box id="comboCuentas" style-name="tiny" item-caption-mode="id" width="144px" _id="comboCuentas"></vaadin-combo-box> 
+      <vaadin-text-field style-name="tiny" width="40px" _id="monedaBanco"></vaadin-text-field> 
+      <vaadin-text-field style-name="tiny" width="133px" _id="cuentaBanco"></vaadin-text-field> 
+     </vaadin-horizontal-layout> 
      <vaadin-horizontal-layout caption="Medio Pago" style-name="name-wrapper" spacing _id="name_wrappeer"> 
       <vaadin-combo-box id="comboMPagos" style-name="tiny" item-caption-mode="id" width="144px" _id="comboMPagos"> 
        <option>Cheque</option> 

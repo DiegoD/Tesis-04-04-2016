@@ -795,11 +795,18 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 			
 		this.btnEliminar.addClickListener(click -> {
 			
-			UsuarioPermisosVO permisoAux = 
-			new UsuarioPermisosVO(this.permisos.getCodEmp(),
-					this.permisos.getUsuario(),
-					VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
-					VariablesPermisos.OPERACION_BORRAR);
+			MensajeExtended form = new MensajeExtended("Elimina el cobro?",this);
+			
+			sub = new MySub("25%", "20%" );
+			sub.setModal(true);
+			sub.center();
+			sub.setModal(true);
+			sub.setVista(form);
+			sub.center();
+			sub.setClosable(false);
+			sub.setResizable(false);
+			sub.setDraggable(true);
+			UI.getCurrent().addWindow(sub);
 			
 		});
 			
