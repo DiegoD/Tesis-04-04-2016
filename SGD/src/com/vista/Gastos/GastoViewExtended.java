@@ -2,8 +2,12 @@ package com.vista.Gastos;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
+
+import org.apache.james.mime4j.field.datetime.DateTime;
 
 //import org.vaadin.csvalidation.CSValidator;
 
@@ -48,6 +52,7 @@ import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.server.VaadinService;
+import com.vaadin.ui.Calendar;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import com.valueObject.FuncionarioVO;
@@ -69,6 +74,7 @@ import com.vista.MySub;
 import com.vista.PermisosUsuario;
 import com.vista.Variables;
 import com.vista.VariablesPermisos;
+import com.vista.Validaciones.Validaciones;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 
@@ -92,6 +98,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 	MonedaVO monedaNacional = new MonedaVO();
 	TitularVO titularVO = new TitularVO();
 	ArrayList<MonedaVO> lstMonedas = new ArrayList<MonedaVO>();
+	Validaciones val = new Validaciones();
 	
 	public GastoViewExtended(String opera, IGastosMain main, TitularVO titular){
 		
@@ -338,9 +345,24 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		/*Inicalizamos listener para boton de Editar*/
 		this.btnEditar.addClickListener(click -> {
 				
+			int mes, anio;
 			try {
+				
+				
 			
-				/*Inicializamos el Form en modo Edicion*/
+				permisoAux = 
+						new UsuarioPermisosVO(this.permisos.getCodEmp(),
+								this.permisos.getUsuario(),
+								VariablesPermisos.FORMULARIO_GASTOS,
+								VariablesPermisos.OPERACION_NUEVO_EDITAR);
+				
+				
+				if(!val.validaPeriodo(fecValor.getValue(), permisoAux)){
+					String fecha = new SimpleDateFormat("dd/MM/yyyy").format(fecValor.getValue());
+					Mensajes.mostrarMensajeError("El período está cerrado para la fecha " + fecha);
+					return;
+				}
+				
 				this.iniFormEditar();
 			}
 			catch(Exception e)	{

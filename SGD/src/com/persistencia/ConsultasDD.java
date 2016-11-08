@@ -1616,4 +1616,67 @@ public String eliminarSaldoCuenta(){
 	
 ////////////////////////FNI TITULARES///////////////////////////////////////////////
 	
+//////////////////////// INI PERIODOS ///////////////////////////////////////////////
+
+	public String getPeriodos(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT mes, anio, abierto, fecha_mod, usuario_mod, operacion, cod_emp ");
+		sb.append("FROM m_periodo WHERE cod_emp = ? ");
+		
+		return sb.toString();
+	}
+	
+
+	public String insertarPeriodo()
+	{
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO m_periodo (mes, anio, abierto, fecha_mod, usuario_mod, operacion, cod_emp )");
+		sb.append("VALUES (?, ?, ?, NOW(), ?, ?, ? ) ");
+		
+		return sb.toString();
+	
+	}
+
+	public String memberPeriodo()
+	{
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT mes, anio ");
+		sb.append("FROM m_periodo  ");
+		sb.append("WHERE mes = ? AND anio = ? AND cod_emp = ?");
+		
+		return sb.toString();
+	}
+	
+	public String actualizarPeriodo(){
+	
+		StringBuilder sb = new StringBuilder();
+		sb.append("UPDATE m_periodo ");
+		sb.append("SET abierto = ?, ");
+		sb.append("fecha_mod = NOW(), ");
+		sb.append("usuario_mod = ?, ");
+		sb.append("operacion = ? ");
+		sb.append("WHERE mes = ? AND anio = ? AND cod_emp = ?");
+		return sb.toString();
+	}
+	
+	public String validaPeriodo()
+	{
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT mes, anio, abierto ");
+		sb.append("FROM m_periodo  ");
+		sb.append("WHERE mes = ? AND anio = ? AND cod_emp = ? AND abierto = 1 ");
+		
+		return sb.toString();
+	}
+	
+//////////////////////// FIN PERIODOS ///////////////////////////////////////////////
+	
 }

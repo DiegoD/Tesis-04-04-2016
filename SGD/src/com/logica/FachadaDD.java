@@ -63,6 +63,11 @@ import com.excepciones.Monedas.InsertandoMonedaException;
 import com.excepciones.Monedas.ModificandoMonedaException;
 import com.excepciones.Monedas.NoExisteMonedaException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
+import com.excepciones.Periodo.ExistePeriodoException;
+import com.excepciones.Periodo.InsertandoPeriodoException;
+import com.excepciones.Periodo.ModificandoPeriodoException;
+import com.excepciones.Periodo.NoExistePeriodoException;
+import com.excepciones.Periodo.ObteniendoPeriodosException;
 import com.excepciones.Procesos.EliminandoProcesoException;
 import com.excepciones.Procesos.ExisteProcesoException;
 import com.excepciones.Procesos.IngresandoProcesoException;
@@ -99,11 +104,13 @@ import com.excepciones.grupos.ObteniendoGruposException;
 import com.logica.DocLog.DocLog;
 import com.logica.Docum.DatosDocum;
 import com.logica.Docum.DocumDetalle;
+import com.logica.Periodo.Periodo;
 import com.valueObject.*;
 import com.valueObject.Cotizacion.CotizacionVO;
 import com.valueObject.Cuenta.CuentaVO;
 import com.valueObject.Gasto.GastoVO;
 import com.valueObject.Numeradores.NumeradoresVO;
+import com.valueObject.Periodo.PeriodoVO;
 import com.valueObject.TipoRubro.TipoRubroVO;
 import com.valueObject.cliente.ClienteVO;
 import com.valueObject.empresa.EmpresaUsuVO;
@@ -139,6 +146,7 @@ public class FachadaDD {
 	private IDAODocLog logsDocumentos;
 	private IDAOSaldosProc saldosProceso;
 	private IDAOTitulares titulares;
+	private IDAOPeriodo periodo;
 	
 	
     private FachadaDD() throws InstantiationException, IllegalAccessException, ClassNotFoundException, FileNotFoundException, IOException
@@ -166,6 +174,7 @@ public class FachadaDD {
         this.logsDocumentos = fabricaConcreta.crearDAODocLog();
         this.saldosProceso = fabricaConcreta.crearDAOSaldosProceso();
         this.titulares = fabricaConcreta.crearDAOTitulares();
+        this.periodo = fabricaConcreta.crearDAOPeriodo();
     }
     
     public static FachadaDD getInstance() throws InicializandoException {
@@ -3164,4 +3173,181 @@ public class FachadaDD {
     	return lstTitularesVO;
     }	 
 /////////////////////////////////FNI-TITULARES/////////////////////////////////
+    
+/////////////////////////////////INI-PERÍODO/////////////////////////////////
+ 
+   /**
+    * Obtiene todos los períodos existentes
+    */
+   @SuppressWarnings("unchecked")
+   public ArrayList<PeriodoVO> getPeriodos(String codEmp) throws ObteniendoPeriodosException, ConexionException
+   {
+   	
+	   Connection con = null;
+	   ArrayList<Periodo> lstPeriodos;
+	   ArrayList<PeriodoVO> lstPeriodosVO = new ArrayList<PeriodoVO>();
+   	
+	   try 	
+	   {
+		   con = this.pool.obtenerConeccion();
+		   lstPeriodos = this.periodo.getPeriodo(codEmp, con);
+   		
+		   PeriodoVO aux;
+   		
+		   for (Periodo periodo : lstPeriodos) 
+		   {
+			   aux = new PeriodoVO();
+			   
+			   aux.setMes(periodo.getMes());
+			   aux.setAnio(periodo.getAnio());
+			   aux.setAbierto(periodo.getAbierto());
+			   aux.setFechaMod(periodo.getFechaMod());
+			   aux.setOperacion(periodo.getOperacion());
+			   aux.setUsuarioMod(periodo.getUsuarioMod());
+			   
+			   lstPeriodosVO.add(aux);
+		   }
+	   }
+   	
+	   catch(ObteniendoPeriodosException e){
+		   throw e;
+	   } 
+   	
+	   catch (ConexionException e) {
+		   throw e;
+	   } 
+   	
+	   finally{
+		   this.pool.liberarConeccion(con);
+	   }
+	   
+	   return lstPeriodosVO;
+   
+   }
+       
+       
+   /**
+   	 * Inserta un período en la base
+ * @throws ExistePeriodoException 
+        * @throws ExisteNacional 
+   	 */
+       
+   public void insertarPeriodo(PeriodoVO periodoVO, String codEmp) throws InsertandoPeriodoException, ConexionException, ExistePeriodoException 
+   {
+
+	   Connection con = null;
+	   boolean existe = false; 
+			   
+	   try 
+	   {
+		   con = this.pool.obtenerConeccion();
+		   con.setAutoCommit(false);
+
+		   Periodo periodo = new Periodo(periodoVO); 
+
+		   if(!this.periodo.memberPeriodo(periodo.getMes(), periodo.getAnio(), codEmp, con)){
+			   this.periodo.insertarPeriodo(periodo, codEmp, con);
+			   con.commit();
+		   }
+		   else{
+			   existe = true;
+		   }
+
+
+	   }
+	   catch(Exception InsertandoPeriodoException)  	{
+		   try {
+			   con.rollback();
+
+		   } catch (SQLException e) {
+
+			   throw new InsertandoPeriodoException();
+		   }
+
+		   throw new InsertandoPeriodoException();
+	   }
+	   finally
+	   {
+		   pool.liberarConeccion(con);
+	   }
+	   if (existe){
+		   throw new ExistePeriodoException();
+	   }
+   }
+
+       /**
+   	 * Actualiza los datos de una moneda dado su código
+   	 * valida que exista el código 
+        * @throws ExisteNacional 
+   	 */
+   public void actualizarPeriodo(PeriodoVO periodoVO, String codEmp) throws ConexionException, NoExistePeriodoException, ModificandoPeriodoException, ExistePeriodoException  
+   {
+
+	   Connection con = null;
+	   boolean existeNacional = false;
+
+	   try 
+	   {
+		   con = this.pool.obtenerConeccion();
+		   con.setAutoCommit(false);
+
+		   Periodo periodo = new Periodo(periodoVO);
+
+		   if(this.periodo.memberPeriodo(periodo.getMes(), periodo.getAnio(), codEmp, con)){
+			   this.periodo.actualizarPeriodo(periodo, codEmp, con);
+			   con.commit();
+		   }
+
+		   else
+			   throw new NoExistePeriodoException();
+
+	   }catch(NoExistePeriodoException| ConexionException | SQLException | ModificandoPeriodoException e)
+	   {
+		   try {
+			   con.rollback();
+
+		   } 
+		   catch (SQLException e1) {
+
+			   throw new ConexionException();
+		   }
+		   throw new ModificandoPeriodoException();
+	   }
+	   finally
+	   {
+		   pool.liberarConeccion(con);
+	   }
+   }
+   
+   public boolean validaPeriodo(String mes, int anio, String codEmp) throws ExistePeriodoException, ConexionException, SQLException, NoExistePeriodoException{
+	   
+	   Boolean abierto = false;
+	   Connection con = null;
+	   try {
+		   
+		   con = this.pool.obtenerConeccion();
+		   con.setAutoCommit(false);
+		   abierto = this.periodo.validaPeriodo(mes, anio, codEmp, con);
+		
+	   } catch(ConexionException | SQLException | NoExistePeriodoException e)
+	   {
+		   try {
+			   con.rollback();
+
+		   } 
+		   catch (SQLException e1) {
+
+			   throw new ConexionException();
+		   }
+		   
+	   }
+	   finally
+	   {
+		   pool.liberarConeccion(con);
+	   }
+	  
+	   return abierto;
+   }
+       
+/////////////////////////////////INI-PERÍODO/////////////////////////////////
 }

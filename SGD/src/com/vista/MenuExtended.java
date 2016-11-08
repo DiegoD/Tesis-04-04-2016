@@ -34,6 +34,7 @@ import com.vista.IngresoCobro.IngresoCobroPanelExtended;
 import com.vista.IngresoOtro.IngresoOtroPanelExtended;
 import com.vista.Login.LoginExtended;
 import com.vista.Monedas.MonedasPanelExtended;
+import com.vista.Periodo.PeriodosPanelExtended;
 import com.vista.Procesos.ProcesosPanelExtended;
 //import com.vista.ResumenProceso.ResProcesosPanelExtended;
 import com.vista.Rubros.RubrosPanelExtended;
@@ -536,7 +537,25 @@ public class MenuExtended extends Menu{
 				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 			}
 		});
-	
+
+		this.periodo.addClickListener(click -> {
+			
+			setSizeFull();
+			
+			this.content.removeAllComponents();
+			try {
+				
+				PeriodosPanelExtended c = new PeriodosPanelExtended();
+				c.setSizeFull();
+				this.content.setSizeFull();
+				
+				this.content.addComponent(c);
+				
+			} catch (Exception e) {
+				
+				Mensajes.mostrarMensajeError(e.getMessage());
+			}
+		});
 		
 	}
 	
@@ -600,6 +619,7 @@ public class MenuExtended extends Menu{
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_INGRESO_EGRESO) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_INGRESO_EGRESO_OTRO) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_RESUMEN_PROCESO) ||
+				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_PERIODO) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_RUBROS))
 			{
 				lstFormsMenuMant.add(formularioVO);
@@ -767,6 +787,13 @@ public class MenuExtended extends Menu{
 						
 					break;
 					
+					case VariablesPermisos.FORMULARIO_PERIODO:
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_PERIODO, VariablesPermisos.OPERACION_LEER)){
+							this.habilitarPeriodo();
+							this.layoutMenu.addComponent(this.periodo);
+						}
+					break;
+					
 				}
 				
 			}
@@ -919,6 +946,9 @@ public class MenuExtended extends Menu{
 		
 		this.resumenProc.setVisible(false);
 		this.resumenProc.setEnabled(false);
+		
+		this.periodo.setVisible(false);
+		this.periodo.setEnabled(false);
 	}
 	
 	
@@ -1059,6 +1089,12 @@ public class MenuExtended extends Menu{
 		this.resumenProc.setVisible(true);
 		this.resumenProc.setEnabled(true);
 		this.layoutMenu.addComponent(resumenProc);
+	}
+	
+	private void habilitarPeriodo(){
+		this.periodo.setVisible(true);
+		this.periodo.setEnabled(true);
+		this.layoutMenu.addComponent(periodo);
 	}
 	
 	public PermisosUsuario getPermisosUsuario()

@@ -49,6 +49,7 @@ public class Menu extends HorizontalLayout {
 	protected Button otroCobro;
 	protected Button otroEgreso;
 	protected Button resumenProc;
+	protected Button periodo;
 	protected VerticalLayout content;
 
 	public Menu() {

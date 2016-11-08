@@ -19,6 +19,7 @@ import com.persistencia.IDAOImpuestos;
 import com.persistencia.IDAOIngresoCobro;
 import com.persistencia.IDAOMonedas;
 import com.persistencia.IDAONumeradores;
+import com.persistencia.IDAOPeriodo;
 import com.persistencia.IDAOProcesos;
 import com.persistencia.IDAORubros;
 import com.persistencia.IDAOSaldos;
@@ -84,4 +85,5 @@ public interface IAbstractFactory
 	
 	public IDAOTitulares crearDAOTitulares();
 
+	public IDAOPeriodo crearDAOPeriodo ();
 }

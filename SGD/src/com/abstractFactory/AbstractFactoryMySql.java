@@ -167,5 +167,11 @@ public class AbstractFactoryMySql implements IAbstractFactory
 		
 		return new DAOTitulares();
 	}
+	
+	@Override
+	public IDAOPeriodo crearDAOPeriodo () {
+		
+		return new DAOPeriodo();
+	}
 
 }
