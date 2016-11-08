@@ -2,6 +2,7 @@ package com.vista.Gastos;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -30,6 +31,8 @@ import com.excepciones.Gastos.ModificandoGastoException;
 import com.excepciones.Gastos.NoExisteGastoException;
 import com.excepciones.Impuestos.ObteniendoImpuestosException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
+import com.excepciones.Periodo.ExistePeriodoException;
+import com.excepciones.Periodo.NoExistePeriodoException;
 import com.excepciones.Procesos.EliminandoProcesoException;
 import com.excepciones.Procesos.ObteniendoProcesosException;
 import com.excepciones.Saldos.EliminandoSaldoException;
@@ -370,6 +373,37 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 			}
 		});
 		
+		fecValor.addValueChangeListener(new Property.ValueChangeListener() {
+
+			@Override
+			public void valueChange(ValueChangeEvent event) {
+				
+				if("ProgramaticallyChanged".equals(fecValor.getData())){
+					fecValor.setData(null);
+	   	            return;
+	   	        }
+				
+				if(!operacion.equals(Variables.OPERACION_LECTURA)){
+					try {
+						if(!val.validaPeriodo(fecValor.getValue(), permisoAux)){
+							String fecha = new SimpleDateFormat("dd/MM/yyyy").format(fecValor.getValue());
+							fecValor.setData("ProgramaticallyChanged");
+							fecValor.setValue(null);
+							Mensajes.mostrarMensajeError("El período está cerrado para la fecha " + fecha);
+							return;
+						}
+					} catch (NumberFormatException | ExistePeriodoException | ConexionException | SQLException
+							| NoExistePeriodoException | InicializandoException | ObteniendoPermisosException
+							| NoTienePermisosException e) {
+						// TODO Auto-generated catch block
+						Mensajes.mostrarMensajeError(e.getMessage());
+					}
+				}
+				
+			}
+			
+		});
+		
 		this.cancelar.addClickListener(click -> {
 			main.cerrarVentana();
 		});
@@ -381,6 +415,17 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 					this.permisos.getUsuario(),
 					VariablesPermisos.FORMULARIO_GASTOS,
 					VariablesPermisos.OPERACION_BORRAR);
+			
+			try {
+				if(!val.validaPeriodo(fecValor.getValue(), permisoAux)){
+					String fecha = new SimpleDateFormat("dd/MM/yyyy").format(fecValor.getValue());
+					Mensajes.mostrarMensajeError("El período está cerrado para la fecha " + fecha);
+					return;
+				}
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			
 			try {
 				

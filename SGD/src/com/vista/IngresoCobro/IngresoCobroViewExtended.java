@@ -2,6 +2,7 @@ package com.vista.IngresoCobro;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -20,6 +21,8 @@ import com.excepciones.IngresoCobros.InsertandoIngresoCobroException;
 import com.excepciones.IngresoCobros.ModificandoIngresoCobroException;
 import com.excepciones.IngresoCobros.NoExisteIngresoCobroException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
+import com.excepciones.Periodo.ExistePeriodoException;
+import com.excepciones.Periodo.NoExistePeriodoException;
 import com.excepciones.Titulares.ObteniendoTitularesException;
 import com.excepciones.clientes.ObteniendoClientesException;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
@@ -56,6 +59,7 @@ import com.vista.MySub;
 import com.vista.PermisosUsuario;
 import com.vista.Variables;
 import com.vista.VariablesPermisos;
+import com.vista.Validaciones.Validaciones;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 
@@ -75,6 +79,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	CotizacionVO cotizacion =  new CotizacionVO();
 	Double cotizacionVenta = null;
 	Double importeTotalCalculado;
+	Validaciones val = new Validaciones();
 	
 	MonedaVO monedaNacional = new MonedaVO();
 	
@@ -222,7 +227,35 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 
    		@Override
 		public void valueChange(ValueChangeEvent event) {
-   						
+   					
+   			if("ProgramaticallyChanged".equals(fecValor.getData())){
+				fecValor.setData(null);
+   	            return;
+   	        }
+   			
+   			if(!operacion.equals(Variables.OPERACION_LECTURA)){
+				try {
+					permisoAux = 
+							new UsuarioPermisosVO(permisos.getCodEmp(),
+									permisos.getUsuario(),
+									VariablesPermisos.FORMULARIO_GASTOS,
+									VariablesPermisos.OPERACION_NUEVO_EDITAR);
+					
+					if(!val.validaPeriodo(fecValor.getValue(), permisoAux)){
+						String fecha = new SimpleDateFormat("dd/MM/yyyy").format(fecValor.getValue());
+						fecValor.setData("ProgramaticallyChanged");
+						fecValor.setValue(null);
+						Mensajes.mostrarMensajeError("El período está cerrado para la fecha " + fecha);
+						return;
+					}
+				} catch (NumberFormatException | ExistePeriodoException | ConexionException | SQLException
+						| NoExistePeriodoException | InicializandoException | ObteniendoPermisosException
+						| NoTienePermisosException e) {
+					// TODO Auto-generated catch block
+					Mensajes.mostrarMensajeError(e.getMessage());
+				}
+			}
+   			
    			for (MonedaVO monedaVO : lstMonedas) {
 					
 				monedaVO = seteaCotizaciones(monedaVO);
@@ -801,7 +834,18 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				
 		try {
 			
-			//this.codGrupo.setReadOnly(true);
+			permisoAux = 
+					new UsuarioPermisosVO(permisos.getCodEmp(),
+							permisos.getUsuario(),
+							VariablesPermisos.FORMULARIO_GASTOS,
+							VariablesPermisos.OPERACION_NUEVO_EDITAR);
+			
+			if(!val.validaPeriodo(fecValor.getValue(), permisoAux)){
+				String fecha = new SimpleDateFormat("dd/MM/yyyy").format(fecValor.getValue());
+				Mensajes.mostrarMensajeError("El período está cerrado para la fecha " + fecha);
+				return;
+			}
+			
 			
 			/*Inicializamos el Form en modo Edicion*/
 			this.iniFormEditar();
@@ -815,6 +859,23 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		});
 		
 		this.btnEliminar.addClickListener(click -> {
+
+			permisoAux = 
+					new UsuarioPermisosVO(permisos.getCodEmp(),
+							permisos.getUsuario(),
+							VariablesPermisos.FORMULARIO_GASTOS,
+							VariablesPermisos.OPERACION_NUEVO_EDITAR);
+			
+			try {
+				if(!val.validaPeriodo(fecValor.getValue(), permisoAux)){
+					String fecha = new SimpleDateFormat("dd/MM/yyyy").format(fecValor.getValue());
+					Mensajes.mostrarMensajeError("El período está cerrado para la fecha " + fecha);
+					return;
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 			MensajeExtended form = new MensajeExtended("Elimina el cobro?",this);
 			
