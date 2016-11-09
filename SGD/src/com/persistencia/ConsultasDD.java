@@ -1153,6 +1153,133 @@ public class ConsultasDD {
 //					     AND c_procesos.cod_emp = ?
 	}
 	
+	public String getGastosNoCobrablesxProceso(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT c_gastos.fecDoc, c_gastos.cod_docum, c_gastos.serie_docum, "
+				+ "c_gastos.nro_docum, c_gastos.cod_emp, c_gastos.referencia, "
+				+ "c_gastos.nro_trans, c_gastos.fecValor, c_gastos.cod_proceso, "
+				+ "c_gastos.referenciaDetalle, c_gastos.imp_impu_mn, c_gastos.imp_impu_mo, "
+				+ "c_gastos.imp_sub_mn, c_gastos.imp_sub_mo, c_gastos.imp_tot_mn, "
+				+ "c_gastos.imp_tot_mo, c_gastos.tc_mov, c_gastos.cuenta, "
+				+ "c_gastos.fecha_mod, c_gastos.usuario_mod, c_gastos.operacion, "
+				+ "m_clientes.cod_tit, m_clientes.nom_tit, "
+				+ "m_monedas.cod_moneda, m_monedas.descripcion, m_monedas.simbolo, "
+				+ "m_cuentas.cod_cuenta, m_cuentas.descripcion, "
+				+ "m_rubros.cod_rubro, m_rubros.descripcion, m_rubros.cod_tipo_rubro, m_rubros.cod_impuesto, "
+				+ "m_impuestos.cod_impuesto, m_impuestos.descripcion, m_impuestos.porcentaje, "
+				+ "c_procesos.descripcion ");
+		
+		sb.append("FROM c_gastos"
+				+ " INNER JOIN  m_clientes ON c_gastos.cod_tit = m_clientes.cod_tit AND m_clientes.cod_emp = c_gastos.cod_emp "
+				+ " INNER JOIN m_cuentas ON c_gastos.cod_cuenta = m_cuentas.cod_cuenta AND m_cuentas.cod_emp = c_gastos.cod_emp "
+				+ " INNER JOIN m_rubros ON c_gastos.cod_rubro = m_rubros.cod_rubro AND m_rubros.cod_emp = c_gastos.cod_emp "
+				+ " INNER JOIN m_monedas ON c_gastos.cod_moneda = m_monedas.cod_moneda AND m_monedas.cod_emp = c_gastos.cod_emp "
+				+ " INNER JOIN m_impuestos ON m_rubros.cod_impuesto = m_impuestos.cod_impuesto AND m_impuestos.cod_emp = c_gastos.cod_emp "
+				+ " INNER JOIN c_procesos ON c_gastos.cod_proceso = c_procesos.cod_proceso and c_procesos.cod_emp = c_gastos.cod_emp "
+				+ " AND c_gastos.cod_emp = ? AND c_gastos.cod_proceso = ? AND c_gastos.estado = 'nocobr' ");
+				
+				return sb.toString();
+
+	}
+	
+	public String getGastosCobrablesxProceso(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT c_gastos.fecDoc, c_gastos.cod_docum, c_gastos.serie_docum, "
+				+ "c_gastos.nro_docum, c_gastos.cod_emp, c_gastos.referencia, "
+				+ "c_gastos.nro_trans, c_gastos.fecValor, c_gastos.cod_proceso, "
+				+ "c_gastos.referenciaDetalle, c_gastos.imp_impu_mn, c_gastos.imp_impu_mo, "
+				+ "c_gastos.imp_sub_mn, c_gastos.imp_sub_mo, c_gastos.imp_tot_mn, "
+				+ "c_gastos.imp_tot_mo, c_gastos.tc_mov, c_gastos.cuenta, "
+				+ "c_gastos.fecha_mod, c_gastos.usuario_mod, c_gastos.operacion, "
+				+ "m_clientes.cod_tit, m_clientes.nom_tit, "
+				+ "m_monedas.cod_moneda, m_monedas.descripcion, m_monedas.simbolo, "
+				+ "m_cuentas.cod_cuenta, m_cuentas.descripcion, "
+				+ "m_rubros.cod_rubro, m_rubros.descripcion, m_rubros.cod_tipo_rubro, m_rubros.cod_impuesto, "
+				+ "m_impuestos.cod_impuesto, m_impuestos.descripcion, m_impuestos.porcentaje, "
+				+ "c_procesos.descripcion ");
+		
+		sb.append("FROM c_gastos"
+				+ " INNER JOIN  m_clientes ON c_gastos.cod_tit = m_clientes.cod_tit AND m_clientes.cod_emp = c_gastos.cod_emp "
+				+ " INNER JOIN m_cuentas ON c_gastos.cod_cuenta = m_cuentas.cod_cuenta AND m_cuentas.cod_emp = c_gastos.cod_emp "
+				+ " INNER JOIN m_rubros ON c_gastos.cod_rubro = m_rubros.cod_rubro AND m_rubros.cod_emp = c_gastos.cod_emp "
+				+ " INNER JOIN m_monedas ON c_gastos.cod_moneda = m_monedas.cod_moneda AND m_monedas.cod_emp = c_gastos.cod_emp "
+				+ " INNER JOIN m_impuestos ON m_rubros.cod_impuesto = m_impuestos.cod_impuesto AND m_impuestos.cod_emp = c_gastos.cod_emp "
+				+ " INNER JOIN c_procesos ON c_gastos.cod_proceso = c_procesos.cod_proceso and c_procesos.cod_emp = c_gastos.cod_emp "
+				+ " AND c_gastos.cod_emp = ? AND c_gastos.cod_proceso = ? AND c_gastos.estado = 'cobr' ");
+				
+				return sb.toString();
+
+	}
+	
+public String getGastosAPagarxProceso(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT c_gastos.fecDoc, c_gastos.cod_docum, c_gastos.serie_docum, "
+				+ "c_gastos.nro_docum, c_gastos.cod_emp, c_gastos.referencia, "
+				+ "c_gastos.nro_trans, c_gastos.fecValor, c_gastos.cod_proceso, "
+				+ "c_gastos.referenciaDetalle, c_gastos.imp_impu_mn, c_gastos.imp_impu_mo, "
+				+ "c_gastos.imp_sub_mn, c_gastos.imp_sub_mo, c_gastos.imp_tot_mn, "
+				+ "c_gastos.imp_tot_mo, c_gastos.tc_mov, c_gastos.cuenta, "
+				+ "c_gastos.fecha_mod, c_gastos.usuario_mod, c_gastos.operacion, "
+				+ "m_clientes.cod_tit, m_clientes.nom_tit, "
+				+ "m_monedas.cod_moneda, m_monedas.descripcion, m_monedas.simbolo, "
+				+ "m_cuentas.cod_cuenta, m_cuentas.descripcion, "
+				+ "m_rubros.cod_rubro, m_rubros.descripcion, m_rubros.cod_tipo_rubro, m_rubros.cod_impuesto, "
+				+ "m_impuestos.cod_impuesto, m_impuestos.descripcion, m_impuestos.porcentaje, "
+				+ "c_procesos.descripcion ");
+		
+		sb.append("FROM c_gastos"
+				+ " INNER JOIN  m_clientes ON c_gastos.cod_tit = m_clientes.cod_tit AND m_clientes.cod_emp = c_gastos.cod_emp "
+				+ " INNER JOIN m_cuentas ON c_gastos.cod_cuenta = m_cuentas.cod_cuenta AND m_cuentas.cod_emp = c_gastos.cod_emp "
+				+ " INNER JOIN m_rubros ON c_gastos.cod_rubro = m_rubros.cod_rubro AND m_rubros.cod_emp = c_gastos.cod_emp "
+				+ " INNER JOIN m_monedas ON c_gastos.cod_moneda = m_monedas.cod_moneda AND m_monedas.cod_emp = c_gastos.cod_emp "
+				+ " INNER JOIN m_impuestos ON m_rubros.cod_impuesto = m_impuestos.cod_impuesto AND m_impuestos.cod_emp = c_gastos.cod_emp "
+				+ " INNER JOIN c_procesos ON c_gastos.cod_proceso = c_procesos.cod_proceso and c_procesos.cod_emp = c_gastos.cod_emp "
+				+ " AND c_gastos.cod_emp = ? AND c_gastos.cod_proceso = ? AND c_gastos.estado = 'apagar' ");
+				
+				return sb.toString();
+
+	}
+	
+
+public String getGastosAnuladosxProceso(){
+	
+	StringBuilder sb = new StringBuilder();
+	
+	sb.append("SELECT c_gastos.fecDoc, c_gastos.cod_docum, c_gastos.serie_docum, "
+			+ "c_gastos.nro_docum, c_gastos.cod_emp, c_gastos.referencia, "
+			+ "c_gastos.nro_trans, c_gastos.fecValor, c_gastos.cod_proceso, "
+			+ "c_gastos.referenciaDetalle, c_gastos.imp_impu_mn, c_gastos.imp_impu_mo, "
+			+ "c_gastos.imp_sub_mn, c_gastos.imp_sub_mo, c_gastos.imp_tot_mn, "
+			+ "c_gastos.imp_tot_mo, c_gastos.tc_mov, c_gastos.cuenta, "
+			+ "c_gastos.fecha_mod, c_gastos.usuario_mod, c_gastos.operacion, "
+			+ "m_clientes.cod_tit, m_clientes.nom_tit, "
+			+ "m_monedas.cod_moneda, m_monedas.descripcion, m_monedas.simbolo, "
+			+ "m_cuentas.cod_cuenta, m_cuentas.descripcion, "
+			+ "m_rubros.cod_rubro, m_rubros.descripcion, m_rubros.cod_tipo_rubro, m_rubros.cod_impuesto, "
+			+ "m_impuestos.cod_impuesto, m_impuestos.descripcion, m_impuestos.porcentaje, "
+			+ "c_procesos.descripcion ");
+	
+	sb.append("FROM c_gastos"
+			+ " INNER JOIN  m_clientes ON c_gastos.cod_tit = m_clientes.cod_tit AND m_clientes.cod_emp = c_gastos.cod_emp "
+			+ " INNER JOIN m_cuentas ON c_gastos.cod_cuenta = m_cuentas.cod_cuenta AND m_cuentas.cod_emp = c_gastos.cod_emp "
+			+ " INNER JOIN m_rubros ON c_gastos.cod_rubro = m_rubros.cod_rubro AND m_rubros.cod_emp = c_gastos.cod_emp "
+			+ " INNER JOIN m_monedas ON c_gastos.cod_moneda = m_monedas.cod_moneda AND m_monedas.cod_emp = c_gastos.cod_emp "
+			+ " INNER JOIN m_impuestos ON m_rubros.cod_impuesto = m_impuestos.cod_impuesto AND m_impuestos.cod_emp = c_gastos.cod_emp "
+			+ " INNER JOIN c_procesos ON c_gastos.cod_proceso = c_procesos.cod_proceso and c_procesos.cod_emp = c_gastos.cod_emp "
+			+ " AND c_gastos.cod_emp = ? AND c_gastos.cod_proceso = ? AND c_gastos.estado = 'anul' ");
+			
+			return sb.toString();
+
+}
+
+
+
 	public String getGastosEmpleados(){
 		
 		StringBuilder sb = new StringBuilder();

@@ -23,5 +23,13 @@ public interface IDAOGastos {
 	public ArrayList<Gasto> getGastosConSaldoxMoneda(Connection con, String codEmp, String codTit, String codMoneda) throws ObteniendoGastosException, ConexionException;
 	public void eliminarGasto(long  transaccion, String codEmp, Connection con) throws EliminandoGastoException, ConexionException;
 	public void eliminarGastoPK(int nroDocum, String serieDocum, String codDocum, String codEmp, Connection con) throws EliminandoGastoException, ConexionException;
+	public ArrayList<DocumDetalle> getGastosNoCobrablesxProceso(Connection con, String codEmp, int codProceso)
+			throws ObteniendoGastosException, ConexionException;
+	public ArrayList<DocumDetalle> getGastosCobrablesxProceso(Connection con, String codEmp, int codProceso)
+			throws ObteniendoGastosException, ConexionException;
+	public ArrayList<DocumDetalle> getGastosAPagarxProceso(Connection con, String codEmp, int codProceso)
+			throws ObteniendoGastosException, ConexionException;
+	public ArrayList<DocumDetalle> getGastosAnuladosxProceso(Connection con, String codEmp, int codProceso)
+			throws ObteniendoGastosException, ConexionException;
 	
 }

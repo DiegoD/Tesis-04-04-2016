@@ -477,8 +477,150 @@ public class DAOGastos implements IDAOGastos{
 					lstGastos.add(aux);
 					
 				}
+
 				rs.close ();
 				pstmt1.close ();
+			}	
+			
+			catch (SQLException e) {
+				throw new ObteniendoGastosException();
+				
+			}
+			
+			return lstGastos;
+		}
+				
+		
+		public ArrayList<DocumDetalle> getGastosNoCobrablesxProceso(Connection con, String codEmp, int codProceso)
+					throws ObteniendoGastosException, ConexionException {
+				// TODO Auto-generated method stub
+				ArrayList<DocumDetalle> lstGastos = new ArrayList<DocumDetalle>();
+				
+				try {
+					
+			    	ConsultasDD clts = new ConsultasDD();
+			    	String query = clts.getGastosNoCobrablesxProceso();
+			    	PreparedStatement pstmt1 = con.prepareStatement(query);
+			    	
+			    	ResultSet rs;
+			    	
+			    	pstmt1.setString(1, codEmp);
+			    	pstmt1.setInt(2, codProceso);
+					rs = pstmt1.executeQuery();
+					
+					DocumDetalle aux;
+					while(rs.next ()) {
+						
+						aux = new Gasto();
+						
+						aux.setFecDoc(rs.getTimestamp(1));
+						aux.setCodDocum(rs.getString(2));
+						aux.setSerieDocum(rs.getString(3));
+						aux.setNroDocum(rs.getInt(4));
+						aux.setCodEmp(rs.getString(5));
+						aux.setReferencia(rs.getString(6));
+						aux.setNroTrans(rs.getLong(7));
+						aux.setFecValor(rs.getTimestamp(8));
+						aux.setCodProceso(rs.getString(9));
+						aux.setImpImpuMn(rs.getDouble(11));
+						aux.setImpImpuMo(rs.getDouble(12));
+						aux.setImpSubMn(rs.getDouble(13));
+						aux.setImpSubMo(rs.getDouble(14));
+						aux.setImpTotMn(rs.getDouble(15));
+						aux.setImpTotMo(rs.getDouble(16));
+						aux.setTcMov(rs.getDouble(17));
+						aux.setCodCuentaInd(rs.getString(18));
+						aux.setFechaMod(rs.getTimestamp(19));
+						aux.setUsuarioMod(rs.getString(20));
+						aux.setOperacion(rs.getString(21));
+						aux.setTitInfo(new TitularInfo(rs.getString(22), rs.getString(23)));
+						aux.setMoneda(new MonedaInfo (rs.getString(24), rs.getString(25), rs.getString(26)));
+						aux.setCuenta(new CuentaInfo(rs.getString(27), rs.getString(28)));
+						aux.setRubroInfo(new RubroInfo(rs.getString(29), rs.getString(30)));
+						ImpuestoInfo imp = new ImpuestoInfo();
+						imp.setCodImpuesto(rs.getString(33));
+						imp.setNomImpuesto(rs.getString(34));
+						imp.setPorcentaje(rs.getDouble(35));
+						aux.setImpuestoInfo(imp);
+						aux.setDescProceso(rs.getString(36));
+						
+						
+						lstGastos.add(aux);
+						
+					}
+					pstmt1.close ();
+					
+				
+		    	}	
+		    	
+				catch (SQLException e) {
+					throw new ObteniendoGastosException();
+					
+				}
+		    	
+		    	return lstGastos;
+			}
+		
+		public ArrayList<DocumDetalle> getGastosCobrablesxProceso(Connection con, String codEmp, int codProceso)
+				throws ObteniendoGastosException, ConexionException {
+			// TODO Auto-generated method stub
+			ArrayList<DocumDetalle> lstGastos = new ArrayList<DocumDetalle>();
+			
+			try {
+				
+		    	ConsultasDD clts = new ConsultasDD();
+		    	String query = clts.getGastosCobrablesxProceso();
+		    	PreparedStatement pstmt1 = con.prepareStatement(query);
+		    	
+		    	ResultSet rs;
+		    	
+		    	pstmt1.setString(1, codEmp);
+		    	pstmt1.setInt(2, codProceso);
+				rs = pstmt1.executeQuery();
+				
+				DocumDetalle aux;
+				while(rs.next ()) {
+					
+					aux = new Gasto();
+					
+					aux.setFecDoc(rs.getTimestamp(1));
+					aux.setCodDocum(rs.getString(2));
+					aux.setSerieDocum(rs.getString(3));
+					aux.setNroDocum(rs.getInt(4));
+					aux.setCodEmp(rs.getString(5));
+					aux.setReferencia(rs.getString(6));
+					aux.setNroTrans(rs.getLong(7));
+					aux.setFecValor(rs.getTimestamp(8));
+					aux.setCodProceso(rs.getString(9));
+					aux.setImpImpuMn(rs.getDouble(11));
+					aux.setImpImpuMo(rs.getDouble(12));
+					aux.setImpSubMn(rs.getDouble(13));
+					aux.setImpSubMo(rs.getDouble(14));
+					aux.setImpTotMn(rs.getDouble(15));
+					aux.setImpTotMo(rs.getDouble(16));
+					aux.setTcMov(rs.getDouble(17));
+					aux.setCodCuentaInd(rs.getString(18));
+					aux.setFechaMod(rs.getTimestamp(19));
+					aux.setUsuarioMod(rs.getString(20));
+					aux.setOperacion(rs.getString(21));
+					aux.setTitInfo(new TitularInfo(rs.getString(22), rs.getString(23)));
+					aux.setMoneda(new MonedaInfo (rs.getString(24), rs.getString(25), rs.getString(26)));
+					aux.setCuenta(new CuentaInfo(rs.getString(27), rs.getString(28)));
+					aux.setRubroInfo(new RubroInfo(rs.getString(29), rs.getString(30)));
+					ImpuestoInfo imp = new ImpuestoInfo();
+					imp.setCodImpuesto(rs.getString(33));
+					imp.setNomImpuesto(rs.getString(34));
+					imp.setPorcentaje(rs.getDouble(35));
+					aux.setImpuestoInfo(imp);
+					aux.setDescProceso(rs.getString(36));
+					
+					
+					lstGastos.add(aux);
+					
+				}
+				pstmt1.close ();
+				
+			
 	    	}	
 	    	
 			catch (SQLException e) {
@@ -488,4 +630,148 @@ public class DAOGastos implements IDAOGastos{
 	    	
 	    	return lstGastos;
 		}
+			
+		public ArrayList<DocumDetalle> getGastosAPagarxProceso(Connection con, String codEmp, int codProceso)
+				throws ObteniendoGastosException, ConexionException {
+			// TODO Auto-generated method stub
+			ArrayList<DocumDetalle> lstGastos = new ArrayList<DocumDetalle>();
+			
+			try {
+				
+		    	ConsultasDD clts = new ConsultasDD();
+		    	String query = clts.getGastosAPagarxProceso();
+		    	PreparedStatement pstmt1 = con.prepareStatement(query);
+		    	
+		    	ResultSet rs;
+		    	
+		    	pstmt1.setString(1, codEmp);
+		    	pstmt1.setInt(2, codProceso);
+				rs = pstmt1.executeQuery();
+				
+				DocumDetalle aux;
+				while(rs.next ()) {
+					
+					aux = new Gasto();
+					
+					aux.setFecDoc(rs.getTimestamp(1));
+					aux.setCodDocum(rs.getString(2));
+					aux.setSerieDocum(rs.getString(3));
+					aux.setNroDocum(rs.getInt(4));
+					aux.setCodEmp(rs.getString(5));
+					aux.setReferencia(rs.getString(6));
+					aux.setNroTrans(rs.getLong(7));
+					aux.setFecValor(rs.getTimestamp(8));
+					aux.setCodProceso(rs.getString(9));
+					aux.setImpImpuMn(rs.getDouble(11));
+					aux.setImpImpuMo(rs.getDouble(12));
+					aux.setImpSubMn(rs.getDouble(13));
+					aux.setImpSubMo(rs.getDouble(14));
+					aux.setImpTotMn(rs.getDouble(15));
+					aux.setImpTotMo(rs.getDouble(16));
+					aux.setTcMov(rs.getDouble(17));
+					aux.setCodCuentaInd(rs.getString(18));
+					aux.setFechaMod(rs.getTimestamp(19));
+					aux.setUsuarioMod(rs.getString(20));
+					aux.setOperacion(rs.getString(21));
+					aux.setTitInfo(new TitularInfo(rs.getString(22), rs.getString(23)));
+					aux.setMoneda(new MonedaInfo (rs.getString(24), rs.getString(25), rs.getString(26)));
+					aux.setCuenta(new CuentaInfo(rs.getString(27), rs.getString(28)));
+					aux.setRubroInfo(new RubroInfo(rs.getString(29), rs.getString(30)));
+					ImpuestoInfo imp = new ImpuestoInfo();
+					imp.setCodImpuesto(rs.getString(33));
+					imp.setNomImpuesto(rs.getString(34));
+					imp.setPorcentaje(rs.getDouble(35));
+					aux.setImpuestoInfo(imp);
+					aux.setDescProceso(rs.getString(36));
+					
+					
+					lstGastos.add(aux);
+					
+				}
+				pstmt1.close ();
+				
+			
+	    	}	
+	    	
+			catch (SQLException e) {
+				throw new ObteniendoGastosException();
+				
+			}
+	    	
+	    	return lstGastos;
+		}
+		
+		public ArrayList<DocumDetalle> getGastosAnuladosxProceso(Connection con, String codEmp, int codProceso)
+				throws ObteniendoGastosException, ConexionException {
+			// TODO Auto-generated method stub
+			ArrayList<DocumDetalle> lstGastos = new ArrayList<DocumDetalle>();
+			
+			try {
+				
+		    	ConsultasDD clts = new ConsultasDD();
+		    	String query = clts.getGastosAnuladosxProceso();
+		    	PreparedStatement pstmt1 = con.prepareStatement(query);
+		    	
+		    	ResultSet rs;
+		    	
+		    	pstmt1.setString(1, codEmp);
+		    	pstmt1.setInt(2, codProceso);
+				rs = pstmt1.executeQuery();
+				
+				DocumDetalle aux;
+				while(rs.next ()) {
+					
+					aux = new Gasto();
+					
+					aux.setFecDoc(rs.getTimestamp(1));
+					aux.setCodDocum(rs.getString(2));
+					aux.setSerieDocum(rs.getString(3));
+					aux.setNroDocum(rs.getInt(4));
+					aux.setCodEmp(rs.getString(5));
+					aux.setReferencia(rs.getString(6));
+					aux.setNroTrans(rs.getLong(7));
+					aux.setFecValor(rs.getTimestamp(8));
+					aux.setCodProceso(rs.getString(9));
+					aux.setImpImpuMn(rs.getDouble(11));
+					aux.setImpImpuMo(rs.getDouble(12));
+					aux.setImpSubMn(rs.getDouble(13));
+					aux.setImpSubMo(rs.getDouble(14));
+					aux.setImpTotMn(rs.getDouble(15));
+					aux.setImpTotMo(rs.getDouble(16));
+					aux.setTcMov(rs.getDouble(17));
+					aux.setCodCuentaInd(rs.getString(18));
+					aux.setFechaMod(rs.getTimestamp(19));
+					aux.setUsuarioMod(rs.getString(20));
+					aux.setOperacion(rs.getString(21));
+					aux.setTitInfo(new TitularInfo(rs.getString(22), rs.getString(23)));
+					aux.setMoneda(new MonedaInfo (rs.getString(24), rs.getString(25), rs.getString(26)));
+					aux.setCuenta(new CuentaInfo(rs.getString(27), rs.getString(28)));
+					aux.setRubroInfo(new RubroInfo(rs.getString(29), rs.getString(30)));
+					ImpuestoInfo imp = new ImpuestoInfo();
+					imp.setCodImpuesto(rs.getString(33));
+					imp.setNomImpuesto(rs.getString(34));
+					imp.setPorcentaje(rs.getDouble(35));
+					aux.setImpuestoInfo(imp);
+					aux.setDescProceso(rs.getString(36));
+					
+					
+					lstGastos.add(aux);
+					
+				}
+				pstmt1.close ();
+				
+			
+	    	}	
+	    	
+			catch (SQLException e) {
+				throw new ObteniendoGastosException();
+				
+			}
+	    	
+	    	return lstGastos;
+		}
+			
+	
+		
+
 }

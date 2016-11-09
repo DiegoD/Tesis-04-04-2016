@@ -108,6 +108,7 @@ import com.logica.Periodo.Periodo;
 import com.valueObject.*;
 import com.valueObject.Cotizacion.CotizacionVO;
 import com.valueObject.Cuenta.CuentaVO;
+import com.valueObject.Docum.DocumDetalleVO;
 import com.valueObject.Gasto.GastoVO;
 import com.valueObject.Numeradores.NumeradoresVO;
 import com.valueObject.Periodo.PeriodoVO;
@@ -2731,6 +2732,321 @@ public class FachadaDD {
 		
 		return lstGastosVO;
 	}
+	
+	/**
+	* Obtiene todos los no cobrables para un proceso
+	*/
+	@SuppressWarnings("unchecked")
+	public ArrayList<DocumDetalleVO> getGastosNoCobrablesxProceso(String cod_emp, int codProceso) throws ObteniendoGastosException, ConexionException
+	{
+	
+		Connection con = null;
+		
+		ArrayList<DocumDetalle> lstGastos;
+		ArrayList<DocumDetalleVO> lstGastosVO = new ArrayList<DocumDetalleVO>();
+		
+		try
+		{
+			con = this.pool.obtenerConeccion();
+			
+			lstGastos = this.gastos.getGastosNoCobrablesxProceso(con, cod_emp, codProceso);
+			
+			
+			DocumDetalleVO aux;
+			for (DocumDetalle gasto : lstGastos) 
+			{
+				aux = new DocumDetalleVO();
+				
+				aux.setFecDoc(gasto.getFecDoc());
+				aux.setCodDocum(gasto.getCodDocum());
+				aux.setSerieDocum(gasto.getSerieDocum());
+				aux.setNroDocum(gasto.getNroDocum());
+				aux.setCodEmp(gasto.getCodEmp());
+				aux.setCodMoneda(gasto.getMoneda().getCodMoneda());
+				aux.setSimboloMoneda(gasto.getMoneda().getSimbolo());
+				aux.setNomMoneda(gasto.getMoneda().getDescripcion());
+				aux.setReferencia(gasto.getReferencia());
+				aux.setCodTitular(gasto.getTitInfo().getCodigo());
+				aux.setNomTitular(gasto.getTitInfo().getNombre());
+				aux.setNroTrans(gasto.getNroTrans());
+				aux.setFecValor(gasto.getFecValor());
+				aux.setCodProceso(gasto.getCodProceso());
+				aux.setReferencia(gasto.getReferencia());
+				aux.setImpImpuMn(gasto.getImpImpuMn());
+				aux.setImpImpuMo(gasto.getImpImpuMo());
+				aux.setImpSubMn(gasto.getImpSubMn());
+				aux.setImpSubMo(gasto.getImpSubMo());
+				aux.setImpTotMn(gasto.getImpTotMn());
+				aux.setImpTotMo(gasto.getImpTotMo());
+				aux.setTcMov(gasto.getTcMov());
+				aux.setCodCuenta(gasto.getCuenta().getCodCuenta());
+				aux.setNomCuenta(gasto.getCuenta().getNomCuenta());
+				aux.setCodRubro(gasto.getRubroInfo().getCodRubro());
+				aux.setNomRubro(gasto.getRubroInfo().getNomRubro());
+				aux.setCodCtaInd(gasto.getCodCuentaInd());
+				aux.setFechaMod(gasto.getFechaMod());
+				aux.setUsuarioMod(gasto.getUsuarioMod());
+				aux.setOperacion(gasto.getOperacion());
+				aux.setDescProceso(gasto.getDescProceso());
+				aux.setCodImpuesto(gasto.getImpuestoInfo().getCodImpuesto());
+				aux.setNomImpuesto(gasto.getImpuestoInfo().getNomImpuesto());
+				aux.setPorcentajeImpuesto(gasto.getImpuestoInfo().getPorcentaje());
+				lstGastosVO.add(aux);
+			}
+		
+		}
+		catch(ObteniendoGastosException e){
+			throw e;
+		
+		} 
+		catch (ConexionException e) {
+		
+			throw e;
+		} 
+		finally{
+			this.pool.liberarConeccion(con);
+		}
+		
+		
+		return lstGastosVO;
+	}
+	
+	
+	/**
+	* Obtiene todos los cobrables para un proceso
+	*/
+	@SuppressWarnings("unchecked")
+	public ArrayList<DocumDetalleVO> getGastosCobrablesxProceso(String cod_emp, int codProceso) throws ObteniendoGastosException, ConexionException
+	{
+	
+		Connection con = null;
+		
+		ArrayList<DocumDetalle> lstGastos;
+		ArrayList<DocumDetalleVO> lstGastosVO = new ArrayList<DocumDetalleVO>();
+		
+		try
+		{
+			con = this.pool.obtenerConeccion();
+			
+			lstGastos = this.gastos.getGastosCobrablesxProceso(con, cod_emp, codProceso);
+			
+			
+			DocumDetalleVO aux;
+			for (DocumDetalle gasto : lstGastos) 
+			{
+				aux = new DocumDetalleVO();
+				
+				aux.setFecDoc(gasto.getFecDoc());
+				aux.setCodDocum(gasto.getCodDocum());
+				aux.setSerieDocum(gasto.getSerieDocum());
+				aux.setNroDocum(gasto.getNroDocum());
+				aux.setCodEmp(gasto.getCodEmp());
+				aux.setCodMoneda(gasto.getMoneda().getCodMoneda());
+				aux.setSimboloMoneda(gasto.getMoneda().getSimbolo());
+				aux.setNomMoneda(gasto.getMoneda().getDescripcion());
+				aux.setReferencia(gasto.getReferencia());
+				aux.setCodTitular(gasto.getTitInfo().getCodigo());
+				aux.setNomTitular(gasto.getTitInfo().getNombre());
+				aux.setNroTrans(gasto.getNroTrans());
+				aux.setFecValor(gasto.getFecValor());
+				aux.setCodProceso(gasto.getCodProceso());
+				aux.setReferencia(gasto.getReferencia());
+				aux.setImpImpuMn(gasto.getImpImpuMn());
+				aux.setImpImpuMo(gasto.getImpImpuMo());
+				aux.setImpSubMn(gasto.getImpSubMn());
+				aux.setImpSubMo(gasto.getImpSubMo());
+				aux.setImpTotMn(gasto.getImpTotMn());
+				aux.setImpTotMo(gasto.getImpTotMo());
+				aux.setTcMov(gasto.getTcMov());
+				aux.setCodCuenta(gasto.getCuenta().getCodCuenta());
+				aux.setNomCuenta(gasto.getCuenta().getNomCuenta());
+				aux.setCodRubro(gasto.getRubroInfo().getCodRubro());
+				aux.setNomRubro(gasto.getRubroInfo().getNomRubro());
+				aux.setCodCtaInd(gasto.getCodCuentaInd());
+				aux.setFechaMod(gasto.getFechaMod());
+				aux.setUsuarioMod(gasto.getUsuarioMod());
+				aux.setOperacion(gasto.getOperacion());
+				aux.setDescProceso(gasto.getDescProceso());
+				aux.setCodImpuesto(gasto.getImpuestoInfo().getCodImpuesto());
+				aux.setNomImpuesto(gasto.getImpuestoInfo().getNomImpuesto());
+				aux.setPorcentajeImpuesto(gasto.getImpuestoInfo().getPorcentaje());
+				lstGastosVO.add(aux);
+			}
+		
+		}
+		catch(ObteniendoGastosException e){
+			throw e;
+		
+		} 
+		catch (ConexionException e) {
+		
+			throw e;
+		} 
+		finally{
+			this.pool.liberarConeccion(con);
+		}
+		
+		
+		return lstGastosVO;
+	}
+	
+	
+	/**
+	* Obtiene todos los cobrables para un proceso
+	*/
+	@SuppressWarnings("unchecked")
+	public ArrayList<DocumDetalleVO> getGastosAPagarxProceso(String cod_emp, int codProceso) throws ObteniendoGastosException, ConexionException
+	{
+	
+		Connection con = null;
+		
+		ArrayList<DocumDetalle> lstGastos;
+		ArrayList<DocumDetalleVO> lstGastosVO = new ArrayList<DocumDetalleVO>();
+		
+		try
+		{
+			con = this.pool.obtenerConeccion();
+			
+			lstGastos = this.gastos.getGastosAPagarxProceso(con, cod_emp, codProceso);
+			
+			
+			DocumDetalleVO aux;
+			for (DocumDetalle gasto : lstGastos) 
+			{
+				aux = new DocumDetalleVO();
+				
+				aux.setFecDoc(gasto.getFecDoc());
+				aux.setCodDocum(gasto.getCodDocum());
+				aux.setSerieDocum(gasto.getSerieDocum());
+				aux.setNroDocum(gasto.getNroDocum());
+				aux.setCodEmp(gasto.getCodEmp());
+				aux.setCodMoneda(gasto.getMoneda().getCodMoneda());
+				aux.setSimboloMoneda(gasto.getMoneda().getSimbolo());
+				aux.setNomMoneda(gasto.getMoneda().getDescripcion());
+				aux.setReferencia(gasto.getReferencia());
+				aux.setCodTitular(gasto.getTitInfo().getCodigo());
+				aux.setNomTitular(gasto.getTitInfo().getNombre());
+				aux.setNroTrans(gasto.getNroTrans());
+				aux.setFecValor(gasto.getFecValor());
+				aux.setCodProceso(gasto.getCodProceso());
+				aux.setReferencia(gasto.getReferencia());
+				aux.setImpImpuMn(gasto.getImpImpuMn());
+				aux.setImpImpuMo(gasto.getImpImpuMo());
+				aux.setImpSubMn(gasto.getImpSubMn());
+				aux.setImpSubMo(gasto.getImpSubMo());
+				aux.setImpTotMn(gasto.getImpTotMn());
+				aux.setImpTotMo(gasto.getImpTotMo());
+				aux.setTcMov(gasto.getTcMov());
+				aux.setCodCuenta(gasto.getCuenta().getCodCuenta());
+				aux.setNomCuenta(gasto.getCuenta().getNomCuenta());
+				aux.setCodRubro(gasto.getRubroInfo().getCodRubro());
+				aux.setNomRubro(gasto.getRubroInfo().getNomRubro());
+				aux.setCodCtaInd(gasto.getCodCuentaInd());
+				aux.setFechaMod(gasto.getFechaMod());
+				aux.setUsuarioMod(gasto.getUsuarioMod());
+				aux.setOperacion(gasto.getOperacion());
+				aux.setDescProceso(gasto.getDescProceso());
+				aux.setCodImpuesto(gasto.getImpuestoInfo().getCodImpuesto());
+				aux.setNomImpuesto(gasto.getImpuestoInfo().getNomImpuesto());
+				aux.setPorcentajeImpuesto(gasto.getImpuestoInfo().getPorcentaje());
+				lstGastosVO.add(aux);
+			}
+		
+		}
+		catch(ObteniendoGastosException e){
+			throw e;
+		
+		} 
+		catch (ConexionException e) {
+		
+			throw e;
+		} 
+		finally{
+			this.pool.liberarConeccion(con);
+		}
+		
+		
+		return lstGastosVO;
+	}
+	
+	/**
+	* Obtiene todos los cobrables para un proceso
+	*/
+	@SuppressWarnings("unchecked")
+	public ArrayList<DocumDetalleVO> getGastosAnuladosxProceso(String cod_emp, int codProceso) throws ObteniendoGastosException, ConexionException
+	{
+	
+		Connection con = null;
+		
+		ArrayList<DocumDetalle> lstGastos;
+		ArrayList<DocumDetalleVO> lstGastosVO = new ArrayList<DocumDetalleVO>();
+		
+		try
+		{
+			con = this.pool.obtenerConeccion();
+			
+			lstGastos = this.gastos.getGastosAnuladosxProceso(con, cod_emp, codProceso);
+			
+			
+			DocumDetalleVO aux;
+			for (DocumDetalle gasto : lstGastos) 
+			{
+				aux = new DocumDetalleVO();
+				
+				aux.setFecDoc(gasto.getFecDoc());
+				aux.setCodDocum(gasto.getCodDocum());
+				aux.setSerieDocum(gasto.getSerieDocum());
+				aux.setNroDocum(gasto.getNroDocum());
+				aux.setCodEmp(gasto.getCodEmp());
+				aux.setCodMoneda(gasto.getMoneda().getCodMoneda());
+				aux.setSimboloMoneda(gasto.getMoneda().getSimbolo());
+				aux.setNomMoneda(gasto.getMoneda().getDescripcion());
+				aux.setReferencia(gasto.getReferencia());
+				aux.setCodTitular(gasto.getTitInfo().getCodigo());
+				aux.setNomTitular(gasto.getTitInfo().getNombre());
+				aux.setNroTrans(gasto.getNroTrans());
+				aux.setFecValor(gasto.getFecValor());
+				aux.setCodProceso(gasto.getCodProceso());
+				aux.setReferencia(gasto.getReferencia());
+				aux.setImpImpuMn(gasto.getImpImpuMn());
+				aux.setImpImpuMo(gasto.getImpImpuMo());
+				aux.setImpSubMn(gasto.getImpSubMn());
+				aux.setImpSubMo(gasto.getImpSubMo());
+				aux.setImpTotMn(gasto.getImpTotMn());
+				aux.setImpTotMo(gasto.getImpTotMo());
+				aux.setTcMov(gasto.getTcMov());
+				aux.setCodCuenta(gasto.getCuenta().getCodCuenta());
+				aux.setNomCuenta(gasto.getCuenta().getNomCuenta());
+				aux.setCodRubro(gasto.getRubroInfo().getCodRubro());
+				aux.setNomRubro(gasto.getRubroInfo().getNomRubro());
+				aux.setCodCtaInd(gasto.getCodCuentaInd());
+				aux.setFechaMod(gasto.getFechaMod());
+				aux.setUsuarioMod(gasto.getUsuarioMod());
+				aux.setOperacion(gasto.getOperacion());
+				aux.setDescProceso(gasto.getDescProceso());
+				aux.setCodImpuesto(gasto.getImpuestoInfo().getCodImpuesto());
+				aux.setNomImpuesto(gasto.getImpuestoInfo().getNomImpuesto());
+				aux.setPorcentajeImpuesto(gasto.getImpuestoInfo().getPorcentaje());
+				lstGastosVO.add(aux);
+			}
+		
+		}
+		catch(ObteniendoGastosException e){
+			throw e;
+		
+		} 
+		catch (ConexionException e) {
+		
+			throw e;
+		} 
+		finally{
+			this.pool.liberarConeccion(con);
+		}
+		
+		
+		return lstGastosVO;
+	}
+	
 	
 	/**
 	* Obtiene todos los gastos existentes por moenda
