@@ -297,6 +297,7 @@ public class PeriodoViewExtended extends PeriodoView{
 	{
 		this.comboMes.setReadOnly(false);
 		this.anio.setReadOnly(false);
+		this.anio.setEnabled(false);
 		this.abierto.setReadOnly(false);
 	}
 	

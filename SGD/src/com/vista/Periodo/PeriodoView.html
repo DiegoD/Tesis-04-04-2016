@@ -14,21 +14,23 @@
    <vaadin-horizontal-layout responsive size-full> 
     <vaadin-form-layout spacing="false" height="66.78%" margin> 
      <vaadin-combo-box caption="Mes" style-name="tiny" item-caption-mode="id" _id="comboMes"> 
-      <option>Enero </option> 
-      <option>Febrero </option> 
-      <option>Marzo </option> 
-      <option>Abril </option> 
-      <option>Mayo </option> 
-      <option>Junio </option> 
-      <option>Julio </option> 
-      <option>Agosto </option> 
-      <option>Setiembre </option> 
-      <option>Octubre </option> 
-      <option>Noviembre </option> 
+      <option>Enero</option> 
+      <option>Febrero</option> 
+      <option>Marzo</option> 
+      <option>Abril</option> 
+      <option>Mayo</option> 
+      <option>Junio</option> 
+      <option>Julio</option> 
+      <option>Agosto</option> 
+      <option>Setiembre</option> 
+      <option>Octubre</option> 
+      <option>Noviembre</option> 
       <option>Diciembre</option> 
      </vaadin-combo-box> 
-     <vaadin-text-field caption="Año" style-name="tiny" _id="anio"></vaadin-text-field> 
-     <vaadin-check-box caption="Abierto" id="activo" responsive _id="abierto"></vaadin-check-box> 
+     <vaadin-text-field caption="Año" style-name="tiny" null-representation="" _id="anio"></vaadin-text-field> 
+     <vaadin-horizontal-layout spacing> 
+      <vaadin-check-box caption="Abierto" id="activo" responsive checked _id="abierto" :bottom></vaadin-check-box> 
+     </vaadin-horizontal-layout> 
      <vaadin-horizontal-layout width="187px"> 
       <vaadin-button style-name="primary tiny" plain-text _id="aceptar" :middle>
         Guardar 

@@ -65,7 +65,7 @@ public class PeriodosPanelExtended extends PeriodosPanel{
 				
 					this.btnNuevoPeriodo.addClickListener(click -> {
 						
-						sub = new MySub("40%","30%");
+						sub = new MySub("45%","30%");
 						form = new PeriodoViewExtended(Variables.OPERACION_NUEVO, this);
 						sub.setModal(true);
 						sub.setVista(form);
@@ -120,6 +120,7 @@ public class PeriodosPanelExtended extends PeriodosPanel{
 		gridPeriodos.removeColumn("fechaMod");
 		gridPeriodos.removeColumn("usuarioMod");
 		gridPeriodos.removeColumn("operacion");
+		gridPeriodos.getColumn("anio").setHeaderCaption("Año");
 		
 		/*Agregamos los filtros a la grilla*/
 		this.filtroGrilla();
@@ -142,7 +143,7 @@ public class PeriodosPanelExtended extends PeriodosPanel{
 				    	}
 							
 				    	form = new PeriodoViewExtended(Variables.OPERACION_LECTURA, PeriodosPanelExtended.this);
-				    	sub = new MySub("40%","30%");
+				    	sub = new MySub("45%","30%");
 						sub.setModal(true);
 						sub.setVista(form);
 						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
