@@ -2737,13 +2737,13 @@ public class FachadaDD {
 	* Obtiene todos los no cobrables para un proceso
 	*/
 	@SuppressWarnings("unchecked")
-	public ArrayList<DocumDetalleVO> getGastosNoCobrablesxProceso(String cod_emp, int codProceso) throws ObteniendoGastosException, ConexionException
+	public ArrayList<GastoVO> getGastosNoCobrablesxProceso(String cod_emp, int codProceso) throws ObteniendoGastosException, ConexionException
 	{
 	
 		Connection con = null;
 		
 		ArrayList<DocumDetalle> lstGastos;
-		ArrayList<DocumDetalleVO> lstGastosVO = new ArrayList<DocumDetalleVO>();
+		ArrayList<GastoVO> lstGastosVO = new ArrayList<GastoVO>();
 		
 		try
 		{
@@ -2752,10 +2752,10 @@ public class FachadaDD {
 			lstGastos = this.gastos.getGastosNoCobrablesxProceso(con, cod_emp, codProceso);
 			
 			
-			DocumDetalleVO aux;
+			GastoVO aux;
 			for (DocumDetalle gasto : lstGastos) 
 			{
-				aux = new DocumDetalleVO();
+				aux = new GastoVO();
 				
 				aux.setFecDoc(gasto.getFecDoc());
 				aux.setCodDocum(gasto.getCodDocum());
@@ -2791,6 +2791,7 @@ public class FachadaDD {
 				aux.setCodImpuesto(gasto.getImpuestoInfo().getCodImpuesto());
 				aux.setNomImpuesto(gasto.getImpuestoInfo().getNomImpuesto());
 				aux.setPorcentajeImpuesto(gasto.getImpuestoInfo().getPorcentaje());
+				aux.setEstadoGasto(gasto.getEstadoGasto());
 				lstGastosVO.add(aux);
 			}
 		
@@ -2816,13 +2817,12 @@ public class FachadaDD {
 	* Obtiene todos los cobrables para un proceso
 	*/
 	@SuppressWarnings("unchecked")
-	public ArrayList<DocumDetalleVO> getGastosCobrablesxProceso(String cod_emp, int codProceso) throws ObteniendoGastosException, ConexionException
+	public ArrayList<GastoVO> getGastosCobrablesxProceso(String cod_emp, int codProceso) throws ObteniendoGastosException, ConexionException
 	{
-	
 		Connection con = null;
 		
 		ArrayList<DocumDetalle> lstGastos;
-		ArrayList<DocumDetalleVO> lstGastosVO = new ArrayList<DocumDetalleVO>();
+		ArrayList<GastoVO> lstGastosVO = new ArrayList<GastoVO>();
 		
 		try
 		{
@@ -2831,10 +2831,10 @@ public class FachadaDD {
 			lstGastos = this.gastos.getGastosCobrablesxProceso(con, cod_emp, codProceso);
 			
 			
-			DocumDetalleVO aux;
+			GastoVO aux;
 			for (DocumDetalle gasto : lstGastos) 
 			{
-				aux = new DocumDetalleVO();
+				aux = new GastoVO();
 				
 				aux.setFecDoc(gasto.getFecDoc());
 				aux.setCodDocum(gasto.getCodDocum());
@@ -2870,6 +2870,7 @@ public class FachadaDD {
 				aux.setCodImpuesto(gasto.getImpuestoInfo().getCodImpuesto());
 				aux.setNomImpuesto(gasto.getImpuestoInfo().getNomImpuesto());
 				aux.setPorcentajeImpuesto(gasto.getImpuestoInfo().getPorcentaje());
+				aux.setEstadoGasto(gasto.getEstadoGasto());
 				lstGastosVO.add(aux);
 			}
 		
@@ -2895,13 +2896,13 @@ public class FachadaDD {
 	* Obtiene todos los cobrables para un proceso
 	*/
 	@SuppressWarnings("unchecked")
-	public ArrayList<DocumDetalleVO> getGastosAPagarxProceso(String cod_emp, int codProceso) throws ObteniendoGastosException, ConexionException
+	public ArrayList<GastoVO> getGastosAPagarxProceso(String cod_emp, int codProceso) throws ObteniendoGastosException, ConexionException
 	{
 	
 		Connection con = null;
 		
 		ArrayList<DocumDetalle> lstGastos;
-		ArrayList<DocumDetalleVO> lstGastosVO = new ArrayList<DocumDetalleVO>();
+		ArrayList<GastoVO> lstGastosVO = new ArrayList<GastoVO>();
 		
 		try
 		{
@@ -2910,10 +2911,10 @@ public class FachadaDD {
 			lstGastos = this.gastos.getGastosAPagarxProceso(con, cod_emp, codProceso);
 			
 			
-			DocumDetalleVO aux;
+			GastoVO aux;
 			for (DocumDetalle gasto : lstGastos) 
 			{
-				aux = new DocumDetalleVO();
+				aux = new GastoVO();
 				
 				aux.setFecDoc(gasto.getFecDoc());
 				aux.setCodDocum(gasto.getCodDocum());
@@ -2949,6 +2950,7 @@ public class FachadaDD {
 				aux.setCodImpuesto(gasto.getImpuestoInfo().getCodImpuesto());
 				aux.setNomImpuesto(gasto.getImpuestoInfo().getNomImpuesto());
 				aux.setPorcentajeImpuesto(gasto.getImpuestoInfo().getPorcentaje());
+				aux.setEstadoGasto(gasto.getEstadoGasto());
 				lstGastosVO.add(aux);
 			}
 		
@@ -2973,13 +2975,13 @@ public class FachadaDD {
 	* Obtiene todos los cobrables para un proceso
 	*/
 	@SuppressWarnings("unchecked")
-	public ArrayList<DocumDetalleVO> getGastosAnuladosxProceso(String cod_emp, int codProceso) throws ObteniendoGastosException, ConexionException
+	public ArrayList<GastoVO> getGastosAnuladosxProceso(String cod_emp, int codProceso) throws ObteniendoGastosException, ConexionException
 	{
 	
 		Connection con = null;
 		
 		ArrayList<DocumDetalle> lstGastos;
-		ArrayList<DocumDetalleVO> lstGastosVO = new ArrayList<DocumDetalleVO>();
+		ArrayList<GastoVO> lstGastosVO = new ArrayList<GastoVO>();
 		
 		try
 		{
@@ -2988,10 +2990,10 @@ public class FachadaDD {
 			lstGastos = this.gastos.getGastosAnuladosxProceso(con, cod_emp, codProceso);
 			
 			
-			DocumDetalleVO aux;
+			GastoVO aux;
 			for (DocumDetalle gasto : lstGastos) 
 			{
-				aux = new DocumDetalleVO();
+				aux = new GastoVO();
 				
 				aux.setFecDoc(gasto.getFecDoc());
 				aux.setCodDocum(gasto.getCodDocum());
@@ -3027,6 +3029,7 @@ public class FachadaDD {
 				aux.setCodImpuesto(gasto.getImpuestoInfo().getCodImpuesto());
 				aux.setNomImpuesto(gasto.getImpuestoInfo().getNomImpuesto());
 				aux.setPorcentajeImpuesto(gasto.getImpuestoInfo().getPorcentaje());
+				aux.setEstadoGasto(gasto.getEstadoGasto());
 				lstGastosVO.add(aux);
 			}
 		

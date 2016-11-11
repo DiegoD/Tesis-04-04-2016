@@ -2,6 +2,7 @@ package com.vista.ResumenProceso;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
@@ -30,7 +31,10 @@ import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.data.validator.StringLengthValidator;
+import com.vaadin.event.SelectionEvent;
+import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.server.VaadinService;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.valueObject.DocumentoAduaneroVO;
@@ -38,6 +42,7 @@ import com.valueObject.MonedaVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.Cotizacion.CotizacionVO;
 import com.valueObject.Docum.DocumDetalleVO;
+import com.valueObject.Gasto.GastoVO;
 import com.valueObject.IngresoCobro.IngresoCobroDetalleVO;
 import com.valueObject.cliente.ClienteVO;
 import com.valueObject.proceso.ProcesoVO;
@@ -48,8 +53,11 @@ import com.vista.MySub;
 import com.vista.PermisosUsuario;
 import com.vista.Variables;
 import com.vista.VariablesPermisos;
+import com.vista.Gastos.GastoViewExtended;
+import com.vista.Gastos.GastosPanelExtended;
+import com.vista.Gastos.IGastosMain;
 
-public class ResumenProcesoViewExtended extends ResumenProcesoView implements IBusqueda{
+public class ResumenProcesoViewExtended extends ResumenProcesoView implements IBusqueda, IGastosMain{
 	
 	private BeanFieldGroup<ProcesoVO> fieldGroup;
 	private ResumenProcesoControlador controlador;
@@ -69,7 +77,7 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 	boolean filtroCobrablesSeteado; 
 	boolean filtroAPagarSeteado;
 	boolean filtroAnuladosSeteado; 
-	
+	private GastoViewExtended form;  /*Para visualizar los gastos de las grillas*/
 	
 	
 	 /*Variable utilizada para setear que se cargaron los gastos, 
@@ -80,12 +88,19 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 	boolean gtosAnuladosSeteado; 
 	
 	
+	BeanItemContainer<GastoVO> containerGastosNoCobrables;
+	BeanItemContainer<GastoVO> containerGastosCobrables;
+	BeanItemContainer<GastoVO> containerGastosAPagar;
+	BeanItemContainer<GastoVO> containerGastosAnulados;
 	
-	BeanItemContainer<DocumDetalleVO> containerGastosCobrables;
-	BeanItemContainer<DocumDetalleVO> containerGastosNoCobrables;
-	BeanItemContainer<DocumDetalleVO> containerGastosAPagar;
-	BeanItemContainer<DocumDetalleVO> containerGastosAnulados;
+	/*Listas que contiene los gastos no cobrables para el proceso*/
+	ArrayList<GastoVO> lstGastosNoCobrables; 
+	ArrayList<GastoVO> lstGastosCobrables; 
+	ArrayList<GastoVO> lstGastosGastosAPagar; 
+	ArrayList<GastoVO> lstGastosGastosAnulados; 
 	
+	private String grillaDesde; /*Variable utilizada para indicar desde que grilla se 
+	 							modifica un gasto*/
 	
 	public ResumenProcesoViewExtended(String opera, ResProcesosPanelExtended main){
 		
@@ -104,6 +119,189 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 		this.operacion = opera;
 		this.mainView = main;
 		
+		
+		/**
+		 * Listener para grilla no cobrables, para inicializar al gasto
+		 * 
+		 */
+		this.gridNoCobrables.addSelectionListener(new SelectionListener() {
+			
+		    @Override
+		    public void select(SelectionEvent event) {
+		       
+		    	try{
+		    		
+		    		grillaDesde = "gridNoCobrables"; 
+		    		
+		    		if(gridNoCobrables.getSelectedRow() != null){
+		    			
+		    			BeanItem<GastoVO> item = containerGastosNoCobrables.getItem(gridNoCobrables.getSelectedRow());
+		    			
+		    			
+		    			
+				    	/*Puede ser null si accedemos luego de haberlo agregado, ya que no va a la base*/
+				    	if(item.getBean().getFechaMod() == null)
+				    	{
+				    		item.getBean().setFechaMod(new Timestamp(System.currentTimeMillis()));
+				    	}
+							
+						
+				    	form = new GastoViewExtended(Variables.OPERACION_LECTURA, ResumenProcesoViewExtended.this, null);
+				    	sub = new MySub("88%","50%");
+						sub.setModal(true);
+						sub.setVista((Component) form);
+						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
+						form.setDataSourceFormulario(item);
+						
+						UI.getCurrent().addWindow(sub);
+		    		}
+			    	
+				}
+		    	
+		    	catch(Exception e){
+			    	Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			    }
+		      
+		    }
+		});
+		
+		
+		/**
+		 * Listener para grilla cobrables, para inicializar al gasto
+		 * 
+		 */
+		this.gridCobrables.addSelectionListener(new SelectionListener() {
+			
+		    @Override
+		    public void select(SelectionEvent event) {
+		       
+		    	try{
+		    		
+		    		grillaDesde = "gridCobrables"; 
+		    		
+		    		if(gridCobrables.getSelectedRow() != null){
+		    			
+		    			BeanItem<GastoVO> item = containerGastosCobrables.getItem(gridCobrables.getSelectedRow());
+		    			
+		    			
+		    			
+				    	/*Puede ser null si accedemos luego de haberlo agregado, ya que no va a la base*/
+				    	if(item.getBean().getFechaMod() == null)
+				    	{
+				    		item.getBean().setFechaMod(new Timestamp(System.currentTimeMillis()));
+				    	}
+							
+						
+				    	form = new GastoViewExtended(Variables.OPERACION_LECTURA, ResumenProcesoViewExtended.this, null);
+				    	sub = new MySub("88%","50%");
+						sub.setModal(true);
+						sub.setVista((Component) form);
+						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
+						form.setDataSourceFormulario(item);
+						
+						UI.getCurrent().addWindow(sub);
+		    		}
+			    	
+				}
+		    	
+		    	catch(Exception e){
+			    	Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			    }
+		      
+		    }
+		});
+		
+		
+		/**
+		 * Listener para grilla a pagar, para inicializar al gasto
+		 * 
+		 */
+		this.gridAPagar.addSelectionListener(new SelectionListener() {
+			
+		    @Override
+		    public void select(SelectionEvent event) {
+		       
+		    	try{
+		    		
+		    		grillaDesde = "gridAPagar"; 
+		    		
+		    		if(gridAPagar.getSelectedRow() != null){
+		    			
+		    			BeanItem<GastoVO> item = containerGastosAPagar.getItem(gridAPagar.getSelectedRow());
+		    			
+		    			
+		    			
+				    	/*Puede ser null si accedemos luego de haberlo agregado, ya que no va a la base*/
+				    	if(item.getBean().getFechaMod() == null)
+				    	{
+				    		item.getBean().setFechaMod(new Timestamp(System.currentTimeMillis()));
+				    	}
+							
+						
+				    	form = new GastoViewExtended(Variables.OPERACION_LECTURA, ResumenProcesoViewExtended.this, null);
+				    	sub = new MySub("88%","50%");
+						sub.setModal(true);
+						sub.setVista((Component) form);
+						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
+						form.setDataSourceFormulario(item);
+						
+						UI.getCurrent().addWindow(sub);
+		    		}
+			    	
+				}
+		    	
+		    	catch(Exception e){
+			    	Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			    }
+		      
+		    }
+		});
+		
+		
+		/**
+		 * Listener para grilla a pagar, para inicializar al gasto
+		 * 
+		 */
+		this.gridAnular.addSelectionListener(new SelectionListener() {
+			
+		    @Override
+		    public void select(SelectionEvent event) {
+		       
+		    	try{
+		    		
+		    		grillaDesde = "gridAnular"; 
+		    		
+		    		if(gridAnular.getSelectedRow() != null){
+		    			
+		    			BeanItem<GastoVO> item = containerGastosAnulados.getItem(gridAnular.getSelectedRow());
+		    			
+		    			
+		    			
+				    	/*Puede ser null si accedemos luego de haberlo agregado, ya que no va a la base*/
+				    	if(item.getBean().getFechaMod() == null)
+				    	{
+				    		item.getBean().setFechaMod(new Timestamp(System.currentTimeMillis()));
+				    	}
+							
+						
+				    	form = new GastoViewExtended(Variables.OPERACION_LECTURA, ResumenProcesoViewExtended.this, null);
+				    	sub = new MySub("88%","50%");
+						sub.setModal(true);
+						sub.setVista((Component) form);
+						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
+						form.setDataSourceFormulario(item);
+						
+						UI.getCurrent().addWindow(sub);
+		    		}
+			    	
+				}
+		    	
+		    	catch(Exception e){
+			    	Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			    }
+		      
+		    }
+		});
 		
 		
 		this.inicializarForm();
@@ -622,16 +820,16 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 		
 		/*Inicializamos los conteiners de grillas*/
 		this.containerGastosNoCobrables = 
-				new BeanItemContainer<DocumDetalleVO>(DocumDetalleVO.class);
+				new BeanItemContainer<GastoVO>(GastoVO.class);
 		
 		this.containerGastosCobrables = 
-				new BeanItemContainer<DocumDetalleVO>(DocumDetalleVO.class);
+				new BeanItemContainer<GastoVO>(GastoVO.class);
 		
 		this.containerGastosAPagar = 
-				new BeanItemContainer<DocumDetalleVO>(DocumDetalleVO.class);
+				new BeanItemContainer<GastoVO>(GastoVO.class);
 		
 		this.containerGastosAnulados = 
-				new BeanItemContainer<DocumDetalleVO>(DocumDetalleVO.class);
+				new BeanItemContainer<GastoVO>(GastoVO.class);
 		
 		
 		/*Dejamos no visibles las grillas de los gastos
@@ -1201,7 +1399,7 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 	 */
 	private void actualizarGastosNoCobrables()
 	{
-		ArrayList<DocumDetalleVO> lst = new ArrayList<DocumDetalleVO>();
+		this.lstGastosNoCobrables = new ArrayList<GastoVO>();
 		
 		/*Inicializamos VO de permisos para el usuario, formulario y operacion
 		 * para confirmar los permisos del usuario*/
@@ -1218,11 +1416,11 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 				
 				String cod = this.codigo.getValue(); 
 			
-				lst = this.controlador.getGastosNoCobrablesxProceso(permisoAux, Integer.valueOf(cod));
+				this.lstGastosNoCobrables = this.controlador.getGastosNoCobrablesxProceso(permisoAux, Integer.valueOf(cod));
 				
 				/*Actualizamos el container y la grilla*/
 				this.containerGastosNoCobrables.removeAllItems();
-				this.containerGastosNoCobrables.addAll(lst);
+				this.containerGastosNoCobrables.addAll(this.lstGastosNoCobrables);
 				//lstFormularios.setContainerDataSource(container);
 				this.inicializarGrillaGastosNoCobrables(containerGastosNoCobrables);
 				
@@ -1245,7 +1443,7 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 	 */
 	private void actualizarGastosCobrables()
 	{
-		ArrayList<DocumDetalleVO> lst = new ArrayList<DocumDetalleVO>();
+		this.lstGastosCobrables = new ArrayList<GastoVO>();
 		
 		/*Inicializamos VO de permisos para el usuario, formulario y operacion
 		 * para confirmar los permisos del usuario*/
@@ -1262,11 +1460,11 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 				
 				String cod = this.codigo.getValue(); 
 			
-				lst = this.controlador.getGastosCobrablesxProceso(permisoAux, Integer.valueOf(cod));
+				this.lstGastosCobrables = this.controlador.getGastosCobrablesxProceso(permisoAux, Integer.valueOf(cod));
 				
 				/*Actualizamos el container y la grilla*/
 				this.containerGastosCobrables.removeAllItems();
-				this.containerGastosCobrables.addAll(lst);
+				this.containerGastosCobrables.addAll(this.lstGastosCobrables);
 				//lstFormularios.setContainerDataSource(container);
 				this.inicializarGrillaGastosCobrables(containerGastosCobrables);
 				
@@ -1289,7 +1487,7 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 	 */
 	private void actualizarGastosAPagar()
 	{
-		ArrayList<DocumDetalleVO> lst = new ArrayList<DocumDetalleVO>();
+		this.lstGastosGastosAPagar = new ArrayList<GastoVO>();
 		
 		/*Inicializamos VO de permisos para el usuario, formulario y operacion
 		 * para confirmar los permisos del usuario*/
@@ -1306,11 +1504,11 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 				
 				String cod = this.codigo.getValue(); 
 			
-				lst = this.controlador.getGastosAPagarxProceso(permisoAux, Integer.valueOf(cod));
+				this.lstGastosGastosAPagar = this.controlador.getGastosAPagarxProceso(permisoAux, Integer.valueOf(cod));
 				
 				/*Actualizamos el container y la grilla*/
 				this.containerGastosAPagar.removeAllItems();
-				this.containerGastosAPagar.addAll(lst);
+				this.containerGastosAPagar.addAll(this.lstGastosGastosAPagar);
 				//lstFormularios.setContainerDataSource(container);
 				this.inicializarGrillaGastosAPagar(containerGastosAPagar); 
 				
@@ -1333,7 +1531,7 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 	 */
 	private void actualizarGastosAnulados()
 	{
-		ArrayList<DocumDetalleVO> lst = new ArrayList<DocumDetalleVO>();
+		this.lstGastosGastosAnulados = new ArrayList<GastoVO>();
 		
 		/*Inicializamos VO de permisos para el usuario, formulario y operacion
 		 * para confirmar los permisos del usuario*/
@@ -1350,11 +1548,11 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 				
 				String cod = this.codigo.getValue(); 
 			
-				lst = this.controlador.getGastosAnuladosxProceso(permisoAux, Integer.valueOf(cod));
+				this.lstGastosGastosAnulados = this.controlador.getGastosAnuladosxProceso(permisoAux, Integer.valueOf(cod));
 				
 				/*Actualizamos el container y la grilla*/
 				this.containerGastosAnulados.removeAllItems();
-				this.containerGastosAnulados.addAll(lst);
+				this.containerGastosAnulados.addAll(this.lstGastosGastosAnulados);
 				//lstFormularios.setContainerDataSource(container);
 				this.inicializarGrillaGastosAnular(containerGastosAnulados); 
 				
@@ -1378,7 +1576,7 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 	 *para el proceso
 	 *
 	 */
-	private void inicializarGrillaGastosNoCobrables(BeanItemContainer<DocumDetalleVO> container){
+	private void inicializarGrillaGastosNoCobrables(BeanItemContainer<GastoVO> container){
 		
 		  gridNoCobrables.setContainerDataSource(container);
 		
@@ -1443,7 +1641,7 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 	 *para el proceso
 	 *
 	 */
-	private void inicializarGrillaGastosCobrables(BeanItemContainer<DocumDetalleVO> container){
+	private void inicializarGrillaGastosCobrables(BeanItemContainer<GastoVO	> container){
 		
 		  gridCobrables.setContainerDataSource(container);
 		
@@ -1507,7 +1705,7 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 	 *para el proceso
 	 *
 	 */
-	private void inicializarGrillaGastosAPagar(BeanItemContainer<DocumDetalleVO> container){
+	private void inicializarGrillaGastosAPagar(BeanItemContainer<GastoVO> container){
 		
 		gridAPagar.setContainerDataSource(container);
 		
@@ -1571,7 +1769,7 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 	 *para el proceso
 	 *
 	 */
-	private void inicializarGrillaGastosAnular(BeanItemContainer<DocumDetalleVO> container){
+	private void inicializarGrillaGastosAnular(BeanItemContainer<GastoVO> container){
 		
 		gridAnular.setContainerDataSource(container);
 		
@@ -1816,6 +2014,127 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 		}catch(Exception e)
 		{
 			 System.out.println(e.getStackTrace());
+		}
+	}
+
+	@Override
+	public void setSub(String seleccion) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void actuilzarGrillaEliminado(long codigo) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mostrarMensaje(String msj) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setInfoLst(GastoVO gasto) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String nomForm() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	/**
+	 * Actualizamos Grilla si se agrega o modigfica un gasto
+	 * desde ProcesoViewExtended
+	 *
+	 */
+	public void actulaizarGrilla(GastoVO gastoVO) 
+	{
+		/*Segun la lista que se haya seleccionado*/
+		BeanItemContainer<GastoVO> container =  null;
+		ArrayList<GastoVO> lst = new ArrayList<>();
+		
+		switch(this.grillaDesde){
+		
+		case "gridNoCobrables" : container = containerGastosNoCobrables;
+								 lst = lstGastosNoCobrables;
+			break;
+			
+		case "gridCobrables" : container = containerGastosCobrables;
+		 lst = lstGastosCobrables;
+		    break;
+		    
+		case "gridAPagar" : container = containerGastosAPagar;
+		 lst = lstGastosGastosAPagar;
+		 	break;
+		 	
+		case "gridAnular" : container = containerGastosAnulados;
+		 lst = lstGastosGastosAnulados;
+		 	break;
+		
+	
+		}
+		this.actualizarGastoenLista(gastoVO);
+		
+		
+		/*Actualizamos la grilla*/
+		container.removeAllItems();
+		container.addAll(lst);
+		
+		
+		switch(this.grillaDesde){
+			case "gridNoCobrables" : gridNoCobrables.setContainerDataSource(container);
+				break;
+		}
+		
+	}
+	
+	/**
+	 * Modificamos un gastoVO de la lista cuando
+	 * se hace una acutalizacion de un gasto
+	 *
+	 */
+	private void actualizarGastoenLista(GastoVO gastoVO)
+	{
+		/*Segun la lista que se haya seleccionado*/
+		ArrayList<GastoVO> lst = new ArrayList<>();
+		
+		switch(this.grillaDesde){
+		
+			case "gridNoCobrables" : lst = lstGastosNoCobrables;
+			break;
+			case "gridCobrables" : lst = lstGastosCobrables;
+			break;
+			case "gridAPagar" : lst = lstGastosGastosAPagar;
+			break;
+			case "gridAnular" : lst = lstGastosGastosAnulados;
+			break;
+		
+		}
+		
+		
+		int i =0;
+		boolean salir = false;
+		
+		GastoVO gastoEnLista;
+		
+		while( i < lst.size() && !salir)
+		{
+			gastoEnLista = lst.get(i);
+			
+			if(gastoVO.getNroTrans() == gastoEnLista.getNroTrans()){
+				
+				lst.get(i).copiar(gastoVO);
+				salir = true;
+			}
+			
+			i++;
 		}
 	}
 	

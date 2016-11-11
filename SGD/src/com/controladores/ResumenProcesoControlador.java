@@ -26,6 +26,7 @@ import com.valueObject.MonedaVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.Cotizacion.CotizacionVO;
 import com.valueObject.Docum.DocumDetalleVO;
+import com.valueObject.Gasto.GastoVO;
 import com.valueObject.cliente.ClienteVO;
 import com.valueObject.proceso.ProcesoVO;
 
@@ -140,7 +141,7 @@ public class ResumenProcesoControlador {
 	 * @throws ObteniendoPermisosException 
 	 * @throws ObteniendoGastosException 
 	 */
-	public ArrayList<DocumDetalleVO> getGastosNoCobrablesxProceso(UsuarioPermisosVO permisos, int codProceso) throws ObteniendoProcesosException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoGastosException {
+	public ArrayList<GastoVO> getGastosNoCobrablesxProceso(UsuarioPermisosVO permisos, int codProceso) throws ObteniendoProcesosException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoGastosException {
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
@@ -155,7 +156,7 @@ public class ResumenProcesoControlador {
 	 * @throws ObteniendoPermisosException 
 	 * @throws ObteniendoGastosException 
 	 */
-	public ArrayList<DocumDetalleVO> getGastosCobrablesxProceso(UsuarioPermisosVO permisos, int codProceso) throws ObteniendoProcesosException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoGastosException {
+	public ArrayList<GastoVO> getGastosCobrablesxProceso(UsuarioPermisosVO permisos, int codProceso) throws ObteniendoProcesosException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoGastosException {
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
@@ -170,7 +171,7 @@ public class ResumenProcesoControlador {
 	 * @throws ObteniendoPermisosException 
 	 * @throws ObteniendoGastosException 
 	 */
-	public ArrayList<DocumDetalleVO> getGastosAPagarxProceso(UsuarioPermisosVO permisos, int codProceso) throws ObteniendoProcesosException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoGastosException {
+	public ArrayList<GastoVO> getGastosAPagarxProceso(UsuarioPermisosVO permisos, int codProceso) throws ObteniendoProcesosException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoGastosException {
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
@@ -185,7 +186,7 @@ public class ResumenProcesoControlador {
 	 * @throws ObteniendoPermisosException 
 	 * @throws ObteniendoGastosException 
 	 */
-	public ArrayList<DocumDetalleVO> getGastosAnuladosxProceso(UsuarioPermisosVO permisos, int codProceso) throws ObteniendoProcesosException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoGastosException {
+	public ArrayList<GastoVO> getGastosAnuladosxProceso(UsuarioPermisosVO permisos, int codProceso) throws ObteniendoProcesosException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoGastosException {
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
