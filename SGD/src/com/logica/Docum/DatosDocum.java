@@ -67,6 +67,7 @@ public class DatosDocum extends Auditoria{
 		
 	}
 	
+	
 	public DatosDocumVO retornarDatosDocumVO(){
 			
 		DatosDocumVO aux = new DatosDocumVO();

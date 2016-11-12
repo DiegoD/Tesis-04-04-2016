@@ -44,23 +44,7 @@ public class ProcesoVO extends AuditoriaVO{
 	private String nomRubro;
 	private String codCuenta;
 	private String nomCuenta;
-	//private boolean activo;
-	
-	
-//	public ClienteInfoVO getClieteInfoVO() {
-//		return clieteInfoVO;
-//	}
-//	public void setClieteInfoVO(ClienteInfoVO clieteInfoVO) {
-//		this.clieteInfoVO = clieteInfoVO;
-//	}
-//	
-//	
-//	public MonedaInfoVO getMonedaInfoVO() {
-//		return monedaInfoVO;
-//	}
-//	public void setMonedaInfoVO(MonedaInfoVO monedaInfoVO) {
-//		this.monedaInfoVO = monedaInfoVO;
-//	}
+
 	
 	public ProcesoVO(){
 		

@@ -86,6 +86,7 @@ import com.excepciones.Saldos.EliminandoSaldoException;
 import com.excepciones.Saldos.ExisteSaldoException;
 import com.excepciones.Saldos.IngresandoSaldoException;
 import com.excepciones.Saldos.ModificandoSaldoException;
+import com.excepciones.Saldos.ObteniendoSaldosException;
 import com.excepciones.TipoRubro.ExisteTipoRubroException;
 import com.excepciones.TipoRubro.InsertandoTipoRubroException;
 import com.excepciones.TipoRubro.ModificandoTipoRubroException;
@@ -125,6 +126,7 @@ import com.valueObject.cliente.ClienteVO;
 import com.valueObject.empresa.EmpresaUsuVO;
 import com.valueObject.empresa.EmpresaVO;
 import com.valueObject.proceso.ProcesoVO;
+import com.valueObject.proceso.SaldoProcesoVO;
 import com.persistencia.*;
 
 public class FachadaDD {
@@ -3058,6 +3060,57 @@ public class FachadaDD {
 		
 		
 		return lstGastosVO;
+	}
+	
+	/**
+	* Obtiene todos los cobrables para un proceso
+	*/
+	@SuppressWarnings("unchecked")
+	public ArrayList<SaldoProcesoVO> getSaldosSinAdjuxProceso(String cod_emp, int codProceso) throws ObteniendoSaldosException,  ConexionException
+	{
+	
+		Connection con = null;
+		
+		ArrayList<SaldoProceso> lst;
+		ArrayList<SaldoProcesoVO> lstVO = new ArrayList<SaldoProcesoVO>();
+		
+		try
+		{
+			con = this.pool.obtenerConeccion();
+			
+			lst = this.saldosProceso.getSaldosSinAdjuxProceso(cod_emp, codProceso, con);
+			
+			
+			SaldoProcesoVO aux;
+			for (SaldoProceso saldo : lst) 
+			{
+				aux = new SaldoProcesoVO();
+				
+				aux.setCodProceso(saldo.getCodProceso());
+				aux.setImpTotMN(saldo.getImpTotMN());
+				aux.setImpTotMO(saldo.getImpTotMO());
+				aux.setCodMoneda(saldo.getMoneda().getCodMoneda());
+				aux.setDescMoneda(saldo.getMoneda().getDescripcion());
+				aux.setSimboloMoneda(saldo.getMoneda().getSimbolo());
+				aux.setNacional(saldo.getMoneda().isNacional());
+				
+				lstVO.add(aux);
+			}
+		
+		}
+		catch(ObteniendoSaldosException e){
+			throw e;
+		
+		} 
+		catch (ConexionException e) {
+		
+			throw e;
+		} 
+		finally{
+			this.pool.liberarConeccion(con);
+		}
+		
+		return lstVO;
 	}
 	
 	

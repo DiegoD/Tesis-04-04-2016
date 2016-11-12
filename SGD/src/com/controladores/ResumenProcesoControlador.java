@@ -18,6 +18,7 @@ import com.excepciones.Procesos.IngresandoProcesoException;
 import com.excepciones.Procesos.ModificandoProcesoException;
 import com.excepciones.Procesos.NoExisteProcesoException;
 import com.excepciones.Procesos.ObteniendoProcesosException;
+import com.excepciones.Saldos.ObteniendoSaldosException;
 import com.excepciones.clientes.ObteniendoClientesException;
 import com.logica.Fachada;
 import com.logica.FachadaDD;
@@ -29,6 +30,7 @@ import com.valueObject.Docum.DocumDetalleVO;
 import com.valueObject.Gasto.GastoVO;
 import com.valueObject.cliente.ClienteVO;
 import com.valueObject.proceso.ProcesoVO;
+import com.valueObject.proceso.SaldoProcesoVO;
 
 public class ResumenProcesoControlador {
 	
@@ -38,8 +40,7 @@ public class ResumenProcesoControlador {
 	
 	/**
 	 * Obtiene array list de VO de todos los proceso
-	 * @throws NoTienePermisosException 
-	 * @throws ObteniendoPermisosException 
+	 * 
 	 */
 	public ArrayList<ProcesoVO> getProcesos(UsuarioPermisosVO permisos) throws ObteniendoProcesosException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException {
 		
@@ -52,8 +53,7 @@ public class ResumenProcesoControlador {
 	
 	/**
 	 * Inserta un nuevo proceso
-	 * @throws NoTienePermisosException 
-	 * @throws ObteniendoPermisosException 
+	 * 
 	 */
 	public int insertarProceso(ProcesoVO procesoVO, UsuarioPermisosVO permisos) throws IngresandoProcesoException, ExisteProcesoException, InicializandoException, ConexionException, ErrorInesperadoException, ObteniendoPermisosException, NoTienePermisosException
 	{
@@ -67,8 +67,7 @@ public class ResumenProcesoControlador {
 	
 	/**
 	 * Actualiza los datos de un proceso
-	 * @throws NoTienePermisosException 
-	 * @throws ObteniendoPermisosException 
+	 * 
 	 */
 	public void actualizarProceso(ProcesoVO procesoVO, UsuarioPermisosVO permisos) throws ConexionException, NoExisteProcesoException, ModificandoProcesoException, ExisteProcesoException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException {
 		
@@ -81,9 +80,7 @@ public class ResumenProcesoControlador {
 	
 	/**
 	 * Elimina un proceso
-	 * @throws NoTienePermisosException 
-	 * @throws ObteniendoPermisosException 
-	 * @throws EliminandoProcesoException 
+	 *  
 	 */
 	public void eliminarProceso(int codigo, UsuarioPermisosVO permisos) throws ConexionException, NoExisteProcesoException, ExisteProcesoException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, EliminandoProcesoException {
 		
@@ -137,11 +134,9 @@ public class ResumenProcesoControlador {
 	
 	/**
 	 * Obtenemos los gastos no cobrables para el proceso
-	 * @throws NoTienePermisosException 
-	 * @throws ObteniendoPermisosException 
-	 * @throws ObteniendoGastosException 
+	 * 
 	 */
-	public ArrayList<GastoVO> getGastosNoCobrablesxProceso(UsuarioPermisosVO permisos, int codProceso) throws ObteniendoProcesosException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoGastosException {
+	public ArrayList<GastoVO> getGastosNoCobrablesxProceso(UsuarioPermisosVO permisos, int codProceso) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoGastosException {
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
@@ -152,11 +147,9 @@ public class ResumenProcesoControlador {
 	
 	/**
 	 * Obtenemos los gastos cobrables para el proceso
-	 * @throws NoTienePermisosException 
-	 * @throws ObteniendoPermisosException 
-	 * @throws ObteniendoGastosException 
+	 * 
 	 */
-	public ArrayList<GastoVO> getGastosCobrablesxProceso(UsuarioPermisosVO permisos, int codProceso) throws ObteniendoProcesosException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoGastosException {
+	public ArrayList<GastoVO> getGastosCobrablesxProceso(UsuarioPermisosVO permisos, int codProceso) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoGastosException {
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
@@ -167,11 +160,9 @@ public class ResumenProcesoControlador {
 	
 	/**
 	 * Obtenemos los gastos a pagar para el proceso
-	 * @throws NoTienePermisosException 
-	 * @throws ObteniendoPermisosException 
-	 * @throws ObteniendoGastosException 
+	 * 
 	 */
-	public ArrayList<GastoVO> getGastosAPagarxProceso(UsuarioPermisosVO permisos, int codProceso) throws ObteniendoProcesosException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoGastosException {
+	public ArrayList<GastoVO> getGastosAPagarxProceso(UsuarioPermisosVO permisos, int codProceso) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoGastosException {
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
@@ -182,11 +173,9 @@ public class ResumenProcesoControlador {
 	
 	/**
 	 * Obtenemos los gastos anulados para el proceso
-	 * @throws NoTienePermisosException 
-	 * @throws ObteniendoPermisosException 
-	 * @throws ObteniendoGastosException 
+	 *
 	 */
-	public ArrayList<GastoVO> getGastosAnuladosxProceso(UsuarioPermisosVO permisos, int codProceso) throws ObteniendoProcesosException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoGastosException {
+	public ArrayList<GastoVO> getGastosAnuladosxProceso(UsuarioPermisosVO permisos, int codProceso) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoGastosException {
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
@@ -194,4 +183,19 @@ public class ResumenProcesoControlador {
 		else
 			throw new NoTienePermisosException();
 	}
+	
+	/**
+	 * Obtenemos los gastos anulados para el proceso
+	 * 
+	 *
+	 */
+	public ArrayList<SaldoProcesoVO> getSaldosSinAdjuxProceso(UsuarioPermisosVO permisos, int codProceso) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoSaldosException {
+		
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			return FachadaDD.getInstance().getSaldosSinAdjuxProceso(permisos.getCodEmp(), codProceso);
+		else
+			throw new NoTienePermisosException();
+	}
+	
 }

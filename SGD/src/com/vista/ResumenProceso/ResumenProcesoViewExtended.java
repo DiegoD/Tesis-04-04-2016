@@ -23,6 +23,7 @@ import com.excepciones.Procesos.IngresandoProcesoException;
 import com.excepciones.Procesos.ModificandoProcesoException;
 import com.excepciones.Procesos.NoExisteProcesoException;
 import com.excepciones.Procesos.ObteniendoProcesosException;
+import com.excepciones.Saldos.ObteniendoSaldosException;
 import com.excepciones.clientes.ObteniendoClientesException;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
@@ -46,6 +47,7 @@ import com.valueObject.Gasto.GastoVO;
 import com.valueObject.IngresoCobro.IngresoCobroDetalleVO;
 import com.valueObject.cliente.ClienteVO;
 import com.valueObject.proceso.ProcesoVO;
+import com.valueObject.proceso.SaldoProcesoVO;
 import com.vista.BusquedaViewExtended;
 import com.vista.IBusqueda;
 import com.vista.Mensajes;
@@ -77,6 +79,8 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 	boolean filtroCobrablesSeteado; 
 	boolean filtroAPagarSeteado;
 	boolean filtroAnuladosSeteado; 
+	boolean filtroSaldoProcesoSeteado; 
+	
 	private GastoViewExtended form;  /*Para visualizar los gastos de las grillas*/
 	
 	
@@ -86,18 +90,21 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 	boolean gtosCobrablesSeteado; 
 	boolean gtosAPagarSeteado;
 	boolean gtosAnuladosSeteado; 
+	boolean saldoProcesoSeteado; 
 	
 	
 	BeanItemContainer<GastoVO> containerGastosNoCobrables;
 	BeanItemContainer<GastoVO> containerGastosCobrables;
 	BeanItemContainer<GastoVO> containerGastosAPagar;
 	BeanItemContainer<GastoVO> containerGastosAnulados;
+	BeanItemContainer<SaldoProcesoVO> containerSaldoProceso;
 	
 	/*Listas que contiene los gastos no cobrables para el proceso*/
 	ArrayList<GastoVO> lstGastosNoCobrables; 
 	ArrayList<GastoVO> lstGastosCobrables; 
 	ArrayList<GastoVO> lstGastosGastosAPagar; 
 	ArrayList<GastoVO> lstGastosGastosAnulados; 
+	ArrayList<SaldoProcesoVO> lstSaldoProceso;
 	
 	private String grillaDesde; /*Variable utilizada para indicar desde que grilla se 
 	 							modifica un gasto*/
@@ -108,12 +115,14 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 		this.filtroCobrablesSeteado = false; 
 		this.filtroAPagarSeteado = false;
 		this.filtroAnuladosSeteado = false; 
+		this.filtroSaldoProcesoSeteado = false;
 		
 		
 		this.gtosNoCobrablesCargados = false;
 		this.gtosCobrablesSeteado = false; 
 		this.gtosAPagarSeteado = false;
 		this.gtosAnuladosSeteado = false; 
+		this.saldoProcesoSeteado = false;
 		
 		this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
 		this.operacion = opera;
@@ -509,6 +518,11 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 		this.btnInfo.addClickListener(click -> {
 			
 			this.gastos_no_cobrables.setVisible(false);
+			this.gastos_apagar.setVisible(false);
+			this.gastos_anulados.setVisible(false);
+			this.gastos_cobrables.setVisible(false);
+			this.saldo_proceso.setVisible(false);
+			
 			this.info_form.setVisible(true);
 			
 		});
@@ -519,6 +533,7 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 			this.gastos_apagar.setVisible(false);
 			this.gastos_anulados.setVisible(false);
 			this.gastos_cobrables.setVisible(false);
+			this.saldo_proceso.setVisible(false);
 			
 			this.actualizarGastosNoCobrables();
 			
@@ -537,6 +552,7 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 			this.gastos_apagar.setVisible(false);
 			this.gastos_anulados.setVisible(false);
 			this.gastos_no_cobrables.setVisible(false);
+			this.saldo_proceso.setVisible(false);
 			
 			this.actualizarGastosCobrables();
 			
@@ -556,6 +572,7 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 			this.gastos_cobrables.setVisible(false);
 			this.gastos_anulados.setVisible(false);
 			this.gastos_no_cobrables.setVisible(false);
+			this.saldo_proceso.setVisible(false);
 			
 			this.actualizarGastosAPagar();
 			
@@ -574,6 +591,7 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 			this.gastos_cobrables.setVisible(false);
 			this.gastos_apagar.setVisible(false);
 			this.gastos_no_cobrables.setVisible(false);
+			this.saldo_proceso.setVisible(false);
 			
 			this.actualizarGastosAnulados();
 			
@@ -586,6 +604,25 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 			}
 		});
 		
+		
+		this.btnSinAdjudicar.addClickListener(click -> {
+			
+			this.info_form.setVisible(false);
+			this.gastos_cobrables.setVisible(false);
+			this.gastos_apagar.setVisible(false);
+			this.gastos_no_cobrables.setVisible(false);
+			this.gastos_anulados.setVisible(false);
+			
+			this.actualizarSaldoProceso();
+			
+			this.saldo_proceso.setVisible(true);
+			
+			/*Si el filtro no fue seteado, lo seteamos*/
+			if(this.filtroSaldoProcesoSeteado == false){
+				this.filtroGrillaGridSaldoProceso(); 
+				this.filtroSaldoProcesoSeteado = true;  
+			}
+		});
 		
 		this.btnBuscarCliente.addClickListener(click -> {
 			
@@ -831,6 +868,9 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 		this.containerGastosAnulados = 
 				new BeanItemContainer<GastoVO>(GastoVO.class);
 		
+		this.containerSaldoProceso = 
+				new BeanItemContainer<SaldoProcesoVO>(SaldoProcesoVO.class);
+		
 		
 		/*Dejamos no visibles las grillas de los gastos
 		 * dejando visible solamenta la solapa de informacion del proceso*/
@@ -838,7 +878,8 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 		this.gastos_no_cobrables.setVisible(false);
 		this.gastos_cobrables.setVisible(false);
 		this.gastos_apagar.setVisible(false);
-		this.gastos_anulados.setVisible(false);
+		this.gastos_anulados.setVisible(false); 
+		this.saldo_proceso.setVisible(false);
 	
 		
 	}
@@ -1427,7 +1468,7 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 				this.gtosNoCobrablesCargados = true;
 			}
 			
-		} catch (NumberFormatException | ObteniendoProcesosException | ConexionException | InicializandoException
+		} catch (NumberFormatException | ConexionException | InicializandoException
 				| ObteniendoPermisosException | NoTienePermisosException | ObteniendoGastosException e) {
 			
 			Mensajes.mostrarMensajeError(e.getMessage());
@@ -1471,7 +1512,7 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 				this.gtosCobrablesSeteado = true;
 			}
 			
-		} catch (NumberFormatException | ObteniendoProcesosException | ConexionException | InicializandoException
+		} catch (NumberFormatException | ConexionException | InicializandoException
 				| ObteniendoPermisosException | NoTienePermisosException | ObteniendoGastosException e) {
 			
 			Mensajes.mostrarMensajeError(e.getMessage());
@@ -1515,7 +1556,7 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 				this.gtosAPagarSeteado = true;
 			}
 			
-		} catch (NumberFormatException | ObteniendoProcesosException | ConexionException | InicializandoException
+		} catch (NumberFormatException | ConexionException | InicializandoException
 				| ObteniendoPermisosException | NoTienePermisosException | ObteniendoGastosException e) {
 			
 			Mensajes.mostrarMensajeError(e.getMessage());
@@ -1561,7 +1602,7 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 				
 			}
 			
-		} catch (NumberFormatException | ObteniendoProcesosException | ConexionException | InicializandoException
+		} catch (NumberFormatException | ConexionException | InicializandoException
 				| ObteniendoPermisosException | NoTienePermisosException | ObteniendoGastosException e) {
 			
 			Mensajes.mostrarMensajeError(e.getMessage());
@@ -1570,6 +1611,52 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 		
 	}
 	
+	
+	/**
+	 *Obtenemos los gastos no cobrables para el proceso
+	 * e inicializamos la grilla de los mismos
+	 *
+	 */
+	private void actualizarSaldoProceso()
+	{
+		this.lstSaldoProceso = new ArrayList<SaldoProcesoVO>();
+		
+		/*Inicializamos VO de permisos para el usuario, formulario y operacion
+		 * para confirmar los permisos del usuario*/
+		UsuarioPermisosVO permisoAux = 
+				new UsuarioPermisosVO(this.permisos.getCodEmp(),
+						this.permisos.getUsuario(),
+						VariablesPermisos.FORMULARIO_RESUMEN_PROCESO,
+						VariablesPermisos.OPERACION_LEER);
+		
+		try {
+			
+			/*Si ya no fueron cargados, se cargan, de lo contrario ya estan en la grilla*/
+			if(this.saldoProcesoSeteado == false) {
+				
+				String cod = this.codigo.getValue(); 
+			
+				this.lstSaldoProceso = this.controlador.getSaldosSinAdjuxProceso(permisoAux, Integer.valueOf(cod));
+				
+				/*Actualizamos el container y la grilla*/
+				this.containerSaldoProceso.removeAllItems();
+				this.containerSaldoProceso.addAll(this.lstSaldoProceso);
+				//lstFormularios.setContainerDataSource(container);
+				this.inicializarGrillaSaldoProceso(containerSaldoProceso);  
+				
+				this.saldoProcesoSeteado = true;
+				
+				
+			}
+			
+		} catch (NumberFormatException | ConexionException | InicializandoException
+				| ObteniendoPermisosException | NoTienePermisosException | ObteniendoSaldosException e) {
+			
+			Mensajes.mostrarMensajeError(e.getMessage());
+			
+		}
+		
+	}
 	
 	/**
 	 *Inicializamos la Grilla de Gastos no cobrables
@@ -1828,6 +1915,30 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 		
 	}
 	
+	/**
+	 *Inicializamos la Grilla de Gastos no cobrables
+	 *para el proceso
+	 *
+	 */
+	private void inicializarGrillaSaldoProceso(BeanItemContainer<SaldoProcesoVO> container){
+		
+		gridSaldoProceso.setContainerDataSource(container);
+		  
+		  
+		  /*Seteamos tamanios*/
+		
+		/*
+		gridAnular.getColumn("nroDocum").setWidth(100);
+		gridAnular.getColumn("referencia").setWidth(280);
+		gridAnular.getColumn("simboloMoneda").setWidth(95);
+		  
+		gridAnular.setColumnOrder("nroDocum", "referencia", "simboloMoneda", "impTotMo", "codProceso");
+		
+		gridAnular.getColumn("simboloMoneda").setHeaderCaption("Moneda");
+		gridAnular.getColumn("impTotMo").setHeaderCaption("Importe");
+		*/
+		
+	}
 	
 	/*Agregamos filtro en la grilla de formularios*/
 	private void filtroGrillaGridNoCobrables()
@@ -2016,6 +2127,55 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 			 System.out.println(e.getStackTrace());
 		}
 	}
+	
+	/*Agregamos filtro en la grilla de formularios*/
+	private void filtroGrillaGridSaldoProceso()
+	{
+		try
+		{
+		
+			com.vaadin.ui.Grid.HeaderRow filterRow = gridAnular.appendHeaderRow();
+	
+			// Set up a filter for all columns
+			for (Object pid: gridSaldoProceso.getContainerDataSource()
+			                     .getContainerPropertyIds()) 
+			{
+			    
+				com.vaadin.ui.Grid.HeaderCell cell = filterRow.getCell(pid);
+			    
+			    if(cell != null)
+				{
+				    /*Agregar field para usar el filtro*/
+				    TextField filterField = new TextField();
+				    filterField.setImmediate(true);
+				    filterField.setWidth("100%");
+				    filterField.setHeight("80%");
+				    filterField.setInputPrompt("Filtro");
+				     /*Actualizar el filtro cuando este tenga un cambio en texto*/
+				    filterField.addTextChangeListener(change -> {
+				        
+				    	/*No se pueden modificar los filtros,
+				    	 * necesitamos reemplazarlos*/
+				    	this.containerSaldoProceso.removeContainerFilters(pid);
+		
+				    	/*Hacemos nuevamente el filtro si es necesario*/
+				        if (! change.getText().isEmpty())
+				        	this.containerSaldoProceso.addContainerFilter(
+				                new SimpleStringFilter(pid,
+				                    change.getText(), true, false));
+				    });
+
+				    cell.setComponent(filterField);
+				}
+			}
+			
+		}catch(Exception e)
+		{
+			 System.out.println(e.getStackTrace());
+		}
+	}
+
+	
 
 	@Override
 	public void setSub(String seleccion) {

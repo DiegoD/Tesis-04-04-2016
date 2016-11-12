@@ -1565,7 +1565,7 @@ public String getGastosAnuladosxProceso(){
 		
 		sb.append("SELECT imp_tot_mn "
 		+ "FROM sa_proceso WHERE cod_proceso = ? "
-		+ "AND cod_emp = ? AND cod_tit = ? ");		
+		+ "AND cod_emp = ? AND cod_tit = ? AND cod_moneda = ?");		
 		
 		return sb.toString();
 	}
@@ -1590,7 +1590,7 @@ public String getGastosAnuladosxProceso(){
 		
 		sb.append("SELECT cod_proceso ");
 		sb.append("FROM sa_proceso WHERE cod_proceso = ? "
-		+ "AND cod_emp = ? AND cod_tit = ? ");
+		+ "AND cod_emp = ? AND cod_tit = ? AND cod_moneda = ?");
 		
 		return sb.toString();
 	}
@@ -1602,10 +1602,25 @@ public String getGastosAnuladosxProceso(){
 		
 		sb.append("DELETE FROM sa_proceso ");
 		sb.append("WHERE cod_proceso = ? "
-		+ "AND cod_emp = ? AND cod_tit = ? ");
+		+ "AND cod_emp = ? AND cod_tit = ? AND cod_moneda = ?");
 		
 		return sb.toString();
 	}		
+	
+	public String getSaldosxProceso(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT s.cod_proceso, s.imp_tot_mo, s.imp_tot_mn, ");
+		sb.append("m.cod_moneda, m.descripcion, m.simbolo, m.nacional ");
+		sb.append("FROM sa_proceso s, m_monedas m  ");
+		sb.append("WHERE s.cod_moneda = m.cod_moneda  ");
+		sb.append("AND s.cod_emp = m.cod_emp  ");
+		sb.append("AND s.cod_emp = ? AND s.cod_proceso = ?  ");
+		
+		return sb.toString();
+	}
+
 
 ////////////////////////FIN SALDOS///////////////////////////////////////////////
 	

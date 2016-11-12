@@ -4,15 +4,23 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
 import com.excepciones.Saldos.EliminandoSaldoException;
 import com.excepciones.Saldos.ExisteSaldoException;
 import com.excepciones.Saldos.IngresandoSaldoException;
 import com.excepciones.Saldos.ModificandoSaldoException;
+import com.excepciones.Saldos.ObteniendoSaldosException;
 import com.google.gwt.thirdparty.javascript.jscomp.SourceMap.DetailLevel;
+import com.logica.MonedaInfo;
+import com.logica.SaldoProceso;
+import com.logica.Docum.BancoInfo;
+import com.logica.Docum.CuentaBcoInfo;
+import com.logica.Docum.CuentaInfo;
 import com.logica.Docum.DatosDocum;
 import com.logica.Docum.DocumDetalle;
+import com.logica.Docum.TitularInfo;
 import com.mysql.jdbc.Statement;
 
 public class DAOSaldoProceso implements IDAOSaldosProc {
@@ -37,6 +45,7 @@ public class DAOSaldoProceso implements IDAOSaldosProc {
 			pstmt1.setString(1, detalle.getCodProceso()); /*Es el codigo del proceso*/
 			pstmt1.setString(2, docum.getCodEmp());
 			pstmt1.setString(3, docum.getTitInfo().getCodigo());
+			pstmt1.setString(4, docum.getMoneda().getCodMoneda());
 			
 			ResultSet rs = pstmt1.executeQuery();
 			
@@ -117,6 +126,7 @@ public class DAOSaldoProceso implements IDAOSaldosProc {
 			pstmt1.setString(1, detalle.getCodProceso());
 			pstmt1.setString(2, documento.getCodEmp());
 			pstmt1.setString(3, documento.getTitInfo().getCodigo());
+			pstmt1.setString(4, documento.getMoneda().getCodMoneda());
 			
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
@@ -195,7 +205,8 @@ public class DAOSaldoProceso implements IDAOSaldosProc {
 			
 			pstmt1.setString(1, detalle.getCodProceso());
 			pstmt1.setString(2, docum.getCodEmp());
-			pstmt1.setString(3, docum.getTitInfo().getCodigo());
+			pstmt1.setString(3, docum.getTitInfo().getCodigo()); 
+			pstmt1.setString(4, docum.getMoneda().getCodMoneda()); 
 			
 			ResultSet rs = pstmt1.executeQuery();
 			
@@ -211,11 +222,58 @@ public class DAOSaldoProceso implements IDAOSaldosProc {
 		
 		}catch(SQLException e){
 		
-		throw new ExisteSaldoException();
-	}
-		
-		
+			throw new ExisteSaldoException();
+		}
 	}
 	
+	
+
+	/**
+	 * Nos retorna los saldos para el proceso abierto por moneda
+	 * 
+	 */
+	public ArrayList<SaldoProceso> getSaldosSinAdjuxProceso(String codEmp, int codProceso, Connection con) throws ObteniendoSaldosException, ConexionException {
+		
+		ArrayList<SaldoProceso> lst = new ArrayList<SaldoProceso>();
+		
+			try {
+				//
+		    	ConsultasDD clts = new ConsultasDD();
+		    	String query = clts.getSaldosxProceso();
+		    	PreparedStatement pstmt1 = con.prepareStatement(query);
+		    	
+		    	ResultSet rs;
+		    	
+		    	pstmt1.setString(1, codEmp);
+		    	pstmt1.setInt(2, codProceso);
+		    	
+				rs = pstmt1.executeQuery();
+				
+				SaldoProceso aux;
+				
+				while(rs.next ()) {
+								
+					aux = new SaldoProceso();
+					
+					aux.setCodProceso(rs.getString("cod_proceso"));
+					aux.setImpTotMN(rs.getDouble("imp_tot_mn"));
+					aux.setImpTotMO(rs.getDouble("imp_tot_mo"));
+					
+					aux.setMoneda(new MonedaInfo(rs.getString("cod_moneda"), rs.getString("descripcion"), rs.getString("simbolo")));
+					
+					lst.add(aux);
+					
+				}
+				rs.close ();
+				pstmt1.close ();
+	    	}	
+			
+			catch (SQLException e) {
+				throw new ObteniendoSaldosException();
+				
+			}
+	    	
+    	return lst;
+	}
 
 }

@@ -78,6 +78,8 @@ public class ResumenProcesoView extends CssLayout {
 	protected Grid gridAPagar;
 	protected FormLayout gastos_anulados;
 	protected Grid gridAnular;
+	protected FormLayout saldo_proceso;
+	protected Grid gridSaldoProceso;
 
 	public ResumenProcesoView() {
 		Design.read(this);
