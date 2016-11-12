@@ -17,6 +17,7 @@ import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.server.VaadinService;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.valueObject.UsuarioPermisosVO;

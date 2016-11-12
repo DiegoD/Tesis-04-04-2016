@@ -1808,4 +1808,53 @@ public String eliminarSaldoCuenta(){
 	
 //////////////////////// FIN PERIODOS ///////////////////////////////////////////////
 	
+/////////////////////// INI DEPOSITOS ///////////////////////////////////////////////////
+	
+	public String getChequesBanco(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT c_cheques.cod_docum, c_cheques.serie_docum, c_cheques.nro_docum, "
+				+ "sa_docum.imp_tot_mn, sa_docum.imp_tot_mo, c_ingcobro.cod_doc_ref, "
+				+ "c_ingcobro.serie_doc_ref, c_ingcobro.nro_doc_ref, c_ingcobro.cod_bco, "
+				+ "c_ingcobro.cod_ctabco , fec_valor, m_bancos.nom_bco, m_ctasbcos.nom_cta ");
+		
+		sb.append("FROM c_cheques, sa_docum, c_ingcobro, m_bancos, m_ctasbcos ");
+		
+		sb.append("WHERE c_cheques.cod_docum = 'cheqrec' "
+				+ "and c_cheques.cod_docum = sa_docum.cod_docum "
+				+ "and c_cheques.serie_docum = sa_docum.serie_docum "
+				+ "and c_cheques.nro_docum = sa_docum.nro_docum "
+				+ "and c_cheques.cod_emp = sa_docum.cod_emp "
+				+ "and c_cheques.cod_docum = c_ingcobro.cod_doc_ref "
+				+ "and c_cheques.serie_docum = c_ingcobro.serie_doc_ref "
+				+ "and c_cheques.nro_docum = c_ingcobro.nro_doc_ref "
+				+ "and c_cheques.cod_emp = c_ingcobro.cod_emp "
+				+ "and c_cheques.cod_emp = ? "
+				+ "and sa_docum.imp_tot_mo > 0 "
+				+ "and c_ingcobro.cod_bco = ? "
+				+ "and c_ingcobro.cod_ctabco = ? "
+				+ "and m_bancos.cod_emp = c_cheques.cod_emp "
+				+ "and m_bancos.cod_bco = c_ingcobro.cod_bco "
+				+ "and m_ctasbcos.cod_emp = c_cheques.cod_emp "
+				+ "and m_ctasbcos.cod_bco = c_ingcobro.cod_bco "
+				+ "and m_ctasbcos.cod_ctabco = c_ingcobro.cod_ctabco ");
+		
+		return sb.toString();
+	}	
+	
+	public String depositarChequeSaldo(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("UPDATE sa_docum ");
+		sb.append("imp_tot_mn = ?, ");
+		sb.append("imp_tot_mo = ?, ");
+		sb.append("WHERE cod_docum = ? AND serie_docum = ? "
+				+ "AND nro_docum = ? AND cod_emp = ? AND cod_tit = ? ");
+		
+		return sb.toString();
+		
+	}
+/////////////////////// FIN DEPOSITOS ///////////////////////////////////////////////////
 }

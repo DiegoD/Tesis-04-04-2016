@@ -32,6 +32,8 @@ public final class VariablesPermisos {
 	
 	public static final String FORMULARIO_PERIODO = "MPeriodo";
 	
+	public static final String FORMULARIO_DEPOSITO = "MDeposito";
+	
 	/*Variables para las operaciones*/
 	public static final String OPERACION_NUEVO_EDITAR = "NUEVO_EDITAR";
 	public static final String OPERACION_LEER = "LEER";

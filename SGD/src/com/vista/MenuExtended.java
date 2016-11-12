@@ -14,10 +14,12 @@ import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.valueObject.FormularioVO;
 import com.vista.Documentos.DocumentosPanelExtended;
 import com.vista.Egreso.IngresoEgresoPanelExtended;
+import com.vista.Egreso.IngresoEgresoViewExtended;
 import com.vista.EgresoOtro.IngresoEgresoOtroPanelExtended;
 //import com.vista.Clientes.ClienteView;
 import com.vista.Bancos.BancosPanelExtended;
@@ -25,6 +27,7 @@ import com.vista.Clientes.ClientesPanelExtended;
 import com.vista.CodigosGeneralizados.CodigosGeneralizadosPanelExtended;
 import com.vista.Cotizaciones.CotizacionesPanelExtended;
 import com.vista.Cuentas.CuentasPanelExtended;
+import com.vista.Deposito.DepositoViewExtended;
 import com.vista.Empresas.EmpresasPanelExtended;
 import com.vista.Funcionarios.FuncionariosPanelExtended;
 import com.vista.Gastos.GastosPanelExtended;
@@ -53,6 +56,8 @@ public class MenuExtended extends Menu{
 	private PermisosUsuario permisos;
 	private Principal mainPrincipal; /*Variable para poder desloguearse*/
 	MenuBar barmenu;
+	private DepositoViewExtended form;
+	MySub sub = new MySub("75%", "65%");
 	
 	private void inicializarMenu(){
 		
@@ -558,6 +563,32 @@ public class MenuExtended extends Menu{
 			}
 		});
 		
+		this.deposito.addClickListener(click -> {
+			
+			setSizeFull();
+			
+			this.content.removeAllComponents();
+			try {
+				
+				sub = new MySub("90%", "55%");
+				form = new DepositoViewExtended(sub);
+				sub.setModal(true);
+				sub.center();
+				sub.setVista(form);
+				
+				UI.getCurrent().addWindow(sub);
+				
+//				c.setSizeFull();
+//				this.content.setSizeFull();
+//				
+//				this.content.addComponent(c);
+				
+			} catch (Exception e) {
+				
+				Mensajes.mostrarMensajeError(e.getMessage());
+			}
+		});
+		
 	}
 	
 	
@@ -621,6 +652,7 @@ public class MenuExtended extends Menu{
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_INGRESO_EGRESO_OTRO) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_RESUMEN_PROCESO) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_PERIODO) ||
+				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_DEPOSITO) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_RUBROS))
 			{
 				lstFormsMenuMant.add(formularioVO);
@@ -795,6 +827,12 @@ public class MenuExtended extends Menu{
 						}
 					break;
 					
+					case VariablesPermisos.FORMULARIO_DEPOSITO:
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_DEPOSITO, VariablesPermisos.OPERACION_LEER)){
+							this.habilitarDeposito();
+							this.layoutMenu.addComponent(this.deposito);
+						}
+					break;
 				}
 				
 			}
@@ -950,6 +988,9 @@ public class MenuExtended extends Menu{
 		
 		this.periodo.setVisible(false);
 		this.periodo.setEnabled(false);
+		
+		this.deposito.setVisible(false);
+		this.deposito.setEnabled(false);
 	}
 	
 	
@@ -1096,6 +1137,12 @@ public class MenuExtended extends Menu{
 		this.periodo.setVisible(true);
 		this.periodo.setEnabled(true);
 		this.layoutMenu.addComponent(periodo);
+	}
+	
+	private void habilitarDeposito(){
+		this.deposito.setVisible(true);
+		this.deposito.setEnabled(true);
+		this.layoutMenu.addComponent(deposito);
 	}
 	
 	public PermisosUsuario getPermisosUsuario()

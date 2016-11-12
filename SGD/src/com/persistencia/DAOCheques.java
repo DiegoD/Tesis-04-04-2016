@@ -7,10 +7,17 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
+import com.excepciones.Bancos.ObteniendoBancosException;
+import com.excepciones.Bancos.ObteniendoCuentasBcoException;
 import com.excepciones.Cheques.*;
+import com.logica.Banco;
+import com.logica.Depositos.Deposito;
+import com.logica.Docum.BancoInfo;
+import com.logica.Docum.CuentaBcoInfo;
 import com.logica.Docum.DatosDocum;
 import com.logica.Docum.DocumDetalle;
 import com.mysql.jdbc.Statement;
+import com.valueObject.Deposito.DepositoVO;
 
 public class DAOCheques implements IDAOCheques{
 
@@ -146,6 +153,74 @@ public class DAOCheques implements IDAOCheques{
 		}
 	}
 	
+	/**
+	 * Nos retorna una lista con todos los cheques a depositar
+	 * @throws ObteniendoBancosException 
+	 */
+	public ArrayList<Deposito> getChequesBanco(Connection con, String codEmp, String codBanco, String codCtaBco) throws ObteniendoChequeException, ConexionException, ObteniendoCuentasBcoException, ObteniendoBancosException {
+		
+		ArrayList<Deposito> lstDepositos = new ArrayList<Deposito>();
+	
+		try {
+			
+	    	ConsultasDD clts = new ConsultasDD();
+	    	String query = clts.getChequesBanco();
+	    	PreparedStatement pstmt1 = con.prepareStatement(query);
+	    	
+	    	ResultSet rs;
+	    	
+	    	pstmt1.setString(1, codEmp);
+	    	pstmt1.setString(2, codBanco);
+	    	pstmt1.setString(3, codCtaBco);
+	    	
+			rs = pstmt1.executeQuery();
+			
+			Deposito aux;
+			BancoInfo b;
+			CuentaBcoInfo c;
+			
+			while(rs.next ()) {
+							
+				aux = new Deposito();
+				
+				aux.setCodDocum(rs.getString("cod_docum"));
+				aux.setSerieDocum(rs.getString("serie_docum"));
+				aux.setNroDocum(rs.getInt("nro_docum"));
+				aux.setFecValor(rs.getTimestamp("fec_valor"));
+				
+				b = new BancoInfo();
+				b.setCodBanco(rs.getString("cod_bco"));
+				b.setNomBanco(rs.getString("nom_bco"));
+				aux.setBanco(b);
+				
+				c = new CuentaBcoInfo();
+				c.setCodCuenta(rs.getString("cod_ctabco"));
+				c.setNomCuenta(rs.getString("nom_cta"));
+				aux.setCuentaBanco(c);
+				
+				aux.setFuncionario(null);
+				aux.setNumComprobante(0);
+				aux.setObservaciones(null);
+				aux.setImpTotMo(rs.getDouble("imp_tot_mo"));
+				
+				
+				lstDepositos.add(aux);
+				
+			}
+			rs.close ();
+			pstmt1.close ();
+    	}	
+    	
+		catch (SQLException e) {
+			throw new ObteniendoChequeException();
+			
+		}
+    	
+    	return lstDepositos;
+	}
 
+	public void depositarCheques(String codEmp, ArrayList<DepositoVO> cheques){
+		
+	}
 	
 }
