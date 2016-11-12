@@ -16,6 +16,9 @@ import org.json.simple.parser.JSONParser;
 import com.abstractFactory.AbstractFactoryBuilder;
 import com.abstractFactory.IAbstractFactory;
 import com.excepciones.*;
+import com.excepciones.Bancos.ObteniendoBancosException;
+import com.excepciones.Bancos.ObteniendoCuentasBcoException;
+import com.excepciones.Cheques.ObteniendoChequeException;
 import com.excepciones.CodigosGeneralizados.EliminandoCodigoGeneralizadoException;
 import com.excepciones.CodigosGeneralizados.ExisteCodigoException;
 import com.excepciones.CodigosGeneralizados.InsertandoCodigoException;
@@ -101,6 +104,7 @@ import com.excepciones.grupos.ModificandoGrupoException;
 import com.excepciones.grupos.NoExisteGrupoException;
 import com.excepciones.grupos.ObteniendoFormulariosException;
 import com.excepciones.grupos.ObteniendoGruposException;
+import com.logica.Depositos.Deposito;
 import com.logica.DocLog.DocLog;
 import com.logica.Docum.DatosDocum;
 import com.logica.Docum.DocumDetalle;
@@ -108,7 +112,11 @@ import com.logica.Periodo.Periodo;
 import com.valueObject.*;
 import com.valueObject.Cotizacion.CotizacionVO;
 import com.valueObject.Cuenta.CuentaVO;
+
+import com.valueObject.Deposito.DepositoVO;
+
 import com.valueObject.Docum.DocumDetalleVO;
+
 import com.valueObject.Gasto.GastoVO;
 import com.valueObject.Numeradores.NumeradoresVO;
 import com.valueObject.Periodo.PeriodoVO;
@@ -148,6 +156,7 @@ public class FachadaDD {
 	private IDAOSaldosProc saldosProceso;
 	private IDAOTitulares titulares;
 	private IDAOPeriodo periodo;
+	private IDAOCheques cheques;
 	
 	
     private FachadaDD() throws InstantiationException, IllegalAccessException, ClassNotFoundException, FileNotFoundException, IOException
@@ -176,6 +185,7 @@ public class FachadaDD {
         this.saldosProceso = fabricaConcreta.crearDAOSaldosProceso();
         this.titulares = fabricaConcreta.crearDAOTitulares();
         this.periodo = fabricaConcreta.crearDAOPeriodo();
+        this.cheques = fabricaConcreta.crearDAOCheques();
     }
     
     public static FachadaDD getInstance() throws InicializandoException {
@@ -3669,4 +3679,64 @@ public class FachadaDD {
    }
        
 /////////////////////////////////INI-PERÍODO/////////////////////////////////
+   
+/////////////////////////////////INI-DEPOSITOS/////////////////////////////////
+   
+	/**
+	* Obtiene todos los cheques a depositar 
+	 * @throws ObteniendoBancosException 
+	 * @throws ObteniendoCuentasBcoException 
+	*/
+	@SuppressWarnings("unchecked")
+	public ArrayList<DepositoVO> getChequesBanco(String codEmp, String codBco, String codCtaBco) throws ObteniendoChequeException, ConexionException, ObteniendoCuentasBcoException, ObteniendoBancosException
+	{
+
+		Connection con = null;
+		ArrayList<Deposito> lstDepositos;
+		ArrayList<DepositoVO> lstDepositosVO = new ArrayList<DepositoVO>();
+
+		try 	
+		{
+			con = this.pool.obtenerConeccion();
+			lstDepositos = this.cheques.getChequesBanco(con, codEmp, codBco, codCtaBco);
+			
+			DepositoVO aux;
+			
+			for (Deposito deposito : lstDepositos) 
+			{
+				aux = new DepositoVO();
+				
+				aux.setCodDocum(deposito.getCodDocum());
+				aux.setSerieDocum(deposito.getSerieDocum());
+				aux.setNroDocum(deposito.getNroDocum());
+				aux.setFecValor(deposito.getFecValor());
+				aux.setCodigoBanco(deposito.getBanco().getCodBanco());
+				aux.setNombreBanco(deposito.getBanco().getNomBanco());
+				aux.setCodigoCuentaBanco(deposito.getCuentaBanco().getCodCuenta());
+				aux.setNombreCuentaBanco(deposito.getCuentaBanco().getNomCuenta());
+				aux.setFuncionario(null);
+				aux.setNumComprobante(0);
+				aux.setObservaciones(null);
+				aux.setImpTotMo(deposito.getImpTotMo());
+				
+				lstDepositosVO.add(aux);
+			}
+		}
+		
+		catch (ConexionException e) {
+			throw e;
+		}	 
+
+		finally{
+			this.pool.liberarConeccion(con);
+		}
+
+		return lstDepositosVO;
+
+	}
+	
+	public void depositarCheques(String codEmp, ArrayList<DepositoVO> cheques){
+		
+		
+	}
 }
