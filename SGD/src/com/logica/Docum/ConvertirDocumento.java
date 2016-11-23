@@ -34,7 +34,7 @@ public class ConvertirDocumento {
 	}
 	
 	/**
-	*Nos retorna un DatosDocumVO para ingresar el cheque dado un IngresoCobro
+	*Nos retorna un DatosDocumVO para ingresar el cheque dado un EgresoCobro
 	 * Lo utilizamos para ingresar el cheque
 	*
 	*/

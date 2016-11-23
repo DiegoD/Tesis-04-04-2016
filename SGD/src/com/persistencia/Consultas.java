@@ -1270,5 +1270,190 @@ public String getIngresoCobroCabTodosOtros(){
 
 //////////////////////FIN-EGRESO COBRO/////////////////////////////////////////////	
 	
+///////////////////////FACTURA/////////////////////////////////////////////////
+
+	public String insertFacturaCab(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+			sb.append("INSERT INTO c_facturas (cod_docum, serie_docum, nro_docum, cod_tit, cod_cuenta ");
+			sb.append(", cod_emp, fec_doc, fec_valor, cod_bco, cod_ctabco, cod_mpago, cod_doc_ref ");
+			sb.append(", serie_doc_ref, nro_doc_ref, cod_moneda, imp_tot_mn, imp_tot_mo, tc_mov ");
+			sb.append(", observaciones, nro_trans, fecha_mod, usuario_mod, operacion) ");
+			sb.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?) ");
+			
+			return sb.toString();
+	}
+
+	public String insertFacturaCabDet(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO d_facturas (cod_cuenta, cod_emp, cod_docum, serie_docum, nro_docum, cod_proceso,  ");
+		sb.append("cod_rubro, cuenta, fec_doc, fec_valor, cod_moneda, cod_impuesto, imp_impu_mn, imp_impu_mo,  ");
+		sb.append("imp_sub_mn, imp_sub_mo, imp_tot_mn, imp_tot_mo, tc_mov, referencia, referencia2, ");
+		sb.append("nro_trans, fecha_mod, usuario_mod, operacion, linea) ");
+		sb.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?) ");
+		
+		return sb.toString();
+	}
+
+	public String eliminarFacturaCab(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("DELETE FROM c_facturas WHERE nro_trans = ? ");
+		
+		return sb.toString();
+	}
+
+	public String deleteFacturaCabDet(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("DELETE FROM d_facturas WHERE nro_trans = ?");
+		
+		
+		return sb.toString();
+	}
+
+
+
+	public String getFacturaCabTodos(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_docum, serie_docum, nro_docum, m_titulares.cod_tit, m_titulares.nom_tit, m_titulares.tipo ");
+		sb.append(",c_facturas.cod_emp, fec_doc, fec_valor, COALESCE(m_bancos.cod_bco,'0') cod_bco ");
+		sb.append(", COALESCE(m_bancos.nom_bco,'0') nom_bco, COALESCE(m_ctasbcos.cod_ctabco,'0') cod_ctabco");
+		sb.append(", COALESCE(m_ctasbcos.nom_cta,'0') nom_cta, COALESCE(cod_mpago,'0') cod_mpago, cod_doc_ref, serie_doc_ref ");
+		sb.append(", nro_doc_ref,	m_monedas.cod_moneda, m_monedas.descripcion, m_monedas.simbolo, imp_tot_mn ");
+		sb.append(", imp_tot_mo, tc_mov, observaciones, nro_trans, c_facturas.fecha_mod, c_facturas.usuario_mod ");
+		sb.append(", c_facturas.operacion, m_monedas.descripcion, m_monedas.simbolo, c_facturas.cod_cuenta   "); 
+		sb.append("	FROM c_facturas ");
+		
+		sb.append("INNER JOIN m_monedas "); 
+		sb.append("ON c_facturas.cod_moneda = m_monedas.cod_moneda  ");
+		sb.append("AND c_facturas.cod_emp = m_monedas.cod_emp  ");
+		
+		sb.append("INNER JOIN m_titulares ");
+		
+		sb.append("ON c_facturas.cod_emp = m_titulares.cod_emp ");  
+		sb.append("AND c_facturas.cod_tit = m_titulares.cod_tit  ");
+		
+		
+		sb.append("LEFT JOIN  m_ctasbcos "); 
+		sb.append("ON c_facturas.cod_emp = m_ctasbcos.cod_emp ");  
+		sb.append("AND c_facturas.cod_ctabco = m_ctasbcos.cod_ctabco ");  
+		sb.append("AND c_facturas.cod_bco = m_ctasbcos.cod_bco ");  
+		
+		sb.append("LEFT JOIN m_bancos ");
+		
+		sb.append("ON c_facturas.cod_bco = m_bancos.cod_bco  ");
+		sb.append("AND c_facturas.cod_emp = m_bancos.cod_emp  "); 
+		
+		sb.append("WHERE c_facturas.cod_emp = ?  "); 
+		
+		return sb.toString();
+	}
+
+
+
+	public String getFacturaDetxTrans(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT m_cuentas.cod_cuenta, m_cuentas.descripcion nom_cuenta, d_facturas.cod_emp, d_facturas.cod_docum, d_facturas.serie_docum, d_facturas.nro_docum, ");
+		sb.append("COALESCE(d_facturas.cod_proceso,0) cod_proceso, (SELECT COALESCE(descripcion,'Sin-Asignar') FROM c_procesos WHERE c_procesos.cod_proceso = d_facturas.cod_proceso AND c_procesos.cod_emp = d_facturas.cod_emp ) nom_proceso,  ");
+		sb.append("m_rubros.cod_rubro, m_rubros.descripcion nom_rubro, d_facturas.cuenta, fec_doc, fec_valor, m_monedas.cod_moneda, m_monedas.simbolo, m_monedas.descripcion nom_moneda ");
+		sb.append(", m_impuestos.cod_impuesto, m_impuestos.descripcion nom_impuesto, m_impuestos.porcentaje, d_facturas.imp_impu_mn,  ");
+		sb.append("d_facturas.imp_impu_mo, d_facturas.imp_sub_mn, d_facturas.imp_sub_mo, d_facturas.imp_tot_mn, d_facturas.imp_tot_mo, d_facturas.tc_mov, d_facturas.referencia,  ");
+		sb.append("d_facturas.referencia2, d_facturas.nro_trans, d_facturas.fecha_mod, d_facturas.usuario_mod, d_facturas.operacion, d_facturas.linea, c_gastos.estado ");
+		
+		
+		sb.append("FROM d_facturas, m_monedas, m_impuestos, m_rubros, m_cuentas, c_gastos  ");
+		
+		sb.append("WHERE d_facturas.cod_moneda = m_monedas.cod_moneda  ");
+		sb.append("AND d_facturas.cod_emp = m_monedas.cod_emp "); 
+		
+		sb.append(" AND d_facturas.cod_impuesto = m_impuestos.cod_impuesto "); 
+		sb.append("AND d_facturas.cod_emp = m_impuestos.cod_emp "); 
+		
+		sb.append(" AND d_facturas.cod_rubro = m_rubros.cod_rubro  ");
+		sb.append("AND d_facturas.cod_emp = m_rubros.cod_emp "); 
+		sb.append("AND d_facturas.nro_trans  = ? ");
+		
+		sb.append(" AND d_facturas.cod_cuenta = m_cuentas.cod_cuenta  ");
+		sb.append("AND d_facturas.cod_emp = m_cuentas.cod_emp "
+		+ " AND d_facturas.nro_docum = c_gastos.nro_docum AND d_facturas.cod_emp = c_gastos.cod_emp "); 
+		
+		return sb.toString();
+	}
+
+	public String getFacturaCabInd(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_docum, serie_docum, nro_docum, m_clientes.cod_tit, m_clientes.nom_tit, m_cuentas.cod_cuenta, m_cuentas.descripcion,  c_facturas.cod_emp, fec_doc,  ");
+		sb.append("fec_valor, m_bancos.cod_bco, m_bancos.nom_bco, m_ctasbcos.cod_ctabco, m_ctasbcos.nom_cta, cod_mpago, cod_doc_ref, serie_doc_ref, nro_doc_ref,  ");
+		sb.append("m_monedas.cod_moneda, m_monedas.descripcion, m_monedas.simbolo, imp_tot_mn, imp_tot_mo, tc_mov, observaciones, nro_trans,  ");
+		sb.append("fecha_mod, usuario_mod, operacion, m_monedas.descripcion, m_monedas.simbolo ");
+		sb.append("FROM c_facturas, m_monedas, m_clientes, m_ctasbcos, m_cuentas WHERE cod_emp = ?   ");
+		sb.append(" AND cod_docum = ? AND nro_docum = ? ");
+		
+		sb.append(" AND c_facturas.cod_moneda = m_monedas.cod_moneda ");
+		sb.append("AND c_facturas.cod_emp = m_monedas.cod_emp ");
+		
+		sb.append("AND c_facturas.cod_emp = m_clientes.cod_emp  ");
+		sb.append("AND c_facturas.cod_tit = m_clientes.cod_tit  ");
+		
+		sb.append("AND c_facturas.cod_bco = m_bancos.cod_bco  ");
+		sb.append("AND c_facturas.cod_emp = m_bancos.cod_emp  ");
+		
+		sb.append(" AND c_facturas.cod_emp = m_ctasbcos.cod_emp  ");
+		sb.append(" AND c_facturas.cod_ctabco = m_ctasbcos.cod_ctabco  ");
+		sb.append(" AND c_facturas.cod_bco = m_ctasbcos.cod_bco  ");
+		
+		sb.append(" AND c_facturas.cod_emp = m_cuentas.cod_emp  ");
+		sb.append(" AND c_facturas.cod_cuenta = m_cuentas.cod_cuenta  ");
+		
+		
+		
+		return sb.toString();
+	}
+
+
+	public String memberFactura(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT nro_docum ");
+		sb.append("FROM c_facturas WHERE nro_docum = ? AND serie_docum = ? AND cod_docum = ?"
+				+ " AND cod_emp = ? ");
+		
+		return sb.toString();
+	}
+
+	public String deleteFacturaCab(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("DELETE FROM c_facturas WHERE nro_trans = ? ");
+		
+		return sb.toString();
+	}
+
+	public String deleteFacturaDet(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("DELETE FROM d_facturas WHERE nro_trans = ? ");
+		
+		return sb.toString();
+	}
+
+
+//////////////////////FIN-FACTURA /////////////////////////////////////////////	
+	
 	
 }

@@ -49,59 +49,7 @@ public abstract class DocumDetalle extends DatosDocum{
 		this.estadoGasto = t.getEstadoGasto();
 	}
 	
-	public IngresoCobroDetalleVO retornarDatosDocumVO(){
-		
-		IngresoCobroDetalleVO aux = new IngresoCobroDetalleVO();
-		
-		aux.setCodCuenta(this.getCuenta().getCodCuenta());
-		aux.setNomCuenta(this.getCuenta().getNomCuenta());
-		
-		aux.setCodCtaInd(this.getCodCuentaInd());
-		
-		aux.setCodProceso(this.getCodProceso());
-		aux.setDescProceso(this.getDescProceso());
-		
-		aux.setFecDoc(this.getFecDoc());
-		aux.setFecValor(this.getFecValor());
-		aux.setCodDocum(this.getCodDocum());
-		aux.setSerieDocum(this.getSerieDocum());
-		aux.setNroDocum(this.getNroDocum());
-		aux.setCodEmp(this.getCodEmp());
-		
-		aux.setNomMoneda(this.getMoneda().getDescripcion());
-		aux.setCodMoneda(this.getMoneda().getCodMoneda());
-		
-		aux.setSimboloMoneda(this.getMoneda().getSimbolo());
-		
-		aux.setNomTitular(this.getTitInfo().getNombre());
-		aux.setCodTitular(this.getTitInfo().getCodigo());
-		
-		aux.setReferencia(this.getReferencia());
-		aux.setUsuarioMod(this.getUsuarioMod());
-		aux.setFechaMod(this.getFechaMod());
-		aux.setOperacion(this.getOperacion());
-		
-		aux.setCodImpuesto(impuestoInfo.getCodImpuesto());
-		aux.setNomImpuesto(impuestoInfo.getNomImpuesto());
-		aux.setPorcentajeImpuesto(impuestoInfo.getPorcentaje());
-		
-		
-		aux.setImpImpuMn(this.impImpuMn);
-		aux.setImpImpuMo(this.impImpuMo);
-		aux.setImpSubMn(this.impSubMn);
-		aux.setImpSubMo(this.impSubMo);
-		
-		aux.setImpTotMn(this.getImpTotMn());
-		aux.setImpTotMo(this.getImpTotMo());
-		aux.setTcMov(this.tcMov);
-		
-		aux.setNomRubro(this.rubroInfo.getNomRubro());
-		aux.setCodRubro(this.rubroInfo.getCodRubro());
-		
-		aux.setEstadoGasto(this.getEstadoGasto());
-		
-		return aux;
-	}
+	
 
 
 	public double getImpImpuMn() {

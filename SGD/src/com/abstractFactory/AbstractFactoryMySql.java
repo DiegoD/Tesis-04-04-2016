@@ -173,5 +173,11 @@ public class AbstractFactoryMySql implements IAbstractFactory
 		
 		return new DAOPeriodo();
 	}
+	
+	@Override
+	public IDAOFacturas crearDAOFactura() {
+		
+		return new DAOFacturas();
+	}
 
 }

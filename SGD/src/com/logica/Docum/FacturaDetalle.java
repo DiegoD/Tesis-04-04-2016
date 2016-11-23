@@ -1,23 +1,21 @@
-package com.logica.IngresoCobro;
+package com.logica.Docum;
 
-import com.logica.Docum.DocumDetalle;
-import com.valueObject.Docum.DocumDetalleVO;
-import com.valueObject.IngresoCobro.IngresoCobroDetalleVO;
+import com.valueObject.Docum.FacturaDetalleVO;
 
-public class IngresoCobroLinea extends DocumDetalle{
+public class FacturaDetalle extends DocumDetalle{
 
-	public IngresoCobroLinea(IngresoCobroDetalleVO t) {
+	public FacturaDetalle(FacturaDetalleVO t) {
 		super(t);
 	}
 	
-	public IngresoCobroLinea() {
+	public FacturaDetalle() {
 		super();
 	}
-
-public IngresoCobroDetalleVO retornarDatosDocumVO(){
+	
+	public FacturaDetalleVO retornarVO(){
 	
 		
-		IngresoCobroDetalleVO aux = new IngresoCobroDetalleVO();
+	FacturaDetalleVO aux = new FacturaDetalleVO();
 		
 		
 		aux.setCodCuenta(this.getCuenta().getCodCuenta());

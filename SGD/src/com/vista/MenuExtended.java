@@ -29,6 +29,8 @@ import com.vista.Cotizaciones.CotizacionesPanelExtended;
 import com.vista.Cuentas.CuentasPanelExtended;
 import com.vista.Deposito.DepositoViewExtended;
 import com.vista.Empresas.EmpresasPanelExtended;
+import com.vista.Factura.FacturaPanelExtended;
+import com.vista.Factura.FacturaViewExtended;
 import com.vista.Funcionarios.FuncionariosPanelExtended;
 import com.vista.Gastos.GastosPanelExtended;
 import com.vista.Grupos.GruposPanelExtended;
@@ -578,21 +580,28 @@ public class MenuExtended extends Menu{
 				
 				UI.getCurrent().addWindow(sub);
 				
-//				c.setSizeFull();
-//				this.content.setSizeFull();
-//				
-//				this.content.addComponent(c);
-				
 			} catch (Exception e) {
 				
 				Mensajes.mostrarMensajeError(e.getMessage());
 			}
 		});
 		
+		this.factura.addClickListener(click -> {
+			
+			setSizeFull();
+			
+			this.content.removeAllComponents();
+			try {
+				
+				FacturaPanelExtended u = new FacturaPanelExtended(); 
+				this.content.addComponent(u);
+				
+			} catch (Exception e) {
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}
+		});
+		
 	}
-	
-	
-	
 	
 	
 	
@@ -653,6 +662,7 @@ public class MenuExtended extends Menu{
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_RESUMEN_PROCESO) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_PERIODO) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_DEPOSITO) ||
+				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_FACTURA) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_RUBROS))
 			{
 				lstFormsMenuMant.add(formularioVO);
@@ -833,6 +843,13 @@ public class MenuExtended extends Menu{
 							this.layoutMenu.addComponent(this.deposito);
 						}
 					break;
+					
+					case VariablesPermisos.FORMULARIO_FACTURA:
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_FACTURA, VariablesPermisos.OPERACION_LEER)){
+							this.habilitarFactura();
+							this.layoutMenu.addComponent(this.factura);
+						}
+					break;
 				}
 				
 			}
@@ -991,6 +1008,9 @@ public class MenuExtended extends Menu{
 		
 		this.deposito.setVisible(false);
 		this.deposito.setEnabled(false);
+		
+		this.factura.setVisible(false);
+		this.factura.setEnabled(false);
 	}
 	
 	
@@ -1143,6 +1163,12 @@ public class MenuExtended extends Menu{
 		this.deposito.setVisible(true);
 		this.deposito.setEnabled(true);
 		this.layoutMenu.addComponent(deposito);
+	}
+	
+	private void habilitarFactura(){
+		this.factura.setVisible(true);
+		this.factura.setEnabled(true);
+		this.layoutMenu.addComponent(factura);
 	}
 	
 	public PermisosUsuario getPermisosUsuario()

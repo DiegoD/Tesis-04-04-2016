@@ -45,8 +45,6 @@ public class IngresoCobroVO extends DatosDocumVO{
 		
 		this.codBanco = t.codBanco;
 		this.nomBanco = t.nomBanco;
-		//this.setCodCuenta(t.getCodCuenta());
-		//this.setNomCuenta(t.getNomCuenta());
 		this.nomCtaBco = t.nomCtaBco;
 		this.codCtaBco = t.codCtaBco;
 		
