@@ -6,6 +6,7 @@ import com.persistencia.IDAOClientes;
 import com.persistencia.IDAOCodigosGeneralizados;
 import com.persistencia.IDAOCotizaciones;
 import com.persistencia.IDAOCuentas;
+import com.persistencia.IDAODepositos;
 import com.persistencia.IDAODocLog;
 import com.persistencia.IDAODocumDgi;
 //import com.persistencia.IDAODocumDgi;
@@ -87,6 +88,8 @@ public interface IAbstractFactory
 	public IDAOTitulares crearDAOTitulares();
 
 	public IDAOPeriodo crearDAOPeriodo ();
+	
+	public IDAODepositos crearDAODeposito();
 
 	public IDAOFacturas crearDAOFactura();
 }

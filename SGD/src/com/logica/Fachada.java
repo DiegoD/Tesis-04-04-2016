@@ -1442,15 +1442,18 @@ public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 				/*Primero obtenemos el DatosDocum para el cheque dado el ingreso cobro*/
 
 				/*Insertamos el cheque y saldo*/
-				DatosDocumVO auxCheque = ConvertirDocumento.getDatosDocumChequeDadoIngCobro(ingVO);
+				//DatosDocumVO auxCheque = ConvertirDocumento.getDatosDocumChequeDadoIngCobro(ingVO);
+				
+				Cheque cheque = new Cheque();
+				cheque = cheque.convierteIng(ing);
 				
 				
-				auxCheque.setCodMoneda(ing.getCuenta().getCodMoneda());
-			    auxCheque.setNacional(ing.getCuenta().isNacional());
-			    auxCheque.setImpTotMo(impMoCtaBco); /*Importe en moneda operativa de la cuenta bco*/
+//				auxCheque.setCodMoneda(ing.getCuenta().getCodMoneda());
+//			    auxCheque.setNacional(ing.getCuenta().isNacional());
+//			    auxCheque.setImpTotMo(impMoCtaBco); /*Importe en moneda operativa de la cuenta bco*/
 				
 				/*Ingresamos el cheque y su saldo*/
-				this.insertarChequeIntFachada(auxCheque, con);
+				this.insertarChequeIntFachada(cheque, con);
 
 			}
 			
@@ -1560,9 +1563,10 @@ public void eliminarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 				
 				/*Eliminamos el cheque de tabla base*/                                           
 				DatosDocum chequeL = new DatosDocum(auxCheque); /*Lo convertimos a objeto de logica para pasarlo al DAO*/
+				Cheque cheque = new Cheque();
+				cheque = cheque.convierteIng(ing);
 				
-				
-				this.cheques.eliminarCheque(chequeL, con);
+				this.cheques.eliminarCheque(cheque, con);
 			}
 			
 			
@@ -1727,14 +1731,15 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 				/*Primero obtenemos el DatosDocum para el cheque dado el ingreso cobro*/
 
 				DatosDocumVO auxCheque = ConvertirDocumento.getDatosDocumChequeDadoIngCobro(ingVO);
-				
+				Cheque cheque = new Cheque();
+				cheque = cheque.convierteIng(ing);
 				auxCheque.setCodMoneda(ing.getCuenta().getCodMoneda());
 			    auxCheque.setNacional(ing.getCuenta().isNacional());
 			     /*Obtenemos el importe moneda operativa de la cuenta del banco*/
 			    
 			    auxCheque.setImpTotMo(impMoCtaBco);
 			    
-				this.insertarChequeIntFachada(auxCheque, con);
+				this.insertarChequeIntFachada(cheque, con);
 
 				/*Ingresamos el saldo para el cheque */
 				DatosDocum auxCheque2 = new DatosDocum(auxCheque);
@@ -1826,7 +1831,8 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 				{
 					/*Primero obtenemos el DatosDocum para el cheque dado el ingreso cobro*/
 					DatosDocumVO auxCheque = ConvertirDocumento.getDatosDocumChequeDadoIngCobro(ingVO);
-					
+					Cheque cheque = new Cheque();
+					cheque = cheque.convierteIng(ing);
 					/*Eliminamos el saldo para el cheque */
 					DatosDocum auxCheque2 = new DatosDocum(auxCheque);
 					this.saldos.eliminarSaldo(auxCheque2, con);
@@ -1835,8 +1841,8 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 				    auxCheque.setCodMoneda(ing.getCuenta().getCodMoneda());
 				    auxCheque.setNacional(ing.getCuenta().isNacional());
 					/*Eliminamos el cheque de tabla base*/                                           
-					DatosDocum chequeL = new DatosDocum(auxCheque); /*Lo convertimos a objeto de logica para pasarlo al DAO*/
-					this.cheques.eliminarCheque(chequeL, con);
+					//DatosDocum chequeL = new DatosDocum(auxCheque); /*Lo convertimos a objeto de logica para pasarlo al DAO*/
+					this.cheques.eliminarCheque(cheque, con);
 				}
 				
 				
@@ -2040,7 +2046,8 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 					
 					/*Insertamos el cheque*/
 					DatosDocumVO auxCheque = ConvertirDocumento.getDatosDocumChequeDadoIngCobro(ingVO);
-					
+					Cheque cheque = new Cheque();
+					cheque = cheque.convierteIng(ing);
 					
 					auxCheque.setCodMoneda(ing.getCuenta().getCodMoneda());
 					auxCheque.setNacional(ing.getCuenta().isNacional());
@@ -2048,7 +2055,7 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 					
 					auxCheque.setImpTotMo(impMoCtaBco);
 					
-					this.insertarChequeIntFachada(auxCheque, con); /*Ingresa el cheque pero no el saldo*/
+					this.insertarChequeIntFachada(cheque, con); /*Ingresa el cheque pero no el saldo*/
 				
 				}
 				
@@ -2144,6 +2151,9 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 					//Primero obtenemos el DatosDocum para el cheque dado el ingreso cobro
 					DatosDocumVO auxCheque = ConvertirDocumento.getDatosDocumChequeDadoEgrCobro(ingVO);
 					
+					Cheque cheque = new Cheque();
+					cheque = cheque.convierteIng(ing);
+					
 					//Eliminamos el saldo para el cheque 
 					//DatosDocum auxCheque2 = new DatosDocum(auxCheque);
 					//this.saldos.eliminarSaldo(auxCheque2, con);
@@ -2153,8 +2163,8 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 					auxCheque.setImpTotMo(impMoCtaBco);
 					auxCheque.setCodMoneda(ing.getCuenta().getCodMoneda());
 					auxCheque.setNacional(ing.getCuenta().isNacional());
-					DatosDocum chequeL = new DatosDocum(auxCheque); /*Lo convertimos a objeto de logica para pasarlo al DAO*/
-					this.cheques.eliminarCheque(chequeL, con);
+					//DatosDocum chequeL = new DatosDocum(auxCheque); /*Lo convertimos a objeto de logica para pasarlo al DAO*/
+					this.cheques.eliminarCheque(cheque, con);
 				}
 				
 				/*Subimos el saldo a la cuenta (Banco o caja)*/
@@ -2299,6 +2309,9 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 					/*Primero obtenemos el DatosDocum para el cheque dado el ingreso cobro*/
 					
 					/*Insertamos el cheque*/
+					Cheque cheque = new Cheque();
+					cheque = cheque.convierteIng(ing);
+					
 					DatosDocumVO auxCheque = ConvertirDocumento.getDatosDocumChequeDadoIngCobro(ingVO);
 					
 					
@@ -2307,7 +2320,7 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 					/*Obtenemos el importe moneda operativa de la cuenta del banco*/
 				
 					auxCheque.setImpTotMo(impMoCtaBco);
-					this.insertarChequeIntFachada(auxCheque, con); /*Ingresa el cheque pero no el saldo*/
+					this.insertarChequeIntFachada(cheque, con); /*Ingresa el cheque pero no el saldo*/
 				
 				}
 				
@@ -2393,6 +2406,9 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 				//Primero obtenemos el DatosDocum para el cheque dado el egreso cobro
 				DatosDocumVO auxCheque = ConvertirDocumento.getDatosDocumChequeDadoEgrCobro(ingVO);
 				
+				Cheque cheque = new Cheque();
+				cheque = cheque.convierteIng(ing);
+				
 				/*
 				//Eliminamos el saldo para el cheque 
 				DatosDocum auxCheque2 = new DatosDocum(auxCheque);
@@ -2405,9 +2421,9 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 				auxCheque.setCodMoneda(ing.getCuenta().getCodMoneda());
 				auxCheque.setNacional(ing.getCuenta().isNacional());
 				
-				DatosDocum chequeL = new DatosDocum(auxCheque); /*Lo convertimos a objeto de logica para pasarlo al DAO*/
+				//DatosDocum chequeL = new DatosDocum(auxCheque); /*Lo convertimos a objeto de logica para pasarlo al DAO*/
 				
-				this.cheques.eliminarCheque(chequeL, con);
+				this.cheques.eliminarCheque(cheque, con);
 			}
 			
 			/*Bajamos el saldo a la cuenta (Banco o caja)*/
@@ -2590,7 +2606,7 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 	*ser invocado desde fuera de fachada
 	*
 	*/
-	public void insertarCheque(DatosDocumVO documento)
+	public void insertarCheque(Cheque cheque)
 			throws InsertandoChequeException, ExisteChequeException, ConexionException, SQLException{
 	
 		Connection con = null;
@@ -2604,10 +2620,8 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 			
 			//Obtenemos nroTrans 
 			//Obtengo numerador de gastos
-			codigos.setNumeroTrans(numeradores.getNumero(con, "03", documento.getCodEmp())); //nro trans
+			codigos.setNumeroTrans(numeradores.getNumero(con, "03", cheque.getCodEmp())); //nro trans
 			
-			
-			DatosDocum cheque = new DatosDocum(documento);
 			
 			cheque.setNroTrans(codigos.getNumeroTrans()); /*Seteamos el nroTrans*/
 			
@@ -2653,7 +2667,7 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 	*para ser invocado desde fachada
 	*
 	*/
-	private void insertarChequeIntFachada(DatosDocumVO documento, Connection con)
+	private void insertarChequeIntFachada(Cheque cheque, Connection con)
 			throws InsertandoChequeException, ExisteChequeException, ConexionException, SQLException{
 	
 		boolean existe = false;
@@ -2662,7 +2676,7 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 		try 
 		{
 						
-			DatosDocum cheque = new DatosDocum(documento);
+			//DatosDocum cheque = new DatosDocum(documento);
 			
 			/*El nro trans es el de la transaccion de cheque*/
 			
@@ -2693,7 +2707,7 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 		
 	}
 	
-	public void modificarCheque(DatosDocumVO chequeVO, int signo, double tc ) throws ModificandoChequeException, ConexionException, EliminandoChequeException, InsertandoChequeException, ExisteChequeException, NoExisteChequeException{
+	public void modificarCheque(Cheque cheque, int signo, double tc ) throws ModificandoChequeException, ConexionException, EliminandoChequeException, InsertandoChequeException, ExisteChequeException, NoExisteChequeException{
 	
 		Connection con = null;
 		
@@ -2702,7 +2716,10 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 			con = this.pool.obtenerConeccion();
 			con.setAutoCommit(false);
 			
-			DatosDocum cheque = new DatosDocum(chequeVO);
+			//DatosDocum cheque = new DatosDocum(chequeVO);
+			
+			
+			
 			
 			/*Verificamos que exista el cheque*/
 			if(this.cheques.memberCheque(cheque, con))
@@ -2733,7 +2750,7 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 	
 	
 	
-	public void eliminarCheque(DatosDocumVO chequeVO ) throws ConexionException, ExisteChequeException, EliminandoChequeException, NoExisteChequeException{
+	public void eliminarCheque(Cheque cheque ) throws ConexionException, ExisteChequeException, EliminandoChequeException, NoExisteChequeException{
 	
 		Connection con = null;
 		
@@ -2742,7 +2759,7 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 			con = this.pool.obtenerConeccion();
 			con.setAutoCommit(false);
 			
-			DatosDocum cheque = new DatosDocum(chequeVO);
+			//DatosDocum cheque = new DatosDocum(chequeVO);
 			
 			/*Verificamos que exista el cheque*/
 			if(this.cheques.memberCheque(cheque, con))

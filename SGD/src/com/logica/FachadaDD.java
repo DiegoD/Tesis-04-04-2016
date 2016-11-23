@@ -7,12 +7,6 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Hashtable;
-
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-
 import com.abstractFactory.AbstractFactoryBuilder;
 import com.abstractFactory.IAbstractFactory;
 import com.excepciones.*;
@@ -36,6 +30,12 @@ import com.excepciones.Cuentas.MemberCuentaException;
 import com.excepciones.Cuentas.ModificandoCuentaException;
 import com.excepciones.Cuentas.NoExisteCuentaException;
 import com.excepciones.Cuentas.ObteniendoCuentasException;
+import com.excepciones.Depositos.EliminandoDepositoException;
+import com.excepciones.Depositos.ExisteDepositoException;
+import com.excepciones.Depositos.InsertandoDepositoException;
+import com.excepciones.Depositos.ModificandoDepositoException;
+import com.excepciones.Depositos.NoExisteDepositoException;
+import com.excepciones.Depositos.ObteniendoDepositoException;
 import com.excepciones.DocLog.InsertandoLogException;
 import com.excepciones.DocLog.ModificandoLogException;
 import com.excepciones.Documentos.ExisteDocumentoException;
@@ -59,7 +59,11 @@ import com.excepciones.Impuestos.InsertandoImpuestoException;
 import com.excepciones.Impuestos.ModificandoImpuestoException;
 import com.excepciones.Impuestos.NoExisteImpuestoException;
 import com.excepciones.Impuestos.ObteniendoImpuestosException;
-import com.excepciones.Login.LoginException;
+import com.excepciones.IngresoCobros.ExisteIngresoCobroException;
+import com.excepciones.IngresoCobros.InsertandoIngresoCobroException;
+import com.excepciones.IngresoCobros.ModificandoIngresoCobroException;
+import com.excepciones.IngresoCobros.NoExisteIngresoCobroException;
+import com.excepciones.IngresoCobros.ObteniendoIngresoCobroException;
 import com.excepciones.Monedas.ExisteMonedaException;
 import com.excepciones.Monedas.ExisteNacional;
 import com.excepciones.Monedas.InsertandoMonedaException;
@@ -97,18 +101,13 @@ import com.excepciones.Usuarios.ExisteUsuarioException;
 import com.excepciones.Usuarios.InsertandoUsuarioException;
 import com.excepciones.Usuarios.ObteniendoUsuariosException;
 import com.excepciones.Usuarios.ObteniendoUsuariosxEmpExeption;
-import com.excepciones.clientes.ObteniendoClientesException;
-import com.excepciones.grupos.ExisteGrupoException;
-import com.excepciones.grupos.InsertandoGrupoException;
-import com.excepciones.grupos.MemberGrupoException;
-import com.excepciones.grupos.ModificandoGrupoException;
-import com.excepciones.grupos.NoExisteGrupoException;
-import com.excepciones.grupos.ObteniendoFormulariosException;
 import com.excepciones.grupos.ObteniendoGruposException;
 import com.logica.Depositos.Deposito;
 import com.logica.DocLog.DocLog;
-import com.logica.Docum.DatosDocum;
+import com.logica.Docum.ConvertirDocumento;
 import com.logica.Docum.DocumDetalle;
+import com.logica.Docum.DocumSaldo;
+import com.logica.IngresoCobro.IngresoCobro;
 import com.logica.Periodo.Periodo;
 import com.valueObject.*;
 import com.valueObject.Cotizacion.CotizacionVO;
@@ -116,13 +115,11 @@ import com.valueObject.Cuenta.CuentaVO;
 
 import com.valueObject.Deposito.DepositoVO;
 
-import com.valueObject.Docum.DocumDetalleVO;
-
 import com.valueObject.Gasto.GastoVO;
+import com.valueObject.IngresoCobro.IngresoCobroVO;
 import com.valueObject.Numeradores.NumeradoresVO;
 import com.valueObject.Periodo.PeriodoVO;
 import com.valueObject.TipoRubro.TipoRubroVO;
-import com.valueObject.cliente.ClienteVO;
 import com.valueObject.empresa.EmpresaUsuVO;
 import com.valueObject.empresa.EmpresaVO;
 import com.valueObject.proceso.ProcesoVO;
@@ -159,6 +156,7 @@ public class FachadaDD {
 	private IDAOTitulares titulares;
 	private IDAOPeriodo periodo;
 	private IDAOCheques cheques;
+	private IDAODepositos depositos;
 	
 	
     private FachadaDD() throws InstantiationException, IllegalAccessException, ClassNotFoundException, FileNotFoundException, IOException
@@ -188,6 +186,7 @@ public class FachadaDD {
         this.titulares = fabricaConcreta.crearDAOTitulares();
         this.periodo = fabricaConcreta.crearDAOPeriodo();
         this.cheques = fabricaConcreta.crearDAOCheques();
+        this.depositos = fabricaConcreta.crearDAODeposito();
     }
     
     public static FachadaDD getInstance() throws InicializandoException {
@@ -3759,18 +3758,18 @@ public class FachadaDD {
 			{
 				aux = new DepositoVO();
 				
-				aux.setCodDocum(deposito.getCodDocum());
-				aux.setSerieDocum(deposito.getSerieDocum());
-				aux.setNroDocum(deposito.getNroDocum());
-				aux.setFecValor(deposito.getFecValor());
-				aux.setCodigoBanco(deposito.getBanco().getCodBanco());
-				aux.setNombreBanco(deposito.getBanco().getNomBanco());
-				aux.setCodigoCuentaBanco(deposito.getCuentaBanco().getCodCuenta());
-				aux.setNombreCuentaBanco(deposito.getCuentaBanco().getNomCuenta());
-				aux.setFuncionario(null);
-				aux.setNumComprobante(0);
-				aux.setObservaciones(null);
-				aux.setImpTotMo(deposito.getImpTotMo());
+//				aux.setCodDocum(deposito.getCodDocum());
+//				aux.setSerieDocum(deposito.getSerieDocum());
+//				aux.setNroDocum(deposito.getNroDocum());
+//				aux.setFecValor(deposito.getFecValor());
+//				aux.setCodigoBanco(deposito.getBanco().getCodBanco());
+//				aux.setNombreBanco(deposito.getBanco().getNomBanco());
+//				aux.setCodigoCuentaBanco(deposito.getCuentaBanco().getCodCuenta());
+//				aux.setNombreCuentaBanco(deposito.getCuentaBanco().getNomCuenta());
+//				aux.setFuncionario(null);
+//				aux.setNumComprobante(0);
+//				aux.setObservaciones(null);
+//				aux.setImpTotMo(deposito.getImpTotMo());
 				
 				lstDepositosVO.add(aux);
 			}
@@ -3791,5 +3790,230 @@ public class FachadaDD {
 	public void depositarCheques(String codEmp, ArrayList<DepositoVO> cheques){
 		
 		
+	}
+	
+	@SuppressWarnings("unchecked") 
+	public ArrayList<DepositoVO> getDepositos(String codEmp) throws ObteniendoDepositoException, ConexionException {
+		
+		Connection con = null;
+		
+		ArrayList<Deposito> lst;
+		ArrayList<DepositoVO> lstVO = new ArrayList<DepositoVO>();
+		
+		try
+		{
+			con = this.pool.obtenerConeccion();
+			
+			lst = this.depositos.getDepositosTodos(con, codEmp);
+			
+			for (Deposito deposito : lst) 
+			{
+				DepositoVO aux = deposito.getDepositoVO(deposito);
+				
+				lstVO.add(aux);
+			}
+		
+		}catch(ObteniendoDepositoException  e)
+		{
+			throw e;
+		
+		} catch (ConexionException e) {
+		
+			throw e;
+		} 
+		finally
+		{
+			this.pool.liberarConeccion(con);
+		}
+		
+		
+		return lstVO;
+	}	 
+	
+	public void insertarDeposito(DepositoVO depVO, String codEmp) throws InsertandoDepositoException, ConexionException, ExisteDepositoException{
+
+		Connection con = null;
+		boolean existe = false;
+		Integer codigo;
+		NumeradoresVO codigos = new NumeradoresVO();
+
+
+    	try 
+    	{
+    		con = this.pool.obtenerConeccion();
+			con.setAutoCommit(false);
+			
+			Deposito deposito = new Deposito();
+			
+			deposito.convierteDeposito(depVO);
+
+			
+			if(!this.depositos.memberDeposito(deposito.getNroTrans(), codEmp, con)){
+	    		
+	    		this.depositos.insertarDeposito(deposito, con, codEmp);
+	    		con.commit();
+	    	}
+	    	else{
+	    		existe = true;
+	    	}
+	    		
+    	
+    	}
+    	catch(Exception InsertandoImpuestoException)  	{
+    		try {
+				con.rollback();
+				
+			} catch (SQLException e) {
+				
+				throw new InsertandoDepositoException();
+			}
+    		
+    		throw new InsertandoDepositoException();
+    	}
+    	finally
+    	{
+    		pool.liberarConeccion(con);
+    	}
+    	if (existe){
+    		throw new ExisteDepositoException();
+    	}
+	}
+	
+	public void modificarDeposito(DepositoVO depositoVO, String codEmp) throws  ConexionException, ModificandoDepositoException, ExisteDepositoException, NoExisteDepositoException, ModificandoIngresoCobroException, InsertandoDepositoException, EliminandoDepositoException{
+
+		Connection con = null;
+		
+		try 
+		{
+			con = this.pool.obtenerConeccion();
+			con.setAutoCommit(false);
+			
+			Deposito deposito = new Deposito();
+			deposito.convierteDeposito(depositoVO);
+			
+			/*Verificamos que exista el nro de cobro*/
+			if(this.depositos.memberDeposito(deposito.getNroTrans(), codEmp, con)){
+				
+				this.eliminarDepositoModificacion(deposito, codEmp, con);
+				this.insertarDepositoModificacion(deposito, codEmp, con);
+				con.commit();
+			}
+				
+				
+			else
+			throw new ModificandoDepositoException();
+		
+		}catch(ExisteDepositoException| ConexionException | SQLException  e)
+		{
+			try {
+			con.rollback();
+			
+			} catch (SQLException e1) {
+			
+			throw new ConexionException();
+			}
+				throw new ModificandoDepositoException();
+		}
+		finally
+		{
+			pool.liberarConeccion(con);
+		}
+	}
+	
+	public void eliminarDeposito(DepositoVO depositoVO, String codEmp) throws  ConexionException, EliminandoDepositoException, ExisteDepositoException, NoExisteDepositoException, InsertandoDepositoException{
+
+		Connection con = null;
+		
+		try 
+		{
+			con = this.pool.obtenerConeccion();
+			con.setAutoCommit(false);
+			
+			Deposito deposito = new Deposito();
+			deposito.convierteDeposito(depositoVO);
+			
+			/*Verificamos que exista el nro de cobro*/
+			if(this.depositos.memberDeposito(deposito.getNroTrans(), codEmp, con)){
+				
+				this.depositos.eliminarDeposito(deposito, con, codEmp);
+				con.commit();
+			}
+				
+				
+			else{
+				throw new NoExisteDepositoException();
+			}
+		
+		}
+		catch(ExisteDepositoException| ConexionException | SQLException  e){
+			
+			try {
+				con.rollback();
+			
+			} 
+			catch (SQLException e1) {
+			
+				throw new ConexionException();
+			}
+		}
+		finally
+		{
+			pool.liberarConeccion(con);
+		}
+	}
+	
+	public void insertarDepositoModificacion(Deposito dep, String codEmp, Connection con) throws InsertandoDepositoException, ConexionException, ExisteDepositoException, ModificandoDepositoException{
+
+		boolean existe = false;
+
+    	try 
+    	{
+			if(!this.depositos.memberDeposito(dep.getNroTrans(), codEmp, con)){
+	    		
+	    		this.depositos.insertarDeposito(dep, con, codEmp);
+	    	}
+	    	else{
+	    		existe = true;
+	    	}
+	    		
+    	
+    	}
+    	catch(Exception ModificandoDepositoException)  	{
+    		
+    		throw new ModificandoDepositoException();
+    	}
+    	if (existe){
+    		throw new ExisteDepositoException();
+    	}
+	}
+	
+	public void eliminarDepositoModificacion(Deposito deposito, String codEmp, Connection con) throws  ConexionException, EliminandoDepositoException, ExisteDepositoException, NoExisteDepositoException, InsertandoDepositoException, ModificandoDepositoException{
+
+		try 
+		{
+			/*Verificamos que exista el nro de cobro*/
+			if(this.depositos.memberDeposito(deposito.getNroTrans(), codEmp, con)){
+				
+				this.depositos.eliminarDeposito(deposito, con, codEmp);
+			}
+				
+				
+			else{
+				throw new NoExisteDepositoException();
+			}
+		
+		}
+		catch(ExisteDepositoException| ConexionException  e){
+			
+			try {
+				con.rollback();
+			
+			} 
+			catch (SQLException e1) {
+			
+			throw new ConexionException();
+			}
+				throw new ModificandoDepositoException();
+		}
 	}
 }

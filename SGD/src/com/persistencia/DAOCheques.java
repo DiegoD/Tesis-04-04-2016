@@ -11,6 +11,7 @@ import com.excepciones.Bancos.ObteniendoBancosException;
 import com.excepciones.Bancos.ObteniendoCuentasBcoException;
 import com.excepciones.Cheques.*;
 import com.logica.Banco;
+import com.logica.Cheque;
 import com.logica.Depositos.Deposito;
 import com.logica.Docum.BancoInfo;
 import com.logica.Docum.CuentaBcoInfo;
@@ -26,7 +27,7 @@ public class DAOCheques implements IDAOCheques{
 	 * Dado el documento, valida si existe
 	 * @throws ExisteSaldoException 
 	 */
-	public boolean memberCheque(DatosDocum docum, Connection con) throws ExisteChequeException{
+	public boolean memberCheque(Cheque cheque, Connection con) throws ExisteChequeException{
 		
 		boolean existe = false;
 		
@@ -38,11 +39,11 @@ public class DAOCheques implements IDAOCheques{
 			
 			PreparedStatement pstmt1 = con.prepareStatement(query);
 			
-			pstmt1.setString(1, docum.getCodDocum());
-			pstmt1.setString(2, docum.getSerieDocum());
-			pstmt1.setInt(3, docum.getNroDocum());
-			pstmt1.setString(4, docum.getCodEmp());
-			pstmt1.setString(5, docum.getTitInfo().getCodigo());
+			pstmt1.setString(1, cheque.getCodDocum());
+			pstmt1.setString(2, cheque.getSerieDocum());
+			pstmt1.setInt(3, cheque.getNroDocum());
+			pstmt1.setString(4, cheque.getCodEmp());
+			pstmt1.setString(5, cheque.getTitInfo().getCodigo());
 			
 			ResultSet rs = pstmt1.executeQuery();
 			
@@ -62,7 +63,7 @@ public class DAOCheques implements IDAOCheques{
 	
 
 
-	public void insertarCheque(DatosDocum documento, Connection con)
+	public void insertarCheque(Cheque cheque, Connection con)
 			throws InsertandoChequeException, ConexionException, SQLException {
 		
 		ConsultasDD clts = new ConsultasDD();
@@ -76,20 +77,22 @@ public class DAOCheques implements IDAOCheques{
     		
 			pstmt1 =  con.prepareStatement(insert);
 			
-			pstmt1.setString(1, documento.getCodDocum());
-			pstmt1.setString(2, documento.getSerieDocum());
-			pstmt1.setInt(3, documento.getNroDocum());
-			pstmt1.setString(4, documento.getCodEmp());
-			pstmt1.setString(5, documento.getMoneda().getCodMoneda());
-			pstmt1.setString(6, documento.getTitInfo().getCodigo());
-			pstmt1.setDouble(7, documento.getImpTotMn());
-			pstmt1.setDouble(8, documento.getImpTotMo());
-			pstmt1.setString(9, documento.getCodCuentaInd());
-			pstmt1.setString(10, documento.getUsuarioMod());
-			pstmt1.setString(11, documento.getOperacion());
-			pstmt1.setString(12, documento.getCodCuentaInd());
-			pstmt1.setString(13, documento.getReferencia());
-			pstmt1.setLong(14, documento.getNroTrans());
+			pstmt1.setString(1, cheque.getCodDocum());
+			pstmt1.setString(2, cheque.getSerieDocum());
+			pstmt1.setInt(3, cheque.getNroDocum());
+			pstmt1.setString(4, cheque.getCodEmp());
+			pstmt1.setString(5, cheque.getMoneda().getCodMoneda());
+			pstmt1.setString(6, cheque.getTitInfo().getCodigo());
+			pstmt1.setDouble(7, cheque.getImpTotMn());
+			pstmt1.setDouble(8, cheque.getImpTotMo());
+			pstmt1.setString(9, cheque.getCodCuentaInd());
+			pstmt1.setString(10, cheque.getUsuarioMod());
+			pstmt1.setString(11, cheque.getOperacion());
+			pstmt1.setString(12, cheque.getCodCuentaInd());
+			pstmt1.setString(13, cheque.getReferencia());
+			pstmt1.setLong(14, cheque.getNroTrans());
+			pstmt1.setString(15, cheque.getBanco().getCodBanco());
+			pstmt1.setString(16, cheque.getCuentaBanco().getCodCuenta());
 			
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
@@ -102,7 +105,7 @@ public class DAOCheques implements IDAOCheques{
 		
 	}
 
-	public void eliminarCheque(DatosDocum documento, Connection con)
+	public void eliminarCheque(Cheque cheque, Connection con)
 			throws EliminandoChequeException, ConexionException {
 		// TODO Auto-generated method stub
 		ConsultasDD consultas = new ConsultasDD();
@@ -112,11 +115,11 @@ public class DAOCheques implements IDAOCheques{
 		try {
 			
 			pstmt1 =  con.prepareStatement(eliminar);
-			pstmt1.setString(1, documento.getCodDocum());
-			pstmt1.setString(2, documento.getSerieDocum());
-			pstmt1.setInt(3, documento.getNroDocum());
-			pstmt1.setString(4, documento.getCodEmp());
-			pstmt1.setString(5, documento.getTitInfo().getCodigo());
+			pstmt1.setString(1, cheque.getCodDocum());
+			pstmt1.setString(2, cheque.getSerieDocum());
+			pstmt1.setInt(3, cheque.getNroDocum());
+			pstmt1.setString(4, cheque.getCodEmp());
+			pstmt1.setString(5, cheque.getTitInfo().getCodigo());
 			
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
@@ -129,7 +132,7 @@ public class DAOCheques implements IDAOCheques{
 		}
 	}
 	
-	public void modificarCheque(DatosDocum cheque, int signo, double tc   , Connection con)
+	public void modificarCheque(Cheque cheque, int signo, double tc   , Connection con)
 			throws ModificandoChequeException, ConexionException, EliminandoChequeException, InsertandoChequeException, ExisteChequeException, NoExisteChequeException {
 		
 		try {
@@ -181,30 +184,30 @@ public class DAOCheques implements IDAOCheques{
 			
 			while(rs.next ()) {
 							
-				aux = new Deposito();
+//				aux = new Deposito();
+//				
+//				aux.setCodDocum(rs.getString("cod_docum"));
+//				aux.setSerieDocum(rs.getString("serie_docum"));
+//				aux.setNroDocum(rs.getInt("nro_docum"));
+//				aux.setFecValor(rs.getTimestamp("fec_valor"));
+//				
+//				b = new BancoInfo();
+//				b.setCodBanco(rs.getString("cod_bco"));
+//				b.setNomBanco(rs.getString("nom_bco"));
+//				aux.setBanco(b);
+//				
+//				c = new CuentaBcoInfo();
+//				c.setCodCuenta(rs.getString("cod_ctabco"));
+//				c.setNomCuenta(rs.getString("nom_cta"));
+//				aux.setCuentaBanco(c);
+//				
+//				aux.setFuncionario(null);
+//				aux.setNumComprobante(0);
+//				aux.setObservaciones(null);
+//				aux.setImpTotMo(rs.getDouble("imp_tot_mo"));
 				
-				aux.setCodDocum(rs.getString("cod_docum"));
-				aux.setSerieDocum(rs.getString("serie_docum"));
-				aux.setNroDocum(rs.getInt("nro_docum"));
-				aux.setFecValor(rs.getTimestamp("fec_valor"));
 				
-				b = new BancoInfo();
-				b.setCodBanco(rs.getString("cod_bco"));
-				b.setNomBanco(rs.getString("nom_bco"));
-				aux.setBanco(b);
-				
-				c = new CuentaBcoInfo();
-				c.setCodCuenta(rs.getString("cod_ctabco"));
-				c.setNomCuenta(rs.getString("nom_cta"));
-				aux.setCuentaBanco(c);
-				
-				aux.setFuncionario(null);
-				aux.setNumComprobante(0);
-				aux.setObservaciones(null);
-				aux.setImpTotMo(rs.getDouble("imp_tot_mo"));
-				
-				
-				lstDepositos.add(aux);
+				//lstDepositos.add(aux);
 				
 			}
 			rs.close ();
@@ -222,5 +225,6 @@ public class DAOCheques implements IDAOCheques{
 	public void depositarCheques(String codEmp, ArrayList<DepositoVO> cheques){
 		
 	}
+
 	
 }

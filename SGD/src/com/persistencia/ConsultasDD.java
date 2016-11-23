@@ -1645,8 +1645,8 @@ public String getGastosAnuladosxProceso(){
 		sb.append("INSERT INTO c_cheques ( cod_docum, serie_docum, nro_docum, "
 				+ " cod_emp, cod_moneda, cod_tit, "
 				+ " imp_tot_mn, imp_tot_mo, cuenta, "
-				+ " fecha_mod, usuario_mod, operacion, cod_cta, referencia, nro_trans ) ");
-		sb.append("VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?, ?) ");
+				+ " fecha_mod, usuario_mod, operacion, cod_cta, referencia, nro_trans, cod_bco, cod_ctabco ) ");
+		sb.append("VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?, ?, ?, ? ) ");
 		
 		return sb.toString();
 	}
@@ -1871,5 +1871,95 @@ public String eliminarSaldoCuenta(){
 		return sb.toString();
 		
 	}
+	
+	public String getCabezalDeposito(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT c_deposito.cod_docum, c_deposito.serie_docum, c_deposito.nro_docum, "
+				+ "c_deposito.cod_emp, c_deposito.fec_doc, c_deposito.fec_valor, c_deposito.cod_bco, "
+				+ "c_deposito.cod_ctabco, c_deposito.cod_moneda, c_deposito.imp_tot_mn, c_deposito.imp_tot_mo, "
+				+ "c_deposito.tc_mov, c_deposito.observaciones, c_deposito.nro_trans, c_deposito.fecha_mod, "
+				+ "c_deposito.usuario_mod, c_deposito.operacion ");
+		
+		sb.append("WHERE cod_emp = ? ");
+		
+		return sb.toString();
+	}
+	
+	public String getDetalleDeposito(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT d_deposito.cod_docum, d_deposito.serie_docum, d_deposito.nro_docum, "
+				+ "d_deposito.cuenta, d_deposito.fec_doc, d_deposito.fec_valor, d_deposito.cod_moneda, "
+				+ "d_deposito.imp_tot_mn, d_deposito.imp_tot_mo, d_deposito.nro_trans, d_deposito.fecha_mod, "
+				+ "d_deposito.usuario_mod, d_deposito.operacion, d_deposito.linea, d_deposito.cod_emp ");
+		
+		sb.append("WHERE d_deposito.cod_emp = ? AND d_deposito.nro_trans = ? ");
+		
+		return sb.toString();
+	}
+	
+	public String insertarCabezalDeposito()
+	{
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO c_deposito (cod_docum, serie_docum, nro_docum, cod_emp, fec_doc, fec_valor, "
+				+ " cod_bco, cod_ctabco, cod_moneda, imp_tot_mn, imp_tot_mo, tc_mov, nro_trans, fecha_mod, "
+				+ "usuario_mod, operacion ");
+		sb.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?) ");
+		
+		return sb.toString();
+	
+	}
+	
+	public String insertarDetalleDeposito()
+	{
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO d_deposito (cod_docum, serie_docum, nro_docum, cuenta, fec_doc, fec_valor, "
+				+ " cod_moneda, imp_tot_mn, imp_tot_mo, nro_trans, fecha_mod, "
+				+ "usuario_mod, operacion, linea, cod_emp ");
+		sb.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?	) ");
+		
+		return sb.toString();
+	
+	}
+	
+	public String memberDeposito(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT nro_trans ");
+		sb.append("FROM c_deposito WHERE nro_trans = ? AND cod_emp = ? ");
+		
+		return sb.toString();
+	}
+	
+	public String eliminarDeposito(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("DELETE c_deposito ");
+		sb.append("WHERE nro_trans = ? AND cod_emp = ? ");
+		
+		return sb.toString();
+	}
+	
+	public String eliminarDepositoDetalle(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("DELETE d_deposito ");
+		sb.append("WHERE nro_trans = ? AND cod_emp = ? ");
+		
+		return sb.toString();
+	}
+	
+	
+	
 /////////////////////// FIN DEPOSITOS ///////////////////////////////////////////////////
 }

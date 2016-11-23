@@ -13,20 +13,21 @@ import com.excepciones.Cheques.InsertandoChequeException;
 import com.excepciones.Cheques.ModificandoChequeException;
 import com.excepciones.Cheques.NoExisteChequeException;
 import com.excepciones.Cheques.ObteniendoChequeException;
+import com.logica.Cheque;
 import com.logica.Depositos.Deposito;
 import com.logica.Docum.DatosDocum;
 
 public interface IDAOCheques {
 	
-	public boolean memberCheque(DatosDocum docum, Connection con) throws ExisteChequeException;
+	public boolean memberCheque(Cheque cheque, Connection con) throws ExisteChequeException;
 	
-	public void insertarCheque(DatosDocum documento, Connection con)
+	public void insertarCheque(Cheque cheque, Connection con)
 			throws InsertandoChequeException, ConexionException, SQLException;
 	
-	public void eliminarCheque(DatosDocum documento, Connection con)
+	public void eliminarCheque(Cheque cheque, Connection con)
 			throws EliminandoChequeException, ConexionException;
 	
-	public void modificarCheque(DatosDocum cheque, int signo, double tc   , Connection con)
+	public void modificarCheque(Cheque cheque, int signo, double tc   , Connection con)
 			throws ModificandoChequeException, ConexionException, EliminandoChequeException, InsertandoChequeException, ExisteChequeException, NoExisteChequeException;
 	
 	public ArrayList<Deposito> getChequesBanco(Connection con, String codEmp, String codBanco, String codCtaBco) throws ObteniendoChequeException, ConexionException, ObteniendoCuentasBcoException, ObteniendoBancosException;
