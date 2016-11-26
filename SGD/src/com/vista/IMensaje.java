@@ -9,5 +9,5 @@ public interface IMensaje {
 	
 	public void cerrarVentana();
 	
-	public void eliminarCobro();
+	public void eliminarFact();
 }

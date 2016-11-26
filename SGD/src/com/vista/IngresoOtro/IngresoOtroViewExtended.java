@@ -1705,7 +1705,7 @@ private void mostrarDatosDeBanco(){
 	}
 
 	@Override
-	public void eliminarCobro() {
+	public void eliminarFact() {
 		// TODO Auto-generated method stub
 		try {
 			

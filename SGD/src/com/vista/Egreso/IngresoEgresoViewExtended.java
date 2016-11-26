@@ -2770,7 +2770,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 	}
 
 	@Override
-	public void eliminarCobro() {
+	public void eliminarFact() {
 		// TODO Auto-generated method stub
 		try {
 			

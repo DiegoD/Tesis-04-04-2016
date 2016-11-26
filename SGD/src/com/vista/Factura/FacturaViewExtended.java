@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
-import com.controladores.IngresoEgresoControlador;
+import com.controladores.FacturaControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
@@ -18,7 +18,7 @@ import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Bancos.ObteniendoBancosException;
 import com.excepciones.Bancos.ObteniendoCuentasBcoException;
 import com.excepciones.Cotizaciones.ObteniendoCotizacionesException;
-import com.excepciones.Egresos.*;
+import com.excepciones.Factura.*;
 import com.excepciones.Monedas.ObteniendoMonedaException;
 import com.excepciones.Periodo.ExistePeriodoException;
 import com.excepciones.Periodo.NoExistePeriodoException;
@@ -51,6 +51,8 @@ import com.valueObject.TitularVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.Cotizacion.CotizacionVO;
 import com.valueObject.Docum.DocumDetalleVO;
+import com.valueObject.Docum.FacturaDetalleVO;
+import com.valueObject.Docum.FacturaVO;
 import com.valueObject.Gasto.GastoVO;
 import com.valueObject.Gasto.GtoSaldoAux;
 import com.valueObject.IngresoCobro.IngresoCobroDetalleVO;
@@ -80,15 +82,15 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private BeanFieldGroup<IngresoCobroVO> fieldGroup;
-	private ArrayList<IngresoCobroDetalleVO> lstDetalleVO; /*Lista de detalle del Cobro*/
-	private ArrayList<IngresoCobroDetalleVO> lstDetalleAgregar; /*Lista de detalle a agregar*/
-	private ArrayList<IngresoCobroDetalleVO> lstDetalleQuitar; /*Lista de detalle a agregar*/
-	private IngresoEgresoControlador controlador;
+	private BeanFieldGroup<FacturaVO> fieldGroup;
+	private ArrayList<FacturaDetalleVO> lstDetalleVO; /*Lista de detalle de Factura*/
+	private ArrayList<FacturaDetalleVO> lstDetalleAgregar; /*Lista de detalle a agregar*/
+	private ArrayList<FacturaDetalleVO> lstDetalleQuitar; /*Lista de detalle a agregar*/
+	private FacturaControlador controlador;
 	private String operacion;
 	private FacturaPanelExtended mainView;
-	BeanItemContainer<IngresoCobroDetalleVO> container;
-	private IngresoCobroDetalleVO formSelecccionado; /*Variable utilizada cuando se selecciona
+	BeanItemContainer<FacturaDetalleVO> container;
+	private FacturaDetalleVO formSelecccionado; /*Variable utilizada cuando se selecciona
 	 										  un detalle, para poder quitarlo de la lista*/
 	UsuarioPermisosVO permisoAux;
 	CotizacionVO cotizacion =  new CotizacionVO();
@@ -99,14 +101,14 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	 															 en negativo*/
 	
 	Double importeTotalCalculado;
-	IngresoCobroVO ingresoCopia; /*Variable utilizada para la modificacion del cobro,
-	 							 para poder detectar las lineas eliminadas del cobro */
+	FacturaVO ingresoCopia; /*Variable utilizada para la modificacion de factura,
+	 							 para poder detectar las lineas eliminadas de la misma */
 	
 	boolean cambioMoneda;
 	MonedaVO monedaNacional = new MonedaVO();
 	
 	MySub sub;
-	//private UsuarioPermisosVO permisos; /*Variable con los permisos del usuario*/
+	
 	private PermisosUsuario permisos; /*Variable con los permisos del usuario*/
 	ArrayList<MonedaVO> lstMonedas = new ArrayList<MonedaVO>();
 	Validaciones val = new Validaciones();
@@ -134,10 +136,9 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	lstGastos.setEditorBuffered(true);
 	
 	
-	/*Esta lista es utilizada solamente para los formularios nuevos
-	 * agregados*/
-	this.lstDetalleAgregar = new ArrayList<IngresoCobroDetalleVO>();
-	this.lstDetalleQuitar = new ArrayList<IngresoCobroDetalleVO>();
+	/*Esta lista es utilizada solamente para detalle  agregados*/
+	this.lstDetalleAgregar = new ArrayList<FacturaDetalleVO>();
+	this.lstDetalleQuitar = new ArrayList<FacturaDetalleVO>();
 	this.inicializarForm();
 	
 	
@@ -218,25 +219,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		
 	});
 	
-	/**
-	* Agregamos listener al combo de tipo (banco, caja), determinamos si mostramos
-	* los campos del banco o no;
-	*
-	*/
-	comboBancos.addValueChangeListener(new Property.ValueChangeListener() {
 
-   		@Override
-		public void valueChange(ValueChangeEvent event) {
-   			BancoVO bcoAux;
-			
-			if(comboBancos.getValue() != null){
-				bcoAux = new BancoVO();
-				bcoAux = (BancoVO) comboBancos.getValue();
-				
-				inicializarComboCuentas(bcoAux.getCodigo(), "Banco");
-			}		
-		}
-    });
 	
 	
 	fecValor.addValueChangeListener(new Property.ValueChangeListener() {
@@ -267,7 +250,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 				} catch (NumberFormatException | ExistePeriodoException | ConexionException | SQLException
 						| NoExistePeriodoException | InicializandoException | ObteniendoPermisosException
 						| NoTienePermisosException e) {
-					// TODO Auto-generated catch block
+					
 					Mensajes.mostrarMensajeError(e.getMessage());
 				}
 			}
@@ -304,8 +287,8 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	   				}
 				} catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
 						| InicializandoException | NoTienePermisosException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					
+					Mensajes.mostrarMensajeError(e.getMessage());
 				}
 				if(cotizacion.getCotizacionVenta() != 0){
 					cotizacionVenta = cotizacion.getCotizacionVenta();
@@ -369,8 +352,8 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 					} 
 	   				catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
 							| InicializandoException | NoTienePermisosException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+	   					
+	   					Mensajes.mostrarMensajeError(e.getMessage());
 					}
 	   				if(fecha != null){
 	   					
@@ -399,7 +382,6 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
    			mostrarDatosDeBanco();
 		}
     });
-  //  combobox.setImmediate(true);
     
     comboCuentas.addValueChangeListener(new Property.ValueChangeListener() {
 
@@ -440,8 +422,8 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	   				}
 				} catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
 						| InicializandoException | NoTienePermisosException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					
+					Mensajes.mostrarMensajeError(e.getMessage());
 				}
 				if(cotizacion.getCotizacionVenta() != 0){
 					cotizacionVenta = cotizacion.getCotizacionVenta();
@@ -527,8 +509,8 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 				} 
    				catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
 						| InicializandoException | NoTienePermisosException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+   					
+   					Mensajes.mostrarMensajeError(e.getMessage());
 				}
    				if(fecha != null){
    					
@@ -553,7 +535,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
    				cotizacionVenta = (double)1;
    				calculos();
    			}
-   			/*Si ya hay ingresado un gasto no lo dejamos cambiar la moneda*/
+   			/*Si ya hay ingresado una linea  no dejamos cambiar la moneda*/
    			if(lstDetalleVO.size()>0)
    			{
    				calcularImporteTotal();
@@ -613,7 +595,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 				UsuarioPermisosVO permisoAux = 
 						new UsuarioPermisosVO(this.permisos.getCodEmp(),
 								this.permisos.getUsuario(),
-								VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
+								VariablesPermisos.FORMULARIO_FACTURA,
 								VariablesPermisos.OPERACION_NUEVO_EDITAR);				
 				
 				
@@ -624,9 +606,9 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 					return;
 				}
 				
-				IngresoCobroVO ingCobroVO = new IngresoCobroVO();	
+				FacturaVO factVO = new FacturaVO();	
 				
-				ingCobroVO.setImpTotMo((Double) impTotMo.getConvertedValue());
+				factVO.setImpTotMo((Double) impTotMo.getConvertedValue());
 				
 				/*Obtenemos la cotizacion y calculamos el importe MN*/
 				Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
@@ -648,9 +630,9 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 						/*SI EL TIPO ES CAJA TOMAMOS LA MONEDA DEL CABEZAL DEL COBRO*/
 						//if(((String)comboTipo.getValue()).equals("Caja")) { 
 						
-							ingCobroVO.setCodMoneda(auxMoneda.getCodMoneda());
-							ingCobroVO.setNomMoneda(auxMoneda.getDescripcion());
-							ingCobroVO.setSimboloMoneda(auxMoneda.getSimbolo());
+							factVO.setCodMoneda(auxMoneda.getCodMoneda());
+							factVO.setNomMoneda(auxMoneda.getDescripcion());
+							factVO.setSimboloMoneda(auxMoneda.getSimbolo());
 						//}
 					}
 					
@@ -661,122 +643,55 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 					if(auxMoneda.isNacional()) /*Si la moneda del cabezal del cobro seleccionada es nacional*/
 					{
 						/*Si la moneda es la nacional, el TC es 1 y el importe MN es el mismo*/
-						ingCobroVO.setTcMov(1);
-						ingCobroVO.setImpTotMn(ingCobroVO.getImpTotMo());
+						factVO.setTcMov(1);
+						factVO.setImpTotMn(factVO.getImpTotMo());
 						
 					}else
 					{
 						coti = this.controlador.getCotizacion(permisoAux, fecha, this.getCodMonedaSeleccionada());
-						ingCobroVO.setTcMov(coti.getCotizacionVenta());
-						ingCobroVO.setImpTotMn((ingCobroVO.getImpTotMo()*ingCobroVO.getTcMov()));
+						factVO.setTcMov(coti.getCotizacionVenta());
+						factVO.setImpTotMn((factVO.getImpTotMo()*factVO.getTcMov()));
 					}
 					
 				} catch (Exception e) {
 					Mensajes.mostrarMensajeError(e.getMessage());
 				}
 				
-				ingCobroVO.setFecDoc(new java.sql.Timestamp(fecDoc.getValue().getTime()));
-				ingCobroVO.setFecValor(new java.sql.Timestamp(fecValor.getValue().getTime()));
-				/*Codigo y serie docum se inicializan en constructor*/
-				//ingCobroVO.setNroDocum(Integer.parseInt(nroDocum.getValue()));  VER ESTO CON EL NUMERADOR
-				ingCobroVO.setCodEmp(permisos.getCodEmp());
-				ingCobroVO.setReferencia(referencia.getValue());
+				factVO.setFecDoc(new java.sql.Timestamp(fecDoc.getValue().getTime()));
+				factVO.setFecValor(new java.sql.Timestamp(fecValor.getValue().getTime()));
+			
+				factVO.setCodEmp(permisos.getCodEmp());
+				factVO.setReferencia(referencia.getValue());
 				
-				ingCobroVO.setCodCtaInd("egrcobro");
+				factVO.setCodCtaInd("fact");
 				
 				
-				ingCobroVO.setCodTitular(codTitular.getValue());
-				ingCobroVO.setNomTitular(nomTitular.getValue());
+				factVO.setCodTitular(codTitular.getValue());
+				factVO.setNomTitular(nomTitular.getValue());
 				
-				ingCobroVO.setOperacion(operacion);
+				factVO.setOperacion(operacion);
 				
-				/*Ver los totales y tc*/
-				//ingCobroVO.setImpTotMn(impTotMn);
-				//ingCobroVO.setImpTotMo(impTotMn);
-				//ingCobroVO.setTcMov(tcMov);
 				
-				/*Si es nuevo aun no tenemos el nro del cobro*/
+				/*Si es nuevo aun no tenemos el nro de factura*/
 				if(this.nroDocum.getValue() != null)
-					ingCobroVO.setNroDocum(Integer.parseInt(this.nroDocum.getValue().toString().trim()));
+					factVO.setNroDocum(Integer.parseInt(this.nroDocum.getValue().toString().trim()));
 				
-				
-				/*Si es banco tomamos estos cmapos de lo contrario caja*/
-				if(this.comboTipo.getValue().toString().equals("Banco")){
-				
-					ingCobroVO.setmPago((String)comboMPagos.getValue());
-					
-					if(ingCobroVO.getmPago().equals("transferencia"))
-					{
-						ingCobroVO.setCodDocRef("tranemi");
-						
-						ingCobroVO.setSerieDocRef("0");
-					}
-					else if(ingCobroVO.getmPago().equals("Cheque"))
-					{
-						ingCobroVO.setCodDocRef("cheqemi");
-						ingCobroVO.setNroDocRef((Integer) nroDocRef.getConvertedValue());
-						ingCobroVO.setSerieDocRef(serieDocRef.getValue());
-						
-					}else
-					{
-						
-						ingCobroVO.setCodDocRef("0");
-						ingCobroVO.setNroDocRef(0);
-						ingCobroVO.setSerieDocRef("0");
-					}
-												
-						//Datos del banco y cuenta
-						CtaBcoVO auxctaBco = new CtaBcoVO();
-						if(this.comboCuentas.getValue() != null){
-							
-							auxctaBco = (CtaBcoVO) this.comboCuentas.getValue();
-							
-						}
-						
-						ingCobroVO.setCodBanco(auxctaBco.getCodBco());
-						ingCobroVO.setCodCtaBco(auxctaBco.getCodigo());
-						ingCobroVO.setNomCtaBco(auxctaBco.getNombre());
-						ingCobroVO.setCodMonedaCtaBco(auxctaBco.getMonedaVO().getCodMoneda());
-						ingCobroVO.setNacionalMonedaCtaBco(auxctaBco.getMonedaVO().isNacional());
-					
-						
-						
-					
-				}
-				else {
-					
-					if(((String)comboTipo.getValue()).equals("Caja"))
-					{
-						ingCobroVO.setCodBanco("0");
-						ingCobroVO.setNomBanco("0");
-						
-						ingCobroVO.setCodCtaBco("0");
-						ingCobroVO.setNomCtaBco("0");
-						
-						ingCobroVO.setCodDocRef("0");
-						ingCobroVO.setNroDocRef(0);
-						ingCobroVO.setSerieDocRef("0");
-						
-						ingCobroVO.setmPago("Caja");
-					}
-								
-				}
-				
-				ingCobroVO.setUsuarioMod(this.permisos.getUsuario());
+			
+				factVO.setUsuarioMod(this.permisos.getUsuario());
 				
 				if(this.operacion != Variables.OPERACION_NUEVO){
-					ingCobroVO.setNroTrans((long)this.nroTrans.getConvertedValue());
+					factVO.setNroTrans((long)this.nroTrans.getConvertedValue());
 				}
 				else{
-					ingCobroVO.setNroTrans(0);
+					factVO.setNroTrans(0);
 				}
 				
 				
 				/*Si hay detalle nuevo agregado
-				 * lo agregamos a la lista del formulario*/
+				 * lo agregamos a la lista */
 				if(this.lstDetalleAgregar.size() > 0)
 				{
-					for (IngresoCobroDetalleVO f : this.lstDetalleAgregar) {
+					for (FacturaDetalleVO f : this.lstDetalleAgregar) {
 						
 						/*Si no esta lo agregamos*/
 						if(!this.existeFormularioenLista(f.getNroDocum()))
@@ -784,36 +699,23 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 					}
 				}
 					
-				ingCobroVO.setCodCuenta("egrcobro");
-				ingCobroVO.setDetalle(this.lstDetalleVO);
+				factVO.setCodCuenta("factura");
+				factVO.setDetalle(this.lstDetalleVO);
 				
-				if(ingCobroVO.getDetalle().size() <= 0){
-					Mensajes.mostrarMensajeError("El egreso no tiene detalle");
+				if(factVO.getDetalle().size() <= 0){
+					Mensajes.mostrarMensajeError("La factura no tiene detalle");
 					return;
 				}
 				
-				/*Obtenemos la moneda de la cuenta*/
-				//Datos del banco y cuenta y moneda de la cuenta
-				CtaBcoVO auxctaBco = new CtaBcoVO();
-				if(this.comboCuentas.getValue() != null){
-					
-					auxctaBco = (CtaBcoVO) this.comboCuentas.getValue();
-					
-				}
-				
-				/*Seteamos la moneda de la cta del banco*/
-				ingCobroVO.setCodMonedaCtaBco(auxctaBco.getMonedaVO().getCodMoneda());
-				ingCobroVO.setNacionalMonedaCtaBco(auxctaBco.getMonedaVO().isNacional());
-				
-				ingCobroVO.setCodDocum("egrcobro");
+				factVO.setCodDocum("fact");
 				
 				if(this.operacion.equals(Variables.OPERACION_NUEVO))	
 				{	
-					this.controlador.insertarIngresoEgreso(ingCobroVO, permisoAux);
+					this.controlador.insertarFactura(factVO, permisoAux);
 					
-					this.mainView.actulaizarGrilla(ingCobroVO);
+					this.mainView.actulaizarGrilla(factVO);
 					
-					Mensajes.mostrarMensajeOK("Se ha guardado el Cobro");
+					Mensajes.mostrarMensajeOK("Se ha guardado la Factura");
 					main.cerrarVentana();
 				
 				}else if(this.operacion.equals(Variables.OPERACION_EDITAR))
@@ -823,22 +725,21 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 					
 					
 					/*VER DE IMPLEMENTAR PARA EDITAR BORRO TODO E INSERTO NUEVAMENTE*/
-					this.controlador.modificarIngresoEgreso(ingCobroVO,ingresoCopia, permisoAux);
+					this.controlador.modificarFactura(factVO,ingresoCopia, permisoAux);
 					
-					this.mainView.actulaizarGrilla(ingCobroVO);
+					this.mainView.actulaizarGrilla(factVO);
 					
 					Mensajes.mostrarMensajeOK("Se ha modificado el Cobro");
 					main.cerrarVentana();
 					
 				}
-				
 			}
 			else /*Si los campos no son válidos mostramos warning*/
 			{
 				Mensajes.mostrarMensajeWarning(Variables.WARNING_CAMPOS_NO_VALIDOS);
 			}
 				
-			} catch (ModificandoEgresoCobroException| NoExisteEgresoCobroException |InsertandoEgresoCobroException| ExisteEgresoCobroException | InicializandoException| ConexionException | NoTienePermisosException| ObteniendoPermisosException e) {
+			} catch (ModificandoFacturaException| NoExisteFacturaException |InsertandoFacturaException| ExisteFacturaException | InicializandoException| ConexionException | NoTienePermisosException| ObteniendoPermisosException e) {
 				
 				Mensajes.mostrarMensajeError(e.getMessage());
 			}
@@ -857,7 +758,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 			permisoAux = 
 					new UsuarioPermisosVO(permisos.getCodEmp(),
 							permisos.getUsuario(),
-							VariablesPermisos.FORMULARIO_GASTOS,
+							VariablesPermisos.FORMULARIO_FACTURA,
 							VariablesPermisos.OPERACION_NUEVO_EDITAR);
 			
 			if(!val.validaPeriodo(fecValor.getValue(), permisoAux)){
@@ -880,7 +781,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 			permisoAux = 
 					new UsuarioPermisosVO(permisos.getCodEmp(),
 							permisos.getUsuario(),
-							VariablesPermisos.FORMULARIO_GASTOS,
+							VariablesPermisos.FORMULARIO_FACTURA,
 							VariablesPermisos.OPERACION_NUEVO_EDITAR);
 			
 			try {
@@ -890,11 +791,11 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 					return;
 				}
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 			}
 			
-			MensajeExtended form = new MensajeExtended("Elimina el cobro?",this);
+			MensajeExtended form = new MensajeExtended("Desea eliminar factura?",this);
 		
 			sub = new MySub("25%", "20%" );
 			sub.setModal(true);
@@ -920,19 +821,18 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 					
 					sub = new MySub("100%","45%");
 					sub.setModal(true);
-					//sub.setVista(form);
+					
 					sub.setVista((Component) form);
 					
 					sub.center();
 					
-					String codCliente;/*Codigo del cliente para obtener los gastos a cobrar del mismo*/
+					String codCliente;/*Codigo del cliente para obtener los gastos a facturar del mismo*/
 					
-					/*Obtenemos los formularios que no estan en el grupo
-					 * para mostrarlos en la grilla para seleccionar*/
+	
 					if(this.operacion.equals(Variables.OPERACION_NUEVO) )
 					{
 						/*Si la operacion es nuevo, ponemos el  codGrupo vacio
-						 * asi nos trae todos los grupos disponibles*/
+						 * asi nos trae todos los  disponibles*/
 						codCliente = this.codTitular.getValue().toString().trim();
 					}
 					else 
@@ -940,40 +840,6 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 						/*Si es operacion Editar tomamos el codGrupo de el fieldGroup*/
 						codCliente = fieldGroup.getItemDataSource().getBean().getCodTitular();
 					}
-					
-//					/*Inicializamos VO de permisos para el usuario, formulario y operacion
-//					 * para confirmar los permisos del usuario*/
-//					UsuarioPermisosVO permisoAux = 
-//							new UsuarioPermisosVO(this.permisos.getCodEmp(),
-//									this.permisos.getUsuario(),
-//									VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
-//									VariablesPermisos.OPERACION_NUEVO_EDITAR);
-//					
-//
-//					//Moneda
-//					MonedaVO auxMoneda = new MonedaVO();
-//					if(this.comboMoneda.getValue() != null){
-//						auxMoneda = (MonedaVO) this.comboMoneda.getValue();
-//					}
-//					
-//					/*Obtenemos los gastos con saldo del cliente*/
-//					ArrayList<GastoVO> lstGastosConSaldo = this.controlador.getGastosConSaldo(permisoAux, codCliente);
-//					
-//					/*Hacemos una lista auxliar para pasarselo al BusquedaViewExtended*/
-//					ArrayList<Object> lst = new ArrayList<Object>();
-//					Object obj;
-//					for (GastoVO i: lstGastosConSaldo) {
-//						
-//						/*Verificamos que el gasto ya no esta en la grilla*/
-//						if(!this.existeFormularioenLista(i.getNroDocum()))
-//						{
-//							obj = new Object();
-//							obj = (Object)i;
-//							lst.add(obj);
-//						}
-//					}
-					
-					//form.inicializarGrilla(lst);
 					
 					UI.getCurrent().addWindow(sub);
 
@@ -992,7 +858,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 			if(this.lstDetalleAgregar.size() > 0)
 			{
 				
-				for (IngresoCobroDetalleVO f : this.lstDetalleAgregar) {
+				for (FacturaDetalleVO f : this.lstDetalleAgregar) {
 					
 					/*Si no esta lo agregamos*/
 					if(this.existeFormularioenLista(f.getNroDocum()))
@@ -1006,7 +872,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 			
 			if(this.lstDetalleQuitar.size() > 0)
 			{
-				for (IngresoCobroDetalleVO f : this.lstDetalleQuitar) {
+				for (FacturaDetalleVO f : this.lstDetalleQuitar) {
 					
 					/*Si no esta lo agregamos*/
 					if(!this.existeFormularioenLista(f.getNroDocum()))
@@ -1026,12 +892,12 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	
 			try {
 				
-				/*Verificamos que haya un formulario seleccionado para
+				/*Verificamos que haya una linea seleccionada para
 				 * eliminar*/
 				if(formSelecccionado != null)
 				{
 
-					/*Recorremos los gastos del cobro
+					/*Recorremos las lineas
 					 * y buscamos el seleccionarlo para quitarlo*/
 					int i = 0;
 					while(i < lstDetalleVO.size() && !esta)
@@ -1054,7 +920,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 						/*Actualizamos el container y la grilla*/
 						container.removeAllItems();
 						container.addAll(lstDetalleVO);
-						//lstFormularios.setContainerDataSource(container);
+						
 						this.actualizarGrillaContainer(container);
 						
 						this.calcularImporteTotal();
@@ -1080,8 +946,8 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		       
 		    	try{
 		    		if(lstGastos.getSelectedRow() != null){
-		    			BeanItem<IngresoCobroDetalleVO> item = container.getItem(lstGastos.getSelectedRow());
-				    	formSelecccionado = item.getBean(); /*Seteamos el formulario
+		    			BeanItem<FacturaDetalleVO> item = container.getItem(lstGastos.getSelectedRow());
+				    	formSelecccionado = item.getBean(); /*Seteamos la linea
 			    	 									seleccionado para poder quitarlo*/
 		    		}
 		    	}
@@ -1107,7 +973,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 			
 			try {
 				
-				/*Verificamos que haya un formulario seleccionado para
+				/*Verificamos que haya una linea seleccionada para
 				 * eliminar*/
 				if(formSelecccionado != null){
 					
@@ -1179,16 +1045,14 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 
 	public  void inicializarForm(){
 		
-		this.controlador = new IngresoEgresoControlador();
+		this.controlador = new FacturaControlador();
 					
-		this.fieldGroup =  new BeanFieldGroup<IngresoCobroVO>(IngresoCobroVO.class);
+		this.fieldGroup =  new BeanFieldGroup<FacturaVO>(FacturaVO.class);
 		
 		/*Mostramos o ocultamos los datos del Banco, dependiendo del combo tipo (banco, caja)*/
 		this.mostrarDatosDeBanco();
 		
 		/*Inicializamos los combos*/
-		this.inicializarComboBancos(null);
-		this.inicializarComboCuentas(null, "");
 		this.inicializarComboMoneda(null);
 		
 		inicializarCampos();
@@ -1305,24 +1169,19 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	}
 	
 	/**
-	 * Dado un item GrupoVO seteamos la info del formulario
+	 * Dado un item VO seteamos la info del formulario
 	 *
 	 */
-	public void setDataSourceFormulario(BeanItem<IngresoCobroVO> item)
+	public void setDataSourceFormulario(BeanItem<FacturaVO> item)
 	{
 		try{
 			
 		this.fieldGroup.setItemDataSource(item);
 		
 		
-		IngresoCobroVO ing = new IngresoCobroVO();
-		ing = fieldGroup.getItemDataSource().getBean();
-		String fecha = new SimpleDateFormat("dd/MM/yyyy").format(ing.getFechaMod());
-		
-		/*Inicializamos los combos*/
-		this.inicializarComboBancos(ing.getCodBanco());
-		this.inicializarComboCuentas(ing.getCodCtaBco(), "CuentaBanco");
-		this.inicializarComboMoneda(ing.getCodMoneda());
+		FacturaVO fact = new FacturaVO();
+		fact = fieldGroup.getItemDataSource().getBean();
+		String fecha = new SimpleDateFormat("dd/MM/yyyy").format(fact.getFechaMod());
 		
 		
 		//Obtenemos bco
@@ -1355,22 +1214,13 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		this.comboMPagos.addItem("Sin Asignar");
 		this.comboMPagos.addItem("Cheque");
 		this.comboMPagos.addItem("Transferencia");
-		/*Seteamos el combo de medio de pago*/
-		if(item.getBean().getmPago().equals("0"))
-		{
-			this.comboMPagos.setValue("Sin Asignar");
-			
-		}else {
-			this.comboMPagos.setValue(item.getBean().getmPago());
-		}
-		
-		
+	
 		
 		auditoria.setDescription(
 			
-			"Usuario: " + ing.getUsuarioMod() + "<br>" +
+			"Usuario: " + fact.getUsuarioMod() + "<br>" +
 		    "Fecha: " + fecha + "<br>" +
-		    "Operación: " + ing.getOperacion());
+		    "Operación: " + fact.getOperacion());
 		
 		/*SETEAMOS LA OPERACION EN MODO LECUTA
 		 * ES CUANDO LLAMAMOS ESTE METODO*/
@@ -1378,8 +1228,8 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 			this.iniFormLectura();
 		
 		/*Copiamos la variable para la modificacion*/
-		this.ingresoCopia = new IngresoCobroVO();
-		this.ingresoCopia.copiar(ing);
+		this.ingresoCopia = new FacturaVO();
+		this.ingresoCopia.copiar(fact);
 		
 		}catch(Exception e)
 		{
@@ -1387,8 +1237,6 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 		}
 	}
-	
-
 	
 	
 	/**
@@ -1398,8 +1246,8 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	private void iniFormLectura()
 	{
 		/*Verificamos que tenga permisos para editar*/
-		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
-		boolean permisoEliminar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO, VariablesPermisos.OPERACION_BORRAR);
+		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_FACTURA, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		boolean permisoEliminar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_FACTURA, VariablesPermisos.OPERACION_BORRAR);
 		
 		
 		this.chkFuncionario.setVisible(false);
@@ -1417,7 +1265,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 			this.disableBotonLectura();
 		}
 		
-		/*Deshabilitamos botn aceptar*/
+		/*Deshabilitamos boton aceptar*/
 		this.disableBotonAceptar();
 		this.disableBotonAgregarQuitar();
 		
@@ -1434,17 +1282,18 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		this.readOnlyFields(true);
 		
 		
-		/*Seteamos la grilla con los formularios*/
+		/*Seteamos la grilla */
 		this.container = 
-				new BeanItemContainer<IngresoCobroDetalleVO>(IngresoCobroDetalleVO.class);
+				new BeanItemContainer<FacturaDetalleVO>(FacturaDetalleVO.class);
 		
 		
 		if(this.lstDetalleVO != null)
 		{
-			for (IngresoCobroDetalleVO detVO : this.lstDetalleVO) {
+			for (FacturaDetalleVO detVO : this.lstDetalleVO) {
 				container.addBean(detVO);
 			}
 		}
+		
 		this.actualizarGrillaContainer(container);
 						
 	}
@@ -1463,13 +1312,13 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		this.btnBuscarCliente.setVisible(false);
 		this.impTotMo.setEnabled(true);
 		/*Verificamos que tenga permisos*/
-		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_FACTURA, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
 		this.importeTotalCalculado = (Double)impTotMo.getConvertedValue();
 		
 		if(permisoNuevoEditar){
 			
-			/*Oculatamos Editar y mostramos el de guardar y de agregar formularios*/
+			/*Oculatamos Editar y mostramos el de guardar y de agregar*/
 			this.enableBotonAceptar();
 			this.disableBotonLectura();
 			this.enableBotonAgregarQuitar();
@@ -1513,7 +1362,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		importeTotalCalculado = (double) 0;
 		
 		/*Chequeamos si tiene permiso de editar*/
-		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_FACTURA, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
 		
 		/*Mostramos o ocultamos los datos del Banco, dependiendo del combo tipo (banco, caja)*/
@@ -1530,14 +1379,13 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		this.enableBotonEliminar();
 		this.disableBotonLectura();
 		this.enableBotonAgregarQuitar();
-		this.lstDetalleAgregar = new ArrayList<IngresoCobroDetalleVO>();
-		this.lstDetalleQuitar = new ArrayList<IngresoCobroDetalleVO>();
-		this.lstDetalleVO = new ArrayList<IngresoCobroDetalleVO>();
+		this.lstDetalleAgregar = new ArrayList<FacturaDetalleVO>();
+		this.lstDetalleQuitar = new ArrayList<FacturaDetalleVO>();
+		this.lstDetalleVO = new ArrayList<FacturaDetalleVO>();
 		
 		/*Inicializamos el container*/
 		this.container = 
-				new BeanItemContainer<IngresoCobroDetalleVO>(IngresoCobroDetalleVO.class);
-		
+				new BeanItemContainer<FacturaDetalleVO>(FacturaDetalleVO.class);
 		
 		
 		/*Como es en operacion nuevo, dejamos todos los campos editabls*/
@@ -1711,9 +1559,6 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	 */
 	private void agregarFieldsValidaciones()
 	{
-		//nroDocRef.addValidator(new RegexpValidator("^[0-9]*(\\.[0-9]+)?$", true, "Dato numerico"));
-		
-		//impTotMo.addValidator(new RegexpValidator("^[0-9]*(\\.[0-9]+)?$", true, "Dato numerico"));
 		
         this.serieDocRef.addValidator(
                 new StringLengthValidator(
@@ -1724,7 +1569,6 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
                         " 45 caracteres máximo", 1, 255, false));
         
 	}
-	
 	
 	
 	
@@ -1755,21 +1599,21 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	}
 
 	/**
-	 * Seteamos la lista de los formularios para mostrarlos
+	 * Seteamos la lista del detalle para mostrarlos
 	 * en la grilla
 	 */
-	public void setLstFormularios(ArrayList<IngresoCobroDetalleVO> lst)
+	public void setLstFormularios(ArrayList<FacturaDetalleVO> lst)
 	{
 		this.lstDetalleVO = lst;
 		
 		/*Seteamos la grilla con los formularios*/
 		this.container = 
-				new BeanItemContainer<IngresoCobroDetalleVO>(IngresoCobroDetalleVO.class);
+				new BeanItemContainer<FacturaDetalleVO>(FacturaDetalleVO.class);
 		
 		
 		if(this.lstDetalleVO != null)
 		{
-			for (IngresoCobroDetalleVO det : this.lstDetalleVO) {
+			for (FacturaDetalleVO det : this.lstDetalleVO) {
 				container.addBean(det);
 			}
 		}
@@ -1781,44 +1625,27 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	
 
 	/**
-	 *Agregamos los formularios seleccionados
+	 *Agregamos las lineas seleccionadas
 	 */
-	public void agregarFormulariosSeleccionados(ArrayList<IngresoCobroDetalleVO> lst)
+	public void agregarFormulariosSeleccionados(ArrayList<FacturaDetalleVO> lst)
 	{
 
-		IngresoCobroDetalleVO bean = new IngresoCobroDetalleVO();
+		FacturaDetalleVO bean = new FacturaDetalleVO();
         
         /*Hacemos un hash auxiliar por si se agrega mas de una vez
          * dejamos el ultimo agregado*/
-        Hashtable<String, IngresoCobroDetalleVO> hForms = new Hashtable<String, IngresoCobroDetalleVO>();
+        Hashtable<String, FacturaDetalleVO> hForms = new Hashtable<String, FacturaDetalleVO>();
         
 		if(lst.size() > 0)
 		{
 			
-
-			/*Si esta lo eliminamos y lo volvemos a ingresar, para
-			 * que queden los ultimos cambios hechos*/
-			/*
-			for (FormularioVO formVO : lstForms) {
-				
-				if(hForms.containsKey(formVO.getCodigo())){
-					
-					hForms.remove(formVO.getCodigo());
-					
-				}
-								
-		        hForms.put(formVO.getCodigo(),formVO);
-				
-			}
-			*/
-			
 			/*Recorremos hash e isertamos en lista de forms a agregar*/
 			/*para no duplicar formularios*/
-			for (IngresoCobroDetalleVO det : lst) {
+			for (FacturaDetalleVO det : lst) {
 				
 				/*Hacemos un nuevo objeto por bug de vaadin
 				 * de lo contrario no refresca la grilla*/
-				bean = new IngresoCobroDetalleVO();
+				bean = new FacturaDetalleVO();
 		        bean.copiar(det);
 				
 		        boolean saco = this.lstDetalleAgregar.remove(det);
@@ -1830,7 +1657,6 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 			
 		}
 		
-		//lstFormularios.setContainerDataSource(container);
 		this.actualizarGrillaContainer(container);
 
 	}
@@ -1848,7 +1674,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		
 			com.vaadin.ui.Grid.HeaderRow filterRow = lstGastos.appendHeaderRow();
 	
-			// Set up a filter for all columns
+			// Seteamos filtros de las columnas
 			for (Object pid: lstGastos.getContainerDataSource()
 			                     .getContainerPropertyIds()) 
 			{
@@ -1892,15 +1718,14 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	
 	
 	/**
-	 * Actualizamos Grilla si se agrega o modigfica un formulario y sus permisos
-	 * desde GrupoViewExtended
+	 * Actualizamos Grilla si se agrega o modigfica una linea 
 	 * Es invocado desde las ventnas hijas
 	 *
 	 */
-	public void actulaizarGrilla(IngresoCobroDetalleVO det)
+	public void actulaizarGrilla(FacturaDetalleVO det)
 	{
 
-		/*Si esta el grupo en la lista, es una acutalizacion
+		/*Si esta el detalle en la lista, es una acutalizacion
 		 * y modificamos el objeto en la lista*/
 		if(this.existeFormularioenLista(det.getNroDocum()))
 		{
@@ -1915,31 +1740,28 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		this.container.removeAllItems();
 		this.container.addAll(lstDetalleVO);
 		
-		//this.lstFormularios.setContainerDataSource(container);
 		this.actualizarGrillaContainer(container);
 
 	}
 	
 	
 	/**
-	 * Modificamos un grupoVO de la lista cuando
+	 * Modificamos un VO de la lista cuando
 	 * se hace una acutalizacion de un Grupo
 	 *
 	 */
-	private void actualizarFormularioLista(IngresoCobroDetalleVO det)
+	private void actualizarFormularioLista(FacturaDetalleVO det)
 	{
 		int i =0;
 		boolean salir = false;
 		
-		IngresoCobroDetalleVO detEnLista;
+		FacturaDetalleVO detEnLista;
 		
 		while( i < this.lstDetalleVO.size() && !salir)
 		{
 			detEnLista = this.lstDetalleVO.get(i);
 			if(det.getNroDocum()== detEnLista.getNroDocum())
 			{
-				//this.lstGrupos.get(i).setNomGrupo(grupoVO.getNomGrupo());
-				
 				this.lstDetalleVO.get(i).copiar(det);
 
 				salir = true;
@@ -1951,7 +1773,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	}
 	
 	/**
-	 * Retornanoms true si esta el grupoVO en la lista
+	 * Retornanoms true si esta el VO en la lista
 	 * de grupos de la vista
 	 *
 	 */
@@ -1960,7 +1782,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		int i =0;
 		boolean esta = false;
 		
-		IngresoCobroDetalleVO aux;
+		FacturaDetalleVO aux;
 		
 		while( i < this.lstDetalleVO.size() && !esta)
 		{
@@ -1981,7 +1803,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		int i =0;
 		boolean esta = false;
 		
-		IngresoCobroDetalleVO aux;
+		FacturaDetalleVO aux;
 		
 		while( i < this.lstDetalleVO.size() && !esta)
 		{
@@ -1997,7 +1819,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		
 	}
 	
-	private void actualizarGrillaContainer(BeanItemContainer<IngresoCobroDetalleVO> container)
+	private void actualizarGrillaContainer(BeanItemContainer<FacturaDetalleVO> container)
 	{
 		lstGastos.setContainerDataSource(container);
 		
@@ -2084,7 +1906,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	
 				if(formSelecccionado != null){
 	
-					IngresoCobroDetalleVO aux = obtenerGastoEnLista(formSelecccionado.getNroDocum());
+					FacturaDetalleVO aux = obtenerGastoEnLista(formSelecccionado.getNroDocum());
 			    	gtoSaldo = saldoOriginalGastos.get(formSelecccionado.getNroDocum());
 			    	
 		  		}
@@ -2094,7 +1916,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	        public void postCommit(FieldGroup.CommitEvent commitEvent) throws     FieldGroup.CommitException {
 	      	
 	    	  
-	        	IngresoCobroDetalleVO aux2 = obtenerGastoEnLista(formSelecccionado.getNroDocum());
+	        	FacturaDetalleVO aux2 = obtenerGastoEnLista(formSelecccionado.getNroDocum());
 	    	  
 	        	/*Si el importe modificado es mayor al saldo no dejamos modificar*/
 	    	  
@@ -2114,12 +1936,12 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	 * de grupos de la vista
 	 *
 	 */
-	private IngresoCobroDetalleVO obtenerGastoEnLista(int nro)
+	private FacturaDetalleVO obtenerGastoEnLista(int nro)
 	{
 		int i =0;
 		boolean esta = false;
 		
-		IngresoCobroDetalleVO aux = null;
+		FacturaDetalleVO aux = null;
 		
 		while( i < this.lstDetalleVO.size() && !esta)
 		{
@@ -2188,130 +2010,6 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		
 	}
 	
-	public void inicializarComboCuentas(String cod, String llamador ){
-		
-		if(cod != "0" && cod != null){
-			BeanItemContainer<CtaBcoVO> ctaObj = new BeanItemContainer<CtaBcoVO>(CtaBcoVO.class);
-			CtaBcoVO cta = new CtaBcoVO();
-			ArrayList<CtaBcoVO> lstctas = new ArrayList<CtaBcoVO>();
-			UsuarioPermisosVO permisosAux;
-			
-			try {
-				permisosAux = 
-						new UsuarioPermisosVO(this.permisos.getCodEmp(),
-								this.permisos.getUsuario(),
-								VariablesPermisos.FORMULARIO_INGRESO_COBRO,
-								VariablesPermisos.OPERACION_LEER);
-				
-				/*Si se selacciona un banco buscamos las cuentas, de lo contrario no*/
-				if(this.comboBancos.getValue() != null)
-					lstctas = this.controlador.getCtaBcos(permisosAux,((BancoVO) this.comboBancos.getValue()).getCodigo());
-				
-			} catch (ObteniendoCuentasBcoException | InicializandoException | ConexionException | ObteniendoPermisosException | NoTienePermisosException e) {
-
-				Mensajes.mostrarMensajeError(e.getMessage());
-			}
-			
-			
-			for (CtaBcoVO ctav : lstctas) {
-					
-				ctaObj.addBean(ctav);
-				
-				if(llamador.equals("CuentaBanco")){
-					if(cod != null){
-						if(cod.equals(ctav.getCodigo())){
-							cta = ctav;
-							this.monedaBanco.setValue(cta.getMonedaVO().getSimbolo());
-							this.cuentaBanco.setValue(cta.getCodigo());
-						}
-					}
-				}
-			}
-			
-			
-			if(lstctas.size()>0){
-				
-				//this.comboCuentas.setData("ProgramaticallyChanged");
-				
-				this.comboCuentas.setContainerDataSource(ctaObj);
-				
-				this.comboCuentas.setItemCaptionPropertyId("nombre");
-			}
-			
-			
-			
-			
-			if(cod!=null)
-			{
-				try{
-					this.comboCuentas.setReadOnly(false);
-					this.comboCuentas.setValue(cta);
-					//this.comboCuentas.setReadOnly(true);
-				}catch(Exception e)
-				{}
-			}
-			
-			if(this.operacion.equals(Variables.OPERACION_EDITAR) || this.operacion.equals(Variables.OPERACION_NUEVO))
-			{
-				this.comboCuentas.setReadOnly(false);
-			}
-		}
-		else{
-			this.comboCuentas.setEnabled(false);
-			this.cuentaBanco.setValue("");
-			this.monedaBanco.setValue("");
-		}
-	}
-	
-	public void inicializarComboBancos(String cod){
-		
-		BeanItemContainer<BancoVO> bcoObj = new BeanItemContainer<BancoVO>(BancoVO.class);
-		BancoVO bcoVO = new BancoVO();
-		ArrayList<BancoVO> lstBcos = new ArrayList<BancoVO>();
-		UsuarioPermisosVO permisosAux;
-		
-		try {
-			permisosAux = 
-					new UsuarioPermisosVO(this.permisos.getCodEmp(),
-							this.permisos.getUsuario(),
-							VariablesPermisos.FORMULARIO_INGRESO_COBRO,
-							VariablesPermisos.OPERACION_LEER);
-			
-			lstBcos = this.controlador.getBcos(permisosAux);
-			
-		} catch ( InicializandoException | ConexionException | ObteniendoPermisosException | NoTienePermisosException | ObteniendoBancosException | ObteniendoCuentasBcoException e) {
-
-			Mensajes.mostrarMensajeError(e.getMessage());
-		}
-		
-		for (BancoVO bco : lstBcos) {
-			
-			if(bco.getCodigo().equals("0")){
-				lstBcos.remove(bco);
-			}
-			else{
-				bcoObj.addBean(bco);
-				
-				if(cod != null){
-					if(cod.equals(bco.getCodigo())){
-						bcoVO = bco;
-						bcoVO.setCodEmp("0");
-					}
-				}
-			}
-			
-		}
-		
-		this.comboBancos.setContainerDataSource(bcoObj);
-		this.comboBancos.setItemCaptionPropertyId("nombre");
-		
-		if(cod!=null)
-		{
-			this.comboBancos.setReadOnly(false);
-			this.comboBancos.setValue(bcoVO);
-			this.comboBancos.setReadOnly(true);
-		}
-	}
 	
 	
 	@Override
@@ -2334,7 +2032,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	}
 	
 	/**
-	 * Controlamos que el total de los gastos sea igual al total
+	 * Controlamos que el total del detalle sea igual al total
 	 * ingresado
 	 *
 	 */
@@ -2344,7 +2042,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		UsuarioPermisosVO permisoAux = 
 				new UsuarioPermisosVO(this.permisos.getCodEmp(),
 						this.permisos.getUsuario(),
-						VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
+						VariablesPermisos.FORMULARIO_FACTURA,
 						VariablesPermisos.OPERACION_NUEVO_EDITAR);	
 		
 		double impMoCab = 0;
@@ -2380,7 +2078,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		String codMonedaCab = this.getCodMonedaSeleccionada();
 		//double tcAux;asd
 		
-		for (IngresoCobroDetalleVO det : lstDetalleVO) {
+		for (FacturaDetalleVO det : lstDetalleVO) {
 
 			/*Si la moneda del cobro es igual  a la del documento*/
 			if(codMonedaCab.equals(det.getCodMoneda()))
@@ -2437,21 +2135,21 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 
 	
 	/**
-	 * Seteamos la lista de los formularios para mostrarlos
+	 * Seteamos la lista de detalle para mostrarlos
 	 * en la grilla
 	 */
-	public void setLstDetalle(ArrayList<IngresoCobroDetalleVO> lst)
+	public void setLstDetalle(ArrayList<FacturaDetalleVO> lst)
 	{
 		this.lstDetalleVO = lst;
 		
 		/*Seteamos la grilla con los formularios*/
 		this.container = 
-				new BeanItemContainer<IngresoCobroDetalleVO>(IngresoCobroDetalleVO.class);
+				new BeanItemContainer<FacturaDetalleVO>(FacturaDetalleVO.class);
 		
 		
 		if(this.lstDetalleVO != null)
 		{
-			for (IngresoCobroDetalleVO det : this.lstDetalleVO) {
+			for (FacturaDetalleVO det : this.lstDetalleVO) {
 				container.addBean(det); /*Lo agregamos a la grilla*/
 			}
 		}
@@ -2562,9 +2260,9 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		int j = 0;
 		boolean salir = false;
 		MonedaVO monedaVO;
-		IngresoCobroDetalleVO g;
+		FacturaDetalleVO g;
 			
-		g = new IngresoCobroDetalleVO();
+		g = new FacturaDetalleVO();
 		g.copiar((DocumDetalleVO)gasto);
 		
 		/*Seteamos el nro de linea para poder identificarlo 
@@ -2654,15 +2352,15 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		int lineaSeleccionada = this.formSelecccionado.getLinea();
 		
 		/*Convertimos el Gasto en linea del Egreso*/
-		IngresoCobroDetalleVO g;
-		g = new IngresoCobroDetalleVO();
+		FacturaDetalleVO g;
+		g = new FacturaDetalleVO();
 		g.copiar((DocumDetalleVO)gastoVO);
 		g.setLinea(lineaSeleccionada);
 		
 		int i =0;
 		boolean salir = false;
 		
-		IngresoCobroDetalleVO gastoEnLista;
+		FacturaDetalleVO gastoEnLista;
 		
 		while( i < this.lstDetalleVO.size() && !salir)
 		{
@@ -2688,7 +2386,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		int i =0;
 		boolean esta = false;
 		
-		IngresoCobroDetalleVO aux;
+		FacturaDetalleVO aux;
 		
 		while( i < this.lstDetalleVO.size() && !esta)
 		{
@@ -2737,7 +2435,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		permisosAux = 
 				new UsuarioPermisosVO(this.permisos.getCodEmp(),
 						this.permisos.getUsuario(),
-						VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
+						VariablesPermisos.FORMULARIO_FACTURA,
 						VariablesPermisos.OPERACION_LEER);
 		
 		Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
@@ -2764,7 +2462,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	}
 
 	@Override
-	public void eliminarCobro() {
+	public void eliminarFact() {
 		// TODO Auto-generated method stub
 		try {
 			
@@ -2780,7 +2478,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 				UsuarioPermisosVO permisoAux = 
 						new UsuarioPermisosVO(this.permisos.getCodEmp(),
 								this.permisos.getUsuario(),
-								VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
+								VariablesPermisos.FORMULARIO_FACTURA,
 								VariablesPermisos.OPERACION_NUEVO_EDITAR);				
 				
 				
@@ -2791,9 +2489,9 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 					return;
 				}
 				
-				IngresoCobroVO ingCobroVO = new IngresoCobroVO();	
+				FacturaVO factVO = new FacturaVO();	
 				
-				ingCobroVO.setImpTotMo((Double) impTotMo.getConvertedValue());
+				factVO.setImpTotMo((Double) impTotMo.getConvertedValue());
 				
 				/*Obtenemos la cotizacion y calculamos el importe MN*/
 				Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
@@ -2815,9 +2513,9 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 						/*SI EL TIPO ES CAJA TOMAMOS LA MONEDA DEL CABEZAL DEL COBRO*/
 						//if(((String)comboTipo.getValue()).equals("Caja")) { 
 						
-							ingCobroVO.setCodMoneda(auxMoneda.getCodMoneda());
-							ingCobroVO.setNomMoneda(auxMoneda.getDescripcion());
-							ingCobroVO.setSimboloMoneda(auxMoneda.getSimbolo());
+							factVO.setCodMoneda(auxMoneda.getCodMoneda());
+							factVO.setNomMoneda(auxMoneda.getDescripcion());
+							factVO.setSimboloMoneda(auxMoneda.getSimbolo());
 						//}
 					}
 					
@@ -2828,34 +2526,34 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 					if(auxMoneda.isNacional()) /*Si la moneda del cabezal del cobro seleccionada es nacional*/
 					{
 						/*Si la moneda es la nacional, el TC es 1 y el importe MN es el mismo*/
-						ingCobroVO.setTcMov(1);
-						ingCobroVO.setImpTotMn(ingCobroVO.getImpTotMo());
+						factVO.setTcMov(1);
+						factVO.setImpTotMn(factVO.getImpTotMo());
 						
 					}else
 					{
 						coti = this.controlador.getCotizacion(permisoAux, fecha, this.getCodMonedaSeleccionada());
-						ingCobroVO.setTcMov(coti.getCotizacionVenta());
-						ingCobroVO.setImpTotMn((ingCobroVO.getImpTotMo()*ingCobroVO.getTcMov()));
+						factVO.setTcMov(coti.getCotizacionVenta());
+						factVO.setImpTotMn((factVO.getImpTotMo()*factVO.getTcMov()));
 					}
 					
 				} catch (Exception e) {
 					Mensajes.mostrarMensajeError(e.getMessage());
 				}
 				
-				ingCobroVO.setFecDoc(new java.sql.Timestamp(fecDoc.getValue().getTime()));
-				ingCobroVO.setFecValor(new java.sql.Timestamp(fecValor.getValue().getTime()));
+				factVO.setFecDoc(new java.sql.Timestamp(fecDoc.getValue().getTime()));
+				factVO.setFecValor(new java.sql.Timestamp(fecValor.getValue().getTime()));
 				/*Codigo y serie docum se inicializan en constructor*/
 				//ingCobroVO.setNroDocum(Integer.parseInt(nroDocum.getValue()));  VER ESTO CON EL NUMERADOR
-				ingCobroVO.setCodEmp(permisos.getCodEmp());
-				ingCobroVO.setReferencia(referencia.getValue());
+				factVO.setCodEmp(permisos.getCodEmp());
+				factVO.setReferencia(referencia.getValue());
 				
-				ingCobroVO.setCodCtaInd("egrcobro");
+				factVO.setCodCtaInd("fact");
 				
 				
-				ingCobroVO.setCodTitular(codTitular.getValue());
-				ingCobroVO.setNomTitular(nomTitular.getValue());
+				factVO.setCodTitular(codTitular.getValue());
+				factVO.setNomTitular(nomTitular.getValue());
 				
-				ingCobroVO.setOperacion(operacion);
+				factVO.setOperacion(operacion);
 				
 				/*Ver los totales y tc*/
 				//ingCobroVO.setImpTotMn(impTotMn);
@@ -2864,75 +2562,18 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 				
 				/*Si es nuevo aun no tenemos el nro del cobro*/
 				if(this.nroDocum.getValue() != null)
-					ingCobroVO.setNroDocum(Integer.parseInt(this.nroDocum.getValue().toString().trim()));
+					factVO.setNroDocum(Integer.parseInt(this.nroDocum.getValue().toString().trim()));
 				
 				
-				/*Si es banco tomamos estos cmapos de lo contrario caja*/
-				if(this.comboTipo.getValue().toString().equals("Banco")){
+			
 				
-					ingCobroVO.setmPago((String)comboMPagos.getValue());
-					
-					if(ingCobroVO.getmPago().equals("transferencia"))
-					{
-						ingCobroVO.setCodDocRef("tranemi");
-						
-						ingCobroVO.setSerieDocRef("0");
-					}
-					else if(ingCobroVO.getmPago().equals("Cheque"))
-					{
-						ingCobroVO.setCodDocRef("cheqemi");
-						ingCobroVO.setNroDocRef((Integer) nroDocRef.getConvertedValue());
-						ingCobroVO.setSerieDocRef(serieDocRef.getValue());
-						
-					}else
-					{
-						
-						ingCobroVO.setCodDocRef("0");
-						ingCobroVO.setNroDocRef(0);
-						ingCobroVO.setSerieDocRef("0");
-					}
-												
-						//Datos del banco y cuenta
-						CtaBcoVO auxctaBco = new CtaBcoVO();
-						if(this.comboCuentas.getValue() != null){
-							
-							auxctaBco = (CtaBcoVO) this.comboCuentas.getValue();
-							
-						}
-						
-						ingCobroVO.setCodBanco(auxctaBco.getCodBco());
-						ingCobroVO.setCodCtaBco(auxctaBco.getCodigo());
-						ingCobroVO.setNomCtaBco(auxctaBco.getNombre());
-						ingCobroVO.setCodMonedaCtaBco(auxctaBco.getMonedaVO().getCodMoneda());
-						ingCobroVO.setNacionalMonedaCtaBco(auxctaBco.getMonedaVO().isNacional());
-					
-				}
-				else {
-					
-					if(((String)comboTipo.getValue()).equals("Caja"))
-					{
-						ingCobroVO.setCodBanco("0");
-						ingCobroVO.setNomBanco("0");
-						
-						ingCobroVO.setCodCtaBco("0");
-						ingCobroVO.setNomCtaBco("0");
-						
-						ingCobroVO.setCodDocRef("0");
-						ingCobroVO.setNroDocRef(0);
-						ingCobroVO.setSerieDocRef("0");
-						
-						ingCobroVO.setmPago("Caja");
-					}
-								
-				}
-				
-				ingCobroVO.setUsuarioMod(this.permisos.getUsuario());
+				factVO.setUsuarioMod(this.permisos.getUsuario());
 				
 				if(this.operacion != Variables.OPERACION_NUEVO){
-					ingCobroVO.setNroTrans((long)this.nroTrans.getConvertedValue());
+					factVO.setNroTrans((long)this.nroTrans.getConvertedValue());
 				}
 				else{
-					ingCobroVO.setNroTrans(0);
+					factVO.setNroTrans(0);
 				}
 				
 				
@@ -2940,7 +2581,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 				 * lo agregamos a la lista del formulario*/
 				if(this.lstDetalleAgregar.size() > 0)
 				{
-					for (IngresoCobroDetalleVO f : this.lstDetalleAgregar) {
+					for (FacturaDetalleVO f : this.lstDetalleAgregar) {
 						
 						/*Si no esta lo agregamos*/
 						if(!this.existeFormularioenLista(f.getNroDocum()))
@@ -2948,33 +2589,21 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 					}
 				}
 					
-				ingCobroVO.setCodCuenta("egrcobro");
-				ingCobroVO.setDetalle(this.lstDetalleVO);
+				factVO.setCodCuenta("factura");
+				factVO.setDetalle(this.lstDetalleVO);
 				
-				if(ingCobroVO.getDetalle().size() <= 0){
-					Mensajes.mostrarMensajeError("El egreso no tiene detalle");
+				if(factVO.getDetalle().size() <= 0){
+					Mensajes.mostrarMensajeError("La factura no tiene detalle");
 					return;
 				}
 				
-				/*Obtenemos la moneda de la cuenta*/
-				//Datos del banco y cuenta y moneda de la cuenta
-				CtaBcoVO auxctaBco = new CtaBcoVO();
-				if(this.comboCuentas.getValue() != null){
-					
-					auxctaBco = (CtaBcoVO) this.comboCuentas.getValue();
-					
-				}
 				
-				/*Seteamos la moneda de la cta del banco*/
-				ingCobroVO.setCodMonedaCtaBco(auxctaBco.getMonedaVO().getCodMoneda());
-				ingCobroVO.setNacionalMonedaCtaBco(auxctaBco.getMonedaVO().isNacional());
+				factVO.setCodDocum("factura");
 				
-				ingCobroVO.setCodDocum("egrcobro");
+				this.controlador.eliminarFactura(factVO, permisoAux);
 				
-				this.controlador.eliminarIngresoEgreso(ingCobroVO, permisoAux);
-				
-				this.mainView.actulaizarGrilla(ingCobroVO);
-				Mensajes.mostrarMensajeOK("Se ha eliminado el egreso");
+				this.mainView.actulaizarGrilla(factVO);
+				Mensajes.mostrarMensajeOK("Se ha eliminado la factura");
 				UI.getCurrent().removeWindow(sub);
 				this.mainView.cerrarVentana();
 			}
@@ -2984,7 +2613,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 				Mensajes.mostrarMensajeWarning(Variables.WARNING_CAMPOS_NO_VALIDOS);
 			}
 				
-			} catch (NoExisteEgresoCobroException |InsertandoEgresoCobroException| ExisteEgresoCobroException | InicializandoException| ConexionException | NoTienePermisosException| ObteniendoPermisosException e) {
+			} catch (NoExisteFacturaException |ExisteFacturaException | InicializandoException| ConexionException | NoTienePermisosException| ObteniendoPermisosException | EliminandoFacturaException e) {
 				
 				Mensajes.mostrarMensajeError(e.getMessage());
 			}

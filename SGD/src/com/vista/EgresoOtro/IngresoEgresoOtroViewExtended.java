@@ -1757,7 +1757,7 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 	}
 
 	@Override
-	public void eliminarCobro() {
+	public void eliminarFact() {
 		// TODO Auto-generated method stub
 		
 		try {

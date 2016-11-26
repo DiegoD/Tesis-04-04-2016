@@ -8,12 +8,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import com.controladores.FacturaControlador;
 import com.controladores.IngresoEgresoControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.InicializandoException;
 import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Egresos.*;
+import com.excepciones.Factura.ObteniendoFacturasException;
 import com.logica.IngresoCobro.IngresoCobro;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
@@ -26,6 +28,7 @@ import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.valueObject.UsuarioPermisosVO;
+import com.valueObject.Docum.FacturaVO;
 import com.valueObject.IngresoCobro.IngresoCobroDetalleVO;
 import com.valueObject.IngresoCobro.IngresoCobroVO;
 import com.valueObject.banco.BancoVO;
@@ -40,16 +43,16 @@ import com.vista.Bancos.BancosPanelExtended;
 public class FacturaPanelExtended extends FacturaPanel{
 	
 	private FacturaViewExtended form; 
-	private ArrayList<IngresoCobroVO> lstEgresos; /*Lista con los cobros*/
-	private BeanItemContainer<IngresoCobroVO> container;
-	private IngresoEgresoControlador controlador;
+	private ArrayList<FacturaVO> lstFacturas; /*Lista con las facturas*/
+	private BeanItemContainer<FacturaVO> container;
+	private FacturaControlador controlador;
 	PermisosUsuario permisos;
 	MySub sub = new MySub("75%", "65%");
 	
 	public FacturaPanelExtended(){
 		
-		controlador = new IngresoEgresoControlador();
-		this.lstEgresos = new ArrayList<IngresoCobroVO>();
+		controlador = new FacturaControlador();
+		this.lstFacturas = new ArrayList<FacturaVO>();
 		
 		String usuario = (String)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("usuario");
 		this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
@@ -104,12 +107,12 @@ public class FacturaPanelExtended extends FacturaPanel{
 		
 									
 		this.container = 
-				new BeanItemContainer<IngresoCobroVO>(IngresoCobroVO.class);
+				new BeanItemContainer<FacturaVO>(FacturaVO.class);
 		
-		//Obtenemos lista de bancos del sistema
-		this.lstEgresos = this.getCobros(); 
+		//Obtenemos lista de facturas
+		this.lstFacturas = this.getFacturas(); 
 		
-		for (IngresoCobroVO ingVO : lstEgresos) {
+		for (FacturaVO ingVO : lstFacturas) {
 			container.addBean(ingVO);
 		}
 		
@@ -129,9 +132,8 @@ public class FacturaPanelExtended extends FacturaPanel{
 		    	try{
 		    		
 		    		if(grid.getSelectedRow() != null){
-		    			BeanItem<IngresoCobroVO> item = container.getItem(grid.getSelectedRow());
+		    			BeanItem<FacturaVO> item = container.getItem(grid.getSelectedRow());
 				    	
-		    			//IngresoCobroVO aux = item.getBean();
 				    	/*Puede ser null si accedemos luego de haberlo agregado, ya que no va a la base*/
 				    	if(item.getBean().getFechaMod() == null)
 				    	{
@@ -139,7 +141,6 @@ public class FacturaPanelExtended extends FacturaPanel{
 				    	}
 				    	
 				    	form = new FacturaViewExtended(Variables.OPERACION_LECTURA, FacturaPanelExtended.this);
-						//form.fieldGroup.setItemDataSource(item);
 						sub = new MySub("90%","90%");
 						sub.setModal(true);
 						sub.setVista(form);
@@ -166,12 +167,12 @@ public class FacturaPanelExtended extends FacturaPanel{
 	}
 	
 	/**
-	 * Obtenemos cobros del sistema
+	 * Obtenemos facturas del sistema
 	 *
 	 */
-	private ArrayList<IngresoCobroVO> getCobros(){
+	private ArrayList<FacturaVO> getFacturas(){
 		
-		ArrayList<IngresoCobroVO> lst = new ArrayList<IngresoCobroVO>();
+		ArrayList<FacturaVO> lst = new ArrayList<FacturaVO>();
 
 		try {
 			
@@ -184,9 +185,9 @@ public class FacturaPanelExtended extends FacturaPanel{
 							VariablesPermisos.OPERACION_LEER);
 
 			
-			lst = controlador.getIngresoEgresoTodos(permisoAux);
+			lst = controlador.getFacturasTodos(permisoAux);
 
-		} catch (InicializandoException | ConexionException | ObteniendoPermisosException | NoTienePermisosException | ObteniendoEgresoCobroException e) {
+		} catch (InicializandoException | ConexionException | ObteniendoPermisosException | NoTienePermisosException | ObteniendoFacturasException e) {
 			
 			Mensajes.mostrarMensajeError(e.getMessage());
 		}
@@ -200,35 +201,17 @@ public class FacturaPanelExtended extends FacturaPanel{
 	 * desde BancoViewExtended
 	 *
 	 */
-	public void actulaizarGrilla(IngresoCobroVO ingVO)
+	public void actulaizarGrilla(FacturaVO factVO)
 	{
 
-		/*Si esta el banco en la lista, es una acutalizacion
-		 * y modificamos el objeto en la lista*/
-//		if(this.existeEnLista(ingVO.getNroDocum()))
-//		{
-//			this.actualizarBancoenLista(ingVO);
-//		}
-//		else  /*De lo contrario es uno nuevo y lo agregamos a la lista*/
-//		{
-//			this.lstIngresoCobro.add(ingVO);
-//		}
-//			
-//		/*Actualizamos la grilla*/
-//		this.container.removeAllItems();
-//		this.container.addAll(this.lstIngresoCobro);
-//		
-//		this.grid.setContainerDataSource(container);
-		
-		
 		/*Actualizamos la grilla*/
 		this.container.removeAllItems();
 		
 		//Obtenemos lista de bancos del sistema
-		this.lstEgresos = this.getCobros(); 
+		this.lstFacturas = this.getFacturas(); 
 		
 		
-		this.container.addAll(this.lstEgresos);
+		this.container.addAll(this.lstFacturas);
 		grid.setContainerDataSource(container);
 
 	}
@@ -239,19 +222,19 @@ public class FacturaPanelExtended extends FacturaPanel{
 	 * se hace una acutalizacion de un Banco
 	 *
 	 */
-	private void actualizarBancoenLista(IngresoCobroVO ingVO)
+	private void actualizarBancoenLista(FacturaVO factVO)
 	{
 		int i =0;
 		boolean salir = false;
 		
-		IngresoCobroVO ingEnLista;
+		FacturaVO ingEnLista;
 		
-		while( i < this.lstEgresos.size() && !salir)
+		while( i < this.lstFacturas.size() && !salir)
 		{
-			ingEnLista = this.lstEgresos.get(i);
-			if(ingVO.getNroDocum()==ingEnLista.getNroDocum())
+			ingEnLista = this.lstFacturas.get(i);
+			if(factVO.getNroDocum()==ingEnLista.getNroDocum())
 			{
-				this.lstEgresos.get(i).copiar(ingVO);
+				this.lstFacturas.get(i).copiar(factVO);
 
 				salir = true;
 			}
@@ -271,11 +254,11 @@ public class FacturaPanelExtended extends FacturaPanel{
 		int i =0;
 		boolean esta = false;
 		
-		IngresoCobroVO aux;
+		FacturaVO aux;
 		
-		while( i < this.lstEgresos.size() && !esta)
+		while( i < this.lstFacturas.size() && !esta)
 		{
-			aux = this.lstEgresos.get(i);
+			aux = this.lstFacturas.get(i);
 			if(nro==aux.getNroDocum())
 			{
 				esta = true;
@@ -294,7 +277,7 @@ public class FacturaPanelExtended extends FacturaPanel{
 		
 			com.vaadin.ui.Grid.HeaderRow filterRow = grid.appendHeaderRow();
 	
-			// Set up a filter for all columns
+			// Seteamos los filtros para las columnas
 			for (Object pid: grid.getContainerDataSource()
 			                     .getContainerPropertyIds()) 
 			{
@@ -353,65 +336,70 @@ public class FacturaPanelExtended extends FacturaPanel{
 	private void ocultarColumnasGrilla()
 	{
 		//grid.sort("nomTitular", SortDirection.ASCENDING);
+		try{
 		
-		grid.getColumn("fechaMod").setHidden(true);
-		grid.getColumn("usuarioMod").setHidden(true);
-		grid.getColumn("operacion").setHidden(true);
-		
-		grid.getColumn("codTitular").setHidden(true);
-		grid.getColumn("codBanco").setHidden(true);
-		
-		grid.getColumn("codCtaBco").setHidden(true);
-		grid.getColumn("codDocRef").setHidden(true);
-		grid.getColumn("codDocum").setHidden(true);
-		grid.getColumn("codEmp").setHidden(true);
-		grid.getColumn("codMoneda").setHidden(true);
-		grid.getColumn("detalle").setHidden(true);
-		grid.getColumn("fecValor").setHidden(true);
-		grid.getColumn("impTotMn").setHidden(true);
-		grid.getColumn("mPago").setHidden(true);
-		grid.getColumn("nomBanco").setHidden(true);
-		
-		grid.getColumn("nomCtaBco").setHidden(true);
-		grid.getColumn("nomMoneda").setHidden(true);
-		grid.getColumn("nroDocRef").setHidden(true);
-		grid.getColumn("nroTrans").setHidden(true);
-		//grid.getColumn("referencia").setHidden(true);
-		grid.getColumn("serieDocRef").setHidden(true);
-		grid.getColumn("serieDocum").setHidden(true);
-		grid.getColumn("tcMov").setHidden(true);
-		
-		grid.getColumn("codCuenta").setHidden(true);
-		grid.getColumn("nomCuenta").setHidden(true);
-		
-		grid.removeColumn("nacional");
-		grid.removeColumn("codCtaInd");
-		grid.getColumn("simboloMoneda").setHeaderCaption("Moneda");
-		
-		grid.getColumn("fecDoc").setConverter(new StringToDateConverter(){
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-
-			@Override
-
-			public DateFormat getFormat(Locale locale){
-
-				return new SimpleDateFormat("dd/MM/yyyy");
-
-			}
-
-		});
-		
-		grid.getColumn("nroDocum").setWidth(150);
-		grid.getColumn("simboloMoneda").setWidth(150);
-		grid.getColumn("impTotMo").setWidth(150);
-		grid.getColumn("fecDoc").setWidth(150);
-		grid.getColumn("referencia").setWidth(300);
-		
-		grid.setColumnOrder("nomTitular", "referencia", "nroDocum", "simboloMoneda", "impTotMo", "fecDoc");
-		
+			grid.getColumn("fechaMod").setHidden(true);
+			grid.getColumn("usuarioMod").setHidden(true);
+			grid.getColumn("operacion").setHidden(true);
+			
+			grid.getColumn("codTitular").setHidden(true);
+			//grid.getColumn("codBanco").setHidden(true);
+			
+			//grid.getColumn("codCtaBco").setHidden(true);
+			//grid.getColumn("codDocRef").setHidden(true);
+			grid.getColumn("codDocum").setHidden(true);
+			grid.getColumn("codEmp").setHidden(true);
+			grid.getColumn("codMoneda").setHidden(true);
+			grid.getColumn("detalle").setHidden(true);
+			grid.getColumn("fecValor").setHidden(true);
+			grid.getColumn("impTotMn").setHidden(true);
+			//grid.getColumn("mPago").setHidden(true);
+			//grid.getColumn("nomBanco").setHidden(true);
+			
+			//grid.getColumn("nomCtaBco").setHidden(true);
+			grid.getColumn("nomMoneda").setHidden(true);
+			//grid.getColumn("nroDocRef").setHidden(true);
+			grid.getColumn("nroTrans").setHidden(true);
+			//grid.getColumn("referencia").setHidden(true);
+			//grid.getColumn("serieDocRef").setHidden(true);
+			grid.getColumn("serieDocum").setHidden(true);
+			grid.getColumn("tcMov").setHidden(true);
+			
+			grid.getColumn("codCuenta").setHidden(true);
+			grid.getColumn("nomCuenta").setHidden(true);
+			grid.getColumn("tipo").setHidden(true);
+			grid.removeColumn("nacional");
+			grid.removeColumn("codCtaInd");
+			grid.getColumn("simboloMoneda").setHeaderCaption("Moneda");
+			
+			grid.getColumn("fecDoc").setConverter(new StringToDateConverter(){
+				/**
+				 * 
+				 */
+				private static final long serialVersionUID = 1L;
+	
+				@Override
+	
+				public DateFormat getFormat(Locale locale){
+	
+					return new SimpleDateFormat("dd/MM/yyyy");
+	
+				}
+	
+			});
+			
+			grid.getColumn("nroDocum").setWidth(150);
+			grid.getColumn("simboloMoneda").setWidth(150);
+			grid.getColumn("impTotMo").setWidth(150);
+			grid.getColumn("fecDoc").setWidth(150);
+			grid.getColumn("referencia").setWidth(300);
+			
+			grid.setColumnOrder("nomTitular", "referencia", "nroDocum", "simboloMoneda", "impTotMo", "fecDoc");
+			
+		}catch(Exception e)
+		{
+			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+		}
 	
 	}
 

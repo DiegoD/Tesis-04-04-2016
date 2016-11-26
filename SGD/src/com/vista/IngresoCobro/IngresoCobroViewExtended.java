@@ -2681,7 +2681,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		return monedaVO;
 	}
 	
-	public void eliminarCobro(){
+	public void eliminarFact(){
 		try {
 		
 		UsuarioPermisosVO permisoAux = 

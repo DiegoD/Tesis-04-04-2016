@@ -14,6 +14,7 @@ import org.json.simple.JSONObject;
 import com.abstractFactory.AbstractFactoryBuilder;
 import com.abstractFactory.IAbstractFactory;
 import com.excepciones.*;
+import com.excepciones.Factura.*;
 import com.excepciones.Bancos.ExisteBancoException;
 import com.excepciones.Bancos.InsertandoBancoException;
 import com.excepciones.Bancos.InsertandoCuentaException;
@@ -70,11 +71,13 @@ import com.logica.Docum.CuentaBcoInfo;
 import com.logica.Docum.DatosDocum;
 import com.logica.Docum.DocumDetalle;
 import com.logica.Docum.DocumSaldo;
+import com.logica.Docum.Factura;
 import com.logica.IngresoCobro.IngresoCobro;
 import com.valueObject.*;
 import com.valueObject.Cotizacion.CotizacionVO;
 import com.valueObject.Docum.DatosDocumVO;
 import com.valueObject.Docum.DocumSaldoVO;
+import com.valueObject.Docum.FacturaVO;
 import com.valueObject.IngresoCobro.IngresoCobroVO;
 import com.valueObject.Numeradores.NumeradoresVO;
 import com.valueObject.banco.BancoVO;
@@ -109,6 +112,7 @@ public class Fachada {
 	private IDAOSaldosProc saldosProceso;
 	private IDAOGastos gastos;
 	private IDAOMonedas monedas;
+	private IDAOFacturas facturas;
 	
 	private AbstractFactoryBuilder fabrica;
 	private IAbstractFactory fabricaConcreta;
@@ -137,6 +141,7 @@ public class Fachada {
         this.egresoCobro = fabricaConcreta.crearDAOEgresoCobro();
         this.gastos = fabricaConcreta.crearDAOGastos();
         this.monedas = fabricaConcreta.crearDAOMonedas();
+        this.facturas = fabricaConcreta.crearDAOFactura();
         
     }
     
@@ -2934,5 +2939,229 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 
 /////////////////////////////////FIN- SALDO CUENTAS//////////////////////////////
 	
+/////////////////////////////////INICIO-EGRESO COBRO//////////////////////
+	/**
+	*Nos retorna las facturas del sistema para la empresa
+	* 
+	*
+	*/
+	@SuppressWarnings("unchecked") 
+	public ArrayList<FacturaVO> getFacturasTodos(String codEmp) throws ObteniendoFacturasException, ConexionException {
+	
+		Connection con = null;
+		
+		ArrayList<Factura> lst;
+		ArrayList<FacturaVO> lstVO = new ArrayList<FacturaVO>();
+		
+		try
+		{
+			con = this.pool.obtenerConeccion();
+			
+			lst = this.facturas.getFacturaTodos(con, codEmp);
+			
+			for (Factura fac : lst) 
+			{
+				FacturaVO aux = fac.retornarVO();
+			
+				lstVO.add(aux);
+			}
+		
+		}catch(ObteniendoFacturasException  e){
+			throw e;
+		
+		} catch (ConexionException e) {
+		
+			throw e;
+		} 
+		finally
+		{
+			this.pool.liberarConeccion(con);
+		}
+		
+		return lstVO;
+	}	 
+
+
+public void insertarFactura(FacturaVO factVO, String codEmp) throws InsertandoFacturaException, ConexionException, ExisteFacturaException{
+
+	Connection con = null;
+	boolean existe = false;
+	NumeradoresVO codigos = new NumeradoresVO();
+	
+	
+	try 
+	{
+		con = this.pool.obtenerConeccion();
+		con.setAutoCommit(false);
+		
+		Factura fact = new Factura(factVO); 
+		Cotizacion cotiAux;
+		
+		//Obtengo numerador de factura
+		codigos.setCodigo(numeradores.getNumero(con, "factura", codEmp)); //Factura 
+		codigos.setNumeroTrans(numeradores.getNumero(con, "03", codEmp)); //nro trans
+		
+		fact.setNroDocum(codigos.getCodigo()); /*Seteamos el nroDocum*/
+		fact.setNroTrans(codigos.getNumeroTrans()); /*Seteamos el nroTrans*/
+		factVO.setNroTrans(codigos.getNumeroTrans()); /*Seteamos el nroTrans al VO para obtener el DocumSaldo*/ 
+		factVO.setNroDocum(codigos.getCodigo()); /*Seteamos el nroDocum*/
+		
+		/*Verificamos que no exista un cobro con el mismo numero*/
+		if(!this.facturas.memberFacturas(fact.getNroDocum(), fact.getSerieDocum(), fact.getCodDocum(), codEmp, con))
+		{
+			/*Para cada linea de gasto de la factura le quitamos el saldo*/
+			
+			/*Para cada linea ingresamos el saldo*/
+			for (DocumDetalle docum : fact.getDetalle()) {
+				
+				if(docum.getCodDocum().equals("Gasto")){ /*Para los gastos modificamos el saldo al documento*/
+					/*Signo -1 porque resta al saldo, al facturar se deja sin saldo al gto*/
+					this.saldos.modificarSaldo(docum, -1, fact.getTcMov(), con);
+				}
+			}
+			/*Ingresamos saldo para la factura*/
+			this.saldos.modificarSaldo(fact, 1, fact.getTcMov(), con);
+			
+			/*Ingresamos la factura*/
+			this.facturas.insertarFactura(fact, con);
+			
+			con.commit();
+		}
+		else{
+			existe = true;
+		}
+		}catch(Exception e){
+		
+			try {
+				con.rollback();
+			
+			} catch (SQLException ex) {
+			
+				throw new InsertandoFacturaException();
+			}
+			
+				throw new InsertandoFacturaException();
+		}
+		finally
+		{
+			pool.liberarConeccion(con);
+		}
+		if (existe){
+			throw new ExisteFacturaException();
+		}
+	}
+
+	public void eliminarFactura(FacturaVO facVO, String codEmp) throws EliminandoFacturaException, ConexionException, ExisteFacturaException, NoExisteFacturaException{
+	
+		Connection con = null;
+		boolean existe = false;
+		Integer codigo;
+		NumeradoresVO codigos = new NumeradoresVO();
+		
+		
+		try 
+			{
+			con = this.pool.obtenerConeccion();
+			con.setAutoCommit(false);
+			
+			Factura fact = new Factura(facVO); 
+			Cotizacion cotiAux;
+			
+
+			/*Verificamos que exista la factura*/
+			if(this.facturas.memberFacturas(fact.getNroDocum(), fact.getSerieDocum(), fact.getCodDocum(), codEmp, con))
+			{
+			
+				/*Para cada linea volvemos el saldo sin este cobro*/
+				for (DocumDetalle docum : fact.getDetalle()) {
+
+					if(docum.getCodDocum().equals("Gasto")){ /*Para los gastos modificamos el saldo al documento*/
+						/*Signo 1 porque devuelve el saldo al gasto*/
+						this.saldos.modificarSaldo(docum, 1, fact.getTcMov(), con);
+					}
+				
+				}
+				
+				/*Una vez hechos todos los movimientos de saldos y documentos
+				* procedemos a eliminar la factura*/
+				this.facturas.eliminarFactura(fact, con); 
+				
+				con.commit();
+			}
+			else{
+				throw new NoExisteEgresoCobroException();
+			}
+		
+		}catch(Exception e){
+		
+			try {
+				con.rollback();
+			
+			} catch (SQLException ex) {
+			
+			throw new EliminandoFacturaException();
+			}
+			
+			throw new EliminandoFacturaException();
+		}
+		finally
+		{
+		pool.liberarConeccion(con);
+		}
+		if (existe){
+			throw new ExisteFacturaException();
+		}
+	}
+	
+	public void modificarFactura(FacturaVO factVO, FacturaVO copiaVO) throws  ConexionException, ModificandoFacturaException, ExisteFacturaException, NoExisteFacturaException{
+	
+		Connection con = null;
+		
+		try 
+		{
+			con = this.pool.obtenerConeccion();
+			con.setAutoCommit(false);
+			
+			Factura fact = new Factura(factVO);
+			Factura copia = new Factura(copiaVO);
+			
+			/*Verificamos que exista el nro de cobro*/
+			if(this.facturas.memberFacturas(fact.getNroDocum(), fact.getSerieDocum(), fact.getCodDocum(), factVO.getCodEmp(), con))
+			{
+				/*Primero eliminamos la transaccion, con la copia, para poder detectar las lineas
+				* eliminadas*/
+				this.facturas.eliminarFactura(copia, con); 
+				
+				/*Luego insertamos el cobro con las modificaciones realizadas*/
+				this.facturas.insertarFactura(fact, con); 
+				
+				con.commit();
+			}
+			else
+				throw new ModificandoFacturaException();
+		
+		}catch(ModificandoFacturaException| ExisteFacturaException| ConexionException | SQLException | InsertandoFacturaException | EliminandoFacturaException  e)
+		{
+			try {
+				
+				con.rollback();
+			
+			} catch (SQLException e1) {
+			
+				throw new ConexionException();
+			}
+				throw new ModificandoFacturaException();
+		}
+		finally
+		{
+			pool.liberarConeccion(con);
+		}
+	}
+
+
+
+
+	
+/////////////////////////////////FIN-FACTURA//////////////////////	
 	
 }

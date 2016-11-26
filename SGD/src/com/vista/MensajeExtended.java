@@ -14,7 +14,7 @@ public class MensajeExtended extends Mensaje{
 		
 		this.aceptar.addClickListener(click -> {
 			
-			main.eliminarCobro();
+			main.eliminarFact();
 			
 		});
 		
