@@ -27,6 +27,8 @@ public class FacturaViews extends FormLayout {
 	protected Link auditoria;
 	protected FormLayout formLay1;
 	protected TextField nroTrans;
+	protected HorizontalLayout wrapper_docum;
+	protected TextField serieDocum;
 	protected TextField nroDocum;
 	protected DateField fecDoc;
 	protected DateField fecValor;

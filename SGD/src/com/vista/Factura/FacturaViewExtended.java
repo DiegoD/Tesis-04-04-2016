@@ -546,6 +546,10 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 					Mensajes.mostrarMensajeError(e.getMessage());
 				}
 				
+				
+				factVO.setNroDocum(Integer.valueOf(this.nroDocum.getValue()));
+				factVO.setSerieDocum(this.serieDocum.getValue().trim());
+				
 				factVO.setFecDoc(new java.sql.Timestamp(fecDoc.getValue().getTime()));
 				factVO.setFecValor(new java.sql.Timestamp(fecValor.getValue().getTime()));
 			
@@ -1226,9 +1230,9 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	 */
 	private void iniFormNuevo()
 	{
-		/*Si es nuevo ocultamos el nroDocum (ya que aun no tenemos el numero)*/
-		this.nroDocum.setVisible(false);
-		this.nroDocum.setEnabled(false);
+		/*En principio no ocultamose el nro y serie que lo agregen a mano*/
+		//this.nroDocum.setVisible(false);
+		//this.nroDocum.setEnabled(false);
 		this.impTotMo.setEnabled(true);
 		this.impTotMo.setReadOnly(false);
 		importeTotalCalculado = (double) 0;

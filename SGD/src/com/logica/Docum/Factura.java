@@ -9,6 +9,11 @@ import com.valueObject.Docum.FacturaVO;
 
 public class Factura extends DatosDocum{
 
+	private double impuTotMn ;
+	private double impuTotMo;
+	private double impSubMo;
+	private double impSubMn;
+	
 	private ProcesoInfo procesoInfo;
 	
 	ArrayList<FacturaDetalle> detalle;
@@ -30,6 +35,11 @@ public class Factura extends DatosDocum{
 		this.setCuenta(new CuentaInfo(t.getCodCuenta(), t.getNomCuenta(), t.getCodMoneda(), t.isNacional()));
 		
 		
+		this.impuTotMn = t.getImpuTotMn();
+		this.impuTotMo = t.getImpuTotMo();
+		this.impSubMo = t.getImpSubMo();
+		this.impSubMn = t.getImpSubMn();
+		
 		FacturaDetalle aux;
 		for (FacturaDetalleVO detVO : t.getDetalle()) {
 			
@@ -43,6 +53,7 @@ public class Factura extends DatosDocum{
 	public FacturaVO retornarVO(){
 			
 		
+		
 		FacturaVO aux = new FacturaVO();
 		
 		aux.copiar(super.retornarDatosDocumVO());
@@ -52,6 +63,11 @@ public class Factura extends DatosDocum{
 		aux.setCodCtaInd("0");
 		aux.setFecValor(aux.getFecValor());
 		aux.setFecDoc(aux.getFecDoc());
+		
+		aux.setImpuTotMn(this.impuTotMn);
+		aux.setImpuTotMo(this.impuTotMo);
+		aux.setImpSubMo(this.impSubMo);
+		aux.setImpSubMn(this.impSubMn);
 		
 		aux.setCodCtaInd(this.getCodCuentaInd());
 		
@@ -89,6 +105,39 @@ public class Factura extends DatosDocum{
 	public void setProcesoInfo(ProcesoInfo procesoInfo) {
 		this.procesoInfo = procesoInfo;
 	}
+
+	public double getImpuTotMn() {
+		return impuTotMn;
+	}
+
+	public void setImpuTotMn(double impuTotMn) {
+		this.impuTotMn = impuTotMn;
+	}
+
+	public double getImpuTotMo() {
+		return impuTotMo;
+	}
+
+	public void setImpuTotMo(double impuTotMo) {
+		this.impuTotMo = impuTotMo;
+	}
+
+	public double getImpSubMo() {
+		return impSubMo;
+	}
+
+	public void setImpSubMo(double impSubMo) {
+		this.impSubMo = impSubMo;
+	}
+
+	public double getImpSubMn() {
+		return impSubMn;
+	}
+
+	public void setImpSubMn(double impSubMn) {
+		this.impSubMn = impSubMn;
+	}
+	
 	
 	
 }

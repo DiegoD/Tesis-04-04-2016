@@ -2998,10 +2998,10 @@ public void insertarFactura(FacturaVO factVO, String codEmp) throws InsertandoFa
 		Cotizacion cotiAux;
 		
 		//Obtengo numerador de factura
-		codigos.setCodigo(numeradores.getNumero(con, "factura", codEmp)); //Factura 
+		//codigos.setCodigo(numeradores.getNumero(con, "factura", codEmp)); //Factura 
 		codigos.setNumeroTrans(numeradores.getNumero(con, "03", codEmp)); //nro trans
 		
-		fact.setNroDocum(codigos.getCodigo()); /*Seteamos el nroDocum*/
+		//fact.setNroDocum(codigos.getCodigo()); /*Seteamos el nroDocum*/
 		fact.setNroTrans(codigos.getNumeroTrans()); /*Seteamos el nroTrans*/
 		factVO.setNroTrans(codigos.getNumeroTrans()); /*Seteamos el nroTrans al VO para obtener el DocumSaldo*/ 
 		factVO.setNroDocum(codigos.getCodigo()); /*Seteamos el nroDocum*/

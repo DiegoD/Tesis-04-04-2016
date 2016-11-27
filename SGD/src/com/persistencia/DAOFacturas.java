@@ -117,7 +117,9 @@ public class DAOFacturas implements IDAOFacturas{
 			PreparedStatement pstmt1 = con.prepareStatement(query);
 			
 			pstmt1.setInt(1, nroDocum);
-			pstmt1.setString(2, codEmp);
+			pstmt1.setString(2, serie);
+			pstmt1.setString(3, codigo);
+			pstmt1.setString(4, codEmp);
 			
 			ResultSet rs = pstmt1.executeQuery();
 			
@@ -170,6 +172,12 @@ public class DAOFacturas implements IDAOFacturas{
 			pstmt1.setString(21, factura.getUsuarioMod());
 			pstmt1.setString(22, factura.getOperacion());
 			pstmt1.setString(23, factura.getProcesoInfo().getDescProceso());
+			
+			
+			pstmt1.setDouble(24, factura.getImpuTotMn());
+			pstmt1.setDouble(25, factura.getImpuTotMo());
+			pstmt1.setDouble(26, factura.getImpSubMo());
+			pstmt1.setDouble(27, factura.getImpSubMn());
 			
 			
 			pstmt1.executeUpdate ();

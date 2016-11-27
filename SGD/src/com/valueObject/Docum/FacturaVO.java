@@ -11,6 +11,11 @@ public class FacturaVO extends DatosDocumVO{
 	private int codProceso;
 	private String descProceso;
 	
+	private double impuTotMn ;
+	private double impuTotMo;
+	private double impSubMo;
+	private double impSubMn;
+	
 	public FacturaVO(){
 		super();
 		
@@ -23,6 +28,11 @@ public class FacturaVO extends DatosDocumVO{
 		
 		this.codProceso = t.codProceso;
 		this.descProceso = t.descProceso;
+		
+		this.impuTotMn = t.impuTotMn;
+		this.impuTotMo = t.impuTotMo;
+		this.impSubMo = t.impSubMo;
+		this.impSubMn = t.impSubMn;
 		
 		FacturaDetalleVO aux;
 		for (FacturaDetalleVO detVO : t.detalle) {
@@ -57,6 +67,39 @@ public class FacturaVO extends DatosDocumVO{
 	public void setDescProceso(String descProceso) {
 		this.descProceso = descProceso;
 	}
+
+	public double getImpuTotMn() {
+		return impuTotMn;
+	}
+
+	public void setImpuTotMn(double impuTotMn) {
+		this.impuTotMn = impuTotMn;
+	}
+
+	public double getImpuTotMo() {
+		return impuTotMo;
+	}
+
+	public void setImpuTotMo(double impuTotMo) {
+		this.impuTotMo = impuTotMo;
+	}
+
+	public double getImpSubMo() {
+		return impSubMo;
+	}
+
+	public void setImpSubMo(double impSubMo) {
+		this.impSubMo = impSubMo;
+	}
+
+	public double getImpSubMn() {
+		return impSubMn;
+	}
+
+	public void setImpSubMn(double impSubMn) {
+		this.impSubMn = impSubMn;
+	}
+	
 	
 	
 }
