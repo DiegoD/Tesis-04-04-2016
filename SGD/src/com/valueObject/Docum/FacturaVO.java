@@ -8,6 +8,9 @@ public class FacturaVO extends DatosDocumVO{
 
 	private ArrayList<FacturaDetalleVO> detalle;
 	
+	private int codProceso;
+	private String descProceso;
+	
 	public FacturaVO(){
 		super();
 		
@@ -17,6 +20,9 @@ public class FacturaVO extends DatosDocumVO{
 	public void copiar(FacturaVO t){
 		
 		super.copiar(t);
+		
+		this.codProceso = t.codProceso;
+		this.descProceso = t.descProceso;
 		
 		FacturaDetalleVO aux;
 		for (FacturaDetalleVO detVO : t.detalle) {
@@ -35,7 +41,22 @@ public class FacturaVO extends DatosDocumVO{
 	public void setDetalle(ArrayList<FacturaDetalleVO> detalle) {
 		this.detalle = detalle;
 	}
-	
+
+	public int getCodProceso() {
+		return codProceso;
+	}
+
+	public void setCodProceso(int codProceso) {
+		this.codProceso = codProceso;
+	}
+
+	public String getDescProceso() {
+		return descProceso;
+	}
+
+	public void setDescProceso(String descProceso) {
+		this.descProceso = descProceso;
+	}
 	
 	
 }

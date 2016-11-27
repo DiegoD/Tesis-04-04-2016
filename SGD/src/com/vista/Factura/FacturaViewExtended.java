@@ -22,6 +22,7 @@ import com.excepciones.Factura.*;
 import com.excepciones.Monedas.ObteniendoMonedaException;
 import com.excepciones.Periodo.ExistePeriodoException;
 import com.excepciones.Periodo.NoExistePeriodoException;
+import com.excepciones.Procesos.ObteniendoProcesosException;
 import com.excepciones.Titulares.ObteniendoTitularesException;
 import com.excepciones.clientes.ObteniendoClientesException;
 import com.sun.org.apache.xpath.internal.operations.Variable;
@@ -50,6 +51,7 @@ import com.valueObject.MonedaVO;
 import com.valueObject.TitularVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.Cotizacion.CotizacionVO;
+import com.valueObject.Docum.AuxDetalleVO;
 import com.valueObject.Docum.DocumDetalleVO;
 import com.valueObject.Docum.FacturaDetalleVO;
 import com.valueObject.Docum.FacturaVO;
@@ -60,6 +62,7 @@ import com.valueObject.IngresoCobro.IngresoCobroVO;
 import com.valueObject.banco.BancoVO;
 import com.valueObject.banco.CtaBcoVO;
 import com.valueObject.cliente.ClienteVO;
+import com.valueObject.proceso.ProcesoVO;
 import com.vista.BusquedaViewExtended;
 import com.vista.IBusqueda;
 import com.vista.IMensaje;
@@ -71,7 +74,9 @@ import com.vista.Variables;
 import com.vista.VariablesPermisos;
 import com.vista.Gastos.GastoViewExtended;
 import com.vista.Gastos.IGastosMain;
+import com.vista.IngresoCobro.SeleccionViewExtended;
 import com.vista.Validaciones.Validaciones;
+import com.vista.detFactura.DetFacturaViewExtended;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 
@@ -90,15 +95,17 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	private String operacion;
 	private FacturaPanelExtended mainView;
 	BeanItemContainer<FacturaDetalleVO> container;
-	private FacturaDetalleVO formSelecccionado; /*Variable utilizada cuando se selecciona
+	private FacturaDetalleVO lineaSelecccionada; /*Variable utilizada cuando se selecciona
 	 										  un detalle, para poder quitarlo de la lista*/
 	UsuarioPermisosVO permisoAux;
 	CotizacionVO cotizacion =  new CotizacionVO();
 	Double cotizacionVenta = null;
 	TitularVO titularVO = new TitularVO();
+	
 	private Hashtable<Integer, GtoSaldoAux> saldoOriginalGastos; /*Variable auxliar para poder
 	 															 controlar que el saldo del gasto quede
 	 															 en negativo*/
+	//String procesosCliente;
 	
 	Double importeTotalCalculado;
 	FacturaVO ingresoCopia; /*Variable utilizada para la modificacion de factura,
@@ -147,12 +154,9 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		
 		BusquedaViewExtended form;
 		
-		if(this.chkFuncionario.getValue()){
-			form = new BusquedaViewExtended(this, new TitularVO());
-		}
-		else{
-			form = new BusquedaViewExtended(this, new ClienteVO());
-		}	
+		form = new BusquedaViewExtended(this, new ClienteVO());
+		
+	
 		
 		ArrayList<Object> lst = new ArrayList<Object>();
 		ArrayList<TitularVO> lstTitulares = new ArrayList<TitularVO>();
@@ -168,36 +172,23 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		
 		try {
 			
-			if(this.chkFuncionario.getValue()){
-				lstTitulares = this.controlador.getTitulares(permisoAux);
-			}
-			else{
-				
-				lstClientes = this.controlador.getClientes(permisoAux);
-			}
+			lstClientes = this.controlador.getClientes(permisoAux);
+			
 			
 		} catch ( ConexionException | InicializandoException | ObteniendoPermisosException | NoTienePermisosException |
-				 ObteniendoClientesException | ObteniendoTitularesException e) {
+				 ObteniendoClientesException  e) {
 
 			Mensajes.mostrarMensajeError(e.getMessage());
 		}
 		
-		if(this.chkFuncionario.getValue()){
-			Object obj;
-			for (TitularVO i: lstTitulares) {
-				obj = new Object();
-				obj = (Object)i;
-				lst.add(obj);
-			}
+		
+		Object obj;
+		for (ClienteVO i: lstClientes) {
+			obj = new Object();
+			obj = (Object)i;
+			lst.add(obj);
 		}
-		else{
-			Object obj;
-			for (ClienteVO i: lstClientes) {
-				obj = new Object();
-				obj = (Object)i;
-				lst.add(obj);
-			}
-		}
+		
 		try {
 			
 			form.inicializarGrilla(lst);
@@ -220,7 +211,64 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	});
 	
 
-	
+	this.btnBuscarProceso.addClickListener(click -> {
+		
+		BusquedaViewExtended form = new BusquedaViewExtended(this, new ProcesoVO());
+		ArrayList<Object> lst = new ArrayList<Object>();
+		ArrayList<ProcesoVO> lstProcesos = new ArrayList<ProcesoVO>();
+		
+		/*Inicializamos VO de permisos para el usuario, formulario y operacion
+		 * para confirmar los permisos del usuario*/
+		UsuarioPermisosVO permisoAux = 
+				new UsuarioPermisosVO(this.permisos.getCodEmp(),
+						this.permisos.getUsuario(),
+						VariablesPermisos.FORMULARIO_GASTOS,
+						VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		
+		try {
+			/*Si selecciono un cliente, permitimos seleccionar proceso*/
+			if(this.codTitular.getValue().toString().equals("")){
+				
+				Mensajes.mostrarMensajeWarning("Debe seleccionar un cliente");
+			}
+			else{
+				
+				lstProcesos = this.controlador.getProcesosCliente(permisoAux, this.codTitular.getValue().toString());
+				
+				
+				Object obj;
+				for (ProcesoVO i: lstProcesos) {
+					obj = new Object();
+					obj = (Object)i;
+					lst.add(obj);
+				}
+					
+				try {
+					
+					form.inicializarGrilla(lst);
+					
+				} catch (Exception e) {
+					
+					Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+				}
+				
+				sub = new MySub("65%", "65%" );
+				sub.setModal(true);
+				sub.center();
+				sub.setModal(true);
+				sub.setVista(form);
+				sub.center();
+				sub.setDraggable(true);
+				UI.getCurrent().addWindow(sub);
+			}
+			
+			
+		} catch ( ConexionException | InicializandoException | ObteniendoPermisosException | NoTienePermisosException | ObteniendoProcesosException e) {
+
+			Mensajes.mostrarMensajeError(e.getMessage());
+		}
+		
+	});
 	
 	fecValor.addValueChangeListener(new Property.ValueChangeListener() {
 
@@ -268,58 +316,9 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
    							VariablesPermisos.FORMULARIO_INGRESO_COBRO,
    							VariablesPermisos.OPERACION_NUEVO_EDITAR);
    			
-   			CtaBcoVO ctaBcoAux;
-   			ctaBcoAux = new CtaBcoVO();
-   			if(comboCuentas.getValue() != null){
-   				ctaBcoAux = (CtaBcoVO) comboCuentas.getValue();
-   			
-	   			MonedaVO auxMoneda = new MonedaVO();
-	   			Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
-	   			
-	   			auxMoneda = (MonedaVO) ctaBcoAux.getMonedaVO();
-	   			
-	   			try {
-	   				if(!auxMoneda.isNacional()){
-	   					cotizacion = controlador.getCotizacion(permisoAux, fecha, ctaBcoAux.getMonedaVO().getCodMoneda());
-	   				}
-	   				else{
-	   					cotizacion.setCotizacionVenta(1);
-	   				}
-				} catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
-						| InicializandoException | NoTienePermisosException e) {
-					
-					Mensajes.mostrarMensajeError(e.getMessage());
-				}
-				if(cotizacion.getCotizacionVenta() != 0){
-					cotizacionVenta = cotizacion.getCotizacionVenta();
-				}
-				else{
-					Mensajes.mostrarMensajeError("Debe cargar la cotización para la moneda");
-					comboCuentas.setErrorHandler(null);
-					comboCuentas.setData("ProgramaticallyChanged");
-					comboCuentas.setValue(null);
-					monedaBanco.setValue("");
-					cuentaBanco.setValue("");
-					
-				}
-   			
-				if(comboCuentas.getValue()!=null){
-					if(ctaBcoAux != null && !comboCuentas.getValue().equals("")){
-		   				monedaBanco.setValue(ctaBcoAux.getMonedaVO().getSimbolo());
-		   				cuentaBanco.setValue(ctaBcoAux.getCodigo());
-		   				if(comboMoneda.getValue()!= ""){
-		   					auxMoneda = (MonedaVO) comboMoneda.getValue();
-		   					if(auxMoneda != null){
-		   						if(!auxMoneda.getCodMoneda().equals(ctaBcoAux.getMonedaVO().getCodMoneda()) && opera != Variables.OPERACION_LECTURA){
-			   						Mensajes.mostrarMensajeWarning("La moneda del banco es diferente a la moneda del documento");
-			   					}
-		   					}
-		   					
-		   				}
-		   			}
-				}
-	   			
-   			}
+   			//CtaBcoVO ctaBcoAux;
+   			//ctaBcoAux = new CtaBcoVO();
+   	
    			
    			if(comboMoneda.getValue()!= null){
    				
@@ -335,14 +334,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 						cotizacion = controlador.getCotizacion(permisoAux, fecha, auxMoneda.getCodMoneda());
 						if(cotizacion.getCotizacionVenta() != 0 && !auxMoneda.isNacional()){
 							cotizacionVenta = cotizacion.getCotizacionVenta();
-							if(comboCuentas.getValue() != "" && comboCuentas.getValue()!=null){
-								
-					   			ctaBcoAux = new CtaBcoVO();
-					   			ctaBcoAux = (CtaBcoVO) comboCuentas.getValue();
-					   			if(!auxMoneda.getCodMoneda().equals(ctaBcoAux.getMonedaVO().getCodMoneda())&& opera != Variables.OPERACION_LECTURA){
-					   				Mensajes.mostrarMensajeWarning("La moneda del banco es diferente a la moneda del documento");
-					   			}
-				   			}
+						
 							calculos();
 						}
 						else{
@@ -369,97 +361,8 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
     });
 	
 	
-	/**
-	* Agregamos listener al combo de tipo (banco, caja), determinamos si mostramos
-	* los campos del banco o no;
-	*
-	*/
-    comboTipo.addValueChangeListener(new Property.ValueChangeListener() {
-
-   		@Override
-		public void valueChange(ValueChangeEvent event) {
-
-   			mostrarDatosDeBanco();
-		}
-    });
     
-    comboCuentas.addValueChangeListener(new Property.ValueChangeListener() {
 
-    	
-    	
-   		@Override
-		public void valueChange(ValueChangeEvent event) {
-   			
-   			if("ProgramaticallyChanged".equals(comboCuentas.getData())){
-   				comboCuentas.setData(null);
-   	            return;
-   	        }
-   			
-   			/*Inicializamos VO de permisos para el usuario, formulario y operacion
-   			 * para confirmar los permisos del usuario*/
-   			UsuarioPermisosVO permisoAux = 
-   					new UsuarioPermisosVO(permisos.getCodEmp(),
-   							permisos.getUsuario(),
-   							VariablesPermisos.FORMULARIO_INGRESO_COBRO,
-   							VariablesPermisos.OPERACION_NUEVO_EDITAR);
-   			
-   			CtaBcoVO ctaBcoAux;
-   			ctaBcoAux = new CtaBcoVO();
-   			if(comboCuentas.getValue() != null){
-   				ctaBcoAux = (CtaBcoVO) comboCuentas.getValue();
-   			
-	   			MonedaVO auxMoneda = new MonedaVO();
-	   			Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
-	   			
-	   			auxMoneda = (MonedaVO) ctaBcoAux.getMonedaVO();
-	   			
-	   			try {
-	   				if(!auxMoneda.isNacional()){
-	   					cotizacion = controlador.getCotizacion(permisoAux, fecha, ctaBcoAux.getMonedaVO().getCodMoneda());
-	   				}
-	   				else{
-	   					cotizacion.setCotizacionVenta(1);
-	   				}
-				} catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
-						| InicializandoException | NoTienePermisosException e) {
-					
-					Mensajes.mostrarMensajeError(e.getMessage());
-				}
-				if(cotizacion.getCotizacionVenta() != 0){
-					cotizacionVenta = cotizacion.getCotizacionVenta();
-				}
-				else{
-					Mensajes.mostrarMensajeError("Debe cargar la cotización para la moneda");
-					comboCuentas.setErrorHandler(null);
-					comboCuentas.setData("ProgramaticallyChanged");
-					comboCuentas.setValue(null);
-					monedaBanco.setValue("");
-					cuentaBanco.setValue("");
-					
-					return;
-				}
-				
-	   			if(ctaBcoAux != null && !comboCuentas.getValue().equals("")){
-	   				monedaBanco.setValue(ctaBcoAux.getMonedaVO().getSimbolo());
-	   				cuentaBanco.setValue(ctaBcoAux.getCodigo());
-	   				if(comboMoneda.getValue()!= ""){
-	   					auxMoneda = (MonedaVO) comboMoneda.getValue();
-	   					if(auxMoneda != null){
-	   						if(!auxMoneda.getCodMoneda().equals(ctaBcoAux.getMonedaVO().getCodMoneda()) && opera != Variables.OPERACION_LECTURA){
-		   						Mensajes.mostrarMensajeWarning("La moneda del banco es diferente a la moneda del documento");
-		   					}
-	   					}
-	   					
-	   				}
-	   				
-	   				
-	   			}
-   			}
-   			
-   			
-			
-		}
-    });
     /**
 	* Agregamos listener al combo de monedas, para verificar que no modifique la moneda
 	* una vez ingresado un gasto ya 
@@ -491,14 +394,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 					cotizacion = controlador.getCotizacion(permisoAux, fecha, auxMoneda.getCodMoneda());
 					if(cotizacion.getCotizacionVenta() != 0 && !auxMoneda.isNacional()){
 						cotizacionVenta = cotizacion.getCotizacionVenta();
-						if(comboCuentas.getValue() != "" && comboCuentas.getValue()!=null){
-							
-				   			ctaBcoAux = new CtaBcoVO();
-				   			ctaBcoAux = (CtaBcoVO) comboCuentas.getValue();
-				   			if(!auxMoneda.getCodMoneda().equals(ctaBcoAux.getMonedaVO().getCodMoneda())&& opera != Variables.OPERACION_LECTURA){
-				   				Mensajes.mostrarMensajeWarning("La moneda del banco es diferente a la moneda del documento");
-				   			}
-			   			}
+					
 						calculos();
 					}
 					else{
@@ -523,14 +419,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
    			}
    			else{
    				
-   				if(comboCuentas.getValue() != "" && comboCuentas.getValue()!=null){
-		   			ctaBcoAux = new CtaBcoVO();
-		   			ctaBcoAux = (CtaBcoVO) comboCuentas.getValue();
-		   			
-		   			if(!auxMoneda.getCodMoneda().equals(ctaBcoAux.getMonedaVO().getCodMoneda())){
-		   				Mensajes.mostrarMensajeWarning("La moneda del banco es diferente a la moneda del documento");
-		   			}
-   				}
+   			
    				tcMov.setVisible(false);
    				cotizacionVenta = (double)1;
    				calculos();
@@ -817,9 +706,14 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 			{
 				try {
 				
-					GastoViewExtended form = new GastoViewExtended(Variables.OPERACION_NUEVO, this, titularVO);
+		   			
+		   			/*Inicializamos variable para pasarle info al detalle*/
+		   			AuxDetalleVO datosCab = this.obtenerDatosCabezalParaDetalle(); 
+		   			
 					
-					sub = new MySub("100%","45%");
+					DetFacturaViewExtended form = new DetFacturaViewExtended(Variables.OPERACION_NUEVO, this, datosCab);
+					
+					sub = new MySub("75%","55%");
 					sub.setModal(true);
 					
 					sub.setVista((Component) form);
@@ -853,6 +747,40 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 			}
 		});
 			
+		
+		/*Inicalizamos listener para boton de Agregar gastos*/
+		this.btnAgregarGto.addClickListener(click -> { 
+			
+			if(this.codTitular.getValue() != null && this.codTitular.getValue() != "" 
+					&& this.fecValor.getValue() != null && this.comboMoneda.getValue() != null)
+			{
+				
+				if(this.codProceso.getValue() != null && this.codProceso.getValue() != "" 
+						&& this.codProceso.getValue() != "0" )
+				{
+				
+					SeleccionViewExtended form = new SeleccionViewExtended(this);
+					
+					sub = new MySub("40%", "25%" );
+					sub.setModal(true);
+					sub.center();
+					sub.setModal(true);
+					sub.setVista(form);
+					sub.center();
+					sub.setClosable(false);
+					sub.setResizable(false);
+					sub.setDraggable(true);
+					UI.getCurrent().addWindow(sub);
+				}else{
+					Mensajes.mostrarMensajeError("Debe ingresar un proceso para seleccionar gastos");
+				}
+
+			}
+			else{
+				Mensajes.mostrarMensajeError("Debe ingresar los datos de cabecera");
+			}
+		});
+		
 		this.cancelar.addClickListener(click -> {
 			
 			if(this.lstDetalleAgregar.size() > 0)
@@ -894,7 +822,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 				
 				/*Verificamos que haya una linea seleccionada para
 				 * eliminar*/
-				if(formSelecccionado != null)
+				if(lineaSelecccionada != null)
 				{
 
 					/*Recorremos las lineas
@@ -902,12 +830,12 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 					int i = 0;
 					while(i < lstDetalleVO.size() && !esta)
 					{
-						if(lstDetalleVO.get(i).getLinea()==formSelecccionado.getLinea())
+						if(lstDetalleVO.get(i).getLinea()==lineaSelecccionada.getLinea())
 						{
 														
 							/*Quitamos el formulario seleccionado de la lista*/
 							lstDetalleVO.remove(lstDetalleVO.get(i));
-							lstDetalleQuitar.add(formSelecccionado);
+							lstDetalleQuitar.add(lineaSelecccionada);
 							esta = true;
 						}
 
@@ -947,7 +875,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		    	try{
 		    		if(lstGastos.getSelectedRow() != null){
 		    			BeanItem<FacturaDetalleVO> item = container.getItem(lstGastos.getSelectedRow());
-				    	formSelecccionado = item.getBean(); /*Seteamos la linea
+				    	lineaSelecccionada = item.getBean(); /*Seteamos la linea
 			    	 									seleccionado para poder quitarlo*/
 		    		}
 		    	}
@@ -975,40 +903,43 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 				
 				/*Verificamos que haya una linea seleccionada para
 				 * eliminar*/
-				if(formSelecccionado != null){
+				if(lineaSelecccionada != null){
 					
 					
 					GastoVO bean = new GastoVO();
 					BeanItem<GastoVO> item = new BeanItem<GastoVO> (bean);
 					
-					item.getBean().setNroDocum(formSelecccionado.getNroDocum());
-					item.getBean().setFecDoc(formSelecccionado.getFecDoc());
-					item.getBean().setFecValor(formSelecccionado.getFecValor());
-					item.getBean().setCodProceso(formSelecccionado.getCodProceso());
-					item.getBean().setDescProceso(formSelecccionado.getDescProceso());
-					item.getBean().setCodTitular(formSelecccionado.getCodTitular());
-					item.getBean().setNomTitular(formSelecccionado.getNomTitular());
-					item.getBean().setCodCuenta(formSelecccionado.getCodCuenta());
-					item.getBean().setNomCuenta(formSelecccionado.getNomCuenta());
-					item.getBean().setCodCtaInd(formSelecccionado.getCodCtaInd());
-					item.getBean().setCodRubro(formSelecccionado.getCodRubro());
-					item.getBean().setNomRubro(formSelecccionado.getNomRubro());
-					item.getBean().setCodImpuesto(formSelecccionado.getCodImpuesto());
-					item.getBean().setNomImpuesto(formSelecccionado.getNomImpuesto());
-					item.getBean().setPorcentajeImpuesto(formSelecccionado.getPorcentajeImpuesto());
-					item.getBean().setCodMoneda(formSelecccionado.getCodMoneda());
-					item.getBean().setNomMoneda(formSelecccionado.getNomMoneda());
-					item.getBean().setSimboloMoneda(formSelecccionado.getSimboloMoneda());
-					item.getBean().setTcMov(formSelecccionado.getTcMov());
-					item.getBean().setImpTotMo(formSelecccionado.getImpTotMo());
-					item.getBean().setImpTotMn(formSelecccionado.getImpTotMn());
-					item.getBean().setImpImpuMo(formSelecccionado.getImpImpuMo());
-					item.getBean().setImpImpuMn(formSelecccionado.getImpImpuMn());
-					item.getBean().setImpSubMo(formSelecccionado.getImpSubMo());
-					item.getBean().setImpSubMn(formSelecccionado.getImpSubMn());
-					item.getBean().setReferencia(formSelecccionado.getReferencia());
-					item.getBean().setEstadoGasto(formSelecccionado.getEstadoGasto());
+					item.getBean().copiar(lineaSelecccionada);
 					
+					/*
+					item.getBean().setNroDocum(lineaSelecccionada.getNroDocum());
+					item.getBean().setFecDoc(lineaSelecccionada.getFecDoc());
+					item.getBean().setFecValor(lineaSelecccionada.getFecValor());
+					item.getBean().setCodProceso(lineaSelecccionada.getCodProceso());
+					item.getBean().setDescProceso(lineaSelecccionada.getDescProceso());
+					item.getBean().setCodTitular(lineaSelecccionada.getCodTitular());
+					item.getBean().setNomTitular(lineaSelecccionada.getNomTitular());
+					item.getBean().setCodCuenta(lineaSelecccionada.getCodCuenta());
+					item.getBean().setNomCuenta(lineaSelecccionada.getNomCuenta());
+					item.getBean().setCodCtaInd(lineaSelecccionada.getCodCtaInd());
+					item.getBean().setCodRubro(lineaSelecccionada.getCodRubro());
+					item.getBean().setNomRubro(lineaSelecccionada.getNomRubro());
+					item.getBean().setCodImpuesto(lineaSelecccionada.getCodImpuesto());
+					item.getBean().setNomImpuesto(lineaSelecccionada.getNomImpuesto());
+					item.getBean().setPorcentajeImpuesto(lineaSelecccionada.getPorcentajeImpuesto());
+					item.getBean().setCodMoneda(lineaSelecccionada.getCodMoneda());
+					item.getBean().setNomMoneda(lineaSelecccionada.getNomMoneda());
+					item.getBean().setSimboloMoneda(lineaSelecccionada.getSimboloMoneda());
+					item.getBean().setTcMov(lineaSelecccionada.getTcMov());
+					item.getBean().setImpTotMo(lineaSelecccionada.getImpTotMo());
+					item.getBean().setImpTotMn(lineaSelecccionada.getImpTotMn());
+					item.getBean().setImpImpuMo(lineaSelecccionada.getImpImpuMo());
+					item.getBean().setImpImpuMn(lineaSelecccionada.getImpImpuMn());
+					item.getBean().setImpSubMo(lineaSelecccionada.getImpSubMo());
+					item.getBean().setImpSubMn(lineaSelecccionada.getImpSubMn());
+					item.getBean().setReferencia(lineaSelecccionada.getReferencia());
+					item.getBean().setEstadoGasto(lineaSelecccionada.getEstadoGasto());
+					*/
 					
 					/*Puede ser null si accedemos luego de haberlo agregado, ya que no va a la base*/
 			    	if(item.getBean().getFechaMod() == null)
@@ -1016,14 +947,35 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 			    		item.getBean().setFechaMod(new Timestamp(System.currentTimeMillis()));
 			    	}
 					
-			    	GastoViewExtended form = new GastoViewExtended(Variables.OPERACION_LECTURA, this, titularVO);
-			    	sub = new MySub("100%","50%");
-					sub.setModal(true);
-					sub.setVista((Component) form);
-					/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
-					form.setDataSourceFormulario(item);
-					
-					UI.getCurrent().addWindow(sub);
+			    	/*Si es un gasto inicalizamos el formulario de gasto*/
+			    	
+			    	if(item.getBean().getCodDocum().equals("Gasto")){
+			    		
+			    		GastoViewExtended form = new GastoViewExtended(Variables.OPERACION_LECTURA, this, titularVO);
+				    	sub = new MySub("80%","50%");
+						sub.setModal(true);
+						sub.setVista((Component) form);
+						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
+						form.setDataSourceFormulario(item);
+						
+						UI.getCurrent().addWindow(sub);
+			    		
+			    	}else { /*De lo contrario es detalle (no gasto)*/
+			    	
+			    		/*Inicializamos variable para pasarle info al detalle*/
+			   			AuxDetalleVO datosCab = this.obtenerDatosCabezalParaDetalle(); 
+			    		
+			    		DetFacturaViewExtended form = new DetFacturaViewExtended(Variables.OPERACION_LECTURA, this, datosCab);
+				    	sub = new MySub("75%","55%");
+						sub.setModal(true);
+						sub.setVista((Component) form);
+						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
+						form.setDataSourceFormulario(item);
+						
+						UI.getCurrent().addWindow(sub);
+			    	
+			    	}
+			    	
 					
 				}
 				else /*De lo contrario mostramos mensaje que debe selcionar un gasto*/
@@ -1042,6 +994,16 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 			
 	///////////////////
 	}
+	
+	/**
+	 * Inicializamos el proceso en no asignado
+	 */
+	private void inicializarProcesoNoAsignado(){
+		
+		this.codProceso.setValue(String.valueOf("0"));
+		this.descProceso.setValue(String.valueOf("No asignado"));
+		
+	}
 
 	public  void inicializarForm(){
 		
@@ -1049,8 +1011,8 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 					
 		this.fieldGroup =  new BeanFieldGroup<FacturaVO>(FacturaVO.class);
 		
-		/*Mostramos o ocultamos los datos del Banco, dependiendo del combo tipo (banco, caja)*/
-		this.mostrarDatosDeBanco();
+		this.inicializarProcesoNoAsignado();
+		
 		
 		/*Inicializamos los combos*/
 		this.inicializarComboMoneda(null);
@@ -1095,11 +1057,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	 */
 	private void setearValidaciones(boolean setear){
 		
-		this.comboTipo.setRequired(setear);
-		this.comboTipo.setRequiredError("Es requerido");
-		
-		
-		
+	
 		this.fecDoc.setRequired(setear);
 		this.fecDoc.setRequiredError("Es requerido");
 		
@@ -1118,53 +1076,8 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		this.codTitular.setRequired(setear);
 		this.codTitular.setRequiredError("Es requerido");
 		
-		this.comboMPagos.setRequired(setear);
-		this.comboMPagos.setRequiredError("Es requerido");
-		
 		this.impTotMo.setRequired(setear);
 		this.impTotMo.setRequiredError("Es requerido");
-		
-		/*De Bco*/
-		if(this.comboTipo.equals("Banco"))
-		{
-			this.comboMPagos.setRequired(setear);
-			this.comboMPagos.setRequiredError("Es requerido");
-			
-			this.serieDocRef.setRequired(setear);
-			this.serieDocRef.setRequiredError("Es requerido");
-			
-			this.nroDocRef.setRequired(setear);
-			this.nroDocRef.setRequiredError("Es requerido");
-			
-			this.comboBancos.setRequired(setear);
-			this.comboBancos.setRequiredError("Es requerido");
-			
-			this.comboCuentas.setRequired(setear);
-			this.comboCuentas.setRequiredError("Es requerido");
-		}
-		else
-		{
-			this.serieDocRef.setReadOnly(false);
-			this.nroDocRef.setReadOnly(false);
-			this.comboBancos.setReadOnly(false);
-			this.comboCuentas.setReadOnly(false);
-			this.comboMPagos.setReadOnly(false);
-			
-			this.serieDocRef.setValue("0");
-			this.serieDocRef.setRequired(false);
-			this.nroDocRef.setRequired(false);
-			this.comboBancos.setRequired(false);
-			this.comboCuentas.setRequired(false);
-			this.comboMPagos.setRequired(false);
-			
-			this.serieDocRef.setReadOnly(true);
-			this.nroDocRef.setReadOnly(true);
-			this.comboBancos.setReadOnly(true);
-			this.comboCuentas.setReadOnly(true);
-			this.comboMPagos.setReadOnly(true);
-			
-		
-		}
 		
 	}
 	
@@ -1183,38 +1096,6 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		fact = fieldGroup.getItemDataSource().getBean();
 		String fecha = new SimpleDateFormat("dd/MM/yyyy").format(fact.getFechaMod());
 		
-		
-		//Obtenemos bco
-		BancoVO auxBco = new BancoVO();
-		if(this.comboBancos.getValue() != null){
-			
-			auxBco = (BancoVO) this.comboBancos.getValue();
-			
-		}
-		else{
-			auxBco.setCodigo("0");
-		}
-		this.comboTipo.setImmediate(true);
-		this.comboTipo.setReadOnly(false);
-		this.comboTipo.setNullSelectionAllowed(false);
-		this.comboTipo.setBuffered(true);
-		
-		/*Seteamos el tipo*/
-		//this.comboTipo = new ComboBox();
-		if(auxBco.getCodigo().equals("0"))
-			this.comboTipo.setValue("Caja");
-		else
-			this.comboTipo.setValue("Banco");
-		
-		this.comboMPagos = new ComboBox();
-		
-		this.comboMPagos.setImmediate(true);
-		this.comboMPagos.setNullSelectionAllowed(false);
-		
-		this.comboMPagos.addItem("Sin Asignar");
-		this.comboMPagos.addItem("Cheque");
-		this.comboMPagos.addItem("Transferencia");
-	
 		
 		auditoria.setDescription(
 			
@@ -1250,8 +1131,6 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		boolean permisoEliminar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_FACTURA, VariablesPermisos.OPERACION_BORRAR);
 		
 		
-		this.chkFuncionario.setVisible(false);
-		this.lblFuncionario.setVisible(false);
 		this.btnBuscarCliente.setVisible(false);
 		this.impTotMo.setEnabled(false);
 		/*Si tiene permisos de editar habilitamos el boton de 
@@ -1307,8 +1186,6 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		/*Seteamos el form en editar*/
 		this.operacion = Variables.OPERACION_EDITAR;
 		
-		this.chkFuncionario.setVisible(false);
-		this.lblFuncionario.setVisible(false);
 		this.btnBuscarCliente.setVisible(false);
 		this.impTotMo.setEnabled(true);
 		/*Verificamos que tenga permisos*/
@@ -1332,9 +1209,6 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 			/*Seteamos las validaciones*/
 			this.setearValidaciones(true);
 			
-			this.comboTipo.setReadOnly(false);
-			this.comboTipo.setEnabled(false);
-			
 			this.titularVO.setCodigo(Integer.parseInt(codTitular.getValue()));
 			this.titularVO.setNombre(nomTitular.getValue());
 			this.titularVO.setTipo(tipo.getValue());
@@ -1355,8 +1229,6 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		/*Si es nuevo ocultamos el nroDocum (ya que aun no tenemos el numero)*/
 		this.nroDocum.setVisible(false);
 		this.nroDocum.setEnabled(false);
-		this.chkFuncionario.setVisible(true);
-		this.lblFuncionario.setVisible(true);
 		this.impTotMo.setEnabled(true);
 		this.impTotMo.setReadOnly(false);
 		importeTotalCalculado = (double) 0;
@@ -1364,9 +1236,6 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		/*Chequeamos si tiene permiso de editar*/
 		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_FACTURA, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
-		
-		/*Mostramos o ocultamos los datos del Banco, dependiendo del combo tipo (banco, caja)*/
-		this.mostrarDatosDeBanco();
 		
 		/*Si no tiene permisos de Nuevo Cerrmamos la ventana y mostramos mensaje*/
 		if(!permisoNuevoEditar)
@@ -1405,10 +1274,6 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		/*Agregar control si se puede editar si el mes esta abierto*/
 		//TODO
 		this.fecDoc.setReadOnly(false);
-		
-		this.serieDocRef.setReadOnly(false);
-		
-		this.nroDocRef.setReadOnly(false);
 		
 		this.impTotMo.setReadOnly(false);
 		this.impTotMo.setEnabled(true);
@@ -1520,22 +1385,11 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	private void readOnlyFields(boolean setear)
 	{
 		
-		this.comboTipo.setReadOnly(setear);
 		this.nroDocum.setReadOnly(setear);
-		
-		this.comboBancos.setReadOnly(setear);
-		
-		this.comboCuentas.setReadOnly(setear);
 		
 		this.fecDoc.setReadOnly(setear);
 		
 		this.fecValor.setReadOnly(setear);
-		
-		this.comboMPagos.setReadOnly(setear);
-		
-		this.serieDocRef.setReadOnly(setear);
-		
-		this.nroDocRef.setReadOnly(setear);
 		
 		this.comboMoneda.setReadOnly(setear);
 		
@@ -1545,11 +1399,12 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		this.codTitular.setEnabled(false);
 		this.nomTitular.setEnabled(false);
 		
+		this.codProceso.setEnabled(false);
+		this.descProceso.setEnabled(false);
+		
 		this.codTitular.setReadOnly(setear);
 		this.codTitular.setEnabled(false);
 		this.nomTitular.setEnabled(false);
-		this.monedaBanco.setEnabled(false);
-		this.cuentaBanco.setEnabled(false);
 	}
 	
 	/**
@@ -1559,11 +1414,6 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	 */
 	private void agregarFieldsValidaciones()
 	{
-		
-        this.serieDocRef.addValidator(
-                new StringLengthValidator(
-                     " 4 caracteres máximo", 1, 4, false));
-        
         this.referencia.addValidator(
                 new StringLengthValidator(
                         " 45 caracteres máximo", 1, 255, false));
@@ -1581,19 +1431,13 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	private boolean fieldsValidos()
 	{
 		boolean valido = false;
+		
 		//Agregamos validaciones a los campos para luego controlarlos
 		this.agregarFieldsValidaciones();
-		try
-		{
-			if(this.nroDocRef.isValid() && this.impTotMo.isValid()
-					&& this.serieDocRef.isValid()
-					&& this.referencia.isValid())
-				valido = true;
-			
-		}catch(Exception e)
-		{
-			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
-		}
+		
+		if(this.referencia.isValid())
+			valido = true;
+		
 		
 		return valido;
 	}
@@ -1847,9 +1691,9 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		  lstGastos.getColumn("fecDoc").setHidden(true);
 		  lstGastos.getColumn("fecValor").setHidden(true);
 		  lstGastos.getColumn("impImpuMn").setHidden(true);
-		  lstGastos.getColumn("impImpuMo").setHidden(true);
+		  //lstGastos.getColumn("impImpuMo").setHidden(true);
 		  lstGastos.getColumn("impSubMn").setHidden(true);
-		  lstGastos.getColumn("impSubMo").setHidden(true);
+		  //lstGastos.getColumn("impSubMo").setHidden(true);
 		  lstGastos.getColumn("linea").setHidden(true);
 		  lstGastos.getColumn("impTotMn").setHidden(true);
 		  lstGastos.getColumn("nomCuenta").setHidden(true);
@@ -1859,6 +1703,8 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		  lstGastos.getColumn("nomTitular").setHidden(true);
 		  lstGastos.getColumn("nroTrans").setHidden(true);
 		  lstGastos.getColumn("porcentajeImpuesto").setHidden(true);
+		  lstGastos.getColumn("codProceso").setHidden(true);
+		  lstGastos.getColumn("estadoGasto").setHidden(true);
 		  lstGastos.getColumn("serieDocum").setHidden(true);
 		  //lstGastos.getColumn("simboloMoneda").setHidden(true);
 		  lstGastos.getColumn("tcMov").setHidden(true);
@@ -1866,10 +1712,12 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		  lstGastos.getColumn("nacional").setHidden(true);
 		  lstGastos.getColumn("tipo").setHidden(true);
 		  
-		lstGastos.setColumnOrder("nroDocum", "referencia", "simboloMoneda", "impTotMo", "codProceso");
+		lstGastos.setColumnOrder("nroDocum", "simboloMoneda", "impSubMo",  "impImpuMo",  "impTotMo", "referencia");
 		
 		lstGastos.getColumn("simboloMoneda").setHeaderCaption("Moneda");
-		lstGastos.getColumn("impTotMo").setHeaderCaption("Importe");
+		lstGastos.getColumn("impTotMo").setHeaderCaption("Total");
+		lstGastos.getColumn("impSubMo").setHeaderCaption("Subtotal");
+		lstGastos.getColumn("impImpuMo").setHeaderCaption("Impuesto");
 		
 		//lst.get(1).setWidth(400);
 		
@@ -1879,17 +1727,20 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		/*Formateamos los tamaños*/
 		lstGastos.getColumn("referencia").setWidth(250);
 		lstGastos.getColumn("nroDocum").setWidth(90);
-		lstGastos.getColumn("codProceso").setWidth(90);
+		//lstGastos.getColumn("codProceso").setWidth(90);
 		lstGastos.getColumn("simboloMoneda").setWidth(95);
+		lstGastos.getColumn("porcentajeImpuesto").setWidth(95);
 		lstGastos.getColumn("impTotMo").setWidth(100);
+		lstGastos.getColumn("impSubMo").setWidth(100);
+		lstGastos.getColumn("impImpuMo").setWidth(100);
 		
 		lstGastos.getColumn("nroDocum").setHeaderCaption("Doc");
-		lstGastos.getColumn("codProceso").setHeaderCaption("Proceso");
+		//lstGastos.getColumn("codProceso").setHeaderCaption("Proceso");
 		
 		lstGastos.getColumn("nroDocum").setEditable(false);
 		lstGastos.getColumn("referencia").setEditable(false);
 		lstGastos.getColumn("codProceso").setEditable(false);
-		lstGastos.getColumn("impTotMo").setEditable(true);
+		lstGastos.getColumn("impTotMo").setEditable(false);
 		
 		lstGastos.setEditorSaveCaption("Guardar");
 		lstGastos.setEditorCancelCaption("Cancelar");
@@ -1904,10 +1755,10 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 			@Override
 			public void preCommit(FieldGroup.CommitEvent commitEvent) throws     FieldGroup.CommitException {
 	
-				if(formSelecccionado != null){
+				if(lineaSelecccionada != null){
 	
-					FacturaDetalleVO aux = obtenerGastoEnLista(formSelecccionado.getNroDocum());
-			    	gtoSaldo = saldoOriginalGastos.get(formSelecccionado.getNroDocum());
+					FacturaDetalleVO aux = obtenerGastoEnLista(lineaSelecccionada.getNroDocum());
+			    	gtoSaldo = saldoOriginalGastos.get(lineaSelecccionada.getNroDocum());
 			    	
 		  		}
 			}
@@ -1916,7 +1767,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	        public void postCommit(FieldGroup.CommitEvent commitEvent) throws     FieldGroup.CommitException {
 	      	
 	    	  
-	        	FacturaDetalleVO aux2 = obtenerGastoEnLista(formSelecccionado.getNroDocum());
+	        	FacturaDetalleVO aux2 = obtenerGastoEnLista(lineaSelecccionada.getNroDocum());
 	    	  
 	        	/*Si el importe modificado es mayor al saldo no dejamos modificar*/
 	    	  
@@ -2022,11 +1873,11 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 			this.tipo.setValue(clienteVO.getTipo());
 		}
 		
-		if(datos instanceof TitularVO){
-			titularVO = (TitularVO) datos;
-			this.codTitular.setValue(String.valueOf(titularVO.getCodigo()));
-			this.nomTitular.setValue(titularVO.getNombre());
-			this.tipo.setValue(titularVO.getTipo());
+		if(datos instanceof ProcesoVO){
+			//codProceso descProceso
+			ProcesoVO procesoVO = (ProcesoVO) datos;
+			this.codProceso.setValue(String.valueOf(procesoVO.getCodigo()));
+			this.descProceso.setValue(String.valueOf(procesoVO.getDescripcion()));
 		}
 		
 	}
@@ -2160,40 +2011,6 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	}
 	
 	
-	/**
-	* Si el combo de Tipo es caja: ocultamos los datos del banco
-	* Si el combo tipo es Banco: mostramos los datos de bando
-	*
-	*/
-	private void mostrarDatosDeBanco(){
-		
-		boolean activo = false;
-		
-		if(this.comboTipo.getValue() != null)
-		{
-			String tipo = this.comboTipo.getValue().toString().trim();
-			
-			if(tipo.equals("Banco"))
-				activo = true;
-		}
-		
-		//this.comboBancos.setVisible(activo);
-		this.comboBancos.setEnabled(activo);
-		
-		//this.comboCuentas.setVisible(activo);
-		this.comboCuentas.setEnabled(activo);
-		
-		
-		//this.comboMPagos.setVisible(activo);
-		this.comboMPagos.setEnabled(activo);
-		
-		//this.serieDocRef.setVisible(activo);
-		this.serieDocRef.setEnabled(activo);
-		
-		//this.nroDocRef.setVisible(activo);
-		this.nroDocRef.setEnabled(activo);
-		
-	}
 
 	public static java.sql.Date convertFromJAVADateToSQLDate(
             java.util.Date javaDate) {
@@ -2227,9 +2044,6 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		nroDocum.setConverter(Integer.class);
 		nroDocum.setConversionError("Ingrese un número entero");
 		
-		nroDocRef.setConverter(Integer.class);
-		nroDocRef.setConversionError("Ingrese un número entero");
-		
 		tcMov.setConverter(Double.class);
 		tcMov.setConversionError("Error en formato de número");
 		
@@ -2257,49 +2071,59 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	@Override
 	public void setInfoLst(GastoVO gasto) {
 		
-		int j = 0;
-		boolean salir = false;
-		MonedaVO monedaVO;
-		FacturaDetalleVO g;
+		try{
+		
+			int j = 0;
+			boolean salir = false;
+			MonedaVO monedaVO;
+			FacturaDetalleVO g;
+				
+			g = new FacturaDetalleVO();
+			g.copiar((DocumDetalleVO)gasto);
 			
-		g = new FacturaDetalleVO();
-		g.copiar((DocumDetalleVO)gasto);
-		
-		/*Seteamos el nro de linea para poder identificarlo 
-		 * si se modifica  */
-		g.setLinea(lstDetalleVO.size() + 1);
-		
-		if(!g.isNacional()){
-			while(lstMonedas.size()>j && !salir){
-				monedaVO = new MonedaVO();
-				monedaVO = lstMonedas.get(j);
-				j++;
-				if(g.getCodMoneda().equals(monedaVO.getCodMoneda())){
-					salir = true;
-					
-					if(monedaVO.getCotizacion() != 0){
-						this.lstDetalleVO.add(g);
-						this.lstDetalleAgregar.add(g);
+			/*Seteamos el nro de linea para poder identificarlo 
+			 * si se modifica  */
+			g.setLinea(lstDetalleVO.size() + 1);
+			
+			if(!g.isNacional()){
+				while(lstMonedas.size()>j && !salir){
+					monedaVO = new MonedaVO();
+					monedaVO = lstMonedas.get(j);
+					j++;
+					if(g.getCodMoneda().equals(monedaVO.getCodMoneda())){
+						salir = true;
 						
-					}
-					else{
-						Mensajes.mostrarMensajeError("Debe ingresar la cotización de la moneda " + monedaVO.getDescripcion());
+						if(monedaVO.getCotizacion() != 0){
+							this.lstDetalleVO.add(g);
+							this.lstDetalleAgregar.add(g);
+							
+						}
+						else{
+							Mensajes.mostrarMensajeError("Debe ingresar la cotización de la moneda " + monedaVO.getDescripcion());
+						}
 					}
 				}
 			}
-		}
-		else{
-			this.lstDetalleVO.add(g);
-			this.lstDetalleAgregar.add(g);
-		}
-		/*Actualizamos el container y la grilla*/
-		container.removeAllItems();
-		container.addAll(lstDetalleVO);
-		//lstFormularios.setContainerDataSource(container);
-		this.actualizarGrillaContainer(container);
+			else{
+				this.lstDetalleVO.add(g);
+				this.lstDetalleAgregar.add(g);
+			}
+			
+			
+			
+			/*Actualizamos el container y la grilla*/
+			container.removeAllItems();
+			container.addAll(lstDetalleVO);
+			//lstFormularios.setContainerDataSource(container);
+			this.actualizarGrillaContainer(container);
+			
+			/*Calculamos el importe total de todos los gastos*/
+			this.calcularImporteTotal();
 		
-		/*Calculamos el importe total de todos los gastos*/
-		this.calcularImporteTotal();
+		}catch(Exception e){
+			
+			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+		}
 		
 	}
 
@@ -2315,7 +2139,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		
 		/*Tomo la linea selaccionada previamente para 
 		 * tomar el nro de linea para poder acutalizar*/
-		int linea = this.formSelecccionado.getLinea();
+		int linea = this.lineaSelecccionada.getLinea();
 		
 		IngresoCobroDetalleVO g;
 		
@@ -2349,7 +2173,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	private void actualizarGastoenLista(GastoVO gastoVO)
 	{
 		/*Obtengo la linea del gasto seleccionado previamente*/
-		int lineaSeleccionada = this.formSelecccionado.getLinea();
+		int lineaSeleccionada = this.lineaSelecccionada.getLinea();
 		
 		/*Convertimos el Gasto en linea del Egreso*/
 		FacturaDetalleVO g;
@@ -2420,12 +2244,66 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	@Override
 	public String nomForm() {
 		
-		return "Egreso";
+		return "Factura";
 	}
 
 	@Override
 	public void setInfoLst(ArrayList<Object> lstDatos) {
-		// TODO Auto-generated method stub
+		
+		int j = 0;
+		boolean salir = false;
+		MonedaVO monedaVO;
+		FacturaDetalleVO f;
+		for (Object obj : lstDatos) {
+			
+			
+			f = new FacturaDetalleVO();
+			f.copiar((DocumDetalleVO)obj);
+			
+			if(!f.isNacional()){
+				
+				while(lstMonedas.size()>j && !salir){
+					monedaVO = new MonedaVO();
+					monedaVO = lstMonedas.get(j);
+					j++;
+					if(f.getCodMoneda().equals(monedaVO.getCodMoneda())){
+						salir = true;
+						
+						if(monedaVO.getCotizacion() != 0){
+							this.lstDetalleVO.add(f);
+							this.lstDetalleAgregar.add(f);
+							
+							/*Tambien agrefamos a la lista de los saldos originales
+							 * para poder controlar que no ingresen un saldo mayor al que tien el gasto*/
+							GtoSaldoAux saldoAux =  new GtoSaldoAux(f.getNroDocum(), f.getImpTotMo());
+							this.saldoOriginalGastos.put(saldoAux.getNroDocum(),saldoAux);
+						}
+						else{
+							Mensajes.mostrarMensajeError("Debe ingresar la cotización de la moneda " + monedaVO.getDescripcion());
+						}
+					}
+				}
+			}
+			else{
+				this.lstDetalleVO.add(f);
+				this.lstDetalleAgregar.add(f);
+				
+				/*Tambien agrefamos a la lista de los saldos originales
+				 * para poder controlar que no ingresen un saldo mayor al que tien el gasto*/
+				GtoSaldoAux saldoAux =  new GtoSaldoAux(f.getNroDocum(), f.getImpTotMo());
+				this.saldoOriginalGastos.put(saldoAux.getNroDocum(),saldoAux);
+			}
+		}
+			
+		/*Actualizamos el container y la grilla*/
+		container.removeAllItems();
+		container.addAll(lstDetalleVO);
+		//lstFormularios.setContainerDataSource(container);
+		this.actualizarGrillaContainer(container);
+		
+		/*Calculamos el importe total de todos los gastos*/
+		
+		this.calcularImporteTotal();
 		
 	}
 	
@@ -2617,6 +2495,114 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 				
 				Mensajes.mostrarMensajeError(e.getMessage());
 			}
+	}
+	
+	public void agregarGasto(){
+		try {
+		
+		UI.getCurrent().removeWindow(sub);
+		BusquedaViewExtended form = new BusquedaViewExtended(this, new GastoVO());
+		
+		sub = new MySub("93%", "64%" );
+		sub.setModal(true);
+		sub.setVista(form);
+		//sub.setWidth("50%");
+		//sub.setHeight("50%");
+		sub.center();
+		
+		String codCliente;/*Codigo del cliente para obtener los gastos a cobrar del mismo*/
+		int codProceso;
+		
+		/*Obtenemos los formularios que no estan en el grupo
+		 * para mostrarlos en la grilla para seleccionar*/
+		if(this.operacion.equals(Variables.OPERACION_NUEVO) )
+		{
+			/*Si la operacion es nuevo, ponemos el  codGrupo vacio
+			 * asi nos trae todos los grupos disponibles*/
+			codCliente = this.codTitular.getValue().toString().trim();
+			codProceso = Integer.valueOf(this.codProceso.getValue().toString());
+		}
+		else 
+		{
+			/*Si es operacion Editar tomamos el codGrupo de el fieldGroup*/
+			codCliente = fieldGroup.getItemDataSource().getBean().getCodTitular();
+			codProceso = fieldGroup.getItemDataSource().getBean().getCodProceso();
+		}
+		
+		/*Inicializamos VO de permisos para el usuario, formulario y operacion
+		 * para confirmar los permisos del usuario*/
+		UsuarioPermisosVO permisoAux = 
+				new UsuarioPermisosVO(this.permisos.getCodEmp(),
+						this.permisos.getUsuario(),
+						VariablesPermisos.FORMULARIO_FACTURA,
+						VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		
+
+		//Moneda
+		MonedaVO auxMoneda = new MonedaVO();
+		if(this.comboMoneda.getValue() != null){
+			auxMoneda = (MonedaVO) this.comboMoneda.getValue();
+		}
+		
+		/*Obtenemos los gastos con saldo del cliente*/
+		ArrayList<GastoVO> lstGastosConSaldo = this.controlador.getGastosConSaldo(permisoAux, codCliente, codProceso);
+		
+		/*Hacemos una lista auxliar para pasarselo al BusquedaViewExtended*/
+		ArrayList<Object> lst = new ArrayList<Object>();
+		Object obj;
+		for (GastoVO i: lstGastosConSaldo) {
+			
+			/*Verificamos que el gasto ya no esta en la grilla*/
+			if(!this.existeFormularioenLista(i.getNroDocum()))
+			{
+				obj = new Object();
+				obj = (Object)i;
+				lst.add(obj);
+			}
+		}
+		
+		form.inicializarGrilla(lst);
+		
+		UI.getCurrent().addWindow(sub);
+
+		}catch(Exception e)
+		{
+			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+		}
+	}
+	
+	/***
+	 * Nos retorna los campos necesarios para 
+	 * pasarle al detalle
+	 */
+	private AuxDetalleVO obtenerDatosCabezalParaDetalle(){
+		
+		AuxDetalleVO datosCab = new AuxDetalleVO();
+		
+		/*Obtenemos moneda del cabezal para pasarle al detalle*/
+		MonedaVO auxMoneda = new MonedaVO();
+		auxMoneda = (MonedaVO) comboMoneda.getValue();
+			
+		datosCab.setCodMoneda(auxMoneda.getCodMoneda());
+		datosCab.setTc((Double) tcMov.getConvertedValue());
+			
+		if(this.codProceso != null ){
+			if(this.codProceso.getValue() != "")
+				datosCab.setCodProceso(Integer.valueOf(this.codProceso.getValue()));
+			else{
+				datosCab.setCodProceso(0);
+			}
+		}
+		else{
+			datosCab.setCodProceso(0);
+		}
+		
+		datosCab.setCodTitular(codTitular.getValue());
+		
+		datosCab.setFecDoc(new java.sql.Timestamp(fecDoc.getValue().getTime()));
+		datosCab.setFecValor(new java.sql.Timestamp(fecValor.getValue().getTime()));
+		
+		return datosCab;
 	}
 	
 }

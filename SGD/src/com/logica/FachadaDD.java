@@ -3273,7 +3273,7 @@ public class FachadaDD {
 	* Obtiene todos los gastos facturables con saldo para el titular y empresas
 	*/
 	@SuppressWarnings("unchecked")
-	public ArrayList<GastoVO> getGastosFacturablesxProcesoConSaldo(String cod_emp, String codTit) throws ObteniendoGastosException, ConexionException
+	public ArrayList<GastoVO> getGastosFacturablesxProcesoConSaldo(String cod_emp, String codTit, int codProceso) throws ObteniendoGastosException, ConexionException
 	{
 	
 		Connection con = null;
@@ -3285,7 +3285,7 @@ public class FachadaDD {
 		{
 			con = this.pool.obtenerConeccion();
 			
-			lstGastos = this.gastos.getGastosFacturablesxProcesoConSaldo(con, cod_emp, codTit);
+			lstGastos = this.gastos.getGastosFacturablesxProcesoConSaldo(con, cod_emp, codTit, codProceso);
 			
 			
 			GastoVO aux;

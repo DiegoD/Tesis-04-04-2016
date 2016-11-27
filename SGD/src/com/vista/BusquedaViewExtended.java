@@ -696,23 +696,7 @@ public class BusquedaViewExtended extends BusquedaView{
 		lstColumn.get(1).setWidth(300);
 		lstColumn.get(2).setWidth(150);
 		
-		//Modifica el formato de fecha en la grilla 
-		/*grid.getColumn("fecha").setConverter(new StringToDateConverter(){
 		
-			private static final long serialVersionUID = 1L;
-
-			@Override
-
-			public DateFormat getFormat(Locale locale){
-
-				return new SimpleDateFormat("dd/MM/yyyy");
-
-			}
-
-		});*/
-		
-		//grid.getColumn("operacion").setHidden(true);
-//		grid.getColumn("fechaMod").setHidden(true);
 		
 	try{	
 		grid.getColumn("codCtaInd").setHidden(true);

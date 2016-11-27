@@ -92,11 +92,11 @@ public class FacturaControlador {
 	}
 	
 
-	public ArrayList<GastoVO> getGastosConSaldo(UsuarioPermisosVO permisos, String cod_tit) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoGastosException{
+	public ArrayList<GastoVO> getGastosConSaldo(UsuarioPermisosVO permisos, String cod_tit, int codProceso) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoGastosException{
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			return FachadaDD.getInstance().getGastosFacturablesxProcesoConSaldo(permisos.getCodEmp(), cod_tit);
+			return FachadaDD.getInstance().getGastosFacturablesxProcesoConSaldo(permisos.getCodEmp(), cod_tit, codProceso);
 		else
 			throw new NoTienePermisosException();
 	}

@@ -51,6 +51,8 @@ public class DAOFacturas implements IDAOFacturas{
 				
 				fact.setCuenta(new CuentaInfo(fact.getCodCuentaInd(), "Ingreso Cobro"));
 				
+				fact.getProcesoInfo().setCodProceso(rs.getInt("cod_proceso"));
+				fact.getProcesoInfo().setDescProceso(rs.getString("cod_proceso"));
 				fact.setFecDoc(rs.getTimestamp("fec_doc"));
 				fact.setCodDocum(rs.getString("cod_docum"));
 				fact.setSerieDocum(rs.getString("serie_docum"));
@@ -167,7 +169,7 @@ public class DAOFacturas implements IDAOFacturas{
 			pstmt1.setLong(20, factura.getNroTrans());
 			pstmt1.setString(21, factura.getUsuarioMod());
 			pstmt1.setString(22, factura.getOperacion());
-			
+			pstmt1.setString(23, factura.getProcesoInfo().getDescProceso());
 			
 			
 			pstmt1.executeUpdate ();

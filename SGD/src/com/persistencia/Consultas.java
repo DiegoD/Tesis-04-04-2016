@@ -1279,8 +1279,8 @@ public String getIngresoCobroCabTodosOtros(){
 			sb.append("INSERT INTO c_facturas (cod_docum, serie_docum, nro_docum, cod_tit, cod_cuenta ");
 			sb.append(", cod_emp, fec_doc, fec_valor, cod_bco, cod_ctabco, cod_mpago, cod_doc_ref ");
 			sb.append(", serie_doc_ref, nro_doc_ref, cod_moneda, imp_tot_mn, imp_tot_mo, tc_mov ");
-			sb.append(", observaciones, nro_trans, fecha_mod, usuario_mod, operacion) ");
-			sb.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?) ");
+			sb.append(", observaciones, nro_trans, fecha_mod, usuario_mod, operacion, cod_proceso ) ");
+			sb.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ? ) ");
 			
 			return sb.toString();
 	}
@@ -1324,9 +1324,9 @@ public String getIngresoCobroCabTodosOtros(){
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("SELECT cod_docum, serie_docum, nro_docum, m_titulares.cod_tit, m_titulares.nom_tit, m_titulares.tipo ");
-		sb.append(",c_facturas.cod_emp, fec_doc, fec_valor  ");
-		sb.append(", m_monedas.cod_moneda, m_monedas.descripcion, m_monedas.simbolo, imp_tot_mn ");
-		sb.append(", imp_tot_mo, tc_mov, observaciones, nro_trans, c_facturas.fecha_mod, c_facturas.usuario_mod ");
+		sb.append(",c_facturas.cod_emp, c_facturas.fec_doc, c_facturas.fec_valor, c_facturas.cod_proceso,  c_procesos.descripcion  ");
+		sb.append(", m_monedas.cod_moneda, m_monedas.descripcion, m_monedas.simbolo, c_facturas.imp_tot_mn ");
+		sb.append(", c_facturas.imp_tot_mo, c_facturas.tc_mov, c_facturas.observaciones, nro_trans, c_facturas.fecha_mod, c_facturas.usuario_mod ");
 		sb.append(", c_facturas.operacion, m_monedas.descripcion, m_monedas.simbolo, c_facturas.cod_cuenta   "); 
 		sb.append("	FROM c_facturas ");
 		
@@ -1339,6 +1339,10 @@ public String getIngresoCobroCabTodosOtros(){
 		sb.append("ON c_facturas.cod_emp = m_titulares.cod_emp ");  
 		sb.append("AND c_facturas.cod_tit = m_titulares.cod_tit  ");
 		
+		sb.append("INNER JOIN c_procesos ");
+		
+		sb.append("ON c_facturas.cod_emp = c_procesos.cod_emp ");  
+		sb.append("AND c_facturas.cod_proceso = c_procesos.cod_proceso  ");
 		
 		sb.append("WHERE c_facturas.cod_emp = ?  "); 
 		
@@ -1377,7 +1381,7 @@ public String getIngresoCobroCabTodosOtros(){
 		
 		return sb.toString();
 	}
-
+/*
 	public String getFacturaCabInd(){
 	
 		StringBuilder sb = new StringBuilder();
@@ -1405,7 +1409,7 @@ public String getIngresoCobroCabTodosOtros(){
 		
 		return sb.toString();
 	}
-
+*/
 
 	public String memberFactura(){
 	

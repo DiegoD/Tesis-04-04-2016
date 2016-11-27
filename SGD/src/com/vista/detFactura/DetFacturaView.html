@@ -6,23 +6,23 @@
  <body> 
   <vaadin-css-layout style-name="root-layout form-template-vaadin" responsive _id="root_layout"> 
    <vaadin-css-layout style-name="main-content-wrapper" width-full _id="main_content_wrapper"> 
-    <vaadin-form-layout spacing="false" responsive id="auditoria" size-full margin-left margin-right margin-bottom="false"> 
+    <vaadin-form-layout spacing="false" responsive id="auditoria" height="454px" margin-left margin-right margin-bottom="false"> 
      <vaadin-label style-name="colored h2" responsive plain-text :center>
-       Gasto 
+       Detalle 
      </vaadin-label> 
      <vaadin-horizontal-layout responsive width-full> 
       <vaadin-link caption="Auditoria" style-name="tiny" responsive _id="auditoria" :middle :right></vaadin-link> 
      </vaadin-horizontal-layout> 
      <vaadin-horizontal-layout responsive size-full> 
       <vaadin-form-layout style-name="tiny" spacing="false" responsive size-full margin-top="false" margin-bottom="false"> 
-       <vaadin-horizontal-layout caption="Número" style-name="tiny" spacing responsive height="40px"> 
-        <vaadin-text-field style-name="tiny" null-representation="0" responsive width="90px" _id="nroDocum"></vaadin-text-field> 
-        <vaadin-combo-box style-name="tiny" responsive item-caption-mode="id" width="125px" _id="comboSeleccion"> 
+       <vaadin-horizontal-layout visible="false" caption="Número" enabled="false" style-name="tiny" spacing responsive height="40px"> 
+        <vaadin-text-field enabled="false" visible="false" style-name="tiny" null-representation="0" responsive width="90px" _id="nroDocum"></vaadin-text-field> 
+        <vaadin-combo-box enabled="false" visible="false" style-name="tiny" responsive item-caption-mode="id" width="125px" _id="comboSeleccion"> 
          <option>Oficina</option> 
          <option>Proceso</option> 
          <option>Empleado</option> 
         </vaadin-combo-box> 
-        <vaadin-combo-box style-name="tiny" item-caption-mode="id" width="125px" _id="comboEstado"> 
+        <vaadin-combo-box enabled="false" visible="false" style-name="tiny" item-caption-mode="id" width="125px" _id="comboEstado"> 
          <option>Cobrable</option> 
          <option>Facturable</option> 
          <option>No cobrable</option> 
@@ -31,25 +31,15 @@
         <vaadin-text-field visible="false" style-name="tiny" readonly _id="codDocum"></vaadin-text-field> 
         <vaadin-text-field visible="false" style-name="tiny" _id="serieDocum"></vaadin-text-field> 
        </vaadin-horizontal-layout> 
-       <vaadin-horizontal-layout caption="Fecha" spacing responsive height="36px"> 
-        <vaadin-date-field style-name="tiny" responsive width="127px" _id="fecDoc"></vaadin-date-field> 
+       <vaadin-horizontal-layout visible="false" caption="Fecha" enabled="false" spacing responsive height="36px"> 
+        <vaadin-date-field enabled="false" visible="false" style-name="tiny" responsive width="127px" _id="fecDoc"></vaadin-date-field> 
         <vaadin-label caption="Fecha Efectiva" style-name="tiny" width-auto height="2px"></vaadin-label> 
-        <vaadin-date-field style-name="tiny" responsive width="122px" _id="fecValor"></vaadin-date-field> 
+        <vaadin-date-field enabled="false" visible="false" style-name="tiny" responsive width="122px" _id="fecValor"></vaadin-date-field> 
        </vaadin-horizontal-layout> 
-       <vaadin-horizontal-layout caption="Proceso" spacing responsive _id="proceso"> 
-        <vaadin-text-field style-name="tiny" width="90px" _id="codProceso"></vaadin-text-field> 
-        <vaadin-text-field style-name="tiny" width="264px" _id="descProceso"></vaadin-text-field> 
-        <vaadin-button icon="fonticon://FontAwesome/f002" style-name="icon-only borderless quiet" _id="btnBuscarProceso">
-          Button 
-        </vaadin-button> 
-       </vaadin-horizontal-layout> 
-       <vaadin-horizontal-layout caption="Cliente" spacing responsive _id="cliente"> 
-        <vaadin-text-field style-name="tiny" width="90px" _id="codTitular"></vaadin-text-field> 
-        <vaadin-text-field style-name="tiny" width="264px" _id="nomTitular"></vaadin-text-field> 
-        <vaadin-button icon="fonticon://FontAwesome/f002" style-name="icon-only borderless quiet" plain-text _id="btnBuscarEmpleado">
-          Button 
-        </vaadin-button> 
-       </vaadin-horizontal-layout> 
+       <vaadin-text-field enabled="false" visible="false" style-name="tiny" width="90px" _id="codProceso"></vaadin-text-field> 
+       <vaadin-text-field enabled="false" visible="false" style-name="tiny" width="264px" _id="descProceso"></vaadin-text-field> 
+       <vaadin-text-field enabled="false" visible="false" style-name="tiny" width="90px" _id="codTitular"></vaadin-text-field> 
+       <vaadin-text-field enabled="false" visible="false" style-name="tiny" width="264px" _id="nomTitular"></vaadin-text-field> 
        <vaadin-horizontal-layout caption="Rubro" spacing responsive> 
         <vaadin-text-field style-name="tiny" width="90px" _id="codRubro"></vaadin-text-field> 
         <vaadin-text-field style-name="tiny" width="264px" _id="nomRubro"></vaadin-text-field> 

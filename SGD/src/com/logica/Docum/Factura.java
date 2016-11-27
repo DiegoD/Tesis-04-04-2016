@@ -2,19 +2,21 @@ package com.logica.Docum;
 
 import java.util.ArrayList;
 
-import com.logica.IngresoCobro.IngresoCobroLinea;
+import com.logica.ProcesoInfo;
 import com.valueObject.Docum.FacturaDetalleVO;
 import com.valueObject.Docum.FacturaVO;
-import com.valueObject.IngresoCobro.IngresoCobroDetalleVO;
-import com.valueObject.IngresoCobro.IngresoCobroVO;
 
 
 public class Factura extends DatosDocum{
 
+	private ProcesoInfo procesoInfo;
+	
 	ArrayList<FacturaDetalle> detalle;
 	
 	public Factura(){
 		super();
+		
+		this.procesoInfo = new ProcesoInfo(0,"No Asignado");
 	}
 	
 	public Factura(FacturaVO t){
@@ -23,6 +25,7 @@ public class Factura extends DatosDocum{
 		
 		this.detalle = new ArrayList<FacturaDetalle>();
 		
+		this.procesoInfo = new ProcesoInfo(t.getCodProceso(), t.getDescProceso());
 		
 		this.setCuenta(new CuentaInfo(t.getCodCuenta(), t.getNomCuenta(), t.getCodMoneda(), t.isNacional()));
 		
@@ -37,9 +40,6 @@ public class Factura extends DatosDocum{
 	}
 		
 	
-
-	
-	
 	public FacturaVO retornarVO(){
 			
 		
@@ -47,7 +47,8 @@ public class Factura extends DatosDocum{
 		
 		aux.copiar(super.retornarDatosDocumVO());
 				
-
+		aux.setCodProceso(this.procesoInfo.getCodProceso());
+		aux.setDescProceso(this.procesoInfo.getDescProceso());
 		aux.setCodCtaInd("0");
 		aux.setFecValor(aux.getFecValor());
 		aux.setFecDoc(aux.getFecDoc());
@@ -79,6 +80,14 @@ public class Factura extends DatosDocum{
 
 	public void setDetalle(ArrayList<FacturaDetalle> detalle) {
 		this.detalle = detalle;
+	}
+
+	public ProcesoInfo getProcesoInfo() {
+		return procesoInfo;
+	}
+
+	public void setProcesoInfo(ProcesoInfo procesoInfo) {
+		this.procesoInfo = procesoInfo;
 	}
 	
 	

@@ -6,7 +6,7 @@
  <body> 
   <vaadin-form-layout spacing="false" responsive id="auditoria" size-full margin-left margin-right margin-bottom="false"> 
    <vaadin-label style-name="colored h2" responsive plain-text :center>
-     Factura
+     Factura 
    </vaadin-label> 
    <vaadin-horizontal-layout responsive width-full> 
     <vaadin-link caption="Auditoria" responsive _id="auditoria" :middle :right></vaadin-link> 
@@ -15,37 +15,22 @@
     <vaadin-form-layout spacing="false" responsive size-full _id="formLay1"> 
      <vaadin-text-field enabled="false" id="nroTrans" visible="false" responsive _id="nroTrans"></vaadin-text-field> 
      <vaadin-text-field caption="Nro" style-name="tiny" null-representation="" responsive width="144px" readonly _id="nroDocum"></vaadin-text-field> 
-     <vaadin-horizontal-layout caption="Tipo" spacing height="30px" _id="aaa"> 
-      <vaadin-combo-box style-name="tiny" responsive item-caption-mode="id" width="144px" _id="comboTipo"> 
-       <option>Caja</option> 
-       <option>Banco</option> 
-      </vaadin-combo-box> 
-      <vaadin-label caption="Funcionario" width-auto height="1px" _id="lblFuncionario"></vaadin-label> 
-      <vaadin-check-box _id="chkFuncionario"></vaadin-check-box> 
-     </vaadin-horizontal-layout> 
      <vaadin-date-field caption="Fec Doc" id="fecDoc" style-name="tiny" responsive width="144px" _id="fecDoc"></vaadin-date-field> 
      <vaadin-date-field caption="Fec Valor" id="fecValor" style-name="tiny" responsive width="144px" _id="fecValor"></vaadin-date-field> 
-     <vaadin-horizontal-layout caption="Titular" style-name="name-wrapper" spacing responsive _id="name_wrapper"> 
-      <vaadin-text-field id="codTitular" style-name="tiny" responsive width="144px" readonly _id="codTitular"></vaadin-text-field> 
+     <vaadin-horizontal-layout caption="Cliente" style-name="name-wrapper" spacing responsive _id="name_wrapper"> 
+      <vaadin-text-field id="codTitular" style-name="tiny" responsive width="144px" _id="codTitular"></vaadin-text-field> 
       <vaadin-text-field id="nomTitular" style-name="tiny" responsive _id="nomTitular"></vaadin-text-field> 
       <vaadin-text-field enabled="false" visible="false" responsive _id="tipo"></vaadin-text-field> 
       <vaadin-button icon="fonticon://FontAwesome/f002" style-name="icon-only borderless quiet tiny" responsive _id="btnBuscarCliente"></vaadin-button> 
      </vaadin-horizontal-layout> 
+     <vaadin-horizontal-layout caption="Proceso" spacing responsive _id="proceso"> 
+      <vaadin-text-field id="codProceso" style-name="tiny" responsive width="144px" _id="codProceso"></vaadin-text-field> 
+      <vaadin-text-field id="descProceso" style-name="tiny" responsive _id="descProceso"></vaadin-text-field> 
+      <vaadin-button icon="fonticon://FontAwesome/f002" style-name="icon-only borderless quiet" _id="btnBuscarProceso">
+        Button 
+      </vaadin-button> 
+     </vaadin-horizontal-layout> 
      <vaadin-text-field caption="Referencia" id="referencia" style-name="tiny" responsive width="341px" readonly _id="referencia"></vaadin-text-field> 
-     <vaadin-combo-box caption="Banco" style-name="tiny" responsive item-caption-mode="id" width="144px" _id="comboBancos"></vaadin-combo-box> 
-     <vaadin-horizontal-layout caption="Cuenta" spacing _id="cuenta"> 
-      <vaadin-combo-box id="comboCuentas" style-name="tiny" item-caption-mode="id" width="144px" _id="comboCuentas"></vaadin-combo-box> 
-      <vaadin-text-field style-name="tiny" width="40px" _id="monedaBanco"></vaadin-text-field> 
-      <vaadin-text-field style-name="tiny" width="133px" _id="cuentaBanco"></vaadin-text-field> 
-     </vaadin-horizontal-layout> 
-     <vaadin-horizontal-layout caption="Medio Pago" style-name="name-wrapper" spacing responsive _id="name_wrappeer"> 
-      <vaadin-combo-box id="comboMPagos" style-name="tiny" responsive item-caption-mode="id" width="144px" _id="comboMPagos"> 
-       <option>Cheque</option> 
-       <option>Transferencia</option> 
-      </vaadin-combo-box> 
-      <vaadin-text-field id="serieDocRef" input-prompt="Serie" style-name="tiny" null-representation="" responsive width="40px" readonly _id="serieDocRef"></vaadin-text-field> 
-      <vaadin-text-field input-prompt="Nro Mov/Cheq" style-name="tiny" null-representation="" responsive width="133px" readonly _id="nroDocRef"></vaadin-text-field> 
-     </vaadin-horizontal-layout> 
      <vaadin-text-field caption="TC" id="tcMov" style-name="tiny" null-representation="" responsive width="144px" _id="tcMov"></vaadin-text-field> 
      <vaadin-horizontal-layout caption="Importe" style-name="name-wrapper" spacing responsive _id="name_wrapper2"> 
       <vaadin-combo-box id="comboMoneda" style-name="tiny" responsive item-caption-mode="id" width="144px" _id="comboMoneda"></vaadin-combo-box> 
@@ -68,9 +53,12 @@
     </vaadin-form-layout> 
     <vaadin-form-layout spacing="false" responsive size-full _id="formLay2"> 
      <vaadin-grid id="lstGastos" style-name="small" responsive width-full height="356px" _id="lstGastos"></vaadin-grid> 
-     <vaadin-horizontal-layout style-name="v-formlayout" responsive width="249px" height-full :middle :right> 
+     <vaadin-horizontal-layout style-name="v-formlayout" responsive width="350px" height-full :middle :right> 
       <vaadin-button style-name="primary tiny" responsive id="btnAgregar" plain-text _id="btnAgregar" :middle>
         Agregar 
+      </vaadin-button> 
+      <vaadin-button style-name="primary tiny" responsive id="btnAgregarGto" plain-text _id="btnAgregarGto" :middle>
+        Gastos 
       </vaadin-button> 
       <vaadin-button style-name="primary tiny" responsive id="btnEditarForm" plain-text _id="btnEditarForm" :middle>
         Editar 
