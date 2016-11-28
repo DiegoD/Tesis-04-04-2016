@@ -70,7 +70,7 @@ public class DepositoPanelExtended extends DepositoPanel{
 				
 					this.btnNuevoDeposito.addClickListener(click -> {
 						
-						sub = new MySub("60%","35%");
+						sub = new MySub("90%","50%");
 						form = new DepositoViewExtended(Variables.OPERACION_NUEVO, this);
 						sub.setModal(true);
 						sub.setVista(form);
@@ -122,9 +122,23 @@ public class DepositoPanelExtended extends DepositoPanel{
 		
 		this.gridDepositos.setContainerDataSource(container);
 		
-		gridDepositos.removeColumn("activo");
+		gridDepositos.removeColumn("operacion");
 		gridDepositos.removeColumn("fechaMod");
 		gridDepositos.removeColumn("usuarioMod");
+		
+		gridDepositos.removeColumn("codDocum");
+		gridDepositos.removeColumn("serieDocum");
+		gridDepositos.removeColumn("fecDoc");
+		gridDepositos.removeColumn("codBanco");
+		gridDepositos.removeColumn("codCuenta");
+		gridDepositos.removeColumn("codMoneda");
+		gridDepositos.removeColumn("nacional");
+		gridDepositos.removeColumn("moneda");
+		gridDepositos.removeColumn("funcionario");
+		gridDepositos.removeColumn("numComprobante");
+		gridDepositos.removeColumn("impTotMn");
+		gridDepositos.removeColumn("nroTrans");
+		gridDepositos.removeColumn("lstDetalle");
 		
 		/*Agregamos los filtros a la grilla*/
 		this.filtroGrilla();
@@ -146,8 +160,8 @@ public class DepositoPanelExtended extends DepositoPanel{
 				    		item.getBean().setFechaMod(new Timestamp(System.currentTimeMillis()));
 				    	}
 							
-				    	form = new DepositoViewExtended(Variables.OPERACION_LECTURA, MonedasPanelExtended.this);
-				    	sub = new MySub("60%","35%");
+				    	form = new DepositoViewExtended(Variables.OPERACION_LECTURA, DepositoPanelExtended.this);
+				    	sub = new MySub("90%","50%");
 						sub.setModal(true);
 						sub.setVista(form);
 						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
@@ -174,7 +188,7 @@ public class DepositoPanelExtended extends DepositoPanel{
 	 */
 	private ArrayList<DepositoVO> getDepositos() throws Exception  {
 		
-		ArrayList<DepositoVO> lstMonedas = new ArrayList<DepositoVO>();
+		ArrayList<DepositoVO> lstDepositos = new ArrayList<DepositoVO>();
 
 		try {
 			
@@ -186,7 +200,7 @@ public class DepositoPanelExtended extends DepositoPanel{
 							VariablesPermisos.FORMULARIO_DEPOSITO,
 							VariablesPermisos.OPERACION_LEER);
 			
-			lstMonedas = controlador.getDepositos(permisoAux);
+			lstDepositos = controlador.getDepositos(permisoAux);
 			
 		} 
 		catch (ObteniendoDepositoException | InicializandoException | ConexionException
@@ -196,7 +210,7 @@ public class DepositoPanelExtended extends DepositoPanel{
 		}
 		
 			
-		return lstMonedas;
+		return lstDepositos;
 	}
 	
 	/**

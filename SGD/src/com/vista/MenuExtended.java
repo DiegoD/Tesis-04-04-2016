@@ -27,6 +27,7 @@ import com.vista.Clientes.ClientesPanelExtended;
 import com.vista.CodigosGeneralizados.CodigosGeneralizadosPanelExtended;
 import com.vista.Cotizaciones.CotizacionesPanelExtended;
 import com.vista.Cuentas.CuentasPanelExtended;
+import com.vista.Deposito.DepositoPanelExtended;
 import com.vista.Deposito.DepositoViewExtended;
 import com.vista.Empresas.EmpresasPanelExtended;
 import com.vista.Factura.FacturaPanelExtended;
@@ -572,13 +573,8 @@ public class MenuExtended extends Menu{
 			this.content.removeAllComponents();
 			try {
 				
-				sub = new MySub("90%", "55%");
-				form = new DepositoViewExtended(sub);
-				sub.setModal(true);
-				sub.center();
-				sub.setVista(form);
-				
-				UI.getCurrent().addWindow(sub);
+				DepositoPanelExtended u = new DepositoPanelExtended(); 
+				this.content.addComponent(u);
 				
 			} catch (Exception e) {
 				

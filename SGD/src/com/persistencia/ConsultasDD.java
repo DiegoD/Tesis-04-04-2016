@@ -1923,7 +1923,7 @@ public String eliminarSaldoCuenta(){
 				+ "c_deposito.tc_mov, c_deposito.observaciones, c_deposito.nro_trans, c_deposito.fecha_mod, "
 				+ "c_deposito.usuario_mod, c_deposito.operacion ");
 		
-		sb.append("WHERE cod_emp = ? ");
+		sb.append("from c_deposito WHERE cod_emp = ? ");
 		
 		return sb.toString();
 	}

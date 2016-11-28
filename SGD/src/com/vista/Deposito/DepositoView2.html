@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8" name="design-properties" content="{&quot;RULERS_VISIBLE&quot;:true,&quot;GUIDELINES_VISIBLE&quot;:false,&quot;SNAP_TO_OBJECTS&quot;:true,&quot;SNAP_TO_GRID&quot;:true,&quot;SNAPPING_DISTANCE&quot;:10,&quot;JAVA_SOURCES_ROOT&quot;:&quot;src&quot;,&quot;THEME&quot;:&quot;sgd&quot;}">
+ </head> 
+ <body> 
+  <vaadin-form-layout spacing="false" responsive id="auditoria" size-full margin-left margin-right margin-top="false" margin-bottom="false"> 
+   <vaadin-label style-name="colored h2" responsive plain-text :center>
+     Depósito 
+   </vaadin-label> 
+   <vaadin-horizontal-layout responsive size-full> 
+    <vaadin-form-layout spacing="false" responsive height="66.78%" margin-top="false" margin-bottom="false"> 
+     <vaadin-horizontal-layout caption="Responsable" spacing responsive height="22px"> 
+      <vaadin-combo-box style-name="tiny" item-caption-mode="id" width="145px" _id="comboResponsable"> 
+       <option>Option 1</option> 
+       <option>Option 2</option> 
+       <option>Option 3</option> 
+      </vaadin-combo-box> 
+      <vaadin-label caption="N° Comp." size-auto _id="lblComprobante"></vaadin-label> 
+      <vaadin-text-field style-name="tiny" width="100px" _id="comprobante"></vaadin-text-field> 
+      <vaadin-label caption="Fecha" style-name="tiny" size-auto _id="lblfecha"></vaadin-label> 
+      <vaadin-date-field style-name="tiny" width="102px" _id="fecValor"></vaadin-date-field> 
+     </vaadin-horizontal-layout> 
+     <vaadin-horizontal-layout caption="Banco" spacing responsive height="22px"> 
+      <vaadin-combo-box style-name="tiny" item-caption-mode="id" width="143px" _id="comboBancos"> 
+       <option>Option 1</option> 
+       <option>Option 2</option> 
+       <option>Option 3</option> 
+      </vaadin-combo-box> 
+      <vaadin-label caption="Cuenta" size-auto _id="lblCuentaBanco"></vaadin-label> 
+      <vaadin-combo-box style-name="tiny" item-caption-mode="id" width="119px" _id="comboCuentas"> 
+       <option>Option 1</option> 
+       <option>Option 2</option> 
+       <option>Option 3</option> 
+      </vaadin-combo-box> 
+      <vaadin-text-field style-name="tiny" width="40px" _id="monedaBanco"></vaadin-text-field> 
+      <vaadin-text-field style-name="tiny" width="100px" _id="cuentaBanco"></vaadin-text-field> 
+     </vaadin-horizontal-layout> 
+     <vaadin-horizontal-layout caption="Importe" responsive width="100px"> 
+      <vaadin-text-field style-name="tiny" null-representation="" width="100px" _id="importeMo"></vaadin-text-field> 
+     </vaadin-horizontal-layout> 
+     <vaadin-horizontal-layout caption="Observaciones" responsive> 
+      <vaadin-text-field style-name="tiny" width="500px" _id="observaciones"></vaadin-text-field> 
+     </vaadin-horizontal-layout> 
+    </vaadin-form-layout> 
+   </vaadin-horizontal-layout> 
+   <vaadin-horizontal-layout responsive> 
+    <vaadin-grid responsive width="617px" height="300px" _id="gridCheques"></vaadin-grid> 
+   </vaadin-horizontal-layout> 
+   <vaadin-horizontal-layout responsive width="187px"> 
+    <vaadin-button style-name="primary tiny" plain-text _id="depositar" :middle>
+      Depositar 
+    </vaadin-button> 
+    <vaadin-button style-name="tiny primary" id="btnCancelar" plain-text _id="cancelar" :middle>
+      Cancelar 
+    </vaadin-button> 
+   </vaadin-horizontal-layout> 
+  </vaadin-form-layout>  
+ </body>
+</html>

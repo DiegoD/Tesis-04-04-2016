@@ -15,6 +15,7 @@ import com.excepciones.Cheques.NoExisteChequeException;
 import com.excepciones.Cheques.ObteniendoChequeException;
 import com.logica.Cheque;
 import com.logica.Depositos.Deposito;
+import com.logica.Depositos.DepositoDetalle;
 import com.logica.Docum.DatosDocum;
 
 public interface IDAOCheques {
@@ -30,6 +31,6 @@ public interface IDAOCheques {
 	public void modificarCheque(Cheque cheque, int signo, double tc   , Connection con)
 			throws ModificandoChequeException, ConexionException, EliminandoChequeException, InsertandoChequeException, ExisteChequeException, NoExisteChequeException;
 	
-	public ArrayList<Deposito> getChequesBanco(Connection con, String codEmp, String codBanco, String codCtaBco) throws ObteniendoChequeException, ConexionException, ObteniendoCuentasBcoException, ObteniendoBancosException;
+	public ArrayList<DepositoDetalle> getChequesBanco(Connection con, String codEmp, String codBanco, String codCtaBco) throws ObteniendoChequeException, ConexionException, ObteniendoCuentasBcoException, ObteniendoBancosException;
 	
 }

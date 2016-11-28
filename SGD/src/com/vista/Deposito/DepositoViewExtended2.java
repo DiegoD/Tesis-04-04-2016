@@ -2,15 +2,11 @@ package com.vista.Deposito;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.sql.Date;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Locale;
 
 import com.controladores.DepositoControlador;
-import com.controladores.IngresoCobroControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.InicializandoException;
 import com.excepciones.NoTienePermisosException;
@@ -20,16 +16,11 @@ import com.excepciones.Bancos.ObteniendoCuentasBcoException;
 import com.excepciones.Cheques.ObteniendoChequeException;
 import com.excepciones.Titulares.ObteniendoTitularesException;
 import com.excepciones.clientes.ObteniendoClientesException;
-import com.logica.FuncionarioInfo;
-import com.logica.Docum.BancoInfo;
-import com.logica.Docum.CuentaBcoInfo;
-import com.logica.Docum.TitularInfo;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.data.util.converter.StringToDateConverter;
 import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.server.VaadinService;
@@ -52,7 +43,7 @@ import com.vista.VariablesPermisos;
 import com.vista.IngresoCobro.IngresoCobroPanelExtended;
 
 
-public class DepositoViewExtended extends DepositoView{
+public class DepositoViewExtended2 extends DepositoView{
 
 	/**
 	 * 
@@ -63,14 +54,14 @@ public class DepositoViewExtended extends DepositoView{
 	private PermisosUsuario permisos;
 	private String operacion;
 	private BeanItemContainer<DepositoDetalleVO> container;
-	private ArrayList<DepositoDetalleVO> lstCheques; /*Lista con los cobros*/
+	private ArrayList<DepositoVO> lstCheques; /*Lista con los cobros*/
 	Boolean existe = false;
 	private BeanFieldGroup<DepositoVO> fieldGroup;
 	
-	public DepositoViewExtended(String opera, DepositoPanelExtended main){
+	public DepositoViewExtended2(String opera, DepositoPanelExtended main){
 		
 		this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
-		operacion = opera;
+		operacion = VariablesPermisos.OPERACION_NUEVO_EDITAR;
 		
 		this.inicializarForm();
 		
@@ -88,8 +79,6 @@ public class DepositoViewExtended extends DepositoView{
 				}		
 			}
 	    });
-		
-		
 		
 		comboCuentas.addValueChangeListener(new Property.ValueChangeListener() {
 	    	
@@ -162,46 +151,20 @@ public class DepositoViewExtended extends DepositoView{
     	   							VariablesPermisos.OPERACION_NUEVO_EDITAR);
     	   			
 					/*ACA*/
-					ArrayList<DepositoDetalleVO> lstSeleccionados = new ArrayList<DepositoDetalleVO>();
+					ArrayList<DepositoVO> lstSeleccionados = new ArrayList<DepositoVO>();
 					
 					/*Obtenemos los formularios seleccionados y se los pasamos a
 					 * la View de Grupos para agregarlos*/
 					Collection<Object> col= gridCheques.getSelectedRows();
 					
-					DepositoDetalleVO aux;
+					DepositoVO aux;
 					for (Object object : col) {
 						
-						aux = (DepositoDetalleVO)object;
+						aux = (DepositoVO)object;
 						lstSeleccionados.add(aux);
 					}
-					if(lstSeleccionados.size() > 0){
-						
-						DepositoVO deposito = new DepositoVO();
-						
-						deposito.setFecValor(new java.sql.Timestamp(fecValor.getValue().getTime()));
-						deposito.setNroDocum(Integer.parseInt(comprobante.getValue()));
-						
-						FuncionarioInfo funcionario = new FuncionarioInfo();
-						funcionario = (FuncionarioInfo) comboResponsable.getValue();
-						deposito.setFuncionario(funcionario);
-						
-						BancoInfo banco = new BancoInfo();
-						banco = (BancoInfo) comboBancos.getValue();
-						deposito.setNomBanco(banco.getNomBanco());
-						deposito.setCodBanco(banco.getCodBanco());
-						
-						CuentaBcoInfo cuentaBanco = new CuentaBcoInfo();
-						cuentaBanco = (CuentaBcoInfo) comboCuentas.getValue();
-						deposito.setCodCuenta(cuentaBanco.getCodCuenta());
-						deposito.setNomCuenta(cuentaBanco.getNomCuenta());
-						
-						deposito.setImpTotMo((Double)importeMo.getConvertedValue());
-						deposito.setObservaciones(observaciones.getValue());
-						
-						controlador.depositarCheques(permisoAux, lstSeleccionados);
-					}
 					
-					
+					controlador.depositarCheques(permisoAux, lstSeleccionados);
     			}
     			else /*Si los campos no son válidos mostramos warning*/
     			{
@@ -221,45 +184,8 @@ public class DepositoViewExtended extends DepositoView{
 	public  void inicializarForm(){
 		
 		this.controlador = new DepositoControlador();
-		
-		this.fieldGroup =  new BeanFieldGroup<DepositoVO>(DepositoVO.class);
-		
-//		/*Mostramos o ocultamos los datos del Banco, dependiendo del combo tipo (banco, caja)*/
-//		this.mostrarDatosDeBanco();
-//		
-		/*Inicializamos los combos*/
-//		this.inicializarComboBancos();
-//		this.inicializarComboCuentas(null, "");
-//		
-//		inicializarCampos();
-//		
-//		importeTotalCalculado = (Double) impTotMo.getConvertedValue();
-//		//Seteamos info del form si es requerido
-//		if(fieldGroup != null)
-//			fieldGroup.buildAndBindMemberFields(this);
-		
-		/*SI LA OPERACION NO ES NUEVO, OCULTAMOS BOTON ACEPTAR*/
-		if(this.operacion.equals(Variables.OPERACION_NUEVO))
-		{
-			/*Inicializamos al formulario como nuevo*/
-			this.iniFormNuevo();
-			
-			/*Agregamos los filtros a la grilla*/
-			//this.filtroGrilla();
-	
-		}else if(this.operacion.equals(Variables.OPERACION_LECTURA))
-		{
-			/*Inicializamos formulario como editar*/
-			//this.iniFormLectura();
-			
-			/*Agregamos los filtros a la grilla*/
-			this.filtroGrilla();
-		} 
-		/*LA OPERACION EDITAR ES DESDE EL DE LECTURA*/
-		
-//		this.controlador = new DepositoControlador();
-//					
-//		this.iniFormNuevo();
+					
+		this.iniFormNuevo();
 	
 	}
 	
@@ -455,6 +381,9 @@ public class DepositoViewExtended extends DepositoView{
 	private void inicializarGrilla() throws InstantiationException, IllegalAccessException, ClassNotFoundException, FileNotFoundException, IOException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoChequeException, ObteniendoCuentasBcoException, ObteniendoBancosException{
 		
 		
+//		this.container = 
+//				new BeanItemContainer<DepositoVO>(DepositoVO.class);
+		
 		UsuarioPermisosVO permisoAux = 
 					new UsuarioPermisosVO(permisos.getCodEmp(),
 							permisos.getUsuario(),
@@ -486,23 +415,6 @@ public class DepositoViewExtended extends DepositoView{
 		
 		/*Agregamos los filtros a la grilla*/
 		this.filtroGrilla();
-		
-		//Modifica el formato de fecha en la grilla 
-		gridCheques.getColumn("fecValor").setConverter(new StringToDateConverter(){
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-
-			@Override
-
-			public DateFormat getFormat(Locale locale){
-
-				return new SimpleDateFormat("dd/MM/yyyy");
-
-			}
-
-		});
 	}
 	
 	private void filtroGrilla()
@@ -556,11 +468,15 @@ public class DepositoViewExtended extends DepositoView{
 	
 	private void arreglarGrilla(){
 		
-		this.gridCheques.removeAllColumns();
-		this.gridCheques.addColumn("fecValor");
-		this.gridCheques.addColumn("nomBanco");
-		this.gridCheques.addColumn("impTotMo");
-		this.filtroGrilla();
+		this.gridCheques.getColumn("codDocum").setHidden(true);
+		this.gridCheques.getColumn("serieDocum").setHidden(true);
+		this.gridCheques.getColumn("nroDocum").setHidden(true);
+		this.gridCheques.getColumn("codigoBanco").setHidden(true);
+		this.gridCheques.getColumn("codigoCuentaBanco").setHidden(true);
+		this.gridCheques.getColumn("nombreCuentaBanco").setHidden(true);
+		this.gridCheques.getColumn("funcionario").setHidden(true);
+		this.gridCheques.getColumn("numComprobante").setHidden(true);
+		this.gridCheques.getColumn("observaciones").setHidden(true);
 	}
 	
 	private void setearValidaciones(boolean setear){
@@ -708,13 +624,4 @@ public class DepositoViewExtended extends DepositoView{
 //                        " 45 caracteres máximo", 1, 255, false));
         
 	}
-	
-	public static java.sql.Date convertFromJAVADateToSQLDate(
-            java.util.Date javaDate) {
-        java.sql.Date sqlDate = null;
-        if (javaDate != null) {
-            sqlDate = new Date(javaDate.getTime());
-        }
-        return sqlDate;
-    }
 }

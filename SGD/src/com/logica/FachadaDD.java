@@ -103,6 +103,7 @@ import com.excepciones.Usuarios.ObteniendoUsuariosException;
 import com.excepciones.Usuarios.ObteniendoUsuariosxEmpExeption;
 import com.excepciones.grupos.ObteniendoGruposException;
 import com.logica.Depositos.Deposito;
+import com.logica.Depositos.DepositoDetalle;
 import com.logica.DocLog.DocLog;
 import com.logica.Docum.ConvertirDocumento;
 import com.logica.Docum.DocumDetalle;
@@ -112,7 +113,7 @@ import com.logica.Periodo.Periodo;
 import com.valueObject.*;
 import com.valueObject.Cotizacion.CotizacionVO;
 import com.valueObject.Cuenta.CuentaVO;
-
+import com.valueObject.Deposito.DepositoDetalleVO;
 import com.valueObject.Deposito.DepositoVO;
 
 import com.valueObject.Gasto.GastoVO;
@@ -3818,36 +3819,25 @@ public class FachadaDD {
 	 * @throws ObteniendoCuentasBcoException 
 	*/
 	@SuppressWarnings("unchecked")
-	public ArrayList<DepositoVO> getChequesBanco(String codEmp, String codBco, String codCtaBco) throws ObteniendoChequeException, ConexionException, ObteniendoCuentasBcoException, ObteniendoBancosException
+	public ArrayList<DepositoDetalleVO> getChequesBanco(String codEmp, String codBco, String codCtaBco) throws ObteniendoChequeException, ConexionException, ObteniendoCuentasBcoException, ObteniendoBancosException
 	{
 
 		Connection con = null;
-		ArrayList<Deposito> lstDepositos;
-		ArrayList<DepositoVO> lstDepositosVO = new ArrayList<DepositoVO>();
+		ArrayList<DepositoDetalle> lstDepositos;
+		ArrayList<DepositoDetalleVO> lstDepositosVO = new ArrayList<DepositoDetalleVO>();
 
 		try 	
 		{
 			con = this.pool.obtenerConeccion();
 			lstDepositos = this.cheques.getChequesBanco(con, codEmp, codBco, codCtaBco);
 			
-			DepositoVO aux;
+			DepositoDetalleVO aux;
 			
-			for (Deposito deposito : lstDepositos) 
+			for (DepositoDetalle deposito : lstDepositos) 
 			{
-				aux = new DepositoVO();
+				aux = new DepositoDetalleVO();
 				
-//				aux.setCodDocum(deposito.getCodDocum());
-//				aux.setSerieDocum(deposito.getSerieDocum());
-//				aux.setNroDocum(deposito.getNroDocum());
-//				aux.setFecValor(deposito.getFecValor());
-//				aux.setCodigoBanco(deposito.getBanco().getCodBanco());
-//				aux.setNombreBanco(deposito.getBanco().getNomBanco());
-//				aux.setCodigoCuentaBanco(deposito.getCuentaBanco().getCodCuenta());
-//				aux.setNombreCuentaBanco(deposito.getCuentaBanco().getNomCuenta());
-//				aux.setFuncionario(null);
-//				aux.setNumComprobante(0);
-//				aux.setObservaciones(null);
-//				aux.setImpTotMo(deposito.getImpTotMo());
+				aux = deposito.retornarDepositoDetalleVO(deposito);
 				
 				lstDepositosVO.add(aux);
 			}
@@ -3865,7 +3855,7 @@ public class FachadaDD {
 
 	}
 	
-	public void depositarCheques(String codEmp, ArrayList<DepositoVO> cheques){
+	public void depositarCheques(String codEmp, ArrayList<DepositoDetalleVO> cheques){
 		
 		
 	}

@@ -30,6 +30,7 @@ import com.logica.FachadaDD;
 import com.valueObject.DocumentoAduaneroVO;
 import com.valueObject.TitularVO;
 import com.valueObject.UsuarioPermisosVO;
+import com.valueObject.Deposito.DepositoDetalleVO;
 import com.valueObject.Deposito.DepositoVO;
 import com.valueObject.IngresoCobro.IngresoCobroVO;
 import com.valueObject.banco.BancoVO;
@@ -127,7 +128,7 @@ public class DepositoControlador {
 			throw new NoTienePermisosException();
 	}
 	
-	public ArrayList<DepositoVO> getChequesBanco(UsuarioPermisosVO permisos, String codBco, String codCtaBco) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoChequeException, ObteniendoCuentasBcoException, ObteniendoBancosException {
+	public ArrayList<DepositoDetalleVO> getChequesBanco(UsuarioPermisosVO permisos, String codBco, String codCtaBco) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoChequeException, ObteniendoCuentasBcoException, ObteniendoBancosException {
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
@@ -136,7 +137,7 @@ public class DepositoControlador {
 			throw new NoTienePermisosException();
 	}
 	
-	public void depositarCheques(UsuarioPermisosVO permisos, ArrayList<DepositoVO> cheques) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoChequeException, ObteniendoCuentasBcoException, ObteniendoBancosException {
+	public void depositarCheques(UsuarioPermisosVO permisos, ArrayList<DepositoDetalleVO> cheques) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoChequeException, ObteniendoCuentasBcoException, ObteniendoBancosException {
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))

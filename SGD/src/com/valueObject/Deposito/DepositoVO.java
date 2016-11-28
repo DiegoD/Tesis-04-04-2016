@@ -18,8 +18,15 @@ public class DepositoVO extends AuditoriaVO{
 	private int nroDocum;
 	private Timestamp fecValor;
 	private Timestamp fecDoc;
-	private BancoInfo banco;
-	private CuentaBcoInfo cuentaBanco;
+	
+	private String codBanco;
+	private String nomBanco;
+	
+	private String nomCuenta;
+	private String codCuenta;
+	private String codMoneda;
+	private boolean nacional;
+	
 	private MonedaInfo moneda;
 	private FuncionarioInfo funcionario;
 	private int numComprobante;
@@ -41,8 +48,6 @@ public class DepositoVO extends AuditoriaVO{
 		this.setNroDocum(depVO.getNroDocum());
 		this.setFecValor(depVO.getFecValor());
 		this.setFecDoc(depVO.getFecDoc());
-		this.setBanco(depVO.getBanco());
-		this.setCuentaBanco(depVO.getCuentaBanco());
 		this.setMoneda(depVO.getMoneda());
 		this.setFuncionario(depVO.getFuncionario());
 		this.setNumComprobante(depVO.getNumComprobante());
@@ -50,6 +55,13 @@ public class DepositoVO extends AuditoriaVO{
 		this.setImpTotMn(depVO.getImpTotMn());
 		this.setImpTotMo(depVO.getImpTotMo());
 		this.setNroTrans(depVO.getNroTrans());
+		
+		this.setCodBanco(depVO.getCodBanco());
+		this.setNomBanco(depVO.getNomBanco());
+		this.setNomCuenta(depVO.getNomCuenta());
+		this.setCodCuenta(depVO.getCodCuenta());
+		this.setCodMoneda(depVO.getCodMoneda());
+		this.setNacional(depVO.isNacional());
 		
 	}
 
@@ -93,21 +105,6 @@ public class DepositoVO extends AuditoriaVO{
 		this.fecDoc = fecDoc;
 	}
 
-	public BancoInfo getBanco() {
-		return banco;
-	}
-
-	public void setBanco(BancoInfo banco) {
-		this.banco = banco;
-	}
-
-	public CuentaBcoInfo getCuentaBanco() {
-		return cuentaBanco;
-	}
-
-	public void setCuentaBanco(CuentaBcoInfo cuentaBanco) {
-		this.cuentaBanco = cuentaBanco;
-	}
 
 	public MonedaInfo getMoneda() {
 		return moneda;
@@ -172,5 +169,54 @@ public class DepositoVO extends AuditoriaVO{
 	public void setLstDetalle(ArrayList<DepositoDetalleVO> lstDetalle) {
 		this.lstDetalle = lstDetalle;
 	}
+
+	public String getCodBanco() {
+		return codBanco;
+	}
+
+	public void setCodBanco(String codBanco) {
+		this.codBanco = codBanco;
+	}
+
+	public String getNomBanco() {
+		return nomBanco;
+	}
+
+	public void setNomBanco(String nomBanco) {
+		this.nomBanco = nomBanco;
+	}
+
+	public String getNomCuenta() {
+		return nomCuenta;
+	}
+
+	public void setNomCuenta(String nomCuenta) {
+		this.nomCuenta = nomCuenta;
+	}
+
+	public String getCodCuenta() {
+		return codCuenta;
+	}
+
+	public void setCodCuenta(String codCuenta) {
+		this.codCuenta = codCuenta;
+	}
+
+	public String getCodMoneda() {
+		return codMoneda;
+	}
+
+	public void setCodMoneda(String codMoneda) {
+		this.codMoneda = codMoneda;
+	}
+
+	public boolean isNacional() {
+		return nacional;
+	}
+
+	public void setNacional(boolean nacional) {
+		this.nacional = nacional;
+	}
+	
 	
 }

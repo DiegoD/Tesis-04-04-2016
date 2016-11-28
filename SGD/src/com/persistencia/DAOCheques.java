@@ -13,6 +13,7 @@ import com.excepciones.Cheques.*;
 import com.logica.Banco;
 import com.logica.Cheque;
 import com.logica.Depositos.Deposito;
+import com.logica.Depositos.DepositoDetalle;
 import com.logica.Docum.BancoInfo;
 import com.logica.Docum.CuentaBcoInfo;
 import com.logica.Docum.DatosDocum;
@@ -160,9 +161,9 @@ public class DAOCheques implements IDAOCheques{
 	 * Nos retorna una lista con todos los cheques a depositar
 	 * @throws ObteniendoBancosException 
 	 */
-	public ArrayList<Deposito> getChequesBanco(Connection con, String codEmp, String codBanco, String codCtaBco) throws ObteniendoChequeException, ConexionException, ObteniendoCuentasBcoException, ObteniendoBancosException {
+	public ArrayList<DepositoDetalle> getChequesBanco(Connection con, String codEmp, String codBanco, String codCtaBco) throws ObteniendoChequeException, ConexionException, ObteniendoCuentasBcoException, ObteniendoBancosException {
 		
-		ArrayList<Deposito> lstDepositos = new ArrayList<Deposito>();
+		ArrayList<DepositoDetalle> lstDepositos = new ArrayList<DepositoDetalle>();
 	
 		try {
 			
@@ -178,36 +179,34 @@ public class DAOCheques implements IDAOCheques{
 	    	
 			rs = pstmt1.executeQuery();
 			
-			Deposito aux;
+			DepositoDetalle aux;
 			BancoInfo b;
 			CuentaBcoInfo c;
 			
 			while(rs.next ()) {
 							
-//				aux = new Deposito();
-//				
-//				aux.setCodDocum(rs.getString("cod_docum"));
-//				aux.setSerieDocum(rs.getString("serie_docum"));
-//				aux.setNroDocum(rs.getInt("nro_docum"));
-//				aux.setFecValor(rs.getTimestamp("fec_valor"));
-//				
-//				b = new BancoInfo();
-//				b.setCodBanco(rs.getString("cod_bco"));
-//				b.setNomBanco(rs.getString("nom_bco"));
-//				aux.setBanco(b);
-//				
-//				c = new CuentaBcoInfo();
-//				c.setCodCuenta(rs.getString("cod_ctabco"));
-//				c.setNomCuenta(rs.getString("nom_cta"));
-//				aux.setCuentaBanco(c);
-//				
-//				aux.setFuncionario(null);
-//				aux.setNumComprobante(0);
-//				aux.setObservaciones(null);
-//				aux.setImpTotMo(rs.getDouble("imp_tot_mo"));
+				aux = new DepositoDetalle();
+				Cheque cheque = new Cheque();
+				cheque.setCodDocum(rs.getString("cod_docum"));
+				cheque.setSerieDocum(rs.getString("serie_docum"));
+				cheque.setNroDocum(rs.getInt("nro_docum"));
+				cheque.setImpTotMn(rs.getDouble("imp_tot_mn"));
+				cheque.setImpTotMo(rs.getDouble("imp_tot_mo"));
 				
+				BancoInfo banco = new BancoInfo();
+				banco.setCodBanco(rs.getString("cod_bco"));
+				banco.setNomBanco(rs.getString("nom_bco"));
+				cheque.setBanco(banco);
+
+				CuentaBcoInfo cuentaBanco = new CuentaBcoInfo();
+				cuentaBanco.setCodCuenta("cod_ctabco");
+				cuentaBanco.setNomCuenta("nom_cta");
+				cheque.setCuentaBanco(cuentaBanco);
 				
-				//lstDepositos.add(aux);
+				cheque.setFecValor(rs.getTimestamp("fec_valor"));
+				aux.setCheque(cheque);
+				aux.setNroTrans(0);
+				lstDepositos.add(aux);
 				
 			}
 			rs.close ();
