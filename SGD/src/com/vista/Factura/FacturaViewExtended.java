@@ -1944,7 +1944,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 			impSubMN = det.getImpSubMn();
 			
 		}
-		
+acaaaaaaaaaaaaaaaaaaaaaaaaaaaaa		
 		Double truncatedImpTotMo = new BigDecimal(impMo).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 		
 		Double truncatedImpuTotMo = new BigDecimal(impuTotMO).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
