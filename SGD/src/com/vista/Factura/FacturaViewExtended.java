@@ -1017,6 +1017,8 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		
 		this.inicializarProcesoNoAsignado();
 		
+		this.impSubMo.setEnabled(false);
+		this.impuTotMo.setEnabled(false);
 		
 		/*Inicializamos los combos*/
 		this.inicializarComboMoneda(null);
@@ -1893,21 +1895,17 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	 */
 	private void calcularImporteTotal(){
 		
-		/*Inicializamos el permisos auxilar, para obterer el TC de moneda no nacional en detalle y distinta a la moneda del cabezal*/
-		UsuarioPermisosVO permisoAux = 
-				new UsuarioPermisosVO(this.permisos.getCodEmp(),
-						this.permisos.getUsuario(),
-						VariablesPermisos.FORMULARIO_FACTURA,
-						VariablesPermisos.OPERACION_NUEVO_EDITAR);	
 		
-		double impMoCab = 0;
+		double impuTotMO = 0;
+		double impuTotMN = 0;
+		
+		double impSubMO = 0;
+		double impSubMN = 0;
+		
 		double impMo = 0;
-		double tcMonedaNacional = 0;
+		double impMn = 0;
 		
-		double aux;
-		double aux2;
-		double tcAux = 0;
-		CotizacionVO cotAux = null;
+		double tcMonedaNacional = 0;
 		
 		Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
 		
@@ -1935,53 +1933,36 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		
 		for (FacturaDetalleVO det : lstDetalleVO) {
 
-			/*Si la moneda del cobro es igual  a la del documento*/
-			if(codMonedaCab.equals(det.getCodMoneda()))
-			{
-				impMo += det.getImpTotMo();
-			}
-			/*Si la moneda del cobro es distinta a la del documento pero
-			 * igual a la moneda nacional, hago el calculo al tipo de cambio
-			 * de la fecha valor del cobro*/
-			else if(det.isNacional() &&  !codMonedaCab.equals(det.getCodMoneda()))
-			{
-				aux = det.getImpTotMo() / tcMonedaNacional;
-				impMo += aux;
-			}
-			else  /*Si no es moneda nacional y es distinto al moneda del cobro*/
-			{
-				
-				/*Obtenemos el tipo de cambio a pesos de la moneda de la linea */
-				try {
-					
-					if(det.isNacional()) /*si es moneda nacional el tc es 1*/
-					{
-						tcAux = 1;
-					}
-					else /*si no es nacional tomo la cotizacion de la moneda*/
-					{
-						cotAux = this.controlador.getCotizacion(permisoAux, fecha, det.getCodMoneda());
-						tcAux = cotAux.getCotizacionVenta();
-					}
-					
-				} catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
-						| InicializandoException | NoTienePermisosException e) {
-					
-					Mensajes.mostrarMensajeError(e.getMessage());
-				}
-				
-				
-				
-				aux = det.getImpTotMo() * tcAux; /*Paso a moneda nacional*/
-				
-				aux2 = aux / tcMonedaNacional; /*Paso la moneda nacional a la del cobro*/
-				
-				impMo += aux2;
-			}
+			
+			impMo += det.getImpTotMo();
+			impMn += det.getImpTotMn();
+			
+			impuTotMO += det.getImpImpuMo();
+			impuTotMN += det.getImpImpuMn();
+			
+			impSubMO = det.getImpSubMo();
+			impSubMN = det.getImpSubMn();
+			
 		}
 		
+		Double truncatedImpTotMo = new BigDecimal(impMo).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+		
+		Double truncatedImpuTotMo = new BigDecimal(impuTotMO).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+		Double truncatedImpuTotMn = new BigDecimal(impuTotMN).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+		
+		Double truncatedImpSubMo = new BigDecimal(impSubMO).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+		Double truncatedImpSubMn = new BigDecimal(impSubMN).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+		
 		//this.impTotMo.setValue(Double.toString(impMo));
-		//this.impTotMo.setConvertedValue(impMo);
+		this.impTotMo.setConvertedValue(Double.toString(truncatedImpTotMo));
+		
+		this.impuTotMo.setConvertedValue(Double.toString(truncatedImpuTotMo));
+		this.impuTotMn.setConvertedValue(Double.toString(truncatedImpuTotMn));
+
+		this.impSubMo.setConvertedValue(Double.toString(truncatedImpSubMo));
+		this.impSubMn.setConvertedValue(Double.toString(truncatedImpSubMn));
+		
+		
 		importeTotalCalculado = impMo;
 	}
 	

@@ -46,6 +46,12 @@ public class FacturaViews extends FormLayout {
 	protected HorizontalLayout name_wrapper2;
 	protected ComboBox comboMoneda;
 	protected TextField impTotMo;
+	protected HorizontalLayout wrapper_documImpu;
+	protected TextField impuTotMo;
+	protected TextField impuTotMn;
+	protected HorizontalLayout wrapper_documSubtot;
+	protected TextField impSubMo;
+	protected TextField impSubMn;
 	protected HorizontalLayout botones;
 	protected Button aceptar;
 	protected Button btnEditar;

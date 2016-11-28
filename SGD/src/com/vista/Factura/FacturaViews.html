@@ -15,8 +15,8 @@
     <vaadin-form-layout spacing="false" responsive size-full _id="formLay1"> 
      <vaadin-text-field enabled="false" id="nroTrans" visible="false" responsive _id="nroTrans"></vaadin-text-field> 
      <vaadin-horizontal-layout caption="Documento" style-name="name-wrapper" spacing responsive _id="wrapper_docum"> 
-      <vaadin-text-field required style-name="tiny" null-representation="" responsive width="50px" _id="serieDocum"></vaadin-text-field> 
-      <vaadin-text-field required style-name="tiny" null-representation="" responsive width="144px" _id="nroDocum"></vaadin-text-field> 
+      <vaadin-text-field required style-name="tiny" null-representation="" responsive immediate width="50px" _id="serieDocum"></vaadin-text-field> 
+      <vaadin-text-field required style-name="tiny" null-representation="" responsive immediate width="144px" _id="nroDocum"></vaadin-text-field> 
      </vaadin-horizontal-layout> 
      <vaadin-date-field caption="Fec Doc" id="fecDoc" style-name="tiny" responsive width="144px" _id="fecDoc"></vaadin-date-field> 
      <vaadin-date-field caption="Fec Valor" id="fecValor" style-name="tiny" responsive width="144px" _id="fecValor"></vaadin-date-field> 
@@ -38,6 +38,14 @@
      <vaadin-horizontal-layout caption="Importe" style-name="name-wrapper" spacing responsive _id="name_wrapper2"> 
       <vaadin-combo-box id="comboMoneda" style-name="tiny" responsive item-caption-mode="id" width="144px" _id="comboMoneda"></vaadin-combo-box> 
       <vaadin-text-field id="impTotMo" style-name="tiny" null-representation="" responsive readonly _id="impTotMo"></vaadin-text-field> 
+     </vaadin-horizontal-layout> 
+     <vaadin-horizontal-layout caption="Impuesto" style-name="name-wrapper" spacing responsive _id="wrapper_documImpu"> 
+      <vaadin-text-field id="impuTotMo" style-name="tiny" null-representation="" responsive width="144px" readonly _id="impuTotMo"></vaadin-text-field> 
+      <vaadin-text-field caption="Impuesto Mn" id="impuTotMn " visible="false" style-name="tiny" null-representation="" responsive readonly _id="impuTotMn"></vaadin-text-field> 
+     </vaadin-horizontal-layout> 
+     <vaadin-horizontal-layout caption="Subtotal MO" style-name="name-wrapper" spacing responsive _id="wrapper_documSubtot"> 
+      <vaadin-text-field id="impSubMo" style-name="tiny" null-representation="" responsive width="144px" readonly _id="impSubMo"></vaadin-text-field> 
+      <vaadin-text-field caption="Subtotal" id="impSubMn " visible="false" style-name="tiny" null-representation="" responsive readonly _id="impSubMn"></vaadin-text-field> 
      </vaadin-horizontal-layout> 
      <vaadin-horizontal-layout responsive width="187px" _id="botones"> 
       <vaadin-button style-name="primary tiny" responsive plain-text _id="aceptar" :middle>
