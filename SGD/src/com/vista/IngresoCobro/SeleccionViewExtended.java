@@ -1,8 +1,13 @@
 package com.vista.IngresoCobro;
 
+import com.vaadin.ui.Component;
+import com.vaadin.ui.UI;
 import com.vista.IMensaje;
 import com.vista.Mensajes;
+import com.vista.MySub;
+import com.vista.Variables;
 import com.vista.Factura.FacturaViewExtended;
+import com.vista.detFactura.DetFacturaViewExtended;
 
 public class SeleccionViewExtended extends SeleccionView{
 	
@@ -10,6 +15,8 @@ public class SeleccionViewExtended extends SeleccionView{
 	IngresoCobroViewExtended main;
 	
 	public SeleccionViewExtended(IngresoCobroViewExtended main){
+		
+		this.operacion_Factura.setVisible(false);
 		
 		this.aceptar.addClickListener(click -> {
 			
@@ -38,11 +45,18 @@ public class SeleccionViewExtended extends SeleccionView{
 	
 	public SeleccionViewExtended(FacturaViewExtended main){
 		
+		this.operacion.setVisible(false);
+		
 		this.aceptar.addClickListener(click -> {
 			
-			if(operacion.getValue() != null){
-				if(this.operacion.getValue().equals("Agregar Gasto")){
+			if(operacion_Factura.getValue() != null){
+				if(this.operacion_Factura.getValue().equals("Agregar Gasto")){
 					main.agregarGasto();
+				}
+				else{
+					
+					main.agregarDetalle();
+					
 				}
 				
 			}

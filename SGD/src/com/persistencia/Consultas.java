@@ -1277,10 +1277,9 @@ public String getIngresoCobroCabTodosOtros(){
 		StringBuilder sb = new StringBuilder();
 		
 			sb.append("INSERT INTO c_facturas (cod_docum, serie_docum, nro_docum, cod_tit, cod_cuenta ");
-			sb.append(", cod_emp, fec_doc, fec_valor, cod_bco, cod_ctabco, cod_mpago, cod_doc_ref ");
-			sb.append(", serie_doc_ref, nro_doc_ref, cod_moneda, imp_tot_mn, imp_tot_mo, tc_mov ");
+			sb.append(", cod_emp, fec_doc, fec_valor, cod_moneda, imp_tot_mn, imp_tot_mo, tc_mov ");
 			sb.append(", observaciones, nro_trans, fecha_mod, usuario_mod, operacion, cod_proceso, impu_tot_mn, impu_tot_mo, imp_sub_mo, imp_sub_mn ) ");
-			sb.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?, ?, ?, ? ) ");
+			sb.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?, ?, ?, ? ) ");
 			
 			return sb.toString();
 	}
@@ -1327,7 +1326,7 @@ public String getIngresoCobroCabTodosOtros(){
 		sb.append(",c_facturas.cod_emp, c_facturas.fec_doc, c_facturas.fec_valor, c_facturas.cod_proceso,  c_procesos.descripcion  ");
 		sb.append(", m_monedas.cod_moneda, m_monedas.descripcion, m_monedas.simbolo, c_facturas.imp_tot_mn ");
 		sb.append(", c_facturas.imp_tot_mo, c_facturas.tc_mov, c_facturas.observaciones, nro_trans, c_facturas.fecha_mod, c_facturas.usuario_mod ");
-		sb.append(", c_facturas.operacion, m_monedas.descripcion, m_monedas.simbolo, c_facturas.cod_cuenta   "); 
+		sb.append(", c_facturas.operacion, m_monedas.descripcion, m_monedas.simbolo, c_facturas.cod_cuenta,   "); 
 		sb.append("c_facturas.impu_tot_mn , c_facturas.impu_tot_mo, c_facturas.imp_sub_mo , c_facturas.imp_sub_mn ");
 		sb.append("	FROM c_facturas ");
 		
@@ -1361,10 +1360,10 @@ public String getIngresoCobroCabTodosOtros(){
 		sb.append("m_rubros.cod_rubro, m_rubros.descripcion nom_rubro, d_facturas.cuenta, fec_doc, fec_valor, m_monedas.cod_moneda, m_monedas.simbolo, m_monedas.descripcion nom_moneda ");
 		sb.append(", m_impuestos.cod_impuesto, m_impuestos.descripcion nom_impuesto, m_impuestos.porcentaje, d_facturas.imp_impu_mn,  ");
 		sb.append("d_facturas.imp_impu_mo, d_facturas.imp_sub_mn, d_facturas.imp_sub_mo, d_facturas.imp_tot_mn, d_facturas.imp_tot_mo, d_facturas.tc_mov, d_facturas.referencia,  ");
-		sb.append("d_facturas.referencia2, d_facturas.nro_trans, d_facturas.fecha_mod, d_facturas.usuario_mod, d_facturas.operacion, d_facturas.linea, c_gastos.estado ");
+		sb.append("d_facturas.referencia2, d_facturas.nro_trans, d_facturas.fecha_mod, d_facturas.usuario_mod, d_facturas.operacion, d_facturas.linea ");
 		
 		
-		sb.append("FROM d_facturas, m_monedas, m_impuestos, m_rubros, m_cuentas, c_gastos  ");
+		sb.append("FROM d_facturas, m_monedas, m_impuestos, m_rubros, m_cuentas  ");
 		
 		sb.append("WHERE d_facturas.cod_moneda = m_monedas.cod_moneda  ");
 		sb.append("AND d_facturas.cod_emp = m_monedas.cod_emp "); 
@@ -1377,8 +1376,7 @@ public String getIngresoCobroCabTodosOtros(){
 		sb.append("AND d_facturas.nro_trans  = ? ");
 		
 		sb.append(" AND d_facturas.cod_cuenta = m_cuentas.cod_cuenta  ");
-		sb.append("AND d_facturas.cod_emp = m_cuentas.cod_emp "
-		+ " AND d_facturas.nro_docum = c_gastos.nro_docum AND d_facturas.cod_emp = c_gastos.cod_emp "); 
+		sb.append("AND d_facturas.cod_emp = m_cuentas.cod_emp  "); 
 		
 		return sb.toString();
 	}

@@ -52,6 +52,7 @@ public class FacturaViews extends FormLayout {
 	protected HorizontalLayout wrapper_documSubtot;
 	protected TextField impSubMo;
 	protected TextField impSubMn;
+	protected TextField impTotMn;
 	protected HorizontalLayout botones;
 	protected Button aceptar;
 	protected Button btnEditar;
@@ -59,7 +60,6 @@ public class FacturaViews extends FormLayout {
 	protected Button btnEliminar;
 	protected FormLayout formLay2;
 	protected Grid lstGastos;
-	protected Button btnAgregar;
 	protected Button btnAgregarGto;
 	protected Button btnEditarForm;
 	protected Button btnQuitar;

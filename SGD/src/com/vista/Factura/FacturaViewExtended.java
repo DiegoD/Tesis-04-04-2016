@@ -102,6 +102,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	Double cotizacionVenta = null;
 	TitularVO titularVO = new TitularVO();
 	
+	
 	private Hashtable<Integer, GtoSaldoAux> saldoOriginalGastos; /*Variable auxliar para poder
 	 															 controlar que el saldo del gasto quede
 	 															 en negativo*/
@@ -547,6 +548,16 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 				}
 				
 				
+				factVO.setCodProceso(Integer.valueOf(this.codProceso.getValue()));
+				
+				factVO.setImpSubMn(Double.valueOf(this.impSubMn.getValue()));
+				factVO.setImpSubMo(Double.valueOf(this.impSubMo.getValue()));
+				factVO.setImpTotMn(Double.valueOf(this.impTotMn.getValue()));
+				
+				factVO.setImpTotMo(Double.valueOf(this.impTotMo.getValue()));
+				factVO.setImpuTotMn(Double.valueOf(this.impuTotMn.getValue()));
+				factVO.setImpuTotMo(Double.valueOf(this.impuTotMo.getValue()));
+				
 				factVO.setNroDocum(Integer.valueOf(this.nroDocum.getValue()));
 				factVO.setSerieDocum(this.serieDocum.getValue().trim());
 				
@@ -702,55 +713,6 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 			UI.getCurrent().addWindow(sub);
 		});
 		
-		/*Inicalizamos listener para boton de Agregar gastos a cobrar*/
-		this.btnAgregar.addClickListener(click -> {
-						
-			if(this.codTitular.getValue() != null && this.codTitular.getValue() != "" 
-					&& this.fecValor.getValue() != null && this.comboMoneda.getValue() != null)
-			{
-				try {
-				
-		   			
-		   			/*Inicializamos variable para pasarle info al detalle*/
-		   			AuxDetalleVO datosCab = this.obtenerDatosCabezalParaDetalle(); 
-		   			
-					
-					DetFacturaViewExtended form = new DetFacturaViewExtended(Variables.OPERACION_NUEVO, this, datosCab);
-					
-					sub = new MySub("75%","55%");
-					sub.setModal(true);
-					
-					sub.setVista((Component) form);
-					
-					sub.center();
-					
-					String codCliente;/*Codigo del cliente para obtener los gastos a facturar del mismo*/
-					
-	
-					if(this.operacion.equals(Variables.OPERACION_NUEVO) )
-					{
-						/*Si la operacion es nuevo, ponemos el  codGrupo vacio
-						 * asi nos trae todos los  disponibles*/
-						codCliente = this.codTitular.getValue().toString().trim();
-					}
-					else 
-					{
-						/*Si es operacion Editar tomamos el codGrupo de el fieldGroup*/
-						codCliente = fieldGroup.getItemDataSource().getBean().getCodTitular();
-					}
-					
-					UI.getCurrent().addWindow(sub);
-
-				}
-				catch(Exception e){
-					Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
-				}
-			}
-			else{
-				Mensajes.mostrarMensajeError("Debe ingresar los datos de cabecera");
-			}
-		});
-			
 		
 		/*Inicalizamos listener para boton de Agregar gastos*/
 		this.btnAgregarGto.addClickListener(click -> { 
@@ -765,7 +727,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 				
 					SeleccionViewExtended form = new SeleccionViewExtended(this);
 					
-					sub = new MySub("40%", "25%" );
+					sub = new MySub("35%", "25%" );
 					sub.setModal(true);
 					sub.center();
 					sub.setModal(true);
@@ -775,6 +737,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 					sub.setResizable(false);
 					sub.setDraggable(true);
 					UI.getCurrent().addWindow(sub);
+					
 				}else{
 					Mensajes.mostrarMensajeError("Debe ingresar un proceso para seleccionar gastos");
 				}
@@ -1123,6 +1086,8 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 			e.printStackTrace();
 			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 		}
+		
+		this.inicializarComboMoneda(item.getBean().getCodMoneda());
 	}
 	
 	
@@ -1139,6 +1104,11 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		
 		this.btnBuscarCliente.setVisible(false);
 		this.impTotMo.setEnabled(false);
+		this.impSubMo.setEnabled(false);
+		this.impuTotMo.setEnabled(false);
+		this.comboMoneda.setEnabled(false);
+		this.serieDocum.setEnabled(false);
+		
 		/*Si tiene permisos de editar habilitamos el boton de 
 		 * edicion*/
 		if(permisoNuevoEditar){
@@ -1314,8 +1284,8 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	 */
 	private void enableBotonAgregarQuitar()
 	{
-		this.btnAgregar.setEnabled(true);
-		this.btnAgregar.setVisible(true);
+		this.btnAgregarGto.setEnabled(true);
+		this.btnAgregarGto.setVisible(true);
 		
 		this.btnQuitar.setEnabled(true);
 		this.btnQuitar.setVisible(true);
@@ -1331,8 +1301,8 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	 */
 	private void disableBotonAgregarQuitar()
 	{
-		this.btnAgregar.setEnabled(false);
-		this.btnAgregar.setVisible(false);
+		this.btnAgregarGto.setEnabled(false);
+		this.btnAgregarGto.setVisible(false);
 		
 		this.btnQuitar.setEnabled(false);
 		this.btnQuitar.setVisible(false);
@@ -1944,8 +1914,9 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 			impSubMN = det.getImpSubMn();
 			
 		}
-acaaaaaaaaaaaaaaaaaaaaaaaaaaaaa		
 		Double truncatedImpTotMo = new BigDecimal(impMo).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+		Double truncatedImpTotMn = new BigDecimal(impMn).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+		
 		
 		Double truncatedImpuTotMo = new BigDecimal(impuTotMO).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 		Double truncatedImpuTotMn = new BigDecimal(impuTotMN).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
@@ -1954,13 +1925,17 @@ acaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 		Double truncatedImpSubMn = new BigDecimal(impSubMN).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 		
 		//this.impTotMo.setValue(Double.toString(impMo));
-		this.impTotMo.setConvertedValue(Double.toString(truncatedImpTotMo));
+		this.impTotMo.setConvertedValue(truncatedImpTotMo);
 		
-		this.impuTotMo.setConvertedValue(Double.toString(truncatedImpuTotMo));
-		this.impuTotMn.setConvertedValue(Double.toString(truncatedImpuTotMn));
 
-		this.impSubMo.setConvertedValue(Double.toString(truncatedImpSubMo));
-		this.impSubMn.setConvertedValue(Double.toString(truncatedImpSubMn));
+		
+		this.impTotMn.setConvertedValue(truncatedImpTotMn);
+		
+		this.impuTotMo.setConvertedValue(truncatedImpuTotMo);
+		this.impuTotMn.setConvertedValue(truncatedImpuTotMn);
+
+		this.impSubMo.setConvertedValue(truncatedImpSubMo);
+		this.impSubMn.setConvertedValue(truncatedImpSubMn);
 		
 		
 		importeTotalCalculado = impMo;
@@ -2034,6 +2009,24 @@ acaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 		
 		impTotMo.setConverter(Double.class);
 		impTotMo.setConversionError("Error en formato de número");
+		
+		impTotMn.setConverter(Double.class);
+		impTotMn.setConversionError("Error en formato de número");
+		
+		impuTotMn.setConverter(Double.class);
+		impSubMo.setConverter(Double.class);
+		impSubMn.setConverter(Double.class);
+		
+		
+		impuTotMo.setConverter(Double.class);
+		impuTotMn.setConverter(Double.class);
+		
+		impuTotMn.setConversionError("Error en formato de número");
+		impSubMo.setConversionError("Error en formato de número");
+		impSubMn.setConversionError("Error en formato de número");
+		
+		this.impuTotMo.setConversionError("Error en formato de número");
+		
 		
 		tcMov.setData("ProgramaticallyChanged");
 	}
@@ -2556,6 +2549,31 @@ acaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 		}
 	}
 	
+	
+	public void agregarDetalle(){
+		try {
+		
+		UI.getCurrent().removeWindow(sub);
+		
+		AuxDetalleVO detalleCab = this.obtenerDatosCabezalParaDetalle();
+		
+		DetFacturaViewExtended form = new DetFacturaViewExtended(Variables.OPERACION_NUEVO, this, detalleCab );
+		
+		sub = new MySub("75%","55%");
+		sub.setModal(true);
+		sub.setVista(form);
+		//sub.setWidth("50%");
+		//sub.setHeight("50%");
+		sub.center();
+		
+		UI.getCurrent().addWindow(sub);
+
+		}catch(Exception e)
+		{
+			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+		}
+	}
+	
 	/***
 	 * Nos retorna los campos necesarios para 
 	 * pasarle al detalle
@@ -2589,5 +2607,7 @@ acaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 		
 		return datosCab;
 	}
+	
+	
 	
 }

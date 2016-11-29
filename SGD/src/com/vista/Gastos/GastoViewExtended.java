@@ -121,7 +121,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		this.inicializarForm();
 		
 	
-		/*Inicializamos listener de boton aceptar*/
+		/*Inicializamos listener de boton 	*/
 		this.aceptar.addClickListener(click -> {
 				
 			try {

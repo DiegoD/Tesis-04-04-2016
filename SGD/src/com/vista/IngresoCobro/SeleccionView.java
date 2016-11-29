@@ -20,6 +20,7 @@ import com.vaadin.ui.declarative.Design;
 @SuppressWarnings("serial")
 public class SeleccionView extends FormLayout {
 	protected OptionGroup operacion;
+	protected OptionGroup operacion_Factura;
 	protected Button aceptar;
 	protected Button cancelar;
 

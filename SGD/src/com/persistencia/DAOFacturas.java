@@ -78,6 +78,10 @@ public class DAOFacturas implements IDAOFacturas{
 				fact.setUsuarioMod(rs.getString("usuario_mod"));
 				fact.setOperacion(rs.getString("operacion"));
 				
+				fact.setImpuTotMn(rs.getDouble("impu_tot_mn"));
+				fact.setImpuTotMo(rs.getDouble("impu_tot_mo"));
+				fact.setImpSubMo(rs.getDouble("imp_sub_mo"));
+				fact.setImpSubMn(rs.getDouble("imp_sub_mn"));
 				
 				/*Obtenemos las lineas de la transaccion*/				
 				fact.setDetalle(this.getEgresoFacturaLineaxTrans(con,fact));
@@ -153,7 +157,7 @@ public class DAOFacturas implements IDAOFacturas{
     	
     	try {
     		
-			pstmt1 =  con.prepareStatement(insert);
+			pstmt1 =  con.prepareStatement(insert); 
 			
 			pstmt1.setString(1, factura.getCodDocum());
 			pstmt1.setString(2, factura.getSerieDocum());
@@ -163,21 +167,21 @@ public class DAOFacturas implements IDAOFacturas{
 			pstmt1.setString(6, factura.getCodEmp());
 			pstmt1.setTimestamp(7, factura.getFecDoc());
 			pstmt1.setTimestamp(8, factura.getFecValor());
-			pstmt1.setString(15, factura.getMoneda().getCodMoneda());
-			pstmt1.setDouble(16, factura.getImpTotMn());
-			pstmt1.setDouble(17, factura.getImpTotMo());
-			pstmt1.setDouble(18, factura.getTcMov());
-			pstmt1.setString(19, factura.getReferencia());
-			pstmt1.setLong(20, factura.getNroTrans());
-			pstmt1.setString(21, factura.getUsuarioMod());
-			pstmt1.setString(22, factura.getOperacion());
-			pstmt1.setString(23, factura.getProcesoInfo().getDescProceso());
+			pstmt1.setString(9, factura.getMoneda().getCodMoneda());
+			pstmt1.setDouble(10, factura.getImpTotMn());
+			pstmt1.setDouble(11, factura.getImpTotMo());
+			pstmt1.setDouble(12, factura.getTcMov());
+			pstmt1.setString(13, factura.getReferencia());
+			pstmt1.setLong(14, factura.getNroTrans());
+			pstmt1.setString(15, factura.getUsuarioMod());
+			pstmt1.setString(16, factura.getOperacion());
+			pstmt1.setInt(17, factura.getProcesoInfo().getCodProceso());
 			
 			
-			pstmt1.setDouble(24, factura.getImpuTotMn());
-			pstmt1.setDouble(25, factura.getImpuTotMo());
-			pstmt1.setDouble(26, factura.getImpSubMo());
-			pstmt1.setDouble(27, factura.getImpSubMn());
+			pstmt1.setDouble(18, factura.getImpuTotMn());
+			pstmt1.setDouble(19, factura.getImpuTotMo());
+			pstmt1.setDouble(20, factura.getImpSubMo());
+			pstmt1.setDouble(21, factura.getImpSubMn());
 			
 			
 			pstmt1.executeUpdate ();
@@ -393,7 +397,7 @@ public class DAOFacturas implements IDAOFacturas{
 				aux.setFechaMod(rs.getTimestamp("fecha_mod"));
 				aux.setOperacion(rs.getString("operacion"));
 				aux.setLinea(rs.getInt("linea"));
-				aux.setEstadoGasto(rs.getString("estado"));
+				aux.setEstadoGasto("0");
 				
 				
 				lst.add(aux);

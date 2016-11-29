@@ -29,9 +29,7 @@
      <vaadin-horizontal-layout caption="Proceso" spacing responsive _id="proceso"> 
       <vaadin-text-field id="codProceso" style-name="tiny" responsive width="144px" _id="codProceso"></vaadin-text-field> 
       <vaadin-text-field id="descProceso" style-name="tiny" responsive _id="descProceso"></vaadin-text-field> 
-      <vaadin-button icon="fonticon://FontAwesome/f002" style-name="icon-only borderless quiet" _id="btnBuscarProceso">
-        Button 
-      </vaadin-button> 
+      <vaadin-button icon="fonticon://FontAwesome/f002" style-name="icon-only borderless quiet tiny" responsive _id="btnBuscarProceso"></vaadin-button> 
      </vaadin-horizontal-layout> 
      <vaadin-text-field caption="Referencia" id="referencia" style-name="tiny" responsive width="341px" readonly _id="referencia"></vaadin-text-field> 
      <vaadin-text-field caption="TC" id="tcMov" style-name="tiny" null-representation="" responsive width="144px" _id="tcMov"></vaadin-text-field> 
@@ -40,12 +38,13 @@
       <vaadin-text-field id="impTotMo" style-name="tiny" null-representation="" responsive readonly _id="impTotMo"></vaadin-text-field> 
      </vaadin-horizontal-layout> 
      <vaadin-horizontal-layout caption="Impuesto" style-name="name-wrapper" spacing responsive _id="wrapper_documImpu"> 
-      <vaadin-text-field id="impuTotMo" style-name="tiny" null-representation="" responsive width="144px" readonly _id="impuTotMo"></vaadin-text-field> 
-      <vaadin-text-field caption="Impuesto Mn" id="impuTotMn " visible="false" style-name="tiny" null-representation="" responsive readonly _id="impuTotMn"></vaadin-text-field> 
+      <vaadin-text-field id="impuTotMo" style-name="tiny" null-representation="" responsive width="144px" _id="impuTotMo"></vaadin-text-field> 
+      <vaadin-text-field caption="Impuesto Mn" id="impuTotMn " visible="false" style-name="tiny" null-representation="" responsive _id="impuTotMn"></vaadin-text-field> 
      </vaadin-horizontal-layout> 
-     <vaadin-horizontal-layout caption="Subtotal MO" style-name="name-wrapper" spacing responsive _id="wrapper_documSubtot"> 
-      <vaadin-text-field id="impSubMo" style-name="tiny" null-representation="" responsive width="144px" readonly _id="impSubMo"></vaadin-text-field> 
-      <vaadin-text-field caption="Subtotal" id="impSubMn " visible="false" style-name="tiny" null-representation="" responsive readonly _id="impSubMn"></vaadin-text-field> 
+     <vaadin-horizontal-layout caption="Subtotal" style-name="name-wrapper" spacing responsive _id="wrapper_documSubtot"> 
+      <vaadin-text-field id="impSubMo" style-name="tiny" null-representation="" responsive width="144px" _id="impSubMo"></vaadin-text-field> 
+      <vaadin-text-field caption="Subtotal" id="impSubMn " visible="false" style-name="tiny" null-representation="" responsive _id="impSubMn"></vaadin-text-field>
+      <vaadin-text-field caption="TotalMN" id="impTotMn " visible="false" style-name="tiny" null-representation="" responsive _id="impTotMn"></vaadin-text-field> 
      </vaadin-horizontal-layout> 
      <vaadin-horizontal-layout responsive width="187px" _id="botones"> 
       <vaadin-button style-name="primary tiny" responsive plain-text _id="aceptar" :middle>
@@ -64,12 +63,9 @@
     </vaadin-form-layout> 
     <vaadin-form-layout spacing="false" responsive size-full _id="formLay2"> 
      <vaadin-grid id="lstGastos" style-name="small" responsive width-full height="356px" _id="lstGastos"></vaadin-grid> 
-     <vaadin-horizontal-layout style-name="v-formlayout" responsive width="350px" height-full :middle :right> 
-      <vaadin-button style-name="primary tiny" responsive id="btnAgregar" plain-text _id="btnAgregar" :middle>
-        Agregar 
-      </vaadin-button> 
+     <vaadin-horizontal-layout style-name="v-formlayout" responsive width="250px" height-full :middle :right> 
       <vaadin-button style-name="primary tiny" responsive id="btnAgregarGto" plain-text _id="btnAgregarGto" :middle>
-        Gastos 
+        Agregar
       </vaadin-button> 
       <vaadin-button style-name="primary tiny" responsive id="btnEditarForm" plain-text _id="btnEditarForm" :middle>
         Editar 
