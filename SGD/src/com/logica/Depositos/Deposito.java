@@ -33,6 +33,7 @@ public class Deposito extends Auditoria{
 	private double impTotMo;
 	private double impTotMn;
 	private long nroTrans;
+	private double tcMov;
 	
 	private ArrayList<DepositoDetalle> lstDetalle;
 	
@@ -63,6 +64,7 @@ public class Deposito extends Auditoria{
 		depositoVO.setNumComprobante(deposito.getNumComprobante());
 		depositoVO.setObservaciones(deposito.getObservaciones());
 		depositoVO.setSerieDocum(deposito.getSerieDocum());
+		depositoVO.setTcMov(deposito.getTcMov());
 		
 		DepositoDetalleVO auxDet;
 		for (DepositoDetalle depositoDetalle: lstDetalle) {
@@ -111,6 +113,7 @@ public class Deposito extends Auditoria{
 		deposito.setOperacion(depositoVO.getOperacion());
 		deposito.setSerieDocum(depositoVO.getSerieDocum());
 		deposito.setUsuarioMod(depositoVO.getUsuarioMod());
+		deposito.setTcMov(depositoVO.getTcMov());
 		
 		
 		DepositoDetalleVO auxDet;
@@ -302,5 +305,14 @@ public class Deposito extends Auditoria{
 		this.lstDetalle = lstDetalle;
 	}
 
+	public double getTcMov() {
+		return tcMov;
+	}
+
+	public void setTcMov(double tcMov) {
+		this.tcMov = tcMov;
+	}
+
+	
 	
 }

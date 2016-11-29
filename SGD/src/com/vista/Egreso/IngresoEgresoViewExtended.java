@@ -2585,7 +2585,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 				if(g.getCodMoneda().equals(monedaVO.getCodMoneda())){
 					salir = true;
 					
-					if(monedaVO.getCotizacion() != 0){
+					if(cotizacionVenta != 0){
 						this.lstDetalleVO.add(g);
 						this.lstDetalleAgregar.add(g);
 						

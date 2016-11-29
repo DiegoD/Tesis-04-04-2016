@@ -1949,8 +1949,8 @@ public String eliminarSaldoCuenta(){
 		
 		sb.append("INSERT INTO c_deposito (cod_docum, serie_docum, nro_docum, cod_emp, fec_doc, fec_valor, "
 				+ " cod_bco, cod_ctabco, cod_moneda, imp_tot_mn, imp_tot_mo, tc_mov, nro_trans, fecha_mod, "
-				+ "usuario_mod, operacion ");
-		sb.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?) ");
+				+ "usuario_mod, operacion, observaciones ) ");
+		sb.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ? ) ");
 		
 		return sb.toString();
 	
@@ -1962,9 +1962,9 @@ public String eliminarSaldoCuenta(){
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("INSERT INTO d_deposito (cod_docum, serie_docum, nro_docum, cuenta, fec_doc, fec_valor, "
-				+ " cod_moneda, imp_tot_mn, imp_tot_mo, nro_trans, fecha_mod, "
-				+ "usuario_mod, operacion, linea, cod_emp ");
-		sb.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?	) ");
+				+ " cod_moneda, imp_tot_mn, imp_tot_mo, nro_trans, "
+				+ "linea, cod_emp ) ");
+		sb.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?	) ");
 		
 		return sb.toString();
 	

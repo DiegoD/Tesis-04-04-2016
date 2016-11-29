@@ -26,7 +26,8 @@ public class DepositoView extends FormLayout {
 	protected ComboBox comboResponsable;
 	protected Label lblComprobante;
 	protected TextField comprobante;
-	protected Label lblfecha;
+	protected DateField fecDoc;
+	protected Label lblFechaValor;
 	protected DateField fecValor;
 	protected ComboBox comboBancos;
 	protected Label lblCuentaBanco;

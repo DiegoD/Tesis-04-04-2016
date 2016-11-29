@@ -3855,7 +3855,7 @@ public class FachadaDD {
 
 	}
 	
-	public void depositarCheques(String codEmp, ArrayList<DepositoDetalleVO> cheques){
+	public void depositarCheques(String codEmp, DepositoVO cheques){
 		
 		
 	}
@@ -3913,7 +3913,7 @@ public class FachadaDD {
 			
 			Deposito deposito = new Deposito();
 			
-			deposito.convierteDeposito(depVO);
+			deposito = deposito.convierteDeposito(depVO);
 
 			
 			if(!this.depositos.memberDeposito(deposito.getNroTrans(), codEmp, con)){

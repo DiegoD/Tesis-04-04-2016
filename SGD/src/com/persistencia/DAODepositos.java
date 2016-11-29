@@ -183,9 +183,11 @@ public class DAODepositos implements IDAODepositos{
 			pstmt1.setString(9, deposito.getMoneda().getCodMoneda());
 			pstmt1.setDouble(10, deposito.getImpTotMn());
 			pstmt1.setDouble(11, deposito.getImpTotMo());
+			pstmt1.setDouble(12, deposito.getTcMov());
 			pstmt1.setLong(13, deposito.getNroTrans());
 			pstmt1.setString(14, deposito.getUsuarioMod());
 			pstmt1.setString(15, deposito.getOperacion());
+			pstmt1.setString(16, deposito.getObservaciones());
 			
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
@@ -235,10 +237,8 @@ public class DAODepositos implements IDAODepositos{
 			pstmt1.setDouble(8, detalle.getCheque().getImpTotMn());
 			pstmt1.setDouble(9, detalle.getCheque().getImpTotMo());
 			pstmt1.setLong(10, detalle.getNroTrans());
-			pstmt1.setString(11, detalle.getCheque().getUsuarioMod());
-			pstmt1.setString(12, detalle.getCheque().getOperacion());
-			pstmt1.setInt(13,linea);
-			pstmt1.setString(14,codEmp);
+			pstmt1.setInt(11,linea);
+			pstmt1.setString(12,codEmp);
 			
 			pstmt1.executeUpdate ();
 			

@@ -1,5 +1,6 @@
 package com.controladores;
 
+import java.sql.Date;
 import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
@@ -10,6 +11,7 @@ import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Bancos.ObteniendoBancosException;
 import com.excepciones.Bancos.ObteniendoCuentasBcoException;
 import com.excepciones.Cheques.ObteniendoChequeException;
+import com.excepciones.Cotizaciones.ObteniendoCotizacionesException;
 import com.excepciones.Depositos.EliminandoDepositoException;
 import com.excepciones.Depositos.ExisteDepositoException;
 import com.excepciones.Depositos.InsertandoDepositoException;
@@ -30,6 +32,7 @@ import com.logica.FachadaDD;
 import com.valueObject.DocumentoAduaneroVO;
 import com.valueObject.TitularVO;
 import com.valueObject.UsuarioPermisosVO;
+import com.valueObject.Cotizacion.CotizacionVO;
 import com.valueObject.Deposito.DepositoDetalleVO;
 import com.valueObject.Deposito.DepositoVO;
 import com.valueObject.IngresoCobro.IngresoCobroVO;
@@ -137,11 +140,20 @@ public class DepositoControlador {
 			throw new NoTienePermisosException();
 	}
 	
-	public void depositarCheques(UsuarioPermisosVO permisos, ArrayList<DepositoDetalleVO> cheques) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoChequeException, ObteniendoCuentasBcoException, ObteniendoBancosException {
+	public void depositarCheques(UsuarioPermisosVO permisos, DepositoVO cheques) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoChequeException, ObteniendoCuentasBcoException, ObteniendoBancosException, InsertandoDepositoException, ExisteDepositoException {
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			FachadaDD.getInstance().depositarCheques(permisos.getCodEmp(), cheques);
+			FachadaDD.getInstance().insertarDeposito(cheques, permisos.getCodEmp());
+		else
+			throw new NoTienePermisosException();
+	}
+	
+	public CotizacionVO getCotizacion(UsuarioPermisosVO permisoAux, Date fecha, String codMonedaSeleccionada) throws ObteniendoCotizacionesException, ConexionException, ObteniendoPermisosException, InicializandoException, NoTienePermisosException{
+		
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisoAux))
+			return FachadaDD.getInstance().getCotizacion(permisoAux.getCodEmp(), fecha, codMonedaSeleccionada);
 		else
 			throw new NoTienePermisosException();
 	}

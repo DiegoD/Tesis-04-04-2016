@@ -10,7 +10,6 @@ import java.util.Collection;
 import java.util.Locale;
 
 import com.controladores.DepositoControlador;
-import com.controladores.IngresoCobroControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.InicializandoException;
 import com.excepciones.NoTienePermisosException;
@@ -21,6 +20,7 @@ import com.excepciones.Cheques.ObteniendoChequeException;
 import com.excepciones.Titulares.ObteniendoTitularesException;
 import com.excepciones.clientes.ObteniendoClientesException;
 import com.logica.FuncionarioInfo;
+import com.logica.MonedaInfo;
 import com.logica.Docum.BancoInfo;
 import com.logica.Docum.CuentaBcoInfo;
 import com.logica.Docum.TitularInfo;
@@ -34,22 +34,19 @@ import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.UI;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.valueObject.MonedaVO;
 import com.valueObject.TitularVO;
 import com.valueObject.UsuarioPermisosVO;
+import com.valueObject.Cotizacion.CotizacionVO;
 import com.valueObject.Deposito.DepositoDetalleVO;
 import com.valueObject.Deposito.DepositoVO;
-import com.valueObject.IngresoCobro.IngresoCobroVO;
 import com.valueObject.banco.BancoVO;
 import com.valueObject.banco.CtaBcoVO;
 import com.vista.Mensajes;
-import com.vista.MySub;
 import com.vista.PermisosUsuario;
 import com.vista.Variables;
 import com.vista.VariablesPermisos;
-import com.vista.IngresoCobro.IngresoCobroPanelExtended;
 
 
 public class DepositoViewExtended extends DepositoView{
@@ -178,27 +175,62 @@ public class DepositoViewExtended extends DepositoView{
 						
 						DepositoVO deposito = new DepositoVO();
 						
+						deposito.setCodDocum("Deposito");
+						deposito.setSerieDocum("0");
 						deposito.setFecValor(new java.sql.Timestamp(fecValor.getValue().getTime()));
+						deposito.setFecDoc(new java.sql.Timestamp(fecDoc.getValue().getTime()));
 						deposito.setNroDocum(Integer.parseInt(comprobante.getValue()));
 						
+						
+						TitularVO titular = new TitularVO();
+						titular = (TitularVO) comboResponsable.getValue();
 						FuncionarioInfo funcionario = new FuncionarioInfo();
-						funcionario = (FuncionarioInfo) comboResponsable.getValue();
+						funcionario.setCodigo(titular.getCodigo());
+						funcionario.setNombre(titular.getNombre());
 						deposito.setFuncionario(funcionario);
 						
-						BancoInfo banco = new BancoInfo();
-						banco = (BancoInfo) comboBancos.getValue();
-						deposito.setNomBanco(banco.getNomBanco());
-						deposito.setCodBanco(banco.getCodBanco());
+						BancoVO banco = new BancoVO();
+						banco = (BancoVO) comboBancos.getValue();
+						deposito.setNomBanco(banco.getCodigo());
+						deposito.setCodBanco(banco.getNombre());
 						
-						CuentaBcoInfo cuentaBanco = new CuentaBcoInfo();
-						cuentaBanco = (CuentaBcoInfo) comboCuentas.getValue();
-						deposito.setCodCuenta(cuentaBanco.getCodCuenta());
-						deposito.setNomCuenta(cuentaBanco.getNomCuenta());
+						CtaBcoVO cuentaBanco = new CtaBcoVO();
+						cuentaBanco = (CtaBcoVO) comboCuentas.getValue();
+						deposito.setCodCuenta(cuentaBanco.getCodigo());
+						deposito.setNomCuenta(cuentaBanco.getNombre());
+						deposito.setCodMoneda(cuentaBanco.getMonedaVO().getCodMoneda());
+						
+						MonedaInfo moneda = new MonedaInfo();
+						moneda.setCodMoneda(cuentaBanco.getMonedaVO().getCodMoneda());
+						moneda.setNacional(cuentaBanco.getMonedaVO().isNacional());
+						moneda.setDescripcion(cuentaBanco.getMonedaVO().getDescripcion());
+						moneda.setSimbolo(cuentaBanco.getMonedaVO().getSimbolo());
+						deposito.setMoneda(moneda);
 						
 						deposito.setImpTotMo((Double)importeMo.getConvertedValue());
-						deposito.setObservaciones(observaciones.getValue());
 						
-						controlador.depositarCheques(permisoAux, lstSeleccionados);
+						if(moneda.isNacional()) /*Si la moneda seleccionada es nacional*/
+						{
+							/*Si la moneda es la nacional, el TC es 1 y el importe MN es el mismo*/
+							deposito.setTcMov(1);
+							deposito.setImpTotMn(deposito.getImpTotMo());
+							
+						}else
+						{
+							Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
+							CotizacionVO coti = null;
+							coti = this.controlador.getCotizacion(permisoAux, fecha, moneda.getCodMoneda());
+							deposito.setTcMov(coti.getCotizacionVenta());
+							deposito.setImpTotMn((deposito.getImpTotMo()*deposito.getTcMov()));
+						}
+						
+						deposito.setObservaciones(observaciones.getValue());
+						deposito.setLstDetalle(lstSeleccionados);
+						
+						deposito.setUsuarioMod(this.permisos.getUsuario());
+						deposito.setOperacion(this.operacion);
+						
+						controlador.depositarCheques(permisoAux, deposito);
 					}
 					
 					
@@ -310,7 +342,7 @@ public class DepositoViewExtended extends DepositoView{
 			permisosAux = 
 					new UsuarioPermisosVO(this.permisos.getCodEmp(),
 							this.permisos.getUsuario(),
-							VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
+							VariablesPermisos.FORMULARIO_DEPOSITO,
 							VariablesPermisos.OPERACION_NUEVO_EDITAR);
 			
 			lstBcos = this.controlador.getBcos(permisosAux);
@@ -343,7 +375,7 @@ public class DepositoViewExtended extends DepositoView{
 				permisosAux = 
 						new UsuarioPermisosVO(this.permisos.getCodEmp(),
 								this.permisos.getUsuario(),
-								VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+								VariablesPermisos.FORMULARIO_DEPOSITO,
 								VariablesPermisos.OPERACION_LEER);
 				
 				/*Si se selacciona un banco buscamos las cuentas, de lo contrario no*/
@@ -423,7 +455,7 @@ public class DepositoViewExtended extends DepositoView{
 			permisosAux = 
 					new UsuarioPermisosVO(this.permisos.getCodEmp(),
 							this.permisos.getUsuario(),
-							VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
+							VariablesPermisos.FORMULARIO_DEPOSITO,
 							VariablesPermisos.OPERACION_NUEVO_EDITAR);
 			
 			lstTitulares = this.controlador.getTitulares(permisosAux);
@@ -458,7 +490,7 @@ public class DepositoViewExtended extends DepositoView{
 		UsuarioPermisosVO permisoAux = 
 					new UsuarioPermisosVO(permisos.getCodEmp(),
 							permisos.getUsuario(),
-							VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+							VariablesPermisos.FORMULARIO_DEPOSITO,
 							VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
 		BancoVO bcoAux = null;

@@ -34,6 +34,7 @@ public class DepositoVO extends AuditoriaVO{
 	private double impTotMo;
 	private double impTotMn;
 	private long nroTrans;
+	private double tcMov;
 	
 	private ArrayList<DepositoDetalleVO> lstDetalle;
 	
@@ -62,6 +63,7 @@ public class DepositoVO extends AuditoriaVO{
 		this.setCodCuenta(depVO.getCodCuenta());
 		this.setCodMoneda(depVO.getCodMoneda());
 		this.setNacional(depVO.isNacional());
+		this.setTcMov(depVO.getTcMov());
 		
 	}
 
@@ -216,6 +218,14 @@ public class DepositoVO extends AuditoriaVO{
 
 	public void setNacional(boolean nacional) {
 		this.nacional = nacional;
+	}
+
+	public double getTcMov() {
+		return tcMov;
+	}
+
+	public void setTcMov(double tcMov) {
+		this.tcMov = tcMov;
 	}
 	
 	
