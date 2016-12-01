@@ -2063,6 +2063,8 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 			 * si se modifica  */
 			g.setLinea(lstDetalleVO.size() + 1);
 			
+			double tcAux = (Double)tcMov.getConvertedValue();
+			
 			if(!g.isNacional()){
 				while(lstMonedas.size()>j && !salir){
 					monedaVO = new MonedaVO();
@@ -2071,7 +2073,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 					if(g.getCodMoneda().equals(monedaVO.getCodMoneda())){
 						salir = true;
 						
-						if(cotizacionVenta != 0){
+						if(tcAux != 0){
 							this.lstDetalleVO.add(g);
 							this.lstDetalleAgregar.add(g);
 							
