@@ -43,12 +43,12 @@ public class FacturaControlador {
 	/**
 	 * Inserta un cobro 
 	 */
-	public void insertarFactura(FacturaVO factVO, UsuarioPermisosVO permisos) throws InsertandoFacturaException, ConexionException, ExisteFacturaException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException 
+	public void insertarFactura(FacturaVO factVO, UsuarioPermisosVO permisos, boolean nuevo) throws InsertandoFacturaException, ConexionException, ExisteFacturaException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException 
 	{
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			Fachada.getInstance().insertarFactura(factVO, permisos.getCodEmp());
+			Fachada.getInstance().insertarFactura(factVO, permisos.getCodEmp(), nuevo);
 		else
 			throw new NoTienePermisosException();
 		
@@ -73,7 +73,7 @@ public class FacturaControlador {
 	 * Modifica los datos de un cobro
 	 * @throws NoExisteFacturaException 
 	 */
-	public void modificarFactura(FacturaVO factVO, FacturaVO copiaVO, UsuarioPermisosVO permisos) throws ConexionException, ModificandoFacturaException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ExisteFacturaException, NoExisteFacturaException 
+	public void modificarFactura(FacturaVO factVO, FacturaVO copiaVO, UsuarioPermisosVO permisos, boolean nuevo) throws ConexionException, ModificandoFacturaException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ExisteFacturaException, NoExisteFacturaException 
 	{
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
@@ -92,11 +92,11 @@ public class FacturaControlador {
 	}
 	
 
-	public ArrayList<GastoVO> getGastosConSaldo(UsuarioPermisosVO permisos, String cod_tit, int codProceso) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoGastosException{
+	public ArrayList<GastoVO> getGastosConSaldo(UsuarioPermisosVO permisos, String cod_tit, int codProceso, String codMoneda) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoGastosException{
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			return FachadaDD.getInstance().getGastosFacturablesxProcesoConSaldo(permisos.getCodEmp(), cod_tit, codProceso);
+			return FachadaDD.getInstance().getGastosFacturablesxProcesoConSaldoxMoneda(permisos.getCodEmp(), cod_tit, codProceso, codMoneda);
 		else
 			throw new NoTienePermisosException();
 	}

@@ -552,34 +552,48 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		
 	    public void valueChange(ValueChangeEvent event) {
 	    	
-	    	 if("ProgramaticallyChanged".equals(tcMov.getData())){
-	    		 tcMov.setData(null);
-	             return;
-	         }
-	    	 
-	        String value = (String) event.getProperty().getValue();
-	        if(value != ""){
-	        	
-	        	try {
-	        		cotizacionVenta = (Double) tcMov.getConvertedValue();
-				} catch (Exception e) {
-					// TODO: handle exception
-					return;
-				}
-	        	
-	        	
-	        	Double truncatedDouble = new BigDecimal(cotizacionVenta)
-					    .setScale(2, BigDecimal.ROUND_HALF_UP)
-					    .doubleValue();
-				
-	        	cotizacionVenta = truncatedDouble;
-	        	
-	        	if(operacion != Variables.OPERACION_LECTURA){
+	    	if(lstDetalleVO != null) {
+	    		
+	    		if(lstDetalleVO.size() == 0) /*Si no hay lineas dejo modificar TC*/
+		    	{
+			    	 if("ProgramaticallyChanged".equals(tcMov.getData())){
+			    		 tcMov.setData(null);
+			             return;
+			         }
+			    	 
+			        String value = (String) event.getProperty().getValue();
+			        if(value != ""){
+			        	
+			        	try {
+			        		cotizacionVenta = (Double) tcMov.getConvertedValue();
+						} catch (Exception e) {
+							// TODO: handle exception
+							return;
+						}
+			        	
+			        	
+			        	Double truncatedDouble = new BigDecimal(cotizacionVenta)
+							    .setScale(2, BigDecimal.ROUND_HALF_UP)
+							    .doubleValue();
+						
+			        	cotizacionVenta = truncatedDouble;
+			        	
+			        	if(operacion != Variables.OPERACION_LECTURA){
 
-		        	calculos();
-		        }
-	        	
+				        	calculos();
+				        }
+			        	
+			    	}
+		    		
+		    	}else{
+		    		
+		    		/*DIEGO ACA ES DONDE QUIERO PONER EL VALOR ANTERIOR*/
+		    		
+		    		Mensajes.mostrarMensajeWarning("No se puede cambiar TC si hay lineas ingresadas");
+		    	}
+	    		
 	    	}
+
 	    }
 	});
 	
@@ -602,6 +616,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 								this.permisos.getUsuario(),
 								VariablesPermisos.FORMULARIO_INGRESO_COBRO,
 								VariablesPermisos.OPERACION_NUEVO_EDITAR);				
+				
+				this.calcularImporteTotal(); /*Calculamos nuevamente por si se cambio en grilla el importe de un gasto*/		
 				
 				int comp = Double.compare(importeTotalCalculado, (Double)impTotMo.getConvertedValue());
 				
@@ -753,15 +769,16 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				
 				/*Si hay detalle nuevo agregado
 				 * lo agregamos a la lista del formulario*/
-				if(this.lstDetalleAgregar.size() > 0)
+				/*if(this.lstDetalleAgregar.size() > 0)
 				{
 					for (IngresoCobroDetalleVO f : this.lstDetalleAgregar) {
 						
-						/*Si no esta lo agregamos*/
+						//Si no esta lo agregamos
 						if(!this.existeFormularioenLista(f.getNroDocum()))
 							this.lstDetalleVO.add(f);
 					}
 				}
+				*/
 					
 				ingCobroVO.setCodCuenta("ingcobro");
 				ingCobroVO.setDetalle(this.lstDetalleVO);
@@ -971,19 +988,25 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 					int i = 0;
 					while(i < lstDetalleVO.size() && !esta)
 					{
-						if(lstDetalleVO.get(i).getNroDocum()==formSelecccionado.getNroDocum())
-						{
-							/*Tambien lo quitamos de la lista de los saldos originales
-							 * para poder controlar que no ingresen un saldo mayor al que tien el gasto*/
-							GtoSaldoAux saldoAux =  new GtoSaldoAux(lstDetalleVO.get(i).getNroDocum(), lstDetalleVO.get(i).getImpTotMo());
-							this.saldoOriginalGastos.remove(saldoAux.getNroDocum(),saldoAux);
+						//if(lstDetalleVO.get(i).getCodDocum().equals("Gasto")){
+							if(lstDetalleVO.get(i).getLinea()==formSelecccionado.getLinea())
+							{
+								/*Tambien lo quitamos de la lista de los saldos originales
+								 * para poder controlar que no ingresen un saldo mayor al que tien el gasto*/
+								GtoSaldoAux saldoAux =  new GtoSaldoAux(lstDetalleVO.get(i).getNroDocum(), lstDetalleVO.get(i).getImpTotMo());
+								this.saldoOriginalGastos.remove(saldoAux.getNroDocum(),saldoAux);
+								
+								/*Quitamos el formulario seleccionado de la lista*/
+								lstDetalleVO.remove(lstDetalleVO.get(i));
+								lstDetalleQuitar.add(formSelecccionado);
 							
-							/*Quitamos el formulario seleccionado de la lista*/
-							lstDetalleVO.remove(lstDetalleVO.get(i));
-							lstDetalleQuitar.add(formSelecccionado);
-						
-							esta = true;
-						}
+								esta = true;
+							}
+						//}
+						//else {
+							
+							
+						//}
 	
 						i++;
 					}
@@ -1055,11 +1078,14 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 						proceso.setCodCuenta(formSelecccionado.getCodCuenta());
 						proceso.setNomCuenta(formSelecccionado.getNomCuenta());
 						proceso.setImpMo(formSelecccionado.getImpTotMo());
+						proceso.setNroDocum(formSelecccionado.getNroDocum());
+						proceso.setLinea(formSelecccionado.getLinea());
+						proceso.setObservaciones(formSelecccionado.getReferencia());
 						
-						datos = controlador.getProceso(permisosAux, proceso.getCodigo());
+						//datos = controlador.getProceso(permisosAux, proceso.getCodigo());
 						
-						proceso.setCarpeta(datos.getCarpeta());
-						proceso.setNomDocum(datos.getNomDocum());
+						//proceso.setCarpeta(datos.getCarpeta());
+						//proceso.setNomDocum(datos.getNomDocum());
 						
 						
 						//BusquedaViewExtended form = new BusquedaViewExtended(this, new ProcesoVO());
@@ -1151,6 +1177,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			this.filtroGrilla();
 		} 
 		/*LA OPERACION EDITAR ES DESDE EL DE LECTURA*/
+		
+	
 	}
 
 	
@@ -1375,13 +1403,18 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		this.importeTotalCalculado = (Double)impTotMo.getConvertedValue();
 		/*Dejamos todods los campos readonly*/
 		this.readOnlyFields(true);
+		int linea = 0;
 		
 		if(this.lstDetalleVO != null)
 		{
 			for (IngresoCobroDetalleVO detVO : this.lstDetalleVO) {
+				
+				detVO.setLinea(linea);
 				container.addBean(detVO);
 				GtoSaldoAux saldoAux =  new GtoSaldoAux(detVO.getNroDocum(), detVO.getImpTotMo());
 				this.saldoOriginalGastos.put(saldoAux.getNroDocum(),saldoAux);
+				
+				linea ++;
 			}
 		}
 		this.actualizarGrillaContainer(container);
@@ -1707,13 +1740,19 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		this.container = 
 				new BeanItemContainer<IngresoCobroDetalleVO>(IngresoCobroDetalleVO.class);
 		
-		
+		int linea = 0;
 		if(this.lstDetalleVO != null)
 		{
 			for (IngresoCobroDetalleVO det : this.lstDetalleVO) {
+				
+				det.setLinea(linea);
+				
 				container.addBean(det);
+				
 				GtoSaldoAux saldoAux =  new GtoSaldoAux(det.getNroDocum(), det.getImpTotMo());
 				this.saldoOriginalGastos.put(saldoAux.getNroDocum(),saldoAux);
+				
+				linea ++;
 			}
 		}
 
@@ -1919,7 +1958,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		return esta;
 	}
 	
-	private void existeFormularioenListaElimina(int nro)
+	private void existeFormularioenListaElimina(int linea)
 	{
 		int i =0;
 		boolean esta = false;
@@ -1929,7 +1968,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		while( i < this.lstDetalleVO.size() && !esta)
 		{
 			aux = this.lstDetalleVO.get(i);
-			if(nro==aux.getNroDocum())
+			if(linea==aux.getLinea())
 			{
 				esta = true;
 				this.lstDetalleVO.remove(i);
@@ -2076,6 +2115,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 					  throw new FieldGroup.CommitException("El importe no puede ser mayor al saldo ");
 				} catch (Exception e) {
 					formSelecccionado.setImpTotMo(gtoSaldo.getSaldo());
+					acaaa setear los otros campos por si cambia el importe
+					
 					Mensajes.mostrarMensajeError(e.getMessage());// TODO: handle exception
 				}
 				  
@@ -2300,6 +2341,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	@Override
 	public void setInfo(Object datos) {
 		
+		
+		
 		if(datos instanceof ClienteVO){
 			
 			ClienteVO clienteVO = (ClienteVO) datos;
@@ -2335,7 +2378,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
    			docum.setSimboloMoneda(auxMoneda.getSimbolo());
    			docum.setCodDocum("Proc");
    			docum.setSerieDocum("Proc");
-   			docum.setNroDocum(procesoVO.getCodigo());
+   			docum.setNroDocum(0); /*Ponemos 0 para que no aparezca el reandom en la grilla*/
    			docum.setCodCtaInd("Proc");
    			docum.setCodProceso(String.valueOf(procesoVO.getCodigo()));
    			docum.setUsuarioMod(permisosAux.getUsuario());
@@ -2343,16 +2386,24 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
    			docum.setCodEmp(permisosAux.getCodEmp());
    			docum.setFecValor(new java.sql.Timestamp(fecValor.getValue().getTime()));
    			docum.setFecDoc(new java.sql.Timestamp(fecDoc.getValue().getTime()));
-   			/*VER*/ docum.setCodRubro("01");
-   			docum.setCodCuenta("01");
-   			docum.setCodImpuesto("01");
+   			
+   			
+   			/*VER*/ docum.setCodRubro(procesoVO.getCodRubro()); 
+   			docum.setCodCuenta(procesoVO.getCodCuenta());
+   			docum.setCodImpuesto(procesoVO.getCodImpuesto());
+   			
    			docum.setImpTotMo(procesoVO.getImpMo());
    			docum.setCodRubro(procesoVO.getCodRubro());
    			docum.setNomRubro(procesoVO.getNomRubro());
    			docum.setCodCuenta(procesoVO.getCodCuenta());
    			docum.setNomCuenta(procesoVO.getNomCuenta());
+   			docum.setImpTotMn(procesoVO.getImpMn());
+   			docum.setImpSubMn(procesoVO.getImpMn()); /*Al no tener impuesto es el mismo que MN*/
+   			docum.setImpSubMo(procesoVO.getImpMo()); /*Al no tener impuesto es el mismo que MO*/
+   			docum.setLinea(procesoVO.getLinea());
+   			docum.setReferencia(procesoVO.getObservaciones());
    			
-   			existeFormularioenListaElimina(docum.getNroDocum());
+   			existeFormularioenListaElimina(docum.getLinea());
    			
 			this.lstDetalleVO.add(docum);
 				
@@ -2487,10 +2538,14 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		
 		if(this.lstDetalleVO != null)
 		{
+			int linea = 0;
 			for (IngresoCobroDetalleVO det : this.lstDetalleVO) {
+				det.setLinea(linea); /*Seteamos la linea*/
 				container.addBean(det); /*Lo agregamos a la grilla*/
 				GtoSaldoAux saldoAux =  new GtoSaldoAux(det.getNroDocum(), det.getImpTotMo());
 				this.saldoOriginalGastos.put(saldoAux.getNroDocum(),saldoAux);
+				
+				linea ++;
 			}
 		}
 
@@ -2563,12 +2618,19 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		int j = 0;
 		boolean salir = false;
 		MonedaVO monedaVO;
+		
+		int linea = this.getLineaMaxima() + 1; /*Obtenemos linea maxima y sumamos uno*/
+		
+		
+		
 		IngresoCobroDetalleVO g;
 		for (Object obj : lstDatos) {
-			
+			j = 0;
+			salir = false;
 			
 			g = new IngresoCobroDetalleVO();
 			g.copiar((DocumDetalleVO)obj);
+			g.setLinea(linea);
 			
 			if(!g.isNacional()){
 				
@@ -2580,6 +2642,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 						salir = true;
 						
 						if(monedaVO.getCotizacion() != 0){
+							
 							this.lstDetalleVO.add(g);
 							this.lstDetalleAgregar.add(g);
 							
@@ -2603,6 +2666,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				GtoSaldoAux saldoAux =  new GtoSaldoAux(g.getNroDocum(), g.getImpTotMo());
 				this.saldoOriginalGastos.put(saldoAux.getNroDocum(),saldoAux);
 			}
+			
+			linea ++;
 		}
 			
 		/*Actualizamos el container y la grilla*/
@@ -2984,6 +3049,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			proceso.setCodMoneda(auxMoneda.getCodMoneda());
 			proceso.setDescMoneda(auxMoneda.getDescripcion());
 			proceso.setSimboloMoneda(auxMoneda.getSimbolo());
+			proceso.setLinea(this.getLineaMaxima() + 1);
 			
 			//BusquedaViewExtended form = new BusquedaViewExtended(this, new ProcesoVO());
 			IngresoCobroProcesoViewExtended form = new IngresoCobroProcesoViewExtended("NUEVO", this, proceso);
@@ -2998,5 +3064,37 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		catch(Exception e){
 			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 		}
+	}
+	
+	/***
+	 * Nos retorna la cotizacion del ingreso de cobro
+	 * Lo utilizamos para agregar a cuenta de proceso
+	 * porder calcular MN 
+	 */
+	public double getCotizacion(){
+		
+		return this.cotizacionVenta;
+	}
+	
+	/***
+	 * Nos retorna la linea maxima del detalle
+	 * para poder asignar correctamente la proxima linea
+	 * a la hora de quitar
+	 */
+	private int getLineaMaxima(){
+		
+		int max = 0;
+		
+		if(this.lstDetalleVO != null)
+		{
+			for (IngresoCobroDetalleVO d : this.lstDetalleVO) {
+				
+				if(d.getLinea() > max)
+					max = d.getLinea();
+				
+			}
+		}
+		
+		return max;
 	}
 }

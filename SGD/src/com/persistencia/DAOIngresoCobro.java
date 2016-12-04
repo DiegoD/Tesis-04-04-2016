@@ -87,6 +87,7 @@ public class DAOIngresoCobro implements IDAOIngresoCobro{
 				aux.setOperacion(rs.getString("operacion"));
 				
 				
+				
 				/*Obtenemos las lineas de la transaccion*/				
 				aux.setDetalle(this.getIngresoCobroLineaxTrans(con,aux));
 				
@@ -460,7 +461,7 @@ public class DAOIngresoCobro implements IDAOIngresoCobro{
 				aux.setFecDoc(rs.getTimestamp("fec_doc"));
 				aux.setFecValor(rs.getTimestamp("fec_valor"));
 				
-				aux.setMoneda(new MonedaInfo(rs.getString("cod_moneda"), rs.getString("nom_moneda"), rs.getString("simbolo")));
+				aux.setMoneda(new MonedaInfo(rs.getString("cod_moneda"), rs.getString("nom_moneda"), rs.getString("simbolo"), rs.getBoolean("nacional")));
 				
 				aux.setImpuestoInfo(new ImpuestoInfo(rs.getString("cod_impuesto"), rs.getString("nom_impuesto"), rs.getDouble("porcentaje")));
 				
@@ -482,6 +483,7 @@ public class DAOIngresoCobro implements IDAOIngresoCobro{
 				aux.setFechaMod(rs.getTimestamp("fecha_mod"));
 				aux.setOperacion(rs.getString("operacion"));
 				aux.setLinea(rs.getInt("linea"));
+				
 				
 				
 				lst.add(aux);

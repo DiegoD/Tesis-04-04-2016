@@ -4,16 +4,18 @@
   <meta charset="UTF-8" name="design-properties" content="{&quot;RULERS_VISIBLE&quot;:true,&quot;GUIDELINES_VISIBLE&quot;:false,&quot;SNAP_TO_OBJECTS&quot;:true,&quot;SNAP_TO_GRID&quot;:true,&quot;SNAPPING_DISTANCE&quot;:10,&quot;JAVA_SOURCES_ROOT&quot;:&quot;src&quot;,&quot;THEME&quot;:&quot;sgd&quot;}">
  </head> 
  <body> 
-  <vaadin-form-layout style-name="center colored h2" responsive id="auditoria" size-auto margin> 
+  <vaadin-form-layout style-name="center colored h2" responsive id="auditoria" width-auto height="187px" margin> 
    <vaadin-horizontal-layout :middle :center> 
     <vaadin-label style-name="center" size-auto _id="mensaje" :middle :center></vaadin-label> 
    </vaadin-horizontal-layout> 
    <vaadin-horizontal-layout> 
-    <vaadin-label style-name="center" size-auto _id="lblMensaje" :middle :center></vaadin-label> 
+    <vaadin-label style-name="center" size-auto _id="lblMensaje" :middle :center>
+      
+    </vaadin-label> 
    </vaadin-horizontal-layout> 
    <vaadin-horizontal-layout responsive size-full :middle :center> 
     <vaadin-form-layout spacing="false" size-full margin-top="false" margin-bottom="false"> 
-     <vaadin-horizontal-layout width="184px" :middle :center> 
+     <vaadin-horizontal-layout responsive width="184px" :middle :center> 
       <vaadin-button style-name="primary tiny" plain-text _id="aceptar" :middle>
         Aceptar 
       </vaadin-button> 

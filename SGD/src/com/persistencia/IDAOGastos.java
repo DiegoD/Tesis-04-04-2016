@@ -32,5 +32,5 @@ public interface IDAOGastos {
 	public ArrayList<DocumDetalle> getGastosAnuladosxProceso(Connection con, String codEmp, int codProceso)
 			throws ObteniendoGastosException, ConexionException;
 	public ArrayList<Gasto> getGastosFacturablesxProcesoConSaldo(Connection con, String codEmp, String codTit, int codProceso) throws ObteniendoGastosException, ConexionException;
-	
+	public ArrayList<Gasto> getGastosFacturablesxProcesoConSaldoxMoneda(Connection con, String codEmp, String codTit, int codProceso, String codMoneda) throws ObteniendoGastosException, ConexionException;
 }

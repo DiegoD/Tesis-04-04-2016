@@ -39,6 +39,7 @@ public IngresoCobroDetalleVO retornarDatosDocumVO(){
 		aux.setCodMoneda(this.getMoneda().getCodMoneda());
 		
 		aux.setSimboloMoneda(this.getMoneda().getSimbolo());
+		aux.setNacional(this.getMoneda().isNacional());
 		
 		aux.setNomTitular(this.getTitInfo().getNombre());
 		aux.setCodTitular(this.getTitInfo().getCodigo());

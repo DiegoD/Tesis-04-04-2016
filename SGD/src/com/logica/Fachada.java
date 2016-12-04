@@ -46,6 +46,10 @@ import com.excepciones.SaldoCuentas.ExisteSaldoCuentaException;
 import com.excepciones.SaldoCuentas.InsertandoSaldoCuentaException;
 import com.excepciones.SaldoCuentas.ModificandoSaldoCuentaException;
 import com.excepciones.SaldoCuentas.NoExisteSaldoCuentaException;
+import com.excepciones.Saldos.EliminandoSaldoException;
+import com.excepciones.Saldos.ExisteSaldoException;
+import com.excepciones.Saldos.IngresandoSaldoException;
+import com.excepciones.Saldos.ModificandoSaldoException;
 import com.excepciones.Usuarios.ExisteUsuarioException;
 import com.excepciones.clientes.ExisteClienteExeption;
 import com.excepciones.clientes.ExisteDocumentoClienteException;
@@ -1407,7 +1411,7 @@ public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 			if(ing.getDetalle().size()< 1) /*Si no tiene detalle es otro cobro*/
 				ing.setCodDocum("otrcobro");
 				
-			this.ingresoCobro.insertarIngresoCobro(ing, con);
+			this.ingresoCobro.insertarIngresoCobro(ing, con); 
 			
 			if(ing.getDetalle().size()> 0) /*Si tiene detalle porque viene del ingreso cobro, de lo contrario
 			 								se consume desde el ingteso cobro otros*/
@@ -1425,7 +1429,7 @@ public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 						
 						docum.setCodDocum(ing.getCodDocum());
 						docum.setSerieDocum(ing.getSerieDocum());
-						docum.setNroDocum(ing.getNroDocum());
+						docum.setNroDocum(numeradores.getNumero(con, "ctaproc", codEmp)); /*Seteamos el nroDocum a cta de proceso con su numerador*/
 						docum.setTitInfo(ing.getTitInfo());
 						docum.setNroTrans(ing.getNroTrans());
 						docum.setFecDoc(ing.getFecDoc());
@@ -1543,7 +1547,7 @@ public void eliminarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 						/*Signo 1 para que restarue los saldos del documento sin este cobro*/
 						this.saldos.modificarSaldo(docum, 1, ingVO.getTcMov(), con);
 					}
-					else if(docum.getCodDocum().equals("Proceso")) /*Modificamos el saldo para el proceso ingresado*/
+					else if(docum.getCodDocum().equals("Proc")) /*Modificamos el saldo para el proceso ingresado*/
 					{
 						/*Signo -1 para que restarue los saldos del proceso sin este cobro*/
 						this.saldosProceso.modificarSaldo(docum, -1, ingVO.getTcMov(), con);
@@ -1823,7 +1827,7 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 							/*Signo 1 para que restarue los saldos del documento sin este cobro*/
 							this.saldos.modificarSaldo(docum, 1, ingVO.getTcMov(), con);
 						}
-						else if(docum.getCodDocum().equals("Proceso")) /*Modificamos el saldo para el proceso ingresado*/
+						else if(docum.getCodDocum().equals("Proc")) /*Modificamos el saldo para el proceso ingresado*/
 						{
 							/*Signo -1 para que le quite el saldo*/
 							this.saldosProceso.modificarSaldo(docum, -1, ingVO.getTcMov(), con);
@@ -2981,30 +2985,73 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 		return lstVO;
 	}	 
 
+	
+	public void insertarFactura(FacturaVO factVO, String codEmp, boolean nuevo) throws InsertandoFacturaException, ConexionException{
+		
+		Connection con = null;
+		try 
+		{
+			con = this.pool.obtenerConeccion();
+			con.setAutoCommit(false);
+			
+			this.insertarFacturaInterno(factVO, codEmp, con, nuevo);
+			
+			con.commit();
+			
+		}catch(Exception e){
+			
+			try {
+				con.rollback();
+			
+			} catch (SQLException ex) {
+			
+				throw new InsertandoFacturaException();
+			}
+			
+				throw new InsertandoFacturaException();
+		}
+		finally
+		{
+			pool.liberarConeccion(con);
+		}
+		
+		
+	}
 
-public void insertarFactura(FacturaVO factVO, String codEmp) throws InsertandoFacturaException, ConexionException, ExisteFacturaException{
+	/***
+	 * 
+	 * Isertamos una factura, el booleano nuevo, es si es nuevo o editar
+	 * si es nuevo generamos nroTrans nuevo de lo contrario no
+	 */
+	private void insertarFacturaInterno(FacturaVO factVO, String codEmp, Connection con, boolean nuevo) throws InsertandoFacturaException, ConexionException, ExisteFacturaException{
 
-	Connection con = null;
+	//Connection con = null;
 	boolean existe = false;
 	NumeradoresVO codigos = new NumeradoresVO();
 	
 	
 	try 
 	{
-		con = this.pool.obtenerConeccion();
-		con.setAutoCommit(false);
 		
 		Factura fact = new Factura(factVO); 
 		Cotizacion cotiAux;
 		
-		//Obtengo numerador de factura
-		//codigos.setCodigo(numeradores.getNumero(con, "factura", codEmp)); //Factura 
-		codigos.setNumeroTrans(numeradores.getNumero(con, "03", codEmp)); //nro trans
+		if(nuevo)
+		{
+			codigos.setNumeroTrans(numeradores.getNumero(con, "03", codEmp)); //nro trans
+			fact.setNroTrans(codigos.getNumeroTrans()); /*Seteamos el nroTrans*/
+			factVO.setNroTrans(codigos.getNumeroTrans()); /*Seteamos el nroTrans al VO para obtener el DocumSaldo*/
+			
+		}else{
+			
+		}
+		
 		
 		//fact.setNroDocum(codigos.getCodigo()); /*Seteamos el nroDocum*/
-		fact.setNroTrans(codigos.getNumeroTrans()); /*Seteamos el nroTrans*/
-		factVO.setNroTrans(codigos.getNumeroTrans()); /*Seteamos el nroTrans al VO para obtener el DocumSaldo*/ 
-		factVO.setNroDocum(codigos.getCodigo()); /*Seteamos el nroDocum*/
+	
+		 
+		
+		
 		
 		/*Verificamos que no exista un cobro con el mismo numero*/
 		if(!this.facturas.memberFacturas(fact.getNroDocum(), fact.getSerieDocum(), fact.getCodDocum(), codEmp, con))
@@ -3025,22 +3072,46 @@ public void insertarFactura(FacturaVO factVO, String codEmp) throws InsertandoFa
 			/*Ingresamos la factura*/
 			this.facturas.insertarFactura(fact, con);
 			
-			con.commit();
+			//con.commit();
 		}
 		else{
 			existe = true;
 		}
 		}catch(Exception e){
 		
+			throw new InsertandoFacturaException();
+		}
+		if (existe){
+			throw new ExisteFacturaException();
+		}
+	}
+
+	public void eliminarFactura(FacturaVO facVO, String codEmp) throws EliminandoFacturaException, ConexionException, ExisteFacturaException{
+		
+		Connection con = null;
+		boolean existe = false;
+		
+		try 
+		{
+			con = this.pool.obtenerConeccion();
+			con.setAutoCommit(false);
+			
+			this.eliminarFacturaInterno(facVO, codEmp, con);
+			
+			con.commit();
+		
+		}
+		catch(Exception e){
+			
 			try {
 				con.rollback();
 			
 			} catch (SQLException ex) {
 			
-				throw new InsertandoFacturaException();
+				throw new EliminandoFacturaException();
 			}
 			
-				throw new InsertandoFacturaException();
+			throw new EliminandoFacturaException();
 		}
 		finally
 		{
@@ -3051,9 +3122,9 @@ public void insertarFactura(FacturaVO factVO, String codEmp) throws InsertandoFa
 		}
 	}
 
-	public void eliminarFactura(FacturaVO facVO, String codEmp) throws EliminandoFacturaException, ConexionException, ExisteFacturaException, NoExisteFacturaException{
+	private void eliminarFacturaInterno(FacturaVO facVO, String codEmp, Connection con) throws EliminandoFacturaException, ConexionException, ExisteFacturaException, NoExisteFacturaException{
 	
-		Connection con = null;
+
 		boolean existe = false;
 		Integer codigo;
 		NumeradoresVO codigos = new NumeradoresVO();
@@ -3061,8 +3132,7 @@ public void insertarFactura(FacturaVO factVO, String codEmp) throws InsertandoFa
 		
 		try 
 			{
-			con = this.pool.obtenerConeccion();
-			con.setAutoCommit(false);
+
 			
 			Factura fact = new Factura(facVO); 
 			Cotizacion cotiAux;
@@ -3081,12 +3151,14 @@ public void insertarFactura(FacturaVO factVO, String codEmp) throws InsertandoFa
 					}
 				
 				}
+				/*Eliminamos el saldo para la factura*/ 
+				this.saldos.eliminarSaldo(fact, con);
 				
 				/*Una vez hechos todos los movimientos de saldos y documentos
 				* procedemos a eliminar la factura*/
 				this.facturas.eliminarFactura(fact, con); 
 				
-				con.commit();
+				//con.commit();
 			}
 			else{
 				throw new NoExisteEgresoCobroException();
@@ -3094,19 +3166,9 @@ public void insertarFactura(FacturaVO factVO, String codEmp) throws InsertandoFa
 		
 		}catch(Exception e){
 		
-			try {
-				con.rollback();
-			
-			} catch (SQLException ex) {
-			
 			throw new EliminandoFacturaException();
-			}
 			
-			throw new EliminandoFacturaException();
-		}
-		finally
-		{
-		pool.liberarConeccion(con);
+			
 		}
 		if (existe){
 			throw new ExisteFacturaException();
@@ -3128,12 +3190,11 @@ public void insertarFactura(FacturaVO factVO, String codEmp) throws InsertandoFa
 			/*Verificamos que exista el nro de cobro*/
 			if(this.facturas.memberFacturas(fact.getNroDocum(), fact.getSerieDocum(), fact.getCodDocum(), factVO.getCodEmp(), con))
 			{
-				/*Primero eliminamos la transaccion, con la copia, para poder detectar las lineas
-				* eliminadas*/
-				this.facturas.eliminarFactura(copia, con); 
+				this.eliminarFacturaInterno(copiaVO, copiaVO.getCodEmp(), con);
 				
-				/*Luego insertamos el cobro con las modificaciones realizadas*/
-				this.facturas.insertarFactura(fact, con); 
+				
+				this.insertarFacturaInterno(factVO, factVO.getCodEmp(), con, false);
+				
 				
 				con.commit();
 			}

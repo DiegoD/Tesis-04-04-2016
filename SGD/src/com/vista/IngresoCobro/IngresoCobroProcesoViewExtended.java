@@ -2,6 +2,7 @@ package com.vista.IngresoCobro;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Random;
 
 import com.controladores.IngresoCobroControlador;
 import com.excepciones.ConexionException;
@@ -30,6 +31,8 @@ public class IngresoCobroProcesoViewExtended extends IngresoCobroProcesoView imp
 	private IngresoCobroControlador controlador;
 	private String operacion;
 	private IngresoCobroViewExtended mainView;
+	private String codImpuesto; /*Variable para setear el impuesto seleccionado*/
+	private int linea;
 	MySub sub;
 	private PermisosUsuario permisos;
 	UsuarioPermisosVO permisoAux;
@@ -40,6 +43,7 @@ public class IngresoCobroProcesoViewExtended extends IngresoCobroProcesoView imp
 		this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
 		this.operacion = opera;
 		this.mainView = main;
+		this.linea = proceso.getLinea();
 		
 		procesoParametro = proceso;
 		
@@ -91,11 +95,19 @@ public class IngresoCobroProcesoViewExtended extends IngresoCobroProcesoView imp
 					return;
 				}
 				
+				procesoNuevo.setLinea(this.linea);
 				
 				procesoNuevo.setCodRubro(codRubro.getValue());
 				procesoNuevo.setNomRubro(nomRubro.getValue());
 				procesoNuevo.setCodCuenta(codCuenta.getValue());
 				procesoNuevo.setNomCuenta(nomCuenta.getValue());
+				
+				procesoNuevo.setImpMn(procesoNuevo.getImpMo() * main.getCotizacion());
+				procesoNuevo.setTcMov(main.getCotizacion());
+				procesoNuevo.setImpSubTot(procesoNuevo.getImpMo()); /*Al no tener impuesto es el mismo que MO*/
+				
+				procesoNuevo.setCodImpuesto(this.codImpuesto);
+				procesoNuevo.setObservaciones(this.comentario.getValue());
 				
 				main.setInfo(procesoNuevo);
 				main.cerrarVentana();
@@ -191,6 +203,7 @@ public class IngresoCobroProcesoViewExtended extends IngresoCobroProcesoView imp
 							VariablesPermisos.OPERACION_NUEVO_EDITAR);
 			
 			try {
+				
 				lstRubros = this.controlador.getRubrosCuentasActivos(permisoAux);
 				
 			} catch ( ConexionException | InicializandoException | ObteniendoPermisosException | NoTienePermisosException | ObteniendoRubrosException | com.excepciones.Rubros.ObteniendoRubrosException e) {
@@ -199,9 +212,14 @@ public class IngresoCobroProcesoViewExtended extends IngresoCobroProcesoView imp
 			}
 			Object obj;
 			for (RubroCuentaVO i: lstRubros) {
+				
+							
 				obj = new Object();
 				obj = (Object)i;
-				lst.add(obj);
+				
+				/*Solo agregamos los rubros que tengan impuesto exento*/
+				if(i.getPorcentaje() == 0)
+					lst.add(obj);
 			}
 			try {
 				
@@ -290,19 +308,25 @@ public class IngresoCobroProcesoViewExtended extends IngresoCobroProcesoView imp
 			/*Seteamos las validaciones*/
 			this.setearValidaciones(true);
 			
+			this.comentario.setEnabled(true);
+			this.comentario.setReadOnly(false);
+			
 			this.codCliente.setValue(procesoParametro.getCodCliente());
 			this.nomCliente.setValue(procesoParametro.getNomCliente());
 			this.moneda.setValue(procesoParametro.getSimboloMoneda());
 			this.codProceso.setValue(String.valueOf(procesoParametro.getCodigo()));
-			this.descripcion.setValue(procesoParametro.getDescripcion());
+			this.comentario.setValue(procesoParametro.getObservaciones());
 			this.documento.setValue(procesoParametro.getNomDocum());
 			this.carpeta.setValue(procesoParametro.getCarpeta());
 			this.codRubro.setValue(procesoParametro.getCodRubro());
 			this.nomRubro.setValue(procesoParametro.getNomRubro());
 			this.codCuenta.setValue(procesoParametro.getCodCuenta());
 			this.nomCuenta.setValue(procesoParametro.getNomCuenta());
+			
 			impMo.setConverter(Double.class);
 			this.impMo.setConvertedValue((procesoParametro.getImpMo()));
+			
+			
 		}
 		else{
 			
@@ -320,6 +344,8 @@ public class IngresoCobroProcesoViewExtended extends IngresoCobroProcesoView imp
 		this.operacion = Variables.OPERACION_NUEVO;
 		/*Chequeamos si tiene permiso de editar*/
 		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_COBRO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		
+	
 		
 		this.codCliente.setValue(procesoParametro.getCodCliente());
 		this.nomCliente.setValue(procesoParametro.getNomCliente());
@@ -553,6 +579,8 @@ public class IngresoCobroProcesoViewExtended extends IngresoCobroProcesoView imp
 			this.nomRubro.setValue(rubroCuenta.getDescripcionRubro());
 			this.codCuenta.setValue(rubroCuenta.getCod_cuenta());
 			this.nomCuenta.setValue(rubroCuenta.getDescripcionCuenta());
+			this.codImpuesto = rubroCuenta.getCod_impuesto();
+			
 			
 		}
 		

@@ -10,9 +10,8 @@ import com.valueObject.cliente.ClienteInfoVO;
 
 public class ProcesoVO extends AuditoriaVO{
 
-	//private ClienteInfoVO clieteInfoVO;
-	//private MonedaInfoVO monedaInfoVO;
 	private int codigo;
+	private int linea;
 	
 	private String codCliente;
 	private String nomCliente;
@@ -32,6 +31,9 @@ public class ProcesoVO extends AuditoriaVO{
 	private double impMo;
 	private double impMn;
 	private double impTr;
+	
+	private double impSubTot;
+	
 	private double tcMov;
 	private double kilos;
 	private Timestamp fecCruce;
@@ -44,6 +46,8 @@ public class ProcesoVO extends AuditoriaVO{
 	private String nomRubro;
 	private String codCuenta;
 	private String nomCuenta;
+	private String codImpuesto;
+	
 
 	
 	public ProcesoVO(){
@@ -53,7 +57,7 @@ public class ProcesoVO extends AuditoriaVO{
 	public ProcesoVO(String codCliente, String nomCliente, String codMoneda, String descMoneda, String simboloMoneda,
 			int codigo, Timestamp fecha, int nroMega, String codDocum, String nomDocum, Integer nroDocum, Timestamp fecDocum, String carpeta,
 			double impMo, double impMn, double impTr, double tcMov, double kilos, Timestamp fecCruce, String marca, String medio,
-			String descripcion, String observaciones) {
+			String descripcion, String observaciones, double impSubTot, String codImpuesto) {
 		super();
 		this.codCliente = codCliente;
 		this.nomCliente = nomCliente;
@@ -78,6 +82,8 @@ public class ProcesoVO extends AuditoriaVO{
 		this.medio = medio;
 		this.descripcion = descripcion;
 		this.observaciones = observaciones;
+		this.impSubTot = impSubTot;
+		this.codImpuesto = codImpuesto;
 	}
 	
 	public void copiar(ProcesoVO procesoVO){
@@ -113,6 +119,9 @@ public class ProcesoVO extends AuditoriaVO{
 		this.nomCuenta = procesoVO.getNomCuenta();
 		this.codRubro = procesoVO.getCodRubro();
 		this.nomRubro = procesoVO.getNomRubro();
+		this.impSubTot = procesoVO.impSubTot;
+		this.codImpuesto = procesoVO.codImpuesto; 
+		this.linea = procesoVO.linea;
 	}
 	
 	public IngresoCobroDetalleVO crearDocumDetalle(ProcesoVO procesoVO){
@@ -330,5 +339,31 @@ public class ProcesoVO extends AuditoriaVO{
 	public void setNomCuenta(String nomCuenta) {
 		this.nomCuenta = nomCuenta;
 	}
+
+	public double getImpSubTot() {
+		return impSubTot;
+	}
+
+	public void setImpSubTot(double impSubTot) {
+		this.impSubTot = impSubTot;
+	}
+
+	public String getCodImpuesto() {
+		return codImpuesto;
+	}
+
+	public void setCodImpuesto(String codImpuesto) {
+		this.codImpuesto = codImpuesto;
+	}
+
+	public int getLinea() {
+		return linea;
+	}
+
+	public void setLinea(int linea) {
+		this.linea = linea;
+	}
+	
+	
 	
 }

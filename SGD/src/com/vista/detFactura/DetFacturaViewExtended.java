@@ -147,7 +147,7 @@ public class DetFacturaViewExtended extends DetFacturaView implements IBusqueda{
 					gastoVO.setUsuarioMod(this.permisos.getUsuario());
 					gastoVO.setOperacion(operacion);
 					
-					if(comboSeleccion.getValue().equals("Proceso")){
+					//if(comboSeleccion.getValue().equals("Proceso")){
 						
 						gastoVO.setDescProceso(descProceso.getValue().trim());
 						
@@ -157,7 +157,7 @@ public class DetFacturaViewExtended extends DetFacturaView implements IBusqueda{
 						else{
 							gastoVO.setCodProceso("");
 						}
-					}
+					//}
 					
 					
 					gastoVO.setCodDocum("Detalle");

@@ -492,6 +492,7 @@ public class BusquedaViewExtended extends BusquedaView{
 			grid.removeColumn("medio");
 			grid.removeColumn("observaciones");
 			grid.removeColumn("descMoneda");
+			grid.removeColumn("codRubro");
 		
 			this.arreglarGrillaProceso();
 			this.filtroGrilla();
@@ -665,9 +666,14 @@ public class BusquedaViewExtended extends BusquedaView{
 	private void arreglarGrillaProceso(){
 		List<Column> lstColumn = grid.getColumns();
 		
-		lstColumn.get(0).setWidth(150);
-		lstColumn.get(0).setHeaderCaption("Número");
-		lstColumn.get(1).setWidth(300);
+		lstColumn.get(1).setWidth(100); /*Numero de proceso*/
+		lstColumn.get(2).setWidth(500); /*Descripcion*/
+		
+		lstColumn.get(0).setWidth(150); /*Este es Número... no lo mostramos*/
+		//lstColumn.get(0).setHeaderCaption("Número");
+		lstColumn.get(0).setHidden(true);
+		lstColumn.get(1).setWidth(100);
+		//lstColumn.get(2).setWidth(300);
 		lstColumn.get(2).setWidth(150);
 		//Modifica el formato de fecha en la grilla 
 		grid.getColumn("fecha").setConverter(new StringToDateConverter(){

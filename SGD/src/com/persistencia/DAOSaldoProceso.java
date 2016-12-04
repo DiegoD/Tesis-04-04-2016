@@ -79,10 +79,6 @@ public class DAOSaldoProceso implements IDAOSaldosProc {
     		
 			pstmt1 =  con.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
 			
-//			1 cod_proceso, 2 cod_doca, 3 serie_doca, 4 nro_doca, 
-//		    5 cod_emp, 6 cod_moneda, 7 cod_tit, 
-//			8 imp_tot_mn, 9 imp_tot_mo, 10 cuenta, 11 nro_trans, 12 fec_doc, 13 fec_valor
-			
 			
 			pstmt1.setString(1, detalle.getCodProceso());
 			pstmt1.setString(2, documento.getCodDocum());
@@ -211,7 +207,7 @@ public class DAOSaldoProceso implements IDAOSaldosProc {
 			ResultSet rs = pstmt1.executeQuery();
 			
 			if (rs.next ()) {
-				aux = (rs.getDouble("imp_tot_mn"));
+				aux = (rs.getDouble("imp_tot_mo"));
 			}
 			
 						

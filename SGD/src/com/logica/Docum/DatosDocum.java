@@ -75,7 +75,7 @@ public class DatosDocum extends Auditoria{
 		aux.setCodDocum(this.codDocum);
 		aux.setSerieDocum(this.serieDocum);
 		aux.setNroDocum(this.nroDocum);
-		aux.setCodEmp(this.codDocum);
+		aux.setCodEmp(this.codEmp);
 		
 		aux.setNomMoneda(this.moneda.getDescripcion());
 		aux.setCodMoneda(this.moneda.getCodMoneda());

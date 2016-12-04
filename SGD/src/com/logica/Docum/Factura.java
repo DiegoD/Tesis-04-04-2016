@@ -14,6 +14,8 @@ public class Factura extends DatosDocum{
 	private double impSubMo;
 	private double impSubMn;
 	
+	
+	
 	private ProcesoInfo procesoInfo;
 	
 	ArrayList<FacturaDetalle> detalle;
@@ -39,6 +41,7 @@ public class Factura extends DatosDocum{
 		this.impuTotMo = t.getImpuTotMo();
 		this.impSubMo = t.getImpSubMo();
 		this.impSubMn = t.getImpSubMn();
+		
 		
 		FacturaDetalle aux;
 		for (FacturaDetalleVO detVO : t.getDetalle()) {

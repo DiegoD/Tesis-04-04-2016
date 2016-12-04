@@ -571,33 +571,45 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		
 	    public void valueChange(ValueChangeEvent event) {
 	    	
-	    	 if("ProgramaticallyChanged".equals(tcMov.getData())){
-	    		 tcMov.setData(null);
-	             return;
-	         }
-	    	 
-	        String value = (String) event.getProperty().getValue();
-	        if(value != ""){
-	        	
-	        	try {
-	        		cotizacionVenta = (Double) tcMov.getConvertedValue();
-				} catch (Exception e) {
-					// TODO: handle exception
-					return;
-				}
-	        	
-	        	
-	        	Double truncatedDouble = new BigDecimal(cotizacionVenta)
-					    .setScale(2, BigDecimal.ROUND_HALF_UP)
-					    .doubleValue();
-				
-	        	cotizacionVenta = truncatedDouble;
-	        	
-	        	if(operacion != Variables.OPERACION_LECTURA){
-
-		        	calculos();
-		        }
-	        	
+	    	if(lstDetalleVO != null) {
+	    	
+		    	if(lstDetalleVO.size() == 0) /*Si no hay lineas dejo modificar TC*/
+		    	{
+			    	 if("ProgramaticallyChanged".equals(tcMov.getData())){
+			    		 tcMov.setData(null);
+			             return;
+			         }
+			    	 
+			        String value = (String) event.getProperty().getValue();
+			        if(value != ""){
+			        	
+			        	try {
+			        		cotizacionVenta = (Double) tcMov.getConvertedValue();
+						} catch (Exception e) {
+							// TODO: handle exception
+							return;
+						}
+			        	
+			        	
+			        	Double truncatedDouble = new BigDecimal(cotizacionVenta)
+							    .setScale(2, BigDecimal.ROUND_HALF_UP)
+							    .doubleValue();
+						
+			        	cotizacionVenta = truncatedDouble;
+			        	
+			        	if(operacion != Variables.OPERACION_LECTURA){
+	
+				        	calculos();
+				        }
+			        	
+			    	}
+		    		
+		    	}else{
+		    		/*DIEGO ACA ES DONDE QUIERO PONER EL VALOR ANTERIOR*/
+		    		
+		    		Mensajes.mostrarMensajeWarning("No se puede cambiar TC si hay lineas ingresadas");
+		    	}
+	    	
 	    	}
 	    }
 	});
@@ -780,15 +792,17 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 				
 				/*Si hay detalle nuevo agregado
 				 * lo agregamos a la lista del formulario*/
+				/*
 				if(this.lstDetalleAgregar.size() > 0)
 				{
 					for (IngresoCobroDetalleVO f : this.lstDetalleAgregar) {
 						
-						/*Si no esta lo agregamos*/
+						//Si no esta lo agregamos
 						if(!this.existeFormularioenLista(f.getNroDocum()))
 							this.lstDetalleVO.add(f);
 					}
 				}
+			 	*/
 					
 				ingCobroVO.setCodCuenta("egrcobro");
 				ingCobroVO.setDetalle(this.lstDetalleVO);

@@ -101,7 +101,8 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	CotizacionVO cotizacion =  new CotizacionVO();
 	Double cotizacionVenta = null;
 	TitularVO titularVO = new TitularVO();
-	
+	Double tcAux; /*Varible utilizada para control, si hay lineas ingresadas, no deja cambiar TC
+	 				esta es variable auxiliar para tomar el tc anterior*/
 	
 	private Hashtable<Integer, GtoSaldoAux> saldoOriginalGastos; /*Variable auxliar para poder
 	 															 controlar que el saldo del gasto quede
@@ -437,34 +438,50 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		
 	    public void valueChange(ValueChangeEvent event) {
 	    	
-	    	 if("ProgramaticallyChanged".equals(tcMov.getData())){
-	    		 tcMov.setData(null);
-	             return;
-	         }
-	    	 
-	        String value = (String) event.getProperty().getValue();
-	        if(value != ""){
-	        	
-	        	try {
-	        		cotizacionVenta = (Double) tcMov.getConvertedValue();
-				} catch (Exception e) {
-					// TODO: handle exception
-					return;
-				}
-	        	
-	        	
-	        	Double truncatedDouble = new BigDecimal(cotizacionVenta)
-					    .setScale(2, BigDecimal.ROUND_HALF_UP)
-					    .doubleValue();
-				
-	        	cotizacionVenta = truncatedDouble;
-	        	
-	        	if(operacion != Variables.OPERACION_LECTURA){
+	    	if(lstDetalleVO != null ){
+	    		
+		    	if(lstDetalleVO.size() == 0)  /*Si no hay lineas dejo modificar TC*/
+		    	{
+		    		
+		    		if("ProgramaticallyChanged".equals(tcMov.getData())){
+			    		 tcMov.setData(null);
+			             return;
+			         }
+			    	 
+			        String value = (String) event.getProperty().getValue();
+			        if(value != ""){
+			        	
+			        	try {
+			        		cotizacionVenta = (Double) tcMov.getConvertedValue();
+						} catch (Exception e) {
+							// TODO: handle exception
+							return;
+						}
+			        	
+			        	
+			        	Double truncatedDouble = new BigDecimal(cotizacionVenta)
+							    .setScale(2, BigDecimal.ROUND_HALF_UP)
+							    .doubleValue();
+						
+			        	cotizacionVenta = truncatedDouble;
+			        	
+			        	if(operacion != Variables.OPERACION_LECTURA){
 
-		        	calculos();
-		        }
-	        	
+				        	calculos();
+				        }
+			        	
+			    	}
+		    	}else{
+		    		/*DIEGO ACA ES DONDE QUIERO PONER EL VALOR ANTERIOR*/
+		    		
+		    		Mensajes.mostrarMensajeWarning("No se puede cambiar TC si hay lineas ingresadas");
+		    	}
+	    		
 	    	}
+	    	
+
+	    	
+	    	
 	    }
 	});
 	
@@ -517,13 +534,10 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 						
 						auxMoneda = (MonedaVO) this.comboMoneda.getValue();
 						
-						/*SI EL TIPO ES CAJA TOMAMOS LA MONEDA DEL CABEZAL DEL COBRO*/
-						//if(((String)comboTipo.getValue()).equals("Caja")) { 
+						factVO.setCodMoneda(auxMoneda.getCodMoneda());
+						factVO.setNomMoneda(auxMoneda.getDescripcion());
+						factVO.setSimboloMoneda(auxMoneda.getSimbolo());
 						
-							factVO.setCodMoneda(auxMoneda.getCodMoneda());
-							factVO.setNomMoneda(auxMoneda.getDescripcion());
-							factVO.setSimboloMoneda(auxMoneda.getSimbolo());
-						//}
 					}
 					
 					
@@ -550,13 +564,15 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 				
 				factVO.setCodProceso(Integer.valueOf(this.codProceso.getValue()));
 				
-				factVO.setImpSubMn(Double.valueOf(this.impSubMn.getValue()));
-				factVO.setImpSubMo(Double.valueOf(this.impSubMo.getValue()));
-				factVO.setImpTotMn(Double.valueOf(this.impTotMn.getValue()));
+			
 				
-				factVO.setImpTotMo(Double.valueOf(this.impTotMo.getValue()));
-				factVO.setImpuTotMn(Double.valueOf(this.impuTotMn.getValue()));
-				factVO.setImpuTotMo(Double.valueOf(this.impuTotMo.getValue()));
+				factVO.setImpSubMn((Double) impSubMn.getConvertedValue());
+				factVO.setImpSubMo((Double) impSubMo.getConvertedValue());
+				factVO.setImpTotMn((Double) impTotMn.getConvertedValue());
+				
+				factVO.setImpTotMo((Double) impTotMo.getConvertedValue());
+				factVO.setImpuTotMn((Double) impuTotMn.getConvertedValue());
+				factVO.setImpuTotMo((Double) impuTotMo.getConvertedValue());
 				
 				factVO.setNroDocum(Integer.valueOf(this.nroDocum.getValue()));
 				factVO.setSerieDocum(this.serieDocum.getValue().trim());
@@ -593,15 +609,17 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 				
 				/*Si hay detalle nuevo agregado
 				 * lo agregamos a la lista */
+				/*
 				if(this.lstDetalleAgregar.size() > 0)
 				{
 					for (FacturaDetalleVO f : this.lstDetalleAgregar) {
 						
-						/*Si no esta lo agregamos*/
+						//Si no esta lo agregamos
 						if(!this.existeFormularioenLista(f.getNroDocum()))
 							this.lstDetalleVO.add(f);
 					}
 				}
+			 	*/
 					
 				factVO.setCodCuenta("factura");
 				factVO.setDetalle(this.lstDetalleVO);
@@ -615,7 +633,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 				
 				if(this.operacion.equals(Variables.OPERACION_NUEVO))	
 				{	
-					this.controlador.insertarFactura(factVO, permisoAux);
+					this.controlador.insertarFactura(factVO, permisoAux, true);
 					
 					this.mainView.actulaizarGrilla(factVO);
 					
@@ -629,7 +647,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 					
 					
 					/*VER DE IMPLEMENTAR PARA EDITAR BORRO TODO E INSERTO NUEVAMENTE*/
-					this.controlador.modificarFactura(factVO,ingresoCopia, permisoAux);
+					this.controlador.modificarFactura(factVO,ingresoCopia, permisoAux, false);
 					
 					this.mainView.actulaizarGrilla(factVO);
 					
@@ -802,6 +820,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 														
 							/*Quitamos el formulario seleccionado de la lista*/
 							lstDetalleVO.remove(lstDetalleVO.get(i));
+							//this.lstDetalleAgregar.remove(lstDetalleAgregar.get(i)); /*ver esosss*/
 							lstDetalleQuitar.add(lineaSelecccionada);
 							esta = true;
 						}
@@ -1910,8 +1929,8 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 			impuTotMO += det.getImpImpuMo();
 			impuTotMN += det.getImpImpuMn();
 			
-			impSubMO = det.getImpSubMo();
-			impSubMN = det.getImpSubMn();
+			impSubMO += det.getImpSubMo();
+			impSubMN += det.getImpSubMn();
 			
 		}
 		Double truncatedImpTotMo = new BigDecimal(impMo).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
@@ -2230,12 +2249,13 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	@Override
 	public void setInfoLst(ArrayList<Object> lstDatos) {
 		
-		int j = 0;
+		int j= 0;
 		boolean salir = false;
 		MonedaVO monedaVO;
 		FacturaDetalleVO f;
 		for (Object obj : lstDatos) {
-			
+			j = 0;
+			salir = false;
 			
 			f = new FacturaDetalleVO();
 			f.copiar((DocumDetalleVO)obj);
@@ -2249,7 +2269,9 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 					if(f.getCodMoneda().equals(monedaVO.getCodMoneda())){
 						salir = true;
 						
-						if(monedaVO.getCotizacion() != 0){
+						double tcAux = (Double)tcMov.getConvertedValue();
+						
+						if(tcAux != 0){
 							this.lstDetalleVO.add(f);
 							this.lstDetalleAgregar.add(f);
 							
@@ -2324,152 +2346,15 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		// TODO Auto-generated method stub
 		try {
 			
-			/*Seteamos validaciones en nuevo, cuando es editar
-			 * solamente cuando apreta el boton editar*/
-			this.setearValidaciones(true);
+			/*Inicializamos VO de permisos para el usuario, formulario y operacion
+			 * para confirmar los permisos del usuario*/
+			UsuarioPermisosVO permisoAux = 
+					new UsuarioPermisosVO(this.permisos.getCodEmp(),
+							this.permisos.getUsuario(),
+							VariablesPermisos.FORMULARIO_FACTURA,
+							VariablesPermisos.OPERACION_BORRAR);	
 			
-			/*Validamos los campos antes de invocar al controlador*/
-			if(this.fieldsValidos())
-			{
-				/*Inicializamos VO de permisos para el usuario, formulario y operacion
-				 * para confirmar los permisos del usuario*/
-				UsuarioPermisosVO permisoAux = 
-						new UsuarioPermisosVO(this.permisos.getCodEmp(),
-								this.permisos.getUsuario(),
-								VariablesPermisos.FORMULARIO_FACTURA,
-								VariablesPermisos.OPERACION_NUEVO_EDITAR);				
-				
-				
-				int comp = Double.compare(importeTotalCalculado, (Double)impTotMo.getConvertedValue());
-				
-				if(comp != 0){
-					Mensajes.mostrarMensajeError("El importe total es diferente a la suma del detalle");
-					return;
-				}
-				
-				FacturaVO factVO = new FacturaVO();	
-				
-				factVO.setImpTotMo((Double) impTotMo.getConvertedValue());
-				
-				/*Obtenemos la cotizacion y calculamos el importe MN*/
-				Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
-				CotizacionVO coti = null;
-				
-				
-				try {
-					
-					/////////////////////////////MONEDA//////////////////////////////////////////////////
-					
-					MonedaVO auxMoneda = null;
-					
-					//Obtenemos la moneda del cabezal
-					auxMoneda = new MonedaVO();
-					if(this.comboMoneda.getValue() != null){
-						
-						auxMoneda = (MonedaVO) this.comboMoneda.getValue();
-						
-						/*SI EL TIPO ES CAJA TOMAMOS LA MONEDA DEL CABEZAL DEL COBRO*/
-						//if(((String)comboTipo.getValue()).equals("Caja")) { 
-						
-							factVO.setCodMoneda(auxMoneda.getCodMoneda());
-							factVO.setNomMoneda(auxMoneda.getDescripcion());
-							factVO.setSimboloMoneda(auxMoneda.getSimbolo());
-						//}
-					}
-					
-					
-					/////////////////////////////FIN MONEDA////////////////////////////////////////////
-					
-					/*Si la moneda del cabezal es nacional*/
-					if(auxMoneda.isNacional()) /*Si la moneda del cabezal del cobro seleccionada es nacional*/
-					{
-						/*Si la moneda es la nacional, el TC es 1 y el importe MN es el mismo*/
-						factVO.setTcMov(1);
-						factVO.setImpTotMn(factVO.getImpTotMo());
-						
-					}else
-					{
-						coti = this.controlador.getCotizacion(permisoAux, fecha, this.getCodMonedaSeleccionada());
-						factVO.setTcMov(coti.getCotizacionVenta());
-						factVO.setImpTotMn((factVO.getImpTotMo()*factVO.getTcMov()));
-					}
-					
-				} catch (Exception e) {
-					Mensajes.mostrarMensajeError(e.getMessage());
-				}
-				
-				factVO.setFecDoc(new java.sql.Timestamp(fecDoc.getValue().getTime()));
-				factVO.setFecValor(new java.sql.Timestamp(fecValor.getValue().getTime()));
-				/*Codigo y serie docum se inicializan en constructor*/
-				//ingCobroVO.setNroDocum(Integer.parseInt(nroDocum.getValue()));  VER ESTO CON EL NUMERADOR
-				factVO.setCodEmp(permisos.getCodEmp());
-				factVO.setReferencia(referencia.getValue());
-				
-				factVO.setCodCtaInd("fact");
-				
-				
-				factVO.setCodTitular(codTitular.getValue());
-				factVO.setNomTitular(nomTitular.getValue());
-				
-				factVO.setOperacion(operacion);
-				
-				/*Ver los totales y tc*/
-				//ingCobroVO.setImpTotMn(impTotMn);
-				//ingCobroVO.setImpTotMo(impTotMn);
-				//ingCobroVO.setTcMov(tcMov);
-				
-				/*Si es nuevo aun no tenemos el nro del cobro*/
-				if(this.nroDocum.getValue() != null)
-					factVO.setNroDocum(Integer.parseInt(this.nroDocum.getValue().toString().trim()));
-				
-				
-			
-				
-				factVO.setUsuarioMod(this.permisos.getUsuario());
-				
-				if(this.operacion != Variables.OPERACION_NUEVO){
-					factVO.setNroTrans((long)this.nroTrans.getConvertedValue());
-				}
-				else{
-					factVO.setNroTrans(0);
-				}
-				
-				
-				/*Si hay detalle nuevo agregado
-				 * lo agregamos a la lista del formulario*/
-				if(this.lstDetalleAgregar.size() > 0)
-				{
-					for (FacturaDetalleVO f : this.lstDetalleAgregar) {
-						
-						/*Si no esta lo agregamos*/
-						if(!this.existeFormularioenLista(f.getNroDocum()))
-							this.lstDetalleVO.add(f);
-					}
-				}
-					
-				factVO.setCodCuenta("factura");
-				factVO.setDetalle(this.lstDetalleVO);
-				
-				if(factVO.getDetalle().size() <= 0){
-					Mensajes.mostrarMensajeError("La factura no tiene detalle");
-					return;
-				}
-				
-				
-				factVO.setCodDocum("factura");
-				
-				this.controlador.eliminarFactura(factVO, permisoAux);
-				
-				this.mainView.actulaizarGrilla(factVO);
-				Mensajes.mostrarMensajeOK("Se ha eliminado la factura");
-				UI.getCurrent().removeWindow(sub);
-				this.mainView.cerrarVentana();
-			}
-					
-			else /*Si los campos no son válidos mostramos warning*/
-			{
-				Mensajes.mostrarMensajeWarning(Variables.WARNING_CAMPOS_NO_VALIDOS);
-			}
+			this.controlador.eliminarFactura(fieldGroup.getItemDataSource().getBean(), permisoAux);
 				
 			} catch (NoExisteFacturaException |ExisteFacturaException | InicializandoException| ConexionException | NoTienePermisosException| ObteniendoPermisosException | EliminandoFacturaException e) {
 				
@@ -2486,12 +2371,24 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		sub = new MySub("93%", "64%" );
 		sub.setModal(true);
 		sub.setVista(form);
-		//sub.setWidth("50%");
-		//sub.setHeight("50%");
+
 		sub.center();
 		
 		String codCliente;/*Codigo del cliente para obtener los gastos a cobrar del mismo*/
 		int codProceso;
+		String codMoneda = null;
+		
+		/*Obtenemos moneda*/
+		MonedaVO auxMoneda = null;
+		
+		//Obtenemos la moneda del cabezal
+		auxMoneda = new MonedaVO();
+		if(this.comboMoneda.getValue() != null){
+			
+			auxMoneda = (MonedaVO) this.comboMoneda.getValue();
+			
+			codMoneda = auxMoneda.getCodMoneda(); 
+		}
 		
 		/*Obtenemos los formularios que no estan en el grupo
 		 * para mostrarlos en la grilla para seleccionar*/
@@ -2507,6 +2404,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 			/*Si es operacion Editar tomamos el codGrupo de el fieldGroup*/
 			codCliente = fieldGroup.getItemDataSource().getBean().getCodTitular();
 			codProceso = fieldGroup.getItemDataSource().getBean().getCodProceso();
+			
 		}
 		
 		/*Inicializamos VO de permisos para el usuario, formulario y operacion
@@ -2518,14 +2416,10 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 						VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
 
-		//Moneda
-		MonedaVO auxMoneda = new MonedaVO();
-		if(this.comboMoneda.getValue() != null){
-			auxMoneda = (MonedaVO) this.comboMoneda.getValue();
-		}
+
 		
 		/*Obtenemos los gastos con saldo del cliente*/
-		ArrayList<GastoVO> lstGastosConSaldo = this.controlador.getGastosConSaldo(permisoAux, codCliente, codProceso);
+		ArrayList<GastoVO> lstGastosConSaldo = this.controlador.getGastosConSaldo(permisoAux, codCliente, codProceso, codMoneda);
 		
 		/*Hacemos una lista auxliar para pasarselo al BusquedaViewExtended*/
 		ArrayList<Object> lst = new ArrayList<Object>();
