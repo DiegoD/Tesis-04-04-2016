@@ -25,6 +25,9 @@ import com.excepciones.IngresoCobros.ExisteIngresoCobroException;
 import com.excepciones.IngresoCobros.InsertandoIngresoCobroException;
 import com.excepciones.IngresoCobros.ModificandoIngresoCobroException;
 import com.excepciones.IngresoCobros.NoExisteIngresoCobroException;
+import com.excepciones.SaldoCuentas.EliminandoSaldoCuetaException;
+import com.excepciones.Saldos.ExisteSaldoException;
+import com.excepciones.Saldos.ModificandoSaldoException;
 import com.excepciones.Titulares.ObteniendoTitularesException;
 import com.excepciones.clientes.ObteniendoClientesException;
 import com.logica.Fachada;
@@ -56,27 +59,17 @@ public class DepositoControlador {
 			throw new NoTienePermisosException();
 	}
 	
-	/**
-	 * Inserta un nuevo deposito
-	 * @throws NoTienePermisosException 
-	 * @throws ObteniendoPermisosException 
-	 */
-	public void insertarDeposito(DepositoVO depositoVO, UsuarioPermisosVO permisos) throws InsertandoDepositoException, ExisteDepositoException, InicializandoException, ConexionException, ErrorInesperadoException, ObteniendoPermisosException, NoTienePermisosException
-	{
-		/*Primero se verifican los permisos*/
-		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			FachadaDD.getInstance().insertarDeposito(depositoVO, permisos.getCodEmp());
-		else
-			throw new NoTienePermisosException();
-	}
 	
 	/**
 	 * Elimina un deposito 
 	 * @throws NoExisteDepositoException 
 	 * @throws ModificandoDepositoException 
 	 * @throws EliminandoDepositoException 
+	 * @throws ExisteSaldoException 
+	 * @throws ModificandoSaldoException 
+	 * @throws EliminandoSaldoCuetaException 
 	 */
-	public void eliminarDeposito(DepositoVO depositoVO, UsuarioPermisosVO permisos) throws InsertandoDepositoException, ConexionException, ExisteDepositoException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, NoExisteDepositoException, EliminandoDepositoException 
+	public void eliminarDeposito(DepositoVO depositoVO, UsuarioPermisosVO permisos) throws InsertandoDepositoException, ConexionException, ExisteDepositoException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, NoExisteDepositoException, EliminandoDepositoException, EliminandoSaldoCuetaException, ModificandoSaldoException, ExisteSaldoException 
 	{
 		
 		/*Primero se verifican los permisos*/
@@ -131,20 +124,20 @@ public class DepositoControlador {
 			throw new NoTienePermisosException();
 	}
 	
-	public ArrayList<DepositoDetalleVO> getChequesBanco(UsuarioPermisosVO permisos, String codBco, String codCtaBco) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoChequeException, ObteniendoCuentasBcoException, ObteniendoBancosException {
+	public ArrayList<DepositoDetalleVO> getChequesBanco(UsuarioPermisosVO permisos, String codMoneda) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoChequeException, ObteniendoCuentasBcoException, ObteniendoBancosException {
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			return FachadaDD.getInstance().getChequesBanco(permisos.getCodEmp(), codBco, codCtaBco);
+			return FachadaDD.getInstance().getChequesBanco(permisos.getCodEmp(), codMoneda);
 		else
 			throw new NoTienePermisosException();
 	}
 	
-	public void depositarCheques(UsuarioPermisosVO permisos, DepositoVO cheques) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoChequeException, ObteniendoCuentasBcoException, ObteniendoBancosException, InsertandoDepositoException, ExisteDepositoException {
+	public Integer depositarCheques(UsuarioPermisosVO permisos, DepositoVO cheques) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoChequeException, ObteniendoCuentasBcoException, ObteniendoBancosException, InsertandoDepositoException, ExisteDepositoException {
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			FachadaDD.getInstance().insertarDeposito(cheques, permisos.getCodEmp());
+			return FachadaDD.getInstance().insertarDeposito(cheques, permisos.getCodEmp());
 		else
 			throw new NoTienePermisosException();
 	}

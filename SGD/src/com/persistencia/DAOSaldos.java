@@ -258,13 +258,43 @@ public class DAOSaldos implements IDAOSaldos{
 			
 			return aux;
 		
-		}catch(SQLException e){
+		}
+		catch(SQLException e){
 		
-		throw new ExisteSaldoException();
-	}
-		
+			throw new ExisteSaldoException();
+		}
 		
 	}
 	
+	public void modificarSaldoImporte(DatosDocum documento, Connection con)
+			throws ModificandoSaldoException, ConexionException, ExisteSaldoException {
+		
+		try {
+			
+			ConsultasDD consultas = new ConsultasDD ();
+			String query = consultas.updateSaldoImporte();
+			
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			/*Verificamos si existe el documento en la tabla de saldos
+			 * si existe eliminamos e insertamos con la nueva info*/
+			if(this.memberSaldo((DatosDocum)documento, con))
+			{
+				pstmt1.setDouble(1, documento.getImpTotMn());
+				pstmt1.setDouble(2, documento.getImpTotMo());
+				pstmt1.setString(3, documento.getCodDocum());
+				pstmt1.setString(4, documento.getSerieDocum());
+				pstmt1.setInt(5, documento.getNroDocum());
+				pstmt1.setString(6, documento.getCodEmp());
+				
+				pstmt1.executeUpdate ();
+				pstmt1.close();
+			}
+		} 
+		
+		catch (SQLException e) {
+			
+			throw new ModificandoSaldoException();
+		}
+	}
 
 }

@@ -39,6 +39,8 @@ public class DepositoDetalleVO {
 	private String nomBanco;
 	private long nroTrans;
 	
+	private int linea;
+	
 	public DepositoDetalleVO(){
 		
 	}
@@ -227,4 +229,13 @@ public class DepositoDetalleVO {
 		this.nroTrans = nroTrans;
 	}
 
+	public int getLinea() {
+		return linea;
+	}
+
+	public void setLinea(int linea) {
+		this.linea = linea;
+	}
+
+	
 }

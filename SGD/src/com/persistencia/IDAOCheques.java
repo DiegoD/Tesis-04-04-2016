@@ -31,6 +31,6 @@ public interface IDAOCheques {
 	public void modificarCheque(Cheque cheque, int signo, double tc   , Connection con)
 			throws ModificandoChequeException, ConexionException, EliminandoChequeException, InsertandoChequeException, ExisteChequeException, NoExisteChequeException;
 	
-	public ArrayList<DepositoDetalle> getChequesBanco(Connection con, String codEmp, String codBanco, String codCtaBco) throws ObteniendoChequeException, ConexionException, ObteniendoCuentasBcoException, ObteniendoBancosException;
+	public ArrayList<DepositoDetalle> getChequesBanco(Connection con, String codEmp, String codMoneda) throws ObteniendoChequeException, ConexionException, ObteniendoCuentasBcoException, ObteniendoBancosException;
 	
 }

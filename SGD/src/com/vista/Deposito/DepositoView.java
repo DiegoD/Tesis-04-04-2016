@@ -7,6 +7,7 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.declarative.Design;
@@ -25,20 +26,24 @@ import com.vaadin.ui.declarative.Design;
 public class DepositoView extends FormLayout {
 	protected ComboBox comboResponsable;
 	protected Label lblComprobante;
-	protected TextField comprobante;
+	protected TextField nroDocum;
 	protected DateField fecDoc;
 	protected Label lblFechaValor;
 	protected DateField fecValor;
+	protected TextField nroTrans;
 	protected ComboBox comboBancos;
 	protected Label lblCuentaBanco;
 	protected ComboBox comboCuentas;
 	protected TextField monedaBanco;
 	protected TextField cuentaBanco;
-	protected TextField importeMo;
+	protected TextField impTotMo;
 	protected TextField observaciones;
 	protected Grid gridCheques;
+	protected HorizontalLayout botones;
 	protected Button depositar;
+	protected Button btnEditar;
 	protected Button cancelar;
+	protected Button btnEliminar;
 
 	public DepositoView() {
 		Design.read(this);

@@ -86,6 +86,8 @@ import com.excepciones.Rubros.InsertandoRubroException;
 import com.excepciones.Rubros.ModificandoRubroException;
 import com.excepciones.Rubros.NoExisteRubroException;
 import com.excepciones.Rubros.ObteniendoRubrosException;
+import com.excepciones.SaldoCuentas.EliminandoSaldoCuetaException;
+import com.excepciones.SaldoCuentas.InsertandoSaldoCuentaException;
 import com.excepciones.Saldos.EliminandoSaldoException;
 import com.excepciones.Saldos.ExisteSaldoException;
 import com.excepciones.Saldos.IngresandoSaldoException;
@@ -106,8 +108,10 @@ import com.logica.Depositos.Deposito;
 import com.logica.Depositos.DepositoDetalle;
 import com.logica.DocLog.DocLog;
 import com.logica.Docum.ConvertirDocumento;
+import com.logica.Docum.DatosDocum;
 import com.logica.Docum.DocumDetalle;
 import com.logica.Docum.DocumSaldo;
+import com.logica.Docum.TitularInfo;
 import com.logica.IngresoCobro.IngresoCobro;
 import com.logica.Periodo.Periodo;
 import com.valueObject.*;
@@ -158,6 +162,7 @@ public class FachadaDD {
 	private IDAOPeriodo periodo;
 	private IDAOCheques cheques;
 	private IDAODepositos depositos;
+	private IDAOSaldosCuentas saldosCuentas;
 	
 	
     private FachadaDD() throws InstantiationException, IllegalAccessException, ClassNotFoundException, FileNotFoundException, IOException
@@ -188,6 +193,7 @@ public class FachadaDD {
         this.periodo = fabricaConcreta.crearDAOPeriodo();
         this.cheques = fabricaConcreta.crearDAOCheques();
         this.depositos = fabricaConcreta.crearDAODeposito();
+        this.saldosCuentas = fabricaConcreta.crearDAOSaldosCuenta();
     }
     
     public static FachadaDD getInstance() throws InicializandoException {
@@ -3898,7 +3904,7 @@ public class FachadaDD {
 	 * @throws ObteniendoCuentasBcoException 
 	*/
 	@SuppressWarnings("unchecked")
-	public ArrayList<DepositoDetalleVO> getChequesBanco(String codEmp, String codBco, String codCtaBco) throws ObteniendoChequeException, ConexionException, ObteniendoCuentasBcoException, ObteniendoBancosException
+	public ArrayList<DepositoDetalleVO> getChequesBanco(String codEmp, String codMoneda) throws ObteniendoChequeException, ConexionException, ObteniendoCuentasBcoException, ObteniendoBancosException
 	{
 
 		Connection con = null;
@@ -3908,7 +3914,7 @@ public class FachadaDD {
 		try 	
 		{
 			con = this.pool.obtenerConeccion();
-			lstDepositos = this.cheques.getChequesBanco(con, codEmp, codBco, codCtaBco);
+			lstDepositos = this.cheques.getChequesBanco(con, codEmp, codMoneda);
 			
 			DepositoDetalleVO aux;
 			
@@ -3932,11 +3938,6 @@ public class FachadaDD {
 
 		return lstDepositosVO;
 
-	}
-	
-	public void depositarCheques(String codEmp, DepositoVO cheques){
-		
-		
 	}
 	
 	@SuppressWarnings("unchecked") 
@@ -3977,7 +3978,7 @@ public class FachadaDD {
 		return lstVO;
 	}	 
 	
-	public void insertarDeposito(DepositoVO depVO, String codEmp) throws InsertandoDepositoException, ConexionException, ExisteDepositoException{
+	public Integer insertarDeposito(DepositoVO depVO, String codEmp) throws InsertandoDepositoException, ConexionException, ExisteDepositoException{
 
 		Connection con = null;
 		boolean existe = false;
@@ -3991,14 +3992,84 @@ public class FachadaDD {
 			con.setAutoCommit(false);
 			
 			Deposito deposito = new Deposito();
-			
+			DatosDocum datos;
+			DocumSaldo documSaldo;
+			TitularInfo tit;
 			deposito = deposito.convierteDeposito(depVO);
 
+			//Obtengo numerador de la transacción
+			codigo = numeradores.getNroTrans(con, "03"); //Transacción
+			deposito.setNroTrans(codigo);
 			
 			if(!this.depositos.memberDeposito(deposito.getNroTrans(), codEmp, con)){
 	    		
+				//Inerto el depósito
 	    		this.depositos.insertarDeposito(deposito, con, codEmp);
+	    		
+	    		
+	    		documSaldo = new DocumSaldo();
+				documSaldo.setCodBco(deposito.getBanco().getCodBanco());
+				documSaldo.setCodCtaBco(deposito.getCuentaBanco().getCodCuenta());
+				documSaldo.setMovimiento("Deposito");
+				documSaldo.setSigno(1);
+				documSaldo.setFecDoc(deposito.getFecDoc());
+				documSaldo.setFecValor(deposito.getFecValor());
+				documSaldo.setCodDocum(deposito.getCodDocum());
+				documSaldo.setSerieDocum(deposito.getSerieDocum());
+				documSaldo.setNroDocum(deposito.getNroDocum());
+				documSaldo.setCodEmp(codEmp);
+				documSaldo.setMoneda(deposito.getMoneda());
+				documSaldo.setReferencia(deposito.getObservaciones());
+				tit = new TitularInfo();
+				tit.setCodigo(String.valueOf(deposito.getFuncionario().getCodigo()));
+				tit.setNombre(deposito.getFuncionario().getNombre());
+				documSaldo.setTitInfo(tit);
+				documSaldo.setNroTrans(deposito.getNroTrans());
+				documSaldo.setImpTotMn(deposito.getImpTotMn());
+				documSaldo.setImpTotMo(deposito.getImpTotMo());
+				documSaldo.setTcMov(deposito.getTcMov());
+				documSaldo.setUsuarioMod(deposito.getUsuarioMod());
+				documSaldo.setOperacion(deposito.getOperacion());
+				documSaldo.setCodDocumRef(deposito.getCodDocum());
+				documSaldo.setSerieDocumRef(deposito.getSerieDocum());
+				documSaldo.setNroDocumRef(deposito.getNroDocum());
+				
+				//Muevo la cuenta del banco para el depósito 
+				saldosCuentas.insertarSaldoCuenta(documSaldo, con);
+	    		
+				
+	    		int linea = 1;
+				for (DepositoDetalle lin : deposito.getLstDetalle()) {
+					
+				
+					/*A cada linea le seteamos el nroTrans*/
+					lin.setNroTrans(deposito.getNroTrans());
+					
+					//Inserto el detalle del depósito
+					depositos.insertarDepositoDetalle(lin, linea, con, codEmp);
+					
+					datos = new DatosDocum();
+					datos.setCodDocum(lin.getCheque().getCodDocum());
+					datos.setSerieDocum(lin.getCheque().getSerieDocum());
+					datos.setNroDocum(lin.getCheque().getNroDocum());
+					datos.setCodEmp(codEmp);
+					datos.setMoneda(lin.getCheque().getMoneda());
+					datos.setImpTotMn(0);
+					datos.setImpTotMo(0);
+					tit = new TitularInfo();
+					tit.setCodigo(lin.getCheque().getTitInfo().getCodigo());
+					datos.setTitInfo(tit);	
+					datos.setCodEmp(codEmp);
+					
+					//Modifico los saldos de los cheques (dejo en cero)
+					this.saldos.modificarSaldoImporte(datos, con);
+					
+					
+					linea++;
+				}
+				
 	    		con.commit();
+	    		
 	    	}
 	    	else{
 	    		existe = true;
@@ -4024,6 +4095,7 @@ public class FachadaDD {
     	if (existe){
     		throw new ExisteDepositoException();
     	}
+		return codigo;
 	}
 	
 	public void modificarDeposito(DepositoVO depositoVO, String codEmp) throws  ConexionException, ModificandoDepositoException, ExisteDepositoException, NoExisteDepositoException, ModificandoIngresoCobroException, InsertandoDepositoException, EliminandoDepositoException{
@@ -4036,7 +4108,7 @@ public class FachadaDD {
 			con.setAutoCommit(false);
 			
 			Deposito deposito = new Deposito();
-			deposito.convierteDeposito(depositoVO);
+			deposito = deposito.convierteDeposito(depositoVO);
 			
 			/*Verificamos que exista el nro de cobro*/
 			if(this.depositos.memberDeposito(deposito.getNroTrans(), codEmp, con)){
@@ -4067,7 +4139,7 @@ public class FachadaDD {
 		}
 	}
 	
-	public void eliminarDeposito(DepositoVO depositoVO, String codEmp) throws  ConexionException, EliminandoDepositoException, ExisteDepositoException, NoExisteDepositoException, InsertandoDepositoException{
+	public void eliminarDeposito(DepositoVO depositoVO, String codEmp) throws  ConexionException, EliminandoDepositoException, ExisteDepositoException, NoExisteDepositoException, InsertandoDepositoException, EliminandoSaldoCuetaException, ModificandoSaldoException, ExisteSaldoException{
 
 		Connection con = null;
 		
@@ -4077,13 +4149,74 @@ public class FachadaDD {
 			con.setAutoCommit(false);
 			
 			Deposito deposito = new Deposito();
-			deposito.convierteDeposito(depositoVO);
+			DatosDocum datos;
+			DocumSaldo documSaldo;
+			TitularInfo tit;
+			
+			deposito = deposito.convierteDeposito(depositoVO);
 			
 			/*Verificamos que exista el nro de cobro*/
 			if(this.depositos.memberDeposito(deposito.getNroTrans(), codEmp, con)){
 				
+				documSaldo = new DocumSaldo();
+				documSaldo.setCodBco(deposito.getBanco().getCodBanco());
+				documSaldo.setCodCtaBco(deposito.getCuentaBanco().getCodCuenta());
+				documSaldo.setMovimiento("Deposito");
+				documSaldo.setSigno(1);
+				documSaldo.setFecDoc(deposito.getFecDoc());
+				documSaldo.setFecValor(deposito.getFecValor());
+				documSaldo.setCodDocum(deposito.getCodDocum());
+				documSaldo.setSerieDocum(deposito.getSerieDocum());
+				documSaldo.setNroDocum(deposito.getNroDocum());
+				documSaldo.setCodEmp(codEmp);
+				documSaldo.setMoneda(deposito.getMoneda());
+				documSaldo.setReferencia(deposito.getObservaciones());
+				tit = new TitularInfo();
+				tit.setCodigo(String.valueOf(deposito.getFuncionario().getCodigo()));
+				tit.setNombre(deposito.getFuncionario().getNombre());
+				documSaldo.setTitInfo(tit);
+				documSaldo.setNroTrans(deposito.getNroTrans());
+				documSaldo.setImpTotMn(deposito.getImpTotMn());
+				documSaldo.setImpTotMo(deposito.getImpTotMo());
+				documSaldo.setTcMov(deposito.getTcMov());
+				documSaldo.setUsuarioMod(deposito.getUsuarioMod());
+				documSaldo.setOperacion(deposito.getOperacion());
+				documSaldo.setCodDocumRef(deposito.getCodDocum());
+				documSaldo.setSerieDocumRef(deposito.getSerieDocum());
+				documSaldo.setNroDocumRef(deposito.getNroDocum());
+				
+				//Muevo la cuenta del banco para el depósito 
+				saldosCuentas.eliminarSaldoCuenta(documSaldo, con);
+	    		
 				this.depositos.eliminarDeposito(deposito, con, codEmp);
-				con.commit();
+				
+				for (DepositoDetalle lin : deposito.getLstDetalle()) {
+					
+				
+					/*A cada linea le seteamos el nroTrans*/
+					lin.setNroTrans(deposito.getNroTrans());
+					
+					//Inserto el detalle del depósito
+					depositos.eliminarDepositoDetalle(deposito, con, codEmp);
+					
+					datos = new DatosDocum();
+					datos.setCodDocum(lin.getCheque().getCodDocum());
+					datos.setSerieDocum(lin.getCheque().getSerieDocum());
+					datos.setNroDocum(lin.getCheque().getNroDocum());
+					datos.setCodEmp(codEmp);
+					datos.setMoneda(lin.getCheque().getMoneda());
+					datos.setImpTotMn(lin.getCheque().getImpTotMn());
+					datos.setImpTotMo(lin.getCheque().getImpTotMo());
+					tit = new TitularInfo();
+					tit.setCodigo(lin.getCheque().getTitInfo().getCodigo());
+					datos.setTitInfo(tit);	
+					datos.setCodEmp(codEmp);
+					
+					//Modifico los saldos de los cheques (dejo en cero)
+					this.saldos.modificarSaldoImporte(datos, con);
+				}
+				
+	    		con.commit();
 			}
 				
 				
@@ -4118,6 +4251,19 @@ public class FachadaDD {
 			if(!this.depositos.memberDeposito(dep.getNroTrans(), codEmp, con)){
 	    		
 	    		this.depositos.insertarDeposito(dep, con, codEmp);
+	    		
+	    		int linea = 1;
+				for (DepositoDetalle lin : dep.getLstDetalle()) {
+					
+				
+					/*A cada linea le seteamos el nroTrans*/
+					lin.setNroTrans(dep.getNroTrans());
+					
+					//Inserto el detalle del depósito
+					depositos.insertarDepositoDetalle(lin, linea, con, codEmp);
+					
+					linea++;
+				}
 	    	}
 	    	else{
 	    		existe = true;
@@ -4142,6 +4288,17 @@ public class FachadaDD {
 			if(this.depositos.memberDeposito(deposito.getNroTrans(), codEmp, con)){
 				
 				this.depositos.eliminarDeposito(deposito, con, codEmp);
+				
+				for (DepositoDetalle lin : deposito.getLstDetalle()) {
+					
+					
+					/*A cada linea le seteamos el nroTrans*/
+					lin.setNroTrans(deposito.getNroTrans());
+					
+					//Inserto el detalle del depósito
+					depositos.eliminarDepositoDetalle(deposito, con, codEmp);
+					
+				}
 			}
 				
 				

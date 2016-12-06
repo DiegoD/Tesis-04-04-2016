@@ -3,7 +3,10 @@ package com.vista.Deposito;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import com.controladores.DepositoControlador;
 import com.controladores.MonedaControlador;
@@ -15,6 +18,7 @@ import com.excepciones.Depositos.ObteniendoDepositoException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.util.converter.StringToDateConverter;
 import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
@@ -107,7 +111,7 @@ public class DepositoPanelExtended extends DepositoPanel{
 		this.container = 
 				new BeanItemContainer<DepositoVO>(DepositoVO.class);
 		
-		//Obtenemos lista de impuestos del sistema
+		//Obtenemos lista de depositos del sistema
 		try {
 			this.lstDepositos = this.getDepositos();
 		} catch (Exception e1) {
@@ -133,12 +137,37 @@ public class DepositoPanelExtended extends DepositoPanel{
 		gridDepositos.removeColumn("codCuenta");
 		gridDepositos.removeColumn("codMoneda");
 		gridDepositos.removeColumn("nacional");
-		gridDepositos.removeColumn("moneda");
 		gridDepositos.removeColumn("funcionario");
 		gridDepositos.removeColumn("numComprobante");
 		gridDepositos.removeColumn("impTotMn");
 		gridDepositos.removeColumn("nroTrans");
 		gridDepositos.removeColumn("lstDetalle");
+		gridDepositos.removeColumn("tcMov");
+		
+		gridDepositos.setColumnOrder("fecValor", "nomBanco", "nomCuenta", "impTotMo", "nomMoneda", "nroDocum", "observaciones");
+		gridDepositos.getColumn("fecValor").setHeaderCaption("Fecha");
+		gridDepositos.getColumn("nomBanco").setHeaderCaption("Banco");
+		gridDepositos.getColumn("nomCuenta").setHeaderCaption("Cuenta");
+		gridDepositos.getColumn("impTotMo").setHeaderCaption("Importe");
+		gridDepositos.getColumn("nroDocum").setHeaderCaption("Comprobante");
+		gridDepositos.getColumn("observaciones").setHeaderCaption("Observaciones");
+		gridDepositos.getColumn("nomMoneda").setHeaderCaption("Moneda");
+		
+		gridDepositos.getColumn("fecValor").setConverter(new StringToDateConverter(){
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+
+			public DateFormat getFormat(Locale locale){
+
+				return new SimpleDateFormat("dd/MM/yyyy");
+
+			}
+
+		});
 		
 		/*Agregamos los filtros a la grilla*/
 		this.filtroGrilla();
@@ -166,6 +195,7 @@ public class DepositoPanelExtended extends DepositoPanel{
 						sub.setVista(form);
 						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
 						form.setDataSourceFormulario(item);
+						form.setLstDetalle(item.getBean().getLstDetalle());
 						
 						UI.getCurrent().addWindow(sub);
 		    		}
@@ -218,14 +248,15 @@ public class DepositoPanelExtended extends DepositoPanel{
 	 * desde ImpuestoViewExtended
 	 *
 	 */
-	public void actulaizarGrilla(DepositoVO depositoVO)
+	public void actulaizarGrilla(DepositoVO depositoVO, String operacion)
 	{
 
 		/*Si esta el impuesto en la lista, es una acutalizacion
 		 * y modificamos el objeto en la lista*/
-		if(this.existeDepositoenLista(depositoVO.getNroDocum()))
+		if(this.existeDepositoenLista(depositoVO.getNroTrans()))
 		{
-			this.actualizarDepositoenLista(depositoVO);
+			
+			this.actualizarDepositoenLista(depositoVO, operacion);
 		}
 		else  /*De lo contrario es uno nuevo y lo agregamos a la lista*/
 		{
@@ -245,7 +276,7 @@ public class DepositoPanelExtended extends DepositoPanel{
 	 * se hace una acutalizacion de una moneda
 	 *
 	 */
-	private void actualizarDepositoenLista(DepositoVO depositoVO)
+	private void actualizarDepositoenLista(DepositoVO depositoVO, String operacion)
 	{
 		int i =0;
 		boolean salir = false;
@@ -256,11 +287,22 @@ public class DepositoPanelExtended extends DepositoPanel{
 		{
 			depositoEnLista = this.lstDepositos.get(i);
 			
-			if(depositoVO.getCodDocum().equals(depositoEnLista.getCodDocum())){
+			if(operacion.equals(Variables.OPERACION_EDITAR)){
 				
-				this.lstDepositos.get(i).copiar(depositoVO);
-				salir = true;
+				if(depositoVO.getNroTrans() == depositoEnLista.getNroTrans()){
+					
+					this.lstDepositos.get(i).copiar(depositoVO);
+					salir = true;
+				}
 			}
+			else{
+				if(depositoVO.getNroTrans() == depositoEnLista.getNroTrans()){
+					
+					this.lstDepositos.remove(i);
+					salir = true;
+				}
+			}
+			
 			
 			i++;
 		}
@@ -271,7 +313,7 @@ public class DepositoPanelExtended extends DepositoPanel{
 	 * de monedas de la vista
 	 *
 	 */
-	private boolean existeDepositoenLista(Integer cod_deposito)
+	private boolean existeDepositoenLista(Long cod_deposito)
 	{
 		int i =0;
 		boolean esta = false;
@@ -281,7 +323,7 @@ public class DepositoPanelExtended extends DepositoPanel{
 		while( i < this.lstDepositos.size() && !esta)
 		{
 			aux = this.lstDepositos.get(i);
-			if(cod_deposito.equals(aux.getCodDocum()))
+			if(cod_deposito.equals(aux.getNroTrans()))
 			{
 				esta = true;
 			}

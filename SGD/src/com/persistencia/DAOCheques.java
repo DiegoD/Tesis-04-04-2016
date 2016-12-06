@@ -12,12 +12,14 @@ import com.excepciones.Bancos.ObteniendoCuentasBcoException;
 import com.excepciones.Cheques.*;
 import com.logica.Banco;
 import com.logica.Cheque;
+import com.logica.MonedaInfo;
 import com.logica.Depositos.Deposito;
 import com.logica.Depositos.DepositoDetalle;
 import com.logica.Docum.BancoInfo;
 import com.logica.Docum.CuentaBcoInfo;
 import com.logica.Docum.DatosDocum;
 import com.logica.Docum.DocumDetalle;
+import com.logica.Docum.TitularInfo;
 import com.mysql.jdbc.Statement;
 import com.valueObject.Deposito.DepositoVO;
 
@@ -161,7 +163,7 @@ public class DAOCheques implements IDAOCheques{
 	 * Nos retorna una lista con todos los cheques a depositar
 	 * @throws ObteniendoBancosException 
 	 */
-	public ArrayList<DepositoDetalle> getChequesBanco(Connection con, String codEmp, String codBanco, String codCtaBco) throws ObteniendoChequeException, ConexionException, ObteniendoCuentasBcoException, ObteniendoBancosException {
+	public ArrayList<DepositoDetalle> getChequesBanco(Connection con, String codEmp, String codMoneda) throws ObteniendoChequeException, ConexionException, ObteniendoCuentasBcoException, ObteniendoBancosException {
 		
 		ArrayList<DepositoDetalle> lstDepositos = new ArrayList<DepositoDetalle>();
 	
@@ -174,14 +176,14 @@ public class DAOCheques implements IDAOCheques{
 	    	ResultSet rs;
 	    	
 	    	pstmt1.setString(1, codEmp);
-	    	pstmt1.setString(2, codBanco);
-	    	pstmt1.setString(3, codCtaBco);
+	    	pstmt1.setString(2, codMoneda);
 	    	
 			rs = pstmt1.executeQuery();
 			
 			DepositoDetalle aux;
 			BancoInfo b;
 			CuentaBcoInfo c;
+			Integer codigo;
 			
 			while(rs.next ()) {
 							
@@ -199,11 +201,27 @@ public class DAOCheques implements IDAOCheques{
 				cheque.setBanco(banco);
 
 				CuentaBcoInfo cuentaBanco = new CuentaBcoInfo();
-				cuentaBanco.setCodCuenta("cod_ctabco");
-				cuentaBanco.setNomCuenta("nom_cta");
+				cuentaBanco.setCodCuenta(rs.getString("cod_ctabco"));
+				cuentaBanco.setNomCuenta(rs.getString("nom_cta"));
 				cheque.setCuentaBanco(cuentaBanco);
 				
+				MonedaInfo moneda = new MonedaInfo();
+				moneda.setCodMoneda(rs.getString("cod_moneda"));
+				moneda.setDescripcion(rs.getString("descripcion"));
+				moneda.setNacional(rs.getBoolean("nacional"));
+				moneda.setSimbolo(rs.getString("simbolo"));
+				cheque.setMoneda(moneda);
+				
 				cheque.setFecValor(rs.getTimestamp("fec_valor"));
+				cheque.setFecDoc(rs.getTimestamp("fec_doc"));
+				cheque.setReferencia(rs.getString("referencia"));
+				cheque.setTcMov(rs.getDouble("tc_mov"));
+				
+				TitularInfo tit = new TitularInfo();
+				codigo = rs.getInt("cod_tit");
+				tit.setCodigo(codigo.toString());
+				cheque.setTitInfo(tit);
+				
 				aux.setCheque(cheque);
 				aux.setNroTrans(0);
 				lstDepositos.add(aux);

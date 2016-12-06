@@ -1617,6 +1617,18 @@ public String getGastosAnuladosxProceso(){
 		
 		return sb.toString();
 	}		
+	
+	public String updateSaldoImporte(){
+    	
+    	StringBuilder sb = new StringBuilder();
+    	 
+       	sb.append("UPDATE vaadin.sa_docum ");
+      	sb.append("SET imp_tot_mn = ?, ");
+      	sb.append("imp_tot_mo = ? ");
+  		sb.append("WHERE cod_docum = ? AND serie_docum = ? AND nro_docum = ? AND cod_emp = ? ");
+      	 
+      	return sb.toString();
+    }
 
 ////////////////////////FIN SALDOS//////////////////////////////////////////////
 	
@@ -1912,11 +1924,14 @@ public String eliminarSaldoCuenta(){
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("SELECT c_cheques.cod_docum, c_cheques.serie_docum, c_cheques.nro_docum, "
+				+ " c_cheques.referencia, c_cheques.cod_moneda, m_monedas.descripcion, m_monedas.nacional, "
+				+ " m_monedas.simbolo, "
 				+ "sa_docum.imp_tot_mn, sa_docum.imp_tot_mo, c_ingcobro.cod_doc_ref, "
 				+ "c_ingcobro.serie_doc_ref, c_ingcobro.nro_doc_ref, c_ingcobro.cod_bco, "
-				+ "c_ingcobro.cod_ctabco , fec_valor, m_bancos.nom_bco, m_ctasbcos.nom_cta ");
+				+ "c_ingcobro.cod_ctabco , c_ingcobro.fec_valor, c_ingcobro.fec_doc, c_ingcobro.tc_mov, "
+				+ "m_bancos.nom_bco, m_ctasbcos.nom_cta, c_cheques.cod_tit ");
 		
-		sb.append("FROM c_cheques, sa_docum, c_ingcobro, m_bancos, m_ctasbcos ");
+		sb.append("FROM c_cheques, sa_docum, c_ingcobro, m_bancos, m_ctasbcos, m_monedas ");
 		
 		sb.append("WHERE c_cheques.cod_docum = 'cheqrec' "
 				+ "and c_cheques.cod_docum = sa_docum.cod_docum "
@@ -1928,14 +1943,15 @@ public String eliminarSaldoCuenta(){
 				+ "and c_cheques.nro_docum = c_ingcobro.nro_doc_ref "
 				+ "and c_cheques.cod_emp = c_ingcobro.cod_emp "
 				+ "and c_cheques.cod_emp = ? "
+				+ "and c_cheques.cod_moneda = ? "
 				+ "and sa_docum.imp_tot_mo > 0 "
-				+ "and c_ingcobro.cod_bco = ? "
-				+ "and c_ingcobro.cod_ctabco = ? "
 				+ "and m_bancos.cod_emp = c_cheques.cod_emp "
 				+ "and m_bancos.cod_bco = c_ingcobro.cod_bco "
 				+ "and m_ctasbcos.cod_emp = c_cheques.cod_emp "
 				+ "and m_ctasbcos.cod_bco = c_ingcobro.cod_bco "
-				+ "and m_ctasbcos.cod_ctabco = c_ingcobro.cod_ctabco ");
+				+ "and m_ctasbcos.cod_ctabco = c_ingcobro.cod_ctabco "
+				+ "and m_monedas.cod_moneda = c_cheques.cod_moneda "
+				+ "and m_monedas.cod_emp = c_cheques.cod_emp ");
 		
 		return sb.toString();
 	}	
@@ -1962,9 +1978,16 @@ public String eliminarSaldoCuenta(){
 				+ "c_deposito.cod_emp, c_deposito.fec_doc, c_deposito.fec_valor, c_deposito.cod_bco, "
 				+ "c_deposito.cod_ctabco, c_deposito.cod_moneda, c_deposito.imp_tot_mn, c_deposito.imp_tot_mo, "
 				+ "c_deposito.tc_mov, c_deposito.observaciones, c_deposito.nro_trans, c_deposito.fecha_mod, "
-				+ "c_deposito.usuario_mod, c_deposito.operacion ");
+				+ "c_deposito.usuario_mod, c_deposito.operacion, c_deposito.cod_tit, "
+				+ "m_bancos.nom_bco, m_ctasbcos.nom_cta, m_monedas.descripcion, m_monedas.simbolo, "
+				+ "m_monedas.nacional, m_titulares.nom_tit ");
 		
-		sb.append("from c_deposito WHERE cod_emp = ? ");
+		sb.append("from c_deposito, m_bancos, m_ctasbcos, m_monedas, m_titulares"
+				+ " WHERE c_deposito.cod_emp = ? and m_bancos.cod_emp = c_deposito.cod_emp and m_bancos.cod_bco = c_deposito.cod_bco "
+				+ " and m_ctasbcos.cod_emp = c_deposito.cod_emp and m_ctasbcos.cod_bco = c_deposito.cod_bco "
+				+ " and m_ctasbcos.cod_ctabco = c_deposito.cod_ctabco "
+				+ " and m_monedas.cod_emp = c_deposito.cod_emp and m_monedas.cod_moneda = c_deposito.cod_moneda "
+				+ " and m_titulares.cod_emp = c_deposito.cod_emp and m_titulares.cod_tit = c_deposito.cod_tit ");
 		
 		return sb.toString();
 	}
@@ -1975,10 +1998,16 @@ public String eliminarSaldoCuenta(){
 		
 		sb.append("SELECT d_deposito.cod_docum, d_deposito.serie_docum, d_deposito.nro_docum, "
 				+ "d_deposito.cuenta, d_deposito.fec_doc, d_deposito.fec_valor, d_deposito.cod_moneda, "
-				+ "d_deposito.imp_tot_mn, d_deposito.imp_tot_mo, d_deposito.nro_trans, d_deposito.fecha_mod, "
-				+ "d_deposito.usuario_mod, d_deposito.operacion, d_deposito.linea, d_deposito.cod_emp ");
+				+ "d_deposito.imp_tot_mn, d_deposito.imp_tot_mo, d_deposito.nro_trans, d_deposito.cod_bco, "
+				+ "d_deposito.linea, d_deposito.cod_emp, d_deposito.cod_ctabco, d_deposito.cod_tit, d_deposito.tc_mov, "
+				+ "m_monedas.descripcion, m_monedas.nacional, m_monedas.simbolo, m_bancos.nom_bco, m_ctasbcos.nom_cta, m_ctasbcos.cod_moneda ");
 		
-		sb.append("WHERE d_deposito.cod_emp = ? AND d_deposito.nro_trans = ? ");
+		sb.append("FROM d_deposito, m_monedas, m_bancos, m_ctasbcos "
+				+ "WHERE d_deposito.cod_emp = ? AND d_deposito.nro_trans = ? "
+				+ "and m_monedas.cod_emp = d_deposito.cod_emp and m_monedas.cod_moneda = d_deposito.cod_moneda "
+				+ "and m_bancos.cod_emp = d_deposito.cod_emp and m_bancos.cod_bco = d_deposito.cod_bco "
+				+ "and m_ctasbcos.cod_emp = d_deposito.cod_emp and m_ctasbcos.cod_ctabco = d_deposito.cod_ctabco "
+				+ "and m_ctasbcos.cod_bco = d_deposito.cod_bco");
 		
 		return sb.toString();
 	}
@@ -1990,8 +2019,8 @@ public String eliminarSaldoCuenta(){
 		
 		sb.append("INSERT INTO c_deposito (cod_docum, serie_docum, nro_docum, cod_emp, fec_doc, fec_valor, "
 				+ " cod_bco, cod_ctabco, cod_moneda, imp_tot_mn, imp_tot_mo, tc_mov, nro_trans, fecha_mod, "
-				+ "usuario_mod, operacion, observaciones ) ");
-		sb.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ? ) ");
+				+ "usuario_mod, operacion, observaciones, cod_tit ) ");
+		sb.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ? ) ");
 		
 		return sb.toString();
 	
@@ -2004,8 +2033,8 @@ public String eliminarSaldoCuenta(){
 		
 		sb.append("INSERT INTO d_deposito (cod_docum, serie_docum, nro_docum, cuenta, fec_doc, fec_valor, "
 				+ " cod_moneda, imp_tot_mn, imp_tot_mo, nro_trans, "
-				+ "linea, cod_emp ) ");
-		sb.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?	) ");
+				+ "linea, cod_emp, cod_bco, cod_ctabco, cod_tit, tc_mov ) ");
+		sb.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?	) ");
 		
 		return sb.toString();
 	
@@ -2025,7 +2054,7 @@ public String eliminarSaldoCuenta(){
 		
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("DELETE c_deposito ");
+		sb.append("DELETE FROM c_deposito ");
 		sb.append("WHERE nro_trans = ? AND cod_emp = ? ");
 		
 		return sb.toString();
@@ -2035,7 +2064,7 @@ public String eliminarSaldoCuenta(){
 		
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("DELETE d_deposito ");
+		sb.append("DELETE from d_deposito ");
 		sb.append("WHERE nro_trans = ? AND cod_emp = ? ");
 		
 		return sb.toString();

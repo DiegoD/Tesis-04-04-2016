@@ -19,4 +19,5 @@ public interface IDAODepositos {
 	public void insertarDepositoDetalle(DepositoDetalle detalle, int linea, Connection con, String codEmp) throws InsertandoDepositoException, ConexionException;
 	public boolean memberDeposito(Long nroTrans, String codEmp, Connection con) throws ExisteDepositoException, ConexionException;
 	public void eliminarDeposito(Deposito deposito, Connection con, String codEmp) throws EliminandoDepositoException, ConexionException;
+	public void eliminarDepositoDetalle(Deposito deposito, Connection con, String codEmp) throws EliminandoDepositoException, ConexionException;
 }

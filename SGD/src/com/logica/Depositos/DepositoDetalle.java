@@ -9,6 +9,7 @@ public class DepositoDetalle {
 	
 	private Cheque cheque;
 	private long nroTrans;
+	private int linea;
 	
 	public DepositoDetalle(){
 		
@@ -18,11 +19,10 @@ public class DepositoDetalle {
 		
 		DepositoDetalleVO detalleVO = new DepositoDetalleVO();
 		
-		ChequeVO cheque = new ChequeVO();
 		detalleVO.setCodBanco(detalle.getCheque().getBanco().getCodBanco());
 		detalleVO.setNomBanco(detalle.getCheque().getBanco().getNomBanco());
 		detalleVO.setCodCuenta(detalle.getCheque().getCuentaBanco().getCodCuenta());
-		detalleVO.setNomCuenta(detalle.getCheque().getCuenta().getNomCuenta());
+		detalleVO.setNomCuenta(detalle.getCheque().getCuentaBanco().getNomCuenta());
 		detalleVO.setCodMoneda(detalle.getCheque().getMoneda().getCodMoneda());
 		detalleVO.setNomMoneda(detalle.getCheque().getMoneda().getDescripcion());
 		detalleVO.setSimboloMoneda(detalle.getCheque().getMoneda().getSimbolo());
@@ -63,6 +63,14 @@ public class DepositoDetalle {
 
 	public void setNroTrans(long nroTrans) {
 		this.nroTrans = nroTrans;
+	}
+
+	public int getLinea() {
+		return linea;
+	}
+
+	public void setLinea(int linea) {
+		this.linea = linea;
 	}
 	
 	

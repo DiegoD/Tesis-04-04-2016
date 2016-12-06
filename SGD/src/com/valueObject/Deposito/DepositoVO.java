@@ -27,7 +27,9 @@ public class DepositoVO extends AuditoriaVO{
 	private String codMoneda;
 	private boolean nacional;
 	
-	private MonedaInfo moneda;
+	//private MonedaInfo moneda;
+	private String nomMoneda;
+	
 	private FuncionarioInfo funcionario;
 	private int numComprobante;
 	private String observaciones;
@@ -49,7 +51,7 @@ public class DepositoVO extends AuditoriaVO{
 		this.setNroDocum(depVO.getNroDocum());
 		this.setFecValor(depVO.getFecValor());
 		this.setFecDoc(depVO.getFecDoc());
-		this.setMoneda(depVO.getMoneda());
+		this.setNomMoneda(depVO.getNomMoneda());
 		this.setFuncionario(depVO.getFuncionario());
 		this.setNumComprobante(depVO.getNumComprobante());
 		this.setObservaciones(depVO.getObservaciones());
@@ -108,13 +110,13 @@ public class DepositoVO extends AuditoriaVO{
 	}
 
 
-	public MonedaInfo getMoneda() {
-		return moneda;
-	}
-
-	public void setMoneda(MonedaInfo moneda) {
-		this.moneda = moneda;
-	}
+//	public MonedaInfo getMoneda() {
+//		return moneda;
+//	}
+//
+//	public void setMoneda(MonedaInfo moneda) {
+//		this.moneda = moneda;
+//	}
 
 	public FuncionarioInfo getFuncionario() {
 		return funcionario;
@@ -226,6 +228,14 @@ public class DepositoVO extends AuditoriaVO{
 
 	public void setTcMov(double tcMov) {
 		this.tcMov = tcMov;
+	}
+
+	public String getNomMoneda() {
+		return nomMoneda;
+	}
+
+	public void setNomMoneda(String nomMoneda) {
+		this.nomMoneda = nomMoneda;
 	}
 	
 	

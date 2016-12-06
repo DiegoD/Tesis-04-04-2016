@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
@@ -12,11 +13,13 @@ import com.excepciones.Depositos.ExisteDepositoException;
 import com.excepciones.Depositos.InsertandoDepositoException;
 import com.excepciones.Depositos.ObteniendoDepositoException;
 import com.logica.Cheque;
+import com.logica.FuncionarioInfo;
 import com.logica.MonedaInfo;
 import com.logica.Depositos.Deposito;
 import com.logica.Depositos.DepositoDetalle;
 import com.logica.Docum.BancoInfo;
 import com.logica.Docum.CuentaBcoInfo;
+import com.logica.Docum.TitularInfo;
 
 public class DAODepositos implements IDAODepositos{
 	
@@ -53,17 +56,31 @@ public class DAODepositos implements IDAODepositos{
 				
 				BancoInfo banco = new BancoInfo();
 				banco.setCodBanco(rs.getString("cod_bco"));
+				banco.setNomBanco(rs.getString("nom_bco"));
 				
 				CuentaBcoInfo cuentaBanco = new CuentaBcoInfo();
 				cuentaBanco.setCodCuenta(rs.getString("cod_ctabco"));
+				cuentaBanco.setNomCuenta(rs.getString("nom_cta"));
+				cuentaBanco.setCodMoneda(rs.getString("cod_moneda"));
+				cuentaBanco.setNacional(rs.getBoolean("nacional"));
+				
 				
 				aux.setBanco(banco);
 				aux.setCuentaBanco(cuentaBanco);
 				
+				
 				MonedaInfo moneda = new MonedaInfo();
 				moneda.setCodMoneda(rs.getString("cod_moneda"));
-				
+				moneda.setDescripcion(rs.getString("descripcion"));
+				moneda.setSimbolo(rs.getString("simbolo"));
+				moneda.setNacional(rs.getBoolean("nacional"));
 				aux.setMoneda(moneda);
+				
+				FuncionarioInfo funcionario = new FuncionarioInfo();
+				funcionario.setCodigo(rs.getInt("cod_tit"));
+				funcionario.setNombre(rs.getString("nom_tit"));
+				aux.setFuncionario(funcionario);
+				
 				aux.setImpTotMn(rs.getDouble("imp_tot_mn"));
 				aux.setImpTotMo(rs.getDouble("imp_tot_mo"));
 				aux.setObservaciones(rs.getString("observaciones"));
@@ -100,6 +117,7 @@ public class DAODepositos implements IDAODepositos{
 	public ArrayList<DepositoDetalle> getDepositoLineaxTrans(Connection con, Deposito deposito, String codEmp) throws ObteniendoDepositoException, ConexionException {
 		
 		ArrayList<DepositoDetalle> lst = new ArrayList<DepositoDetalle>();
+		Integer codigo;
 	
 		try {
 			
@@ -128,17 +146,38 @@ public class DAODepositos implements IDAODepositos{
 				cheque.setFecDoc(rs.getTimestamp("fec_doc"));
 				cheque.setFecValor(rs.getTimestamp("fec_valor"));
 				
-				MonedaInfo moneda = new MonedaInfo();
-				moneda.setCodMoneda(rs.getString("cod_moneda"));
-				
 				cheque.setImpTotMn(rs.getDouble("imp_tot_mn"));
 				cheque.setImpTotMo(rs.getDouble("imp_tot_mo"));
 				cheque.setNroTrans(rs.getLong("nro_trans"));
 				
 				
-				cheque.setUsuarioMod(rs.getString("usuario_mod"));
-				cheque.setFechaMod(rs.getTimestamp("fecha_mod"));
-				cheque.setOperacion(rs.getString("operacion"));
+				BancoInfo banco = new BancoInfo();
+				banco.setCodBanco(rs.getString("cod_bco"));
+				banco.setNomBanco(rs.getString("nom_bco"));
+				cheque.setBanco(banco);
+				
+				CuentaBcoInfo cuentaBanco = new CuentaBcoInfo();
+				cuentaBanco.setCodCuenta(rs.getString("cod_ctabco"));
+				cuentaBanco.setNomCuenta(rs.getString("nom_cta"));
+				cuentaBanco.setCodMoneda(rs.getString("cod_moneda"));
+				cuentaBanco.setNacional(rs.getBoolean("nacional"));
+				cheque.setCuentaBanco(cuentaBanco);
+				
+				
+				MonedaInfo moneda = new MonedaInfo();
+				moneda.setCodMoneda(rs.getString("cod_moneda"));
+				moneda.setDescripcion(rs.getString("descripcion"));
+				moneda.setSimbolo(rs.getString("simbolo"));
+				moneda.setNacional(rs.getBoolean("nacional"));
+				cheque.setMoneda(moneda);
+				
+				TitularInfo titInfo = new TitularInfo();
+				
+				codigo = rs.getInt("cod_tit");
+				titInfo.setCodigo(codigo.toString());
+				cheque.setTitInfo(titInfo);
+				cheque.setTcMov(rs.getDouble("tc_mov"));
+				aux.setCheque(cheque);
 				
 				
 				lst.add(aux);
@@ -188,20 +227,22 @@ public class DAODepositos implements IDAODepositos{
 			pstmt1.setString(14, deposito.getUsuarioMod());
 			pstmt1.setString(15, deposito.getOperacion());
 			pstmt1.setString(16, deposito.getObservaciones());
+			pstmt1.setInt(17, deposito.getFuncionario().getCodigo());
 			
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
 			
-			int linea = 1;
-			for (DepositoDetalle lin : deposito.getLstDetalle()) {
-				
-				/*A cada linea le seteamos el nroTrans*/
-				lin.setNroTrans(deposito.getNroTrans());
-				
-				this.insertarDepositoDetalle(lin, linea, con, codEmp);
-				
-				linea++;
-			}
+//			int linea = 1;
+//			for (DepositoDetalle lin : deposito.getLstDetalle()) {
+//				
+//			
+//				/*A cada linea le seteamos el nroTrans*/
+//				lin.setNroTrans(deposito.getNroTrans());
+//				
+//				this.insertarDepositoDetalle(lin, linea, con, codEmp);
+//				
+//				linea++;
+//			}
 			
 					
 		} 
@@ -220,6 +261,7 @@ public class DAODepositos implements IDAODepositos{
 		ConsultasDD clts = new ConsultasDD();
     	
     	String insert = clts.insertarDetalleDeposito();
+    	String codigo;
     	
     	PreparedStatement pstmt1;
     	
@@ -239,7 +281,11 @@ public class DAODepositos implements IDAODepositos{
 			pstmt1.setLong(10, detalle.getNroTrans());
 			pstmt1.setInt(11,linea);
 			pstmt1.setString(12,codEmp);
-			
+			pstmt1.setString(13, detalle.getCheque().getBanco().getCodBanco());
+			pstmt1.setString(14, detalle.getCheque().getCuentaBanco().getCodCuenta());
+			codigo = detalle.getCheque().getTitInfo().getCodigo();
+			pstmt1.setInt(15, Integer.parseInt(codigo));
+			pstmt1.setDouble(16, detalle.getCheque().getTcMov());
 			pstmt1.executeUpdate ();
 			
 			pstmt1.close ();
@@ -297,12 +343,11 @@ public class DAODepositos implements IDAODepositos{
 			pstmt1.setLong(1, deposito.getNroTrans());
 			pstmt1.setString(2, codEmp);
 			
-			ResultSet rs = pstmt1.executeQuery();
+			pstmt1.executeUpdate ();
 			
-			rs.close ();
 			pstmt1.close ();
 			
-			this.eliminarDepositoDetalle(deposito, con, codEmp);
+			//this.eliminarDepositoDetalle(deposito, con, codEmp);
 			
 		}
 		catch(SQLException e){
@@ -322,9 +367,7 @@ public class DAODepositos implements IDAODepositos{
 			pstmt1.setLong(1, deposito.getNroTrans());
 			pstmt1.setString(2, codEmp);
 			
-			ResultSet rs = pstmt1.executeQuery();
-			
-			rs.close ();
+			pstmt1.executeUpdate ();
 			pstmt1.close ();
 			
 		}

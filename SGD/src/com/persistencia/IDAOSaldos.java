@@ -24,4 +24,7 @@ public interface IDAOSaldos {
 			throws ModificandoSaldoException, ConexionException, EliminandoSaldoException, IngresandoSaldoException, ExisteSaldoException; 
 	public void modificarSaldoSinSA(DatosDocum documento, Connection con)
 			throws ModificandoSaldoException, ConexionException, EliminandoSaldoException, IngresandoSaldoException, ExisteSaldoException;
+	
+	public void modificarSaldoImporte(DatosDocum documento, Connection con)
+			throws ModificandoSaldoException, ConexionException, ExisteSaldoException;
 }

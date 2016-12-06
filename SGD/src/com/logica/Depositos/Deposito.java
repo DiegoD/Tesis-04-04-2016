@@ -58,7 +58,8 @@ public class Deposito extends Auditoria{
 		depositoVO.setFuncionario(deposito.getFuncionario());
 		depositoVO.setImpTotMn(deposito.getImpTotMn());
 		depositoVO.setImpTotMo(deposito.getImpTotMo());
-		depositoVO.setMoneda(deposito.getMoneda());
+		//depositoVO.setMoneda(deposito.getMoneda());
+		depositoVO.setNomMoneda(deposito.getMoneda().getDescripcion());
 		depositoVO.setNroDocum(deposito.getNroDocum());
 		depositoVO.setNroTrans(deposito.getNroTrans());
 		depositoVO.setNumComprobante(deposito.getNumComprobante());
@@ -67,6 +68,8 @@ public class Deposito extends Auditoria{
 		depositoVO.setTcMov(deposito.getTcMov());
 		
 		DepositoDetalleVO auxDet;
+		lstDetalle = deposito.getLstDetalle();
+		
 		for (DepositoDetalle depositoDetalle: lstDetalle) {
 			auxDet = new DepositoDetalleVO();
 			
@@ -75,6 +78,7 @@ public class Deposito extends Auditoria{
 			depositoVO.getLstDetalle().add(auxDet);
 			
 		}
+		
 		
 		return depositoVO;
 		
@@ -105,7 +109,11 @@ public class Deposito extends Auditoria{
 		deposito.setFuncionario(depositoVO.getFuncionario());
 		deposito.setImpTotMn(depositoVO.getImpTotMn());
 		deposito.setImpTotMo(depositoVO.getImpTotMo());
-		deposito.setMoneda(depositoVO.getMoneda());
+		//deposito.setMoneda(depositoVO.getMoneda());
+		MonedaInfo moneda = new MonedaInfo();
+		moneda.setCodMoneda(depositoVO.getCodMoneda());
+		moneda.setDescripcion(depositoVO.getNomMoneda());
+		deposito.setMoneda(moneda);
 		deposito.setNroDocum(depositoVO.getNroDocum());
 		deposito.setNroTrans(depositoVO.getNroTrans());
 		deposito.setNumComprobante(depositoVO.getNumComprobante());
@@ -130,6 +138,7 @@ public class Deposito extends Auditoria{
 		for (DepositoDetalleVO depositoDetalleVO: depositoVO.getLstDetalle()) {
 			
 			auxDetalle = new DepositoDetalle();
+			auxDetalle.setNroTrans(deposito.getNroTrans());
 			
 			Cheque cheque = new Cheque();
 			BancoInfo bancoInfo = new BancoInfo();
@@ -154,12 +163,12 @@ public class Deposito extends Auditoria{
 			cheque.setImpTotMn(depositoDetalleVO.getImpTotMn());
 			cheque.setImpTotMo(depositoDetalleVO.getImpTotMo());
 			
-			MonedaInfo moneda = new MonedaInfo();
-			moneda.setCodMoneda(depositoDetalleVO.getCodMoneda());
-			moneda.setDescripcion(depositoDetalleVO.getNomMoneda());
-			moneda.setSimbolo(depositoDetalleVO.getSimboloMoneda());
-			moneda.setNacional(depositoDetalleVO.isNacional());
-			cheque.setMoneda(moneda);
+			MonedaInfo moneda2 = new MonedaInfo();
+			moneda2.setCodMoneda(depositoDetalleVO.getCodMoneda());
+			moneda2.setDescripcion(depositoDetalleVO.getNomMoneda());
+			moneda2.setSimbolo(depositoDetalleVO.getSimboloMoneda());
+			moneda2.setNacional(depositoDetalleVO.isNacional());
+			cheque.setMoneda(moneda2);
 			
 			cheque.setNroDocum(depositoDetalleVO.getNroDocum());
 			cheque.setNroTrans(depositoDetalleVO.getNroTrans());
