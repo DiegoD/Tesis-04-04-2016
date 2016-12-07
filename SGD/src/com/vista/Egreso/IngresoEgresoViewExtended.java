@@ -1165,7 +1165,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 					item.getBean().setImpSubMn(formSelecccionado.getImpSubMn());
 					item.getBean().setReferencia(formSelecccionado.getReferencia());
 					item.getBean().setEstadoGasto(formSelecccionado.getEstadoGasto());
-					
+					item.getBean().setNomImpuesto(formSelecccionado.getNomImpuesto());
 					
 					/*Puede ser null si accedemos luego de haberlo agregado, ya que no va a la base*/
 			    	if(item.getBean().getFechaMod() == null)

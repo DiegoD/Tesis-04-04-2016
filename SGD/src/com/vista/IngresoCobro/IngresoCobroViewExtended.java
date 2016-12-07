@@ -770,18 +770,6 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				}
 				
 				
-				/*Si hay detalle nuevo agregado
-				 * lo agregamos a la lista del formulario*/
-				if(this.lstDetalleAgregar.size() > 0)
-				{
-					for (IngresoCobroDetalleVO f : this.lstDetalleAgregar) {
-						
-						//Si no esta lo agregamos
-						if(!this.existeFormularioenLista(f.getNroDocum()))
-							this.lstDetalleVO.add(f);
-					}
-				}
-				
 					
 				ingCobroVO.setCodCuenta("ingcobro");
 				
@@ -1095,6 +1083,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 						proceso.setNroDocum(formSelecccionado.getNroDocum());
 						proceso.setLinea(formSelecccionado.getLinea());
 						proceso.setObservaciones(formSelecccionado.getReferencia());
+						proceso.setCodImpuesto(formSelecccionado.getCodImpuesto());
 						
 						//datos = controlador.getProceso(permisosAux, proceso.getCodigo());
 						
