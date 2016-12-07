@@ -590,6 +590,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		    		/*DIEGO ACA ES DONDE QUIERO PONER EL VALOR ANTERIOR*/
 		    		
 		    		Mensajes.mostrarMensajeWarning("No se puede cambiar TC si hay lineas ingresadas");
+		    		tcMov.setConvertedValue(cotizacionVenta);
+		    		return;
 		    	}
 	    		
 	    	}
@@ -663,8 +665,9 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 						
 					}else
 					{
-						coti = this.controlador.getCotizacion(permisoAux, fecha, this.getCodMonedaSeleccionada());
-						ingCobroVO.setTcMov(coti.getCotizacionVenta());
+//						coti = this.controlador.getCotizacion(permisoAux, fecha, this.getCodMonedaSeleccionada());
+//						ingCobroVO.setTcMov(coti.getCotizacionVenta());
+						ingCobroVO.setTcMov((double) tcMov.getConvertedValue());
 						ingCobroVO.setImpTotMn((ingCobroVO.getImpTotMo()*ingCobroVO.getTcMov()));
 					}
 					
@@ -769,7 +772,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				
 				/*Si hay detalle nuevo agregado
 				 * lo agregamos a la lista del formulario*/
-				/*if(this.lstDetalleAgregar.size() > 0)
+				if(this.lstDetalleAgregar.size() > 0)
 				{
 					for (IngresoCobroDetalleVO f : this.lstDetalleAgregar) {
 						
@@ -778,9 +781,20 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 							this.lstDetalleVO.add(f);
 					}
 				}
-				*/
+				
 					
 				ingCobroVO.setCodCuenta("ingcobro");
+				
+				
+				
+				for (IngresoCobroDetalleVO detVO : this.lstDetalleVO) {
+					
+					 
+					
+					detVO.setImpTotMn(detVO.getImpTotMo() * detVO.getTcMov());
+					
+				}
+				
 				ingCobroVO.setDetalle(this.lstDetalleVO);
 				
 				if(ingCobroVO.getDetalle().size() <= 0){
@@ -1286,6 +1300,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		this.inicializarComboCuentas(ing.getCodCtaBco(), "CuentaBanco");
 		this.inicializarComboMoneda(ing.getCodMoneda());
 		
+		//Se setea manual ya que si no lo carga del detalle
+		this.tcMov.setConvertedValue(ing.getTcMov());
 		
 		//Obtenemos bco
 		BancoVO auxBco = new BancoVO();
@@ -1460,7 +1476,6 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			
 			
 			
-			
 		}
 		else{
 			
@@ -1536,6 +1551,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		
 		this.impTotMo.setReadOnly(false);
 		this.impTotMo.setEnabled(true);
+		this.tcMov.setReadOnly(false);
 		this.monedaBanco.setEnabled(false);
 		this.cuentaBanco.setEnabled(false);
 		this.referencia.setReadOnly(false);
@@ -1665,8 +1681,9 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		
 		this.comboMoneda.setReadOnly(setear);
 		
-		this.impTotMo.setReadOnly(false);
-		this.impTotMo.setEnabled(true);
+		this.impTotMo.setReadOnly(setear);
+		
+		this.tcMov.setReadOnly(setear);
 		
 		this.referencia.setReadOnly(setear);
 		
@@ -2101,7 +2118,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
       @Override
       public void postCommit(FieldGroup.CommitEvent commitEvent) throws     FieldGroup.CommitException {
       	
-    	  
+    	  double aux, importeMoneda = 0, importeImpuesto = 0;
+  		  double aux3;
     	  IngresoCobroDetalleVO aux2 = obtenerGastoEnLista(formSelecccionado.getNroDocum());
     	  
     	  /*Verifico si es a cuenta de proceso no tiene saldo*/
@@ -2113,18 +2131,51 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 
 				  try {
 					  throw new FieldGroup.CommitException("El importe no puede ser mayor al saldo ");
-				} catch (Exception e) {
+					  
+				} 
+				  catch (Exception e) {
 					formSelecccionado.setImpTotMo(gtoSaldo.getSaldo());
-					acaaa setear los otros campos por si cambia el importe
-					
-					Mensajes.mostrarMensajeError(e.getMessage());// TODO: handle exception
+					Mensajes.mostrarMensajeError("El importe no puede ser mayor al saldo");
+					return;
+//				666	acaaa setear los otros campos por si cambia el importe
+//					
+//					Mensajes.mostrarMensajeError(e.getMessage());// TODO: handle exception
 				}
-				  
-				  
 			  }
     	  }
-	    	
-	    	
+    	  
+    	  if(formSelecccionado.getTcMov() != 0){
+			  formSelecccionado.setImpTotMn(formSelecccionado.getImpTotMo() * formSelecccionado.getTcMov());
+		  }
+		  else{
+			  formSelecccionado.setImpTotMn(formSelecccionado.getImpTotMo());
+		  }
+		  
+    	  importeMoneda = formSelecccionado.getImpTotMo();
+    	  
+    	  //Importe Impuesto Moneda
+    	  aux = (formSelecccionado.getPorcentajeImpuesto() /100)+1;
+		  aux3 = importeMoneda/aux;
+		  importeImpuesto = importeMoneda - aux3;
+			
+		  Double truncatedDouble = new BigDecimal(importeImpuesto)
+				    .setScale(2, BigDecimal.ROUND_HALF_UP)
+				    .doubleValue();
+		  
+		  importeImpuesto = truncatedDouble;
+		  formSelecccionado.setImpImpuMo(truncatedDouble);
+		  
+		  //Importe Impuesto Moneda Nacional
+		  truncatedDouble = new BigDecimal( formSelecccionado.getImpImpuMo() * formSelecccionado.getTcMov())
+				    .setScale(2, BigDecimal.ROUND_HALF_UP)
+				    .doubleValue();
+			
+		  formSelecccionado.setImpImpuMn(truncatedDouble);
+		  
+		  
+		  formSelecccionado.setImpSubMn(formSelecccionado.getImpTotMn() - formSelecccionado.getImpImpuMn());  
+		  formSelecccionado.setImpSubMo(formSelecccionado.getImpTotMo() - formSelecccionado.getImpImpuMo());
+		  
     	  calcularImporteTotal();
       }
 	 });
@@ -2392,6 +2443,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
    			docum.setCodCuenta(procesoVO.getCodCuenta());
    			docum.setCodImpuesto(procesoVO.getCodImpuesto());
    			
+   			docum.setTcMov(procesoVO.getTcMov());
    			docum.setImpTotMo(procesoVO.getImpMo());
    			docum.setCodRubro(procesoVO.getCodRubro());
    			docum.setNomRubro(procesoVO.getNomRubro());
@@ -2668,6 +2720,10 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			}
 			
 			linea ++;
+			
+			if(lstDetalleVO.size() > 0){
+				this.tcMov.setEnabled(false);
+			}
 		}
 			
 		/*Actualizamos el container y la grilla*/

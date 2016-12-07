@@ -623,8 +623,11 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 						
 					}else
 					{
-						coti = this.controlador.getCotizacion(permisoAux, fecha, this.getCodMonedaSeleccionada());
-						ingCobroVO.setTcMov(coti.getCotizacionVenta());
+//						coti = this.controlador.getCotizacion(permisoAux, fecha, this.getCodMonedaSeleccionada());
+//						ingCobroVO.setTcMov(coti.getCotizacionVenta());
+//						ingCobroVO.setImpTotMn((ingCobroVO.getImpTotMo()*ingCobroVO.getTcMov()));
+						
+						ingCobroVO.setTcMov((double) tcMov.getConvertedValue());
 						ingCobroVO.setImpTotMn((ingCobroVO.getImpTotMo()*ingCobroVO.getTcMov()));
 					}
 					
@@ -1002,6 +1005,8 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 		this.inicializarComboCuentas(ing.getCodCtaBco(), "CuentaBanco");
 		this.inicializarComboMoneda(ing.getCodMoneda());
 		
+		//Se setea manual ya que si no lo carga del detalle
+		this.tcMov.setConvertedValue(ing.getTcMov());
 		
 		//Obtenemos bco
 		BancoVO auxBco = new BancoVO();

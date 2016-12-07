@@ -216,13 +216,6 @@ public class MenuExtended extends Menu{
 				ImpuestosPanelExtended c = new ImpuestosPanelExtended();
 				c.setSizeFull();
 				this.content.setSizeFull();
-				
-				HorizontalLayout h = new HorizontalLayout();
-				h.setHeight("10px");
-				h.setWidth("100%");
-				h.addComponent(gruposButton);
-				
-				this.content.addComponent(h);
 				this.content.addComponent(c);
 				
 			} catch (Exception e) {

@@ -104,6 +104,9 @@ public class IngresoCobroProcesoViewExtended extends IngresoCobroProcesoView imp
 				
 				procesoNuevo.setImpMn(procesoNuevo.getImpMo() * main.getCotizacion());
 				procesoNuevo.setTcMov(main.getCotizacion());
+				if(procesoNuevo.getTcMov() == 0){
+					procesoNuevo.setTcMov(1);
+				}
 				procesoNuevo.setImpSubTot(procesoNuevo.getImpMo()); /*Al no tener impuesto es el mismo que MO*/
 				
 				procesoNuevo.setCodImpuesto(this.codImpuesto);

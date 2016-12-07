@@ -1005,6 +1005,8 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		this.inicializarComboSeleccion(gasto.getCodCtaInd());
 		this.inicializarComboEstado(gasto.getEstadoGasto());
 		
+		
+				
 		/*SETEAMOS LA OPERACION EN MODO LECUTA
 		 * ES CUANDO LLAMAMOS ESTE METODO*/
 		if(this.operacion.equals(Variables.OPERACION_LECTURA)){

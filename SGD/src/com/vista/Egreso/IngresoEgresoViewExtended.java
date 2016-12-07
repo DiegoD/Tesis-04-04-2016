@@ -608,6 +608,8 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		    		/*DIEGO ACA ES DONDE QUIERO PONER EL VALOR ANTERIOR*/
 		    		
 		    		Mensajes.mostrarMensajeWarning("No se puede cambiar TC si hay lineas ingresadas");
+		    		tcMov.setConvertedValue(cotizacionVenta);
+		    		return;
 		    	}
 	    	
 	    	}
@@ -684,8 +686,9 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 						
 					}else
 					{
-						coti = this.controlador.getCotizacion(permisoAux, fecha, this.getCodMonedaSeleccionada());
-						ingCobroVO.setTcMov(coti.getCotizacionVenta());
+//						coti = this.controlador.getCotizacion(permisoAux, fecha, this.getCodMonedaSeleccionada());
+//						ingCobroVO.setTcMov(coti.getCotizacionVenta());
+						ingCobroVO.setTcMov((double) tcMov.getConvertedValue());
 						ingCobroVO.setImpTotMn((ingCobroVO.getImpTotMo()*ingCobroVO.getTcMov()));
 					}
 					
@@ -792,7 +795,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 				
 				/*Si hay detalle nuevo agregado
 				 * lo agregamos a la lista del formulario*/
-				/*
+				
 				if(this.lstDetalleAgregar.size() > 0)
 				{
 					for (IngresoCobroDetalleVO f : this.lstDetalleAgregar) {
@@ -802,7 +805,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 							this.lstDetalleVO.add(f);
 					}
 				}
-			 	*/
+			 	
 					
 				ingCobroVO.setCodCuenta("egrcobro");
 				ingCobroVO.setDetalle(this.lstDetalleVO);
@@ -1344,6 +1347,8 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		this.inicializarComboCuentas(ing.getCodCtaBco(), "CuentaBanco");
 		this.inicializarComboMoneda(ing.getCodMoneda());
 		
+		//Se setea manual ya que si no lo carga del detalle
+		this.tcMov.setConvertedValue(ing.getTcMov());
 		
 		//Obtenemos bco
 		BancoVO auxBco = new BancoVO();

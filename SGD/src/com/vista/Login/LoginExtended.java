@@ -58,8 +58,8 @@ public class LoginExtended extends Login implements ViewDisplay {
 		// Use the resource
 		// Use the resource
 		Image image = new Image("", resource); 
-		image.setHeight("10%");
-		image.setWidth("15%");
+		image.setHeight("30%");
+		image.setWidth("100%");
 		
 		this.layout.addComponent(image);
 		
