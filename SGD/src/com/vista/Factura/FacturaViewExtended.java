@@ -635,7 +635,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 				{	
 					this.controlador.insertarFactura(factVO, permisoAux, true);
 					
-					this.mainView.actulaizarGrilla(factVO);
+					this.mainView.actulaizarGrilla();
 					
 					Mensajes.mostrarMensajeOK("Se ha guardado la Factura");
 					main.cerrarVentana();
@@ -649,7 +649,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 					/*VER DE IMPLEMENTAR PARA EDITAR BORRO TODO E INSERTO NUEVAMENTE*/
 					this.controlador.modificarFactura(factVO,ingresoCopia, permisoAux, false);
 					
-					this.mainView.actulaizarGrilla(factVO);
+					this.mainView.actulaizarGrilla();
 					
 					Mensajes.mostrarMensajeOK("Se ha modificado el Cobro");
 					main.cerrarVentana();
@@ -2355,7 +2355,13 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 							VariablesPermisos.OPERACION_BORRAR);	
 			
 			this.controlador.eliminarFactura(fieldGroup.getItemDataSource().getBean(), permisoAux);
-				
+			
+			this.mainView.actulaizarGrilla();
+			
+			UI.getCurrent().removeWindow(sub);
+			
+			this.mainView.cerrarVentana();
+			
 			} catch (NoExisteFacturaException |ExisteFacturaException | InicializandoException| ConexionException | NoTienePermisosException| ObteniendoPermisosException | EliminandoFacturaException e) {
 				
 				Mensajes.mostrarMensajeError(e.getMessage());

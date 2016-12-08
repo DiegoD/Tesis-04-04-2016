@@ -770,7 +770,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				}
 				
 				
-					
+
 				ingCobroVO.setCodCuenta("ingcobro");
 				
 				

@@ -136,8 +136,13 @@ public class DAOSaldoProceso implements IDAOSaldosProc {
 	}
 	
 	@Override
-	public void modificarSaldo(DatosDocum documento, int signo, double tc , Connection con)
+	public void modificarSaldo(DatosDocum docum, int signo, double tc , Connection con)
 			throws ModificandoSaldoException, ConexionException, EliminandoSaldoException, IngresandoSaldoException, ExisteSaldoException {
+		
+		/*Variable utlilizada para modificar una copia de lo
+		   * pasado por parametro, para que no afecte al
+		   * objeto original*/
+ 	  DatosDocum documento = new DatosDocum(docum.retornarDatosDocumVO());
 		
 		double saldoAnteriorMO;
 		double saldoCalcMO;

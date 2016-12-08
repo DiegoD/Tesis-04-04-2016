@@ -201,7 +201,7 @@ public class FacturaPanelExtended extends FacturaPanel{
 	 * desde BancoViewExtended
 	 *
 	 */
-	public void actulaizarGrilla(FacturaVO factVO)
+	public void actulaizarGrilla()
 	{
 
 		/*Actualizamos la grilla*/
