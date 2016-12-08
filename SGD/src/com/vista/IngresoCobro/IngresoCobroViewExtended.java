@@ -943,33 +943,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			
 		this.cancelar.addClickListener(click -> {
 			
-			if(this.lstDetalleAgregar.size() > 0)
-			{
-				
-				for (IngresoCobroDetalleVO f : this.lstDetalleAgregar) {
-					
-					/*Si no esta lo agregamos*/
-					if(this.existeFormularioenLista(f.getNroDocum()))
-						this.lstDetalleVO.remove(f);
-				}
-				
-				
-				
-				this.calcularImporteTotal();
-			}
-			
-			if(this.lstDetalleQuitar.size() > 0)
-			{
-				for (IngresoCobroDetalleVO f : this.lstDetalleQuitar) {
-					
-					/*Si no esta lo agregamos*/
-					if(!this.existeFormularioenLista(f.getNroDocum()))
-						this.lstDetalleVO.add(f);
-				}
-				
-				this.calcularImporteTotal();
-			}
-			
+			this.mainView.actulaizarGrilla(this.ingresoCopia);
 			main.cerrarVentana();
 		});
 			
@@ -2950,17 +2924,6 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			}
 			
 			
-			/*Si hay detalle nuevo agregado
-			 * lo agregamos a la lista del formulario*/
-			if(this.lstDetalleAgregar.size() > 0)
-			{
-				for (IngresoCobroDetalleVO f : this.lstDetalleAgregar) {
-					
-					/*Si no esta lo agregamos*/
-					if(!this.existeFormularioenLista(f.getNroDocum()))
-						this.lstDetalleVO.add(f);
-				}
-			}
 				
 			ingCobroVO.setCodCuenta("ingcobro");
 			ingCobroVO.setDetalle(this.lstDetalleVO);
