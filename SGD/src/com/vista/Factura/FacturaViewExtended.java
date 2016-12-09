@@ -11,38 +11,26 @@ import java.util.List;
 
 import com.controladores.FacturaControlador;
 import com.excepciones.ConexionException;
-import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
 import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
-import com.excepciones.Bancos.ObteniendoBancosException;
-import com.excepciones.Bancos.ObteniendoCuentasBcoException;
 import com.excepciones.Cotizaciones.ObteniendoCotizacionesException;
 import com.excepciones.Factura.*;
 import com.excepciones.Monedas.ObteniendoMonedaException;
 import com.excepciones.Periodo.ExistePeriodoException;
 import com.excepciones.Periodo.NoExistePeriodoException;
 import com.excepciones.Procesos.ObteniendoProcesosException;
-import com.excepciones.Titulares.ObteniendoTitularesException;
 import com.excepciones.clientes.ObteniendoClientesException;
-import com.sun.org.apache.xpath.internal.operations.Variable;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup;
-import com.vaadin.data.fieldgroup.FieldGroup.CommitEvent;
-import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
-import com.vaadin.data.fieldgroup.FieldGroup.CommitHandler;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.filter.SimpleStringFilter;
-import com.vaadin.data.validator.RegexpValidator;
 import com.vaadin.data.validator.StringLengthValidator;
-import com.vaadin.event.FieldEvents.BlurEvent;
-import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
+import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinService;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.TextField;
@@ -58,8 +46,6 @@ import com.valueObject.Docum.FacturaVO;
 import com.valueObject.Gasto.GastoVO;
 import com.valueObject.Gasto.GtoSaldoAux;
 import com.valueObject.IngresoCobro.IngresoCobroDetalleVO;
-import com.valueObject.IngresoCobro.IngresoCobroVO;
-import com.valueObject.banco.BancoVO;
 import com.valueObject.banco.CtaBcoVO;
 import com.valueObject.cliente.ClienteVO;
 import com.valueObject.proceso.ProcesoVO;
@@ -475,6 +461,8 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		    		/*DIEGO ACA ES DONDE QUIERO PONER EL VALOR ANTERIOR*/
 		    		
 		    		Mensajes.mostrarMensajeWarning("No se puede cambiar TC si hay lineas ingresadas");
+		    		tcMov.setConvertedValue(cotizacionVenta);
+		    		return;
 		    	}
 	    		
 	    	}
@@ -497,6 +485,8 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 			/*Validamos los campos antes de invocar al controlador*/
 			if(this.fieldsValidos())
 			{
+				
+				
 				/*Inicializamos VO de permisos para el usuario, formulario y operacion
 				 * para confirmar los permisos del usuario*/
 				UsuarioPermisosVO permisoAux = 
@@ -505,14 +495,14 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 								VariablesPermisos.FORMULARIO_FACTURA,
 								VariablesPermisos.OPERACION_NUEVO_EDITAR);				
 				
-				
-				int comp = Double.compare(importeTotalCalculado, (Double)impTotMo.getConvertedValue());
-				
-				if(comp != 0){
-					Mensajes.mostrarMensajeError("El importe total es diferente a la suma del detalle");
-					return;
+				if(!this.chkDiferencia.getValue()){
+					int comp = Double.compare(importeTotalCalculado, (Double)impTotMo.getConvertedValue());
+					
+					if(comp != 0){
+						Mensajes.mostrarMensajeError("El importe total es diferente a la suma del detalle");
+						return;
+					}
 				}
-				
 				FacturaVO factVO = new FacturaVO();	
 				
 				factVO.setImpTotMo((Double) impTotMo.getConvertedValue());
@@ -574,7 +564,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 				factVO.setImpuTotMn((Double) impuTotMn.getConvertedValue());
 				factVO.setImpuTotMo((Double) impuTotMo.getConvertedValue());
 				
-				factVO.setNroDocum(Integer.valueOf(this.nroDocum.getValue()));
+				factVO.setNroDocum(nroDocum.getValue());
 				factVO.setSerieDocum(this.serieDocum.getValue().trim());
 				
 				factVO.setFecDoc(new java.sql.Timestamp(fecDoc.getValue().getTime()));
@@ -594,7 +584,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 				
 				/*Si es nuevo aun no tenemos el nro de factura*/
 				if(this.nroDocum.getValue() != null)
-					factVO.setNroDocum(Integer.parseInt(this.nroDocum.getValue().toString().trim()));
+					factVO.setNroDocum(nroDocum.getValue());
 				
 			
 				factVO.setUsuarioMod(this.permisos.getUsuario());
@@ -719,7 +709,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 			
 			MensajeExtended form = new MensajeExtended("Desea eliminar factura?",this);
 		
-			sub = new MySub("25%", "20%" );
+			sub = new MySub("18%", "16%" );
 			sub.setModal(true);
 			sub.center();
 			sub.setModal(true);
@@ -768,33 +758,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		
 		this.cancelar.addClickListener(click -> {
 			
-			if(this.lstDetalleAgregar.size() > 0)
-			{
-				
-				for (FacturaDetalleVO f : this.lstDetalleAgregar) {
-					
-					/*Si no esta lo agregamos*/
-					if(this.existeFormularioenLista(f.getNroDocum()))
-						this.lstDetalleVO.remove(f);
-				}
-				
-				
-				
-				this.calcularImporteTotal();
-			}
-			
-			if(this.lstDetalleQuitar.size() > 0)
-			{
-				for (FacturaDetalleVO f : this.lstDetalleQuitar) {
-					
-					/*Si no esta lo agregamos*/
-					if(!this.existeFormularioenLista(f.getNroDocum()))
-						this.lstDetalleVO.add(f);
-				}
-				
-				this.calcularImporteTotal();
-			}
-			
+			this.mainView.actulaizarGrilla();
 			main.cerrarVentana();
 		});
 			
@@ -1004,7 +968,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		
 		/*Inicializamos los combos*/
 		this.inicializarComboMoneda(null);
-		
+		this.total.setEnabled(false);
 		inicializarCampos();
 		
 		importeTotalCalculado = (Double) impTotMo.getConvertedValue();
@@ -1127,6 +1091,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		this.impuTotMo.setEnabled(false);
 		this.comboMoneda.setEnabled(false);
 		this.serieDocum.setEnabled(false);
+		this.btnBuscarProceso.setVisible(false);
 		
 		/*Si tiene permisos de editar habilitamos el boton de 
 		 * edicion*/
@@ -1194,7 +1159,6 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 			this.enableBotonAceptar();
 			this.disableBotonLectura();
 			this.enableBotonAgregarQuitar();
-			
 			this.disableBotonEliminar();
 			
 			/*Dejamos los textfields que se pueden editar
@@ -1433,6 +1397,10 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		if(this.referencia.isValid())
 			valido = true;
 		
+		if(!this.tryParseInt(nroDocum.getValue())){
+			nroDocum.setComponentError(new UserError("Debe ingresar un número entero"));
+			valido = false;
+		}
 		
 		return valido;
 	}
@@ -1566,7 +1534,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 
 		/*Si esta el detalle en la lista, es una acutalizacion
 		 * y modificamos el objeto en la lista*/
-		if(this.existeFormularioenLista(det.getNroDocum()))
+		if(this.existeFormularioenLista(Integer.parseInt(det.getNroDocum())))
 		{
 			this.actualizarFormularioLista(det);
 		}
@@ -1626,7 +1594,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		while( i < this.lstDetalleVO.size() && !esta)
 		{
 			aux = this.lstDetalleVO.get(i);
-			if(nro==aux.getNroDocum())
+			if(nro==Integer.parseInt(aux.getNroDocum()))
 			{
 				esta = true;
 			}
@@ -1647,7 +1615,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		while( i < this.lstDetalleVO.size() && !esta)
 		{
 			aux = this.lstDetalleVO.get(i);
-			if(nro==aux.getNroDocum())
+			if(nro==Integer.parseInt(aux.getNroDocum()))
 			{
 				esta = true;
 				this.lstDetalleVO.remove(i);
@@ -1752,7 +1720,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	
 				if(lineaSelecccionada != null){
 	
-					FacturaDetalleVO aux = obtenerGastoEnLista(lineaSelecccionada.getNroDocum());
+					FacturaDetalleVO aux = obtenerGastoEnLista(Integer.parseInt(lineaSelecccionada.getNroDocum()));
 			    	gtoSaldo = saldoOriginalGastos.get(lineaSelecccionada.getNroDocum());
 			    	
 		  		}
@@ -1762,7 +1730,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	        public void postCommit(FieldGroup.CommitEvent commitEvent) throws     FieldGroup.CommitException {
 	      	
 	    	  
-	        	FacturaDetalleVO aux2 = obtenerGastoEnLista(lineaSelecccionada.getNroDocum());
+	        	FacturaDetalleVO aux2 = obtenerGastoEnLista(Integer.parseInt(lineaSelecccionada.getNroDocum()));
 	    	  
 	        	/*Si el importe modificado es mayor al saldo no dejamos modificar*/
 	    	  
@@ -1792,7 +1760,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		while( i < this.lstDetalleVO.size() && !esta)
 		{
 			aux = this.lstDetalleVO.get(i);
-			if(nro==aux.getNroDocum())
+			if(nro==Integer.parseInt(aux.getNroDocum()))
 			{
 				esta = true;
 			}
@@ -1956,8 +1924,13 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		this.impSubMo.setConvertedValue(truncatedImpSubMo);
 		this.impSubMn.setConvertedValue(truncatedImpSubMn);
 		
-		
 		importeTotalCalculado = impMo;
+		Double truncatedDouble = new BigDecimal(importeTotalCalculado)
+			    .setScale(2, BigDecimal.ROUND_HALF_UP)
+			    .doubleValue();
+		
+		importeTotalCalculado = truncatedDouble;
+		this.total.setConvertedValue(importeTotalCalculado);
 	}
 	
 	
@@ -1986,7 +1959,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 
 		//lstFormularios.setContainerDataSource(container);
 		this.actualizarGrillaContainer(container);
-		
+		calcularImporteTotal();
 	}
 	
 	
@@ -2020,8 +1993,8 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		
 		nroTrans.setConverter(Long.class);
 		
-		nroDocum.setConverter(Integer.class);
-		nroDocum.setConversionError("Ingrese un número entero");
+//		nroDocum.setConverter(Integer.class);
+//		nroDocum.setConversionError("Ingrese un número entero");
 		
 		tcMov.setConverter(Double.class);
 		tcMov.setConversionError("Error en formato de número");
@@ -2046,6 +2019,8 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		
 		this.impuTotMo.setConversionError("Error en formato de número");
 		
+		total.setConverter(Double.class);
+		total.setConversionError("Error en formato de número");
 		
 		tcMov.setData("ProgramaticallyChanged");
 	}
@@ -2277,7 +2252,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 							
 							/*Tambien agrefamos a la lista de los saldos originales
 							 * para poder controlar que no ingresen un saldo mayor al que tien el gasto*/
-							GtoSaldoAux saldoAux =  new GtoSaldoAux(f.getNroDocum(), f.getImpTotMo());
+							GtoSaldoAux saldoAux =  new GtoSaldoAux(Integer.parseInt(f.getNroDocum()), f.getImpTotMo());
 							this.saldoOriginalGastos.put(saldoAux.getNroDocum(),saldoAux);
 						}
 						else{
@@ -2292,7 +2267,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 				
 				/*Tambien agrefamos a la lista de los saldos originales
 				 * para poder controlar que no ingresen un saldo mayor al que tien el gasto*/
-				GtoSaldoAux saldoAux =  new GtoSaldoAux(f.getNroDocum(), f.getImpTotMo());
+				GtoSaldoAux saldoAux =  new GtoSaldoAux(Integer.parseInt(f.getNroDocum()), f.getImpTotMo());
 				this.saldoOriginalGastos.put(saldoAux.getNroDocum(),saldoAux);
 			}
 		}
@@ -2433,7 +2408,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		for (GastoVO i: lstGastosConSaldo) {
 			
 			/*Verificamos que el gasto ya no esta en la grilla*/
-			if(!this.existeFormularioenLista(i.getNroDocum()))
+			if(!this.existeFormularioenLista(Integer.parseInt(i.getNroDocum())))
 			{
 				obj = new Object();
 				obj = (Object)i;
@@ -2510,6 +2485,15 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		return datosCab;
 	}
 	
-	
+
+	boolean tryParseInt(String value) {  
+     try {  
+         Integer.parseInt(value);  
+         return true;  
+      } catch (NumberFormatException e) {  
+         return false;  
+    }  
+}
+
 	
 }

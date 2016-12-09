@@ -477,12 +477,10 @@ public class BusquedaViewExtended extends BusquedaView{
 			grid.removeColumn("fechaMod");
 			grid.removeColumn("usuarioMod");
 			grid.removeColumn("operacion");
-			grid.removeColumn("nroMega");
 			grid.removeColumn("codDocum");
 			grid.removeColumn("nomDocum");
 			grid.removeColumn("nroDocum");
 			grid.removeColumn("fecDocum");
-			grid.removeColumn("carpeta");
 			grid.removeColumn("impMo");
 			grid.removeColumn("impMn");
 			grid.removeColumn("impTr");
@@ -493,7 +491,29 @@ public class BusquedaViewExtended extends BusquedaView{
 			grid.removeColumn("observaciones");
 			grid.removeColumn("descMoneda");
 			grid.removeColumn("codRubro");
-		
+			
+			grid.removeColumn("codCuenta");
+			grid.removeColumn("codImpuesto");
+			grid.removeColumn("impSubTot");
+			grid.removeColumn("nomCuenta");
+			grid.removeColumn("nomRubro");
+			grid.removeColumn("linea");
+			
+			grid.getColumn("descripcion").setWidth(300);
+			grid.getColumn("codigo").setWidth(100);
+			grid.getColumn("fecha").setWidth(100);
+			grid.getColumn("nomCliente").setWidth(150);
+			grid.getColumn("nroMega").setWidth(100);
+			grid.getColumn("carpeta").setWidth(100);
+			
+			
+			grid.getColumn("nomCliente").setHeaderCaption("Cliente");
+			grid.getColumn("codigo").setHeaderCaption("Proceso");
+			grid.getColumn("nroMega").setHeaderCaption("Mega");
+			grid.getColumn("carpeta").setHeaderCaption("Carpeta");
+			
+			grid.setColumnOrder("codigo", "fecha", "nomCliente", "descripcion", "carpeta", "nroMega");
+			
 			this.arreglarGrillaProceso();
 			this.filtroGrilla();
 			
@@ -574,6 +594,8 @@ public class BusquedaViewExtended extends BusquedaView{
 			grid.removeColumn("usuarioMod");
 			grid.removeColumn("operacion");
 			grid.removeColumn("nacional");
+			grid.removeColumn("estadoGasto");
+			grid.removeColumn("tipo");
 			
 			grid.setEditorEnabled(true);
 			grid.getColumn("impTotMn").setEditable(true);
@@ -664,17 +686,7 @@ public class BusquedaViewExtended extends BusquedaView{
 	}
 	
 	private void arreglarGrillaProceso(){
-		List<Column> lstColumn = grid.getColumns();
 		
-		lstColumn.get(1).setWidth(100); /*Numero de proceso*/
-		lstColumn.get(2).setWidth(500); /*Descripcion*/
-		
-		lstColumn.get(0).setWidth(150); /*Este es Número... no lo mostramos*/
-		//lstColumn.get(0).setHeaderCaption("Número");
-		lstColumn.get(0).setHidden(true);
-		lstColumn.get(1).setWidth(100);
-		//lstColumn.get(2).setWidth(300);
-		lstColumn.get(2).setWidth(150);
 		//Modifica el formato de fecha en la grilla 
 		grid.getColumn("fecha").setConverter(new StringToDateConverter(){
 			/**

@@ -174,7 +174,7 @@ public class DepositoViewExtended extends DepositoView implements IMensaje{
 			this.operacion = Variables.OPERACION_ELIMINAR;
 			
 			
-			sub = new MySub("25%", "20%" );
+			sub = new MySub("18%", "16%" );
 			sub.setModal(true);
 			sub.center();
 			sub.setModal(true);
@@ -1089,7 +1089,7 @@ public class DepositoViewExtended extends DepositoView implements IMensaje{
 	@Override
 	public void cerrarVentana() {
 		// TODO Auto-generated method stub
-		
+		UI.getCurrent().removeWindow(sub);
 	}
 
 	@Override

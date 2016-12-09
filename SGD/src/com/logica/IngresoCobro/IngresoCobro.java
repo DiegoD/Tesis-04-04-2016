@@ -40,7 +40,7 @@ public class IngresoCobro extends DatosDocum{
 		this.mPago = t.getmPago();
 		this.codDocRef = t.getCodDocRef();
 		this.serieDocRef = t.getSerieDocRef();
-		this.nroDocRef = t.getNroDocRef();
+		this.nroDocRef = Integer.parseInt(t.getNroDocRef());
 		this.bancoInfo = new BancoInfo(t.getCodBanco(), t.getNomBanco());
 		this.setCuenta(new CuentaInfo(t.getCodCuenta(), t.getNomCuenta(), t.getCodMonedaCtaBco(), t.isNacionalMonedaCtaBco()));
 		
@@ -66,7 +66,7 @@ public class IngresoCobro extends DatosDocum{
 		aux.setmPago(mPago);
 		aux.setCodDocRef(codDocRef);
 		aux.setSerieDocRef(serieDocRef);
-		aux.setNroDocRef(nroDocRef);
+		aux.setNroDocRef(String.valueOf(nroDocRef));
 		aux.setCodBanco(bancoInfo.getCodBanco());
 		aux.setNomBanco(bancoInfo.getNomBanco());
 		aux.setCodCtaInd("0");

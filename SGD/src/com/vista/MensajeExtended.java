@@ -8,8 +8,7 @@ public class MensajeExtended extends Mensaje{
 	
 	public MensajeExtended(String mensaje, IMensaje main){
 		
-		this.lblMensaje.setCaption(mensaje);
-		this.lblMensaje.setStyleName("center");
+		this.lblMensaje.setValue(mensaje);
 		this.main = main;
 		
 		this.aceptar.addClickListener(click -> {

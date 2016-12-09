@@ -158,10 +158,10 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 					}
 					
 					if(nroDocum.getValue() != "" && nroDocum.getValue() != null){
-						procesoVO.setNroDocum((Integer) nroDocum.getConvertedValue());
+						procesoVO.setNroDocum(nroDocum.getValue());
 					}
 					else{
-						procesoVO.setNroDocum(0);
+						procesoVO.setNroDocum("0");
 					}
 						
 					if(Kilos.getValue() != "" && Kilos.getValue() != null){

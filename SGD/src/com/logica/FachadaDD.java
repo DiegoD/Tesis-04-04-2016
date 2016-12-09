@@ -2382,7 +2382,7 @@ public class FachadaDD {
     			aux.setNroMega(proceso.getNroMega());
     			aux.setCodDocum(proceso.getDocumento().getCod_docucmento());
     			aux.setNomDocum(proceso.getDocumento().getDescirpcion());
-    			aux.setNroDocum(proceso.getNroDocum());
+    			aux.setNroDocum(String.valueOf(proceso.getNroDocum()));
     			aux.setFecDocum(proceso.getFecDocum());
     			aux.setCarpeta(proceso.getCarpeta());
     			aux.setImpMo(proceso.getImpMo());
@@ -2451,7 +2451,7 @@ public class FachadaDD {
        			aux.setNroMega(proceso.getNroMega());
        			aux.setCodDocum(proceso.getDocumento().getCod_docucmento());
        			aux.setNomDocum(proceso.getDocumento().getDescirpcion());
-       			aux.setNroDocum(proceso.getNroDocum());
+       			aux.setNroDocum(String.valueOf(proceso.getNroDocum()));
        			aux.setFecDocum(proceso.getFecDocum());
        			aux.setCarpeta(proceso.getCarpeta());
        			aux.setImpMo(proceso.getImpMo());
@@ -2638,7 +2638,7 @@ public class FachadaDD {
 			aux.setNroMega(proceso.getNroMega());
 			aux.setCodDocum(proceso.getDocumento().getCod_docucmento());
 			aux.setNomDocum(proceso.getDocumento().getDescirpcion());
-			aux.setNroDocum(proceso.getNroDocum());
+			aux.setNroDocum(String.valueOf(proceso.getNroDocum()));
 			aux.setFecDocum(proceso.getFecDocum());
 			aux.setCarpeta(proceso.getCarpeta());
 			aux.setImpMo(proceso.getImpMo());
@@ -2699,7 +2699,7 @@ public class FachadaDD {
 				aux.setFecDoc(gasto.getFecDoc());
 				aux.setCodDocum(gasto.getCodDocum());
 				aux.setSerieDocum(gasto.getSerieDocum());
-				aux.setNroDocum(gasto.getNroDocum());
+				aux.setNroDocum(String.valueOf(gasto.getNroDocum()));
 				aux.setCodEmp(gasto.getCodEmp());
 				aux.setCodMoneda(gasto.getMoneda().getCodMoneda());
 				aux.setNomMoneda(gasto.getMoneda().getDescripcion());
@@ -2778,7 +2778,7 @@ public class FachadaDD {
 				aux.setFecDoc(gasto.getFecDoc());
 				aux.setCodDocum(gasto.getCodDocum());
 				aux.setSerieDocum(gasto.getSerieDocum());
-				aux.setNroDocum(gasto.getNroDocum());
+				aux.setNroDocum(String.valueOf(gasto.getNroDocum()));
 				aux.setCodEmp(gasto.getCodEmp());
 				aux.setCodMoneda(gasto.getMoneda().getCodMoneda());
 				aux.setSimboloMoneda(gasto.getMoneda().getSimbolo());
@@ -2857,7 +2857,7 @@ public class FachadaDD {
 				aux.setFecDoc(gasto.getFecDoc());
 				aux.setCodDocum(gasto.getCodDocum());
 				aux.setSerieDocum(gasto.getSerieDocum());
-				aux.setNroDocum(gasto.getNroDocum());
+				aux.setNroDocum(String.valueOf(gasto.getNroDocum()));
 				aux.setCodEmp(gasto.getCodEmp());
 				aux.setCodMoneda(gasto.getMoneda().getCodMoneda());
 				aux.setSimboloMoneda(gasto.getMoneda().getSimbolo());
@@ -2937,7 +2937,7 @@ public class FachadaDD {
 				aux.setFecDoc(gasto.getFecDoc());
 				aux.setCodDocum(gasto.getCodDocum());
 				aux.setSerieDocum(gasto.getSerieDocum());
-				aux.setNroDocum(gasto.getNroDocum());
+				aux.setNroDocum(String.valueOf(gasto.getNroDocum()));
 				aux.setCodEmp(gasto.getCodEmp());
 				aux.setCodMoneda(gasto.getMoneda().getCodMoneda());
 				aux.setSimboloMoneda(gasto.getMoneda().getSimbolo());
@@ -3016,7 +3016,7 @@ public class FachadaDD {
 				aux.setFecDoc(gasto.getFecDoc());
 				aux.setCodDocum(gasto.getCodDocum());
 				aux.setSerieDocum(gasto.getSerieDocum());
-				aux.setNroDocum(gasto.getNroDocum());
+				aux.setNroDocum(String.valueOf(gasto.getNroDocum()));
 				aux.setCodEmp(gasto.getCodEmp());
 				aux.setCodMoneda(gasto.getMoneda().getCodMoneda());
 				aux.setSimboloMoneda(gasto.getMoneda().getSimbolo());
@@ -3147,7 +3147,7 @@ public class FachadaDD {
 				aux.setFecDoc(gasto.getFecDoc());
 				aux.setCodDocum(gasto.getCodDocum());
 				aux.setSerieDocum(gasto.getSerieDocum());
-				aux.setNroDocum(gasto.getNroDocum());
+				aux.setNroDocum(String.valueOf(gasto.getNroDocum()));
 				aux.setCodEmp(gasto.getCodEmp());
 				aux.setCodMoneda(gasto.getMoneda().getCodMoneda());
 				aux.setNomMoneda(gasto.getMoneda().getDescripcion());
@@ -3224,7 +3224,86 @@ public class FachadaDD {
 				aux.setFecDoc(gasto.getFecDoc());
 				aux.setCodDocum(gasto.getCodDocum());
 				aux.setSerieDocum(gasto.getSerieDocum());
-				aux.setNroDocum(gasto.getNroDocum());
+				aux.setNroDocum(String.valueOf(gasto.getNroDocum()));
+				aux.setCodEmp(gasto.getCodEmp());
+				aux.setCodMoneda(gasto.getMoneda().getCodMoneda());
+				aux.setNomMoneda(gasto.getMoneda().getDescripcion());
+				aux.setReferencia(gasto.getReferencia());
+				aux.setCodTitular(gasto.getTitInfo().getCodigo());
+				aux.setNomTitular(gasto.getTitInfo().getNombre());
+				aux.setNroTrans(gasto.getNroTrans());
+				aux.setFecValor(gasto.getFecValor());
+				aux.setCodProceso(gasto.getCodProceso());
+				aux.setReferencia(gasto.getReferencia());
+				aux.setImpImpuMn(gasto.getImpImpuMn());
+				aux.setImpImpuMo(gasto.getImpImpuMo());
+				aux.setImpSubMn(gasto.getImpSubMn());
+				aux.setImpSubMo(gasto.getImpSubMo());
+				aux.setImpTotMn(gasto.getImpTotMn());
+				aux.setImpTotMo(gasto.getImpTotMo());
+				aux.setTcMov(gasto.getTcMov());
+				aux.setCodCuenta(gasto.getCuenta().getCodCuenta());
+				aux.setNomCuenta(gasto.getCuenta().getNomCuenta());
+				aux.setCodRubro(gasto.getRubroInfo().getCodRubro());
+				aux.setNomRubro(gasto.getRubroInfo().getNomRubro());
+				aux.setCodCtaInd(gasto.getCodCuentaInd());
+				aux.setFechaMod(gasto.getFechaMod());
+				aux.setUsuarioMod(gasto.getUsuarioMod());
+				aux.setOperacion(gasto.getOperacion());
+				aux.setDescProceso(gasto.getDescProceso());
+				aux.setCodImpuesto(gasto.getImpuestoInfo().getCodImpuesto());
+				aux.setNomImpuesto(gasto.getImpuestoInfo().getNomImpuesto());
+				aux.setPorcentajeImpuesto(gasto.getImpuestoInfo().getPorcentaje());
+				aux.setSimboloMoneda(gasto.getMoneda().getSimbolo());
+				aux.setNacional(gasto.getMoneda().isNacional());
+				aux.setEstadoGasto(gasto.getEstadoGasto());
+				lstGastosVO.add(aux);
+			}
+		
+		}
+		catch(ObteniendoGastosException e){
+			throw e;
+		
+		} 
+		catch (ConexionException e) {
+		
+			throw e;
+		} 
+		finally{
+			this.pool.liberarConeccion(con);
+		}
+		
+		return lstGastosVO;
+	}
+	
+	/**
+	* Obtiene todos los gastos con saldo cobrables para el titular y empresa 
+	*/
+	@SuppressWarnings("unchecked")
+	public ArrayList<GastoVO> getGastosConSaldoCobrable(String cod_emp, String codTit) throws ObteniendoGastosException, ConexionException
+	{
+	
+		Connection con = null;
+		
+		ArrayList<Gasto> lstGastos;
+		ArrayList<GastoVO> lstGastosVO = new ArrayList<GastoVO>();
+		
+		try
+		{
+			con = this.pool.obtenerConeccion();
+			
+			lstGastos = this.gastos.getGastosConSaldoCobrable(con, cod_emp, codTit);
+			
+			
+			GastoVO aux;
+			for (Gasto gasto : lstGastos) 
+			{
+				aux = new GastoVO();
+				
+				aux.setFecDoc(gasto.getFecDoc());
+				aux.setCodDocum(gasto.getCodDocum());
+				aux.setSerieDocum(gasto.getSerieDocum());
+				aux.setNroDocum(String.valueOf(gasto.getNroDocum()));
 				aux.setCodEmp(gasto.getCodEmp());
 				aux.setCodMoneda(gasto.getMoneda().getCodMoneda());
 				aux.setNomMoneda(gasto.getMoneda().getDescripcion());
@@ -3303,7 +3382,7 @@ public class FachadaDD {
 				aux.setFecDoc(gasto.getFecDoc());
 				aux.setCodDocum(gasto.getCodDocum());
 				aux.setSerieDocum(gasto.getSerieDocum());
-				aux.setNroDocum(gasto.getNroDocum());
+				aux.setNroDocum(String.valueOf(gasto.getNroDocum()));
 				aux.setCodEmp(gasto.getCodEmp());
 				aux.setCodMoneda(gasto.getMoneda().getCodMoneda());
 				aux.setNomMoneda(gasto.getMoneda().getDescripcion());
@@ -3382,7 +3461,7 @@ public class FachadaDD {
 				aux.setFecDoc(gasto.getFecDoc());
 				aux.setCodDocum(gasto.getCodDocum());
 				aux.setSerieDocum(gasto.getSerieDocum());
-				aux.setNroDocum(gasto.getNroDocum());
+				aux.setNroDocum(String.valueOf(gasto.getNroDocum()));
 				aux.setCodEmp(gasto.getCodEmp());
 				aux.setCodMoneda(gasto.getMoneda().getCodMoneda());
 				aux.setNomMoneda(gasto.getMoneda().getDescripcion());
@@ -3744,7 +3823,7 @@ public class FachadaDD {
 			   aux = new PeriodoVO();
 			   
 			   aux.setMes(periodo.getMes());
-			   aux.setAnio(periodo.getAnio());
+			   aux.setAnio(periodo.getAnio().toString());
 			   aux.setAbierto(periodo.getAbierto());
 			   aux.setFechaMod(periodo.getFechaMod());
 			   aux.setOperacion(periodo.getOperacion());

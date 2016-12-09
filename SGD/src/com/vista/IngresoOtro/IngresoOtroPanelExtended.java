@@ -269,7 +269,7 @@ public class IngresoOtroPanelExtended extends IngresoOtroPanel{
 		while( i < this.lstIngresoCobro.size() && !esta)
 		{
 			aux = this.lstIngresoCobro.get(i);
-			if(nro==aux.getNroDocum())
+			if(nro==Integer.parseInt(aux.getNroDocum()))
 			{
 				esta = true;
 			}

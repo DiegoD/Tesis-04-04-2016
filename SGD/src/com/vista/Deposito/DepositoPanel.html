@@ -5,6 +5,16 @@
  </head> 
  <body> 
   <vaadin-vertical-layout size-full> 
+   <vaadin-horizontal-layout width-full> 
+    <vaadin-horizontal-layout spacing :right> 
+     <vaadin-label caption="Filtrar" width="0px" height="0px"></vaadin-label> 
+     <vaadin-date-field style-name="tiny"></vaadin-date-field> 
+     <vaadin-date-field style-name="tiny" :right></vaadin-date-field> 
+     <vaadin-button icon="fonticon://FontAwesome/f021" style-name="icon-only borderless quiet tiny" :right>
+       Button 
+     </vaadin-button> 
+    </vaadin-horizontal-layout> 
+   </vaadin-horizontal-layout> 
    <vaadin-panel size-full :expand="100"> 
     <vaadin-grid size-full _id="gridDepositos"></vaadin-grid> 
    </vaadin-panel> 

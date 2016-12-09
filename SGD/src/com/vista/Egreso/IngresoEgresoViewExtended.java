@@ -40,6 +40,7 @@ import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
+import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
@@ -242,6 +243,23 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 				inicializarComboCuentas(bcoAux.getCodigo(), "Banco");
 			}		
 		}
+    });
+	
+    comboMPagos.addValueChangeListener(new Property.ValueChangeListener() {
+
+		@Override
+		public void valueChange(ValueChangeEvent event) {
+			// TODO Auto-generated method stub
+			if(comboMPagos.getValue().equals("Transferencia")){
+				serieDocRef.setEnabled(false);
+				serieDocRef.setRequired(false);
+			}
+			else{
+				serieDocRef.setEnabled(true);
+				serieDocRef.setRequired(true);
+			}
+		}
+    	
     });
 	
 	
@@ -636,14 +654,14 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 								VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
 								VariablesPermisos.OPERACION_NUEVO_EDITAR);				
 				
-				
-				int comp = Double.compare(importeTotalCalculado, (Double)impTotMo.getConvertedValue());
-				
-				if(comp != 0){
-					Mensajes.mostrarMensajeError("El importe total es diferente a la suma del detalle");
-					return;
+				if(!this.chkDiferencia.getValue()){
+					int comp = Double.compare(importeTotalCalculado, (Double)impTotMo.getConvertedValue());
+					
+					if(comp != 0){
+						Mensajes.mostrarMensajeError("El importe total es diferente a la suma del detalle");
+						return;
+					}
 				}
-				
 				IngresoCobroVO ingCobroVO = new IngresoCobroVO();	
 				
 				ingCobroVO.setImpTotMo((Double) impTotMo.getConvertedValue());
@@ -718,7 +736,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 				
 				/*Si es nuevo aun no tenemos el nro del cobro*/
 				if(this.nroDocum.getValue() != null)
-					ingCobroVO.setNroDocum(Integer.parseInt(this.nroDocum.getValue().toString().trim()));
+					ingCobroVO.setNroDocum(this.nroDocum.getValue());
 				
 				
 				/*Si es banco tomamos estos cmapos de lo contrario caja*/
@@ -726,23 +744,23 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 				
 					ingCobroVO.setmPago((String)comboMPagos.getValue());
 					
-					if(ingCobroVO.getmPago().equals("transferencia"))
+					if(ingCobroVO.getmPago().equals("Transferencia"))
 					{
 						ingCobroVO.setCodDocRef("tranemi");
-						
+						ingCobroVO.setNroDocRef(nroDocRef.getValue());
 						ingCobroVO.setSerieDocRef("0");
 					}
 					else if(ingCobroVO.getmPago().equals("Cheque"))
 					{
 						ingCobroVO.setCodDocRef("cheqemi");
-						ingCobroVO.setNroDocRef((Integer) nroDocRef.getConvertedValue());
+						ingCobroVO.setNroDocRef(nroDocRef.getValue());
 						ingCobroVO.setSerieDocRef(serieDocRef.getValue());
 						
 					}else
 					{
 						
 						ingCobroVO.setCodDocRef("0");
-						ingCobroVO.setNroDocRef(0);
+						ingCobroVO.setNroDocRef("0");
 						ingCobroVO.setSerieDocRef("0");
 					}
 												
@@ -775,7 +793,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 						ingCobroVO.setNomCtaBco("0");
 						
 						ingCobroVO.setCodDocRef("0");
-						ingCobroVO.setNroDocRef(0);
+						ingCobroVO.setNroDocRef("0");
 						ingCobroVO.setSerieDocRef("0");
 						
 						ingCobroVO.setmPago("Caja");
@@ -801,7 +819,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 					for (IngresoCobroDetalleVO f : this.lstDetalleAgregar) {
 						
 						//Si no esta lo agregamos
-						if(!this.existeFormularioenLista(f.getNroDocum()))
+						if(!this.existeFormularioenLista(Integer.parseInt(f.getNroDocum())))
 							this.lstDetalleVO.add(f);
 					}
 				}
@@ -832,6 +850,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 				
 				if(this.operacion.equals(Variables.OPERACION_NUEVO))	
 				{	
+					ingCobroVO.setNroDocum("0");
 					this.controlador.insertarIngresoEgreso(ingCobroVO, permisoAux);
 					
 					this.mainView.actulaizarGrilla(ingCobroVO);
@@ -919,7 +938,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 			
 			MensajeExtended form = new MensajeExtended("Elimina el cobro?",this);
 		
-			sub = new MySub("25%", "20%" );
+			sub = new MySub("18%", "16%" );
 			sub.setModal(true);
 			sub.center();
 			sub.setModal(true);
@@ -945,7 +964,8 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 					sub.setModal(true);
 					//sub.setVista(form);
 					sub.setVista((Component) form);
-					
+					sub.setHeight("90%");
+					sub.setWidth("46%");
 					sub.center();
 					
 					String codCliente;/*Codigo del cliente para obtener los gastos a cobrar del mismo*/
@@ -1012,33 +1032,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 			
 		this.cancelar.addClickListener(click -> {
 			
-			if(this.lstDetalleAgregar.size() > 0)
-			{
-				
-				for (IngresoCobroDetalleVO f : this.lstDetalleAgregar) {
-					
-					/*Si no esta lo agregamos*/
-					if(this.existeFormularioenLista(f.getNroDocum()))
-						this.lstDetalleVO.remove(f);
-				}
-				
-				
-				
-				this.calcularImporteTotal();
-			}
-			
-			if(this.lstDetalleQuitar.size() > 0)
-			{
-				for (IngresoCobroDetalleVO f : this.lstDetalleQuitar) {
-					
-					/*Si no esta lo agregamos*/
-					if(!this.existeFormularioenLista(f.getNroDocum()))
-						this.lstDetalleVO.add(f);
-				}
-				
-				this.calcularImporteTotal();
-			}
-			
+			this.mainView.actulaizarGrilla(this.ingresoCopia);
 			main.cerrarVentana();
 		});
 			
@@ -1214,6 +1208,8 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		this.inicializarComboCuentas(null, "");
 		this.inicializarComboMoneda(null);
 		
+		this.total.setEnabled(false);
+		
 		inicializarCampos();
 		
 		importeTotalCalculado = (Double) impTotMo.getConvertedValue();
@@ -1284,45 +1280,57 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		this.impTotMo.setRequiredError("Es requerido");
 		
 		/*De Bco*/
-		if(this.comboTipo.equals("Banco"))
-		{
-			this.comboMPagos.setRequired(setear);
-			this.comboMPagos.setRequiredError("Es requerido");
-			
-			this.serieDocRef.setRequired(setear);
-			this.serieDocRef.setRequiredError("Es requerido");
-			
-			this.nroDocRef.setRequired(setear);
-			this.nroDocRef.setRequiredError("Es requerido");
-			
-			this.comboBancos.setRequired(setear);
-			this.comboBancos.setRequiredError("Es requerido");
-			
-			this.comboCuentas.setRequired(setear);
-			this.comboCuentas.setRequiredError("Es requerido");
-		}
-		else
-		{
-			this.serieDocRef.setReadOnly(false);
-			this.nroDocRef.setReadOnly(false);
-			this.comboBancos.setReadOnly(false);
-			this.comboCuentas.setReadOnly(false);
-			this.comboMPagos.setReadOnly(false);
-			
-			this.serieDocRef.setValue("0");
-			this.serieDocRef.setRequired(false);
-			this.nroDocRef.setRequired(false);
-			this.comboBancos.setRequired(false);
-			this.comboCuentas.setRequired(false);
-			this.comboMPagos.setRequired(false);
-			
-			this.serieDocRef.setReadOnly(true);
-			this.nroDocRef.setReadOnly(true);
-			this.comboBancos.setReadOnly(true);
-			this.comboCuentas.setReadOnly(true);
-			this.comboMPagos.setReadOnly(true);
+		if(comboTipo.getValue() != null){
 			
 		
+			if(this.comboTipo.getValue().equals("Banco") && this.comboTipo.getValue() != null)
+			{
+				this.comboMPagos.setRequired(setear);
+				this.comboMPagos.setRequiredError("Es requerido");
+				
+				if(this.comboMPagos.getValue()!= null){
+					if(this.comboMPagos.getValue().equals("Cheque")){
+						this.serieDocRef.setRequired(setear);
+						this.serieDocRef.setRequiredError("Es requerido");
+					}
+					else{
+						this.serieDocRef.setRequired(false);
+					}
+				}
+				
+				
+				this.nroDocRef.setRequired(setear);
+				this.nroDocRef.setRequiredError("Es requerido");
+				
+				this.comboBancos.setRequired(setear);
+				this.comboBancos.setRequiredError("Es requerido");
+				
+				this.comboCuentas.setRequired(setear);
+				this.comboCuentas.setRequiredError("Es requerido");
+			}
+			else
+			{
+				this.serieDocRef.setReadOnly(false);
+				this.nroDocRef.setReadOnly(false);
+				this.comboBancos.setReadOnly(false);
+				this.comboCuentas.setReadOnly(false);
+				this.comboMPagos.setReadOnly(false);
+				
+				this.serieDocRef.setValue("0");
+				this.serieDocRef.setRequired(false);
+				this.nroDocRef.setRequired(false);
+				this.comboBancos.setRequired(false);
+				this.comboCuentas.setRequired(false);
+				this.comboMPagos.setRequired(false);
+				
+				this.serieDocRef.setReadOnly(true);
+				this.nroDocRef.setReadOnly(true);
+				this.comboBancos.setReadOnly(true);
+				this.comboCuentas.setReadOnly(true);
+				this.comboMPagos.setReadOnly(true);
+				
+			
+			}
 		}
 		
 	}
@@ -1372,11 +1380,9 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		else
 			this.comboTipo.setValue("Banco");
 		
-		this.comboMPagos = new ComboBox();
-		
 		this.comboMPagos.setImmediate(true);
 		this.comboMPagos.setNullSelectionAllowed(false);
-		
+		this.comboMPagos.setReadOnly(false);
 		this.comboMPagos.addItem("Sin Asignar");
 		this.comboMPagos.addItem("Cheque");
 		this.comboMPagos.addItem("Transferencia");
@@ -1520,6 +1526,11 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 			/*Mostramos mensaje Sin permisos para operacion*/
 			Mensajes.mostrarMensajeError(Variables.USUSARIO_SIN_PERMISOS);
 		}
+		
+		if(comboMPagos.getValue() != null && comboMPagos.getValue().equals("Transferencia")){
+			this.serieDocRef.setEnabled(false);
+			
+		}
 	}
 	
 	/**
@@ -1584,13 +1595,17 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		this.fecDoc.setReadOnly(false);
 		
 		this.serieDocRef.setReadOnly(false);
+		this.serieDocRef.setEnabled(true);
 		
 		this.nroDocRef.setReadOnly(false);
+		this.nroDocRef.setEnabled(true);
 		
 		this.impTotMo.setReadOnly(false);
 		this.impTotMo.setEnabled(true);
 		
 		this.referencia.setReadOnly(false);
+		
+		
 	}
 	
 	/**
@@ -1742,7 +1757,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		
         this.serieDocRef.addValidator(
                 new StringLengthValidator(
-                     " 4 caracteres máximo", 1, 4, false));
+                     " 4 caracteres máximo", 0, 4, false));
         
         this.referencia.addValidator(
                 new StringLengthValidator(
@@ -1766,10 +1781,19 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		this.agregarFieldsValidaciones();
 		try
 		{
-			if(this.nroDocRef.isValid() && this.impTotMo.isValid()
+			if(this.impTotMo.isValid()
 					&& this.serieDocRef.isValid()
 					&& this.referencia.isValid())
 				valido = true;
+			
+			if(this.comboTipo.getValue()!= null){
+				if(this.comboTipo.getValue().toString().equals("Banco") && this.comboBancos != null){
+					if(!this.tryParseInt(nroDocRef.getValue())){
+						nroDocRef.setComponentError(new UserError("Debe ingresar un número entero"));
+						valido = false;
+					}
+				}
+			}
 			
 		}catch(Exception e)
 		{
@@ -1927,7 +1951,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 
 		/*Si esta el grupo en la lista, es una acutalizacion
 		 * y modificamos el objeto en la lista*/
-		if(this.existeFormularioenLista(det.getNroDocum()))
+		if(this.existeFormularioenLista(Integer.parseInt(det.getNroDocum())))
 		{
 			this.actualizarFormularioLista(det);
 		}
@@ -1990,7 +2014,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		while( i < this.lstDetalleVO.size() && !esta)
 		{
 			aux = this.lstDetalleVO.get(i);
-			if(nro==aux.getNroDocum())
+			if(nro==Integer.parseInt(aux.getNroDocum()))
 			{
 				esta = true;
 			}
@@ -2011,7 +2035,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		while( i < this.lstDetalleVO.size() && !esta)
 		{
 			aux = this.lstDetalleVO.get(i);
-			if(nro==aux.getNroDocum())
+			if(nro==Integer.parseInt(aux.getNroDocum()))
 			{
 				esta = true;
 				this.lstDetalleVO.remove(i);
@@ -2109,7 +2133,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 	
 				if(formSelecccionado != null){
 	
-					IngresoCobroDetalleVO aux = obtenerGastoEnLista(formSelecccionado.getNroDocum());
+					IngresoCobroDetalleVO aux = obtenerGastoEnLista(Integer.parseInt(formSelecccionado.getNroDocum()));
 			    	gtoSaldo = saldoOriginalGastos.get(formSelecccionado.getNroDocum());
 			    	
 		  		}
@@ -2119,7 +2143,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 	        public void postCommit(FieldGroup.CommitEvent commitEvent) throws     FieldGroup.CommitException {
 	      	
 	    	  
-	        	IngresoCobroDetalleVO aux2 = obtenerGastoEnLista(formSelecccionado.getNroDocum());
+	        	IngresoCobroDetalleVO aux2 = obtenerGastoEnLista(Integer.parseInt(formSelecccionado.getNroDocum()));
 	    	  
 	        	/*Si el importe modificado es mayor al saldo no dejamos modificar*/
 	    	  
@@ -2149,7 +2173,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		while( i < this.lstDetalleVO.size() && !esta)
 		{
 			aux = this.lstDetalleVO.get(i);
-			if(nro==aux.getNroDocum())
+			if(nro==Integer.parseInt(aux.getNroDocum()))
 			{
 				esta = true;
 			}
@@ -2455,6 +2479,13 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		//this.impTotMo.setValue(Double.toString(impMo));
 		//this.impTotMo.setConvertedValue(impMo);
 		importeTotalCalculado = impMo;
+		Double truncatedDouble = new BigDecimal(importeTotalCalculado)
+			    .setScale(2, BigDecimal.ROUND_HALF_UP)
+			    .doubleValue();
+		
+		importeTotalCalculado = truncatedDouble;
+		
+		this.total.setConvertedValue(importeTotalCalculado);
 	}
 	
 	
@@ -2483,7 +2514,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 
 		//lstFormularios.setContainerDataSource(container);
 		this.actualizarGrillaContainer(container);
-		
+		calcularImporteTotal();
 	}
 	
 	
@@ -2551,17 +2582,21 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		
 		nroTrans.setConverter(Long.class);
 		
-		nroDocum.setConverter(Integer.class);
-		nroDocum.setConversionError("Ingrese un número entero");
-		
-		nroDocRef.setConverter(Integer.class);
-		nroDocRef.setConversionError("Ingrese un número entero");
+//		nroDocum.setConverter(Integer.class);
+//		nroDocum.setConversionError("Ingrese un número entero");
+//		
+//		nroDocRef.setConverter(Integer.class);
+//		nroDocRef.setConversionError("Ingrese un número entero");
+//		
 		
 		tcMov.setConverter(Double.class);
 		tcMov.setConversionError("Error en formato de número");
 		
 		impTotMo.setConverter(Double.class);
 		impTotMo.setConversionError("Error en formato de número");
+		
+		total.setConverter(Double.class);
+		total.setConversionError("Error en formato de número");
 		
 		tcMov.setData("ProgramaticallyChanged");
 	}
@@ -2632,7 +2667,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 
 	@Override
 	public void setSub(String seleccion) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
@@ -2889,7 +2924,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 				
 				/*Si es nuevo aun no tenemos el nro del cobro*/
 				if(this.nroDocum.getValue() != null)
-					ingCobroVO.setNroDocum(Integer.parseInt(this.nroDocum.getValue().toString().trim()));
+					ingCobroVO.setNroDocum(this.nroDocum.getValue());
 				
 				
 				/*Si es banco tomamos estos cmapos de lo contrario caja*/
@@ -2906,14 +2941,14 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 					else if(ingCobroVO.getmPago().equals("Cheque"))
 					{
 						ingCobroVO.setCodDocRef("cheqemi");
-						ingCobroVO.setNroDocRef((Integer) nroDocRef.getConvertedValue());
+						ingCobroVO.setNroDocRef(nroDocRef.getValue());
 						ingCobroVO.setSerieDocRef(serieDocRef.getValue());
 						
 					}else
 					{
 						
 						ingCobroVO.setCodDocRef("0");
-						ingCobroVO.setNroDocRef(0);
+						ingCobroVO.setNroDocRef("0");
 						ingCobroVO.setSerieDocRef("0");
 					}
 												
@@ -2943,7 +2978,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 						ingCobroVO.setNomCtaBco("0");
 						
 						ingCobroVO.setCodDocRef("0");
-						ingCobroVO.setNroDocRef(0);
+						ingCobroVO.setNroDocRef("0");
 						ingCobroVO.setSerieDocRef("0");
 						
 						ingCobroVO.setmPago("Caja");
@@ -2968,7 +3003,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 					for (IngresoCobroDetalleVO f : this.lstDetalleAgregar) {
 						
 						/*Si no esta lo agregamos*/
-						if(!this.existeFormularioenLista(f.getNroDocum()))
+						if(!this.existeFormularioenLista(Integer.parseInt(f.getNroDocum())))
 							this.lstDetalleVO.add(f);
 					}
 				}
@@ -3013,6 +3048,15 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 				
 				Mensajes.mostrarMensajeError(e.getMessage());
 			}
+	}
+	
+	boolean tryParseInt(String value) {  
+	     try {  
+	         Integer.parseInt(value);  
+	         return true;  
+	      } catch (NumberFormatException e) {  
+	         return false;  
+	      }  
 	}
 	
 }

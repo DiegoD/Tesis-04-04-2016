@@ -102,6 +102,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 	TitularVO titularVO = new TitularVO();
 	ArrayList<MonedaVO> lstMonedas = new ArrayList<MonedaVO>();
 	Validaciones val = new Validaciones();
+	private String llamador;
 	
 	public GastoViewExtended(String opera, IGastosMain main, TitularVO titular){
 		
@@ -112,10 +113,12 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		
 		if(titularVO != null){
 			this.tipoTitular = titular.getTipo();
+			this.llamador = "Egreso";
 		}
 		else{
 			this.tipoTitular = "";
 			this.procesosCliente = "";
+			
 		}
 		
 		this.inicializarForm();
@@ -273,10 +276,10 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 					
 					
 					if(this.operacion.equals(Variables.OPERACION_NUEVO)){
-						gastoVO.setNroDocum((0));
+						gastoVO.setNroDocum(("0"));
 					}
 					else{
-						gastoVO.setNroDocum(((Integer) nroDocum.getConvertedValue()));
+						gastoVO.setNroDocum((nroDocum.getValue()));
 					}
 					
 					if(this.operacion.equals(Variables.OPERACION_NUEVO)){
@@ -295,7 +298,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 						if(this.mainView.nomForm().equals("Panel")){
 							
 							codigos = this.controlador.insertarGasto(gastoVO, permisoAux);
-							gastoVO.setNroDocum(codigos.getCodigo());
+							gastoVO.setNroDocum(String.valueOf(codigos.getCodigo()));
 							gastoVO.setNroTrans(codigos.getNumeroTrans());
 							
 							this.mainView.actulaizarGrilla(gastoVO);
@@ -433,7 +436,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 				
 				gastoVO.setCodDocum(codDocum.getValue());
 				gastoVO.setSerieDocum(serieDocum.getValue());
-				gastoVO.setNroDocum((Integer) nroDocum.getConvertedValue());
+				gastoVO.setNroDocum(nroDocum.getValue());
 				gastoVO.setCodEmp(permisoAux.getCodEmp());
 				gastoVO.setCodTitular(codTitular.getValue());
 				gastoVO.setNroTrans((long) nroTrans.getConvertedValue());
@@ -1037,8 +1040,20 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 			this.disableBotonLectura();
 		}
 		
-		if(permisoEliminar)
+		if(llamador != null){
+			if(permisoEliminar && ! llamador.equals("Egreso")){
+				this.enableBotonEliminar();
+			}
+				
+			else{
+				this.disableBotonEliminar();
+			}
+		}
+		else{
 			this.enableBotonEliminar();
+		}
+		
+		
 		
 		/*Deshabilitamos botn aceptar*/
 		this.disableBotonAceptar();

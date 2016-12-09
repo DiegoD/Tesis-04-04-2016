@@ -116,6 +116,15 @@ public class IngresoCobroControlador {
 			throw new NoTienePermisosException();
 	}
 	
+	public ArrayList<GastoVO> getGastosConSaldoCobrable(UsuarioPermisosVO permisos, String cod_tit) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoGastosException{
+		
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			return FachadaDD.getInstance().getGastosConSaldoCobrable(permisos.getCodEmp(), cod_tit);
+		else
+			throw new NoTienePermisosException();
+	}
+	
 	public ArrayList<CtaBcoVO> getCtaBcos(UsuarioPermisosVO permisos, String codBco) throws  ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoCuentasBcoException{
 		
 		/*Primero se verifican los permisos*/

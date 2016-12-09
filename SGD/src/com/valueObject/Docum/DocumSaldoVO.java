@@ -8,7 +8,7 @@ public class DocumSaldoVO extends DatosDocumVO{
 	
 	private String codDocumRef;
 	private String serieDocumRef;
-	private int nroDocumRef;
+	private String nroDocumRef;
 	
 	private int signo;
 	
@@ -79,12 +79,12 @@ public class DocumSaldoVO extends DatosDocumVO{
 	}
 
 
-	public int getNroDocumRef() {
+	public String getNroDocumRef() {
 		return nroDocumRef;
 	}
 
 
-	public void setNroDocumRef(int nroDocumRef) {
+	public void setNroDocumRef(String nroDocumRef) {
 		this.nroDocumRef = nroDocumRef;
 	}
 

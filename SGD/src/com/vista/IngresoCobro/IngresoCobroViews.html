@@ -47,8 +47,12 @@
      </vaadin-horizontal-layout> 
      <vaadin-text-field caption="TC" id="tcMov" style-name="tiny" null-representation="" width="144px" _id="tcMov"></vaadin-text-field> 
      <vaadin-horizontal-layout caption="Importe" style-name="name-wrapper" spacing _id="name_wrapper2"> 
-      <vaadin-combo-box id="comboMoneda" style-name="tiny" item-caption-mode="id" width="144px" _id="comboMoneda"></vaadin-combo-box> 
-      <vaadin-text-field id="impTotMo" style-name="tiny" null-representation="" readonly _id="impTotMo"></vaadin-text-field> 
+      <vaadin-combo-box id="comboMoneda" style-name="tiny" item-caption-mode="id" width="105px" _id="comboMoneda"></vaadin-combo-box> 
+      <vaadin-text-field id="impTotMo" style-name="tiny" null-representation="" width="80px" readonly _id="impTotMo"></vaadin-text-field> 
+      <vaadin-label style-name="tiny" width="100px" plain-text :middle>
+        Permitir diferencia 
+      </vaadin-label> 
+      <vaadin-check-box style-name="tiny" _id="chkDiferencia" :middle></vaadin-check-box> 
      </vaadin-horizontal-layout> 
      <vaadin-horizontal-layout spacing _id="botones"> 
       <vaadin-button style-name="primary tiny" plain-text _id="aceptar" :middle>
@@ -67,16 +71,24 @@
     </vaadin-form-layout> 
     <vaadin-form-layout spacing="false" size-full _id="formLay2"> 
      <vaadin-grid id="lstGastos" style-name="small" responsive width-full height="356px" editable _id="lstGastos"></vaadin-grid> 
-     <vaadin-horizontal-layout style-name="v-formlayout" spacing responsive :middle :right> 
-      <vaadin-button style-name="primary tiny" responsive id="btnAgregar" plain-text _id="btnAgregar" :middle>
-        Agregar 
-      </vaadin-button> 
-      <vaadin-button style-name="primary tiny" responsive id="btnEditarItem" plain-text _id="btnEditarItem">
-        Editar 
-      </vaadin-button> 
-      <vaadin-button style-name="primary tiny" responsive id="btnQuitar" plain-text _id="btnQuitar" :middle>
-        Quitar 
-      </vaadin-button> 
+     <vaadin-horizontal-layout width-full> 
+      <vaadin-horizontal-layout style-name="v-formlayout" spacing responsive :middle> 
+       <vaadin-button style-name="primary tiny" responsive id="btnAgregar" plain-text _id="btnAgregar" :middle>
+         Agregar 
+       </vaadin-button> 
+       <vaadin-button style-name="primary tiny" responsive id="btnEditarItem" plain-text _id="btnEditarItem" :middle>
+         Editar 
+       </vaadin-button> 
+       <vaadin-button style-name="primary tiny" responsive id="btnQuitar" plain-text _id="btnQuitar" :middle>
+         Quitar 
+       </vaadin-button> 
+      </vaadin-horizontal-layout> 
+      <vaadin-horizontal-layout spacing responsive :middle :right> 
+       <vaadin-label style-name="tiny" width="70px" plain-text :middle :right>
+         Total detalle 
+       </vaadin-label> 
+       <vaadin-text-field style-name="tiny" null-representation="" width="80px" _id="total" :middle :right></vaadin-text-field> 
+      </vaadin-horizontal-layout> 
      </vaadin-horizontal-layout> 
     </vaadin-form-layout> 
    </vaadin-horizontal-layout> 

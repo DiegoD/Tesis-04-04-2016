@@ -29,6 +29,7 @@ import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.validator.StringLengthValidator;
+import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.UI;
@@ -206,6 +207,23 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 				inicializarComboCuentas(bcoAux.getCodigo(), "Banco");
 			}		
 		}
+    });
+	
+	comboMPagos.addValueChangeListener(new Property.ValueChangeListener() {
+
+		@Override
+		public void valueChange(ValueChangeEvent event) {
+			// TODO Auto-generated method stub
+			if(comboMPagos.getValue().equals("Transferencia")){
+				serieDocRef.setEnabled(false);
+				serieDocRef.setRequired(false);
+			}
+			else{
+				serieDocRef.setEnabled(true);
+				serieDocRef.setRequired(true);
+			}
+		}
+    	
     });
 	
 	fecValor.addValueChangeListener(new Property.ValueChangeListener() {
@@ -647,7 +665,7 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 				
 				/*Si es nuevo aun no tenemos el nro del cobro*/
 				if(this.nroDocum.getValue() != null)
-					ingCobroVO.setNroDocum(Integer.parseInt(this.nroDocum.getValue().toString().trim()));
+					ingCobroVO.setNroDocum(this.nroDocum.getValue());
 				
 				
 				/*Si es banco tomamos estos cmapos de lo contrario caja*/
@@ -655,24 +673,24 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 				
 					ingCobroVO.setmPago((String)comboMPagos.getValue());
 					
-					if(ingCobroVO.getmPago().equals("transferencia"))
+					if(ingCobroVO.getmPago().equals("Transferencia"))
 					{
 						ingCobroVO.setCodDocRef("tranrec");
-						
+						ingCobroVO.setNroDocRef(nroDocRef.getValue());
 						ingCobroVO.setSerieDocRef("0");
 						
 					}
 					else if(ingCobroVO.getmPago().equals("Cheque"))
 					{
 						ingCobroVO.setCodDocRef("cheqrec");
-						ingCobroVO.setNroDocRef((Integer) nroDocRef.getConvertedValue());
+						ingCobroVO.setNroDocRef(nroDocRef.getValue());
 						ingCobroVO.setSerieDocRef(serieDocRef.getValue());
 						
 					}else
 					{
 						
 						ingCobroVO.setCodDocRef("0");
-						ingCobroVO.setNroDocRef(0);
+						ingCobroVO.setNroDocRef("0");
 						ingCobroVO.setSerieDocRef("0");
 					}
 												
@@ -709,7 +727,7 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 						ingCobroVO.setNomCtaBco("0");
 						
 						ingCobroVO.setCodDocRef("0");
-						ingCobroVO.setNroDocRef(0);
+						ingCobroVO.setNroDocRef("0");
 						ingCobroVO.setSerieDocRef("0");
 						
 						ingCobroVO.setmPago("Caja");
@@ -734,6 +752,7 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 
 				if(this.operacion.equals(Variables.OPERACION_NUEVO))	
 				{	
+					ingCobroVO.setNroDocum("0");
 					this.controlador.insertarIngresoCobro(ingCobroVO, permisoAux);
 					
 					this.mainView.actulaizarGrilla(ingCobroVO);
@@ -797,7 +816,7 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 		
 		
 		
-		sub = new MySub("25%", "20%" );
+		sub = new MySub("18%", "16%" );
 		sub.setModal(true);
 		sub.center();
 		sub.setModal(true);
@@ -839,6 +858,7 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 		
 			
 	this.cancelar.addClickListener(click -> {
+		main.actulaizarGrilla(ingresoCopia);
 		main.cerrarVentana();
 	});
 			
@@ -927,8 +947,16 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 				this.comboMPagos.setRequired(setear);
 				this.comboMPagos.setRequiredError("Es requerido");
 				
-				this.serieDocRef.setRequired(setear);
-				this.serieDocRef.setRequiredError("Es requerido");
+				if(this.comboMPagos.getValue()!= null){
+					if(this.comboMPagos.getValue().equals("Cheque")){
+						this.serieDocRef.setRequired(setear);
+						this.serieDocRef.setRequiredError("Es requerido");
+					}
+					else{
+						this.serieDocRef.setRequired(false);
+					}
+				}
+				
 				
 				this.nroDocRef.setRequired(setear);
 				this.nroDocRef.setRequiredError("Es requerido");
@@ -1142,6 +1170,11 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 			/*Mostramos mensaje Sin permisos para operacion*/
 			Mensajes.mostrarMensajeError(Variables.USUSARIO_SIN_PERMISOS);
 		}
+		
+		if(comboMPagos.getValue() != null && comboMPagos.getValue().equals("Transferencia")){
+			this.serieDocRef.setEnabled(false);
+			
+		}
 	}
 	
 	/**
@@ -1332,7 +1365,7 @@ this.comboTipo.setReadOnly(setear);
 		
         this.serieDocRef.addValidator(
                 new StringLengthValidator(
-                     " 4 caracteres máximo", 1, 4, false));
+                     " 4 caracteres máximo", 0, 4, false));
         
         this.referencia.addValidator(
                 new StringLengthValidator(
@@ -1356,10 +1389,19 @@ this.comboTipo.setReadOnly(setear);
 		this.agregarFieldsValidaciones();
 		try
 		{
-			if(this.nroDocRef.isValid() && this.impTotMo.isValid()
+			if( this.impTotMo.isValid()
 					&& this.serieDocRef.isValid()
 					&& this.referencia.isValid())
 				valido = true;
+			
+			if(this.comboTipo.getValue()!= null){
+				if(this.comboTipo.getValue().toString().equals("Banco") && this.comboBancos != null){
+					if(!this.tryParseInt(nroDocRef.getValue())){
+						nroDocRef.setComponentError(new UserError("Debe ingresar un número entero"));
+						valido = false;
+					}
+				}
+			}
 			
 		}catch(Exception e)
 		{
@@ -1649,11 +1691,11 @@ private void mostrarDatosDeBanco(){
 		
 		nroTrans.setConverter(Long.class);
 		
-		nroDocum.setConverter(Integer.class);
-		nroDocum.setConversionError("Ingrese un número entero");
-		
-		nroDocRef.setConverter(Integer.class);
-		nroDocRef.setConversionError("Ingrese un número entero");
+//		nroDocum.setConverter(Integer.class);
+//		nroDocum.setConversionError("Ingrese un número entero");
+//		
+//		nroDocRef.setConverter(Integer.class);
+//		nroDocRef.setConversionError("Ingrese un número entero");
 		
 		tcMov.setConverter(Double.class);
 		tcMov.setConversionError("Error en formato de número");
@@ -1799,7 +1841,7 @@ private void mostrarDatosDeBanco(){
 				
 				/*Si es nuevo aun no tenemos el nro del cobro*/
 				if(this.nroDocum.getValue() != null)
-					ingCobroVO.setNroDocum(Integer.parseInt(this.nroDocum.getValue().toString().trim()));
+					ingCobroVO.setNroDocum(this.nroDocum.getValue());
 				
 				
 				/*Si es banco tomamos estos cmapos de lo contrario caja*/
@@ -1817,14 +1859,14 @@ private void mostrarDatosDeBanco(){
 					else if(ingCobroVO.getmPago().equals("Cheque"))
 					{
 						ingCobroVO.setCodDocRef("cheqrec");
-						ingCobroVO.setNroDocRef((Integer) nroDocRef.getConvertedValue());
+						ingCobroVO.setNroDocRef(nroDocRef.getValue());
 						ingCobroVO.setSerieDocRef(serieDocRef.getValue());
 						
 					}else
 					{
 						
 						ingCobroVO.setCodDocRef("0");
-						ingCobroVO.setNroDocRef(0);
+						ingCobroVO.setNroDocRef("0");
 						ingCobroVO.setSerieDocRef("0");
 					}
 												
@@ -1861,7 +1903,7 @@ private void mostrarDatosDeBanco(){
 						ingCobroVO.setNomCtaBco("0");
 						
 						ingCobroVO.setCodDocRef("0");
-						ingCobroVO.setNroDocRef(0);
+						ingCobroVO.setNroDocRef("0");
 						ingCobroVO.setSerieDocRef("0");
 						
 						ingCobroVO.setmPago("Caja");
@@ -1905,6 +1947,15 @@ private void mostrarDatosDeBanco(){
 				Mensajes.mostrarMensajeError(e.getMessage());
 				
 			}
+	}
+	
+	boolean tryParseInt(String value) {  
+	     try {  
+	         Integer.parseInt(value);  
+	         return true;  
+	      } catch (NumberFormatException e) {  
+	         return false;  
+	      }  
 	}
 	
 }

@@ -54,6 +54,7 @@ public class DocumDetalleVO extends DatosDocumVO{
 		this.descProceso = t.descProceso;
 		this.estadoGasto = t.getEstadoGasto();
 		this.porcentajeImpuesto = t.getPorcentajeImpuesto();
+		this.nomImpuesto = t.getNomImpuesto();
 		
 	}
 

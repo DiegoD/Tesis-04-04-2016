@@ -24,6 +24,7 @@ import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.validator.StringLengthValidator;
+import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.UI;
@@ -209,6 +210,23 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 		}
     });
 	
+	  comboMPagos.addValueChangeListener(new Property.ValueChangeListener() {
+
+			@Override
+			public void valueChange(ValueChangeEvent event) {
+				// TODO Auto-generated method stub
+				if(comboMPagos.getValue().equals("Transferencia")){
+					serieDocRef.setEnabled(false);
+					serieDocRef.setRequired(false);
+				}
+				else{
+					serieDocRef.setEnabled(true);
+					serieDocRef.setRequired(true);
+				}
+			}
+	    	
+	    });
+	  
 	fecValor.addValueChangeListener(new Property.ValueChangeListener() {
 
    		@Override
@@ -657,7 +675,7 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 				
 				/*Si es nuevo aun no tenemos el nro del cobro*/
 				if(this.nroDocum.getValue() != null)
-					ingCobroVO.setNroDocum(Integer.parseInt(this.nroDocum.getValue().toString().trim()));
+					ingCobroVO.setNroDocum(this.nroDocum.getValue());
 				
 				
 				/*Si es banco tomamos estos cmapos de lo contrario caja*/
@@ -665,23 +683,23 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 				
 					ingCobroVO.setmPago((String)comboMPagos.getValue());
 					
-					if(ingCobroVO.getmPago().equals("transferencia"))
+					if(ingCobroVO.getmPago().equals("Transferencia"))
 					{
 						ingCobroVO.setCodDocRef("tranemi");
-						
+						ingCobroVO.setNroDocRef(nroDocRef.getValue());
 						ingCobroVO.setSerieDocRef("0");
 					}
 					else if(ingCobroVO.getmPago().equals("Cheque"))
 					{
 						ingCobroVO.setCodDocRef("cheqemi");
-						ingCobroVO.setNroDocRef((Integer) nroDocRef.getConvertedValue());
+						ingCobroVO.setNroDocRef( nroDocRef.getValue());
 						ingCobroVO.setSerieDocRef(serieDocRef.getValue());
 						
 					}else
 					{
 						
 						ingCobroVO.setCodDocRef("0");
-						ingCobroVO.setNroDocRef(0);
+						ingCobroVO.setNroDocRef("0");
 						ingCobroVO.setSerieDocRef("0");
 					}
 												
@@ -714,7 +732,7 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 						ingCobroVO.setNomCtaBco("0");
 						
 						ingCobroVO.setCodDocRef("0");
-						ingCobroVO.setNroDocRef(0);
+						ingCobroVO.setNroDocRef("0");
 						ingCobroVO.setSerieDocRef("0");
 						
 						ingCobroVO.setmPago("Caja");
@@ -754,6 +772,7 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 				
 				if(this.operacion.equals(Variables.OPERACION_NUEVO))	
 				{	
+					ingCobroVO.setNroDocum("0");
 					this.controlador.insertarIngresoEgreso(ingCobroVO, permisoAux);
 					
 					this.mainView.actulaizarGrilla(ingCobroVO);
@@ -844,7 +863,7 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 			
 			MensajeExtended form = new MensajeExtended("Elimina el cobro?",this);
 			
-			sub = new MySub("25%", "20%" );
+			sub = new MySub("18%", "16%" );
 			sub.setModal(true);
 			sub.center();
 			sub.setModal(true);
@@ -859,6 +878,7 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 			
 			
 		this.cancelar.addClickListener(click -> {
+			main.actulaizarGrilla(ingresoCopia);
 			main.cerrarVentana();
 		});
 			
@@ -944,11 +964,20 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 		if(this.comboTipo.getValue()!=null){
 			if(this.comboTipo.getValue().equals("Banco") && this.comboTipo.getValue()!=null)
 			{
+				
 				this.comboMPagos.setRequired(setear);
 				this.comboMPagos.setRequiredError("Es requerido");
 				
-				this.serieDocRef.setRequired(setear);
-				this.serieDocRef.setRequiredError("Es requerido");
+				if(this.comboMPagos.getValue()!=null){
+					if(this.comboMPagos.getValue().equals("Cheque")){
+						this.serieDocRef.setRequired(setear);
+						this.serieDocRef.setRequiredError("Es requerido");
+					}
+					else{
+						this.serieDocRef.setRequired(false);
+					}
+				}
+				
 				
 				this.nroDocRef.setRequired(setear);
 				this.nroDocRef.setRequiredError("Es requerido");
@@ -1164,6 +1193,11 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 			/*Mostramos mensaje Sin permisos para operacion*/
 			Mensajes.mostrarMensajeError(Variables.USUSARIO_SIN_PERMISOS);
 		}
+		
+		if(comboMPagos.getValue() != null && comboMPagos.getValue().equals("Transferencia")){
+			this.serieDocRef.setEnabled(false);
+			
+		}
 	}
 	
 	/**
@@ -1357,7 +1391,7 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 		
         this.serieDocRef.addValidator(
                 new StringLengthValidator(
-                     " 4 caracteres máximo", 1, 4, false));
+                     " 4 caracteres máximo", 0, 4, false));
         
         this.referencia.addValidator(
                 new StringLengthValidator(
@@ -1381,10 +1415,19 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 		this.agregarFieldsValidaciones();
 		try
 		{
-			if(this.nroDocRef.isValid() && this.impTotMo.isValid()
+			if(this.impTotMo.isValid()
 					&& this.serieDocRef.isValid()
 					&& this.referencia.isValid())
 				valido = true;
+			
+			if(this.comboTipo.getValue()!= null){
+				if(this.comboTipo.getValue().toString().equals("Banco") && this.comboBancos != null){
+					if(!this.tryParseInt(nroDocRef.getValue())){
+						nroDocRef.setComponentError(new UserError("Debe ingresar un número entero"));
+						valido = false;
+					}
+				}
+			}
 			
 		}catch(Exception e)
 		{
@@ -1656,11 +1699,11 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 		
 		nroTrans.setConverter(Long.class);
 		
-		nroDocum.setConverter(Integer.class);
-		nroDocum.setConversionError("Ingrese un número entero");
-		
-		nroDocRef.setConverter(Integer.class);
-		nroDocRef.setConversionError("Ingrese un número entero");
+//		nroDocum.setConverter(Integer.class);
+//		nroDocum.setConversionError("Ingrese un número entero");
+//		
+//		nroDocRef.setConverter(Integer.class);
+//		nroDocRef.setConversionError("Ingrese un número entero");
 		
 		tcMov.setConverter(Double.class);
 		tcMov.setConversionError("Error en formato de número");
@@ -1856,7 +1899,7 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 				
 				/*Si es nuevo aun no tenemos el nro del cobro*/
 				if(this.nroDocum.getValue() != null)
-					ingCobroVO.setNroDocum(Integer.parseInt(this.nroDocum.getValue().toString().trim()));
+					ingCobroVO.setNroDocum(this.nroDocum.getValue());
 				
 				
 				/*Si es banco tomamos estos cmapos de lo contrario caja*/
@@ -1873,14 +1916,14 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 					else if(ingCobroVO.getmPago().equals("Cheque"))
 					{
 						ingCobroVO.setCodDocRef("cheqemi");
-						ingCobroVO.setNroDocRef((Integer) nroDocRef.getConvertedValue());
+						ingCobroVO.setNroDocRef(nroDocRef.getValue());
 						ingCobroVO.setSerieDocRef(serieDocRef.getValue());
 						
 					}else
 					{
 						
 						ingCobroVO.setCodDocRef("0");
-						ingCobroVO.setNroDocRef(0);
+						ingCobroVO.setNroDocRef("0");
 						ingCobroVO.setSerieDocRef("0");
 					}
 												
@@ -1913,7 +1956,7 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 						ingCobroVO.setNomCtaBco("0");
 						
 						ingCobroVO.setCodDocRef("0");
-						ingCobroVO.setNroDocRef(0);
+						ingCobroVO.setNroDocRef("0");
 						ingCobroVO.setSerieDocRef("0");
 						
 						ingCobroVO.setmPago("Caja");
@@ -1972,5 +2015,13 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 			}
 	}
 	
+	boolean tryParseInt(String value) {  
+	     try {  
+	         Integer.parseInt(value);  
+	         return true;  
+	      } catch (NumberFormatException e) {  
+	         return false;  
+	      }  
+	}
 	
 }

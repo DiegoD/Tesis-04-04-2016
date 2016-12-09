@@ -14,7 +14,7 @@ public class DatosDocumVO extends AuditoriaVO{
 	
 	private String codDocum;
 	private String serieDocum;
-	private int nroDocum;
+	private String nroDocum;
 	private String codEmp;
 	private boolean nacional;
 	
@@ -87,7 +87,7 @@ public class DatosDocumVO extends AuditoriaVO{
 		
 	}
 	
-	public int getNroDocum() {
+	public String getNroDocum() {
 		return nroDocum;
 	}
 	
@@ -123,7 +123,7 @@ public class DatosDocumVO extends AuditoriaVO{
 		this.serieDocum = serieDocum;
 	}
 	
-	public void setNroDocum(int nroDocum) {
+	public void setNroDocum(String nroDocum) {
 		this.nroDocum = nroDocum;
 	}
 	public String getCodEmp() {

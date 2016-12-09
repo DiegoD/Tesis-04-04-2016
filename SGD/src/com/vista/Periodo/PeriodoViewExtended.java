@@ -58,7 +58,19 @@ public class PeriodoViewExtended extends PeriodoView{
 					PeriodoVO periodoVO = new PeriodoVO();		
 					
 					periodoVO.setMes(comboMes.getValue().toString());
-					periodoVO.setAnio((Integer)anio.getConvertedValue());
+					
+					if(anio.getValue().length() != 4){
+						Mensajes.mostrarMensajeError("Debe ingresar el año con los 4 dígitos");
+						return;
+					}
+					if(tryParseInt(anio.getValue())){
+						periodoVO.setAnio(anio.getValue());
+					}
+					else{
+						Mensajes.mostrarMensajeError("Error en el formatio del año");
+						return;
+					}
+					
 					periodoVO.setAbierto(abierto.getValue());
 					periodoVO.setUsuarioMod(this.permisos.getUsuario());
 					periodoVO.setOperacion(operacion);
@@ -395,7 +407,17 @@ public class PeriodoViewExtended extends PeriodoView{
 
 	public void inicializarCampos(){
 		
-		anio.setConverter(Integer.class);
-		anio.setConversionError("Error en formato de número");
+//		anio.setConverter(Integer.class);
+//		anio.setConversionError("Error en formato de número");
+	}
+	
+	boolean tryParseInt(String value) {  
+		try {  
+	        Integer.parseInt(value);  
+	        return true;  
+	    } 
+		catch (NumberFormatException e) {  
+	        return false;  
+	    }  
 	}
 }

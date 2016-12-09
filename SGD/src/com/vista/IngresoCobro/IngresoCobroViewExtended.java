@@ -33,6 +33,7 @@ import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
+import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.TextField;
@@ -110,7 +111,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	
 	this.cambioMoneda = false;
 		
-	/*Inicializamos los permisos para el usuario*/
+	/*Inicializamos lfos permisos para el usuario*/
 	this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
 	
 	saldoOriginalGastos = new Hashtable<Integer, GtoSaldoAux>();
@@ -464,6 +465,22 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		}
     });
 
+    comboMPagos.addValueChangeListener(new Property.ValueChangeListener() {
+
+		@Override
+		public void valueChange(ValueChangeEvent event) {
+			// TODO Auto-generated method stub
+			if(comboMPagos.getValue().equals("Transferencia")){
+				serieDocRef.setEnabled(false);
+				serieDocRef.setRequired(false);
+			}
+			else{
+				serieDocRef.setEnabled(true);
+				serieDocRef.setRequired(true);
+			}
+		}
+    	
+    });
     
     /**
 	* Agregamos listener al combo de monedas, para verificar que no modifique la moneda
@@ -621,12 +638,15 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				
 				this.calcularImporteTotal(); /*Calculamos nuevamente por si se cambio en grilla el importe de un gasto*/		
 				
-				int comp = Double.compare(importeTotalCalculado, (Double)impTotMo.getConvertedValue());
-				
-				if(comp != 0){
-					Mensajes.mostrarMensajeError("El importe total es diferente a la suma del detalle");
-					return;
+				if(!this.chkDiferencia.getValue()){
+					int comp = Double.compare(importeTotalCalculado, (Double)impTotMo.getConvertedValue());
+					
+					if(comp != 0){
+						Mensajes.mostrarMensajeError("El importe total es diferente a la suma del detalle");
+						return;
+					}
 				}
+				
 				IngresoCobroVO ingCobroVO = new IngresoCobroVO();	
 				
 				ingCobroVO.setImpTotMo((Double) impTotMo.getConvertedValue());
@@ -690,6 +710,11 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				
 				ingCobroVO.setOperacion(operacion);
 				
+				if(comboMPagos.getValue() != null){
+					ingCobroVO.setmPago(comboMPagos.getValue().toString());
+				}
+				
+				
 				/*Ver los totales y tc*/
 				//ingCobroVO.setImpTotMn(impTotMn);
 				//ingCobroVO.setImpTotMo(impTotMn);
@@ -697,7 +722,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				
 				/*Si es nuevo aun no tenemos el nro del cobro*/
 				if(this.nroDocum.getValue() != null)
-					ingCobroVO.setNroDocum(Integer.parseInt(this.nroDocum.getValue().toString().trim()));
+					ingCobroVO.setNroDocum(this.nroDocum.getValue());
 				
 				
 				/*Si es banco tomamos estos cmapos de lo contrario caja*/
@@ -705,23 +730,23 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				
 					ingCobroVO.setmPago((String)comboMPagos.getValue());
 					
-					if(ingCobroVO.getmPago().equals("transferencia"))
+					if(ingCobroVO.getmPago().equals("Transferencia"))
 					{
 						ingCobroVO.setCodDocRef("tranrec");
-						
+						ingCobroVO.setNroDocRef(nroDocRef.getValue());
 						ingCobroVO.setSerieDocRef("0");
 					}
 					else if(ingCobroVO.getmPago().equals("Cheque"))
 					{
 						ingCobroVO.setCodDocRef("cheqrec");
-						ingCobroVO.setNroDocRef((Integer) nroDocRef.getConvertedValue());
+						ingCobroVO.setNroDocRef( nroDocRef.getValue());
 						ingCobroVO.setSerieDocRef(serieDocRef.getValue().trim());
 						
 					}else
 					{
 						
 						ingCobroVO.setCodDocRef("0");
-						ingCobroVO.setNroDocRef(0);
+						ingCobroVO.setNroDocRef("0");
 						ingCobroVO.setSerieDocRef("0");
 					}
 												
@@ -752,7 +777,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 						ingCobroVO.setNomCtaBco("0");
 						
 						ingCobroVO.setCodDocRef("0");
-						ingCobroVO.setNroDocRef(0);
+						ingCobroVO.setNroDocRef("0");
 						ingCobroVO.setSerieDocRef("0");
 						
 						ingCobroVO.setmPago("Caja");
@@ -805,6 +830,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				
 				if(this.operacion.equals(Variables.OPERACION_NUEVO))	
 				{	
+					ingCobroVO.setNroDocum("0");
 					this.controlador.insertarIngresoCobro(ingCobroVO, permisoAux);
 					
 					this.mainView.actulaizarGrilla(ingCobroVO);
@@ -900,7 +926,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			
 			
 			
-			sub = new MySub("25%", "20%" );
+			sub = new MySub("18%", "16%" );
 			sub.setModal(true);
 			sub.center();
 			sub.setModal(true);
@@ -923,7 +949,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				
 				SeleccionViewExtended form = new SeleccionViewExtended(this);
 				
-				sub = new MySub("40%", "25%" );
+				sub = new MySub("33%", "20%" );
 				sub.setModal(true);
 				sub.center();
 				sub.setModal(true);
@@ -969,7 +995,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 							{
 								/*Tambien lo quitamos de la lista de los saldos originales
 								 * para poder controlar que no ingresen un saldo mayor al que tien el gasto*/
-								GtoSaldoAux saldoAux =  new GtoSaldoAux(lstDetalleVO.get(i).getNroDocum(), lstDetalleVO.get(i).getImpTotMo());
+								GtoSaldoAux saldoAux =  new GtoSaldoAux(Integer.parseInt(lstDetalleVO.get(i).getNroDocum()), lstDetalleVO.get(i).getImpTotMo());
 								this.saldoOriginalGastos.remove(saldoAux.getNroDocum(),saldoAux);
 								
 								/*Quitamos el formulario seleccionado de la lista*/
@@ -1129,6 +1155,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		this.inicializarComboCuentas(null, "");
 		this.inicializarComboMoneda(null);
 		
+		this.total.setEnabled(false);
+		
 		inicializarCampos();
 		
 		importeTotalCalculado = (Double) impTotMo.getConvertedValue();
@@ -1203,11 +1231,22 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				this.comboMPagos.setRequired(setear);
 				this.comboMPagos.setRequiredError("Es requerido");
 				
-				this.serieDocRef.setRequired(setear);
-				this.serieDocRef.setRequiredError("Es requerido");
+				
 				
 				this.nroDocRef.setRequired(setear);
 				this.nroDocRef.setRequiredError("Es requerido");
+				
+				if(this.comboMPagos.getValue()!=null){
+					if(this.comboMPagos.getValue().equals("Cheque")){
+						this.serieDocRef.setRequired(setear);
+						this.serieDocRef.setRequiredError("Es requerido");
+					}
+					else{
+						this.serieDocRef.setRequired(false);
+					}
+				}
+				
+				
 				
 				this.comboBancos.setRequired(setear);
 				this.comboBancos.setRequiredError("Es requerido");
@@ -1309,7 +1348,6 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		}
 		
 		
-		
 		auditoria.setDescription(
 			
 			"Usuario: " + ing.getUsuarioMod() + "<br>" +
@@ -1324,6 +1362,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		/*Copiamos la variable para la modificacion*/
 		this.ingresoCopia = new IngresoCobroVO();
 		this.ingresoCopia.copiar(ing);
+		
 		
 		}catch(Exception e)
 		{
@@ -1390,7 +1429,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				
 				detVO.setLinea(linea);
 				container.addBean(detVO);
-				GtoSaldoAux saldoAux =  new GtoSaldoAux(detVO.getNroDocum(), detVO.getImpTotMo());
+				GtoSaldoAux saldoAux =  new GtoSaldoAux(Integer.parseInt(detVO.getNroDocum()), detVO.getImpTotMo());
 				this.saldoOriginalGastos.put(saldoAux.getNroDocum(),saldoAux);
 				
 				linea ++;
@@ -1444,6 +1483,11 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			
 			/*Mostramos mensaje Sin permisos para operacion*/
 			Mensajes.mostrarMensajeError(Variables.USUSARIO_SIN_PERMISOS);
+		}
+		
+		if(comboMPagos.getValue() != null && comboMPagos.getValue().equals("Transferencia")){
+			this.serieDocRef.setEnabled(false);
+			
 		}
 	}
 	
@@ -1665,13 +1709,10 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	 */
 	private void agregarFieldsValidaciones()
 	{
-		//nroDocRef.addValidator(new RegexpValidator("^[0-9]*(\\.[0-9]+)?$", true, "Dato numerico"));
-		
-		//impTotMo.addValidator(new RegexpValidator("^[0-9]*(\\.[0-9]+)?$", true, "Dato numerico"));
 		
         this.serieDocRef.addValidator(
                 new StringLengthValidator(
-                     " 4 caracteres máximo", 1, 4, false));
+                     " 4 caracteres máximo", 0, 4, false));
         
         this.referencia.addValidator(
                 new StringLengthValidator(
@@ -1695,10 +1736,19 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		this.agregarFieldsValidaciones();
 		try
 		{
-			if(this.nroDocRef.isValid() && this.impTotMo.isValid()
+			if(this.impTotMo.isValid()
 					&& this.serieDocRef.isValid()
 					&& this.referencia.isValid())
 				valido = true;
+			
+			if(this.comboTipo.getValue()!= null){
+				if(this.comboTipo.getValue().toString().equals("Banco") && this.comboBancos != null){
+					if(!this.tryParseInt(nroDocRef.getValue())){
+						nroDocRef.setComponentError(new UserError("Debe ingresar un número entero"));
+						valido = false;
+					}
+				}
+			}
 			
 		}catch(Exception e)
 		{
@@ -1729,7 +1779,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				
 				container.addBean(det);
 				
-				GtoSaldoAux saldoAux =  new GtoSaldoAux(det.getNroDocum(), det.getImpTotMo());
+				GtoSaldoAux saldoAux =  new GtoSaldoAux(Integer.parseInt(det.getNroDocum()), det.getImpTotMo());
 				this.saldoOriginalGastos.put(saldoAux.getNroDocum(),saldoAux);
 				
 				linea ++;
@@ -1864,7 +1914,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 
 		/*Si esta el grupo en la lista, es una acutalizacion
 		 * y modificamos el objeto en la lista*/
-		if(this.existeFormularioenLista(det.getNroDocum()))
+		if(this.existeFormularioenLista(Integer.parseInt(det.getNroDocum())))
 		{
 			this.actualizarFormularioLista(det);
 		}
@@ -1927,7 +1977,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		while( i < this.lstDetalleVO.size() && !esta)
 		{
 			aux = this.lstDetalleVO.get(i);
-			if(nro==aux.getNroDocum())
+			if(nro==Integer.parseInt(aux.getNroDocum()))
 			{
 				esta = true;
 			}
@@ -1969,7 +2019,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		while( i < this.lstDetalleVO.size() && !esta)
 		{
 			aux = this.lstDetalleVO.get(i);
-			if(nro==aux.getNroDocum())
+			if(nro==Integer.parseInt(aux.getNroDocum()))
 			{
 				esta = true;
 			}
@@ -2067,13 +2117,13 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	      	if(formSelecccionado != null && (formSelecccionado.getSerieDocum() != "Proc")){
 	      		
 	      		
-	      		IngresoCobroDetalleVO aux = obtenerGastoEnLista(formSelecccionado.getNroDocum());
+	      		IngresoCobroDetalleVO aux = obtenerGastoEnLista(Integer.parseInt(formSelecccionado.getNroDocum()));
 		    	gtoSaldo = saldoOriginalGastos.get(formSelecccionado.getNroDocum());
 		    	
 	  		}
 	      	else if(formSelecccionado != null && (formSelecccionado.getSerieDocum() == "Proc")){
 	      		
-	      		IngresoCobroDetalleVO aux = obtenerGastoEnLista(formSelecccionado.getNroDocum());
+	      		IngresoCobroDetalleVO aux = obtenerGastoEnLista(Integer.parseInt(formSelecccionado.getNroDocum()));
 		    	gtoSaldo = saldoOriginalGastos.get(formSelecccionado.getNroDocum());
 	      	}
       }
@@ -2083,7 +2133,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
       	
     	  double aux, importeMoneda = 0, importeImpuesto = 0;
   		  double aux3;
-    	  IngresoCobroDetalleVO aux2 = obtenerGastoEnLista(formSelecccionado.getNroDocum());
+    	  IngresoCobroDetalleVO aux2 = obtenerGastoEnLista(Integer.parseInt(formSelecccionado.getNroDocum()));
     	  
     	  /*Verifico si es a cuenta de proceso no tiene saldo*/
     	  if(!aux2.getCodDocum().equals("Proc")){
@@ -2160,7 +2210,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		while( i < this.lstDetalleVO.size() && !esta)
 		{
 			aux = this.lstDetalleVO.get(i);
-			if(nro==aux.getNroDocum())
+			if(nro==Integer.parseInt(aux.getNroDocum()))
 			{
 				esta = true;
 			}
@@ -2392,7 +2442,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
    			docum.setSimboloMoneda(auxMoneda.getSimbolo());
    			docum.setCodDocum("Proc");
    			docum.setSerieDocum("Proc");
-   			docum.setNroDocum(0); /*Ponemos 0 para que no aparezca el reandom en la grilla*/
+   			docum.setNroDocum("0"); /*Ponemos 0 para que no aparezca el reandom en la grilla*/
    			docum.setCodCtaInd("Proc");
    			docum.setCodProceso(String.valueOf(procesoVO.getCodigo()));
    			docum.setUsuarioMod(permisosAux.getUsuario());
@@ -2526,6 +2576,12 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		//this.impTotMo.setValue(Double.toString(impMo));
 		//this.impTotMo.setConvertedValue(impMo);
 		importeTotalCalculado = impMo;
+		Double truncatedDouble = new BigDecimal(importeTotalCalculado)
+			    .setScale(2, BigDecimal.ROUND_HALF_UP)
+			    .doubleValue();
+		
+		importeTotalCalculado = truncatedDouble;
+		this.total.setConvertedValue(importeTotalCalculado);
 	}
 	
 	
@@ -2557,7 +2613,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			for (IngresoCobroDetalleVO det : this.lstDetalleVO) {
 				det.setLinea(linea); /*Seteamos la linea*/
 				container.addBean(det); /*Lo agregamos a la grilla*/
-				GtoSaldoAux saldoAux =  new GtoSaldoAux(det.getNroDocum(), det.getImpTotMo());
+				GtoSaldoAux saldoAux =  new GtoSaldoAux(Integer.parseInt(det.getNroDocum()), det.getImpTotMo());
 				this.saldoOriginalGastos.put(saldoAux.getNroDocum(),saldoAux);
 				
 				linea ++;
@@ -2566,7 +2622,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 
 		//lstFormularios.setContainerDataSource(container);
 		this.actualizarGrillaContainer(container);
-		
+		calcularImporteTotal();
 	}
 	
 	
@@ -2663,7 +2719,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 							
 							/*Tambien agrefamos a la lista de los saldos originales
 							 * para poder controlar que no ingresen un saldo mayor al que tien el gasto*/
-							GtoSaldoAux saldoAux =  new GtoSaldoAux(g.getNroDocum(), g.getImpTotMo());
+							GtoSaldoAux saldoAux =  new GtoSaldoAux(Integer.parseInt(g.getNroDocum()), g.getImpTotMo());
 							this.saldoOriginalGastos.put(saldoAux.getNroDocum(),saldoAux);
 						}
 						else{
@@ -2678,7 +2734,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				
 				/*Tambien agrefamos a la lista de los saldos originales
 				 * para poder controlar que no ingresen un saldo mayor al que tien el gasto*/
-				GtoSaldoAux saldoAux =  new GtoSaldoAux(g.getNroDocum(), g.getImpTotMo());
+				GtoSaldoAux saldoAux =  new GtoSaldoAux(Integer.parseInt(g.getNroDocum()), g.getImpTotMo());
 				this.saldoOriginalGastos.put(saldoAux.getNroDocum(),saldoAux);
 			}
 			
@@ -2705,17 +2761,20 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		
 		nroTrans.setConverter(Long.class);
 		
-		nroDocum.setConverter(Integer.class);
-		nroDocum.setConversionError("Ingrese un número entero");
+//		nroDocum.setConverter(Integer.class);
+//		nroDocum.setConversionError("Ingrese un número entero");
 		
-		nroDocRef.setConverter(Integer.class);
-		nroDocRef.setConversionError("Ingrese un número entero");
+//		nroDocRef.setConverter(Integer.class);
+//		nroDocRef.setConversionError("Ingrese un número entero");
 		
 		tcMov.setConverter(Double.class);
 		tcMov.setConversionError("Error en formato de número");
 		
 		impTotMo.setConverter(Double.class);
 		impTotMo.setConversionError("Error en formato de número");
+		
+		total.setConverter(Double.class);
+		total.setConversionError("Error en formato de número");
 		
 		tcMov.setData("ProgramaticallyChanged");
 	}
@@ -2852,7 +2911,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			
 			/*Si es nuevo aun no tenemos el nro del cobro*/
 			if(this.nroDocum.getValue() != null)
-				ingCobroVO.setNroDocum(Integer.parseInt(this.nroDocum.getValue().toString().trim()));
+				ingCobroVO.setNroDocum(this.nroDocum.getValue());
 			
 			
 			/*Si es banco tomamos estos cmapos de lo contrario caja*/
@@ -2860,23 +2919,23 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			
 				ingCobroVO.setmPago((String)comboMPagos.getValue());
 				
-				if(ingCobroVO.getmPago().equals("transferencia"))
+				if(ingCobroVO.getmPago().equals("Transferencia"))
 				{
 					ingCobroVO.setCodDocRef("tranrec");
-					
+					ingCobroVO.setNroDocRef(nroDocRef.getValue());
 					ingCobroVO.setSerieDocRef("0");
 				}
 				else if(ingCobroVO.getmPago().equals("Cheque"))
 				{
 					ingCobroVO.setCodDocRef("cheqrec");
-					ingCobroVO.setNroDocRef((Integer) nroDocRef.getConvertedValue());
+					ingCobroVO.setNroDocRef(nroDocRef.getValue());
 					ingCobroVO.setSerieDocRef(serieDocRef.getValue().trim());
 					
 				}else
 				{
 					
 					ingCobroVO.setCodDocRef("0");
-					ingCobroVO.setNroDocRef(0);
+					ingCobroVO.setNroDocRef("0");
 					ingCobroVO.setSerieDocRef("0");
 				}
 											
@@ -2906,7 +2965,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 					ingCobroVO.setNomCtaBco("0");
 					
 					ingCobroVO.setCodDocRef("0");
-					ingCobroVO.setNroDocRef(0);
+					ingCobroVO.setNroDocRef("0");
 					ingCobroVO.setSerieDocRef("0");
 					
 					ingCobroVO.setmPago("Caja");
@@ -3015,7 +3074,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		}
 		
 		/*Obtenemos los gastos con saldo del cliente*/
-		ArrayList<GastoVO> lstGastosConSaldo = this.controlador.getGastosConSaldo(permisoAux, codCliente);
+		ArrayList<GastoVO> lstGastosConSaldo = this.controlador.getGastosConSaldoCobrable(permisoAux, codCliente);
 		
 		/*Hacemos una lista auxliar para pasarselo al BusquedaViewExtended*/
 		ArrayList<Object> lst = new ArrayList<Object>();
@@ -3023,7 +3082,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		for (GastoVO i: lstGastosConSaldo) {
 			
 			/*Verificamos que el gasto ya no esta en la grilla*/
-			if(!this.existeFormularioenLista(i.getNroDocum()))
+			if(!this.existeFormularioenLista(Integer.parseInt(i.getNroDocum())))
 			{
 				obj = new Object();
 				obj = (Object)i;
@@ -3104,5 +3163,14 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		}
 		
 		return max;
+	}
+	
+	boolean tryParseInt(String value) {  
+	     try {  
+	         Integer.parseInt(value);  
+	         return true;  
+	      } catch (NumberFormatException e) {  
+	         return false;  
+	      }  
 	}
 }

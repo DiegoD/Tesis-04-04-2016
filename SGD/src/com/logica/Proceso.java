@@ -75,7 +75,7 @@ public class Proceso extends Auditoria{
 		this.fecha = procVO.getFecha();
 		this.nroMega = procVO.getNroMega();
 		//this.codDocum = procVO.getCodDocum();
-		this.nroDocum = procVO.getNroDocum();
+		this.nroDocum = Integer.parseInt(procVO.getNroDocum());
 		this.fecDocum = procVO.getFecDocum();
 		this.carpeta = procVO.getCarpeta();
 		

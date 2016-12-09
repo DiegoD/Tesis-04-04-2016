@@ -1378,7 +1378,6 @@ public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 	Integer codigo;
 	NumeradoresVO codigos = new NumeradoresVO();
 
-
 	try 
 	{
 		con = this.pool.obtenerConeccion();
@@ -1401,8 +1400,7 @@ public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 		ing.setNroDocum(codigos.getCodigo()); /*Seteamos el nroDocum*/
 		ing.setNroTrans(codigos.getNumeroTrans()); /*Seteamos el nroTrans*/
 		ingVO.setNroTrans(codigos.getNumeroTrans()); /*Seteamos el nroTrans al VO para obtener el DocumSaldo*/ 
-		ingVO.setNroDocum(codigos.getCodigo()); /*Seteamos el nroDocum*/
-		
+		ingVO.setNroDocum(String.valueOf(codigos.getCodigo())); /*Seteamos el nroDocum*/
 		/*Verificamos que no exista un cobro con el mismo numero*/
 		if(!this.ingresoCobro.memberIngresoCobro(ing.getNroDocum(), codEmp, con))
 		{
@@ -1420,6 +1418,7 @@ public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 				/*Para cada linea ingresamos el saldo*/
 				for (DocumDetalle docum : ing.getDetalle()) {
 					
+					
 					if(docum.getCodDocum().equals("Gasto")){ /*Para los gastos modificamos el saldo al documento*/
 						/*Signo -1 porque resta al saldo del documento el cobro*/
 						this.saldos.modificarSaldo(docum, -1, ingVO.getTcMov(), con);
@@ -1435,7 +1434,6 @@ public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 						docum.setFecDoc(ing.getFecDoc());
 						docum.setFecValor(ing.getFecValor());
 						docum.setCodEmp(ing.getCodEmp());
-						
 						
 						/*Para el proceso esl signo es 1 porque subo el saldo a la cuenta del proceso*/
 						this.saldosProceso.modificarSaldo(docum, 1, ingVO.getTcMov(), con);
@@ -1706,8 +1704,11 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 			if(ing.getDetalle().size() > 0) /*Si tiene detalle porque viene del ingreso cobro, de lo contrario
 											se consume desde el ingteso cobro otros*/
 			{
-				
+			
+				int i = 0;
 				for (DocumDetalle docum : ing.getDetalle()) {
+					
+					docum.setCodProceso(ing.getDetalle().get(i).getCodProceso());
 					
 					if(docum.getCodDocum().equals("Gasto")){ /*Para los gastos modificamos el saldo al documento*/
 						/*Signo -1 porque resta al saldo del documento el cobro*/
@@ -2008,7 +2009,7 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 			ing.setNroDocum(codigos.getCodigo()); /*Seteamos el nroDocum*/
 			ing.setNroTrans(codigos.getNumeroTrans()); /*Seteamos el nroTrans*/
 			ingVO.setNroTrans(codigos.getNumeroTrans()); /*Seteamos el nroTrans al VO para obtener el DocumSaldo*/ 
-			ingVO.setNroDocum(codigos.getCodigo()); /*Seteamos el nroDocum*/
+			ingVO.setNroDocum(String.valueOf(codigos.getCodigo())); /*Seteamos el nroDocum*/
 			
 			/*Verificamos que no exista un cobro con el mismo numero*/
 			if(!this.egresoCobro.memberEgresoCobro(ing.getNroDocum(), codEmp, con))

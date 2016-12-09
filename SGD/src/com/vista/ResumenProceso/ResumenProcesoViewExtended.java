@@ -408,10 +408,10 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 					}
 					
 					if(nroDocum.getValue() != "" && nroDocum.getValue() != null){
-						procesoVO.setNroDocum((Integer) nroDocum.getConvertedValue());
+						procesoVO.setNroDocum(nroDocum.getValue());
 					}
 					else{
-						procesoVO.setNroDocum(0);
+						procesoVO.setNroDocum("0");
 					}
 						
 					if(Kilos.getValue() != "" && Kilos.getValue() != null){

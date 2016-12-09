@@ -13,7 +13,7 @@ public class IngresoCobroVO extends DatosDocumVO{
 	private String mPago;
 	private String codDocRef;
 	private String serieDocRef;
-	private int nroDocRef;
+	private String nroDocRef;
 	
 	private String codBanco;
 	private String nomBanco;
@@ -80,10 +80,10 @@ public class IngresoCobroVO extends DatosDocumVO{
 	public void setSerieDocRef(String serieDocRef) {
 		this.serieDocRef = serieDocRef;
 	}
-	public int getNroDocRef() {
+	public String getNroDocRef() {
 		return nroDocRef;
 	}
-	public void setNroDocRef(int nroDocRef) {
+	public void setNroDocRef(String nroDocRef) {
 		this.nroDocRef = nroDocRef;
 	}
 

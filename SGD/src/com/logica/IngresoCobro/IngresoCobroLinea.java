@@ -32,7 +32,7 @@ public IngresoCobroDetalleVO retornarDatosDocumVO(){
 		aux.setFecValor(this.getFecValor());
 		aux.setCodDocum(this.getCodDocum());
 		aux.setSerieDocum(this.getSerieDocum());
-		aux.setNroDocum(this.getNroDocum());
+		aux.setNroDocum(String.valueOf(this.getNroDocum()));
 		aux.setCodEmp(this.getCodEmp());
 		
 		aux.setNomMoneda(this.getMoneda().getDescripcion());

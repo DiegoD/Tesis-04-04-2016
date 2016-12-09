@@ -243,10 +243,10 @@ public class DetFacturaViewExtended extends DetFacturaView implements IBusqueda{
 					
 					
 					if(this.operacion.equals(Variables.OPERACION_NUEVO)){
-						gastoVO.setNroDocum((0));
+						gastoVO.setNroDocum((String.valueOf(0)));
 					}
 					else{
-						gastoVO.setNroDocum(((Integer) nroDocum.getConvertedValue()));
+						gastoVO.setNroDocum((nroDocum.getValue()));
 					}
 					
 					if(this.operacion.equals(Variables.OPERACION_NUEVO)){
@@ -265,7 +265,7 @@ public class DetFacturaViewExtended extends DetFacturaView implements IBusqueda{
 						if(this.mainView.nomForm().equals("Panel")){
 							
 							codigos = this.controlador.insertarGasto(gastoVO, permisoAux);
-							gastoVO.setNroDocum(codigos.getCodigo());
+							gastoVO.setNroDocum(String.valueOf(codigos.getCodigo()));
 							gastoVO.setNroTrans(codigos.getNumeroTrans());
 							
 							this.mainView.actulaizarGrilla(gastoVO);
@@ -297,6 +297,10 @@ public class DetFacturaViewExtended extends DetFacturaView implements IBusqueda{
 							
 						}else if(this.mainView.nomForm().equals("Egreso")){ /*Si es del form de Egreso Cobro*/
 							
+							this.mainView.actulaizarGrilla(gastoVO);
+							main.cerrarVentana();
+						}
+						else if(this.mainView.nomForm().equals("Factura")){
 							this.mainView.actulaizarGrilla(gastoVO);
 							main.cerrarVentana();
 						}
@@ -408,7 +412,7 @@ public class DetFacturaViewExtended extends DetFacturaView implements IBusqueda{
 				
 				gastoVO.setCodDocum(codDocum.getValue());
 				gastoVO.setSerieDocum(serieDocum.getValue());
-				gastoVO.setNroDocum((Integer) nroDocum.getConvertedValue());
+				gastoVO.setNroDocum(nroDocum.getValue());
 				gastoVO.setCodEmp(permisoAux.getCodEmp());
 				gastoVO.setCodTitular(codTitular.getValue());
 				gastoVO.setNroTrans((long) nroTrans.getConvertedValue());

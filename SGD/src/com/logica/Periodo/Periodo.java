@@ -23,7 +23,7 @@ public class Periodo extends Auditoria{
 	public Periodo(PeriodoVO periodoVO){
 		super(periodoVO.getUsuarioMod(), periodoVO.getFechaMod(), periodoVO.getOperacion());
 		this.mes = periodoVO.getMes();
-		this.anio = periodoVO.getAnio();
+		this.anio = Integer.parseInt(periodoVO.getAnio());
 		this.abierto = periodoVO.getAbierto();
 		
 	}

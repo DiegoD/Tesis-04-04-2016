@@ -142,7 +142,7 @@ public class DAOSaldoProceso implements IDAOSaldosProc {
 		/*Variable utlilizada para modificar una copia de lo
 		   * pasado por parametro, para que no afecte al
 		   * objeto original*/
- 	  DatosDocum documento = new DatosDocum(docum.retornarDatosDocumVO());
+ 	    DatosDocum documento = new DatosDocum(docum.retornarDatosDocumVO());
 		
 		double saldoAnteriorMO;
 		double saldoCalcMO;

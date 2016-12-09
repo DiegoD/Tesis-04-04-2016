@@ -68,7 +68,7 @@ public class ConvertirDocumento {
 		
 		docSaldo.setCodDocum(ingVO.getCodDocRef());
 		docSaldo.setSerieDocum(ingVO.getSerieDocRef());
-		docSaldo.setNroDocum(ingVO.getNroDocRef());
+		docSaldo.setNroDocum(Integer.parseInt(ingVO.getNroDocRef()));
 		
 		//private String codBco;
 		//private String codCtaBco;
@@ -101,7 +101,7 @@ public class ConvertirDocumento {
 		
 		docSaldo.setCodDocum(ingVO.getCodDocRef());
 		docSaldo.setSerieDocum(ingVO.getSerieDocRef());
-		docSaldo.setNroDocum(ingVO.getNroDocRef());
+		docSaldo.setNroDocum(Integer.parseInt(ingVO.getNroDocRef()));
 		
 		//private String codBco;
 		//private String codCtaBco;
@@ -134,7 +134,7 @@ public class ConvertirDocumento {
 		
 		docSaldo.setCodDocum(ingVO.getCodDocum()); /*Documento del cobro*/
 		docSaldo.setSerieDocum("0");
-		docSaldo.setNroDocum(ingVO.getNroDocum()); /*Nro docum del cobro*/
+		docSaldo.setNroDocum(Integer.parseInt(ingVO.getNroDocum())); /*Nro docum del cobro*/
 		
 		//private String codBco;
 		//private String codCtaBco;
@@ -153,13 +153,13 @@ public class ConvertirDocumento {
 			
 			docSaldo.setCodDocumRef(ingVO.getCodDocRef()); /*Documento del cobro*/
 			docSaldo.setSerieDocumRef("0");
-			docSaldo.setNroDocumRef(ingVO.getNroDocRef()); /*Nro docum del cobro*/
+			docSaldo.setNroDocumRef(Integer.parseInt(ingVO.getNroDocRef())); /*Nro docum del cobro*/
 			
 		}else if(ingVO.getmPago().toUpperCase().equals("CHEQUE")){ /*Si es transferencia*/
 			
 			docSaldo.setCodDocumRef(ingVO.getCodDocRef()); /*Documento del cobro*/
 			docSaldo.setSerieDocumRef(ingVO.getSerieDocRef());
-			docSaldo.setNroDocumRef(ingVO.getNroDocRef()); /*Nro docum del cobro*/
+			docSaldo.setNroDocumRef(Integer.parseInt(ingVO.getNroDocRef())); /*Nro docum del cobro*/
 			
 		}
 			
@@ -222,7 +222,7 @@ public class ConvertirDocumento {
 		
 		docSaldo.setCodDocum(ing.getCodDocum()); /*Documento del cobro*/
 		docSaldo.setSerieDocum("0");
-		docSaldo.setNroDocum(ing.getNroDocum()); /*Nro docum del cobro*/
+		docSaldo.setNroDocum(Integer.parseInt(ing.getNroDocum())); /*Nro docum del cobro*/
 		
 		//private String codBco;
 		//private String codCtaBco;
@@ -241,13 +241,13 @@ public class ConvertirDocumento {
 			
 			docSaldo.setCodDocumRef(ing.getCodDocRef()); /*Documento del cobro*/
 			docSaldo.setSerieDocumRef("0");
-			docSaldo.setNroDocumRef(ing.getNroDocRef()); /*Nro docum del cobro*/
+			docSaldo.setNroDocumRef(Integer.parseInt(ing.getNroDocRef())); /*Nro docum del cobro*/
 			
 		}else if(ing.getmPago().toUpperCase().equals("CHEQUE")){ /*Si es transferencia*/
 			
 			docSaldo.setCodDocumRef(ing.getCodDocRef()); /*Documento del cobro*/
 			docSaldo.setSerieDocumRef(ing.getSerieDocRef());
-			docSaldo.setNroDocumRef(ing.getNroDocRef()); /*Nro docum del cobro*/
+			docSaldo.setNroDocumRef(Integer.parseInt(ing.getNroDocRef())); /*Nro docum del cobro*/
 			
 		}
 			

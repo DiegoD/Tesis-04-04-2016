@@ -1500,6 +1500,45 @@ public String getGastosAnuladosxProceso(){
 		return sb.toString();
 	}
 	
+	public String getGastosConSaldoCobrable(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT c_gastos.fecDoc, c_gastos.cod_docum, c_gastos.serie_docum, "
+				+ "c_gastos.nro_docum, c_gastos.cod_emp, c_gastos.referencia, "
+				+ "c_gastos.nro_trans, c_gastos.fecValor, c_gastos.cod_proceso, "
+				+ "c_gastos.referenciaDetalle, c_gastos.imp_impu_mn, c_gastos.imp_impu_mo, "
+				+ "c_gastos.imp_sub_mn, c_gastos.imp_sub_mo, sa_docum.imp_tot_mn, "
+				+ "sa_docum.imp_tot_mo, c_gastos.tc_mov, c_gastos.cuenta, "
+				+ "c_gastos.fecha_mod, c_gastos.usuario_mod, c_gastos.operacion, "
+				+ "m_clientes.cod_tit, m_clientes.nom_tit, "
+				+ "m_monedas.cod_moneda, m_monedas.descripcion, m_monedas.simbolo, "
+				+ "m_cuentas.cod_cuenta, m_cuentas.descripcion, "
+				+ "m_rubros.cod_rubro, m_rubros.descripcion, m_rubros.cod_tipo_rubro, m_rubros.cod_impuesto, "
+				+ "m_impuestos.cod_impuesto, m_impuestos.descripcion, m_impuestos.porcentaje, "
+				+ "c_procesos.descripcion, m_monedas.nacional ");
+		
+		sb.append("FROM c_gastos"
+				+ " INNER JOIN  m_clientes ON c_gastos.cod_tit = m_clientes.cod_tit AND c_gastos.cod_emp = m_clientes.cod_emp  "
+				+ " INNER JOIN m_cuentas ON c_gastos.cod_cuenta = m_cuentas.cod_cuenta AND c_gastos.cod_emp = m_cuentas.cod_emp "
+				+ " INNER JOIN m_rubros ON c_gastos.cod_rubro = m_rubros.cod_rubro AND c_gastos.cod_emp = m_rubros.cod_emp "
+				+ " INNER JOIN m_monedas ON c_gastos.cod_moneda = m_monedas.cod_moneda AND c_gastos.cod_emp = m_monedas.cod_emp "
+				+ " INNER JOIN m_impuestos ON m_rubros.cod_impuesto = m_impuestos.cod_impuesto AND c_gastos.cod_emp = m_impuestos.cod_emp "
+				+ " INNER JOIN c_procesos ON c_gastos.cod_proceso = c_procesos.cod_proceso AND c_gastos.cod_emp = c_procesos.cod_emp "
+				+" INNER JOIN sa_docum ON c_gastos.cod_docum = sa_docum.cod_docum  "
+				+" AND c_gastos.serie_docum = sa_docum.serie_docum "
+				+" AND c_gastos.nro_docum = sa_docum.nro_docum "
+				+" AND c_gastos.cod_emp = sa_docum.cod_emp "
+				+" AND c_gastos.cod_tit = sa_docum.cod_tit "
+				+ " AND c_gastos.cod_emp = ? AND c_gastos.estado = 'cobr' "); 
+		
+		
+		sb.append(" AND c_gastos.cod_tit = ? "
+				+ " AND sa_docum.imp_tot_mo <> 0 ");
+				
+		return sb.toString();
+	}
+	
 	public String insertarGasto()
 	{
 	

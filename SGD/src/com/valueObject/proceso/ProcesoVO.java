@@ -25,7 +25,7 @@ public class ProcesoVO extends AuditoriaVO{
 	private int nroMega;
 	private String codDocum;
 	private String nomDocum;
-	private Integer nroDocum;
+	private String nroDocum;
 	private Timestamp fecDocum;
 	private String carpeta;
 	private double impMo;
@@ -55,7 +55,7 @@ public class ProcesoVO extends AuditoriaVO{
 	}
 	
 	public ProcesoVO(String codCliente, String nomCliente, String codMoneda, String descMoneda, String simboloMoneda,
-			int codigo, Timestamp fecha, int nroMega, String codDocum, String nomDocum, Integer nroDocum, Timestamp fecDocum, String carpeta,
+			int codigo, Timestamp fecha, int nroMega, String codDocum, String nomDocum, String nroDocum, Timestamp fecDocum, String carpeta,
 			double impMo, double impMn, double impTr, double tcMov, double kilos, Timestamp fecCruce, String marca, String medio,
 			String descripcion, String observaciones, double impSubTot, String codImpuesto) {
 		super();
@@ -148,6 +148,7 @@ public class ProcesoVO extends AuditoriaVO{
 		docum.setNomRubro(procesoVO.getNomRubro());
 		docum.setCodRubro(procesoVO.getCodRubro());
 		
+		
 		/***VER DE DONDE SACAR***/
 		docum.setUsuarioMod(procesoVO.getUsuarioMod());
 		docum.setOperacion(procesoVO.getOperacion());
@@ -215,7 +216,7 @@ public class ProcesoVO extends AuditoriaVO{
 	public void setCodDocum(String codDocum) {
 		this.codDocum = codDocum;
 	}
-	public Integer getNroDocum() {
+	public String getNroDocum() {
 		return nroDocum;
 	}
 	
@@ -227,7 +228,7 @@ public class ProcesoVO extends AuditoriaVO{
 		this.nomDocum = nomDocum;
 	}
 
-	public void setNroDocum(Integer nroDocum) {
+	public void setNroDocum(String nroDocum) {
 		this.nroDocum = nroDocum;
 	}
 	public Timestamp getFecDocum() {

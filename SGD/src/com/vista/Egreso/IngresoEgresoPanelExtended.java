@@ -276,7 +276,7 @@ public class IngresoEgresoPanelExtended extends IngresoEgresoPanel{
 		while( i < this.lstEgresos.size() && !esta)
 		{
 			aux = this.lstEgresos.get(i);
-			if(nro==aux.getNroDocum())
+			if(nro==Integer.parseInt(aux.getNroDocum()))
 			{
 				esta = true;
 			}

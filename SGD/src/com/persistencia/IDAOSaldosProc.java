@@ -12,6 +12,7 @@ import com.excepciones.Saldos.ModificandoSaldoException;
 import com.excepciones.Saldos.ObteniendoSaldosException;
 import com.logica.SaldoProceso;
 import com.logica.Docum.DatosDocum;
+import com.logica.Docum.DocumDetalle;
 
 public interface IDAOSaldosProc {
 

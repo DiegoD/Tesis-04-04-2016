@@ -34,7 +34,7 @@ public class DocumSaldo extends DatosDocum{
 		
 		this.codDocumRef = d.getCodDocumRef();
 		this.serieDocumRef = d.getSerieDocumRef();
-		this.nroDocumRef = d.getNroDocumRef();
+		this.nroDocumRef = Integer.parseInt(d.getNroDocumRef());
 		
 		this.signo = d.getSigno();
 	}
@@ -48,7 +48,7 @@ public class DocumSaldo extends DatosDocum{
 		aux.setFecDoc(this.getFecDoc());
 		aux.setCodDocum(this.getCodDocum());
 		aux.setSerieDocum(this.getSerieDocum());
-		aux.setNroDocum(this.getNroDocum());
+		aux.setNroDocum(String.valueOf(this.getNroDocum()));
 		aux.setCodEmp(this.getCodDocum());
 		
 		aux.setNomMoneda(this.getMoneda().getDescripcion());
@@ -79,7 +79,7 @@ public class DocumSaldo extends DatosDocum{
 		
 		aux.setCodDocumRef(this.getCodDocumRef());
 		aux.setSerieDocumRef(this.getSerieDocumRef());
-		aux.setNroDocumRef(this.getNroDocumRef());
+		aux.setNroDocumRef(String.valueOf(this.getNroDocumRef()));
 		
 		aux.setSigno(this.getSigno());
 		

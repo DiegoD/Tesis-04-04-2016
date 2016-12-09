@@ -53,6 +53,7 @@ public class IngresoCobroViews extends FormLayout {
 	protected HorizontalLayout name_wrapper2;
 	protected ComboBox comboMoneda;
 	protected TextField impTotMo;
+	protected CheckBox chkDiferencia;
 	protected HorizontalLayout botones;
 	protected Button aceptar;
 	protected Button btnEditar;
@@ -63,6 +64,7 @@ public class IngresoCobroViews extends FormLayout {
 	protected Button btnAgregar;
 	protected Button btnEditarItem;
 	protected Button btnQuitar;
+	protected TextField total;
 
 	public IngresoCobroViews() {
 		Design.read(this);

@@ -279,7 +279,7 @@ public class IngresoCobroPanelExtended extends IngresoCobroPanel{
 		while( i < this.lstIngresoCobro.size() && !esta)
 		{
 			aux = this.lstIngresoCobro.get(i);
-			if(nro==aux.getNroDocum())
+			if(nro==Integer.parseInt(aux.getNroDocum()))
 			{
 				esta = true;
 			}

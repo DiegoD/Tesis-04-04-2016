@@ -6,14 +6,14 @@ import com.valueObject.MonedaVO;
 public class PeriodoVO extends AuditoriaVO{
 	
 	private String mes;
-	private Integer anio;
+	private String anio;
 	private Boolean abierto;
 	
 	public PeriodoVO(){
 		
 	}
 	
-	public PeriodoVO(String mes, Integer anio, Boolean abierto) {
+	public PeriodoVO(String mes, String anio, Boolean abierto) {
 		super();
 		this.mes = mes;
 		this.anio = anio;
@@ -38,10 +38,10 @@ public class PeriodoVO extends AuditoriaVO{
 	public void setMes(String mes) {
 		this.mes = mes;
 	}
-	public Integer getAnio() {
+	public String getAnio() {
 		return anio;
 	}
-	public void setAnio(Integer anio) {
+	public void setAnio(String anio) {
 		this.anio = anio;
 	}
 	public Boolean getAbierto() {

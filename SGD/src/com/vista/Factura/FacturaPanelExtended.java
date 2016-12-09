@@ -259,7 +259,7 @@ public class FacturaPanelExtended extends FacturaPanel{
 		while( i < this.lstFacturas.size() && !esta)
 		{
 			aux = this.lstFacturas.get(i);
-			if(nro==aux.getNroDocum())
+			if(nro==Integer.parseInt(aux.getNroDocum()))
 			{
 				esta = true;
 			}

@@ -44,7 +44,7 @@ public class DatosDocum extends Auditoria{
 		this.fecDoc = d.getFecDoc();
 		this.codDocum = d.getCodDocum();
 		this.serieDocum = d.getSerieDocum();
-		this.nroDocum = d.getNroDocum();
+		this.nroDocum = Integer.parseInt(d.getNroDocum());
 		this.codEmp = d.getCodEmp();
 		this.cuenta = new CuentaInfo(d.getCodCuenta(), d.getNomCuenta());
 		
@@ -74,7 +74,7 @@ public class DatosDocum extends Auditoria{
 		aux.setFecDoc(this.fecDoc);
 		aux.setCodDocum(this.codDocum);
 		aux.setSerieDocum(this.serieDocum);
-		aux.setNroDocum(this.nroDocum);
+		aux.setNroDocum(String.valueOf(this.nroDocum));
 		aux.setCodEmp(this.codEmp);
 		
 		aux.setNomMoneda(this.moneda.getDescripcion());
