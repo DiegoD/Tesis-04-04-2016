@@ -16,10 +16,10 @@ import com.logica.Docum.DocumDetalle;
 
 public interface IDAOSaldosProc {
 
-	public boolean memberSaldo(DatosDocum docum, Connection con) throws ExisteSaldoException, ConexionException;
-	public void insertarSaldo(DatosDocum documento, Connection con) throws IngresandoSaldoException, ConexionException, SQLException;
-	public void eliminarSaldo(DatosDocum documento, Connection con) throws EliminandoSaldoException, ConexionException;
-	public void modificarSaldo(DatosDocum documento, int signo, double tc , Connection con)
+	public boolean memberSaldo(DatosDocum docum, Connection con, String codProceso) throws ExisteSaldoException, ConexionException;
+	public void insertarSaldo(DatosDocum documento, Connection con, String codProceso) throws IngresandoSaldoException, ConexionException, SQLException;
+	public void eliminarSaldo(DatosDocum documento, Connection con, String codProceso) throws EliminandoSaldoException, ConexionException;
+	public void modificarSaldo(DatosDocum documento, int signo, double tc , Connection con, String codProceso)
 			throws ModificandoSaldoException, ConexionException, EliminandoSaldoException, IngresandoSaldoException, ExisteSaldoException;
 	public ArrayList<SaldoProceso> getSaldosSinAdjuxProceso(String codEmp, int codProceso, Connection con) throws ObteniendoSaldosException, ConexionException;
 }

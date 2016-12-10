@@ -64,6 +64,7 @@ public class DAORubros implements IDAORubros{
 				rubro.setOperacion(rs.getString(6));
 				codImpuesto = rs.getString(7);
 				codTipoRubro = rs.getString(8);
+				rubro.setFacturable(rs.getBoolean(10));
 				
 				
 				pstmt2.setString(1, codImpuesto);
@@ -158,7 +159,7 @@ public class DAORubros implements IDAORubros{
 				rubro.setOperacion(rs.getString(6));
 				codImpuesto = rs.getString(7);
 				codTipoRubro = rs.getString(8);
-				
+				rubro.setFacturable(rs.getBoolean(9));
 				
 				pstmt2.setString(1, codImpuesto);
 				pstmt2.setString(2, codEmp);
@@ -248,6 +249,57 @@ public class DAORubros implements IDAORubros{
 				rubro.setPersona(rs.getBoolean(10));
 				rubro.setCod_tipoRubro(rs.getString(11));
 				rubro.setDescripcionTipoRubro(rs.getString(12));
+				rubro.setFacturable(rs.getBoolean(13));
+				
+				lstRubros.add(rubro);
+			}
+			
+			rs.close ();
+			pstmt1.close ();
+		}
+		catch (SQLException e) {
+			
+			throw new ObteniendoRubrosException();
+		}
+			
+		return lstRubros;
+	}
+	
+	@Override
+	public ArrayList<RubroCuenta> getRubrosCuentasActivosFacturable(String codEmp, Connection con) throws ObteniendoRubrosException, ConexionException {
+		// TODO Auto-generated method stub
+		ArrayList<RubroCuenta> lstRubros = new ArrayList<RubroCuenta>();
+		
+		try
+		{
+			ConsultasDD consultas = new ConsultasDD ();
+			String query = consultas.rubroCuentaActivosFacturable();
+			
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			
+			pstmt1.setString(1, codEmp);
+			
+			ResultSet rs = pstmt1.executeQuery();
+			
+			RubroCuenta rubro;
+			
+			while(rs.next ()) {
+
+				rubro = new RubroCuenta();
+				
+				rubro.setCod_rubro(rs.getString(1));
+				rubro.setDescripcionRubro(rs.getString(2));
+				rubro.setCod_cuenta(rs.getString(3));
+				rubro.setDescripcionCuenta(rs.getString(4));
+				rubro.setCod_impuesto(rs.getString(5));
+				rubro.setDescripcionImpuesto(rs.getString(6));
+				rubro.setPorcentaje(rs.getDouble(7));
+				rubro.setOficina(rs.getBoolean(8));
+				rubro.setProceso(rs.getBoolean(9));
+				rubro.setPersona(rs.getBoolean(10));
+				rubro.setCod_tipoRubro(rs.getString(11));
+				rubro.setDescripcionTipoRubro(rs.getString(12));
+				rubro.setFacturable(rs.getBoolean(13));
 				
 				lstRubros.add(rubro);
 			}
@@ -289,6 +341,7 @@ public class DAORubros implements IDAORubros{
 			pstmt1.setString(6, rubro.getImpuesto().getCod_imp());
 			pstmt1.setString(7,  rubro.getTipoRubro().getCod_tipoRubro());
 			pstmt1.setString(8,  cod_emp);
+			pstmt1.setBoolean(9, rubro.isFacturable());
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
 			
@@ -355,8 +408,10 @@ public class DAORubros implements IDAORubros{
 			pstmt1.setString(4, rubro.getOperacion());
 			pstmt1.setString(5, rubro.getImpuesto().getCod_imp());
 			pstmt1.setString(6, rubro.getTipoRubro().getCod_tipoRubro());
-			pstmt1.setString(7, rubro.getCod_rubro());
-			pstmt1.setString(8, cod_emp);
+			pstmt1.setBoolean(7, rubro.isFacturable());
+			pstmt1.setString(8, rubro.getCod_rubro());
+			pstmt1.setString(9, cod_emp);
+			
 			
 			
 			

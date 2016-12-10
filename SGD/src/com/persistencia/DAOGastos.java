@@ -259,6 +259,7 @@ public class DAOGastos implements IDAOGastos{
 			pstmt1.setString(23, gasto.getUsuarioMod());
 			pstmt1.setString(24, gasto.getOperacion());
 			pstmt1.setString(25, gasto.getEstadoGasto());
+			pstmt1.setString(26, gasto.getImpuestoInfo().getCodImpuesto());
 			
 			pstmt1.executeUpdate ();
 			pstmt1.close ();

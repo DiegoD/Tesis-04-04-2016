@@ -1054,6 +1054,7 @@ public class FachadaDD {
     			aux.setPorcentajeImpuesto(rubro.getImpuesto().getPorcentaje());
     			aux.setDescripcionTipoRubro(rubro.getTipoRubro().getDescripcion());
     			aux.setCodTipoRubro(rubro.getTipoRubro().getCod_tipoRubro());
+    			aux.setFacturable(rubro.isFacturable());
     			
     			lstRubrosVO.add(aux);
 			}
@@ -1111,6 +1112,7 @@ public class FachadaDD {
     			aux.setPorcentajeImpuesto(rubro.getImpuesto().getPorcentaje());
     			aux.setDescripcionTipoRubro(rubro.getTipoRubro().getDescripcion());
     			aux.setCodTipoRubro(rubro.getTipoRubro().getCod_tipoRubro());
+    			aux.setFacturable(rubro.isFacturable());
     			
     			lstRubrosVO.add(aux);
 			}
@@ -1177,6 +1179,48 @@ public class FachadaDD {
        	return lstRubrosVO;
        }
        
+       /**
+      	 * Obtiene todos los rubros existentes
+      	 */
+          @SuppressWarnings("unchecked")
+      	public ArrayList<RubroCuentaVO> getRubrosCuentasActivosFacturable(String cod_emp) throws ObteniendoRubrosException, ConexionException
+          {
+          	
+          	Connection con = null;
+          	
+          	ArrayList<RubroCuenta> lstRubros;
+          	ArrayList<RubroCuentaVO> lstRubrosVO = new ArrayList<RubroCuentaVO>();
+          	    	
+          	try
+          	{
+          		con = this.pool.obtenerConeccion();
+          		
+          		lstRubros = this.rubros.getRubrosCuentasActivosFacturable(cod_emp, con);
+          		
+          		for (RubroCuenta rubro : lstRubros) 
+      			{
+          			RubroCuentaVO aux = new RubroCuentaVO(rubro);
+          			
+          			lstRubrosVO.add(aux);
+      			}
+      	
+          	}
+          	catch(ObteniendoRubrosException e){
+          		throw e;
+          		
+          	} 
+          	catch (ConexionException e) {
+      			
+          		throw e;
+          	} 
+          	finally
+          	{
+          		this.pool.liberarConeccion(con);
+          	}
+          	    
+          	
+          	return lstRubrosVO;
+          }
        
     /**
 	 * Inserta un nuevo rubro en la base

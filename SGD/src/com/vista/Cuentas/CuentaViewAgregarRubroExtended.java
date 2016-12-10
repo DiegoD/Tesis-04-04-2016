@@ -99,6 +99,7 @@ public class CuentaViewAgregarRubroExtended extends CuentaViewAgregarRubro{
 		this.lstRubros.removeColumn("fechaMod");
 		this.lstRubros.removeColumn("usuarioMod");
 		this.lstRubros.removeColumn("operacion");
+		this.lstRubros.removeColumn("facturable");
 		
 		/*Agregamos los filtros de la grilla*/
 		this.filtroGrilla();

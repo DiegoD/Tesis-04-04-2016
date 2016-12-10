@@ -361,6 +361,7 @@ public class BusquedaViewExtended extends BusquedaView{
 			grid.removeColumn("usuarioMod");
 			grid.removeColumn("operacion");
 			
+			
 		
 			this.arreglarGrilla();
 			
@@ -545,6 +546,7 @@ public class BusquedaViewExtended extends BusquedaView{
 			grid.removeColumn("oficina");
 			grid.removeColumn("proceso");
 			grid.removeColumn("persona");
+			grid.removeColumn("facturable");
 			
 			//this.arreglarGrillaProceso();
 			this.filtroGrilla();
@@ -668,6 +670,7 @@ public class BusquedaViewExtended extends BusquedaView{
 			grid.removeColumn("proceso");
 			grid.removeColumn("persona");
 			grid.removeColumn("cod_tipoRubro");
+			grid.removeColumn("facturable");
 			
 			this.arreglarGrillaRubroCuenta(); /*FaltaImplementar*/
 			this.filtroGrilla();

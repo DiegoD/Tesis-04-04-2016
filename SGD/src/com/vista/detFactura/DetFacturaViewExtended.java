@@ -450,7 +450,7 @@ public class DetFacturaViewExtended extends DetFacturaView implements IBusqueda{
 							VariablesPermisos.OPERACION_NUEVO_EDITAR);
 			
 			try {
-				lstRubros = this.controlador.getRubrosCuentasActivos(permisoAux);
+				lstRubros = this.controlador.getRubrosCuentasActivosFacturable(permisoAux);
 				
 			} catch ( ConexionException | InicializandoException | ObteniendoPermisosException | NoTienePermisosException | ObteniendoRubrosException | com.excepciones.Rubros.ObteniendoRubrosException e) {
 

@@ -126,6 +126,7 @@ public class CtaBcoViewExtended extends CtaBcoView{
 		/*Dejamos los textfields que se pueden editar
 		 * en readonly = false asi  se pueden editar*/
 		this.readOnlyFields(false);
+		this.codigo.setEnabled(false);
 		
 		/*Seteamos las validaciones*/
 		this.setearValidaciones(true);

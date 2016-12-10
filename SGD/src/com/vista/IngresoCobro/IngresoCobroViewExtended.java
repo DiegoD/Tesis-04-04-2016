@@ -1004,11 +1004,6 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 							
 								esta = true;
 							}
-						//}
-						//else {
-							
-							
-						//}
 	
 						i++;
 					}

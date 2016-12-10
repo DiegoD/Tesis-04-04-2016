@@ -26,7 +26,6 @@ public class GrupoView extends FormLayout {
 	protected FormLayout formLay1;
 	protected TextField codGrupo;
 	protected TextField nomGrupo;
-	protected TextField telefono;
 	protected CheckBox activo;
 	protected Button aceptar;
 	protected Button btnEditar;

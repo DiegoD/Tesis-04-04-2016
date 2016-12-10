@@ -325,6 +325,7 @@ public class IngresoCobroProcesoViewExtended extends IngresoCobroProcesoView imp
 			this.nomRubro.setValue(procesoParametro.getNomRubro());
 			this.codCuenta.setValue(procesoParametro.getCodCuenta());
 			this.nomCuenta.setValue(procesoParametro.getNomCuenta());
+			this.codImpuesto = procesoParametro.getCodImpuesto();
 			
 			impMo.setConverter(Double.class);
 			this.impMo.setConvertedValue((procesoParametro.getImpMo()));

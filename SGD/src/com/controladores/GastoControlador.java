@@ -172,6 +172,15 @@ public class GastoControlador {
 			throw new NoTienePermisosException();
 	}
 	
+	public ArrayList<RubroCuentaVO> getRubrosCuentasActivosFacturable(UsuarioPermisosVO permisos) throws ObteniendoRubrosException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, com.excepciones.Rubros.ObteniendoRubrosException {
+		
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))	
+			return FachadaDD.getInstance().getRubrosCuentasActivosFacturable(permisos.getCodEmp());
+		else
+			throw new NoTienePermisosException();
+	}
+	
 	public ArrayList<ImpuestoVO> getImpuestos(UsuarioPermisosVO permisos) throws ObteniendoImpuestosException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoImpuestosException{
 		
 		/*Primero se verifican los permisos*/

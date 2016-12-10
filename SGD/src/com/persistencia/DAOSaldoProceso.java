@@ -29,7 +29,7 @@ public class DAOSaldoProceso implements IDAOSaldosProc {
 	 * Dado el codigo de rubro, valida si existe
 	 * @throws ExisteSaldoException 
 	 */
-	public boolean memberSaldo(DatosDocum docum, Connection con) throws ExisteSaldoException{
+	public boolean memberSaldo(DatosDocum docum, Connection con, String codProceso) throws ExisteSaldoException{
 		
 		boolean existe = false;
 		
@@ -37,12 +37,12 @@ public class DAOSaldoProceso implements IDAOSaldosProc {
 			
 			ConsultasDD consultas = new ConsultasDD ();
 			String query = consultas.memberSaldoProceso();
-			DocumDetalle detalle = (DocumDetalle) docum;
+			//DocumDetalle detalle = (DocumDetalle) docum;
 			
 			
 			PreparedStatement pstmt1 = con.prepareStatement(query);
 			
-			pstmt1.setString(1, detalle.getCodProceso()); /*Es el codigo del proceso*/
+			pstmt1.setString(1, codProceso); /*Es el codigo del proceso*/
 			pstmt1.setString(2, docum.getCodEmp());
 			pstmt1.setString(3, docum.getTitInfo().getCodigo());
 			pstmt1.setString(4, docum.getMoneda().getCodMoneda());
@@ -65,13 +65,13 @@ public class DAOSaldoProceso implements IDAOSaldosProc {
 	
 
 	@Override
-	public void insertarSaldo(DatosDocum documento, Connection con)
+	public void insertarSaldo(DatosDocum documento, Connection con, String codProceso)
 			throws IngresandoSaldoException, ConexionException, SQLException {
 		ConsultasDD clts = new ConsultasDD();
 		
     	String insert = clts.insertarSaldoProceso();
     	
-    	DocumDetalle detalle = (DocumDetalle) documento;
+    	//DocumDetalle detalle = (DocumDetalle) documento;
     	
     	PreparedStatement pstmt1;
     	
@@ -80,7 +80,7 @@ public class DAOSaldoProceso implements IDAOSaldosProc {
 			pstmt1 =  con.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
 			
 			
-			pstmt1.setString(1, detalle.getCodProceso());
+			pstmt1.setString(1, codProceso);
 			pstmt1.setString(2, documento.getCodDocum());
 			pstmt1.setString(3, documento.getSerieDocum());
 			pstmt1.setInt(4, documento.getNroDocum());
@@ -108,18 +108,18 @@ public class DAOSaldoProceso implements IDAOSaldosProc {
 	}
 
 	@Override
-	public void eliminarSaldo(DatosDocum documento, Connection con)
+	public void eliminarSaldo(DatosDocum documento, Connection con, String codProceso)
 			throws EliminandoSaldoException, ConexionException {
 		// TODO Auto-generated method stub
 		ConsultasDD consultas = new ConsultasDD();
 		String eliminar = consultas.eliminarSaldoProceso();
 		PreparedStatement pstmt1;
-		DocumDetalle detalle = (DocumDetalle) documento;
+		//DocumDetalle detalle = (DocumDetalle) documento;
 		
 		try {
 			
 			pstmt1 =  con.prepareStatement(eliminar);
-			pstmt1.setString(1, detalle.getCodProceso());
+			pstmt1.setString(1, codProceso);
 			pstmt1.setString(2, documento.getCodEmp());
 			pstmt1.setString(3, documento.getTitInfo().getCodigo());
 			pstmt1.setString(4, documento.getMoneda().getCodMoneda());
@@ -136,7 +136,7 @@ public class DAOSaldoProceso implements IDAOSaldosProc {
 	}
 	
 	@Override
-	public void modificarSaldo(DatosDocum docum, int signo, double tc , Connection con)
+	public void modificarSaldo(DatosDocum docum, int signo, double tc , Connection con, String codProceso)
 			throws ModificandoSaldoException, ConexionException, EliminandoSaldoException, IngresandoSaldoException, ExisteSaldoException {
 		
 		/*Variable utlilizada para modificar una copia de lo
@@ -152,12 +152,12 @@ public class DAOSaldoProceso implements IDAOSaldosProc {
 			
 			/*Verificamos si existe el documento en la tabla de saldos
 			 * si existe eliminamos e insertamos con la nueva info*/
-			if(this.memberSaldo(documento, con))
+			if(this.memberSaldo(documento, con, codProceso))
 			{
 				
 				
 				/*Obtenemos primero el saldo anterior*/
-				saldoAnteriorMO = this.getSaldo(documento, con);
+				saldoAnteriorMO = this.getSaldo(documento, con, codProceso);
 				
 				/*Resto en la moneda operativa*/
 				saldoCalcMO = saldoAnteriorMO +(documento.getImpTotMo()* signo);
@@ -174,12 +174,12 @@ public class DAOSaldoProceso implements IDAOSaldosProc {
 					documento.setImpTotMn(0);
 				}
 				
-				this.eliminarSaldo(documento, con);
-				this.insertarSaldo(documento, con);
+				this.eliminarSaldo(documento, con, codProceso);
+				this.insertarSaldo(documento, con, codProceso);
 			}
 			else /*Si no existe, es nuevo y solamente insertamos*/
 			{
-				this.insertarSaldo(documento, con);
+				this.insertarSaldo(documento, con, codProceso);
 			} 
 		} 
 		
@@ -193,7 +193,7 @@ public class DAOSaldoProceso implements IDAOSaldosProc {
 	 * Nos retorna el saldo del documento en moneda operativa
 	 * @throws ExisteSaldoException 
 	 */
-	private double getSaldo(DatosDocum docum, Connection con) throws ExisteSaldoException{
+	private double getSaldo(DatosDocum docum, Connection con, String codProceso) throws ExisteSaldoException{
 		
 		ConsultasDD consultas = new ConsultasDD ();
 		String query = consultas.getSaldoMnProceso();
@@ -202,9 +202,9 @@ public class DAOSaldoProceso implements IDAOSaldosProc {
 		
 		try {
 			PreparedStatement pstmt1 = con.prepareStatement(query);
-			DocumDetalle detalle = (DocumDetalle) docum;
+			//DocumDetalle detalle = (DocumDetalle) docum;
 			
-			pstmt1.setString(1, detalle.getCodProceso());
+			pstmt1.setString(1, codProceso);
 			pstmt1.setString(2, docum.getCodEmp());
 			pstmt1.setString(3, docum.getTitInfo().getCodigo()); 
 			pstmt1.setString(4, docum.getMoneda().getCodMoneda()); 

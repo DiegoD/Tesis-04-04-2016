@@ -12,6 +12,7 @@ public class Rubro extends Auditoria{
 	private boolean oficina;
 	private boolean proceso;
 	private boolean persona;
+	private boolean facturable;
 	
 
 	public Rubro(){
@@ -29,7 +30,7 @@ public class Rubro extends Auditoria{
 	}
 	
 	public Rubro(String cod_rubro, String descripcion, boolean activo, Impuesto impuesto,
-		     TipoRubro tipoRubro, boolean oficina, boolean proceso, boolean persona) {
+		     TipoRubro tipoRubro, boolean oficina, boolean proceso, boolean persona, boolean facturable) {
 		super();
 		this.cod_rubro = cod_rubro;
 		this.descripcion = descripcion;
@@ -39,6 +40,7 @@ public class Rubro extends Auditoria{
 		this.oficina = oficina;
 		this.proceso = proceso;
 		this.persona = persona;
+		this.facturable = facturable;
 	}
 
 	public Rubro(RubroVO rubroVO){
@@ -55,6 +57,7 @@ public class Rubro extends Auditoria{
 		this.oficina = rubroVO.isOficina();
 		this.proceso = rubroVO.isProceso();
 		this.persona = rubroVO.isPersona();
+		this.facturable = rubroVO.isFacturable();
 	}
 	
 	public Rubro(String cod_rubro, String descripcion, Impuesto impuesto){
@@ -127,5 +130,14 @@ public class Rubro extends Auditoria{
 		this.persona = persona;
 	}
 
+	public boolean isFacturable() {
+		return facturable;
+	}
+
+	public void setFacturable(boolean facturable) {
+		this.facturable = facturable;
+	}
+
+	
 	
 }

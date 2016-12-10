@@ -458,7 +458,7 @@ public class ConsultasDD {
 	
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("SELECT cod_rubro, descripcion, activo, fecha_mod, usuario_mod, operacion, cod_impuesto, cod_tipo_rubro, cod_emp ");
+		sb.append("SELECT cod_rubro, descripcion, activo, fecha_mod, usuario_mod, operacion, cod_impuesto, cod_tipo_rubro, cod_emp, facturable ");
 		sb.append("FROM m_rubros ");
 		sb.append("WHERE cod_emp = ? ");
 		return sb.toString();
@@ -468,7 +468,7 @@ public class ConsultasDD {
 		
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("SELECT cod_rubro, descripcion, activo, fecha_mod, usuario_mod, operacion, cod_impuesto, cod_tipo_rubro, cod_emp ");
+		sb.append("SELECT cod_rubro, descripcion, activo, fecha_mod, usuario_mod, operacion, cod_impuesto, cod_tipo_rubro, cod_emp, facturable ");
 		sb.append("FROM m_rubros ");
 		sb.append("WHERE cod_emp = ? and activo = 1 ");
 		return sb.toString();
@@ -480,8 +480,8 @@ public class ConsultasDD {
 	
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("INSERT INTO vaadin.m_rubros (cod_rubro, descripcion, activo, fecha_mod, usuario_mod, operacion, cod_impuesto, cod_tipo_rubro, cod_emp )");
-		sb.append("VALUES (?, ?, ?, NOW(), ?, ?, ?, ?, ? ) ");
+		sb.append("INSERT INTO vaadin.m_rubros (cod_rubro, descripcion, activo, fecha_mod, usuario_mod, operacion, cod_impuesto, cod_tipo_rubro, cod_emp, facturable )");
+		sb.append("VALUES (?, ?, ?, NOW(), ?, ?, ?, ?, ?, ? ) ");
 		
 		return sb.toString();
 	
@@ -510,7 +510,8 @@ public class ConsultasDD {
 		sb.append("usuario_mod = ?, ");
 		sb.append("operacion = ?, ");
 		sb.append("cod_impuesto = ?, ");
-		sb.append("cod_tipo_rubro = ? ");
+		sb.append("cod_tipo_rubro = ?, ");
+		sb.append("facturable = ? ");
 		sb.append("WHERE cod_rubro = ? AND cod_emp = ? ");
 		
 		return sb.toString();
@@ -523,7 +524,7 @@ public class ConsultasDD {
 		sb.append("SELECT m_rubros.cod_rubro, m_rubros.descripcion, m_cuentas.cod_cuenta, m_cuentas.descripcion,"
 				+ "m_impuestos.cod_impuesto, m_impuestos.descripcion, m_impuestos.porcentaje, "
 				+ "m_rubrosxcuenta.oficina, m_rubrosxcuenta.proceso, m_rubrosxcuenta.persona, "
-				+ "m_tiporubro.cod_tipoRubro, m_tiporubro.descripcion ");
+				+ "m_tiporubro.cod_tipoRubro, m_tiporubro.descripcion, m_rubros.facturable ");
 		
 		sb.append("FROM m_cuentas, m_rubrosxcuenta, m_rubros, m_impuestos, m_tipoRubro ");
 		
@@ -537,6 +538,32 @@ public class ConsultasDD {
 				+ " and m_impuestos.cod_emp = m_rubrosxcuenta.cod_emp "
 				+ " and m_rubros.cod_tipo_rubro = m_tiporubro.cod_tipoRubro "
 				+ " and m_tiporubro.cod_emp = m_rubrosxcuenta.cod_emp ");
+
+		return sb.toString();
+	}
+
+	public String rubroCuentaActivosFacturable(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT m_rubros.cod_rubro, m_rubros.descripcion, m_cuentas.cod_cuenta, m_cuentas.descripcion,"
+				+ "m_impuestos.cod_impuesto, m_impuestos.descripcion, m_impuestos.porcentaje, "
+				+ "m_rubrosxcuenta.oficina, m_rubrosxcuenta.proceso, m_rubrosxcuenta.persona, "
+				+ "m_tiporubro.cod_tipoRubro, m_tiporubro.descripcion, m_rubros.facturable ");
+		
+		sb.append("FROM m_cuentas, m_rubrosxcuenta, m_rubros, m_impuestos, m_tipoRubro ");
+		
+		sb.append("where m_rubrosxcuenta.cod_rubro = m_rubros.cod_rubro AND "
+				+ "m_rubrosxcuenta.cod_cuenta = m_cuentas.cod_cuenta and m_rubrosxcuenta.cod_emp = ? "
+				+ " and m_rubros.cod_emp = m_rubrosxcuenta.cod_emp and m_rubros.activo = 1 "
+				+ " and m_cuentas.cod_emp = m_rubrosxcuenta.cod_emp and m_cuentas.activo = 1 "
+				+ " and m_rubros.activo = 1 AND m_cuentas.cod_cuenta = m_rubrosxcuenta.cod_cuenta "
+				+ " and m_cuentas.cod_emp = m_rubrosxcuenta.cod_emp "
+				+ " and m_impuestos.cod_impuesto = m_rubros.cod_impuesto "
+				+ " and m_impuestos.cod_emp = m_rubrosxcuenta.cod_emp "
+				+ " and m_rubros.cod_tipo_rubro = m_tiporubro.cod_tipoRubro "
+				+ " and m_tiporubro.cod_emp = m_rubrosxcuenta.cod_emp "
+				+ " and m_rubros.facturable = 1 ");
 
 		return sb.toString();
 	}
@@ -1141,7 +1168,7 @@ public class ConsultasDD {
 				+ " INNER JOIN m_cuentas ON c_gastos.cod_cuenta = m_cuentas.cod_cuenta AND m_cuentas.cod_emp = c_gastos.cod_emp "
 				+ " INNER JOIN m_rubros ON c_gastos.cod_rubro = m_rubros.cod_rubro AND m_rubros.cod_emp = c_gastos.cod_emp "
 				+ " INNER JOIN m_monedas ON c_gastos.cod_moneda = m_monedas.cod_moneda AND m_monedas.cod_emp = c_gastos.cod_emp "
-				+ " INNER JOIN m_impuestos ON m_rubros.cod_impuesto = m_impuestos.cod_impuesto AND m_impuestos.cod_emp = c_gastos.cod_emp "
+				+ " INNER JOIN m_impuestos ON c_gastos.cod_impuesto = m_impuestos.cod_impuesto AND m_impuestos.cod_emp = c_gastos.cod_emp "
 				+ " INNER JOIN c_procesos ON c_gastos.cod_proceso = c_procesos.cod_proceso and c_procesos.cod_emp = c_gastos.cod_emp "
 				+ " AND c_gastos.cod_emp = ? AND c_gastos.cuenta = 'IngGastoProceso' ");  
 				
@@ -1176,7 +1203,7 @@ public class ConsultasDD {
 				+ " INNER JOIN m_cuentas ON c_gastos.cod_cuenta = m_cuentas.cod_cuenta AND m_cuentas.cod_emp = c_gastos.cod_emp "
 				+ " INNER JOIN m_rubros ON c_gastos.cod_rubro = m_rubros.cod_rubro AND m_rubros.cod_emp = c_gastos.cod_emp "
 				+ " INNER JOIN m_monedas ON c_gastos.cod_moneda = m_monedas.cod_moneda AND m_monedas.cod_emp = c_gastos.cod_emp "
-				+ " INNER JOIN m_impuestos ON m_rubros.cod_impuesto = m_impuestos.cod_impuesto AND m_impuestos.cod_emp = c_gastos.cod_emp "
+				+ " INNER JOIN m_impuestos ON c_gastos.cod_impuesto = m_impuestos.cod_impuesto AND m_impuestos.cod_emp = c_gastos.cod_emp "
 				+ " INNER JOIN c_procesos ON c_gastos.cod_proceso = c_procesos.cod_proceso and c_procesos.cod_emp = c_gastos.cod_emp "
 				+ " AND c_gastos.cod_emp = ? AND c_gastos.cod_proceso = ? AND c_gastos.estado = 'nocobr' ");
 				
@@ -1207,7 +1234,7 @@ public class ConsultasDD {
 				+ " INNER JOIN m_cuentas ON c_gastos.cod_cuenta = m_cuentas.cod_cuenta AND c_gastos.cod_emp = m_cuentas.cod_emp "
 				+ " INNER JOIN m_rubros ON c_gastos.cod_rubro = m_rubros.cod_rubro AND c_gastos.cod_emp = m_rubros.cod_emp "
 				+ " INNER JOIN m_monedas ON c_gastos.cod_moneda = m_monedas.cod_moneda AND c_gastos.cod_emp = m_monedas.cod_emp "
-				+ " INNER JOIN m_impuestos ON m_rubros.cod_impuesto = m_impuestos.cod_impuesto AND c_gastos.cod_emp = m_impuestos.cod_emp "
+				+ " INNER JOIN m_impuestos ON c_gastos.cod_impuesto = m_impuestos.cod_impuesto AND c_gastos.cod_emp = m_impuestos.cod_emp "
 				+ " INNER JOIN c_procesos ON c_gastos.cod_proceso = c_procesos.cod_proceso AND c_gastos.cod_emp = c_procesos.cod_emp "
 				+" INNER JOIN sa_docum ON c_gastos.cod_docum = sa_docum.cod_docum  "
 				+" AND c_gastos.serie_docum = sa_docum.serie_docum "
@@ -1248,7 +1275,7 @@ public class ConsultasDD {
 				+ " INNER JOIN m_cuentas ON c_gastos.cod_cuenta = m_cuentas.cod_cuenta AND c_gastos.cod_emp = m_cuentas.cod_emp "
 				+ " INNER JOIN m_rubros ON c_gastos.cod_rubro = m_rubros.cod_rubro AND c_gastos.cod_emp = m_rubros.cod_emp "
 				+ " INNER JOIN m_monedas ON c_gastos.cod_moneda = m_monedas.cod_moneda AND c_gastos.cod_emp = m_monedas.cod_emp "
-				+ " INNER JOIN m_impuestos ON m_rubros.cod_impuesto = m_impuestos.cod_impuesto AND c_gastos.cod_emp = m_impuestos.cod_emp "
+				+ " INNER JOIN m_impuestos ON c_gastos.cod_impuesto = m_impuestos.cod_impuesto AND c_gastos.cod_emp = m_impuestos.cod_emp "
 				+ " INNER JOIN c_procesos ON c_gastos.cod_proceso = c_procesos.cod_proceso AND c_gastos.cod_emp = c_procesos.cod_emp "
 				+" INNER JOIN sa_docum ON c_gastos.cod_docum = sa_docum.cod_docum  "
 				+" AND c_gastos.serie_docum = sa_docum.serie_docum "
@@ -1289,7 +1316,7 @@ public class ConsultasDD {
 				+ " INNER JOIN m_cuentas ON c_gastos.cod_cuenta = m_cuentas.cod_cuenta AND m_cuentas.cod_emp = c_gastos.cod_emp "
 				+ " INNER JOIN m_rubros ON c_gastos.cod_rubro = m_rubros.cod_rubro AND m_rubros.cod_emp = c_gastos.cod_emp "
 				+ " INNER JOIN m_monedas ON c_gastos.cod_moneda = m_monedas.cod_moneda AND m_monedas.cod_emp = c_gastos.cod_emp "
-				+ " INNER JOIN m_impuestos ON m_rubros.cod_impuesto = m_impuestos.cod_impuesto AND m_impuestos.cod_emp = c_gastos.cod_emp "
+				+ " INNER JOIN m_impuestos ON c_gastos.cod_impuesto = m_impuestos.cod_impuesto AND m_impuestos.cod_emp = c_gastos.cod_emp "
 				+ " INNER JOIN c_procesos ON c_gastos.cod_proceso = c_procesos.cod_proceso and c_procesos.cod_emp = c_gastos.cod_emp "
 				+ " AND c_gastos.cod_emp = ? AND c_gastos.cod_proceso = ? AND c_gastos.estado = 'cobr' ");
 				
@@ -1320,7 +1347,7 @@ public String getGastosAPagarxProceso(){
 				+ " INNER JOIN m_cuentas ON c_gastos.cod_cuenta = m_cuentas.cod_cuenta AND m_cuentas.cod_emp = c_gastos.cod_emp "
 				+ " INNER JOIN m_rubros ON c_gastos.cod_rubro = m_rubros.cod_rubro AND m_rubros.cod_emp = c_gastos.cod_emp "
 				+ " INNER JOIN m_monedas ON c_gastos.cod_moneda = m_monedas.cod_moneda AND m_monedas.cod_emp = c_gastos.cod_emp "
-				+ " INNER JOIN m_impuestos ON m_rubros.cod_impuesto = m_impuestos.cod_impuesto AND m_impuestos.cod_emp = c_gastos.cod_emp "
+				+ " INNER JOIN m_impuestos ON c_gastos.cod_impuesto = m_impuestos.cod_impuesto AND m_impuestos.cod_emp = c_gastos.cod_emp "
 				+ " INNER JOIN c_procesos ON c_gastos.cod_proceso = c_procesos.cod_proceso and c_procesos.cod_emp = c_gastos.cod_emp "
 				+ " INNER JOIN sa_docum ON c_gastos.cod_docum = sa_docum.cod_docum AND sa_docum.serie_docum = c_gastos.serie_docum "
 				+ "			   AND sa_docum.nro_docum = c_gastos.nro_docum AND sa_docum.cod_emp = c_gastos.cod_emp "
@@ -1354,7 +1381,7 @@ public String getGastosAnuladosxProceso(){
 			+ " INNER JOIN m_cuentas ON c_gastos.cod_cuenta = m_cuentas.cod_cuenta AND m_cuentas.cod_emp = c_gastos.cod_emp "
 			+ " INNER JOIN m_rubros ON c_gastos.cod_rubro = m_rubros.cod_rubro AND m_rubros.cod_emp = c_gastos.cod_emp "
 			+ " INNER JOIN m_monedas ON c_gastos.cod_moneda = m_monedas.cod_moneda AND m_monedas.cod_emp = c_gastos.cod_emp "
-			+ " INNER JOIN m_impuestos ON m_rubros.cod_impuesto = m_impuestos.cod_impuesto AND m_impuestos.cod_emp = c_gastos.cod_emp "
+			+ " INNER JOIN m_impuestos ON c_gastos.cod_impuesto = m_impuestos.cod_impuesto AND m_impuestos.cod_emp = c_gastos.cod_emp "
 			+ " INNER JOIN c_procesos ON c_gastos.cod_proceso = c_procesos.cod_proceso and c_procesos.cod_emp = c_gastos.cod_emp "
 			+ " AND c_gastos.cod_emp = ? AND c_gastos.cod_proceso = ? AND c_gastos.estado = 'anul' ");
 			
@@ -1387,7 +1414,7 @@ public String getGastosAnuladosxProceso(){
 				+ " INNER JOIN m_cuentas ON c_gastos.cod_cuenta = m_cuentas.cod_cuenta AND m_cuentas.cod_emp = c_gastos.cod_emp "
 				+ " INNER JOIN m_rubros ON c_gastos.cod_rubro = m_rubros.cod_rubro AND m_rubros.cod_emp = c_gastos.cod_emp "
 				+ " INNER JOIN m_monedas ON c_gastos.cod_moneda = m_monedas.cod_moneda  AND m_monedas.cod_emp = c_gastos.cod_emp "
-				+ " INNER JOIN m_impuestos ON m_rubros.cod_impuesto = m_impuestos.cod_impuesto AND m_impuestos.cod_emp = c_gastos.cod_emp "
+				+ " INNER JOIN m_impuestos ON c_gastos.cod_impuesto = m_impuestos.cod_impuesto AND m_impuestos.cod_emp = c_gastos.cod_emp "
 				+ " AND c_gastos.cod_emp = ? AND c_gastos.cuenta = 'IngGastoEmpleado' ");  
 				
 				return sb.toString();
@@ -1415,7 +1442,7 @@ public String getGastosAnuladosxProceso(){
 				+ " INNER JOIN m_cuentas ON c_gastos.cod_cuenta = m_cuentas.cod_cuenta AND m_cuentas.cod_emp = c_gastos.cod_emp "
 				+ " INNER JOIN m_rubros ON c_gastos.cod_rubro = m_rubros.cod_rubro AND m_rubros.cod_emp = c_gastos.cod_emp "
 				+ " INNER JOIN m_monedas ON c_gastos.cod_moneda = m_monedas.cod_moneda AND m_monedas.cod_emp = c_gastos.cod_emp "
-				+ " INNER JOIN m_impuestos ON m_rubros.cod_impuesto = m_impuestos.cod_impuesto AND m_impuestos.cod_emp = c_gastos.cod_emp "
+				+ " INNER JOIN m_impuestos ON c_gastos.cod_impuesto = m_impuestos.cod_impuesto AND m_impuestos.cod_emp = c_gastos.cod_emp "
 				+ " AND c_gastos.cod_emp = ? AND c_gastos.cuenta = 'IngGastoOficina' ");  
 				
 				return sb.toString();
@@ -1444,7 +1471,7 @@ public String getGastosAnuladosxProceso(){
 				+ " INNER JOIN m_cuentas ON c_gastos.cod_cuenta = m_cuentas.cod_cuenta AND c_gastos.cod_emp = m_cuentas.cod_emp "
 				+ " INNER JOIN m_rubros ON c_gastos.cod_rubro = m_rubros.cod_rubro AND c_gastos.cod_emp = m_rubros.cod_emp "
 				+ " INNER JOIN m_monedas ON c_gastos.cod_moneda = m_monedas.cod_moneda AND c_gastos.cod_emp = m_monedas.cod_emp "
-				+ " INNER JOIN m_impuestos ON m_rubros.cod_impuesto = m_impuestos.cod_impuesto AND c_gastos.cod_emp = m_impuestos.cod_emp "
+				+ " INNER JOIN m_impuestos ON c_gastos.cod_impuesto = m_impuestos.cod_impuesto AND c_gastos.cod_emp = m_impuestos.cod_emp "
 				+ " INNER JOIN c_procesos ON c_gastos.cod_proceso = c_procesos.cod_proceso AND c_gastos.cod_emp = c_procesos.cod_emp "
 				+" INNER JOIN sa_docum ON c_gastos.cod_docum = sa_docum.cod_docum  "
 				+" AND c_gastos.serie_docum = sa_docum.serie_docum "
@@ -1484,7 +1511,7 @@ public String getGastosAnuladosxProceso(){
 				+ " INNER JOIN m_cuentas ON c_gastos.cod_cuenta = m_cuentas.cod_cuenta AND c_gastos.cod_emp = m_cuentas.cod_emp "
 				+ " INNER JOIN m_rubros ON c_gastos.cod_rubro = m_rubros.cod_rubro AND c_gastos.cod_emp = m_rubros.cod_emp "
 				+ " INNER JOIN m_monedas ON c_gastos.cod_moneda = m_monedas.cod_moneda AND c_gastos.cod_emp = m_monedas.cod_emp "
-				+ " INNER JOIN m_impuestos ON m_rubros.cod_impuesto = m_impuestos.cod_impuesto AND c_gastos.cod_emp = m_impuestos.cod_emp "
+				+ " INNER JOIN m_impuestos ON c_gastos.cod_impuesto = m_impuestos.cod_impuesto AND c_gastos.cod_emp = m_impuestos.cod_emp "
 				+ " INNER JOIN c_procesos ON c_gastos.cod_proceso = c_procesos.cod_proceso AND c_gastos.cod_emp = c_procesos.cod_emp "
 				+" INNER JOIN sa_docum ON c_gastos.cod_docum = sa_docum.cod_docum  "
 				+" AND c_gastos.serie_docum = sa_docum.serie_docum "
@@ -1523,7 +1550,7 @@ public String getGastosAnuladosxProceso(){
 				+ " INNER JOIN m_cuentas ON c_gastos.cod_cuenta = m_cuentas.cod_cuenta AND c_gastos.cod_emp = m_cuentas.cod_emp "
 				+ " INNER JOIN m_rubros ON c_gastos.cod_rubro = m_rubros.cod_rubro AND c_gastos.cod_emp = m_rubros.cod_emp "
 				+ " INNER JOIN m_monedas ON c_gastos.cod_moneda = m_monedas.cod_moneda AND c_gastos.cod_emp = m_monedas.cod_emp "
-				+ " INNER JOIN m_impuestos ON m_rubros.cod_impuesto = m_impuestos.cod_impuesto AND c_gastos.cod_emp = m_impuestos.cod_emp "
+				+ " INNER JOIN m_impuestos ON c_gastos.cod_impuesto = m_impuestos.cod_impuesto AND c_gastos.cod_emp = m_impuestos.cod_emp "
 				+ " INNER JOIN c_procesos ON c_gastos.cod_proceso = c_procesos.cod_proceso AND c_gastos.cod_emp = c_procesos.cod_emp "
 				+" INNER JOIN sa_docum ON c_gastos.cod_docum = sa_docum.cod_docum  "
 				+" AND c_gastos.serie_docum = sa_docum.serie_docum "
@@ -1548,9 +1575,9 @@ public String getGastosAnuladosxProceso(){
 				+ " cod_emp, cod_moneda, referencia, cod_tit, nro_trans, "
 				+ " fecValor, cod_proceso, referenciaDetalle, imp_impu_mn, imp_impu_mo, imp_sub_mn, "
 				+ " imp_sub_mo, imp_tot_mn, imp_tot_mo, tc_mov, cod_cuenta, cod_rubro, cuenta, "
-				+ " fecha_mod, usuario_mod, operacion, estado ) ");
+				+ " fecha_mod, usuario_mod, operacion, estado, cod_impuesto ) ");
 		sb.append("VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
-				+ " ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ? ) ");
+				+ " ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ? ) ");
 		
 		return sb.toString();
 	}

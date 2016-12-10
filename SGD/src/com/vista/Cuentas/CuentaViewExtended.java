@@ -896,6 +896,7 @@ public class CuentaViewExtended extends CuentaView{
 		lstRubros.getColumn("persona").setHidden(true);
 		lstRubros.getColumn("oficina").setHidden(true);
 		lstRubros.getColumn("activo").setHidden(true);
+		lstRubros.getColumn("facturable").setHidden(true);
 		lstRubros.getColumn("codigoImpuesto").setHidden(true);
 		lstRubros.getColumn("descripcionImpuesto").setHidden(true);
 		lstRubros.getColumn("porcentajeImpuesto").setHidden(true);

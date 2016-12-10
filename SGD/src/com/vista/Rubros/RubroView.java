@@ -28,6 +28,7 @@ public class RubroView extends FormLayout {
 	protected ComboBox comboImpuestos;
 	protected ComboBox comboTipoRubro;
 	protected CheckBox activo;
+	protected CheckBox facturable;
 	protected Button aceptar;
 	protected Button btnEditar;
 	protected Button cancelar;

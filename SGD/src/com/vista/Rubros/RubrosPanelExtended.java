@@ -134,6 +134,7 @@ public class RubrosPanelExtended extends RubrosPanel{
 		gridRubros.removeColumn("proceso");
 		gridRubros.removeColumn("persona");
 		gridRubros.removeColumn("oficina");
+		gridRubros.removeColumn("facturable");
 		
 		/*Agregamos los filtros a la grilla*/
 		this.filtroGrilla();

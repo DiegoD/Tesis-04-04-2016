@@ -100,6 +100,8 @@ public class RubroViewExtended extends RubroView {
 					rubroVO.setCodTipoRubro(auxTipo.getCodTipoRubro());
 					rubroVO.setDescripcionTipoRubro(auxTipo.getDescripcion());
 					
+					rubroVO.setFacturable(facturable.getValue());
+					
 //					rubroVO.setCodigoImpuesto(codigoImpuesto.getValue());
 //					rubroVO.setDescripcionImpuesto(descripcionImpuesto.getValue().trim());
 //					String aux = porcentajeImpuesto.getValue().toString().trim().replace(",", ".");
@@ -521,7 +523,7 @@ public class RubroViewExtended extends RubroView {
 		this.activo.setReadOnly(false);
 		this.comboImpuestos.setEnabled(true);
 		this.comboTipoRubro.setEnabled(true);
-		
+		this.facturable.setReadOnly(false);
 //		this.descripcionImpuesto.setReadOnly(false);
 //		this.descripcionTipoRubro.setReadOnly(false);
 //		this.codigoImpuesto.setReadOnly(false);
@@ -592,15 +594,7 @@ public class RubroViewExtended extends RubroView {
 		this.activo.setReadOnly(setear);
 		this.comboImpuestos.setEnabled(false);
 		this.comboTipoRubro.setEnabled(false);
-		
-		//this.comboImpuestos.setReadOnly(setear);
-		//this.comboTipoRubro.setReadOnly(setear);
-//		this.descripcionImpuesto.setReadOnly(false);	
-//		this.descripcionImpuesto.setEnabled(false);
-//		this.descripcionTipoRubro.setReadOnly(false);
-//		this.descripcionTipoRubro.setEnabled(false);
-//		this.codigoImpuesto.setReadOnly(false);
-//		this.codigoImpuesto.setEnabled(false);
+		this.facturable.setReadOnly(setear);
 		
 		
 	}

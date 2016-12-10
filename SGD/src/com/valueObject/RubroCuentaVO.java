@@ -16,6 +16,7 @@ public class RubroCuentaVO {
 	private boolean persona;
 	private String cod_tipoRubro;
 	private String descripcionTipoRubro;
+	private boolean facturable;
 	
 	public RubroCuentaVO(){
 		
@@ -23,7 +24,7 @@ public class RubroCuentaVO {
 
 	public RubroCuentaVO(String cod_rubro, String descripcionRubro, String cod_cuenta, String descripcionCuenta,
 			String cod_impuesto, String descripcionImpuesto, double porcentaje, boolean oficina, boolean proceso,
-			boolean persona, String cod_tipoRubro, String descripcionTipoRubro) {
+			boolean persona, String cod_tipoRubro, String descripcionTipoRubro, boolean facturable) {
 		super();
 		this.cod_rubro = cod_rubro;
 		this.descripcionRubro = descripcionRubro;
@@ -37,6 +38,7 @@ public class RubroCuentaVO {
 		this.persona = persona;
 		this.cod_tipoRubro = cod_tipoRubro;
 		this.descripcionTipoRubro = descripcionTipoRubro;
+		this.facturable = facturable;
 	}
 
 	public RubroCuentaVO(RubroCuenta rubro){
@@ -53,6 +55,7 @@ public class RubroCuentaVO {
 		this.persona = rubro.isPersona();
 		this.cod_tipoRubro = rubro.getCod_tipoRubro();
 		this.descripcionTipoRubro = rubro.getDescripcionTipoRubro();
+		this.facturable = rubro.isFacturable();
 	}
 	
 	public String getCod_rubro() {
@@ -149,6 +152,14 @@ public class RubroCuentaVO {
 
 	public void setDescripcionTipoRubro(String descripcionTipoRubro) {
 		this.descripcionTipoRubro = descripcionTipoRubro;
+	}
+
+	public boolean isFacturable() {
+		return facturable;
+	}
+
+	public void setFacturable(boolean facturable) {
+		this.facturable = facturable;
 	}
 	
 	
