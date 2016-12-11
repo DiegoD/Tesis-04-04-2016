@@ -42,6 +42,7 @@ import com.vista.Login.LoginExtended;
 import com.vista.Monedas.MonedasPanelExtended;
 import com.vista.Periodo.PeriodosPanelExtended;
 import com.vista.Procesos.ProcesosPanelExtended;
+import com.vista.Recibo.ReciboPanelExtended;
 import com.vista.ResumenProceso.ResProcesosPanelExtended;
 //import com.vista.ResumenProceso.ResProcesosPanelExtended;
 import com.vista.Rubros.RubrosPanelExtended;
@@ -597,14 +598,13 @@ public class MenuExtended extends Menu{
 			this.content.removeAllComponents();
 			try {
 				
-				FacturaPanelExtended u = new FacturaPanelExtended(); 
+				ReciboPanelExtended u = new ReciboPanelExtended(); 
 				this.content.addComponent(u);
 				
 			} catch (Exception e) {
 				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 			}
 		});
-		
 		
 	}
 	
@@ -668,6 +668,7 @@ public class MenuExtended extends Menu{
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_PERIODO) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_DEPOSITO) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_FACTURA) ||
+				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_RECIBO) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_RUBROS))
 			{
 				lstFormsMenuMant.add(formularioVO);
@@ -855,6 +856,13 @@ public class MenuExtended extends Menu{
 							this.layoutMenu.addComponent(this.factura);
 						}
 					break;
+					
+					case VariablesPermisos.FORMULARIO_RECIBO:
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_RECIBO, VariablesPermisos.OPERACION_LEER)){
+							this.habilitarRecibo();
+							this.layoutMenu.addComponent(this.recibo);
+						}
+					break;
 				}
 				
 			}
@@ -1016,6 +1024,9 @@ public class MenuExtended extends Menu{
 		
 		this.factura.setVisible(false);
 		this.factura.setEnabled(false);
+		
+		this.recibo.setVisible(false);
+		this.recibo.setEnabled(false);
 	}
 	
 	
@@ -1174,6 +1185,12 @@ public class MenuExtended extends Menu{
 		this.factura.setVisible(true);
 		this.factura.setEnabled(true);
 		this.layoutMenu.addComponent(factura);
+	}
+	
+	private void habilitarRecibo(){
+		this.recibo.setVisible(true);
+		this.recibo.setEnabled(true);
+		this.layoutMenu.addComponent(recibo);
 	}
 	
 	public PermisosUsuario getPermisosUsuario()

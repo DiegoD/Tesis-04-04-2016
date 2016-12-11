@@ -46,7 +46,7 @@ import com.vista.Bancos.BancosPanelExtended;
 public class ReciboPanelExtended extends ReciboPanel{
 	
 	private ReciboViewExtended form; 
-	private ArrayList<ReciboVO> lstIngresoCobro; /*Lista con los cobros*/
+	private ArrayList<ReciboVO> lstRecibo; /*Lista con los cobros*/
 	private BeanItemContainer<ReciboVO> container;
 	private ReciboControlador controlador;
 	PermisosUsuario permisos;
@@ -55,7 +55,7 @@ public class ReciboPanelExtended extends ReciboPanel{
 	public ReciboPanelExtended(){
 		
 		controlador = new ReciboControlador();
-		this.lstIngresoCobro = new ArrayList<ReciboVO>();
+		this.lstRecibo = new ArrayList<ReciboVO>();
 		
 		String usuario = (String)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("usuario");
 		this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
@@ -113,9 +113,9 @@ public class ReciboPanelExtended extends ReciboPanel{
 				new BeanItemContainer<ReciboVO>(ReciboVO.class);
 		
 		//Obtenemos lista de bancos del sistema
-		this.lstIngresoCobro = this.getCobros(); 
+		this.lstRecibo = this.getCobros(); 
 		
-		for (ReciboVO rec : lstIngresoCobro) {
+		for (ReciboVO rec : lstRecibo) {
 			container.addBean(rec);
 		}
 		
@@ -213,10 +213,10 @@ public class ReciboPanelExtended extends ReciboPanel{
 		this.container.removeAllItems();
 		
 		//Obtenemos lista de bancos del sistema
-		this.lstIngresoCobro = this.getCobros(); 
+		this.lstRecibo = this.getCobros(); 
 		
 		
-		this.container.addAll(this.lstIngresoCobro);
+		this.container.addAll(this.lstRecibo);
 		grid.setContainerDataSource(container);
 
 	}
@@ -234,12 +234,12 @@ public class ReciboPanelExtended extends ReciboPanel{
 		
 		ReciboVO recEnLista;
 		
-		while( i < this.lstIngresoCobro.size() && !salir)
+		while( i < this.lstRecibo.size() && !salir)
 		{
-			recEnLista = this.lstIngresoCobro.get(i);
+			recEnLista = this.lstRecibo.get(i);
 			if(rec.getNroDocum()==recEnLista.getNroDocum())
 			{
-				this.lstIngresoCobro.get(i).copiar(rec);
+				this.lstRecibo.get(i).copiar(rec);
 
 				salir = true;
 			}
@@ -261,9 +261,9 @@ public class ReciboPanelExtended extends ReciboPanel{
 		
 		ReciboVO aux;
 		
-		while( i < this.lstIngresoCobro.size() && !esta)
+		while( i < this.lstRecibo.size() && !esta)
 		{
-			aux = this.lstIngresoCobro.get(i);
+			aux = this.lstRecibo.get(i);
 			if(String.valueOf(nro).equals(aux.getNroDocum()))
 			{
 				esta = true;

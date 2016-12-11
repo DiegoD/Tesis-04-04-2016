@@ -31,6 +31,8 @@ import com.valueObject.RubroCuentaVO;
 import com.valueObject.RubroVO;
 import com.valueObject.TitularVO;
 import com.valueObject.Cuenta.CuentaVO;
+import com.valueObject.Docum.FacturaVO;
+import com.valueObject.Docum.ReciboDetalleVO;
 import com.valueObject.Gasto.GastoVO;
 import com.valueObject.TipoRubro.TipoRubroVO;
 import com.valueObject.cliente.ClienteVO;
@@ -50,12 +52,17 @@ public class BusquedaViewExtended extends BusquedaView{
 	BeanItemContainer<RubroVO> containerRubro;
 	BeanItemContainer<CuentaVO> containerCuenta;
 	BeanItemContainer<GastoVO> containerGasto;
+	BeanItemContainer<FacturaVO> containerFactura;
 	BeanItemContainer<FuncionarioVO> containerFuncionario;
 	BeanItemContainer<RubroCuentaVO> containerRubroCuenta;
 	Object seleccionado;
 	IBusqueda main;
+	private Object objRef;  /*Variable para diferenciar en el boton agregar
+	 						para identificar que objet viene por parametro*/
 	
 	public BusquedaViewExtended(IBusqueda main, Object obj){
+		
+		this.objRef = obj;
 		
 		/*Ocultamos el boton de agresgar, solamente
 		 * se utiliza para los casos de la ventana
@@ -143,8 +150,24 @@ public class BusquedaViewExtended extends BusquedaView{
 			this.containerGasto = new BeanItemContainer<GastoVO>(GastoVO.class);
 			this.lblNombre.setValue("Gastos");
 			this.seleccionado = new GastoVO();
+			
+		}else if(obj instanceof FacturaVO){
+			
+			/*Dejamos que sea multi seleccion la grilla*/
+			grid.setSelectionMode(SelectionMode.MULTI);
+			
+			
+			/*Mostramos el boton de agregar*/
+			this.btnAgregar.setEnabled(true);
+			this.btnAgregar.setVisible(true);
+			
+			this.btnCancelar.setEnabled(true);
+			this.btnCancelar.setVisible(true);
+			
+			this.containerFactura = new BeanItemContainer<FacturaVO>(FacturaVO.class);
+			this.lblNombre.setValue("Facturas");
+			this.seleccionado = new FacturaVO();
 		}
-		
 		else if(obj instanceof FuncionarioVO){
 			
 			this.containerFuncionario = new BeanItemContainer<FuncionarioVO>(FuncionarioVO.class);
@@ -262,6 +285,10 @@ public class BusquedaViewExtended extends BusquedaView{
 			    		 *se maneja desde el boton de agregar*/
 		    			
 		    		
+		    		}else if(seleccionado instanceof FacturaVO){
+			    		/*Si es Factura no hacemos nada, ya que es multi seleccion
+			    		 *se maneja desde el boton de agregar*/
+		    		
 		    		}
 		    		
 		    		else if(seleccionado instanceof FuncionarioVO){
@@ -313,7 +340,6 @@ public class BusquedaViewExtended extends BusquedaView{
 			grid.removeColumn("fechaMod");
 			grid.removeColumn("usuarioMod");
 			grid.removeColumn("operacion");
-			//grid.removeColumn("tipo");
 			
 			
 			this.arreglarGrilla();
@@ -602,7 +628,7 @@ public class BusquedaViewExtended extends BusquedaView{
 			grid.setEditorEnabled(true);
 			grid.getColumn("impTotMn").setEditable(true);
 			
-			grid.getColumn("simboloMoneda").setHeaderCaption("Monedad");
+			grid.getColumn("simboloMoneda").setHeaderCaption("Moneda");
 			grid.getColumn("impTotMo").setHeaderCaption("Importe");
 			
 			grid.getColumn("referencia").setWidth(300);
@@ -615,6 +641,28 @@ public class BusquedaViewExtended extends BusquedaView{
 			grid.getColumn("codProceso").setHeaderCaption("Proceso");
 			
 			this.arreglarGrillaGasto(); /*FaltaImplementar*/
+			this.filtroGrilla();
+			
+		}
+		
+		if(seleccionado instanceof FacturaVO){
+			
+			ArrayList<FacturaVO> lstDoc = new ArrayList<>();
+			
+			FacturaVO i;
+			for (Object o : lst) {
+				
+				i = (FacturaVO) o;
+				lstDoc.add(i);
+			}
+			
+			this.containerFactura.addAll(lstDoc);
+			this.grid.setContainerDataSource(containerFactura);
+			
+
+
+			
+			this.arreglarGrillaFactura(); /*FaltaImplementar*/
 			this.filtroGrilla();
 			
 		}
@@ -757,6 +805,83 @@ public class BusquedaViewExtended extends BusquedaView{
 		int i = 0;
 		
 	}
+	
+	}
+	
+	private void arreglarGrillaFactura(){ 
+		
+		List<Column> lstColumn = grid.getColumns();
+		
+		lstColumn.get(0).setWidth(150);
+		lstColumn.get(0).setHeaderCaption("Número");
+		lstColumn.get(1).setWidth(300);
+		lstColumn.get(2).setWidth(150);
+		
+		try{	
+			
+			grid.getColumn("codProceso").setHidden(true);
+			grid.getColumn("descProceso").setHidden(true);
+
+			grid.getColumn("codEmp").setHidden(true);
+			
+			grid.getColumn("codTitular").setHidden(true);
+			grid.getColumn("nomTitular").setHidden(true);
+			grid.getColumn("tipo").setHidden(true);
+
+			grid.getColumn("nomTitular").setHidden(true);
+			grid.getColumn("codTitular").setHidden(true);
+			
+			grid.getColumn("codMoneda").setHidden(true);
+			grid.getColumn("nomMoneda").setHidden(true);
+			grid.getColumn("simboloMoneda").setHidden(true);
+			
+			grid.getColumn("impTotMn").setHidden(true);
+
+			grid.getColumn("tcMov").setHidden(true);
+			grid.getColumn("fecValor").setHidden(true);
+			
+			grid.getColumn("nroTrans").setHidden(true);
+
+			grid.getColumn("usuarioMod").setHidden(true);
+			
+			grid.getColumn("fechaMod").setHidden(true);
+			grid.getColumn("operacion").setHidden(true);
+
+			grid.getColumn("codCuenta").setHidden(true);
+			grid.getColumn("nomCuenta").setHidden(true);
+
+			grid.getColumn("codCtaInd").setHidden(true);
+			grid.getColumn("nacional").setHidden(true);
+			
+			grid.getColumn("codProceso").setHidden(true);
+			
+			grid.getColumn("simboloMoneda").setHeaderCaption("Moneda");
+			grid.getColumn("impTotMo").setHeaderCaption("Importe");
+			
+			grid.getColumn("referencia").setWidth(300);
+			grid.getColumn("serieDocum").setWidth(50);
+			grid.getColumn("nroDocum").setWidth(90);
+			grid.getColumn("simboloMoneda").setWidth(100);
+			grid.getColumn("impTotMo").setWidth(200);
+			
+			grid.getColumn("nroDocum").setHeaderCaption("Doc");
+			//grid.getColumn("codProceso").setHeaderCaption("Proceso");
+			
+			grid.getColumn("codDocum").setHidden(true);
+			grid.getColumn("detalle").setHidden(true);
+
+
+			grid.getColumn("impSubMn").setHidden(true);
+			grid.getColumn("impSubMo").setHidden(true);
+			grid.getColumn("impuTotMn").setHidden(true);
+			grid.getColumn("impuTotMo").setHidden(true);
+			
+			grid.setColumnOrder("fecDoc","serieDocum", "nroDocum", "referencia", "simboloMoneda", "impTotMo");
+			
+		}catch(Exception e){
+			int i = 0;
+			
+		}
 	
 	}
 	
@@ -926,6 +1051,18 @@ public class BusquedaViewExtended extends BusquedaView{
 					                    change.getText(), true, false));
 				    	}
 				    	
+				    	else if(seleccionado instanceof FacturaVO) /*PARA FACTURAS*/
+				    	{
+					    	// Can't modify filters so need to replace
+					    	this.containerFactura.removeContainerFilters(pid);
+			
+					        // (Re)create the filter if necessary
+					        if (! change.getText().isEmpty())
+					        	this.containerFactura.addContainerFilter(
+					                new SimpleStringFilter(pid,
+					                    change.getText(), true, false));
+				    	}
+				    	
 				    	else if(seleccionado instanceof FuncionarioVO) /*PARA GASTOS*/
 				    	{
 					    	// Can't modify filters so need to replace
@@ -970,25 +1107,42 @@ public class BusquedaViewExtended extends BusquedaView{
 		this.btnAgregar.addClickListener(click -> {
 			
     		try {
-			
-			/*ACA*/
-			ArrayList<Object> lstSeleccionados = new ArrayList<Object>();
-			
-			/*Obtenemos los formularios seleccionados y se los pasamos a
-			 * la View de Grupos para agregarlos*/
-			Collection<Object> col= grid.getSelectedRows();
-			
-			GastoVO aux;
-			for (Object object : col) {
-				aux = (GastoVO)object;
 				
-									
-				lstSeleccionados.add(aux);
+				/*ACA*/
+				ArrayList<Object> lstSeleccionados = new ArrayList<Object>();
 				
-			}
-			
-	    	main.setInfoLst(lstSeleccionados);	
-	    	main.cerrarVentana();
+				/*Obtenemos los formularios seleccionados y se los pasamos a
+				 * la View de Grupos para agregarlos*/
+				Collection<Object> col= grid.getSelectedRows();
+				
+				
+				if(objRef instanceof GastoVO){ /*Si es gasto*/
+					GastoVO aux;
+					for (Object object : col) {
+						aux = (GastoVO)object;
+						
+											
+						lstSeleccionados.add(aux);
+						
+					}
+					
+				} else if(objRef instanceof FacturaVO){ /*Si es factura*/
+					FacturaVO aux;
+					ReciboDetalleVO recVO; 
+					for (Object object : col) {
+											
+						aux = (FacturaVO)object;
+						recVO = getReciboDetalleVODesdeFacturaVO(aux); /*Convertimos la factura en detalle
+						 												de recibo*/
+
+						lstSeleccionados.add(recVO);
+						
+					}
+				}
+				
+				
+		    	main.setInfoLst(lstSeleccionados);	
+		    	main.cerrarVentana();
 	    	
 	    	
 			} catch (Exception e) {
@@ -1005,7 +1159,72 @@ public class BusquedaViewExtended extends BusquedaView{
 		});
 	}
 	
-	
+	/***
+	 * Para el detalle del recibo, dado que obtenemos las FacturasVO
+	 * necesitamos pasarlo a ReciboDetalleVO
+	 */
+	private ReciboDetalleVO getReciboDetalleVODesdeFacturaVO(FacturaVO t){
+		
+		ReciboDetalleVO r = new ReciboDetalleVO();
+		
+		r.setCodImpuesto("0");
+		r.setImpImpuMn(t.getImpuTotMn());
+		r.setImpImpuMo(t.getImpuTotMo());
+		r.setImpSubMn(t.getImpSubMn());
+		r.setImpSubMo(t.getImpSubMo());
+		r.setTcMov(t.getTcMov());
+
+		r.setCodProceso(String.valueOf(t.getCodProceso()));
+		r.setNomRubro("No asignado");
+		r.setCodRubro("0");
+		r.setCodCtaInd("recibo");
+		r.setLinea(1);
+		r.setDescProceso(t.getDescProceso());
+		r.setEstadoGasto("0");
+		r.setPorcentajeImpuesto(0);
+		r.setNomImpuesto("No asignado");
+		
+		
+		r.setFecDoc(t.getFecDoc()); 
+		r.setCodDocum(t.getCodDocum());
+		r.setSerieDocum(t.getSerieDocum());
+		r.setNroDocum(t.getNroDocum());
+		r.setCodEmp(t.getCodEmp());
+		
+		r.setCodTitular(t.getCodTitular());
+		r.setNomTitular(t.getNomTitular());
+		r.setTipo(t.getTipo());
+		
+		r.setReferencia(t.getReferencia());
+		r.setNomTitular(t.getNomTitular());
+		r.setCodTitular(t.getCodTitular());
+		
+		r.setCodMoneda(t.getCodMoneda());
+		r.setNomMoneda(t.getNomMoneda());
+		r.setSimboloMoneda(t.getSimboloMoneda());
+		
+		r.setImpTotMn(t.getImpTotMn());
+		r.setImpTotMo(t.getImpTotMo());
+		r.setTcMov(t.getTcMov());
+		r.setFecValor(t.getFecValor());
+		
+		r.setNroTrans(0); /*Se cambia*/
+		r.setUsuarioMod(t.getUsuarioMod());
+		
+		if(t.getFechaMod() !=null)
+			r.setFechaMod(t.getFechaMod());
+		r.setOperacion(t.getOperacion());
+		
+		r.setCodCuenta(t.getCodCuenta());
+		
+		if(t.getNomCuenta() != null)
+			r.setNomCuenta(t.getNomCuenta());
+		
+		r.setCodCtaInd(t.getCodCtaInd());
+		r.setNacional(t.isNacional());
+		
+		return r;
+	}
 	
 
 }

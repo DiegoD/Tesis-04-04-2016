@@ -6,13 +6,13 @@
  <body> 
   <vaadin-form-layout spacing="false" responsive id="auditoria" size-full margin-left margin-right margin-bottom="false"> 
    <vaadin-label style-name="colored h2" responsive plain-text :center>
-     Ingreso Cobro 
+     Recibo 
    </vaadin-label> 
    <vaadin-horizontal-layout width-full> 
     <vaadin-link caption="Auditoria" _id="auditoria" :middle :right></vaadin-link> 
    </vaadin-horizontal-layout> 
    <vaadin-horizontal-layout responsive size-full> 
-    <vaadin-form-layout spacing="false" size-full _id="formLay1"> 
+    <vaadin-form-layout spacing="false" size-full margin-top="false" _id="formLay1"> 
      <vaadin-text-field enabled="false" id="nroTrans" visible="false" _id="nroTrans"></vaadin-text-field> 
      <vaadin-text-field caption="Nro" style-name="tiny" null-representation="" width="144px" readonly _id="nroDocum"></vaadin-text-field> 
      <vaadin-horizontal-layout caption="Tipo" spacing> 
@@ -20,8 +20,6 @@
        <option>Caja</option> 
        <option>Banco</option> 
       </vaadin-combo-box> 
-      <vaadin-label caption="Funcionario" size-auto _id="lblFuncionario"></vaadin-label> 
-      <vaadin-check-box _id="chkFuncionario" :middle></vaadin-check-box> 
      </vaadin-horizontal-layout> 
      <vaadin-date-field caption="Fec Doc" id="fecDoc" style-name="tiny" width="144px" _id="fecDoc"></vaadin-date-field> 
      <vaadin-date-field caption="Fec Valor" id="fecValor" style-name="tiny" width="144px" _id="fecValor"></vaadin-date-field> 
@@ -65,7 +63,7 @@
       </vaadin-button> 
      </vaadin-horizontal-layout> 
     </vaadin-form-layout> 
-    <vaadin-form-layout spacing="false" size-full _id="formLay2"> 
+    <vaadin-form-layout spacing="false" size-full margin-top="false" _id="formLay2"> 
      <vaadin-grid id="lstGastos" style-name="small" responsive width-full height="356px" editable _id="lstGastos"></vaadin-grid> 
      <vaadin-horizontal-layout style-name="v-formlayout" spacing responsive :middle :right> 
       <vaadin-button style-name="primary tiny" responsive id="btnAgregar" plain-text _id="btnAgregar" :middle>

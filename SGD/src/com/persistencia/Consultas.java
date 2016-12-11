@@ -1353,12 +1353,12 @@ public String getIngresoCobroCabTodosOtros(){
 		
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("SELECT cod_docum, serie_docum, nro_docum, m_titulares.cod_tit, m_titulares.nom_tit, m_titulares.tipo ");
+		sb.append("SELECT c_facturas.cod_docum, c_facturas.serie_docum, c_facturas.nro_docum, m_titulares.cod_tit, m_titulares.nom_tit, m_titulares.tipo ");
 		sb.append(",c_facturas.cod_emp, c_facturas.fec_doc, c_facturas.fec_valor, c_facturas.cod_proceso,  c_procesos.descripcion  ");
 		sb.append(", m_monedas.cod_moneda, m_monedas.descripcion, m_monedas.simbolo, c_facturas.imp_tot_mn ");
 		sb.append(", c_facturas.imp_tot_mo, c_facturas.tc_mov, c_facturas.observaciones, nro_trans, c_facturas.fecha_mod, c_facturas.usuario_mod ");
 		sb.append(", c_facturas.operacion, m_monedas.descripcion, m_monedas.simbolo, c_facturas.cod_cuenta,   "); 
-		sb.append("c_facturas.impu_tot_mn , c_facturas.impu_tot_mo, c_facturas.imp_sub_mo , c_facturas.imp_sub_mn ");
+		sb.append("c_facturas.impu_tot_mn , c_facturas.impu_tot_mo, c_facturas.imp_sub_mo , c_facturas.imp_sub_mn,  m_monedas.nacional ");
 		sb.append("	FROM c_facturas ");
 		
 		sb.append("INNER JOIN m_monedas "); 
@@ -1514,10 +1514,10 @@ public String getIngresoCobroCabTodosOtros(){
 		sb.append(", m_monedas.cod_moneda, m_monedas.descripcion, m_monedas.simbolo, c_recibos.imp_tot_mn ");
 		sb.append(", c_recibos.imp_tot_mo, c_recibos.tc_mov, c_recibos.observaciones, nro_trans, c_recibos.fecha_mod, c_recibos.usuario_mod ");
 		sb.append(", c_recibos.operacion, m_monedas.descripcion, m_monedas.simbolo, c_recibos.cod_cuenta,   "); 
-		sb.append("c_recibos.impu_tot_mn , c_recibos.impu_tot_mo, c_recibos.imp_sub_mo , c_recibos.imp_sub_mn ");
-		sb.append("COALESCE(m_bancos.cod_bco,'0') cod_bco, COALESCE(m_bancos.nom_bco,'0') nom_bco ");
-		sb.append("COALESCE(m_ctasbcos.cod_ctabco,'0') cod_ctabco, COALESCE(m_ctasbcos.nom_cta,'0') nom_cta ");
-		sb.append("COALESCE(cod_mpago,'0') cod_mpago ");
+		sb.append("c_recibos.impu_tot_mn , c_recibos.impu_tot_mo, c_recibos.imp_sub_mo , c_recibos.imp_sub_mn, ");
+		sb.append("COALESCE(m_bancos.cod_bco,'0') cod_bco, COALESCE(m_bancos.nom_bco,'0') nom_bco, ");
+		sb.append("COALESCE(m_ctasbcos.cod_ctabco,'0') cod_ctabco, COALESCE(m_ctasbcos.nom_cta,'0') nom_cta, ");
+		sb.append("COALESCE(cod_mpago,'0') cod_mpago, ");
 		sb.append("cod_doc_ref, serie_doc_ref, nro_doc_ref "); 
 		
 		sb.append("	FROM c_recibos ");

@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
-import com.controladores.IngresoCobroControlador;
 import com.controladores.ReciboControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.InicializandoException;
@@ -17,11 +16,11 @@ import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Bancos.ObteniendoBancosException;
 import com.excepciones.Bancos.ObteniendoCuentasBcoException;
 import com.excepciones.Cotizaciones.ObteniendoCotizacionesException;
+import com.excepciones.Factura.ObteniendoFacturasException;
 import com.excepciones.Recibo.*;
 import com.excepciones.Monedas.ObteniendoMonedaException;
 import com.excepciones.Periodo.ExistePeriodoException;
 import com.excepciones.Periodo.NoExistePeriodoException;
-import com.excepciones.Titulares.ObteniendoTitularesException;
 import com.excepciones.clientes.ObteniendoClientesException;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup;
@@ -37,6 +36,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.valueObject.FacturaSaldoAux;
 import com.valueObject.MonedaVO;
+import com.valueObject.Docum.FacturaVO;
 import com.valueObject.TitularVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.Cotizacion.CotizacionVO;
@@ -121,17 +121,12 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 	
 	this.inicializarForm();
 	
-	
-	
 	this.btnBuscarCliente.addClickListener(click -> {
 		BusquedaViewExtended form;
 		
-		if(this.chkFuncionario.getValue()){
-			form = new BusquedaViewExtended(this, new TitularVO());
-		}
-		else{
-			form = new BusquedaViewExtended(this, new ClienteVO());
-		}	
+		
+		form = new BusquedaViewExtended(this, new ClienteVO());
+			
 		
 		ArrayList<Object> lst = new ArrayList<Object>();
 		ArrayList<TitularVO> lstTitulares = new ArrayList<TitularVO>();
@@ -147,36 +142,22 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 		
 		try {
 			
-			if(this.chkFuncionario.getValue()){
-				lstTitulares = this.controlador.getTitulares(permisoAux);
-			}
-			else{
-				
-				lstClientes = this.controlador.getClientes(permisoAux);
-			}
+			lstClientes = this.controlador.getClientes(permisoAux);
 			
 		} catch ( ConexionException | InicializandoException | ObteniendoPermisosException | NoTienePermisosException |
-				 ObteniendoClientesException | ObteniendoTitularesException e) {
+				 ObteniendoClientesException e) {
 
 			Mensajes.mostrarMensajeError(e.getMessage());
 		}
 		
-		if(this.chkFuncionario.getValue()){
-			Object obj;
-			for (TitularVO i: lstTitulares) {
-				obj = new Object();
-				obj = (Object)i;
-				lst.add(obj);
-			}
+		
+		Object obj;
+		for (ClienteVO i: lstClientes) {
+			obj = new Object();
+			obj = (Object)i;
+			lst.add(obj);
 		}
-		else{
-			Object obj;
-			for (ClienteVO i: lstClientes) {
-				obj = new Object();
-				obj = (Object)i;
-				lst.add(obj);
-			}
-		}
+		
 		try {
 			
 			form.inicializarGrilla(lst);
@@ -875,7 +856,7 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 				e.printStackTrace();
 			}
 			
-			MensajeExtended form = new MensajeExtended("Elimina el cobro?",this);
+			MensajeExtended form = new MensajeExtended("Elimina el recibo?",this);
 			
 			
 			
@@ -899,14 +880,55 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 			if(this.codTitular.getValue() != null && this.codTitular.getValue() != "" 
 					&& this.fecValor.getValue() != null && this.comboMoneda.getValue() != null)
 			{
+				ArrayList<FacturaVO> lstFacturas = new ArrayList<FacturaVO>();
+				ArrayList<Object> lst = new ArrayList<Object>();
+				MonedaVO auxMoneda = null;
 				
-				SeleccionViewExtended form = new SeleccionViewExtended(this);
+				BusquedaViewExtended form2 = new BusquedaViewExtended(this, new FacturaVO());
 				
-				sub = new MySub("40%", "25%" );
+				/*Inicializamos VO de permisos para el usuario, formulario y operacion
+				 * para confirmar los permisos del usuario*/
+				UsuarioPermisosVO permisoAux = 
+						new UsuarioPermisosVO(this.permisos.getCodEmp(),
+								this.permisos.getUsuario(),
+								VariablesPermisos.FORMULARIO_RECIBO,
+								VariablesPermisos.OPERACION_NUEVO_EDITAR);
+				
+				if(comboMoneda.getValue()!= ""){
+   					auxMoneda = (MonedaVO) comboMoneda.getValue();
+				}
+				
+				try {	
+					
+					lstFacturas = this.controlador.getFacturasConSaldo(permisoAux, auxMoneda.getCodMoneda(), this.codTitular.getValue().trim());
+				
+				}catch(ConexionException| InicializandoException| ObteniendoPermisosException| NoTienePermisosException| ObteniendoFacturasException e){
+					
+					Mensajes.mostrarMensajeError(e.getMessage());
+				}
+				
+				Object obj;
+				for (FacturaVO i: lstFacturas) {
+					obj = new Object();
+					obj = (Object)i;
+					lst.add(obj);
+				}
+				
+				try {
+					
+					form2.inicializarGrilla(lst);
+				
+					
+				} catch (Exception e) {
+					
+					Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+				}
+				
+				sub = new MySub("85%", "65%" );//sub = new MySub("40%", "25%" );
 				sub.setModal(true);
 				sub.center();
 				sub.setModal(true);
-				sub.setVista(form);
+				sub.setVista(form2);
 				sub.center();
 				sub.setClosable(false);
 				sub.setResizable(false);
@@ -1224,8 +1246,6 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 			}
 		}
 		
-		
-		
 	}
 	
 	/**
@@ -1293,8 +1313,6 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 			this.comboMPagos.setValue(item.getBean().getmPago());
 		}
 		
-		
-		
 		auditoria.setDescription(
 			
 			"Usuario: " + rec.getUsuarioMod() + "<br>" +
@@ -1315,12 +1333,7 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 			e.printStackTrace();
 			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 		}
-			
-		
-		
 	}
-	
-
 	
 	
 	/**
@@ -1332,10 +1345,6 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 		/*Verificamos que tenga permisos para editar*/
 		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_RECIBO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		boolean permisoEliminar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_RECIBO, VariablesPermisos.OPERACION_BORRAR);
-		
-		this.chkFuncionario.setVisible(false);
-		this.lblFuncionario.setVisible(false);
-		
 		
 		/*Si tiene permisos de editar habilitamos el boton de 
 		 * edicion*/
@@ -1396,11 +1405,6 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 		/*Seteamos el form en editar*/
 		this.operacion = Variables.OPERACION_EDITAR;
 		
-		this.chkFuncionario.setVisible(false);
-		this.lblFuncionario.setVisible(false);
-		
-		//this.botones.setWidth("200");
-		
 		/*Verificamos que tenga permisos*/
 		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_RECIBO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
@@ -1441,12 +1445,7 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 		/*Si es nuevo ocultamos el nroDocum (ya que aun no tenemos el numero)*/
 		this.nroDocum.setVisible(false);
 		this.nroDocum.setEnabled(false);
-		this.chkFuncionario.setVisible(true);
-		this.lblFuncionario.setVisible(true);
 		importeTotalCalculado = (double) 0;
-		
-//		this.nroDocum.setValue("0");
-//		this.nroTrans.setValue("0");
 		
 		/*Chequeamos si tiene permiso de editar*/
 		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_RECIBO, VariablesPermisos.OPERACION_NUEVO_EDITAR);

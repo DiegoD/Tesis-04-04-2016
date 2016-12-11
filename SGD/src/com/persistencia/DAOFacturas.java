@@ -119,6 +119,8 @@ public class DAOFacturas implements IDAOFacturas{
 	    	ResultSet rs;
 	    	
 	    	pstmt1.setString(1, codEmp);
+	    	pstmt1.setString(2, codMoneda);
+	    	pstmt1.setString(3, codTit);
 			rs = pstmt1.executeQuery();
 			
 			Factura fact;
@@ -139,7 +141,7 @@ public class DAOFacturas implements IDAOFacturas{
 				fact.setNroDocum(rs.getInt("nro_docum"));
 				fact.setCodEmp(rs.getString("cod_emp"));
 				
-				fact.setMoneda(new MonedaInfo(rs.getString("cod_moneda"), rs.getString("descripcion"), rs.getString("simbolo")));
+				fact.setMoneda(new MonedaInfo(rs.getString("cod_moneda"), rs.getString("descripcion"), rs.getString("simbolo"), rs.getBoolean("nacional")));
 				
 				fact.setReferencia(rs.getString("observaciones"));
 				fact.setTitInfo(new TitularInfo(rs.getString("cod_tit"), rs.getString("nom_tit"), rs.getString("tipo")));
