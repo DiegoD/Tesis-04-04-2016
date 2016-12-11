@@ -23,6 +23,7 @@ import com.persistencia.IDAOMonedas;
 import com.persistencia.IDAONumeradores;
 import com.persistencia.IDAOPeriodo;
 import com.persistencia.IDAOProcesos;
+import com.persistencia.IDAORecibos;
 import com.persistencia.IDAORubros;
 import com.persistencia.IDAOSaldos;
 import com.persistencia.IDAOSaldosCuentas;
@@ -92,4 +93,6 @@ public interface IAbstractFactory
 	public IDAODepositos crearDAODeposito();
 
 	public IDAOFacturas crearDAOFactura();
+	
+	public IDAORecibos crearDAORecibos();
 }

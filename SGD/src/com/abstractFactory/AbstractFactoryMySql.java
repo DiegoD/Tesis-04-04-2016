@@ -183,4 +183,8 @@ public class AbstractFactoryMySql implements IAbstractFactory
 	public IDAODepositos crearDAODeposito(){
 		return new DAODepositos();
 	}
+	
+	public IDAORecibos crearDAORecibos(){
+		return new DAORecibos();
+	}
 }

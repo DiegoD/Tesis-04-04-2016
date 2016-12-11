@@ -80,7 +80,7 @@ public class IngresoEgresoControlador {
 	
 	/**
 	 * Modifica los datos de un cobro
-	 * @throws NoExisteFacturaException 
+	 * @throws NoExisteReciboException 
 	 */
 	public void modificarIngresoEgreso(IngresoCobroVO ingVO, IngresoCobroVO copiaVO, UsuarioPermisosVO permisos) throws ConexionException, ModificandoEgresoCobroException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ExisteEgresoCobroException, NoExisteEgresoCobroException 
 	{

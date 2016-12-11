@@ -41,6 +41,12 @@ import com.excepciones.IngresoCobros.ModificandoIngresoCobroException;
 import com.excepciones.IngresoCobros.NoExisteIngresoCobroException;
 import com.excepciones.IngresoCobros.ObteniendoIngresoCobroException;
 import com.excepciones.Login.LoginException;
+import com.excepciones.Recibo.EliminandoReciboException;
+import com.excepciones.Recibo.ExisteReciboException;
+import com.excepciones.Recibo.InsertandoReciboException;
+import com.excepciones.Recibo.ModificandoReciboException;
+import com.excepciones.Recibo.NoExisteReciboException;
+import com.excepciones.Recibo.ObteniendoReciboException;
 import com.excepciones.SaldoCuentas.EliminandoSaldoCuetaException;
 import com.excepciones.SaldoCuentas.ExisteSaldoCuentaException;
 import com.excepciones.SaldoCuentas.InsertandoSaldoCuentaException;
@@ -76,12 +82,14 @@ import com.logica.Docum.DatosDocum;
 import com.logica.Docum.DocumDetalle;
 import com.logica.Docum.DocumSaldo;
 import com.logica.Docum.Factura;
+import com.logica.Docum.Recibo;
 import com.logica.IngresoCobro.IngresoCobro;
 import com.valueObject.*;
 import com.valueObject.Cotizacion.CotizacionVO;
 import com.valueObject.Docum.DatosDocumVO;
 import com.valueObject.Docum.DocumSaldoVO;
 import com.valueObject.Docum.FacturaVO;
+import com.valueObject.Docum.ReciboVO;
 import com.valueObject.IngresoCobro.IngresoCobroVO;
 import com.valueObject.Numeradores.NumeradoresVO;
 import com.valueObject.banco.BancoVO;
@@ -117,6 +125,7 @@ public class Fachada {
 	private IDAOGastos gastos;
 	private IDAOMonedas monedas;
 	private IDAOFacturas facturas;
+	private IDAORecibos recibos;
 	
 	private AbstractFactoryBuilder fabrica;
 	private IAbstractFactory fabricaConcreta;
@@ -146,6 +155,7 @@ public class Fachada {
         this.gastos = fabricaConcreta.crearDAOGastos();
         this.monedas = fabricaConcreta.crearDAOMonedas();
         this.facturas = fabricaConcreta.crearDAOFactura();
+        this.recibos = fabricaConcreta.crearDAORecibos();
         
     }
     
@@ -2957,10 +2967,9 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 
 /////////////////////////////////FIN- SALDO CUENTAS//////////////////////////////
 	
-/////////////////////////////////INICIO-EGRESO COBRO//////////////////////
+/////////////////////////////////INICIO-FACTURAS////////////////////////////////
 	/**
 	*Nos retorna las facturas del sistema para la empresa
-	* 
 	*
 	*/
 	@SuppressWarnings("unchecked") 
@@ -2998,6 +3007,47 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 		
 		return lstVO;
 	}	 
+	
+	/**
+	*Nos retorna una lista con todos las facturas con saldo para titular, empresa y moneda
+	*
+	*/
+	@SuppressWarnings("unchecked") 
+	public ArrayList<FacturaVO> getFacturaConSaldoxMoneda(String codEmp, String codMoneda, String codTit) throws ObteniendoFacturasException, ConexionException {
+	
+		Connection con = null;
+		
+		ArrayList<Factura> lst;
+		ArrayList<FacturaVO> lstVO = new ArrayList<FacturaVO>();
+		
+		try
+		{
+			con = this.pool.obtenerConeccion();
+			
+			lst = this.facturas.getFacturaConSaldoxMoneda(con, codEmp, codMoneda, codTit);
+			
+			for (Factura fac : lst) 
+			{
+				FacturaVO aux = fac.retornarVO();
+			
+				lstVO.add(aux);
+			}
+		
+		}catch(ObteniendoFacturasException  e){
+			throw e;
+		
+		} catch (ConexionException e) {
+		
+			throw e;
+		} 
+		finally
+		{
+			this.pool.liberarConeccion(con);
+		}
+		
+		return lstVO;
+	}	 
+
 
 	
 	public void insertarFactura(FacturaVO factVO, String codEmp, boolean nuevo) throws InsertandoFacturaException, ConexionException{
@@ -3056,16 +3106,7 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 			fact.setNroTrans(codigos.getNumeroTrans()); /*Seteamos el nroTrans*/
 			factVO.setNroTrans(codigos.getNumeroTrans()); /*Seteamos el nroTrans al VO para obtener el DocumSaldo*/
 			
-		}else{
-			
-		}
-		
-		
-		//fact.setNroDocum(codigos.getCodigo()); /*Seteamos el nroDocum*/
-	
-		 
-		
-		
+		}		
 		
 		/*Verificamos que no exista un cobro con el mismo numero*/
 		if(!this.facturas.memberFacturas(fact.getNroDocum(), fact.getSerieDocum(), fact.getCodDocum(), codEmp, con))
@@ -3238,5 +3279,280 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 
 	
 /////////////////////////////////FIN-FACTURA//////////////////////	
+	
+	
+/////////////////////////////////INICIO-FACTURAS////////////////////////////////
+	/**
+	*Nos retorna los recibos del sistema para la empresa
+	* 
+	*
+	*/
+	@SuppressWarnings("unchecked") 
+	public ArrayList<ReciboVO> getRecibosTodos(String codEmp) throws ObteniendoReciboException, ConexionException {
+	
+		Connection con = null;
+		
+		ArrayList<Recibo> lst;
+		ArrayList<ReciboVO> lstVO = new ArrayList<ReciboVO>();
+		
+		try
+		{
+			con = this.pool.obtenerConeccion();
+			
+			lst = this.recibos.getReciboTodos(con, codEmp);
+			
+			for (Recibo rec : lst) 
+			{
+				ReciboVO aux = rec.retornarVO();
+			
+				lstVO.add(aux);
+			}
+			
+			}catch(ObteniendoReciboException  e){
+			throw e;
+			
+		} catch (ConexionException e) {
+		
+			throw e;
+		} 
+		finally
+		{
+			this.pool.liberarConeccion(con);
+		}
+		
+		return lstVO;
+	}	 
+
+
+	/**
+	*Ingresamos recibo para el sistema
+	* 
+	*
+	*/
+	public void insertarFactura(ReciboVO vo, String codEmp, boolean nuevo) throws InsertandoReciboException, ConexionException{
+	
+		Connection con = null;
+		try 
+		{
+			con = this.pool.obtenerConeccion();
+			con.setAutoCommit(false);
+			
+			this.insertarReciboInterno(vo, codEmp, con, nuevo); 
+			
+			con.commit();
+			
+			}catch(Exception e){
+			
+			try {
+			con.rollback();
+		
+		} catch (SQLException ex) {
+		
+			throw new InsertandoReciboException();
+		}
+		
+			throw new InsertandoReciboException();
+		
+		}
+		finally
+		{
+			pool.liberarConeccion(con);
+		}
+	
+	}
+
+	/***
+	* 
+	* Isertamos un recibo, el booleano nuevo, es si es nuevo o editar
+	* si es nuevo generamos nroTrans nuevo de lo contrario no
+	*/
+	private void insertarReciboInterno(ReciboVO vo, String codEmp, Connection con, boolean nuevo) throws InsertandoReciboException, ConexionException, ExisteReciboException{
+	
+		boolean existe = false;
+		NumeradoresVO codigos = new NumeradoresVO();
+		
+		
+		try 
+		{
+		
+			Recibo rec = new Recibo(vo); 
+			Cotizacion cotiAux;
+			
+			if(nuevo)
+			{
+				codigos.setNumeroTrans(numeradores.getNumero(con, "03", codEmp)); //nro trans
+				rec.setNroTrans(codigos.getNumeroTrans()); /*Seteamos el nroTrans*/
+				vo.setNroTrans(codigos.getNumeroTrans()); /*Seteamos el nroTrans al VO para obtener el DocumSaldo*/
+				
+			}
+			
+			/*Verificamos que no exista un recibo con el mismo numero*/
+			if(!this.recibos.memberRecibos(rec.getNroDocum(), rec.getSerieDocum(), rec.getCodDocum(), codEmp, con))
+			{
+				/*Para cada linea  del recibo le quitamos el saldo*/
+				
+				/*Para cada linea ingresamos el saldo*/
+				for (DocumDetalle docum : rec.getDetalle()) {
+					
+					/*Para los gastos modificamos el saldo al documento*/
+					/*Signo -1 porque resta al saldo*/
+					this.saldos.modificarSaldo(docum, -1, rec.getTcMov(), con);
+				
+				}
+				/*El recibo no lleva saldo */
+				//this.saldos.modificarSaldo(rec, 1, rec.getTcMov(), con);
+				
+				/*Ingresamos la factura*/
+				this.recibos.insertarRecibo(rec, con);
+				
+			}
+			else{
+				existe = true;
+			}
+		}catch(Exception e){
+		
+			throw new InsertandoReciboException();
+		}
+		if (existe){
+			throw new ExisteReciboException();
+		}
+	}
+
+	/***
+	 * 
+	 *Eliminamos recibo
+	 */
+	public void eliminarRecibo(ReciboVO recVO, String codEmp) throws EliminandoReciboException, ConexionException, ExisteReciboException{
+		
+		Connection con = null;
+		boolean existe = false;
+		
+		try 
+		{
+			con = this.pool.obtenerConeccion();
+			con.setAutoCommit(false);
+			
+			this.eliminarReciboInterno(recVO, codEmp, con);
+			
+			con.commit();
+		
+		}
+		catch(Exception e){
+		
+			try {
+			con.rollback();
+			
+			} catch (SQLException ex) {
+			
+				throw new EliminandoReciboException();
+			}
+			
+			throw new EliminandoReciboException();
+		}
+		finally
+		{
+			pool.liberarConeccion(con);
+		}
+		if (existe){
+			throw new ExisteReciboException();
+		}
+	}
+
+	private void eliminarReciboInterno(ReciboVO vo, String codEmp, Connection con) throws EliminandoReciboException, ConexionException, ExisteReciboException, NoExisteReciboException{
+	
+		
+		boolean existe = false;
+		Integer codigo;
+		NumeradoresVO codigos = new NumeradoresVO();
+		
+		try 
+		{
+		
+			Recibo rec = new Recibo(vo); 
+			Cotizacion cotiAux;
+			
+			
+			/*Verificamos que exista la factura*/
+			if(this.recibos.memberRecibos(rec.getNroDocum(), rec.getSerieDocum(), rec.getCodDocum(), codEmp, con))
+			{
+			
+				/*Para cada linea reintegramos el saldo*/
+				for (DocumDetalle docum : rec.getDetalle()) {
+
+					/*Signo 1 porque devuelve el saldo a la factura*/
+					this.saldos.modificarSaldo(docum, 1, rec.getTcMov(), con);
+				
+				}
+				
+				/*Eliminamos el saldo para la factura*/ 
+				this.saldos.eliminarSaldo(rec, con);
+				
+				/*Una vez hechos todos los movimientos de saldos y documentos
+				* procedemos a eliminar el recibo*/
+				this.recibos.eliminarRecibo(rec, con); 
+				
+				
+		}
+		else{
+			throw new NoExisteEgresoCobroException();
+		}
+		
+		}catch(Exception e){
+		
+			throw new EliminandoReciboException();
+		
+		}
+		if (existe){
+			throw new ExisteReciboException();
+		}
+	}
+
+	/***
+	 * 
+	 * Modificamos el recibo
+	 */
+	public void modificarRecibo(ReciboVO recVO, ReciboVO copiaVO) throws  ConexionException, ModificandoReciboException, ExisteReciboException, NoExisteReciboException{
+	
+		Connection con = null;
+		
+		try 
+		{
+			con = this.pool.obtenerConeccion();
+			con.setAutoCommit(false);
+			
+			Recibo rec = new Recibo(recVO);
+			Recibo copia = new Recibo(copiaVO);
+			
+			/*Verificamos que exista el nro de cobro*/
+			if(this.recibos.memberRecibos(rec.getNroDocum(), rec.getSerieDocum(), rec.getCodDocum(), recVO.getCodEmp(), con))
+			{
+				this.eliminarReciboInterno(copiaVO, copiaVO.getCodEmp(), con);
+				
+				this.insertarReciboInterno(recVO, recVO.getCodEmp(), con, false);
+			
+				con.commit();
+			}
+			else
+				throw new ModificandoReciboException();
+		
+		}catch(ModificandoReciboException| ExisteReciboException| ConexionException | SQLException | InsertandoReciboException | EliminandoReciboException | NoExisteReciboException  e){
+			try {
+			
+				con.rollback();
+			
+			} catch (SQLException e1) {
+			
+				throw new ConexionException();
+			}
+			
+			throw new ModificandoReciboException();
+		}
+		finally
+		{
+			pool.liberarConeccion(con);
+		}
+	}
+
+/////////////////////////////////FIN-RECIBO//////////////////////
 	
 }
