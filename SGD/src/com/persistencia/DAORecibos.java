@@ -37,7 +37,7 @@ public class DAORecibos implements IDAORecibos{
 		ArrayList<Recibo> lst = new ArrayList<Recibo>();
 	
 		try {
-			//
+			
 	    	Consultas clts = new Consultas();
 	    	String query = clts.getReciboCabTodos();
 	    	PreparedStatement pstmt1 = con.prepareStatement(query);
@@ -86,10 +86,21 @@ public class DAORecibos implements IDAORecibos{
 				recibo.setImpSubMo(rs.getDouble("imp_sub_mo"));
 				recibo.setImpSubMn(rs.getDouble("imp_sub_mn"));
 				
+				recibo.setmPago(rs.getString("cod_mpago"));
+				recibo.setCodDocRef(rs.getString("cod_doc_ref"));
+				recibo.setSerieDocRef(rs.getString("serie_doc_ref"));
+				recibo.setNroDocRef(rs.getInt("nro_doc_ref"));
+				
+				
+				recibo.setBancoInfo(new BancoInfo(rs.getString("cod_bco"), rs.getString("nom_bco")));
+				
+				recibo.setCuentaBcoInfo(new CuentaBcoInfo(rs.getString("cod_ctabco"), rs.getString("nom_cta")));
+				
+				
 				/*Obtenemos las lineas de la transaccion*/				
 				recibo.setDetalle(this.getEgresoReciboLineaxTrans(con,recibo));
 				
-				
+
 				lst.add(recibo);
 				
 			}
@@ -153,7 +164,7 @@ public class DAORecibos implements IDAORecibos{
 
 		Consultas clts = new Consultas();
     	
-    	String insert = clts.insertFacturaCab();
+    	String insert = clts.insertReciboCab();
     	
     	PreparedStatement pstmt1;
 
@@ -185,6 +196,13 @@ public class DAORecibos implements IDAORecibos{
 			pstmt1.setDouble(19, recibo.getImpuTotMo());
 			pstmt1.setDouble(20, recibo.getImpSubMo());
 			pstmt1.setDouble(21, recibo.getImpSubMn());
+			
+			pstmt1.setString(22, recibo.getBancoInfo().getCodBanco());
+			pstmt1.setString(23, recibo.getCuentaBcoInfo().getCodCuenta());
+			pstmt1.setString(24, recibo.getmPago());
+			pstmt1.setString(25, recibo.getCodDocRef());
+			pstmt1.setString(26, recibo.getSerieDocRef());
+			pstmt1.setInt(27, recibo.getNroDocRef());
 			
 			
 			pstmt1.executeUpdate ();

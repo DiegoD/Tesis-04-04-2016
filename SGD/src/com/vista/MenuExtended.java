@@ -590,6 +590,22 @@ public class MenuExtended extends Menu{
 			}
 		});
 		
+		this.recibo.addClickListener(click -> {
+			
+			setSizeFull();
+			
+			this.content.removeAllComponents();
+			try {
+				
+				FacturaPanelExtended u = new FacturaPanelExtended(); 
+				this.content.addComponent(u);
+				
+			} catch (Exception e) {
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}
+		});
+		
+		
 	}
 	
 	

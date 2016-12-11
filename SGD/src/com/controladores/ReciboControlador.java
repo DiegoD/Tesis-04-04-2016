@@ -7,6 +7,8 @@ import com.excepciones.ConexionException;
 import com.excepciones.InicializandoException;
 import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
+import com.excepciones.Bancos.ObteniendoBancosException;
+import com.excepciones.Bancos.ObteniendoCuentasBcoException;
 import com.excepciones.Cotizaciones.ObteniendoCotizacionesException;
 import com.excepciones.Factura.ObteniendoFacturasException;
 import com.excepciones.Recibo.*;
@@ -22,6 +24,8 @@ import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.Cotizacion.CotizacionVO;
 import com.valueObject.Docum.FacturaVO;
 import com.valueObject.Docum.ReciboVO;
+import com.valueObject.banco.BancoVO;
+import com.valueObject.banco.CtaBcoVO;
 import com.valueObject.cliente.ClienteVO;
 import com.valueObject.proceso.ProcesoVO;
 
@@ -43,12 +47,12 @@ public class ReciboControlador {
 	/**
 	 * Inserta un recibo 
 	 */
-	public void insertarRecibo(ReciboVO recVO, UsuarioPermisosVO permisos, boolean nuevo) throws InsertandoReciboException, ConexionException, ExisteReciboException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException 
+	public void insertarRecibo(ReciboVO recVO, UsuarioPermisosVO permisos) throws InsertandoReciboException, ConexionException, ExisteReciboException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException 
 	{
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			Fachada.getInstance().insertarFactura(recVO, permisos.getCodEmp(), nuevo);
+			Fachada.getInstance().insertarRecibo(recVO, permisos.getCodEmp());
 		else
 			throw new NoTienePermisosException();
 		
@@ -71,7 +75,7 @@ public class ReciboControlador {
 	/**
 	 * Modifica los datos de un recibo
 	 */
-	public void modificarRecibo(ReciboVO recVO, ReciboVO copiaVO, UsuarioPermisosVO permisos, boolean nuevo) throws ConexionException, ModificandoReciboException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ExisteReciboException, NoExisteReciboException 
+	public void modificarRecibo(ReciboVO recVO, ReciboVO copiaVO, UsuarioPermisosVO permisos) throws ConexionException, ModificandoReciboException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ExisteReciboException, NoExisteReciboException 
 	{
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
@@ -138,7 +142,23 @@ public class ReciboControlador {
 	}
 
 
+	public ArrayList<CtaBcoVO> getCtaBcos(UsuarioPermisosVO permisos, String codBco) throws  ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoCuentasBcoException{
+		
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			return Fachada.getInstance().getCtaBcoActivosxBco(permisos.getCodEmp(), codBco);
+		else
+			throw new NoTienePermisosException();
+	}
 	
+	public ArrayList<BancoVO> getBcos(UsuarioPermisosVO permisos) throws  ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoBancosException, ObteniendoCuentasBcoException{
+		
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			return Fachada.getInstance().getBancosActivos(permisos.getCodEmp());
+		else
+			throw new NoTienePermisosException();
+	}
 
 
 	

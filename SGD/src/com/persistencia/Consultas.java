@@ -1466,7 +1466,9 @@ public String getIngresoCobroCabTodosOtros(){
 		sb.append("INSERT INTO c_recibos (cod_docum, serie_docum, nro_docum, cod_tit, cod_cuenta ");
 		sb.append(", cod_emp, fec_doc, fec_valor, cod_moneda, imp_tot_mn, imp_tot_mo, tc_mov ");
 		sb.append(", observaciones, nro_trans, fecha_mod, usuario_mod, operacion, cod_proceso, impu_tot_mn, impu_tot_mo, imp_sub_mo, imp_sub_mn ) ");
-		sb.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?, ?, ?, ? ) ");
+		sb.append("cod_bco, cod_ctabco,cod_mpago , cod_doc_ref, serie_doc_ref, nro_doc_ref");
+		sb.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?  ");
+		sb.append(" ?, ?, ?, ?, ?, ? ) ");
 		
 		return sb.toString();
 	}

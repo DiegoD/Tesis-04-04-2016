@@ -3329,7 +3329,7 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 	* 
 	*
 	*/
-	public void insertarFactura(ReciboVO vo, String codEmp, boolean nuevo) throws InsertandoReciboException, ConexionException{
+	public void insertarRecibo(ReciboVO vo, String codEmp) throws InsertandoReciboException, ConexionException{
 	
 		Connection con = null;
 		try 
@@ -3337,7 +3337,7 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 			con = this.pool.obtenerConeccion();
 			con.setAutoCommit(false);
 			
-			this.insertarReciboInterno(vo, codEmp, con, nuevo); 
+			this.insertarReciboInterno(vo, codEmp, con, true); 
 			
 			con.commit();
 			

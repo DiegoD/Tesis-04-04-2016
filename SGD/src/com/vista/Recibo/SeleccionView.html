@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8" name="design-properties" content="{&quot;RULERS_VISIBLE&quot;:true,&quot;GUIDELINES_VISIBLE&quot;:false,&quot;SNAP_TO_OBJECTS&quot;:true,&quot;SNAP_TO_GRID&quot;:true,&quot;SNAPPING_DISTANCE&quot;:10,&quot;JAVA_SOURCES_ROOT&quot;:&quot;src&quot;,&quot;THEME&quot;:&quot;sgd&quot;}">
+ </head> 
+ <body> 
+  <vaadin-form-layout style-name="center colored h2" responsive id="auditoria" size-auto margin> 
+   <vaadin-horizontal-layout> 
+    <vaadin-label style-name="colored h2" responsive plain-text :center>
+      Seleccione operación 
+    </vaadin-label> 
+   </vaadin-horizontal-layout> 
+   <vaadin-option-group caption="" item-caption-mode="id" _id="operacion"> 
+    <option>Agregar Gasto</option> 
+    <option>A cuenta de Proceso</option> 
+   </vaadin-option-group> 
+   <vaadin-option-group caption="" item-caption-mode="id" _id="operacion_Factura"> 
+    <option>Agregar Gasto</option> 
+    <option>Agregar Detalle</option> 
+   </vaadin-option-group> 
+   <vaadin-horizontal-layout responsive size-full :middle :center> 
+    <vaadin-form-layout spacing="false" size-full margin-top="false" margin-bottom="false"> 
+     <vaadin-horizontal-layout width="184px" :middle :center> 
+      <vaadin-button style-name="primary tiny" plain-text _id="aceptar" :middle>
+        Aceptar 
+      </vaadin-button> 
+      <vaadin-button style-name="tiny primary" id="btnCancelar" plain-text _id="cancelar" :middle>
+        Cancelar 
+      </vaadin-button> 
+     </vaadin-horizontal-layout> 
+    </vaadin-form-layout> 
+   </vaadin-horizontal-layout> 
+  </vaadin-form-layout>  
+ </body>
+</html>
