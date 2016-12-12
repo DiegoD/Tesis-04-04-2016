@@ -36,6 +36,7 @@ public final class VariablesPermisos {
 	
 	public static final String FORMULARIO_FACTURA = "TFactVta";
 	public static final String FORMULARIO_RECIBO = "TRecibo";
+	public static final String FORMULARIO_CONCILIACION = "MConciliacion";
 	
 	/*Variables para las operaciones*/
 	public static final String OPERACION_NUEVO_EDITAR = "NUEVO_EDITAR";

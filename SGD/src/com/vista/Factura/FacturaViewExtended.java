@@ -902,7 +902,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 			    	if(item.getBean().getCodDocum().equals("Gasto")){
 			    		
 			    		GastoViewExtended form = new GastoViewExtended(Variables.OPERACION_LECTURA, this, titularVO);
-				    	sub = new MySub("80%","50%");
+				    	sub = new MySub("90%","50%");
 						sub.setModal(true);
 						sub.setVista((Component) form);
 						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/

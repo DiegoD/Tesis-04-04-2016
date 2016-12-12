@@ -19,6 +19,12 @@ import com.excepciones.CodigosGeneralizados.InsertandoCodigoException;
 import com.excepciones.CodigosGeneralizados.ModificandoCodigoException;
 import com.excepciones.CodigosGeneralizados.NoExisteCodigoException;
 import com.excepciones.CodigosGeneralizados.ObteniendoCodigosException;
+import com.excepciones.Conciliaciones.EliminandoConcialiacionException;
+import com.excepciones.Conciliaciones.ExisteConciliacionException;
+import com.excepciones.Conciliaciones.InsertandoConciliacionException;
+import com.excepciones.Conciliaciones.ModificandoConciliacionException;
+import com.excepciones.Conciliaciones.NoExisteConciliacionException;
+import com.excepciones.Conciliaciones.ObteniendoConciliacionException;
 import com.excepciones.Cotizaciones.ExisteCotizacionException;
 import com.excepciones.Cotizaciones.InsertandoCotizacionException;
 import com.excepciones.Cotizaciones.ModificandoCotizacionException;
@@ -104,6 +110,8 @@ import com.excepciones.Usuarios.InsertandoUsuarioException;
 import com.excepciones.Usuarios.ObteniendoUsuariosException;
 import com.excepciones.Usuarios.ObteniendoUsuariosxEmpExeption;
 import com.excepciones.grupos.ObteniendoGruposException;
+import com.logica.Conciliacion.Conciliacion;
+import com.logica.Conciliacion.ConciliacionDetalle;
 import com.logica.Depositos.Deposito;
 import com.logica.Depositos.DepositoDetalle;
 import com.logica.DocLog.DocLog;
@@ -115,6 +123,8 @@ import com.logica.Docum.TitularInfo;
 import com.logica.IngresoCobro.IngresoCobro;
 import com.logica.Periodo.Periodo;
 import com.valueObject.*;
+import com.valueObject.Conciliaciones.ConciliacionDetalleVO;
+import com.valueObject.Conciliaciones.ConciliacionVO;
 import com.valueObject.Cotizacion.CotizacionVO;
 import com.valueObject.Cuenta.CuentaVO;
 import com.valueObject.Deposito.DepositoDetalleVO;
@@ -163,6 +173,7 @@ public class FachadaDD {
 	private IDAOCheques cheques;
 	private IDAODepositos depositos;
 	private IDAOSaldosCuentas saldosCuentas;
+	private IDAOConciliaciones conciliaciones;
 	
 	
     private FachadaDD() throws InstantiationException, IllegalAccessException, ClassNotFoundException, FileNotFoundException, IOException
@@ -194,6 +205,7 @@ public class FachadaDD {
         this.cheques = fabricaConcreta.crearDAOCheques();
         this.depositos = fabricaConcreta.crearDAODeposito();
         this.saldosCuentas = fabricaConcreta.crearDAOSaldosCuenta();
+        this.conciliaciones = fabricaConcreta.crearDAOConciliaciones();
     }
     
     public static FachadaDD getInstance() throws InicializandoException {
@@ -4442,5 +4454,370 @@ public class FachadaDD {
 			}
 				throw new ModificandoDepositoException();
 		}
+	}
+	
+/////////////////////////////////FIN-DEPOSITOS/////////////////////////////////
+	
+/////////////////////////////////INI-CONCILIACIONES/////////////////////////////////
+	   
+//	/**
+//	* Obtiene todos los cheques a depositar 
+//	* @throws ObteniendoBancosException 
+//	* @throws ObteniendoCuentasBcoException 
+//	*/
+//	@SuppressWarnings("unchecked")
+//	public ArrayList<DepositoDetalleVO> get(String codEmp, String codMoneda) throws ObteniendoChequeException, ConexionException, ObteniendoCuentasBcoException, ObteniendoBancosException
+//	{
+//	
+//		Connection con = null;
+//		ArrayList<DepositoDetalle> lstDepositos;
+//		ArrayList<DepositoDetalleVO> lstDepositosVO = new ArrayList<DepositoDetalleVO>();
+//		
+//		try 	
+//		{
+//			con = this.pool.obtenerConeccion();
+//			lstDepositos = this.cheques.getChequesBanco(con, codEmp, codMoneda);
+//			
+//			DepositoDetalleVO aux;
+//			
+//			for (DepositoDetalle deposito : lstDepositos) 
+//			{
+//			aux = new DepositoDetalleVO();
+//			
+//			aux = deposito.retornarDepositoDetalleVO(deposito);
+//			
+//			lstDepositosVO.add(aux);
+//			}
+//		}
+//	
+//		catch (ConexionException e) {
+//			throw e;
+//		}	 
+//	
+//		finally{
+//			this.pool.liberarConeccion(con);
+//		}
+//	
+//		return lstDepositosVO;
+//	
+//	}
+
+	@SuppressWarnings("unchecked") 
+	public ArrayList<ConciliacionVO> getConciliacionesTodos(String codEmp) throws ObteniendoConciliacionException, ConexionException {
+	
+		Connection con = null;
+		
+		ArrayList<Conciliacion> lst;
+		ArrayList<ConciliacionVO> lstVO = new ArrayList<ConciliacionVO>();
+		
+		try
+		{
+			con = this.pool.obtenerConeccion();
+			
+			lst = this.conciliaciones.getConciliacionesTodos(con, codEmp);
+			
+			
+			for (Conciliacion conciliacion : lst) 
+			{
+				ConciliacionVO aux = conciliacion.getConciliacionVO(conciliacion);
+				
+				lstVO.add(aux);
+			}
+		
+		}
+		catch(ObteniendoConciliacionException  e)
+		{
+			throw e;
+			
+		} 
+		catch (ConexionException e) {
+		
+			throw e;
+		} 
+		finally
+		{
+			this.pool.liberarConeccion(con);
+		}
+		
+		
+		return lstVO;
+	}	 
+
+	public Integer insertarConciliacion(ConciliacionVO concVO, String codEmp) throws InsertandoConciliacionException, ConexionException, ExisteConciliacionException{
+	
+		Connection con = null;
+		boolean existe = false;
+		Integer codigo;
+		NumeradoresVO codigos = new NumeradoresVO();
+		
+		
+		try 
+		{
+			con = this.pool.obtenerConeccion();
+			con.setAutoCommit(false);
+			
+			Conciliacion conciliacion = new Conciliacion();
+			conciliacion = conciliacion.convierteConciliacion(concVO);
+			
+			//Obtengo numerador de la transacción
+			codigo = numeradores.getNroTrans(con, "03"); //Transacción
+			conciliacion.setNroTrans(codigo);
+			
+			if(!this.conciliaciones.memberConciliacion(conciliacion.getNroTrans(), codEmp, con)){
+			
+				//Inerto la conciliacion
+				this.conciliaciones.insertarConciliacion(conciliacion, con, codEmp);
+				
+				int linea = 1;
+				for (ConciliacionDetalle lin : conciliacion.getLstDetalle()) {
+				
+				
+					/*A cada linea le seteamos el nroTrans*/
+					lin.setNroTrans(conciliacion.getNroTrans());
+					
+					//Inserto el detalle de la conciliación
+					conciliaciones.insertarConciliacionDetalle(lin, linea, con, codEmp);
+					
+					linea++;
+				}
+			
+				con.commit();
+			
+			}
+			else{
+				existe = true;
+			}
+		
+		
+		}
+		catch(Exception InsertandoConciliacionException)  	{
+			try {
+				con.rollback();
+		
+			} 
+			catch (SQLException e) {
+		
+				throw new InsertandoConciliacionException();
+			}
+		
+			throw new InsertandoConciliacionException();
+		}
+		finally
+		{
+			pool.liberarConeccion(con);
+		}
+		if (existe){
+			throw new ExisteConciliacionException();
+		}
+		return codigo;
+	}
+
+	public void modificarConciliacion(ConciliacionVO conciliacionVO, String codEmp) throws  ConexionException, ModificandoConciliacionException, ExisteConciliacionException, NoExisteConciliacionException, InsertandoConciliacionException, EliminandoConcialiacionException{
+	
+		Connection con = null;
+		
+		try 
+		{
+			con = this.pool.obtenerConeccion();
+			con.setAutoCommit(false);
+			
+			Conciliacion conciliacion = new Conciliacion();
+			conciliacion = conciliacion.convierteConciliacion(conciliacionVO);
+			
+			/*Verificamos que exista la conciliación*/
+			if(this.conciliaciones.memberConciliacion(conciliacion.getNroTrans(), codEmp, con)){
+				this.eliminarConciliacion(conciliacionVO, codEmp);
+				this.insertarConciliacion(conciliacionVO, codEmp);
+				con.commit();
+			}
+			else
+				throw new ModificandoConciliacionException();
+			
+		}
+		catch(ExisteConciliacionException | ConexionException | SQLException  e)
+		{
+			try {
+				con.rollback();
+			
+			} 
+			catch (SQLException e1) {
+		
+				throw new ConexionException();
+			}
+			throw new ModificandoConciliacionException();
+		}
+		finally
+		{
+			pool.liberarConeccion(con);
+		}
+	}
+
+	public void eliminarConciliacion(ConciliacionVO conciliacionVO, String codEmp) throws  ConexionException, EliminandoConcialiacionException, ExisteConciliacionException, NoExisteConciliacionException, InsertandoConciliacionException{
+	
+		Connection con = null;
+		
+		try 
+		{
+			con = this.pool.obtenerConeccion();
+			con.setAutoCommit(false);
+			
+			Conciliacion conciliacion = new Conciliacion();
+			
+			conciliacion = conciliacion.convierteConciliacion(conciliacionVO);
+			
+			/*Verificamos que exista el nro de conciliacion*/
+			if(this.conciliaciones.memberConciliacion(conciliacion.getNroTrans(), codEmp, con)){
+			
+				this.conciliaciones.eliminarConciliacion(conciliacion, con, codEmp);
+				
+				for (ConciliacionDetalle lin : conciliacion.getLstDetalle()) {
+				
+					/*A cada linea le seteamos el nroTrans*/
+					lin.setNroTrans(conciliacion.getNroTrans());
+					
+					//elimino el detalle de conciliación
+					conciliaciones.eliminarConciliacionDetalle(conciliacion, con, codEmp);
+					
+				}
+				
+				con.commit();
+			}
+			
+			
+			else{
+				throw new NoExisteConciliacionException();
+			}
+			
+		}
+		catch(ExisteConciliacionException| ConexionException | SQLException  e){
+			
+			try {
+				con.rollback();
+			
+			} 
+			catch (SQLException e1) {
+			
+				throw new ConexionException();
+			}
+		}
+		finally
+		{
+			pool.liberarConeccion(con);
+		}
+	}
+
+	public void insertarConciliacionModificacion(Conciliacion conciliacion, String codEmp, Connection con) throws InsertandoConciliacionException, ConexionException, ExisteConciliacionException, ModificandoConciliacionException{
+	
+		boolean existe = false;
+		
+		try 
+		{
+			if(!this.conciliaciones.memberConciliacion(conciliacion.getNroTrans(), codEmp, con)){
+			
+				this.conciliaciones.insertarConciliacion(conciliacion, con, codEmp);
+				
+				int linea = 1;
+				for (ConciliacionDetalle lin : conciliacion.getLstDetalle()) {
+				
+				
+					/*A cada linea le seteamos el nroTrans*/
+					lin.setNroTrans(conciliacion.getNroTrans());
+					
+					//Inserto el detalle de conciliación
+					conciliaciones.insertarConciliacionDetalle(lin, linea, con, codEmp);
+					linea++;
+				}
+			}
+			else{
+				existe = true;
+			}
+		
+		
+		}
+		catch(Exception ModificandoConciliacionException)  	{
+		
+			throw new ModificandoConciliacionException();
+		}
+		if (existe){
+			throw new ExisteConciliacionException();
+		}
+	}
+
+	public void eliminarConciliacionModificacion(Conciliacion conciliacion, String codEmp, Connection con) throws  ConexionException, EliminandoConcialiacionException, ExisteConciliacionException, NoExisteConciliacionException, InsertandoConciliacionException, ModificandoConciliacionException{
+
+		try 
+		{
+			/*Verificamos que exista el nro de cobro*/
+			if(this.conciliaciones.memberConciliacion(conciliacion.getNroTrans(), codEmp, con)){
+			
+				this.conciliaciones.eliminarConciliacion(conciliacion, con, codEmp);
+				
+				for (ConciliacionDetalle lin : conciliacion.getLstDetalle()) {
+				
+				
+					/*A cada linea le seteamos el nroTrans*/
+					lin.setNroTrans(conciliacion.getNroTrans());
+					
+					//Inserto el detalle de la conciliación
+					conciliaciones.eliminarConciliacionDetalle(conciliacion, con, codEmp);
+				
+				}
+			}
+			
+			
+			else{
+				throw new NoExisteConciliacionException();
+			}
+		
+		}
+		catch(ExisteConciliacionException| ConexionException  e){
+		
+			try {
+			con.rollback();
+			
+			} 
+			catch (SQLException e1) {
+			
+				throw new ConexionException();
+			}
+			throw new ModificandoConciliacionException();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public ArrayList<ConciliacionDetalleVO> getMovimientosBanco(String codEmp, String codBco, String codCtaBco) throws ObteniendoConciliacionException, ConexionException, ObteniendoCuentasBcoException, ObteniendoBancosException
+	{
+
+		Connection con = null;
+		ArrayList<ConciliacionDetalle> lstMovimientos;
+		ArrayList<ConciliacionDetalleVO> lstMovimientosVO = new ArrayList<ConciliacionDetalleVO>();
+
+		try 	
+		{
+			con = this.pool.obtenerConeccion();
+			lstMovimientos = this.conciliaciones.getMovimientosBanco(con, codEmp, codBco, codCtaBco);
+			
+			ConciliacionDetalleVO aux;
+			
+			for (ConciliacionDetalle conciliacion: lstMovimientos) 
+			{
+				aux = new ConciliacionDetalleVO();
+				
+				aux = conciliacion.retornarConciliacionDetalleVO(conciliacion);
+				
+				lstMovimientosVO.add(aux);
+			}
+		}
+		
+		catch (ConexionException e) {
+			throw e;
+		}	 
+
+		finally{
+			this.pool.liberarConeccion(con);
+		}
+
+		return lstMovimientosVO;
+
 	}
 }

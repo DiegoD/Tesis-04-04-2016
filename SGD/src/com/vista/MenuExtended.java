@@ -25,6 +25,7 @@ import com.vista.EgresoOtro.IngresoEgresoOtroPanelExtended;
 import com.vista.Bancos.BancosPanelExtended;
 import com.vista.Clientes.ClientesPanelExtended;
 import com.vista.CodigosGeneralizados.CodigosGeneralizadosPanelExtended;
+import com.vista.Conciliaciones.ConciliacionesPanelExtended;
 import com.vista.Cotizaciones.CotizacionesPanelExtended;
 import com.vista.Cuentas.CuentasPanelExtended;
 import com.vista.Deposito.DepositoPanelExtended;
@@ -606,6 +607,20 @@ public class MenuExtended extends Menu{
 			}
 		});
 		
+		this.conciliacion.addClickListener(click -> {
+			
+			setSizeFull();
+			
+			this.content.removeAllComponents();
+			try {
+				
+				ConciliacionesPanelExtended u = new ConciliacionesPanelExtended(); 
+				this.content.addComponent(u);
+				
+			} catch (Exception e) {
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}
+		});
 	}
 	
 	
@@ -669,6 +684,7 @@ public class MenuExtended extends Menu{
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_DEPOSITO) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_FACTURA) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_RECIBO) ||
+				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_CONCILIACION) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_RUBROS))
 			{
 				lstFormsMenuMant.add(formularioVO);
@@ -863,6 +879,13 @@ public class MenuExtended extends Menu{
 							this.layoutMenu.addComponent(this.recibo);
 						}
 					break;
+					
+					case VariablesPermisos.FORMULARIO_CONCILIACION:
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_CONCILIACION, VariablesPermisos.OPERACION_LEER)){
+							this.habilitarConciliacion();
+							this.layoutMenu.addComponent(this.conciliacion);
+						}
+					break;
 				}
 				
 			}
@@ -1027,6 +1050,9 @@ public class MenuExtended extends Menu{
 		
 		this.recibo.setVisible(false);
 		this.recibo.setEnabled(false);
+		
+		this.conciliacion.setVisible(false);
+		this.conciliacion.setEnabled(false);
 	}
 	
 	
@@ -1191,6 +1217,12 @@ public class MenuExtended extends Menu{
 		this.recibo.setVisible(true);
 		this.recibo.setEnabled(true);
 		this.layoutMenu.addComponent(recibo);
+	}
+	
+	private void habilitarConciliacion(){
+		this.conciliacion.setVisible(true);
+		this.conciliacion.setEnabled(true);
+		this.layoutMenu.addComponent(conciliacion);
 	}
 	
 	public PermisosUsuario getPermisosUsuario()

@@ -4,6 +4,7 @@ import com.persistencia.IDAOBancos;
 import com.persistencia.IDAOCheques;
 import com.persistencia.IDAOClientes;
 import com.persistencia.IDAOCodigosGeneralizados;
+import com.persistencia.IDAOConciliaciones;
 import com.persistencia.IDAOCotizaciones;
 import com.persistencia.IDAOCuentas;
 import com.persistencia.IDAODepositos;
@@ -95,4 +96,6 @@ public interface IAbstractFactory
 	public IDAOFacturas crearDAOFactura();
 	
 	public IDAORecibos crearDAORecibos();
+	
+	public IDAOConciliaciones crearDAOConciliaciones();
 }

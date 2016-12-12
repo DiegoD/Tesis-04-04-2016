@@ -187,4 +187,8 @@ public class AbstractFactoryMySql implements IAbstractFactory
 	public IDAORecibos crearDAORecibos(){
 		return new DAORecibos();
 	}
+	
+	public IDAOConciliaciones crearDAOConciliaciones(){
+		return new DAOConciliaciones();
+	}
 }
