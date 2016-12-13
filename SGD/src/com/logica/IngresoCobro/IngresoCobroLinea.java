@@ -34,6 +34,7 @@ public IngresoCobroDetalleVO retornarDatosDocumVO(){
 		aux.setSerieDocum(this.getSerieDocum());
 		aux.setNroDocum(String.valueOf(this.getNroDocum()));
 		aux.setCodEmp(this.getCodEmp());
+		aux.setNroTrans(this.getNroTrans());
 		
 		aux.setNomMoneda(this.getMoneda().getDescripcion());
 		aux.setCodMoneda(this.getMoneda().getCodMoneda());
