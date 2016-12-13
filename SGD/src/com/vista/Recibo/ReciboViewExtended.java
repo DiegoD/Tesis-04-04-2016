@@ -102,7 +102,10 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 	@SuppressWarnings({ "unchecked", "deprecation" })
 	public ReciboViewExtended(String opera, ReciboPanelExtended main){
 	
-	
+	//	tcMov.setConverter(new StringToDoubleConverterWithThreeFractionDigits());
+		
+
+		
 	this.cambioMoneda = false;
 		
 	/*Inicializamos los permisos para el usuario*/
@@ -637,7 +640,7 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 						
 					}else
 					{
-						ingCobroVO.setTcMov((double) tcMov.getConvertedValue());
+						ingCobroVO.setTcMov(Double.valueOf(tcMov.getConvertedValue().toString()));
 						ingCobroVO.setImpTotMn((ingCobroVO.getImpTotMo()*ingCobroVO.getTcMov()));
 					}
 					
@@ -2443,6 +2446,8 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 	 */
 	private void calcularImporteTotal(){
 		
+		  //tcMov.setConverter(new StringToDoubleConverterWithThreeFractionDigits());
+		
 		/*Inicializamos el permisos auxilar, para obterer el TC de moneda no nacional en detalle y distinta a la moneda del cabezal*/
 		UsuarioPermisosVO permisoAux = 
 				new UsuarioPermisosVO(this.permisos.getCodEmp(),
@@ -2462,7 +2467,7 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 		Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
 		
 		try{
-			tcMonedaNacional = Double.valueOf(tcMov.getConvertedValue().toString());
+			tcMonedaNacional = Double.valueOf(tcMov.getConvertedValue().toString()); //(double)tcMov.getConvertedValue();
 		}
 		catch(Exception e)
 		{
@@ -3101,4 +3106,6 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 		
 		return max;
 	}
+	
+	 
 }
