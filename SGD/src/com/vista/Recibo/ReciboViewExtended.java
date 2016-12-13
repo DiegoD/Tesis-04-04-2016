@@ -544,7 +544,7 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 			        if(value != ""){
 			        	
 			        	try {
-			        		cotizacionVenta = (Double) tcMov.getConvertedValue();
+			        		cotizacionVenta = Double.valueOf(tcMov.getConvertedValue().toString());
 						} catch (Exception e) {
 							// TODO: handle exception
 							return;
@@ -552,7 +552,7 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 			        	
 			        	
 			        	Double truncatedDouble = new BigDecimal(cotizacionVenta)
-							    .setScale(2, BigDecimal.ROUND_HALF_UP)
+							    .setScale(3, BigDecimal.ROUND_HALF_UP)
 							    .doubleValue();
 						
 			        	cotizacionVenta = truncatedDouble;

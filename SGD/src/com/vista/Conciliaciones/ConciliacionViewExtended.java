@@ -182,7 +182,7 @@ private static final long serialVersionUID = 1L;
 				e.printStackTrace();
 			}
 			
-			MensajeExtended form = new MensajeExtended("Elimina el depósito?",this);
+			MensajeExtended form = new MensajeExtended("Elimina la conciliación?",this);
 			
 			this.operacion = Variables.OPERACION_ELIMINAR;
 			
@@ -1074,12 +1074,7 @@ private static final long serialVersionUID = 1L;
 				 * la View de Grupos para agregarlos*/
 				Collection<Object> col= gridDetalle.getSelectedRows();
 				
-				ConciliacionDetalleVO aux;
-				for (Object object : col) {
-					
-					aux = (ConciliacionDetalleVO)object;
-					lstSeleccionados.add(aux);
-				}
+				
 				if(lstSeleccionados.size() > 0 || this.operacion.equals(Variables.OPERACION_ELIMINAR)){
 					
 					ConciliacionVO conciliacion = new ConciliacionVO();
