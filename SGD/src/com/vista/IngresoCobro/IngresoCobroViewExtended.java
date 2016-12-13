@@ -582,7 +582,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			        if(value != ""){
 			        	
 			        	try {
-			        		cotizacionVenta = (Double) tcMov.getConvertedValue();
+			        		cotizacionVenta = Double.valueOf(tcMov.getConvertedValue().toString());
 						} catch (Exception e) {
 							// TODO: handle exception
 							return;
@@ -590,7 +590,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			        	
 			        	
 			        	Double truncatedDouble = new BigDecimal(cotizacionVenta)
-							    .setScale(2, BigDecimal.ROUND_HALF_UP)
+							    .setScale(3, BigDecimal.ROUND_HALF_UP)
 							    .doubleValue();
 						
 			        	cotizacionVenta = truncatedDouble;
@@ -687,7 +687,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 					{
 //						coti = this.controlador.getCotizacion(permisoAux, fecha, this.getCodMonedaSeleccionada());
 //						ingCobroVO.setTcMov(coti.getCotizacionVenta());
-						ingCobroVO.setTcMov((double) tcMov.getConvertedValue());
+						ingCobroVO.setTcMov(Double.valueOf(tcMov.getConvertedValue().toString()));
 						ingCobroVO.setImpTotMn((ingCobroVO.getImpTotMo()*ingCobroVO.getTcMov()));
 					}
 					
@@ -2510,7 +2510,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
 		
 		try{
-			tcMonedaNacional = (Double) tcMov.getConvertedValue();
+			tcMonedaNacional = Double.valueOf(tcMov.getConvertedValue().toString());
 		}
 		catch(Exception e)
 		{
