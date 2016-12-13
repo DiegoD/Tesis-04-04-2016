@@ -1403,7 +1403,7 @@ public class DetFacturaViewExtended extends DetFacturaView implements IBusqueda{
 		impImpuMo.setConverter(Double.class);
 		impImpuMo.setConversionError("Error en formato de número");
 		
-		tcMov.setConverter(Double.class);
+		tcMov.setConverter(BigDecimal.class);
 		tcMov.setConversionError("Error en formato de número");
 		
 		impTotMn.setConverter(Double.class);

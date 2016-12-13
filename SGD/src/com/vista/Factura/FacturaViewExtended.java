@@ -1996,7 +1996,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 //		nroDocum.setConverter(Integer.class);
 //		nroDocum.setConversionError("Ingrese un número entero");
 		
-		tcMov.setConverter(Double.class);
+		tcMov.setConverter(BigDecimal.class);
 		tcMov.setConversionError("Error en formato de número");
 		
 		impTotMo.setConverter(Double.class);

@@ -993,7 +993,7 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 		impTr.setConverter(Double.class);
 		impTr.setConversionError("Error en formato de número");
 		
-		tcMov.setConverter(Double.class);
+		tcMov.setConverter(BigDecimal.class);
 		tcMov.setConversionError("Error en formato de número");
 		
 		Kilos.setConverter(Double.class);

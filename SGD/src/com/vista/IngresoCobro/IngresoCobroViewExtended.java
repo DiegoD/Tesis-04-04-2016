@@ -519,7 +519,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				   			ctaBcoAux = (CtaBcoVO) comboCuentas.getValue();
 				   			if(!auxMoneda.getCodMoneda().equals(ctaBcoAux.getMonedaVO().getCodMoneda())&& opera != Variables.OPERACION_LECTURA){
 				   				Mensajes.mostrarMensajeWarning("La moneda del banco es diferente a la moneda del documento");
-				   			}
+				   			} 
 			   			}
 						calculos();
 					}
@@ -2762,8 +2762,9 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 //		nroDocRef.setConverter(Integer.class);
 //		nroDocRef.setConversionError("Ingrese un número entero");
 		
-		tcMov.setConverter(Double.class);
+		tcMov.setConverter(BigDecimal.class);
 		tcMov.setConversionError("Error en formato de número");
+		
 		
 		impTotMo.setConverter(Double.class);
 		impTotMo.setConversionError("Error en formato de número");
@@ -2772,6 +2773,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		total.setConversionError("Error en formato de número");
 		
 		tcMov.setData("ProgramaticallyChanged");
+		
+		
 	}
 	
 	public void calculos(){

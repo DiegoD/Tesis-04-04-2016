@@ -1697,7 +1697,7 @@ private void mostrarDatosDeBanco(){
 //		nroDocRef.setConverter(Integer.class);
 //		nroDocRef.setConversionError("Ingrese un número entero");
 		
-		tcMov.setConverter(Double.class);
+		tcMov.setConverter(BigDecimal.class);
 		tcMov.setConversionError("Error en formato de número");
 		
 		impTotMo.setConverter(Double.class);
