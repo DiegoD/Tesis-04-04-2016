@@ -878,12 +878,25 @@ public class BusquedaViewExtended extends BusquedaView{
 			
 			grid.setColumnOrder("fecDoc","serieDocum", "nroDocum", "referencia", "simboloMoneda", "impTotMo");
 			
+			/*Arreglar formato de fecha*/
+			grid.getColumn("fecDoc").setConverter(new StringToDateConverter(){
+				  
+				   @Override
+				   public DateFormat getFormat(Locale locale){
+
+					   return new SimpleDateFormat("dd/MM/yyyy");
+
+				   }
+
+			  });
+			
 		}catch(Exception e){
 			int i = 0;
 			
 		}
 	
 	}
+	
 	
 	/*Este falta implementarlo es copia del de proceso*/
 	private void arreglarGrillaFuncionario(){

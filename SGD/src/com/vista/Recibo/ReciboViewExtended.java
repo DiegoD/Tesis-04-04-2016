@@ -2462,7 +2462,7 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 		Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
 		
 		try{
-			tcMonedaNacional = (Double) tcMov.getConvertedValue();
+			tcMonedaNacional = Double.valueOf(tcMov.getConvertedValue().toString());
 		}
 		catch(Exception e)
 		{

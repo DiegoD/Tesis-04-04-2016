@@ -80,6 +80,7 @@ public class DatosDocum extends Auditoria{
 		aux.setNomMoneda(this.moneda.getDescripcion());
 		aux.setCodMoneda(this.moneda.getCodMoneda());
 		aux.setSimboloMoneda(this.moneda.getSimbolo());
+		aux.setNacional(this.moneda.isNacional());
 		
 		aux.setNomTitular(this.titInfo.getNombre());
 		aux.setCodTitular(this.titInfo.getCodigo());
