@@ -1431,6 +1431,10 @@ public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 					
 					
 					if(docum.getCodDocum().equals("Gasto")){ /*Para los gastos modificamos el saldo al documento*/
+						
+						docum.setCodProceso(ing.getDetalle().get(i).getCodProceso());
+						docum.setNroTrans(ingVO.getNroTrans());
+						
 						/*Signo -1 porque resta al saldo del documento el cobro*/
 						this.saldos.modificarSaldo(docum, -1, ingVO.getTcMov(), con);
 					}
@@ -1445,7 +1449,7 @@ public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 						docum.setFecDoc(ing.getFecDoc());
 						docum.setFecValor(ing.getFecValor());
 						docum.setCodEmp(ing.getCodEmp());
-						docum.setNroTrans(ing.getNroTrans());
+						docum.setNroTrans(ingVO.getNroTrans());
 						
 						/*Para el proceso esl signo es 1 porque subo el saldo a la cuenta del proceso*/
 						this.saldosProceso.modificarSaldo(docum, 1, ingVO.getTcMov(), con, ing.getDetalle().get(i).getCodProceso());
@@ -1723,6 +1727,7 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 				for (DocumDetalle docum : ing.getDetalle()) {
 					
 					docum.setCodProceso(ing.getDetalle().get(i).getCodProceso());
+					docum.setNroTrans(ingVO.getNroTrans());
 					
 					if(docum.getCodDocum().equals("Gasto")){ /*Para los gastos modificamos el saldo al documento*/
 						/*Signo -1 porque resta al saldo del documento el cobro*/
@@ -1739,7 +1744,7 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 						docum.setFecDoc(ing.getFecDoc());
 						docum.setFecValor(ing.getFecValor());
 						docum.setCodEmp(ing.getCodEmp());
-						docum.setNroTrans(ing.getNroTrans());
+						docum.setNroTrans(ingVO.getNroTrans());
 						
 						/*EL signo es 1 en proceso para que le agregue saldo al proceso*/
 						this.saldosProceso.modificarSaldo(docum, 1, ingVO.getTcMov(), con, ing.getDetalle().get(i).getCodProceso());

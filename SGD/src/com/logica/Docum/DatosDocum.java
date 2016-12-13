@@ -64,7 +64,7 @@ public class DatosDocum extends Auditoria{
 		this.setUsuarioMod(d.getUsuarioMod());
 		this.setOperacion(d.getOperacion());
 		this.codCuentaInd = d.getCodCtaInd();
-		
+		this.nroTrans = d.getNroTrans();
 	}
 	
 	

@@ -68,6 +68,8 @@ public IngresoCobroDetalleVO retornarDatosDocumVO(){
 		
 		aux.setEstadoGasto(this.getEstadoGasto());
 		
+		aux.setNroTrans(this.getNroTrans());
+		
 		return aux;
 	}
 }

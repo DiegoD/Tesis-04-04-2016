@@ -22,6 +22,7 @@ import com.logica.Docum.DatosDocum;
 import com.logica.Docum.DocumDetalle;
 import com.logica.Docum.TitularInfo;
 import com.mysql.jdbc.Statement;
+import com.valueObject.Docum.DatosDocumVO;
 
 public class DAOSaldoProceso implements IDAOSaldosProc {
 	
@@ -142,7 +143,8 @@ public class DAOSaldoProceso implements IDAOSaldosProc {
 		/*Variable utlilizada para modificar una copia de lo
 		   * pasado por parametro, para que no afecte al
 		   * objeto original*/
- 	    DatosDocum documento = new DatosDocum(docum.retornarDatosDocumVO());
+		DatosDocumVO auxVO = docum.retornarDatosDocumVO();
+ 	    DatosDocum documento = new DatosDocum(auxVO);
 		
 		double saldoAnteriorMO;
 		double saldoCalcMO;
