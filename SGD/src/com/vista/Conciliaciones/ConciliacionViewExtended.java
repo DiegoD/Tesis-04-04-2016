@@ -36,6 +36,7 @@ import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.Conciliaciones.ConciliacionDetalleVO;
 import com.valueObject.Conciliaciones.ConciliacionVO;
 import com.valueObject.Cotizacion.CotizacionVO;
+import com.valueObject.Numeradores.NumeradoresVO;
 import com.valueObject.banco.BancoVO;
 import com.valueObject.banco.CtaBcoVO;
 import com.vista.IMensaje;
@@ -65,7 +66,7 @@ private static final long serialVersionUID = 1L;
 	CotizacionVO cotizacion =  new CotizacionVO();
 	MySub sub;
 	Double importeTotalCalculado;
-	
+	NumeradoresVO codigos;
 	
 	public ConciliacionViewExtended(String opera, ConciliacionesPanelExtended main){
 		
@@ -87,6 +88,24 @@ private static final long serialVersionUID = 1L;
 					bcoAux = (BancoVO) comboBancos.getValue();
 					
 					inicializarComboCuentas(bcoAux.getCodigo(), "Banco");
+				}		
+			}
+	    });
+		
+		comboCajaBanco.addValueChangeListener(new Property.ValueChangeListener() {
+
+			@Override
+			public void valueChange(ValueChangeEvent event) {
+				
+				if(comboCajaBanco.getValue() != null){
+					if(comboCajaBanco.getValue().equals("Caja")){
+						horizontalBanco.setVisible(false);
+						horizontalMoneda.setVisible(true);
+					}
+					else{
+						horizontalMoneda.setVisible(false);
+						horizontalBanco.setVisible(true);
+					}
 				}		
 			}
 	    });
@@ -239,28 +258,33 @@ private static final long serialVersionUID = 1L;
 					/*ACA*/
 					ArrayList<ConciliacionDetalleVO> lstSeleccionados = new ArrayList<ConciliacionDetalleVO>();
 					
+					
 					/*Obtenemos los formularios seleccionados y se los pasamos a
 					 * la View de Grupos para agregarlos*/
 					Collection<Object> col= gridDetalle.getSelectedRows();
 					
 					ConciliacionDetalleVO aux;
-					importeTotalCalculado = (double) 0;
-					for (Object object : col) {
-						
-						aux = (ConciliacionDetalleVO)object;
-						importeTotalCalculado = importeTotalCalculado + aux.getImpTotMo();
-						lstSeleccionados.add(aux);
+					
+					if(this.operacion.equals(Variables.OPERACION_NUEVO)){
+						importeTotalCalculado = (double) 0;
+						for (Object object : col) {
+							
+							aux = (ConciliacionDetalleVO)object;
+							importeTotalCalculado = importeTotalCalculado + aux.getImpTotMo();
+							lstSeleccionados.add(aux);
+						}
 					}
+					
 					if(lstSeleccionados.size() > 0 || this.operacion.equals(Variables.OPERACION_EDITAR)){
 						
 						ConciliacionVO conciliacion = new ConciliacionVO();
 						
-						conciliacion.setCodDocum("Conciliacion");
+						conciliacion.setCodDocum("Conc");
 						conciliacion.setSerieDocum("0");
 						conciliacion.setFecValor(new java.sql.Timestamp(fecValor.getValue().getTime()));
 						conciliacion.setFecDoc(new java.sql.Timestamp(fecDoc.getValue().getTime()));
 						
-						conciliacion.setNroDocum(nroDocum.getValue());
+						conciliacion.setTipo(comboCajaBanco.getValue().toString());
 						
 						BancoVO banco = new BancoVO();
 						banco = (BancoVO) comboBancos.getValue();
@@ -282,6 +306,9 @@ private static final long serialVersionUID = 1L;
 						conciliacion.setDescripcion(moneda.getDescripcion());
 						
 						conciliacion.setImpTotMo((Double)impTotMo.getConvertedValue());
+						
+						conciliacion.setUsuarioMod(this.permisos.getUsuario());
+						conciliacion.setOperacion(this.operacion);
 						
 						int comp = Double.compare(importeTotalCalculado, (Double)impTotMo.getConvertedValue());
 						
@@ -324,8 +351,9 @@ private static final long serialVersionUID = 1L;
 						conciliacion.setOperacion(this.operacion);
 						
 						if(this.operacion.equals(Variables.OPERACION_NUEVO)){
-							codigo = controlador.insertarConciliacion(permisoAux, conciliacion);
-							conciliacion.setNroTrans(codigo);
+							codigos = controlador.insertarConciliacion(permisoAux, conciliacion);
+							conciliacion.setNroTrans(codigos.getNumeroTrans());
+							conciliacion.setNroDocum(String.valueOf(codigos.getCodigo()));
 							this.mainView.actulaizarGrilla(conciliacion, Variables.OPERACION_NUEVO);
     						main.cerrarVentana();
 						}
@@ -334,6 +362,7 @@ private static final long serialVersionUID = 1L;
 						else if(this.operacion.equals(Variables.OPERACION_EDITAR))	{
 							
 							conciliacion.setNroTrans((long)this.nroTrans.getConvertedValue());
+							conciliacion.setNroDocum(this.nroDocum.getValue());
 							
 							controlador.modificarConciliacion(conciliacion, permisoAux);
 							this.mainView.actulaizarGrilla(conciliacion, Variables.OPERACION_EDITAR);
@@ -407,11 +436,14 @@ private static final long serialVersionUID = 1L;
 		ing = fieldGroup.getItemDataSource().getBean();
 		String fecha = new SimpleDateFormat("dd/MM/yyyy").format(ing.getFechaMod());
 		
+		this.importeTotalCalculado = ing.getImpTotMo();
+		
 		if(fieldGroup != null)
 			fieldGroup.buildAndBindMemberFields(this);
 		
 		this.inicializarComboBancos(ing.getCodBanco());
 		this.inicializarComboCuentas(ing.getCodCuenta(), "CuentaBanco");
+		this.inicializarComboCajaBanco(ing.getTipo());
 		
 		if(this.operacion.equals(Variables.OPERACION_LECTURA))
 			this.iniFormLectura();
@@ -451,6 +483,7 @@ private static final long serialVersionUID = 1L;
 		this.fecDoc.setEnabled(false);
 		this.fecValor.setEnabled(false);
 		this.observaciones.setEnabled(false);
+		this.nroDocum.setVisible(true);
 		
 		/*Seteamos la grilla con los formularios*/
 		this.container = 
@@ -508,10 +541,16 @@ private static final long serialVersionUID = 1L;
 		/*Chequeamos si tiene permiso de editar*/
 		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_CONCILIACION, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
+		this.nroDocum.setVisible(false);
+		
 		importeTotalCalculado = (double) 0;
+		
+		this.horizontalBanco.setVisible(false);
+		this.horizontalMoneda.setVisible(false);
 		
 		this.inicializarComboBancos(null);
 		this.inicializarComboCuentas(null, "");
+		this.inicializarComboCajaBanco(null);
 		this.inicializarCampos();
 		this.lstDetalle = new ArrayList<ConciliacionDetalleVO>();
 		
@@ -638,6 +677,32 @@ private static final long serialVersionUID = 1L;
 			this.comboBancos.setReadOnly(true);
 		}
 	}
+	
+	public void inicializarComboCajaBanco(String cod){
+		
+		BeanItemContainer<BancoVO> bcoObj = new BeanItemContainer<BancoVO>(BancoVO.class);
+		BancoVO bcoVO = new BancoVO();
+		ArrayList<BancoVO> lstBcos = new ArrayList<BancoVO>();
+		UsuarioPermisosVO permisosAux;
+		
+		if(cod!=null){
+			if(cod.equals("Caja")){
+				this.comboCajaBanco.setValue("Caja");
+				this.comboCajaBanco.setEnabled(false);
+				this.horizontalBanco.setVisible(false);
+				this.horizontalMoneda.setVisible(true);
+			}
+			else{
+				this.comboCajaBanco.setValue("Banco");
+				this.comboCajaBanco.setEnabled(false);
+				this.horizontalBanco.setVisible(true);
+				this.horizontalMoneda.setVisible(false);
+			}
+			
+				
+		}
+	}
+		
 	
 	public void inicializarComboCuentas(String cod, String llamador ){
 		
@@ -825,9 +890,6 @@ private static final long serialVersionUID = 1L;
 		this.comboCuentas.setRequired(setear);
 		this.comboCuentas.setRequiredError("Es requerido");
 		
-		this.nroDocum.setRequired(setear);
-		this.nroDocum.setRequiredError("Es requerido");
-		
 		this.impTotMo.setRequired(setear);
 		this.impTotMo.setRequiredError("Es requerido");
 		
@@ -905,9 +967,25 @@ private static final long serialVersionUID = 1L;
 			}
 
 		});
-				
 		
+		gridDetalle.removeColumn("cod_docum");
+		gridDetalle.removeColumn("serie_docum");
+		gridDetalle.removeColumn("fecDoc");
+		gridDetalle.removeColumn("nroTrans");
+		gridDetalle.removeColumn("nroTransDoc");
+		gridDetalle.removeColumn("impTotMn");
+		gridDetalle.removeColumn("codEmp");
 		
+		gridDetalle.getColumn("nro_docum").setHeaderCaption("Número");
+		gridDetalle.getColumn("fecValor").setHeaderCaption("Fecha");
+		gridDetalle.getColumn("impTotMo").setHeaderCaption("Importe");
+		gridDetalle.getColumn("descripcion").setHeaderCaption("Descripción");
+		
+		gridDetalle.setColumnOrder("fecValor", "nro_docum", "impTotMo");
+		gridDetalle.getColumn("fecValor").setWidth(120);
+		gridDetalle.getColumn("nro_docum").setWidth(100);
+		gridDetalle.getColumn("impTotMo").setWidth(100);
+		gridDetalle.getColumn("descripcion").setWidth(283);
 		
 		this.filtroGrilla();
 	}

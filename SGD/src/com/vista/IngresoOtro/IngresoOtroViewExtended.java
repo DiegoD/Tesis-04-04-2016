@@ -550,7 +550,7 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 	        if(value != ""){
 	        	
 	        	try {
-	        		cotizacionVenta = (Double) tcMov.getConvertedValue();
+	        		cotizacionVenta = Double.valueOf(tcMov.getConvertedValue().toString());
 				} catch (Exception e) {
 					// TODO: handle exception
 					return;
@@ -558,7 +558,7 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 	        	
 	        	
 	        	Double truncatedDouble = new BigDecimal(cotizacionVenta)
-					    .setScale(2, BigDecimal.ROUND_HALF_UP)
+					    .setScale(3, BigDecimal.ROUND_HALF_UP)
 					    .doubleValue();
 				
 	        	cotizacionVenta = truncatedDouble;
@@ -635,7 +635,7 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 //						ingCobroVO.setTcMov(coti.getCotizacionVenta());
 //						ingCobroVO.setImpTotMn((ingCobroVO.getImpTotMo()*ingCobroVO.getTcMov()));
 						
-						ingCobroVO.setTcMov((double) tcMov.getConvertedValue());
+						ingCobroVO.setTcMov(Double.valueOf(tcMov.getConvertedValue().toString()));
 						ingCobroVO.setImpTotMn((ingCobroVO.getImpTotMo()*ingCobroVO.getTcMov()));
 					}
 					

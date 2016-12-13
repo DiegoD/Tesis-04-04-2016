@@ -135,7 +135,7 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 					}
 					
 					if(tcMov.getValue() != "" && tcMov.getValue() != null){
-						procesoVO.setTcMov((double) tcMov.getConvertedValue());
+						procesoVO.setTcMov(Double.valueOf(tcMov.getConvertedValue().toString()));
 					}
 					else{
 						procesoVO.setTcMov(0);
@@ -233,7 +233,7 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 			
 				/*Inicializamos el Form en modo Edicion*/
 				this.iniFormEditar();
-				cotizacionVenta = (Double) tcMov.getConvertedValue();
+				cotizacionVenta = Double.valueOf(tcMov.getConvertedValue().toString());
 				importeMoneda = (Double) impMo.getConvertedValue();
 				
 			}
@@ -442,7 +442,7 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 		        	
 		        	try {
 		        		tcMov.setValue(value);
-		        		cotizacionVenta = (Double) tcMov.getConvertedValue();
+		        		cotizacionVenta = Double.valueOf(tcMov.getConvertedValue().toString());
 					} catch (Exception e) {
 						return;
 						// TODO: handle exception
@@ -451,7 +451,7 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 		        	
 		        	
 		        	Double truncatedDouble = new BigDecimal(cotizacionVenta)
-						    .setScale(2, BigDecimal.ROUND_HALF_UP)
+						    .setScale(3, BigDecimal.ROUND_HALF_UP)
 						    .doubleValue();
 					
 		        	cotizacionVenta = truncatedDouble;

@@ -15,7 +15,7 @@ public class DepositoVO extends AuditoriaVO{
 	
 	private String codDocum;
 	private String serieDocum;
-	private int nroDocum;
+	private String nroDocum;
 	private Timestamp fecValor;
 	private Timestamp fecDoc;
 	
@@ -85,11 +85,11 @@ public class DepositoVO extends AuditoriaVO{
 		this.serieDocum = serieDocum;
 	}
 
-	public int getNroDocum() {
+	public String getNroDocum() {
 		return nroDocum;
 	}
 
-	public void setNroDocum(int nroDocum) {
+	public void setNroDocum(String nroDocum) {
 		this.nroDocum = nroDocum;
 	}
 

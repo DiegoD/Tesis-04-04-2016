@@ -250,13 +250,16 @@ public class DepositoViewExtended extends DepositoView implements IMensaje{
 					Collection<Object> col= gridCheques.getSelectedRows();
 					
 					DepositoDetalleVO aux;
-					importeTotalCalculado = (double) 0;
-					for (Object object : col) {
-						
-						aux = (DepositoDetalleVO)object;
-						importeTotalCalculado = importeTotalCalculado + aux.getImpTotMo();
-						lstSeleccionados.add(aux);
+					if(this.operacion.equals(Variables.OPERACION_NUEVO)){
+						importeTotalCalculado = (double) 0;
+						for (Object object : col) {
+							
+							aux = (DepositoDetalleVO)object;
+							importeTotalCalculado = importeTotalCalculado + aux.getImpTotMo();
+							lstSeleccionados.add(aux);
+						}
 					}
+					
 					if(lstSeleccionados.size() > 0 || this.operacion.equals(Variables.OPERACION_EDITAR)){
 						
 						DepositoVO deposito = new DepositoVO();
@@ -266,7 +269,7 @@ public class DepositoViewExtended extends DepositoView implements IMensaje{
 						deposito.setFecValor(new java.sql.Timestamp(fecValor.getValue().getTime()));
 						deposito.setFecDoc(new java.sql.Timestamp(fecDoc.getValue().getTime()));
 						
-						deposito.setNroDocum((Integer)nroDocum.getConvertedValue());
+						deposito.setNroDocum(nroDocum.getValue());
 						
 						TitularVO titular = new TitularVO();
 						titular = (TitularVO) comboResponsable.getValue();
@@ -342,6 +345,7 @@ public class DepositoViewExtended extends DepositoView implements IMensaje{
 							codigo = controlador.depositarCheques(permisoAux, deposito);
 							deposito.setNroTrans(codigo);
 							this.mainView.actulaizarGrilla(deposito, Variables.OPERACION_NUEVO);
+							Mensajes.mostrarMensajeOK("Se ha guardado el depósito");
     						main.cerrarVentana();
 						}
 						
@@ -352,6 +356,7 @@ public class DepositoViewExtended extends DepositoView implements IMensaje{
 							
 							controlador.modificarDeposito(deposito, permisoAux);
 							this.mainView.actulaizarGrilla(deposito, Variables.OPERACION_EDITAR);
+							Mensajes.mostrarMensajeOK("Se ha modificado el depósito");
 							main.cerrarVentana();
 						}
 					}
@@ -422,6 +427,8 @@ public class DepositoViewExtended extends DepositoView implements IMensaje{
 		DepositoVO ing = new DepositoVO();
 		ing = fieldGroup.getItemDataSource().getBean();
 		String fecha = new SimpleDateFormat("dd/MM/yyyy").format(ing.getFechaMod());
+		
+		this.importeTotalCalculado = ing.getImpTotMo();
 		
 		if(fieldGroup != null)
 			fieldGroup.buildAndBindMemberFields(this);
@@ -807,8 +814,6 @@ public class DepositoViewExtended extends DepositoView implements IMensaje{
 		nroTrans.setConverter(Long.class);
 		nroTrans.setConversionError("Error en formato de número");
 		
-		nroDocum.setConverter(Integer.class);
-		nroDocum.setConversionError("Ingrese un número entero");
 	}
 	
 	private void inicializarGrilla() throws InstantiationException, IllegalAccessException, ClassNotFoundException, FileNotFoundException, IOException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoChequeException, ObteniendoCuentasBcoException, ObteniendoBancosException{
@@ -1138,7 +1143,7 @@ public class DepositoViewExtended extends DepositoView implements IMensaje{
 					deposito.setFecValor(new java.sql.Timestamp(fecValor.getValue().getTime()));
 					deposito.setFecDoc(new java.sql.Timestamp(fecDoc.getValue().getTime()));
 					
-					deposito.setNroDocum((Integer)nroDocum.getConvertedValue());
+					deposito.setNroDocum(nroDocum.getValue());
 					
 					TitularVO titular = new TitularVO();
 					titular = (TitularVO) comboResponsable.getValue();

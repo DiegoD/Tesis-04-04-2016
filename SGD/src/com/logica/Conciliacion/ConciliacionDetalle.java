@@ -16,6 +16,7 @@ public class ConciliacionDetalle {
 	private double impTotMn;
 	private double impTotMo;
 	private String cod_emp;
+	private String descripcion;
 	
 	public ConciliacionDetalle(){
 		
@@ -35,6 +36,7 @@ public class ConciliacionDetalle {
 		detalleVO.setImpTotMn(detalle.getImpTotMn());
 		detalleVO.setImpTotMo(detalle.getImpTotMo());
 		detalleVO.setCodEmp(detalle.getCod_emp());
+		detalleVO.setDescripcion(detalle.getDescripcion());
 		
 		return detalleVO;
 	}
@@ -101,6 +103,14 @@ public class ConciliacionDetalle {
 
 	public void setCod_emp(String cod_emp) {
 		this.cod_emp = cod_emp;
+	}
+
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
 	}
 	
 	

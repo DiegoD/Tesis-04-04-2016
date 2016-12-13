@@ -136,6 +136,47 @@ public class ConciliacionesPanelExtended extends ConciliacionesPanel {
 
 		});
 		
+		gridConciliaciones.removeColumn("codDocum");
+		gridConciliaciones.removeColumn("serieDocum");
+		gridConciliaciones.removeColumn("cod_emp");
+		gridConciliaciones.removeColumn("impTotMn");
+		gridConciliaciones.removeColumn("cuenta");
+		gridConciliaciones.removeColumn("nroTrans");
+		gridConciliaciones.removeColumn("fecDoc");
+		gridConciliaciones.removeColumn("codMoneda");
+		gridConciliaciones.removeColumn("simbolo");
+		gridConciliaciones.removeColumn("nacional");
+		gridConciliaciones.removeColumn("codBanco");
+		gridConciliaciones.removeColumn("codCuenta");
+		gridConciliaciones.removeColumn("lstDetalle");
+		
+		gridConciliaciones.removeColumn("fechaMod");
+		gridConciliaciones.removeColumn("usuarioMod");
+		gridConciliaciones.removeColumn("operacion");
+		
+		gridConciliaciones.setColumnOrder("fecValor", "nroDocum", "tipo",  "observaciones", "impTotMo",
+				"descripcion", "nomBanco", "nomCuenta");
+		
+		gridConciliaciones.getColumn("fecValor").setHeaderCaption("Fecha");
+		gridConciliaciones.getColumn("nroDocum").setHeaderCaption("Número");
+		gridConciliaciones.getColumn("tipo").setHeaderCaption("Tipo");
+		gridConciliaciones.getColumn("descripcion").setHeaderCaption("Moneda");
+		gridConciliaciones.getColumn("impTotMo").setHeaderCaption("Importe");
+		gridConciliaciones.getColumn("observaciones").setHeaderCaption("Obsersvaciones");
+		gridConciliaciones.getColumn("descripcion").setHeaderCaption("Moneda");
+		gridConciliaciones.getColumn("nomBanco").setHeaderCaption("Banco");
+		gridConciliaciones.getColumn("nomCuenta").setHeaderCaption("Cuenta");
+		
+		gridConciliaciones.getColumn("fecValor").setWidth(120);
+		gridConciliaciones.getColumn("nroDocum").setWidth(100);
+		gridConciliaciones.getColumn("tipo").setWidth(120);
+		gridConciliaciones.getColumn("impTotMo").setWidth(120);
+		gridConciliaciones.getColumn("observaciones").setWidth(300);
+		gridConciliaciones.getColumn("descripcion").setWidth(150);
+		gridConciliaciones.getColumn("nomBanco").setWidth(150);
+		gridConciliaciones.getColumn("nomCuenta").setWidth(150);
+		
+		
 		/*Agregamos los filtros a la grilla*/
 		this.filtroGrilla();
 		

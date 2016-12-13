@@ -556,7 +556,7 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 	        if(value != ""){
 	        	
 	        	try {
-	        		cotizacionVenta = (Double) tcMov.getConvertedValue();
+	        		cotizacionVenta = Double.valueOf(tcMov.getConvertedValue().toString());
 				} catch (Exception e) {
 					// TODO: handle exception
 					return;
@@ -564,7 +564,7 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 	        	
 	        	
 	        	Double truncatedDouble = new BigDecimal(cotizacionVenta)
-					    .setScale(2, BigDecimal.ROUND_HALF_UP)
+					    .setScale(3, BigDecimal.ROUND_HALF_UP)
 					    .doubleValue();
 				
 	        	cotizacionVenta = truncatedDouble;
@@ -645,7 +645,7 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 //						ingCobroVO.setTcMov(coti.getCotizacionVenta());
 //						ingCobroVO.setImpTotMn((ingCobroVO.getImpTotMo()*ingCobroVO.getTcMov()));
 						
-						ingCobroVO.setTcMov((double) tcMov.getConvertedValue());
+						ingCobroVO.setTcMov(Double.valueOf(tcMov.getConvertedValue().toString()));
 						ingCobroVO.setImpTotMn((ingCobroVO.getImpTotMo()*ingCobroVO.getTcMov()));
 					}
 					

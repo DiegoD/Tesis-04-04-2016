@@ -4,17 +4,16 @@
   <meta charset="UTF-8" name="design-properties" content="{&quot;RULERS_VISIBLE&quot;:true,&quot;GUIDELINES_VISIBLE&quot;:false,&quot;SNAP_TO_OBJECTS&quot;:true,&quot;SNAP_TO_GRID&quot;:true,&quot;SNAPPING_DISTANCE&quot;:10,&quot;JAVA_SOURCES_ROOT&quot;:&quot;src&quot;,&quot;THEME&quot;:&quot;sgd&quot;}">
  </head> 
  <body> 
-  <vaadin-form-layout spacing="false" responsive id="auditoria" size-full margin-left margin-right margin-top="false" margin-bottom="false"> 
+  <vaadin-form-layout spacing="false" responsive id="auditoria" height="544px" margin-left margin-right margin-top="false" margin-bottom="false"> 
    <vaadin-label style-name="colored h2" responsive plain-text :center>
      Conciliación 
    </vaadin-label> 
    <vaadin-horizontal-layout responsive size-full> 
     <vaadin-form-layout spacing="false" responsive height="66.78%" margin-top="false" margin-bottom="false"> 
-     <vaadin-horizontal-layout caption="Selección" spacing responsive height="22px"> 
+     <vaadin-horizontal-layout caption="Tipo" spacing responsive height="22px"> 
       <vaadin-combo-box style-name="tiny" item-caption-mode="id" width="110px" _id="comboCajaBanco"> 
-       <option>Option 1</option> 
-       <option>Option 2</option> 
-       <option>Option 3</option> 
+       <option>Caja</option> 
+       <option>Banco</option> 
       </vaadin-combo-box> 
       <vaadin-label caption="N° Comp." size-auto _id="lblComprobante"></vaadin-label> 
       <vaadin-text-field style-name="tiny" null-representation="" width="104px" _id="nroDocum"></vaadin-text-field> 
@@ -25,38 +24,38 @@
       <vaadin-date-field style-name="tiny" width="102px" _id="fecValor"></vaadin-date-field> 
      </vaadin-horizontal-layout> 
      <vaadin-text-field enabled="false" visible="false" _id="nroTrans"></vaadin-text-field> 
-     <vaadin-horizontal-layout caption="Moneda"> 
+     <vaadin-horizontal-layout caption="Moneda" _id="horizontalMoneda"> 
       <vaadin-combo-box style-name="tiny" item-caption-mode="id" width="110px" _id="comboMoneda"> 
        <option>Option 1</option> 
        <option>Option 2</option> 
        <option>Option 3</option> 
       </vaadin-combo-box> 
      </vaadin-horizontal-layout> 
-     <vaadin-horizontal-layout caption="Banco" spacing responsive height="22px"> 
+     <vaadin-horizontal-layout caption="Banco" spacing responsive height="22px" _id="horizontalBanco"> 
       <vaadin-combo-box style-name="tiny" item-caption-mode="id" width="112px" _id="comboBancos"> 
        <option>Option 1</option> 
        <option>Option 2</option> 
        <option>Option 3</option> 
       </vaadin-combo-box> 
       <vaadin-label caption="Cuenta" size-auto _id="lblCuentaBanco"></vaadin-label> 
-      <vaadin-combo-box style-name="tiny" item-caption-mode="id" width="119px" _id="comboCuentas"> 
+      <vaadin-combo-box style-name="tiny" item-caption-mode="id" width="135px" _id="comboCuentas"> 
        <option>Option 1</option> 
        <option>Option 2</option> 
        <option>Option 3</option> 
       </vaadin-combo-box> 
       <vaadin-text-field style-name="tiny" width="40px" _id="monedaBanco"></vaadin-text-field> 
-      <vaadin-text-field style-name="tiny" width="100px" _id="cuentaBanco"></vaadin-text-field> 
+      <vaadin-text-field style-name="tiny" width="108px" _id="cuentaBanco"></vaadin-text-field> 
      </vaadin-horizontal-layout> 
      <vaadin-horizontal-layout caption="Importe" responsive width="100px"> 
       <vaadin-text-field style-name="tiny" null-representation="" width="110px" _id="impTotMo"></vaadin-text-field> 
      </vaadin-horizontal-layout> 
      <vaadin-horizontal-layout caption="Observaciones" responsive> 
-      <vaadin-text-field style-name="tiny" width="466px" _id="observaciones"></vaadin-text-field> 
+      <vaadin-text-field style-name="tiny" width="488px" _id="observaciones"></vaadin-text-field> 
      </vaadin-horizontal-layout> 
     </vaadin-form-layout> 
    </vaadin-horizontal-layout> 
    <vaadin-horizontal-layout responsive> 
-    <vaadin-grid responsive width="582px" height="300px" _id="gridDetalle"></vaadin-grid> 
+    <vaadin-grid responsive width="604px" height="260px" _id="gridDetalle"></vaadin-grid> 
    </vaadin-horizontal-layout> 
    <vaadin-horizontal-layout responsive width="287px" _id="botones"> 
     <vaadin-button style-name="tiny primary" plain-text _id="conciliar" :middle>

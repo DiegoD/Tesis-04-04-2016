@@ -26,6 +26,7 @@ public class Conciliacion extends Auditoria{
 	private MonedaInfo moneda;
 	private BancoInfo banco;
 	private CuentaBcoInfo cuentaBanco;
+	private String tipo;
 	
 	private ArrayList<ConciliacionDetalle> lstDetalle;
 	
@@ -56,6 +57,10 @@ public class Conciliacion extends Auditoria{
 		conciliacionVO.setCodBanco(conciliacion.getBanco().getCodBanco());
 		conciliacionVO.setNomCuenta(conciliacion.getCuentaBanco().getNomCuenta());
 		conciliacionVO.setCodCuenta(conciliacion.getCuentaBanco().getCodCuenta());
+		conciliacionVO.setUsuarioMod(conciliacion.getUsuarioMod());
+		conciliacionVO.setFechaMod(conciliacion.getFechaMod());
+		conciliacionVO.setOperacion(conciliacion.getOperacion());
+		conciliacionVO.setTipo(conciliacion.getTipo());
 		
 		ConciliacionDetalleVO auxDet;
 		lstDetalle = conciliacion.getLstDetalle();
@@ -108,6 +113,10 @@ public class Conciliacion extends Auditoria{
 		conciliacion.setImpTotMo(conciliacionVO.getImpTotMo());
 		conciliacion.setCuenta(conciliacionVO.getCuenta());
 		conciliacion.setObservaciones(conciliacionVO.getObservaciones());
+		conciliacion.setUsuarioMod(conciliacionVO.getUsuarioMod());
+		conciliacion.setOperacion(conciliacionVO.getOperacion());
+		conciliacion.setTipo(conciliacionVO.getTipo());
+		conciliacion.setCod_emp(conciliacionVO.getCod_emp());
 		
 		
 		ConciliacionDetalle auxDetalle;
@@ -122,6 +131,10 @@ public class Conciliacion extends Auditoria{
 			auxDetalle.setNroTransDoc(conciliacionDetalleVO.getNroTransDoc());
 			auxDetalle.setImpTotMn(conciliacionDetalleVO.getImpTotMn());
 			auxDetalle.setImpTotMo(conciliacionDetalleVO.getImpTotMo());
+			auxDetalle.setCod_docum(conciliacionDetalleVO.getCod_docum());
+			auxDetalle.setCod_emp(conciliacion.getCod_emp());
+			auxDetalle.setDescripcion(conciliacionDetalleVO.getDescripcion());
+			
 			
 			
 			conciliacion.getLstDetalle().add(auxDetalle);
@@ -238,6 +251,14 @@ public class Conciliacion extends Auditoria{
 
 	public void setLstDetalle(ArrayList<ConciliacionDetalle> lstDetalle) {
 		this.lstDetalle = lstDetalle;
+	}
+
+	public String getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
 	}
 	
 	

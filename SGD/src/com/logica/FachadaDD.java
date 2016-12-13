@@ -4543,11 +4543,10 @@ public class FachadaDD {
 		return lstVO;
 	}	 
 
-	public Integer insertarConciliacion(ConciliacionVO concVO, String codEmp) throws InsertandoConciliacionException, ConexionException, ExisteConciliacionException{
+	public NumeradoresVO insertarConciliacion(ConciliacionVO concVO, String codEmp) throws InsertandoConciliacionException, ConexionException, ExisteConciliacionException{
 	
 		Connection con = null;
 		boolean existe = false;
-		Integer codigo;
 		NumeradoresVO codigos = new NumeradoresVO();
 		
 		
@@ -4556,12 +4555,15 @@ public class FachadaDD {
 			con = this.pool.obtenerConeccion();
 			con.setAutoCommit(false);
 			
+			//Obtengo numerador de la transacción
+			codigos.setCodigo(numeradores.getNroTrans(con, "Conc")); 
+			codigos.setNumeroTrans(numeradores.getNroTrans(con, "03"));
+			concVO.setNroDocum(String.valueOf(codigos.getCodigo()));
+			concVO.setNroTrans(codigos.getNumeroTrans());
+			concVO.setCod_emp(codEmp);
+			
 			Conciliacion conciliacion = new Conciliacion();
 			conciliacion = conciliacion.convierteConciliacion(concVO);
-			
-			//Obtengo numerador de la transacción
-			codigo = numeradores.getNroTrans(con, "03"); //Transacción
-			conciliacion.setNroTrans(codigo);
 			
 			if(!this.conciliaciones.memberConciliacion(conciliacion.getNroTrans(), codEmp, con)){
 			
@@ -4577,7 +4579,7 @@ public class FachadaDD {
 					
 					//Inserto el detalle de la conciliación
 					conciliaciones.insertarConciliacionDetalle(lin, linea, con, codEmp);
-					
+					conciliaciones.conciliarSaCuentas(lin, con, codEmp, true);
 					linea++;
 				}
 			
@@ -4609,7 +4611,7 @@ public class FachadaDD {
 		if (existe){
 			throw new ExisteConciliacionException();
 		}
-		return codigo;
+		return codigos;
 	}
 
 	public void modificarConciliacion(ConciliacionVO conciliacionVO, String codEmp) throws  ConexionException, ModificandoConciliacionException, ExisteConciliacionException, NoExisteConciliacionException, InsertandoConciliacionException, EliminandoConcialiacionException{
@@ -4626,8 +4628,8 @@ public class FachadaDD {
 			
 			/*Verificamos que exista la conciliación*/
 			if(this.conciliaciones.memberConciliacion(conciliacion.getNroTrans(), codEmp, con)){
-				this.eliminarConciliacion(conciliacionVO, codEmp);
-				this.insertarConciliacion(conciliacionVO, codEmp);
+				this.eliminarConciliacionModificacion(conciliacion, codEmp, con);
+				this.insertarConciliacionModificacion(conciliacion, codEmp, con);
 				con.commit();
 			}
 			else
@@ -4677,6 +4679,7 @@ public class FachadaDD {
 					
 					//elimino el detalle de conciliación
 					conciliaciones.eliminarConciliacionDetalle(conciliacion, con, codEmp);
+					conciliaciones.conciliarSaCuentas(lin, con, codEmp, false);
 					
 				}
 				

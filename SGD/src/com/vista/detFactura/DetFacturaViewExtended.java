@@ -235,7 +235,7 @@ public class DetFacturaViewExtended extends DetFacturaView implements IBusqueda{
 					gastoVO.setImpSubMo(gastoVO.getImpTotMo() - gastoVO.getImpImpuMo());
 					
 					if(tcMov.getValue() != "" && tcMov.getValue() != null){
-						gastoVO.setTcMov((double) tcMov.getConvertedValue());
+						gastoVO.setTcMov(Double.valueOf(tcMov.getConvertedValue().toString()));
 					}
 					else{
 						gastoVO.setTcMov(0);
@@ -641,7 +641,7 @@ public class DetFacturaViewExtended extends DetFacturaView implements IBusqueda{
 		        if(value != ""){
 		        	
 		        	try {
-		        		cotizacionVenta = (Double) tcMov.getConvertedValue();
+		        		cotizacionVenta = Double.valueOf(tcMov.getConvertedValue().toString());
 					} catch (Exception e) {
 						// TODO: handle exception
 						return;
@@ -649,7 +649,7 @@ public class DetFacturaViewExtended extends DetFacturaView implements IBusqueda{
 		        	
 		        	
 		        	Double truncatedDouble = new BigDecimal(cotizacionVenta)
-						    .setScale(2, BigDecimal.ROUND_HALF_UP)
+						    .setScale(3, BigDecimal.ROUND_HALF_UP)
 						    .doubleValue();
 					
 		        	cotizacionVenta = truncatedDouble;
@@ -910,9 +910,9 @@ public class DetFacturaViewExtended extends DetFacturaView implements IBusqueda{
 			if(operacion.equals(Variables.OPERACION_EDITAR)){
 				importeMoneda = (Double) impTotMo.getConvertedValue();
 				porcImpuesto  = (Double) porcentajeImpuesto.getConvertedValue();
-				tipoCambio = (Double) tcMov.getConvertedValue();
+				tipoCambio = Double.valueOf(tcMov.getConvertedValue().toString());
 				importeImpuesto = (Double) impImpuMo.getConvertedValue();
-				cotizacionVenta = (Double) tcMov.getConvertedValue();
+				Double.valueOf(tcMov.getConvertedValue().toString());
 				this.comboEstado.setEnabled(true);
 			}
 			

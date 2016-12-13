@@ -67,6 +67,7 @@ public class DAOConciliaciones implements IDAOConciliaciones{
 				aux.setImpTotMn(rs.getDouble("imp_tot_mn"));
 				aux.setImpTotMo(rs.getDouble("imp_tot_mo"));
 				aux.setCod_emp(rs.getString("cod_emp"));
+				aux.setDescripcion(rs.getString("referencia"));
 				
 				lstMovimientos.add(aux);
 				
@@ -77,10 +78,7 @@ public class DAOConciliaciones implements IDAOConciliaciones{
 			rs2 = pstmt2.executeQuery();
 			while(rs2.next ()) {
 				
-				if(aux == null){
-					aux = new ConciliacionDetalle();
-				}
-				
+				aux = new ConciliacionDetalle();
 				
 				aux.setCod_docum(rs2.getString("cod_docum"));
 				aux.setSerie_docum(rs2.getString("serie_docum"));
@@ -90,6 +88,7 @@ public class DAOConciliaciones implements IDAOConciliaciones{
 				aux.setImpTotMn(rs2.getDouble("imp_tot_mn"));
 				aux.setImpTotMo(rs2.getDouble("imp_tot_mo"));
 				aux.setCod_emp(rs2.getString("cod_emp"));
+				aux.setDescripcion(rs2.getString("referencia"));
 				
 				lstMovimientos.add(aux);
 				
@@ -166,6 +165,7 @@ public class DAOConciliaciones implements IDAOConciliaciones{
 				aux.setFechaMod(rs.getTimestamp("fecha_mod"));
 				aux.setUsuarioMod(rs.getString("usuario_mod"));
 				aux.setOperacion(rs.getString("operacion"));
+				aux.setTipo(rs.getString("tipo"));
 				
 				
 				/*Obtenemos las lineas de la transaccion*/				
@@ -223,8 +223,8 @@ public class DAOConciliaciones implements IDAOConciliaciones{
 				aux.setImpTotMn(rs.getDouble("imp_tot_mn"));
 				aux.setImpTotMo(rs.getDouble("imp_tot_mo"));
 				aux.setNroTrans(rs.getLong("nro_trans"));
-				aux.setNroTransDoc(rs.getLong("nro_trans_doc"));
 				aux.setCod_emp(rs.getString("cod_emp"));
+				aux.setDescripcion(rs.getString("referencia"));
 				
 				lst.add(aux);
 				
@@ -263,16 +263,16 @@ public class DAOConciliaciones implements IDAOConciliaciones{
 			pstmt1.setString(4, codEmp);
 			pstmt1.setDouble(5, conciliacion.getImpTotMn());
 			pstmt1.setDouble(6, conciliacion.getImpTotMo());
-			pstmt1.setString(7, conciliacion.getCuenta());
-			pstmt1.setLong(8, conciliacion.getNroTrans());
-			pstmt1.setTimestamp(9, conciliacion.getFecDoc());
-			pstmt1.setTimestamp(10, conciliacion.getFecValor());
-			pstmt1.setString(11, conciliacion.getBanco().getCodBanco());
-			pstmt1.setString(12, conciliacion.getCuentaBanco().getCodCuenta());
-			pstmt1.setString(13, conciliacion.getMoneda().getCodMoneda());
-			pstmt1.setString(14, conciliacion.getObservaciones());
-			pstmt1.setString(15, conciliacion.getUsuarioMod());
-			pstmt1.setString(16, conciliacion.getOperacion());
+			pstmt1.setLong(7, conciliacion.getNroTrans());
+			pstmt1.setTimestamp(8, conciliacion.getFecDoc());
+			pstmt1.setTimestamp(9, conciliacion.getFecValor());
+			pstmt1.setString(10, conciliacion.getBanco().getCodBanco());
+			pstmt1.setString(11, conciliacion.getCuentaBanco().getCodCuenta());
+			pstmt1.setString(12, conciliacion.getMoneda().getCodMoneda());
+			pstmt1.setString(13, conciliacion.getObservaciones());
+			pstmt1.setString(14, conciliacion.getUsuarioMod());
+			pstmt1.setString(15, conciliacion.getOperacion());
+			pstmt1.setString(16, conciliacion.getTipo());
 			
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
@@ -305,14 +305,15 @@ public class DAOConciliaciones implements IDAOConciliaciones{
 			pstmt1.setString(1, detalle.getCod_docum());
 			pstmt1.setString(2, detalle.getSerie_docum());
 			pstmt1.setInt(3, detalle.getNro_docum());
-			pstmt1.setString(4, detalle.getCod_emp());
+			pstmt1.setString(4, codEmp);
 			pstmt1.setDouble(5, detalle.getImpTotMn());
 			pstmt1.setDouble(6, detalle.getImpTotMo());
 			pstmt1.setLong(7, detalle.getNroTrans());
-			pstmt1.setLong(8, detalle.getNroTransDoc());
-			pstmt1.setTimestamp(9, detalle.getFecDoc());
-			pstmt1.setTimestamp(10, detalle.getFecValor());
+			pstmt1.setTimestamp(8, detalle.getFecDoc());
+			pstmt1.setTimestamp(9, detalle.getFecValor());
+			pstmt1.setString(10, detalle.getDescripcion());
 			
+			pstmt1.executeUpdate ();
 			pstmt1.close ();
 					
 		} 
@@ -399,6 +400,30 @@ public class DAOConciliaciones implements IDAOConciliaciones{
 		catch(SQLException e){
 			
 			throw new EliminandoConcialiacionException();
+		}
+	}
+	
+	public void conciliarSaCuentas(ConciliacionDetalle conciliacion, Connection con, String codEmp, boolean conciliar) throws InsertandoConciliacionException, ConexionException{
+		
+		try{
+			ConsultasDD consultas = new ConsultasDD();
+			String query = consultas.actualizarSaCuentasConciliado();
+			
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			
+			pstmt1.setBoolean(1, conciliar);
+			pstmt1.setString(2, conciliacion.getCod_docum());
+			pstmt1.setString(3, conciliacion.getSerie_docum());
+			pstmt1.setInt(4, conciliacion.getNro_docum());
+			pstmt1.setString(5, codEmp);
+			
+			pstmt1.executeUpdate ();
+			pstmt1.close ();
+			
+		}
+		catch(SQLException e){
+			
+			throw new InsertandoConciliacionException();
 		}
 	}
 	

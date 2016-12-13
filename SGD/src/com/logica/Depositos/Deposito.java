@@ -60,7 +60,7 @@ public class Deposito extends Auditoria{
 		depositoVO.setImpTotMo(deposito.getImpTotMo());
 		//depositoVO.setMoneda(deposito.getMoneda());
 		depositoVO.setNomMoneda(deposito.getMoneda().getDescripcion());
-		depositoVO.setNroDocum(deposito.getNroDocum());
+		depositoVO.setNroDocum(String.valueOf(deposito.getNroDocum()));
 		depositoVO.setNroTrans(deposito.getNroTrans());
 		depositoVO.setNumComprobante(deposito.getNumComprobante());
 		depositoVO.setObservaciones(deposito.getObservaciones());
@@ -114,7 +114,7 @@ public class Deposito extends Auditoria{
 		moneda.setCodMoneda(depositoVO.getCodMoneda());
 		moneda.setDescripcion(depositoVO.getNomMoneda());
 		deposito.setMoneda(moneda);
-		deposito.setNroDocum(depositoVO.getNroDocum());
+		deposito.setNroDocum(Integer.parseInt(depositoVO.getNroDocum()));
 		deposito.setNroTrans(depositoVO.getNroTrans());
 		deposito.setNumComprobante(depositoVO.getNumComprobante());
 		deposito.setObservaciones(depositoVO.getObservaciones());

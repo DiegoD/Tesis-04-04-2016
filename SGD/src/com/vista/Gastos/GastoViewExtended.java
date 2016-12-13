@@ -104,16 +104,16 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 	Validaciones val = new Validaciones();
 	private String llamador;
 	
-	public GastoViewExtended(String opera, IGastosMain main, TitularVO titular){
+	public GastoViewExtended(String opera, IGastosMain main, TitularVO titular, String pantalla){
 		
 		this.titularVO = titular;
 		this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
 		this.operacion = opera;
 		this.mainView = main;
+		this.llamador = pantalla;
 		
 		if(titularVO != null){
 			this.tipoTitular = titular.getTipo();
-			this.llamador = "Egreso";
 		}
 		else{
 			this.tipoTitular = "";
@@ -268,7 +268,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 					gastoVO.setImpSubMo(gastoVO.getImpTotMo() - gastoVO.getImpImpuMo());
 					
 					if(tcMov.getValue() != "" && tcMov.getValue() != null){
-						gastoVO.setTcMov((double) tcMov.getConvertedValue());
+						gastoVO.setTcMov(Double.valueOf(tcMov.getConvertedValue().toString()));
 					}
 					else{
 						gastoVO.setTcMov(0);
@@ -785,7 +785,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		        if(value != ""){
 		        	
 		        	try {
-		        		cotizacionVenta = (Double) tcMov.getConvertedValue();
+		        		cotizacionVenta = Double.valueOf(tcMov.getConvertedValue().toString());
 					} catch (Exception e) {
 						// TODO: handle exception
 						return;
@@ -793,7 +793,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		        	
 		        	
 		        	Double truncatedDouble = new BigDecimal(cotizacionVenta)
-						    .setScale(2, BigDecimal.ROUND_HALF_UP)
+						    .setScale(3, BigDecimal.ROUND_HALF_UP)
 						    .doubleValue();
 					
 		        	cotizacionVenta = truncatedDouble;
@@ -1041,7 +1041,10 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		}
 		
 		if(llamador != null){
-			if(permisoEliminar && ! llamador.equals("Egreso")){
+			if(llamador.equals("Factura")){
+				this.btnEditar.setVisible(false);
+			}
+			if(permisoEliminar && llamador.equals("Gasto")){
 				this.enableBotonEliminar();
 			}
 				
@@ -1099,9 +1102,9 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 			if(operacion.equals(Variables.OPERACION_EDITAR)){
 				importeMoneda = (Double) impTotMo.getConvertedValue();
 				porcImpuesto  = (Double) porcentajeImpuesto.getConvertedValue();
-				tipoCambio = (Double) tcMov.getConvertedValue();
+				tipoCambio = Double.valueOf(tcMov.getConvertedValue().toString());
 				importeImpuesto = (Double) impImpuMo.getConvertedValue();
-				cotizacionVenta = (Double) tcMov.getConvertedValue();
+				cotizacionVenta = Double.valueOf(tcMov.getConvertedValue().toString());
 				this.comboEstado.setEnabled(true);
 			}
 			

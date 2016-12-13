@@ -438,7 +438,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 			        if(value != ""){
 			        	
 			        	try {
-			        		cotizacionVenta = (Double) tcMov.getConvertedValue();
+			        		cotizacionVenta = Double.valueOf(tcMov.getConvertedValue().toString());
 						} catch (Exception e) {
 							// TODO: handle exception
 							return;
@@ -446,7 +446,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 			        	
 			        	
 			        	Double truncatedDouble = new BigDecimal(cotizacionVenta)
-							    .setScale(2, BigDecimal.ROUND_HALF_UP)
+							    .setScale(3, BigDecimal.ROUND_HALF_UP)
 							    .doubleValue();
 						
 			        	cotizacionVenta = truncatedDouble;
@@ -901,8 +901,8 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 			    	
 			    	if(item.getBean().getCodDocum().equals("Gasto")){
 			    		
-			    		GastoViewExtended form = new GastoViewExtended(Variables.OPERACION_LECTURA, this, titularVO);
-				    	sub = new MySub("90%","50%");
+			    		GastoViewExtended form = new GastoViewExtended(Variables.OPERACION_LECTURA, this, titularVO, "Factura");
+				    	sub = new MySub("92%","50%");
 						sub.setModal(true);
 						sub.setVista((Component) form);
 						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
@@ -1092,6 +1092,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		this.comboMoneda.setEnabled(false);
 		this.serieDocum.setEnabled(false);
 		this.btnBuscarProceso.setVisible(false);
+		this.tcMov.setEnabled(false);
 		
 		/*Si tiene permisos de editar habilitamos el boton de 
 		 * edicion*/
@@ -1190,6 +1191,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		//this.nroDocum.setEnabled(false);
 		this.impTotMo.setEnabled(true);
 		this.impTotMo.setReadOnly(false);
+		this.tcMov.setEnabled(true);
 		importeTotalCalculado = (double) 0;
 		
 		/*Chequeamos si tiene permiso de editar*/
@@ -1867,7 +1869,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
 		
 		try{
-			tcMonedaNacional = (Double) tcMov.getConvertedValue();
+			tcMonedaNacional = Double.valueOf(tcMov.getConvertedValue().toString());
 		}
 		catch(Exception e)
 		{
@@ -2057,7 +2059,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 			 * si se modifica  */
 			g.setLinea(lstDetalleVO.size() + 1);
 			
-			double tcAux = (Double)tcMov.getConvertedValue();
+			double tcAux = Double.valueOf(tcMov.getConvertedValue().toString());
 			
 			if(!g.isNacional()){
 				while(lstMonedas.size()>j && !salir){
@@ -2244,7 +2246,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 					if(f.getCodMoneda().equals(monedaVO.getCodMoneda())){
 						salir = true;
 						
-						double tcAux = (Double)tcMov.getConvertedValue();
+						double tcAux = Double.valueOf(tcMov.getConvertedValue().toString());
 						
 						if(tcAux != 0){
 							this.lstDetalleVO.add(f);
@@ -2464,7 +2466,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		auxMoneda = (MonedaVO) comboMoneda.getValue();
 			
 		datosCab.setCodMoneda(auxMoneda.getCodMoneda());
-		datosCab.setTc((Double) tcMov.getConvertedValue());
+		datosCab.setTc(Double.valueOf(tcMov.getConvertedValue().toString()));
 			
 		if(this.codProceso != null ){
 			if(this.codProceso.getValue() != "")

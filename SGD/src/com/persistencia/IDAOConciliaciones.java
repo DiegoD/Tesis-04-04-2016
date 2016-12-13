@@ -24,5 +24,6 @@ public interface IDAOConciliaciones {
 	public void eliminarConciliacion(Conciliacion conciliacion, Connection con, String codEmp) throws EliminandoConcialiacionException, ConexionException;
 	public void eliminarConciliacionDetalle(Conciliacion conciliacion, Connection con, String codEmp) throws EliminandoConcialiacionException, ConexionException;
 	public ArrayList<ConciliacionDetalle> getMovimientosBanco(Connection con, String codEmp, String codBco, String codCta) throws ObteniendoConciliacionException, ConexionException, ObteniendoCuentasBcoException, ObteniendoBancosException;
+	public void conciliarSaCuentas(ConciliacionDetalle conciliacion, Connection con, String codEmp, boolean conciliar) throws InsertandoConciliacionException, ConexionException;
 
 }

@@ -602,7 +602,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 			        if(value != ""){
 			        	
 			        	try {
-			        		cotizacionVenta = (Double) tcMov.getConvertedValue();
+			        		cotizacionVenta = Double.valueOf(tcMov.getConvertedValue().toString());
 						} catch (Exception e) {
 							// TODO: handle exception
 							return;
@@ -610,7 +610,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 			        	
 			        	
 			        	Double truncatedDouble = new BigDecimal(cotizacionVenta)
-							    .setScale(2, BigDecimal.ROUND_HALF_UP)
+							    .setScale(3, BigDecimal.ROUND_HALF_UP)
 							    .doubleValue();
 						
 			        	cotizacionVenta = truncatedDouble;
@@ -706,7 +706,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 					{
 //						coti = this.controlador.getCotizacion(permisoAux, fecha, this.getCodMonedaSeleccionada());
 //						ingCobroVO.setTcMov(coti.getCotizacionVenta());
-						ingCobroVO.setTcMov((double) tcMov.getConvertedValue());
+						ingCobroVO.setTcMov(Double.valueOf(tcMov.getConvertedValue().toString()));
 						ingCobroVO.setImpTotMn((ingCobroVO.getImpTotMo()*ingCobroVO.getTcMov()));
 					}
 					
@@ -958,13 +958,13 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 			{
 				try {
 				
-					GastoViewExtended form = new GastoViewExtended(Variables.OPERACION_NUEVO, this, titularVO);
+					GastoViewExtended form = new GastoViewExtended(Variables.OPERACION_NUEVO, this, titularVO, "Egreso");
 					
 					sub = new MySub("100%","45%");
 					sub.setModal(true);
 					//sub.setVista(form);
 					sub.setVista((Component) form);
-					sub.setHeight("90%");
+					sub.setHeight("92%");
 					sub.setWidth("46%");
 					sub.center();
 					
@@ -1167,8 +1167,8 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 			    		item.getBean().setFechaMod(new Timestamp(System.currentTimeMillis()));
 			    	}
 					
-			    	GastoViewExtended form = new GastoViewExtended(Variables.OPERACION_LECTURA, this, titularVO);
-			    	sub = new MySub("100%","50%");
+			    	GastoViewExtended form = new GastoViewExtended(Variables.OPERACION_LECTURA, this, titularVO, "Egreso");
+			    	sub = new MySub("92%","50%");
 					sub.setModal(true);
 					sub.setVista((Component) form);
 					/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
@@ -1437,6 +1437,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		this.lblFuncionario.setVisible(false);
 		this.btnBuscarCliente.setVisible(false);
 		this.impTotMo.setEnabled(false);
+		this.tcMov.setEnabled(false);
 		/*Si tiene permisos de editar habilitamos el boton de 
 		 * edicion*/
 		if(permisoNuevoEditar){
@@ -1546,6 +1547,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		this.lblFuncionario.setVisible(true);
 		this.impTotMo.setEnabled(true);
 		this.impTotMo.setReadOnly(false);
+		this.tcMov.setEnabled(true);
 		importeTotalCalculado = (double) 0;
 		
 		/*Chequeamos si tiene permiso de editar*/
@@ -2408,7 +2410,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
 		
 		try{
-			tcMonedaNacional = (Double) tcMov.getConvertedValue();
+			tcMonedaNacional = Double.valueOf(tcMov.getConvertedValue().toString());
 		}
 		catch(Exception e)
 		{

@@ -14,6 +14,7 @@ public class ConciliacionDetalleVO {
 	private double impTotMn;
 	private double impTotMo;
 	private String codEmp;
+	private String descripcion;
 	
 	public String getCod_docum() {
 		return cod_docum;
@@ -74,6 +75,12 @@ public class ConciliacionDetalleVO {
 	}
 	public void setCodEmp(String codEmp) {
 		this.codEmp = codEmp;
+	}
+	public String getDescripcion() {
+		return descripcion;
+	}
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
 	}
 	
 	

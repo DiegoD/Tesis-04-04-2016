@@ -27,6 +27,7 @@ public class ConciliacionVO extends AuditoriaVO{
 	private String nomBanco;
 	private String nomCuenta;
 	private String codCuenta;
+	private String tipo;
 	private ArrayList<ConciliacionDetalleVO> lstDetalle;
 	
 	public ConciliacionVO(){
@@ -56,6 +57,7 @@ public class ConciliacionVO extends AuditoriaVO{
 		this.setNomCuenta(conc.getNomCuenta());
 		this.setCodCuenta(conc.getCodCuenta());
 		this.setLstDetalle(conc.getLstDetalle());
+		this.setTipo(conc.getTipo());
 		
 	}
 	
@@ -196,6 +198,14 @@ public class ConciliacionVO extends AuditoriaVO{
 	}
 	public void setLstDetalle(ArrayList<ConciliacionDetalleVO> lstDetalle) {
 		this.lstDetalle = lstDetalle;
+	}
+
+	public String getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
 	}
 	
 	

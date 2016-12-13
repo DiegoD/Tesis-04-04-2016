@@ -85,6 +85,8 @@ public class DAOSaldoCuentas implements IDAOSaldosCuentas{
 			pstmt1.setString(19, documento.getCodCtaBco());
 			pstmt1.setString(20, documento.getMovimiento());
 			pstmt1.setInt(21, documento.getSigno());
+			pstmt1.setTimestamp(22, documento.getFecDoc());
+			pstmt1.setTimestamp(23, documento.getFecValor());
 			
 			pstmt1.executeUpdate ();
 			pstmt1.close ();

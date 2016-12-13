@@ -40,6 +40,7 @@ import com.valueObject.Conciliaciones.ConciliacionVO;
 import com.valueObject.Cotizacion.CotizacionVO;
 import com.valueObject.Deposito.DepositoDetalleVO;
 import com.valueObject.Deposito.DepositoVO;
+import com.valueObject.Numeradores.NumeradoresVO;
 import com.valueObject.banco.BancoVO;
 import com.valueObject.banco.CtaBcoVO;
 
@@ -122,7 +123,7 @@ public class ConciliacionControlador {
 //			throw new NoTienePermisosException();
 //	}
 //	
-	public Integer insertarConciliacion(UsuarioPermisosVO permisos, ConciliacionVO conciliacion) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoConciliacionException, ObteniendoCuentasBcoException, ObteniendoBancosException, InsertandoConciliacionException, ExisteConciliacionException {
+	public NumeradoresVO insertarConciliacion(UsuarioPermisosVO permisos, ConciliacionVO conciliacion) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoConciliacionException, ObteniendoCuentasBcoException, ObteniendoBancosException, InsertandoConciliacionException, ExisteConciliacionException {
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))

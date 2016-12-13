@@ -71,7 +71,7 @@ public class GastosPanelExtended extends GastosPanel implements IGastosMain{
 					this.btnNuevoGasto.addClickListener(click -> {
 						
 						sub = new MySub("50%","45%");
-						form = new GastoViewExtended(Variables.OPERACION_NUEVO, this, null);
+						form = new GastoViewExtended(Variables.OPERACION_NUEVO, this, null, "Gasto");
 						sub.setModal(true);
 						sub.setVista((Component) form);
 						
@@ -193,7 +193,7 @@ public class GastosPanelExtended extends GastosPanel implements IGastosMain{
 				    		item.getBean().setFechaMod(new Timestamp(System.currentTimeMillis()));
 				    	}
 							
-				    	form = new GastoViewExtended(Variables.OPERACION_LECTURA, GastosPanelExtended.this, null);
+				    	form = new GastoViewExtended(Variables.OPERACION_LECTURA, GastosPanelExtended.this, null, "Gasto");
 				    	sub = new MySub("50%","45%");
 						sub.setModal(true);
 						sub.setVista((Component) form);
@@ -434,15 +434,15 @@ public class GastosPanelExtended extends GastosPanel implements IGastosMain{
 	
 	public void setSub(String seleccion){
 		if(seleccion.equals("Proceso")){
-			sub.setHeight("90%");
-			sub.setWidth("46%");
+			sub.setHeight("95%");
+			sub.setWidth("50%");
 		}
 		if(seleccion.equals("Empleado")){
-			sub.setHeight("85%");
+			sub.setHeight("87%");
 			sub.setWidth("46%");
 		}
 		if(seleccion.equals("Oficina")){
-			sub.setHeight("78%");
+			sub.setHeight("80%");
 			sub.setWidth("46%");
 		}
 		

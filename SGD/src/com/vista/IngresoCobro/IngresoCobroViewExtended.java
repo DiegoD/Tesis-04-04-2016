@@ -1553,7 +1553,6 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		
 		this.impTotMo.setReadOnly(false);
 		this.impTotMo.setEnabled(true);
-		this.tcMov.setReadOnly(false);
 		this.monedaBanco.setEnabled(false);
 		this.cuentaBanco.setEnabled(false);
 		this.referencia.setReadOnly(false);

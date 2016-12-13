@@ -31,7 +31,9 @@ public class ConciliacionView extends FormLayout {
 	protected Label lblFechaValor;
 	protected DateField fecValor;
 	protected TextField nroTrans;
+	protected HorizontalLayout horizontalMoneda;
 	protected ComboBox comboMoneda;
+	protected HorizontalLayout horizontalBanco;
 	protected ComboBox comboBancos;
 	protected Label lblCuentaBanco;
 	protected ComboBox comboCuentas;
