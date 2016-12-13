@@ -104,6 +104,57 @@ public class DAOConciliaciones implements IDAOConciliaciones{
     	
     	return lstMovimientos;
 	}
+	
+	public ArrayList<ConciliacionDetalle> getMovimientosCajaMoneda(Connection con, String codEmp, String codMoneda) throws ObteniendoConciliacionException, ConexionException, ObteniendoCuentasBcoException, ObteniendoBancosException {
+		
+		ArrayList<ConciliacionDetalle> lstMovimientos = new ArrayList<ConciliacionDetalle>();
+	
+		try {
+			
+	    	ConsultasDD clts = new ConsultasDD();
+	    	String query = clts.getMovimientosCajaMoneda();
+	    	PreparedStatement pstmt1 = con.prepareStatement(query);
+	    	
+	    	ResultSet rs;
+	    	
+	    	pstmt1.setString(1, codEmp);
+	    	pstmt1.setString(2, codMoneda);
+	    	
+			rs = pstmt1.executeQuery();
+			
+			ConciliacionDetalle aux = null;
+			
+			while(rs.next ()) {
+							
+				aux = new ConciliacionDetalle();
+				
+				aux.setCod_docum(rs.getString("cod_docum"));
+				aux.setSerie_docum(rs.getString("serie_docum"));
+				aux.setNro_docum(rs.getInt("nro_docum"));
+				aux.setFecValor(rs.getTimestamp("fec_valor"));
+				aux.setFecDoc(rs.getTimestamp("fec_doc"));
+				aux.setImpTotMn(rs.getDouble("imp_tot_mn"));
+				aux.setImpTotMo(rs.getDouble("imp_tot_mo"));
+				aux.setCod_emp(rs.getString("cod_emp"));
+				aux.setDescripcion(rs.getString("referencia"));
+				
+				lstMovimientos.add(aux);
+				
+			}
+			rs.close ();
+			pstmt1.close ();
+			
+    	}	
+    	
+		catch (SQLException e) {
+			throw new ObteniendoConciliacionException();
+			
+		}
+    	
+    	return lstMovimientos;
+	}
+	
+	
 	/**
 	 * Nos retorna una lista con todos las conciliaciones del sistema para la emrpesa
 	 */

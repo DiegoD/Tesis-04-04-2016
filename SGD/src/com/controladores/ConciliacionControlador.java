@@ -26,6 +26,7 @@ import com.excepciones.Depositos.ObteniendoDepositoException;
 import com.excepciones.IngresoCobros.ExisteIngresoCobroException;
 import com.excepciones.IngresoCobros.ModificandoIngresoCobroException;
 import com.excepciones.IngresoCobros.NoExisteIngresoCobroException;
+import com.excepciones.Monedas.ObteniendoMonedaException;
 import com.excepciones.SaldoCuentas.EliminandoSaldoCuetaException;
 import com.excepciones.Saldos.ExisteSaldoException;
 import com.excepciones.Saldos.ModificandoSaldoException;
@@ -33,6 +34,7 @@ import com.excepciones.Titulares.ObteniendoTitularesException;
 import com.excepciones.clientes.ObteniendoClientesException;
 import com.logica.Fachada;
 import com.logica.FachadaDD;
+import com.valueObject.MonedaVO;
 import com.valueObject.TitularVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.Conciliaciones.ConciliacionDetalleVO;
@@ -59,7 +61,7 @@ public class ConciliacionControlador {
 			throw new NoTienePermisosException();
 	}
 	
-	public ArrayList<ConciliacionDetalleVO> getMovimientos(UsuarioPermisosVO permisos, String codBco, String codCtaBco) throws ObteniendoConciliacionException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoCuentasBcoException, ObteniendoBancosException {
+	public ArrayList<ConciliacionDetalleVO> getMovimientosBanco(UsuarioPermisosVO permisos, String codBco, String codCtaBco) throws ObteniendoConciliacionException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoCuentasBcoException, ObteniendoBancosException {
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
@@ -68,6 +70,14 @@ public class ConciliacionControlador {
 			throw new NoTienePermisosException();
 	}
 	
+	public ArrayList<ConciliacionDetalleVO> getMovimientosCaja(UsuarioPermisosVO permisos, String codMoneda) throws ObteniendoConciliacionException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoCuentasBcoException, ObteniendoBancosException {
+		
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			return FachadaDD.getInstance().getMovimientosCajaMoneda(permisos.getCodEmp(), codMoneda);
+		else
+			throw new NoTienePermisosException();
+	}
 	
 	/**
 	 * Elimina una conciliación 
@@ -141,4 +151,12 @@ public class ConciliacionControlador {
 			throw new NoTienePermisosException();
 	}
 
+	public ArrayList<MonedaVO> getMonedas(UsuarioPermisosVO permisos) throws ObteniendoMonedaException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException{
+		
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			return FachadaDD.getInstance().getMonedasActivas(permisos.getCodEmp());
+		else
+			throw new NoTienePermisosException();
+	}
 }

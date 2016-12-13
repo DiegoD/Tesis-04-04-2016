@@ -4823,4 +4823,41 @@ public class FachadaDD {
 		return lstMovimientosVO;
 
 	}
+	
+	@SuppressWarnings("unchecked")
+	public ArrayList<ConciliacionDetalleVO> getMovimientosCajaMoneda(String codEmp, String codMoneda) throws ObteniendoConciliacionException, ConexionException, ObteniendoCuentasBcoException, ObteniendoBancosException
+	{
+
+		Connection con = null;
+		ArrayList<ConciliacionDetalle> lstMovimientos;
+		ArrayList<ConciliacionDetalleVO> lstMovimientosVO = new ArrayList<ConciliacionDetalleVO>();
+
+		try 	
+		{
+			con = this.pool.obtenerConeccion();
+			lstMovimientos = this.conciliaciones.getMovimientosCajaMoneda(con, codEmp, codMoneda);
+			
+			ConciliacionDetalleVO aux;
+			
+			for (ConciliacionDetalle conciliacion: lstMovimientos) 
+			{
+				aux = new ConciliacionDetalleVO();
+				
+				aux = conciliacion.retornarConciliacionDetalleVO(conciliacion);
+				
+				lstMovimientosVO.add(aux);
+			}
+		}
+		
+		catch (ConexionException e) {
+			throw e;
+		}	 
+
+		finally{
+			this.pool.liberarConeccion(con);
+		}
+
+		return lstMovimientosVO;
+
+	}
 }

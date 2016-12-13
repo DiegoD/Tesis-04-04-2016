@@ -2176,6 +2176,23 @@ public String eliminarSaldoCuenta(){
 		
 		return sb.toString();
 	}	
+	
+	public String getMovimientosCajaMoneda(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("select sa_cuentas.cod_docum, sa_cuentas.serie_docum, sa_cuentas.nro_docum, sa_cuentas.cod_doc_ref, "
+				+ "sa_cuentas.serie_doc_ref, sa_cuentas.nro_doc_ref, sa_cuentas.fec_doc, sa_cuentas.fec_valor, "
+				+ "sa_cuentas.imp_tot_mn, sa_cuentas.imp_tot_mo, sa_cuentas.cod_emp, sa_cuentas.referencia ");
+
+		sb.append(" from sa_cuentas ");
+		
+		sb.append("WHERE sa_cuentas.cod_bco = '0' and sa_cuentas.cod_ctabco = '0' "
+		+ "and sa_cuentas.cod_emp = ? and sa_cuentas.cod_moneda = ? "
+		+ "and sa_cuentas.conciliado = 0  ");
+		
+		return sb.toString();
+	}	
 
 	public String getCabezalConciliacion(){
 	

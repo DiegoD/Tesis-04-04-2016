@@ -17,6 +17,7 @@ import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Bancos.ObteniendoBancosException;
 import com.excepciones.Bancos.ObteniendoCuentasBcoException;
 import com.excepciones.Conciliaciones.ObteniendoConciliacionException;
+import com.excepciones.Monedas.ObteniendoMonedaException;
 import com.excepciones.clientes.ObteniendoClientesException;
 import com.logica.MonedaInfo;
 import com.vaadin.data.Property;
@@ -67,6 +68,7 @@ private static final long serialVersionUID = 1L;
 	MySub sub;
 	Double importeTotalCalculado;
 	NumeradoresVO codigos;
+	MonedaVO moneda;
 	
 	public ConciliacionViewExtended(String opera, ConciliacionesPanelExtended main){
 		
@@ -88,6 +90,26 @@ private static final long serialVersionUID = 1L;
 					bcoAux = (BancoVO) comboBancos.getValue();
 					
 					inicializarComboCuentas(bcoAux.getCodigo(), "Banco");
+				}		
+			}
+	    });
+		
+		comboMoneda.addValueChangeListener(new Property.ValueChangeListener() {
+
+			@Override
+			public void valueChange(ValueChangeEvent event) {
+				
+				if(comboMoneda.getValue() != null){
+					
+					try {
+						inicializarGrilla();
+					} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException
+							| ConexionException | InicializandoException | ObteniendoPermisosException
+							| NoTienePermisosException | ObteniendoConciliacionException | ObteniendoCuentasBcoException
+							| ObteniendoBancosException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}		
 			}
 	    });
@@ -286,24 +308,34 @@ private static final long serialVersionUID = 1L;
 						
 						conciliacion.setTipo(comboCajaBanco.getValue().toString());
 						
-						BancoVO banco = new BancoVO();
-						banco = (BancoVO) comboBancos.getValue();
-						conciliacion.setNomBanco(banco.getNombre());
-						conciliacion.setCodBanco(banco.getCodigo());
+						if(comboCajaBanco.getValue().equals("Banco")){
+							BancoVO banco = new BancoVO();
+							banco = (BancoVO) comboBancos.getValue();
+							conciliacion.setNomBanco(banco.getNombre());
+							conciliacion.setCodBanco(banco.getCodigo());
+							
+							CtaBcoVO cuentaBanco = new CtaBcoVO();
+							cuentaBanco = (CtaBcoVO) comboCuentas.getValue();
+							conciliacion.setCodCuenta(cuentaBanco.getCodigo());
+							conciliacion.setNomCuenta(cuentaBanco.getNombre());
+							conciliacion.setCodMoneda(cuentaBanco.getMonedaVO().getCodMoneda());
+							
+							moneda = new MonedaVO();
+							moneda.setCodMoneda(cuentaBanco.getMonedaVO().getCodMoneda());
+							moneda.setNacional(cuentaBanco.getMonedaVO().isNacional());
+							moneda.setDescripcion(cuentaBanco.getMonedaVO().getDescripcion());
+							moneda.setSimbolo(cuentaBanco.getMonedaVO().getSimbolo());
+							conciliacion.setCodMoneda(moneda.getCodMoneda());
+							conciliacion.setDescripcion(moneda.getDescripcion());
+						}
 						
-						CtaBcoVO cuentaBanco = new CtaBcoVO();
-						cuentaBanco = (CtaBcoVO) comboCuentas.getValue();
-						conciliacion.setCodCuenta(cuentaBanco.getCodigo());
-						conciliacion.setNomCuenta(cuentaBanco.getNombre());
-						conciliacion.setCodMoneda(cuentaBanco.getMonedaVO().getCodMoneda());
+						else{
+							moneda = new MonedaVO();
+							moneda = (MonedaVO) comboMoneda.getValue();
+							conciliacion.setCodMoneda(moneda.getCodMoneda());
+							conciliacion.setDescripcion(moneda.getDescripcion());
+						}
 						
-						MonedaInfo moneda = new MonedaInfo();
-						moneda.setCodMoneda(cuentaBanco.getMonedaVO().getCodMoneda());
-						moneda.setNacional(cuentaBanco.getMonedaVO().isNacional());
-						moneda.setDescripcion(cuentaBanco.getMonedaVO().getDescripcion());
-						moneda.setSimbolo(cuentaBanco.getMonedaVO().getSimbolo());
-						conciliacion.setCodMoneda(moneda.getCodMoneda());
-						conciliacion.setDescripcion(moneda.getDescripcion());
 						
 						conciliacion.setImpTotMo((Double)impTotMo.getConvertedValue());
 						
@@ -396,6 +428,7 @@ private static final long serialVersionUID = 1L;
 		
 		this.inicializarComboBancos(null);
 		this.inicializarComboCuentas(null, "");
+		this.inicializarComboMoneda(null);
 		
 		this.monedaBanco.setEnabled(false);
 		this.cuentaBanco.setEnabled(false);
@@ -444,6 +477,7 @@ private static final long serialVersionUID = 1L;
 		this.inicializarComboBancos(ing.getCodBanco());
 		this.inicializarComboCuentas(ing.getCodCuenta(), "CuentaBanco");
 		this.inicializarComboCajaBanco(ing.getTipo());
+		this.inicializarComboMoneda(ing.getCodMoneda());
 		
 		if(this.operacion.equals(Variables.OPERACION_LECTURA))
 			this.iniFormLectura();
@@ -806,22 +840,33 @@ private static final long serialVersionUID = 1L;
 							VariablesPermisos.FORMULARIO_CONCILIACION,
 							VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
-		BancoVO bcoAux = null;
-		if(comboBancos.getValue() != null){
-			bcoAux = new BancoVO();
-			bcoAux = (BancoVO) comboBancos.getValue();
-		}		
-		
-		CtaBcoVO ctaBcoAux;
-		ctaBcoAux = new CtaBcoVO();
-		if(comboCuentas.getValue() != null){
-			ctaBcoAux = (CtaBcoVO) comboCuentas.getValue();
+		if(this.comboCajaBanco.equals("Banco")){
+			BancoVO bcoAux = null;
+			if(comboBancos.getValue() != null){
+				bcoAux = new BancoVO();
+				bcoAux = (BancoVO) comboBancos.getValue();
+			}		
+			
+			CtaBcoVO ctaBcoAux;
+			ctaBcoAux = new CtaBcoVO();
+			if(comboCuentas.getValue() != null){
+				ctaBcoAux = (CtaBcoVO) comboCuentas.getValue();
+				//Obtenemos lista de movimientos sin conciliar para el banco/cuenta 
+				this.lstDetalle = this.controlador.getMovimientosBanco(permisoAux, ctaBcoAux.getCodigo(), bcoAux.getCodigo());
+			}
+			
+			
 			
 		}
 		
-		//Obtenemos lista de movimientos sin conciliar para el banco/cuenta 
-		this.lstDetalle = this.controlador.getMovimientos(permisoAux, ctaBcoAux.getCodigo(), bcoAux.getCodigo());
-		
+		else{
+			MonedaVO moneda = null;
+			if(comboMoneda.getValue()!= null){
+				moneda = new MonedaVO();
+				moneda = (MonedaVO) comboMoneda.getValue();
+				this.lstDetalle = this.controlador.getMovimientosCaja(permisoAux, moneda.getCodMoneda());
+			}
+		}
 		container.removeAllItems();
 		
 		for (ConciliacionDetalleVO conciliacionDetalleVO : lstDetalle) {
@@ -884,11 +929,20 @@ private static final long serialVersionUID = 1L;
 	
 	private void setearValidaciones(boolean setear){
 		
-		this.comboBancos.setRequired(setear);
-		this.comboBancos.setRequiredError("Es requerido");
+		if(comboCajaBanco.getValue()!=null){
+			if(comboCajaBanco.getValue().equals("Banco")){
+				this.comboBancos.setRequired(setear);
+				this.comboBancos.setRequiredError("Es requerido");
+				
+				this.comboCuentas.setRequired(setear);
+				this.comboCuentas.setRequiredError("Es requerido");
+			}
+			else{
+				this.comboMoneda.setRequired(setear);
+				this.comboMoneda.setRequiredError("Es requerido");
+			}
+		}
 		
-		this.comboCuentas.setRequired(setear);
-		this.comboCuentas.setRequiredError("Es requerido");
 		
 		this.impTotMo.setRequired(setear);
 		this.impTotMo.setRequiredError("Es requerido");
@@ -1161,6 +1215,56 @@ private static final long serialVersionUID = 1L;
 		catch (Exception e) {
 			Mensajes.mostrarMensajeError(e.getMessage());
 		}	
+		
+	}
+	
+	public void inicializarComboMoneda(String cod){
+		
+		//this.comboMoneda = new ComboBox();
+		BeanItemContainer<MonedaVO> monedasObj = new BeanItemContainer<MonedaVO>(MonedaVO.class);
+		MonedaVO moneda = new MonedaVO();
+		ArrayList<MonedaVO> lstMonedas = new ArrayList<MonedaVO>();
+		UsuarioPermisosVO permisosAux;
+		
+		try {
+			permisosAux = 
+					new UsuarioPermisosVO(this.permisos.getCodEmp(),
+							this.permisos.getUsuario(),
+							VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
+							VariablesPermisos.OPERACION_NUEVO_EDITAR);
+			
+			lstMonedas = this.controlador.getMonedas(permisosAux);
+			
+		} catch (ObteniendoMonedaException | InicializandoException | ConexionException | ObteniendoPermisosException | NoTienePermisosException e) {
+
+			Mensajes.mostrarMensajeError(e.getMessage());
+		}
+		
+		for (MonedaVO monedaVO : lstMonedas) {
+			
+			monedasObj.addBean(monedaVO);
+			
+			if(cod != null){
+				if(cod.equals(monedaVO.getCodMoneda())){
+					moneda = monedaVO;
+				}
+			}
+		}
+		
+		
+		this.comboMoneda.setContainerDataSource(monedasObj);
+		this.comboMoneda.setItemCaptionPropertyId("descripcion");
+		
+		
+		if(cod!=null)
+		{
+			try{
+				this.comboMoneda.setReadOnly(false);
+				this.comboMoneda.setValue(moneda);
+				this.comboMoneda.setReadOnly(true);
+			}catch(Exception e)
+			{}
+		}
 		
 	}
 }
