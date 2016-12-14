@@ -32,6 +32,7 @@ import com.vaadin.server.VaadinService;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Grid.SelectionMode;
+import com.vaadin.ui.Notification;
 import com.valueObject.MonedaVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.Conciliaciones.ConciliacionDetalleVO;
@@ -69,6 +70,7 @@ private static final long serialVersionUID = 1L;
 	Double importeTotalCalculado;
 	NumeradoresVO codigos;
 	MonedaVO moneda;
+	double saldoConciliadoMoneda = 0;
 	
 	public ConciliacionViewExtended(String opera, ConciliacionesPanelExtended main){
 		
@@ -93,7 +95,8 @@ private static final long serialVersionUID = 1L;
 				}		
 			}
 	    });
-		
+	
+				
 		comboMoneda.addValueChangeListener(new Property.ValueChangeListener() {
 
 			@Override
@@ -114,6 +117,27 @@ private static final long serialVersionUID = 1L;
 			}
 	    });
 		
+//		gridDetalle.addEventListener(AdvancedDataGridEvent.ITEM_FOCUS_IN, clickedRow);
+//		
+//		console.log("Selected: " + gridDetalle.addSelectionListener(listener);.selection.selected());
+		
+		gridDetalle.addSelectionListener(selection -> { // Java 8
+			
+			Collection<Object> col= gridDetalle.getSelectedRows();
+			
+			ConciliacionDetalleVO aux;
+			
+			if(this.operacion.equals(Variables.OPERACION_NUEVO)){
+				importeTotalCalculado = (double) 0;
+				for (Object object : col) {
+					
+					aux = (ConciliacionDetalleVO)object;
+					importeTotalCalculado = importeTotalCalculado + aux.getImpTotMo();
+				}
+			}
+			this.impTotMo.setConvertedValue(importeTotalCalculado);
+		});
+		
 		comboCajaBanco.addValueChangeListener(new Property.ValueChangeListener() {
 
 			@Override
@@ -123,17 +147,17 @@ private static final long serialVersionUID = 1L;
 					if(comboCajaBanco.getValue().equals("Caja")){
 						horizontalBanco.setVisible(false);
 						horizontalMoneda.setVisible(true);
+						container.removeAllItems();
 					}
 					else{
 						horizontalMoneda.setVisible(false);
 						horizontalBanco.setVisible(true);
+						container.removeAllItems();
 					}
 				}		
 			}
 	    });
-		
-		
-		
+			
 		comboCuentas.addValueChangeListener(new Property.ValueChangeListener() {
 	    	
 	    	@Override
@@ -349,25 +373,6 @@ private static final long serialVersionUID = 1L;
 							return;
 						}
 						
-						if(moneda.isNacional()) /*Si la moneda seleccionada es nacional*/
-						{
-							conciliacion.setImpTotMn(conciliacion.getImpTotMo());
-							
-						}else
-						{
-							Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
-							CotizacionVO coti = null;
-							coti = this.controlador.getCotizacion(permisoAux, fecha, moneda.getCodMoneda());
-							if(coti.getCotizacionVenta() != 0){
-								tcMov = coti.getCotizacionVenta();
-								conciliacion.setImpTotMn((conciliacion.getImpTotMo()*tcMov));
-							}
-							else{
-								Mensajes.mostrarMensajeError("Debe cargar la cotización para la moneda");
-								return;
-							}
-							
-						}
 						
 						conciliacion.setObservaciones(observaciones.getValue());
 						
@@ -417,6 +422,8 @@ private static final long serialVersionUID = 1L;
 		    
 			
 		});
+		
+		
 
 	} 
 	
@@ -432,6 +439,8 @@ private static final long serialVersionUID = 1L;
 		
 		this.monedaBanco.setEnabled(false);
 		this.cuentaBanco.setEnabled(false);
+		this.importeConciliado.setEnabled(false);
+		this.impTotMo.setEnabled(false);
 		
 		inicializarCampos();
 		
@@ -490,6 +499,9 @@ private static final long serialVersionUID = 1L;
 		boolean permisoEliminar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_CONCILIACION, VariablesPermisos.OPERACION_BORRAR);
 		
 		gridDetalle.setSelectionMode(SelectionMode.NONE);
+		this.importeConciliado.setVisible(false);
+		this.lblConciliado.setVisible(false);
+		this.horizontalImportes.setCaption("Importe");
 		
 		/*Si tiene permisos de editar habilitamos el boton de 
 		 * edicion*/
@@ -826,6 +838,9 @@ private static final long serialVersionUID = 1L;
 		impTotMo.setConverter(Double.class);
 		impTotMo.setConversionError("Error en formato de número");
 		
+		importeConciliado.setConverter(Double.class);
+		importeConciliado.setConversionError("Error en formato de número");
+		
 		nroTrans.setConverter(Long.class);
 		nroTrans.setConversionError("Error en formato de número");
 		
@@ -840,33 +855,41 @@ private static final long serialVersionUID = 1L;
 							VariablesPermisos.FORMULARIO_CONCILIACION,
 							VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
-		if(this.comboCajaBanco.equals("Banco")){
-			BancoVO bcoAux = null;
-			if(comboBancos.getValue() != null){
-				bcoAux = new BancoVO();
-				bcoAux = (BancoVO) comboBancos.getValue();
-			}		
-			
-			CtaBcoVO ctaBcoAux;
-			ctaBcoAux = new CtaBcoVO();
-			if(comboCuentas.getValue() != null){
-				ctaBcoAux = (CtaBcoVO) comboCuentas.getValue();
-				//Obtenemos lista de movimientos sin conciliar para el banco/cuenta 
-				this.lstDetalle = this.controlador.getMovimientosBanco(permisoAux, ctaBcoAux.getCodigo(), bcoAux.getCodigo());
+		if(this.comboCajaBanco.getValue()!=null){
+			if(this.comboCajaBanco.getValue().equals("Banco")){
+				BancoVO bcoAux = null;
+				if(comboBancos.getValue() != null){
+					bcoAux = new BancoVO();
+					bcoAux = (BancoVO) comboBancos.getValue();
+				}		
+				
+				CtaBcoVO ctaBcoAux;
+				ctaBcoAux = new CtaBcoVO();
+				if(comboCuentas.getValue() != null){
+					ctaBcoAux = (CtaBcoVO) comboCuentas.getValue();
+					//Obtenemos lista de movimientos sin conciliar para el banco/cuenta 
+					this.lstDetalle = this.controlador.getMovimientosBanco(permisoAux, ctaBcoAux.getCodBco(), ctaBcoAux.getCodigo());
+					this.saldoConciliadoMoneda = this.controlador.getSaldoConciliadoCuentaBAnco(permisoAux, ctaBcoAux.getCodBco(), ctaBcoAux.getCodigo());
+					this.importeConciliado.setConvertedValue(saldoConciliadoMoneda);
+					
+				}
+				
+				
+				
 			}
 			
-			
-			
+			else{
+				MonedaVO moneda = null;
+				if(comboMoneda.getValue()!= null){
+					moneda = new MonedaVO();
+					moneda = (MonedaVO) comboMoneda.getValue();
+					this.lstDetalle = this.controlador.getMovimientosCaja(permisoAux, moneda.getCodMoneda());
+					this.saldoConciliadoMoneda = this.controlador.getSaldoConciliadoMoneda(permisoAux, moneda.getCodMoneda());
+					this.importeConciliado.setConvertedValue(saldoConciliadoMoneda);
+				}
+			}
 		}
 		
-		else{
-			MonedaVO moneda = null;
-			if(comboMoneda.getValue()!= null){
-				moneda = new MonedaVO();
-				moneda = (MonedaVO) comboMoneda.getValue();
-				this.lstDetalle = this.controlador.getMovimientosCaja(permisoAux, moneda.getCodMoneda());
-			}
-		}
 		container.removeAllItems();
 		
 		for (ConciliacionDetalleVO conciliacionDetalleVO : lstDetalle) {

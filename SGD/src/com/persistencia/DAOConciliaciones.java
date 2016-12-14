@@ -363,6 +363,7 @@ public class DAOConciliaciones implements IDAOConciliaciones{
 			pstmt1.setTimestamp(8, detalle.getFecDoc());
 			pstmt1.setTimestamp(9, detalle.getFecValor());
 			pstmt1.setString(10, detalle.getDescripcion());
+			pstmt1.setInt(11, linea);
 			
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
@@ -476,6 +477,73 @@ public class DAOConciliaciones implements IDAOConciliaciones{
 			
 			throw new InsertandoConciliacionException();
 		}
+	}
+	
+	public double getSaldoConciliadoMoneda(Connection con, String codEmp, String codMoneda) throws ObteniendoConciliacionException, ConexionException, ObteniendoCuentasBcoException, ObteniendoBancosException {
+		
+		Double saldo_conciliado = (double) 0;
+		try {
+			
+	    	ConsultasDD clts = new ConsultasDD();
+	    	String query = clts.getSaldoConciliadoMoneda();
+	    	PreparedStatement pstmt1 = con.prepareStatement(query);
+	    	
+	    	ResultSet rs;
+	    	
+	    	pstmt1.setString(1, codEmp);
+	    	pstmt1.setString(2, codMoneda);
+	    	
+			rs = pstmt1.executeQuery();
+			
+			while(rs.next ()) {
+				
+				saldo_conciliado = rs.getDouble("sum(imp_tot_mo)");	
+			}
+			rs.close ();
+			pstmt1.close ();
+			
+    	}	
+    	
+		catch (SQLException e) {
+			throw new ObteniendoConciliacionException();
+			
+		}
+    	
+    	return saldo_conciliado;
+	}
+	
+	public double getSaldoConciliadoCuentaBanco(Connection con, String codBco, String codCta, String codEmp) throws ObteniendoConciliacionException, ConexionException, ObteniendoCuentasBcoException, ObteniendoBancosException {
+		
+		Double saldo_conciliado = (double) 0;
+		try {
+			
+	    	ConsultasDD clts = new ConsultasDD();
+	    	String query = clts.getSaldoConciliadoCuentaBanco();
+	    	PreparedStatement pstmt1 = con.prepareStatement(query);
+	    	
+	    	ResultSet rs;
+	    	
+	    	pstmt1.setString(1, codBco);
+	    	pstmt1.setString(2, codCta);
+	    	pstmt1.setString(3, codEmp);
+	    	
+			rs = pstmt1.executeQuery();
+			
+			while(rs.next ()) {
+				
+				saldo_conciliado = rs.getDouble("sum(imp_tot_mo)");	
+			}
+			rs.close ();
+			pstmt1.close ();
+			
+    	}	
+    	
+		catch (SQLException e) {
+			throw new ObteniendoConciliacionException();
+			
+		}
+    	
+    	return saldo_conciliado;
 	}
 	
 }

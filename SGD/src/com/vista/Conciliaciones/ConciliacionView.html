@@ -46,8 +46,10 @@
       <vaadin-text-field style-name="tiny" width="40px" _id="monedaBanco"></vaadin-text-field> 
       <vaadin-text-field style-name="tiny" width="108px" _id="cuentaBanco"></vaadin-text-field> 
      </vaadin-horizontal-layout> 
-     <vaadin-horizontal-layout caption="Importe" responsive width="100px"> 
-      <vaadin-text-field style-name="tiny" null-representation="" width="110px" _id="impTotMo"></vaadin-text-field> 
+     <vaadin-horizontal-layout caption="A conciliar" spacing responsive _id="horizontalImportes"> 
+      <vaadin-text-field style-name="tiny" null-representation="0	" width="110px" _id="impTotMo"></vaadin-text-field> 
+      <vaadin-label caption="Conciliado" size-auto _id="lblConciliado" :middle></vaadin-label> 
+      <vaadin-text-field style-name="tiny" null-representation="0" width="99px" _id="importeConciliado"></vaadin-text-field> 
      </vaadin-horizontal-layout> 
      <vaadin-horizontal-layout caption="Observaciones" responsive> 
       <vaadin-text-field style-name="tiny" width="488px" _id="observaciones"></vaadin-text-field> 

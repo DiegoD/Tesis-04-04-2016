@@ -159,4 +159,22 @@ public class ConciliacionControlador {
 		else
 			throw new NoTienePermisosException();
 	}
+	
+	public double getSaldoConciliadoMoneda(UsuarioPermisosVO permisos, String codMoneda) throws ObteniendoConciliacionException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoCuentasBcoException, ObteniendoBancosException {
+		
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			return FachadaDD.getInstance().getSaldoConciliadoMoneda(permisos.getCodEmp(), codMoneda);
+		else
+			throw new NoTienePermisosException();
+	}
+	
+	public double getSaldoConciliadoCuentaBAnco(UsuarioPermisosVO permisos, String codBanco, String codCuenta) throws ObteniendoConciliacionException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoCuentasBcoException, ObteniendoBancosException {
+		
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			return FachadaDD.getInstance().getSaldoConciliadoCuentaBanco(permisos.getCodEmp(), codBanco, codCuenta);
+		else
+			throw new NoTienePermisosException();
+	}
 }

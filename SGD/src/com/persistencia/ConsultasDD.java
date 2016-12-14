@@ -2193,6 +2193,33 @@ public String eliminarSaldoCuenta(){
 		
 		return sb.toString();
 	}	
+	
+	public String getSaldoConciliadoMoneda(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("select sum(imp_tot_mo) from sa_cuentas " );
+
+		sb.append("WHERE sa_cuentas.cod_bco = '0' and sa_cuentas.cod_ctabco = '0' "
+		+ "and sa_cuentas.cod_emp = ? and sa_cuentas.cod_moneda = ? "
+		+ "and sa_cuentas.conciliado = 1  ");
+		
+		return sb.toString();
+	}	
+	
+	public String getSaldoConciliadoCuentaBanco(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("select sum(imp_tot_mo) from sa_cuentas " );
+
+		sb.append("WHERE sa_cuentas.cod_bco = ? and sa_cuentas.cod_ctabco = ? "
+		+ "and sa_cuentas.cod_emp = ?  "
+		+ "and sa_cuentas.conciliado = 1  ");
+		
+		return sb.toString();
+	}
+
 
 	public String getCabezalConciliacion(){
 	
@@ -2206,11 +2233,20 @@ public String eliminarSaldoCuenta(){
 		+ "m_bancos.nom_bco, m_ctasbcos.nom_cta, m_monedas.descripcion, m_monedas.simbolo, "
 		+ "m_monedas.nacional, c_conciliacion.observaciones, c_conciliacion.tipo ");
 		
-		sb.append("from c_conciliacion, m_bancos, m_ctasbcos, m_monedas "
-		+ " WHERE c_conciliacion.cod_emp = ? and m_bancos.cod_emp = c_conciliacion.cod_emp and m_bancos.cod_bco = c_conciliacion.cod_bco "
-		+ " and m_ctasbcos.cod_emp = c_conciliacion.cod_emp and m_ctasbcos.cod_bco = c_conciliacion.cod_bco "
-		+ " and m_ctasbcos.cod_ctabco = c_conciliacion.cod_ctabco "
-		+ " and m_monedas.cod_emp = c_conciliacion.cod_emp and m_monedas.cod_moneda = c_conciliacion.cod_moneda ");
+//		sb.append("from c_conciliacion, m_bancos, m_ctasbcos, m_monedas "
+//		+ " WHERE c_conciliacion.cod_emp = ? and m_bancos.cod_emp = c_conciliacion.cod_emp and m_bancos.cod_bco = c_conciliacion.cod_bco "
+//		+ " and m_ctasbcos.cod_emp = c_conciliacion.cod_emp and m_ctasbcos.cod_bco = c_conciliacion.cod_bco "
+//		+ " and m_ctasbcos.cod_ctabco = c_conciliacion.cod_ctabco "
+//		+ " and m_monedas.cod_emp = c_conciliacion.cod_emp and m_monedas.cod_moneda = c_conciliacion.cod_moneda ");
+		
+		sb.append("from c_conciliacion "
+				+ "LEFT JOIN m_bancos ON c_conciliacion.cod_bco = m_bancos.cod_bco and "
+				+ "c_conciliacion.cod_emp = m_bancos.cod_emp "
+				+ "LEFT JOIN m_ctasbcos ON c_conciliacion.cod_emp = m_ctasbcos.cod_emp and "
+				+ "m_ctasbcos.cod_bco = c_conciliacion.cod_bco and m_ctasbcos.cod_ctabco = c_conciliacion.cod_ctabco "
+				+ "LEFT JOIN  m_monedas ON c_conciliacion.cod_emp = m_monedas.cod_emp and "
+				+ "m_monedas.cod_moneda = c_conciliacion.cod_moneda "
+				+ " WHERE c_conciliacion.cod_emp = ? " );
 		
 		return sb.toString();
 	}
@@ -2250,8 +2286,8 @@ public String eliminarSaldoCuenta(){
 	StringBuilder sb = new StringBuilder();
 	
 	sb.append("INSERT INTO d_conciliacion (cod_docum, serie_docum, nro_docum, cod_emp, imp_tot_mn, imp_tot_mo, "
-	+ " nro_trans, fec_doc, fec_valor, referencia ) ");
-	sb.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?	) ");
+	+ " nro_trans, fec_doc, fec_valor, referencia, linea ) ");
+	sb.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?	) ");
 	
 	return sb.toString();
 	

@@ -4573,7 +4573,7 @@ public class FachadaDD {
 				int linea = 1;
 				for (ConciliacionDetalle lin : conciliacion.getLstDetalle()) {
 				
-				
+					
 					/*A cada linea le seteamos el nroTrans*/
 					lin.setNroTrans(conciliacion.getNroTrans());
 					
@@ -4858,6 +4858,56 @@ public class FachadaDD {
 		}
 
 		return lstMovimientosVO;
+
+	}
+	
+	@SuppressWarnings("unchecked")
+	public double getSaldoConciliadoMoneda(String codEmp, String codMoneda) throws ObteniendoConciliacionException, ConexionException, ObteniendoCuentasBcoException, ObteniendoBancosException
+	{
+
+		Connection con = null;
+		double saldo_conciliado = 0;
+		try 	
+		{
+			con = this.pool.obtenerConeccion();
+			saldo_conciliado = this.conciliaciones.getSaldoConciliadoMoneda(con, codEmp, codMoneda);
+			
+		}
+		
+		catch (ConexionException e) {
+			throw e;
+		}	 
+
+		finally{
+			this.pool.liberarConeccion(con);
+		}
+
+		return saldo_conciliado;
+
+	}
+	
+	@SuppressWarnings("unchecked")
+	public double getSaldoConciliadoCuentaBanco(String codEmp, String codBanco, String codCuenta) throws ObteniendoConciliacionException, ConexionException, ObteniendoCuentasBcoException, ObteniendoBancosException
+	{
+
+		Connection con = null;
+		double saldo_conciliado = 0;
+		try 	
+		{
+			con = this.pool.obtenerConeccion();
+			saldo_conciliado = this.conciliaciones.getSaldoConciliadoCuentaBanco(con, codBanco, codCuenta, codEmp);
+			
+		}
+		
+		catch (ConexionException e) {
+			throw e;
+		}	 
+
+		finally{
+			this.pool.liberarConeccion(con);
+		}
+
+		return saldo_conciliado;
 
 	}
 }
