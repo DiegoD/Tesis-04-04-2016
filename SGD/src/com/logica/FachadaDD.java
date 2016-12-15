@@ -4076,7 +4076,7 @@ public class FachadaDD {
 	}
 	
 	@SuppressWarnings("unchecked") 
-	public ArrayList<DepositoVO> getDepositos(String codEmp) throws ObteniendoDepositoException, ConexionException {
+	public ArrayList<DepositoVO> getDepositos(String codEmp, Timestamp inicio, Timestamp fin ) throws ObteniendoDepositoException, ConexionException {
 		
 		Connection con = null;
 		
@@ -4087,7 +4087,7 @@ public class FachadaDD {
 		{
 			con = this.pool.obtenerConeccion();
 			
-			lst = this.depositos.getDepositosTodos(con, codEmp);
+			lst = this.depositos.getDepositosTodos(con, codEmp, inicio, fin);
 			
 			for (Deposito deposito : lst) 
 			{

@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Locale;
 
 import com.controladores.DepositoControlador;
@@ -49,6 +50,7 @@ public class DepositoPanelExtended extends DepositoPanel{
 	private DepositoControlador controlador;
 	MySub sub = new MySub("65%", "65%");
 	PermisosUsuario permisos;
+	boolean actualiza = false;
 	
 	public DepositoPanelExtended(){
 		
@@ -58,12 +60,22 @@ public class DepositoPanelExtended extends DepositoPanel{
 		String usuario = (String)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("usuario");
 		this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
 		
+		this.lblTitulo.setValue("Depósitos");
+		
 		/*Verificamos que el usuario tenga permisos de lectura para mostrar la vista*/
 		boolean permisoLectura = permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_DEPOSITO, VariablesPermisos.OPERACION_LEER);
 		
 		if(permisoLectura){
 	        
 			try {
+				
+				Calendar c = Calendar.getInstance();   // this takes current date
+			    c.set(Calendar.DAY_OF_MONTH, 1);
+				
+			    this.fechaInicio.setValue(new java.sql.Date(c.getTimeInMillis()));
+			    
+			    c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
+			    this.fechaFin.setValue(new java.sql.Date(c.getTimeInMillis()));
 				
 				this.inicializarGrilla();
 				
@@ -126,88 +138,102 @@ public class DepositoPanelExtended extends DepositoPanel{
 		
 		this.gridDepositos.setContainerDataSource(container);
 		
-		gridDepositos.removeColumn("operacion");
-		gridDepositos.removeColumn("fechaMod");
-		gridDepositos.removeColumn("usuarioMod");
-		
-		gridDepositos.removeColumn("codDocum");
-		gridDepositos.removeColumn("serieDocum");
-		gridDepositos.removeColumn("fecDoc");
-		gridDepositos.removeColumn("codBanco");
-		gridDepositos.removeColumn("codCuenta");
-		gridDepositos.removeColumn("codMoneda");
-		gridDepositos.removeColumn("nacional");
-		gridDepositos.removeColumn("funcionario");
-		gridDepositos.removeColumn("numComprobante");
-		gridDepositos.removeColumn("impTotMn");
-		gridDepositos.removeColumn("nroTrans");
-		gridDepositos.removeColumn("lstDetalle");
-		gridDepositos.removeColumn("tcMov");
-		
-		gridDepositos.setColumnOrder("fecValor", "nomBanco", "nomCuenta", "impTotMo", "nomMoneda", "nroDocum", "observaciones");
-		gridDepositos.getColumn("fecValor").setHeaderCaption("Fecha");
-		gridDepositos.getColumn("nomBanco").setHeaderCaption("Banco");
-		gridDepositos.getColumn("nomCuenta").setHeaderCaption("Cuenta");
-		gridDepositos.getColumn("impTotMo").setHeaderCaption("Importe");
-		gridDepositos.getColumn("nroDocum").setHeaderCaption("Comprobante");
-		gridDepositos.getColumn("observaciones").setHeaderCaption("Observaciones");
-		gridDepositos.getColumn("nomMoneda").setHeaderCaption("Moneda");
-		
-		gridDepositos.getColumn("fecValor").setConverter(new StringToDateConverter(){
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-
-			@Override
-
-			public DateFormat getFormat(Locale locale){
-
-				return new SimpleDateFormat("dd/MM/yyyy");
-
-			}
-
-		});
-		
-		/*Agregamos los filtros a la grilla*/
-		this.filtroGrilla();
-		
-		
-		gridDepositos.addSelectionListener(new SelectionListener() {
-						
-		    @Override
-		    public void select(SelectionEvent event) {
-		       
-		    	try{
-		    		
-		    		if(gridDepositos.getSelectedRow() != null){
-		    			BeanItem<DepositoVO> item = container.getItem(gridDepositos.getSelectedRow());
-				    	
-				    	/*Puede ser null si accedemos luego de haberlo agregado, ya que no va a la base*/
-				    	if(item.getBean().getFechaMod() == null)
-				    	{
-				    		item.getBean().setFechaMod(new Timestamp(System.currentTimeMillis()));
-				    	}
-							
-				    	form = new DepositoViewExtended(Variables.OPERACION_LECTURA, DepositoPanelExtended.this);
-				    	sub = new MySub("90%","50%");
-						sub.setModal(true);
-						sub.setVista(form);
-						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
-						form.setDataSourceFormulario(item);
-						form.setLstDetalle(item.getBean().getLstDetalle());
-						
-						UI.getCurrent().addWindow(sub);
-		    		}
-			    	
+		if(!actualiza){
+			
+			actualiza = true;
+			
+			gridDepositos.removeColumn("operacion");
+			gridDepositos.removeColumn("fechaMod");
+			gridDepositos.removeColumn("usuarioMod");
+			
+			gridDepositos.removeColumn("codDocum");
+			gridDepositos.removeColumn("serieDocum");
+			gridDepositos.removeColumn("fecDoc");
+			gridDepositos.removeColumn("codBanco");
+			gridDepositos.removeColumn("codCuenta");
+			gridDepositos.removeColumn("codMoneda");
+			gridDepositos.removeColumn("nacional");
+			gridDepositos.removeColumn("funcionario");
+			gridDepositos.removeColumn("numComprobante");
+			gridDepositos.removeColumn("impTotMn");
+			gridDepositos.removeColumn("nroTrans");
+			gridDepositos.removeColumn("lstDetalle");
+			gridDepositos.removeColumn("tcMov");
+			
+			gridDepositos.setColumnOrder("fecValor", "nomBanco", "nomCuenta", "impTotMo", "nomMoneda", "nroDocum", "observaciones");
+			gridDepositos.getColumn("fecValor").setHeaderCaption("Fecha");
+			gridDepositos.getColumn("nomBanco").setHeaderCaption("Banco");
+			gridDepositos.getColumn("nomCuenta").setHeaderCaption("Cuenta");
+			gridDepositos.getColumn("impTotMo").setHeaderCaption("Importe");
+			gridDepositos.getColumn("nroDocum").setHeaderCaption("Comprobante");
+			gridDepositos.getColumn("observaciones").setHeaderCaption("Observaciones");
+			gridDepositos.getColumn("nomMoneda").setHeaderCaption("Moneda");
+			
+			gridDepositos.getColumn("fecValor").setConverter(new StringToDateConverter(){
+				/**
+				 * 
+				 */
+				private static final long serialVersionUID = 1L;
+	
+				@Override
+	
+				public DateFormat getFormat(Locale locale){
+	
+					return new SimpleDateFormat("dd/MM/yyyy");
+	
 				}
-		    	
-		    	catch(Exception e){
-			    	Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+	
+			});
+			
+			/*Agregamos los filtros a la grilla*/
+			this.filtroGrilla();
+			
+			
+			gridDepositos.addSelectionListener(new SelectionListener() {
+							
+			    @Override
+			    public void select(SelectionEvent event) {
+			       
+			    	try{
+			    		
+			    		if(gridDepositos.getSelectedRow() != null){
+			    			BeanItem<DepositoVO> item = container.getItem(gridDepositos.getSelectedRow());
+					    	
+					    	/*Puede ser null si accedemos luego de haberlo agregado, ya que no va a la base*/
+					    	if(item.getBean().getFechaMod() == null)
+					    	{
+					    		item.getBean().setFechaMod(new Timestamp(System.currentTimeMillis()));
+					    	}
+								
+					    	form = new DepositoViewExtended(Variables.OPERACION_LECTURA, DepositoPanelExtended.this);
+					    	sub = new MySub("90%","50%");
+							sub.setModal(true);
+							sub.setVista(form);
+							/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
+							form.setDataSourceFormulario(item);
+							form.setLstDetalle(item.getBean().getLstDetalle());
+							
+							UI.getCurrent().addWindow(sub);
+			    		}
+				    	
+					}
+			    	
+			    	catch(Exception e){
+				    	Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+				    }
+			      
 			    }
-		      
-		    }
-		});
+			});
+			
+			this.btnActualizar.addClickListener(click -> {
+				try {
+					this.inicializarGrilla();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			});
+		}
 		
 	}
 	
@@ -230,7 +256,7 @@ public class DepositoPanelExtended extends DepositoPanel{
 							VariablesPermisos.FORMULARIO_DEPOSITO,
 							VariablesPermisos.OPERACION_LEER);
 			
-			lstDepositos = controlador.getDepositos(permisoAux);
+			lstDepositos = controlador.getDepositos(permisoAux, new java.sql.Timestamp(fechaInicio.getValue().getTime()), new java.sql.Timestamp(fechaFin.getValue().getTime()));
 			
 		} 
 		catch (ObteniendoDepositoException | InicializandoException | ConexionException

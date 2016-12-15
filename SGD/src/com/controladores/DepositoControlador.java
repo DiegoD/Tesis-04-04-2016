@@ -1,6 +1,7 @@
 package com.controladores;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
@@ -50,11 +51,11 @@ public class DepositoControlador {
 	 * @throws NoTienePermisosException 
 	 * @throws ObteniendoDepositoException 
 	 */
-	public ArrayList<DepositoVO> getDepositos(UsuarioPermisosVO permisos) throws ObteniendoDepositoException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException {
+	public ArrayList<DepositoVO> getDepositos(UsuarioPermisosVO permisos, Timestamp inicio, Timestamp fin ) throws ObteniendoDepositoException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException {
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			return FachadaDD.getInstance().getDepositos(permisos.getCodEmp());
+			return FachadaDD.getInstance().getDepositos(permisos.getCodEmp(), inicio, fin);
 		else
 			throw new NoTienePermisosException();
 	}

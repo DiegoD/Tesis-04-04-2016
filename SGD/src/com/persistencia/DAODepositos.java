@@ -27,7 +27,7 @@ public class DAODepositos implements IDAODepositos{
 	/**
 	 * Nos retorna una lista con todos los ingresos de cobro del sistema para la emrpesa
 	 */
-	public ArrayList<Deposito> getDepositosTodos(Connection con, String codEmp) throws ObteniendoDepositoException, ConexionException {
+	public ArrayList<Deposito> getDepositosTodos(Connection con, String codEmp, Timestamp inicio, Timestamp fin ) throws ObteniendoDepositoException, ConexionException {
 		
 		ArrayList<Deposito> lst = new ArrayList<Deposito>();
 	
@@ -40,6 +40,8 @@ public class DAODepositos implements IDAODepositos{
 	    	ResultSet rs;
 	    	
 	    	pstmt1.setString(1, codEmp);
+	    	pstmt1.setTimestamp(2, inicio);
+	    	pstmt1.setTimestamp(3, fin);
 			rs = pstmt1.executeQuery();
 			
 			Deposito aux;

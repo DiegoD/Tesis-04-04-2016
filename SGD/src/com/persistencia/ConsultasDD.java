@@ -2053,7 +2053,8 @@ public String eliminarSaldoCuenta(){
 				+ " and m_ctasbcos.cod_emp = c_deposito.cod_emp and m_ctasbcos.cod_bco = c_deposito.cod_bco "
 				+ " and m_ctasbcos.cod_ctabco = c_deposito.cod_ctabco "
 				+ " and m_monedas.cod_emp = c_deposito.cod_emp and m_monedas.cod_moneda = c_deposito.cod_moneda "
-				+ " and m_titulares.cod_emp = c_deposito.cod_emp and m_titulares.cod_tit = c_deposito.cod_tit ");
+				+ " and m_titulares.cod_emp = c_deposito.cod_emp and m_titulares.cod_tit = c_deposito.cod_tit "
+				+ " and fec_valor between DATE_SUB(?, INTERVAL 1 DAY) and ? ");
 		
 		return sb.toString();
 	}
