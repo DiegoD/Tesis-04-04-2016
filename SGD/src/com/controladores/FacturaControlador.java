@@ -1,6 +1,7 @@
 package com.controladores;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
@@ -30,11 +31,11 @@ public class FacturaControlador {
 	/**
 	 * Obtiene los cobros del sistema
 	 */
-	public ArrayList<FacturaVO> getFacturasTodos(UsuarioPermisosVO permisos) throws ObteniendoFacturasException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException  
+	public ArrayList<FacturaVO> getFacturasTodos(UsuarioPermisosVO permisos, Timestamp inicio, Timestamp fin) throws ObteniendoFacturasException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException  
 	{
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			return Fachada.getInstance().getFacturasTodos(permisos.getCodEmp());
+			return Fachada.getInstance().getFacturasTodos(permisos.getCodEmp(), inicio, fin);
 		else
 			throw new NoTienePermisosException();
     }

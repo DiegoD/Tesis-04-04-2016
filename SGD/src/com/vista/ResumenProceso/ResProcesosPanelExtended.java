@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Locale;
 
 import com.controladores.ResumenProcesoControlador;
@@ -44,11 +45,13 @@ public class ResProcesosPanelExtended extends ResProcesosPanel{
 	private ResumenProcesoControlador controlador;
 	MySub sub = new MySub("100%","70%");
 	PermisosUsuario permisos;
+	boolean actualiza = false;
+	
 
 	public ResProcesosPanelExtended(){
 		controlador = new ResumenProcesoControlador();
 		this.lstProcesos = new ArrayList<ProcesoVO>();
-		
+		this.lblTitulo.setValue("Resumen procesos");
 		String usuario = (String)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("usuario");
 		this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
 		
@@ -59,6 +62,14 @@ public class ResProcesosPanelExtended extends ResProcesosPanel{
 	        
 			try {
 				
+				Calendar c = Calendar.getInstance();   // this takes current date
+			    c.set(Calendar.DAY_OF_MONTH, 1);
+				
+			    this.fechaInicio.setValue(new java.sql.Date(c.getTimeInMillis()));
+			    
+			    c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
+			    this.fechaFin.setValue(new java.sql.Date(c.getTimeInMillis()));
+			    
 				this.inicializarGrilla();
 				
 				/*Para el boton de nuevo, verificamos que tenga permisos de nuevoEditar*/
@@ -120,85 +131,107 @@ public class ResProcesosPanelExtended extends ResProcesosPanel{
 		
 		this.gridProcesos.setContainerDataSource(container);
 		
-		gridProcesos.removeColumn("tcMov");
-		gridProcesos.removeColumn("simboloMoneda");
-		gridProcesos.removeColumn("codCliente");
-		gridProcesos.removeColumn("codMoneda");
-		gridProcesos.removeColumn("fechaMod");
-		gridProcesos.removeColumn("usuarioMod");
-		gridProcesos.removeColumn("operacion");
-		gridProcesos.removeColumn("nroMega");
-		gridProcesos.removeColumn("codDocum");
-		gridProcesos.removeColumn("nomDocum");
-		gridProcesos.removeColumn("nroDocum");
-		gridProcesos.removeColumn("fecDocum");
-		gridProcesos.removeColumn("carpeta");
-		gridProcesos.removeColumn("impMo");
-		gridProcesos.removeColumn("impMn");
-		gridProcesos.removeColumn("impTr");
-		gridProcesos.removeColumn("kilos");
-		gridProcesos.removeColumn("fecCruce");
-		gridProcesos.removeColumn("marca");
-		gridProcesos.removeColumn("medio");
-		gridProcesos.removeColumn("descripcion");
-		gridProcesos.removeColumn("observaciones");
-		gridProcesos.removeColumn("descMoneda");
-		
-		/*Agregamos los filtros a la grilla*/
-		this.filtroGrilla();
-		
-		
-		gridProcesos.addSelectionListener(new SelectionListener() {
-						
-		    @Override
-		    public void select(SelectionEvent event) {
-		       
-		    	try{
-		    		
-		    		if(gridProcesos.getSelectedRow() != null){
-		    			BeanItem<ProcesoVO> item = container.getItem(gridProcesos.getSelectedRow());
-				    	
-				    	/*Puede ser null si accedemos luego de haberlo agregado, ya que no va a la base*/
-				    	if(item.getBean().getFechaMod() == null)
-				    	{
-				    		item.getBean().setFechaMod(new Timestamp(System.currentTimeMillis()));
-				    	}
+
+		if(!actualiza){
+			
+			actualiza = true;
+			
+			gridProcesos.removeColumn("tcMov");
+			gridProcesos.removeColumn("simboloMoneda");
+			gridProcesos.removeColumn("codCliente");
+			gridProcesos.removeColumn("codMoneda");
+			gridProcesos.removeColumn("fechaMod");
+			gridProcesos.removeColumn("usuarioMod");
+			gridProcesos.removeColumn("operacion");
+			gridProcesos.removeColumn("nroMega");
+			gridProcesos.removeColumn("codDocum");
+			gridProcesos.removeColumn("nomDocum");
+			gridProcesos.removeColumn("nroDocum");
+			gridProcesos.removeColumn("fecDocum");
+			gridProcesos.removeColumn("carpeta");
+			gridProcesos.removeColumn("impMo");
+			gridProcesos.removeColumn("impMn");
+			gridProcesos.removeColumn("impTr");
+			gridProcesos.removeColumn("kilos");
+			gridProcesos.removeColumn("fecCruce");
+			gridProcesos.removeColumn("marca");
+			gridProcesos.removeColumn("medio");
+			gridProcesos.removeColumn("descripcion");
+			gridProcesos.removeColumn("observaciones");
+			gridProcesos.removeColumn("descMoneda");
+			
+			/*Agregamos los filtros a la grilla*/
+			this.filtroGrilla();
+			
+			
+			gridProcesos.addSelectionListener(new SelectionListener() {
 							
-				    	form = new ResumenProcesoViewExtended(Variables.OPERACION_LECTURA, ResProcesosPanelExtended.this);
-				    	sub = new MySub("95%","65%");
-						sub.setModal(true);
-						sub.setVista((Component) form);
-						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
-						form.setDataSourceFormulario(item);
-						
-						UI.getCurrent().addWindow(sub);
-		    		}
+			    @Override
+			    public void select(SelectionEvent event) {
+			       
+			    	try{
+			    		
+			    		if(gridProcesos.getSelectedRow() != null){
+			    			BeanItem<ProcesoVO> item = container.getItem(gridProcesos.getSelectedRow());
+					    	
+					    	/*Puede ser null si accedemos luego de haberlo agregado, ya que no va a la base*/
+					    	if(item.getBean().getFechaMod() == null)
+					    	{
+					    		item.getBean().setFechaMod(new Timestamp(System.currentTimeMillis()));
+					    	}
+								
+					    	form = new ResumenProcesoViewExtended(Variables.OPERACION_LECTURA, ResProcesosPanelExtended.this);
+					    	sub = new MySub("95%","65%");
+							sub.setModal(true);
+							sub.setVista((Component) form);
+							/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
+							form.setDataSourceFormulario(item);
+							
+							UI.getCurrent().addWindow(sub);
+			    		}
+				    	
+					}
 			    	
-				}
-		    	
-		    	catch(Exception e){
-			    	Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			    	catch(Exception e){
+				    	Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+				    }
+			      
 			    }
-		      
-		    }
-		});
-		
-		//Modifica el formato de fecha en la grilla 
-		gridProcesos.getColumn("fecha").setConverter(new StringToDateConverter(){
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-
-			@Override
-
-			public DateFormat getFormat(Locale locale){
-
-				return new SimpleDateFormat("dd/MM/yyyy");
-
-			}
-
-		});
+			});
+			
+			//Modifica el formato de fecha en la grilla 
+			gridProcesos.getColumn("fecha").setConverter(new StringToDateConverter(){
+				/**
+				 * 
+				 */
+				private static final long serialVersionUID = 1L;
+	
+				@Override
+	
+				public DateFormat getFormat(Locale locale){
+	
+					return new SimpleDateFormat("dd/MM/yyyy");
+	
+				}
+	
+			});
+			
+			this.btnActualizar.addClickListener(click -> {
+				try {
+					
+					if(fechaInicio.getValue()==null || fechaFin.getValue()==null){
+						Mensajes.mostrarMensajeError("Debe ingresar las fechas para actualizar la búsqueda");
+					}
+					else{
+						this.inicializarGrilla();
+					}
+					
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			});
+		}
 		
 	}
 	
@@ -221,7 +254,7 @@ public class ResProcesosPanelExtended extends ResProcesosPanel{
 							VariablesPermisos.FORMULARIO_RESUMEN_PROCESO,
 							VariablesPermisos.OPERACION_LEER);
 			
-			lstProcesos = controlador.getProcesos(permisoAux);
+			lstProcesos = controlador.getProcesos(permisoAux,  new java.sql.Timestamp(fechaInicio.getValue().getTime()), new java.sql.Timestamp(fechaFin.getValue().getTime()));
 			
 		} 
 		catch (ObteniendoProcesosException | InicializandoException | ConexionException

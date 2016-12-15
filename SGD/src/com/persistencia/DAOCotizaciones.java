@@ -23,7 +23,7 @@ import com.logica.Moneda;
 public class DAOCotizaciones implements IDAOCotizaciones{
 
 	@Override
-	public ArrayList<Cotizacion> getCotizaciones(String codEmp, Connection con)
+	public ArrayList<Cotizacion> getCotizaciones(String codEmp, Connection con, Timestamp inicio, Timestamp fin)
 			throws ObteniendoCotizacionesException, ConexionException {
 		
 		ArrayList<Cotizacion> lstCotizaciones = new ArrayList<Cotizacion>();
@@ -34,7 +34,10 @@ public class DAOCotizaciones implements IDAOCotizaciones{
 			String query = consultas.getCotizaciones();
 			
 			PreparedStatement pstmt1 = con.prepareStatement(query);
+			
 			pstmt1.setString(1, codEmp);
+			pstmt1.setTimestamp(2, inicio);
+			pstmt1.setTimestamp(3, fin);
 			
 			ResultSet rs = pstmt1.executeQuery();
 			

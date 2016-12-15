@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Locale;
 
 import com.controladores.GastoControlador;
@@ -45,11 +46,13 @@ public class GastosPanelExtended extends GastosPanel implements IGastosMain{
 	private GastoControlador controlador;
 	MySub sub = new MySub("50%","65%");
 	PermisosUsuario permisos;
+	boolean actualiza = false;
 	
 	public GastosPanelExtended(){
 		
 		controlador = new GastoControlador();
 		this.lstGastos = new ArrayList<GastoVO>();
+		this.lblTitulo.setValue("Gastos");
 		
 		String usuario = (String)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("usuario");
 		this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
@@ -61,6 +64,14 @@ public class GastosPanelExtended extends GastosPanel implements IGastosMain{
 	        
 			try {
 				
+				Calendar c = Calendar.getInstance();   // this takes current date
+			    c.set(Calendar.DAY_OF_MONTH, 1);
+				
+			    this.fechaInicio.setValue(new java.sql.Date(c.getTimeInMillis()));
+			    
+			    c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
+			    this.fechaFin.setValue(new java.sql.Date(c.getTimeInMillis()));
+			    
 				this.inicializarGrilla();
 				
 				/*Para el boton de nuevo, verificamos que tenga permisos de nuevoEditar*/
@@ -125,108 +136,129 @@ public class GastosPanelExtended extends GastosPanel implements IGastosMain{
 		
 		this.gridGastos.setContainerDataSource(container);
 		
-		gridGastos.removeColumn("fechaMod");
-		gridGastos.removeColumn("usuarioMod");
-		gridGastos.removeColumn("operacion");
+		if(!actualiza){
+			
+			actualiza = true;
+			
+			gridGastos.removeColumn("fechaMod");
+			gridGastos.removeColumn("usuarioMod");
+			gridGastos.removeColumn("operacion");
+			
+			gridGastos.removeColumn("codDocum");
+			gridGastos.removeColumn("serieDocum");
+			gridGastos.removeColumn("codEmp");
+			
+			gridGastos.removeColumn("codMoneda");
+			gridGastos.removeColumn("nomMoneda");
+			gridGastos.removeColumn("simboloMoneda");
+			
+			gridGastos.removeColumn("codTitular");
+			gridGastos.removeColumn("nroTrans");
+			//gridGastos.removeColumn("impTotMn");
+			
+			gridGastos.removeColumn("tcMov");
+			gridGastos.removeColumn("fecDoc");
+			
+			gridGastos.removeColumn("codImpuesto");
+			gridGastos.removeColumn("nomImpuesto");
+			gridGastos.removeColumn("porcentajeImpuesto");
+			
+			gridGastos.removeColumn("impImpuMn");
+			gridGastos.removeColumn("impImpuMo");
+			gridGastos.removeColumn("impSubMn");
+			
+			gridGastos.removeColumn("impSubMo");
+			gridGastos.removeColumn("impTotMn");
+			gridGastos.removeColumn("impTotMo");
+			
+			//gridGastos.removeColumn("tcMov");
+			gridGastos.removeColumn("nomCuenta");
+			gridGastos.removeColumn("codProceso");
+			
+			gridGastos.removeColumn("nomRubro");
+			gridGastos.removeColumn("codRubro");
+			gridGastos.removeColumn("codCtaInd");
+			gridGastos.removeColumn("linea");
+			gridGastos.removeColumn("codCuenta");
+			gridGastos.removeColumn("nacional");
+			
+			gridGastos.setColumnOrder("fecValor", "nomTitular", "nroDocum", "referencia", "descProceso");
 		
-		gridGastos.removeColumn("codDocum");
-		gridGastos.removeColumn("serieDocum");
-		gridGastos.removeColumn("codEmp");
-		
-		gridGastos.removeColumn("codMoneda");
-		gridGastos.removeColumn("nomMoneda");
-		gridGastos.removeColumn("simboloMoneda");
-		
-		gridGastos.removeColumn("codTitular");
-		gridGastos.removeColumn("nroTrans");
-		//gridGastos.removeColumn("impTotMn");
-		
-		gridGastos.removeColumn("tcMov");
-		gridGastos.removeColumn("fecValor");
-		
-		gridGastos.removeColumn("codImpuesto");
-		gridGastos.removeColumn("nomImpuesto");
-		gridGastos.removeColumn("porcentajeImpuesto");
-		
-		gridGastos.removeColumn("impImpuMn");
-		gridGastos.removeColumn("impImpuMo");
-		gridGastos.removeColumn("impSubMn");
-		
-		gridGastos.removeColumn("impSubMo");
-		gridGastos.removeColumn("impTotMn");
-		gridGastos.removeColumn("impTotMo");
-		
-		//gridGastos.removeColumn("tcMov");
-		gridGastos.removeColumn("nomCuenta");
-		gridGastos.removeColumn("codProceso");
-		
-		gridGastos.removeColumn("nomRubro");
-		gridGastos.removeColumn("codRubro");
-		gridGastos.removeColumn("codCtaInd");
-		gridGastos.removeColumn("linea");
-		gridGastos.removeColumn("codCuenta");
-		gridGastos.removeColumn("nacional");
-		
-		gridGastos.setColumnOrder("fecDoc", "nomTitular", "nroDocum", "referencia", "descProceso");
-	
-		/*Agregamos los filtros a la grilla*/
-		this.filtroGrilla();
-		
-		
-		gridGastos.addSelectionListener(new SelectionListener() {
-						
-		    /**
-			 * 
-			 */
-
-			@Override
-		    public void select(SelectionEvent event) {
-		       
-		    	try{
-		    		
-		    		if(gridGastos.getSelectedRow() != null){
-		    			BeanItem<GastoVO> item = container.getItem(gridGastos.getSelectedRow());
-				    	
-				    	/*Puede ser null si accedemos luego de haberlo agregado, ya que no va a la base*/
-				    	if(item.getBean().getFechaMod() == null)
-				    	{
-				    		item.getBean().setFechaMod(new Timestamp(System.currentTimeMillis()));
-				    	}
+			/*Agregamos los filtros a la grilla*/
+			this.filtroGrilla();
+			
+			
+			gridGastos.addSelectionListener(new SelectionListener() {
 							
-				    	form = new GastoViewExtended(Variables.OPERACION_LECTURA, GastosPanelExtended.this, null, "Gasto");
-				    	sub = new MySub("50%","45%");
-						sub.setModal(true);
-						sub.setVista((Component) form);
-						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
-						form.setDataSourceFormulario(item);
-						
-						UI.getCurrent().addWindow(sub);
-		    		}
+			    /**
+				 * 
+				 */
+	
+				@Override
+			    public void select(SelectionEvent event) {
+			       
+			    	try{
+			    		
+			    		if(gridGastos.getSelectedRow() != null){
+			    			BeanItem<GastoVO> item = container.getItem(gridGastos.getSelectedRow());
+					    	
+					    	/*Puede ser null si accedemos luego de haberlo agregado, ya que no va a la base*/
+					    	if(item.getBean().getFechaMod() == null)
+					    	{
+					    		item.getBean().setFechaMod(new Timestamp(System.currentTimeMillis()));
+					    	}
+								
+					    	form = new GastoViewExtended(Variables.OPERACION_LECTURA, GastosPanelExtended.this, null, "Gasto");
+					    	sub = new MySub("50%","45%");
+							sub.setModal(true);
+							sub.setVista((Component) form);
+							/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
+							form.setDataSourceFormulario(item);
+							
+							UI.getCurrent().addWindow(sub);
+			    		}
+				    	
+					}
 			    	
-				}
-		    	
-		    	catch(Exception e){
-			    	Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			    	catch(Exception e){
+				    	Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+				    }
+			      
 			    }
-		      
-		    }
-		});
-		
-		//Modifica el formato de fecha en la grilla 
-		gridGastos.getColumn("fecDoc").setConverter(new StringToDateConverter(){
-			/**
-			 * 
-			 */
-
-			@Override
-
-			public DateFormat getFormat(Locale locale){
-
-				return new SimpleDateFormat("dd/MM/yyyy");
-
-			}
-
-		});
+			});
+			
+			//Modifica el formato de fecha en la grilla 
+			gridGastos.getColumn("fecValor").setConverter(new StringToDateConverter(){
+				/**
+				 * 
+				 */
+	
+				@Override
+	
+				public DateFormat getFormat(Locale locale){
+	
+					return new SimpleDateFormat("dd/MM/yyyy");
+	
+				}
+	
+			});
+			
+			this.btnActualizar.addClickListener(click -> {
+				try {
+					
+					if(fechaInicio.getValue()==null || fechaFin.getValue()==null){
+						Mensajes.mostrarMensajeError("Debe ingresar las fechas para actualizar la búsqueda");
+					}
+					else{
+						this.inicializarGrilla();
+					}
+					
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			});
+		}
 		
 	}
 	
@@ -249,7 +281,7 @@ public class GastosPanelExtended extends GastosPanel implements IGastosMain{
 							VariablesPermisos.FORMULARIO_GASTOS,
 							VariablesPermisos.OPERACION_LEER);
 			
-			lstGastos = controlador.getGastos(permisoAux);
+			lstGastos = controlador.getGastos(permisoAux, new java.sql.Timestamp(fechaInicio.getValue().getTime()), new java.sql.Timestamp(fechaFin.getValue().getTime()));
 			
 		} 
 		catch (InicializandoException | ConexionException

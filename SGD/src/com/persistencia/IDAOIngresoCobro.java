@@ -1,6 +1,7 @@
 package com.persistencia;
 
 import java.sql.Connection;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
@@ -14,10 +15,10 @@ import com.logica.IngresoCobro.IngresoCobroLinea;
 
 public interface IDAOIngresoCobro {
 
-	public ArrayList<IngresoCobro> getIngresoCobroTodos(Connection con, String codEmp) throws ObteniendoIngresoCobroException, ConexionException;
+	public ArrayList<IngresoCobro> getIngresoCobroTodos(Connection con, String codEmp, Timestamp inicio, Timestamp fin) throws ObteniendoIngresoCobroException, ConexionException;
 	public boolean memberIngresoCobro(int nroDocum, String codEmp, Connection con) throws ExisteIngresoCobroException, ConexionException;
 	public void insertarIngresoCobro(IngresoCobro cobro, Connection con) throws InsertandoIngresoCobroException, ConexionException;
 	//public ArrayList<IngresoCobroLinea> getIngresoCobroLineaxTrans(Connection con, String codEmp, long nroTrans) throws ObteniendoIngresoCobroException, ConexionException;
 	public void eliminarIngresoCobro(IngresoCobro ing, Connection con)throws InsertandoIngresoCobroException, ConexionException, EliminandoIngresoCobroException ;
-	public ArrayList<IngresoCobro> getIngresoCobroTodosOtro(Connection con, String codEmp) throws ObteniendoIngresoCobroException, ConexionException ;
+	public ArrayList<IngresoCobro> getIngresoCobroTodosOtro(Connection con, String codEmp, Timestamp inicio, Timestamp fin) throws ObteniendoIngresoCobroException, ConexionException ;
 }

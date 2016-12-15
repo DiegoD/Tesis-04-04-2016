@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -40,11 +41,13 @@ public class CotizacionesPanelExtended extends CotizacionesPanel{
 	private CotizacionControlador controlador;
 	PermisosUsuario permisos;
 	MySub sub = new MySub("65%", "65%");
+	boolean actualiza = false;
 	
 	public CotizacionesPanelExtended() {
 		
 		controlador = new CotizacionControlador();
 		this.lstCotizaciones = new ArrayList<CotizacionVO>();
+		this.lblTitulo.setValue("Cotizaciones");
 		
 		String usuario = (String)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("usuario");
 		this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
@@ -55,6 +58,16 @@ public class CotizacionesPanelExtended extends CotizacionesPanel{
 		if(permisoLectura){
 	        
 			try {
+				
+				Calendar c = Calendar.getInstance();   // this takes current date
+			    c.set(Calendar.DAY_OF_MONTH, 1);
+				
+			    this.fechaInicio.setValue(new java.sql.Date(c.getTimeInMillis()));
+			    
+			    c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
+			    this.fechaFin.setValue(new java.sql.Date(c.getTimeInMillis()));
+			    
+				this.inicializarGrilla();
 				
 				this.inicializarGrilla();
 				
@@ -120,71 +133,91 @@ public class CotizacionesPanelExtended extends CotizacionesPanel{
 		
 		this.gridCotizaciones.setContainerDataSource(container);
 		
-		gridCotizaciones.setColumnOrder("descripcionMoneda", "fecha", "cotizacionCompra", "cotizacionVenta");
-		gridCotizaciones.getColumn("descripcionMoneda").setHeaderCaption("Moneda");
-		gridCotizaciones.removeColumn("fechaMod");
-		gridCotizaciones.removeColumn("usuarioMod");
-		gridCotizaciones.removeColumn("operacion");
-		gridCotizaciones.removeColumn("codMoneda");
-		gridCotizaciones.removeColumn("simboloMoneda");
-		gridCotizaciones.removeColumn("aceptaCotizacionMoneda");
-		gridCotizaciones.removeColumn("activoMoneda");
-		
-		/*Agregamos los filtros a la grilla*/
-		this.filtroGrilla();
-		
-		
-		gridCotizaciones.addSelectionListener(new SelectionListener() {
-						
-		    @Override
-		    public void select(SelectionEvent event) {
-		       
-		    	try{
-		    		
-		    		if(gridCotizaciones.getSelectedRow() != null){
-		    			BeanItem<CotizacionVO> item = container.getItem(gridCotizaciones.getSelectedRow());
-				    	
-				    	/*Puede ser null si accedemos luego de haberlo agregado, ya que no va a la base*/
-				    	if(item.getBean().getFechaMod() == null)
-				    	{
-				    		item.getBean().setFechaMod(new Timestamp(System.currentTimeMillis()));
-				    	}
+		if(!actualiza){
+			
+			actualiza = true;
+			gridCotizaciones.setColumnOrder("descripcionMoneda", "fecha", "cotizacionCompra", "cotizacionVenta");
+			gridCotizaciones.getColumn("descripcionMoneda").setHeaderCaption("Moneda");
+			gridCotizaciones.removeColumn("fechaMod");
+			gridCotizaciones.removeColumn("usuarioMod");
+			gridCotizaciones.removeColumn("operacion");
+			gridCotizaciones.removeColumn("codMoneda");
+			gridCotizaciones.removeColumn("simboloMoneda");
+			gridCotizaciones.removeColumn("aceptaCotizacionMoneda");
+			gridCotizaciones.removeColumn("activoMoneda");
+			
+			/*Agregamos los filtros a la grilla*/
+			this.filtroGrilla();
+			
+			
+			gridCotizaciones.addSelectionListener(new SelectionListener() {
 							
-				    	form = new CotizacionViewExtended(Variables.OPERACION_LECTURA, CotizacionesPanelExtended.this);
-						sub = new MySub("50%","35%");
-						sub.setModal(true);
-						sub.setVista(form);
-						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
-						form.setDataSourceFormulario(item);
-						
-						UI.getCurrent().addWindow(sub);
-		    		}
+			    @Override
+			    public void select(SelectionEvent event) {
+			       
+			    	try{
+			    		
+			    		if(gridCotizaciones.getSelectedRow() != null){
+			    			BeanItem<CotizacionVO> item = container.getItem(gridCotizaciones.getSelectedRow());
+					    	
+					    	/*Puede ser null si accedemos luego de haberlo agregado, ya que no va a la base*/
+					    	if(item.getBean().getFechaMod() == null)
+					    	{
+					    		item.getBean().setFechaMod(new Timestamp(System.currentTimeMillis()));
+					    	}
+								
+					    	form = new CotizacionViewExtended(Variables.OPERACION_LECTURA, CotizacionesPanelExtended.this);
+							sub = new MySub("50%","35%");
+							sub.setModal(true);
+							sub.setVista(form);
+							/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
+							form.setDataSourceFormulario(item);
+							
+							UI.getCurrent().addWindow(sub);
+			    		}
+				    	
+					}
 			    	
-				}
-		    	
-		    	catch(Exception e){
-			    	Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			    	catch(Exception e){
+				    	Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+				    }
+			      
 			    }
-		      
-		    }
-		});
-		
-		//Modifica el formato de fecha en la grilla 
-		gridCotizaciones.getColumn("fecha").setConverter(new StringToDateConverter(){
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-
-			@Override
-
-			public DateFormat getFormat(Locale locale){
-
-				return new SimpleDateFormat("dd/MM/yyyy");
-
-			}
-
-		});
+			});
+			
+			//Modifica el formato de fecha en la grilla 
+			gridCotizaciones.getColumn("fecha").setConverter(new StringToDateConverter(){
+				/**
+				 * 
+				 */
+				private static final long serialVersionUID = 1L;
+	
+				@Override
+	
+				public DateFormat getFormat(Locale locale){
+	
+					return new SimpleDateFormat("dd/MM/yyyy");
+	
+				}
+	
+			});
+			
+			this.btnActualizar.addClickListener(click -> {
+				try {
+					
+					if(fechaInicio.getValue()==null || fechaFin.getValue()==null){
+						Mensajes.mostrarMensajeError("Debe ingresar las fechas para actualizar la búsqueda");
+					}
+					else{
+						this.inicializarGrilla();
+					}
+					
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			});
+		}
 		
 	}
 	
@@ -207,9 +240,7 @@ public class CotizacionesPanelExtended extends CotizacionesPanel{
 							VariablesPermisos.FORMULARIO_COTIZACIONES,
 							VariablesPermisos.OPERACION_LEER);
 
-			
-			lstCotizaciones = controlador.getCotizaciones(permisoAux);
-			
+				lstCotizaciones = controlador.getCotizaciones(permisoAux, new java.sql.Timestamp(fechaInicio.getValue().getTime()), new java.sql.Timestamp(fechaFin.getValue().getTime()));
 		} 
 		catch (ObteniendoCotizacionesException | InicializandoException | ConexionException| ObteniendoPermisosException| NoTienePermisosException e) {
 			

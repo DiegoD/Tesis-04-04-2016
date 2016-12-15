@@ -25,7 +25,7 @@ public class DAOProcesos implements IDAOProcesos{
 	/**
 	 * Nos retorna una lista con todos los procesos del sistema
 	 */
-	public ArrayList<Proceso> getProcesosTodos(Connection con, String codEmp) throws ObteniendoProcesosException, ConexionException {
+	public ArrayList<Proceso> getProcesosTodos(Connection con, String codEmp, Timestamp inicio, Timestamp fin) throws ObteniendoProcesosException, ConexionException {
 		
 		ArrayList<Proceso> lstProcesos = new ArrayList<Proceso>();
 	
@@ -38,6 +38,78 @@ public class DAOProcesos implements IDAOProcesos{
 	    	ResultSet rs;
 	    	
 	    	pstmt1.setString(1, codEmp);
+	    	pstmt1.setTimestamp(2, inicio);
+	    	pstmt1.setTimestamp(3, fin);
+	    	
+			rs = pstmt1.executeQuery();
+			
+			Proceso aux;
+			while(rs.next ()) {
+				
+							
+				aux = new Proceso();
+				
+				aux.setCodigo(rs.getInt(1));
+				aux.setFecha(rs.getTimestamp(2));
+				aux.setNroDocum(rs.getInt(3));
+				aux.setFecDocum(rs.getTimestamp(4));
+				aux.setNroMega(rs.getInt(5));
+				aux.setCarpeta(rs.getString(6));
+				aux.setImpMo(rs.getDouble(7));
+				aux.setImpMn(rs.getDouble(8));
+				aux.setImpTr(rs.getDouble(9));
+				aux.setTcMov(rs.getDouble(10));
+				aux.setKilos(rs.getDouble(11));
+				aux.setFecCruce(rs.getTimestamp(12));
+				aux.setMarca(rs.getString(13));
+				aux.setMedio(rs.getString(14));
+				aux.setDescripcion(rs.getString(15));
+				aux.setObservaciones(rs.getString(16));
+				aux.setFechaMod(rs.getTimestamp(17));
+				aux.setUsuarioMod(rs.getString(18));
+				aux.setOperacion(rs.getString(19));
+				
+				aux.setDocumento(new DocumentoAduanero((rs.getString(20)), 
+						rs.getString(21)));
+				
+				aux.setClienteInfo(new ClienteInfo(rs.getString(22), rs.getString(23)));
+				
+				aux.setMonedaInfo(new MonedaInfo(rs.getString(24)
+						, rs.getString(25)
+						, rs.getString(26)));
+				
+				lstProcesos.add(aux);
+				
+			}
+			rs.close ();
+			pstmt1.close ();
+    	}	
+    	
+		catch (SQLException e) {
+			throw new ObteniendoProcesosException();
+			
+		}
+    	
+    	return lstProcesos;
+	}
+	
+	/**
+	 * Nos retorna una lista con todos los procesos del sistema
+	 */
+	public ArrayList<Proceso> getProcesosTodosSinFecha(Connection con, String codEmp) throws ObteniendoProcesosException, ConexionException {
+		
+		ArrayList<Proceso> lstProcesos = new ArrayList<Proceso>();
+	
+		try {
+			
+	    	ConsultasDD clts = new ConsultasDD();
+	    	String query = clts.getProcesos();
+	    	PreparedStatement pstmt1 = con.prepareStatement(query);
+	    	
+	    	ResultSet rs;
+	    	
+	    	pstmt1.setString(1, codEmp);
+	    	
 			rs = pstmt1.executeQuery();
 			
 			Proceso aux;

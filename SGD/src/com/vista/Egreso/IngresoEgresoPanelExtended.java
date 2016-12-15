@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Locale;
 
 import com.controladores.IngresoEgresoControlador;
@@ -45,11 +46,13 @@ public class IngresoEgresoPanelExtended extends IngresoEgresoPanel{
 	private IngresoEgresoControlador controlador;
 	PermisosUsuario permisos;
 	MySub sub = new MySub("75%", "65%");
+	boolean actualiza = false;
 	
 	public IngresoEgresoPanelExtended(){
 		
 		controlador = new IngresoEgresoControlador();
 		this.lstEgresos = new ArrayList<IngresoCobroVO>();
+		this.lblTitulo.setValue("Egresos");
 		
 		String usuario = (String)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("usuario");
 		this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
@@ -62,6 +65,14 @@ public class IngresoEgresoPanelExtended extends IngresoEgresoPanel{
         
 			try {
 				
+				Calendar c = Calendar.getInstance();   // this takes current date
+			    c.set(Calendar.DAY_OF_MONTH, 1);
+				
+			    this.fechaInicio.setValue(new java.sql.Date(c.getTimeInMillis()));
+			    
+			    c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
+			    this.fechaFin.setValue(new java.sql.Date(c.getTimeInMillis()));
+			    
 				this.inicializarGrilla();
 				
 				/*Para el boton de nuevo, verificamos que tenga permisos de nuevoEditar*/
@@ -115,53 +126,74 @@ public class IngresoEgresoPanelExtended extends IngresoEgresoPanel{
 		
 		grid.setContainerDataSource(container);
 		
-		//Quitamos las columnas de la grilla de auditoria
-		this.ocultarColumnasGrilla();
-		
-		/*Agregamos los filtros a la grilla*/
-		this.filtroGrilla();
-		
-		grid.addSelectionListener(new SelectionListener() {
-						
-		    @Override
-		    public void select(SelectionEvent event) {
-		       
-		    	try{
-		    		
-		    		if(grid.getSelectedRow() != null){
-		    			BeanItem<IngresoCobroVO> item = container.getItem(grid.getSelectedRow());
+		if(!actualiza){
+			
+			actualiza = true;
+			
+			//Quitamos las columnas de la grilla de auditoria
+			this.ocultarColumnasGrilla();
+			
+			/*Agregamos los filtros a la grilla*/
+			this.filtroGrilla();
+			
+			grid.addSelectionListener(new SelectionListener() {
+							
+			    @Override
+			    public void select(SelectionEvent event) {
+			       
+			    	try{
+			    		
+			    		if(grid.getSelectedRow() != null){
+			    			BeanItem<IngresoCobroVO> item = container.getItem(grid.getSelectedRow());
+					    	
+			    			//IngresoCobroVO aux = item.getBean();
+					    	/*Puede ser null si accedemos luego de haberlo agregado, ya que no va a la base*/
+					    	if(item.getBean().getFechaMod() == null)
+					    	{
+					    		item.getBean().setFechaMod(new Timestamp(System.currentTimeMillis()));
+					    	}
+					    	
+					    	form = new IngresoEgresoViewExtended(Variables.OPERACION_LECTURA, IngresoEgresoPanelExtended.this);
+							//form.fieldGroup.setItemDataSource(item);
+							sub = new MySub("90%","90%");
+							sub.setModal(true);
+							sub.setVista(form);
+							
+					    	form.setDataSourceFormulario(item); 
+					    	form.setLstDetalle(item.getBean().getDetalle());
+							
+							/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
+							
+							
+							
+							UI.getCurrent().addWindow(sub);
+			    		}
 				    	
-		    			//IngresoCobroVO aux = item.getBean();
-				    	/*Puede ser null si accedemos luego de haberlo agregado, ya que no va a la base*/
-				    	if(item.getBean().getFechaMod() == null)
-				    	{
-				    		item.getBean().setFechaMod(new Timestamp(System.currentTimeMillis()));
-				    	}
-				    	
-				    	form = new IngresoEgresoViewExtended(Variables.OPERACION_LECTURA, IngresoEgresoPanelExtended.this);
-						//form.fieldGroup.setItemDataSource(item);
-						sub = new MySub("90%","90%");
-						sub.setModal(true);
-						sub.setVista(form);
-						
-				    	form.setDataSourceFormulario(item); 
-				    	form.setLstDetalle(item.getBean().getDetalle());
-						
-						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
-						
-						
-						
-						UI.getCurrent().addWindow(sub);
-		    		}
+					}
 			    	
-				}
-		    	
-		    	catch(Exception e){
-			    	Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			    	catch(Exception e){
+				    	Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+				    }
+			      
 			    }
-		      
-		    }
-		});
+			});
+			
+			this.btnActualizar.addClickListener(click -> {
+				try {
+					
+					if(fechaInicio.getValue()==null || fechaFin.getValue()==null){
+						Mensajes.mostrarMensajeError("Debe ingresar las fechas para actualizar la búsqueda");
+					}
+					else{
+						this.inicializarGrilla();
+					}
+					
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			});
+		}
 		
 	}
 	
@@ -184,7 +216,7 @@ public class IngresoEgresoPanelExtended extends IngresoEgresoPanel{
 							VariablesPermisos.OPERACION_LEER);
 
 			
-			lst = controlador.getIngresoEgresoTodos(permisoAux);
+			lst = controlador.getIngresoEgresoTodos(permisoAux, new java.sql.Timestamp(fechaInicio.getValue().getTime()), new java.sql.Timestamp(fechaFin.getValue().getTime()));
 
 		} catch (InicializandoException | ConexionException | ObteniendoPermisosException | NoTienePermisosException | ObteniendoEgresoCobroException e) {
 			
@@ -367,7 +399,7 @@ public class IngresoEgresoPanelExtended extends IngresoEgresoPanel{
 		grid.getColumn("codEmp").setHidden(true);
 		grid.getColumn("codMoneda").setHidden(true);
 		grid.getColumn("detalle").setHidden(true);
-		grid.getColumn("fecValor").setHidden(true);
+		grid.getColumn("fecDoc").setHidden(true);
 		grid.getColumn("impTotMn").setHidden(true);
 		grid.getColumn("mPago").setHidden(true);
 		grid.getColumn("nomBanco").setHidden(true);
@@ -388,7 +420,7 @@ public class IngresoEgresoPanelExtended extends IngresoEgresoPanel{
 		grid.removeColumn("codCtaInd");
 		grid.getColumn("simboloMoneda").setHeaderCaption("Moneda");
 		
-		grid.getColumn("fecDoc").setConverter(new StringToDateConverter(){
+		grid.getColumn("fecValor").setConverter(new StringToDateConverter(){
 			/**
 			 * 
 			 */
@@ -407,7 +439,7 @@ public class IngresoEgresoPanelExtended extends IngresoEgresoPanel{
 		grid.getColumn("nroDocum").setWidth(150);
 		grid.getColumn("simboloMoneda").setWidth(150);
 		grid.getColumn("impTotMo").setWidth(150);
-		grid.getColumn("fecDoc").setWidth(150);
+		grid.getColumn("fecValor").setWidth(150);
 		grid.getColumn("referencia").setWidth(300);
 		
 		grid.setColumnOrder("nomTitular", "referencia", "nroDocum", "simboloMoneda", "impTotMo", "fecDoc");

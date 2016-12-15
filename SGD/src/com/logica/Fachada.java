@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
@@ -1296,7 +1297,7 @@ public void editarBanco(BancoVO bancoVO, String codEmp) throws  ConexionExceptio
 *
 */
 @SuppressWarnings("unchecked") 
-public ArrayList<IngresoCobroVO> getIngresoCobroTodos(String codEmp) throws ObteniendoIngresoCobroException, ConexionException {
+public ArrayList<IngresoCobroVO> getIngresoCobroTodos(String codEmp, Timestamp inicio, Timestamp fin) throws ObteniendoIngresoCobroException, ConexionException {
 	
 	Connection con = null;
 	
@@ -1307,7 +1308,7 @@ public ArrayList<IngresoCobroVO> getIngresoCobroTodos(String codEmp) throws Obte
 	{
 		con = this.pool.obtenerConeccion();
 		
-		lst = this.ingresoCobro.getIngresoCobroTodos(con, codEmp);
+		lst = this.ingresoCobro.getIngresoCobroTodos(con, codEmp, inicio, fin);
 		
 		for (IngresoCobro ing : lst) 
 		{
@@ -1341,7 +1342,7 @@ public ArrayList<IngresoCobroVO> getIngresoCobroTodos(String codEmp) throws Obte
 *
 */
 @SuppressWarnings("unchecked") 
-public ArrayList<IngresoCobroVO> getIngresoCobroTodosOtro(String codEmp) throws ObteniendoIngresoCobroException, ConexionException {
+public ArrayList<IngresoCobroVO> getIngresoCobroTodosOtro(String codEmp, Timestamp inicio, Timestamp fin) throws ObteniendoIngresoCobroException, ConexionException {
 	
 	Connection con = null;
 	
@@ -1352,7 +1353,7 @@ public ArrayList<IngresoCobroVO> getIngresoCobroTodosOtro(String codEmp) throws 
 	{
 		con = this.pool.obtenerConeccion();
 		
-		lst = this.ingresoCobro.getIngresoCobroTodosOtro(con, codEmp); 
+		lst = this.ingresoCobro.getIngresoCobroTodosOtro(con, codEmp, inicio, fin); 
 		
 		for (IngresoCobro ing : lst) 
 		{
@@ -1922,7 +1923,7 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 	*
 	*/
 	@SuppressWarnings("unchecked") 
-	public ArrayList<IngresoCobroVO> getEgresoCobroTodos(String codEmp) throws ObteniendoEgresoCobroException, ConexionException {
+	public ArrayList<IngresoCobroVO> getEgresoCobroTodos(String codEmp, Timestamp inicio, Timestamp fin) throws ObteniendoEgresoCobroException, ConexionException {
 	
 		Connection con = null;
 		
@@ -1933,7 +1934,7 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 		{
 			con = this.pool.obtenerConeccion();
 			
-			lst = this.egresoCobro.getEgresoCobroTodos(con, codEmp);
+			lst = this.egresoCobro.getEgresoCobroTodos(con, codEmp, inicio, fin);
 			
 			for (IngresoCobro ing : lst) 
 			{
@@ -1964,7 +1965,7 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 	*
 	*/
 	@SuppressWarnings("unchecked") 
-	public ArrayList<IngresoCobroVO> getEgresoCobroOtroTodos(String codEmp) throws ObteniendoEgresoCobroException, ConexionException {
+	public ArrayList<IngresoCobroVO> getEgresoCobroOtroTodos(String codEmp, Timestamp inicio, Timestamp fin) throws ObteniendoEgresoCobroException, ConexionException {
 	
 		Connection con = null;
 		
@@ -1975,7 +1976,7 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 		{
 			con = this.pool.obtenerConeccion();
 			
-			lst = this.egresoCobro.getEgresoCobroOtroTodos(con, codEmp); 
+			lst = this.egresoCobro.getEgresoCobroOtroTodos(con, codEmp, inicio, fin); 
 			
 			for (IngresoCobro ing : lst) 
 			{
@@ -2978,7 +2979,7 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 	*
 	*/
 	@SuppressWarnings("unchecked") 
-	public ArrayList<FacturaVO> getFacturasTodos(String codEmp) throws ObteniendoFacturasException, ConexionException {
+	public ArrayList<FacturaVO> getFacturasTodos(String codEmp, Timestamp inicio, Timestamp fin) throws ObteniendoFacturasException, ConexionException {
 	
 		Connection con = null;
 		
@@ -2989,7 +2990,7 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 		{
 			con = this.pool.obtenerConeccion();
 			
-			lst = this.facturas.getFacturaTodos(con, codEmp);
+			lst = this.facturas.getFacturaTodos(con, codEmp, inicio, fin);
 			
 			for (Factura fac : lst) 
 			{
@@ -3293,7 +3294,7 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 	*
 	*/
 	@SuppressWarnings("unchecked") 
-	public ArrayList<ReciboVO> getRecibosTodos(String codEmp) throws ObteniendoReciboException, ConexionException {
+	public ArrayList<ReciboVO> getRecibosTodos(String codEmp, Timestamp inicio, Timestamp fin) throws ObteniendoReciboException, ConexionException {
 	
 		Connection con = null;
 		
@@ -3304,7 +3305,7 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 		{
 			con = this.pool.obtenerConeccion();
 			
-			lst = this.recibos.getReciboTodos(con, codEmp);
+			lst = this.recibos.getReciboTodos(con, codEmp, inicio, fin);
 			
 			for (Recibo rec : lst) 
 			{

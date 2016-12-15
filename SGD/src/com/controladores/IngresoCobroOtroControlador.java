@@ -1,5 +1,6 @@
 package com.controladores;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
@@ -17,11 +18,11 @@ public class IngresoCobroOtroControlador extends IngresoCobroControlador{
 	 * Obtiene los cobros del sistema
 	 */
 	@Override
-	public ArrayList<IngresoCobroVO> getIngresoCobroTodos(UsuarioPermisosVO permisos) throws ObteniendoIngresoCobroException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException  
+	public ArrayList<IngresoCobroVO> getIngresoCobroTodos(UsuarioPermisosVO permisos, Timestamp inicio, Timestamp fin) throws ObteniendoIngresoCobroException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException  
 	{
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			return Fachada.getInstance().getIngresoCobroTodosOtro(permisos.getCodEmp());
+			return Fachada.getInstance().getIngresoCobroTodosOtro(permisos.getCodEmp(), inicio, fin);
 		else
 			throw new NoTienePermisosException();
     }

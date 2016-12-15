@@ -1,6 +1,7 @@
 package com.controladores;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
@@ -55,11 +56,11 @@ public class GastoControlador {
 	 * @throws NoTienePermisosException 
 	 * @throws ObteniendoPermisosException 
 	 */
-	public ArrayList<GastoVO> getGastos(UsuarioPermisosVO permisos) throws ObteniendoGastosException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException {
+	public ArrayList<GastoVO> getGastos(UsuarioPermisosVO permisos, Timestamp inicio, Timestamp fin) throws ObteniendoGastosException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException {
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			return FachadaDD.getInstance().getGastos(permisos.getCodEmp());
+			return FachadaDD.getInstance().getGastos(permisos.getCodEmp(), inicio, fin);
 		else
 			throw new NoTienePermisosException();
 	}
@@ -194,7 +195,7 @@ public class GastoControlador {
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			return FachadaDD.getInstance().getProcesos(permisos.getCodEmp());
+			return FachadaDD.getInstance().getProcesosSinFecha(permisos.getCodEmp());
 		else
 			throw new NoTienePermisosException();
 	}

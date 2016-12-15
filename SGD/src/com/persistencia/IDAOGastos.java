@@ -2,6 +2,7 @@ package com.persistencia;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
@@ -15,7 +16,8 @@ import com.logica.Docum.DocumDetalle;
 
 public interface IDAOGastos {
 	
-	public ArrayList<Gasto> getGastos(Connection con, String codEmp) throws ObteniendoGastosException, ConexionException;
+	public ArrayList<Gasto> getGastos(Connection con, String codEmp, Timestamp inicio, Timestamp fin)
+			throws ObteniendoGastosException, ConexionException;
 	public boolean memberGasto(long codGasto, String codEmp, Connection con) throws ExisteGastoException, ConexionException;
 	public void insertarGasto(DocumDetalle gasto, String codEmp, Connection con) throws IngresandoGastoException, ConexionException, SQLException;
 	public void modificarGasto(DocumDetalle gasto, String codEmp, Connection con) throws ModificandoGastoException, IngresandoGastoException, ConexionException;

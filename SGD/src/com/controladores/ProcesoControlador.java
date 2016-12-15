@@ -1,6 +1,7 @@
 package com.controladores;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
@@ -38,11 +39,11 @@ public class ProcesoControlador {
 	 * @throws NoTienePermisosException 
 	 * @throws ObteniendoPermisosException 
 	 */
-	public ArrayList<ProcesoVO> getProcesos(UsuarioPermisosVO permisos) throws ObteniendoProcesosException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException {
+	public ArrayList<ProcesoVO> getProcesos(UsuarioPermisosVO permisos, Timestamp inicio, Timestamp fin) throws ObteniendoProcesosException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException {
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			return FachadaDD.getInstance().getProcesos(permisos.getCodEmp());
+			return FachadaDD.getInstance().getProcesos(permisos.getCodEmp(), inicio, fin);
 		else
 			throw new NoTienePermisosException();
 	}

@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
@@ -32,7 +33,7 @@ public class DAORecibos implements IDAORecibos{
 	/**
 	 * Nos retorna una lista con todos las facturas del sistema para la emrpesa
 	 */
-	public ArrayList<Recibo> getReciboTodos(Connection con, String codEmp) throws ObteniendoReciboException, ConexionException {
+	public ArrayList<Recibo> getReciboTodos(Connection con, String codEmp, Timestamp inicio, Timestamp fin) throws ObteniendoReciboException, ConexionException {
 		
 		ArrayList<Recibo> lst = new ArrayList<Recibo>();
 	
@@ -45,6 +46,9 @@ public class DAORecibos implements IDAORecibos{
 	    	ResultSet rs;
 	    	
 	    	pstmt1.setString(1, codEmp);
+	    	pstmt1.setTimestamp(2, inicio);
+	    	pstmt1.setTimestamp(3, fin);
+	    	
 			rs = pstmt1.executeQuery();
 			
 			Recibo recibo;

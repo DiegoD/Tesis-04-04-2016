@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
@@ -22,7 +23,7 @@ import com.logica.Docum.TitularInfo;
 public interface IDAORecibos {
 
 	
-	public ArrayList<Recibo> getReciboTodos(Connection con, String codEmp) throws ObteniendoReciboException, ConexionException;
+	public ArrayList<Recibo> getReciboTodos(Connection con, String codEmp, Timestamp inicio, Timestamp fin) throws ObteniendoReciboException, ConexionException;
 	public boolean memberRecibos(int nroDocum, String serie, String codigo, String codEmp, Connection con) throws ExisteReciboException, ConexionException;
 	public void insertarRecibo(Recibo recibo, Connection con) throws InsertandoReciboException, ConexionException;
 	public void eliminarRecibo(Recibo recibo, Connection con) throws InsertandoReciboException, ConexionException, EliminandoReciboException;

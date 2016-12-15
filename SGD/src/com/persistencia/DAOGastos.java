@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
@@ -29,7 +30,7 @@ import com.mysql.jdbc.Statement;
 public class DAOGastos implements IDAOGastos{
 
 	@Override
-	public ArrayList<Gasto> getGastos(Connection con, String codEmp)
+	public ArrayList<Gasto> getGastos(Connection con, String codEmp, Timestamp inicio, Timestamp fin)
 			throws ObteniendoGastosException, ConexionException {
 		// TODO Auto-generated method stub
 		ArrayList<Gasto> lstGastos = new ArrayList<Gasto>();
@@ -49,6 +50,9 @@ public class DAOGastos implements IDAOGastos{
 	    	ResultSet rs;
 	    	
 	    	pstmt1.setString(1, codEmp);
+	    	pstmt1.setTimestamp(2, inicio);
+	    	pstmt1.setTimestamp(3, fin);
+	    	
 			rs = pstmt1.executeQuery();
 			
 			Gasto aux;
@@ -94,6 +98,9 @@ public class DAOGastos implements IDAOGastos{
 			pstmt1.close ();
 			
 			pstmt2.setString(1, codEmp);
+			pstmt2.setTimestamp(2, inicio);
+	    	pstmt2.setTimestamp(3, fin);
+	    	
 			rs = pstmt2.executeQuery();
 			
 			while(rs.next ()) {
@@ -135,6 +142,9 @@ public class DAOGastos implements IDAOGastos{
 			}
 			
 			pstmt3.setString(1, codEmp);
+			pstmt3.setTimestamp(2, inicio);
+	    	pstmt3.setTimestamp(3, fin);
+	    	
 			rs = pstmt3.executeQuery();
 			
 			while(rs.next ()) {

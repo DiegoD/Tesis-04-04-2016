@@ -1,6 +1,7 @@
 package com.persistencia;
 
 import java.sql.Connection;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
@@ -10,7 +11,7 @@ import com.valueObject.Docum.FacturaVO;
 
 public interface IDAOFacturas {
 
-	public ArrayList<Factura> getFacturaTodos(Connection con, String codEmp) throws ObteniendoFacturasException, ConexionException;
+	public ArrayList<Factura> getFacturaTodos(Connection con, String codEmp, Timestamp inicio, Timestamp fin) throws ObteniendoFacturasException, ConexionException;
 	public boolean memberFacturas(int nroDocum, String serie, String codigo, String codEmp, Connection con) throws ExisteFacturaException, ConexionException;
 	public void insertarFactura(Factura factura, Connection con) throws InsertandoFacturaException, ConexionException;
 	public void eliminarFactura(Factura factura, Connection con) throws InsertandoFacturaException, ConexionException, EliminandoFacturaException;

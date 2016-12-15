@@ -227,7 +227,14 @@ public class DepositoPanelExtended extends DepositoPanel{
 			
 			this.btnActualizar.addClickListener(click -> {
 				try {
-					this.inicializarGrilla();
+					
+					if(fechaInicio.getValue()==null || fechaFin.getValue()==null){
+						Mensajes.mostrarMensajeError("Debe ingresar las fechas para actualizar la búsqueda");
+					}
+					else{
+						this.inicializarGrilla();
+					}
+					
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

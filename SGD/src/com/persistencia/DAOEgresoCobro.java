@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
@@ -23,7 +24,7 @@ public class DAOEgresoCobro implements IDAOEgresoCobro{
 	/**
 	 * Nos retorna una lista con todos los egresos de cobro del sistema para la emrpesa
 	 */
-	public ArrayList<IngresoCobro> getEgresoCobroTodos(Connection con, String codEmp) throws ObteniendoEgresoCobroException, ConexionException {
+	public ArrayList<IngresoCobro> getEgresoCobroTodos(Connection con, String codEmp, Timestamp inicio, Timestamp fin) throws ObteniendoEgresoCobroException, ConexionException {
 		
 		ArrayList<IngresoCobro> lst = new ArrayList<IngresoCobro>();
 	
@@ -36,6 +37,9 @@ public class DAOEgresoCobro implements IDAOEgresoCobro{
 	    	ResultSet rs;
 	    	
 	    	pstmt1.setString(1, codEmp);
+	    	pstmt1.setTimestamp(2, inicio);
+	    	pstmt1.setTimestamp(3, fin);
+	    	
 			rs = pstmt1.executeQuery();
 			
 			IngresoCobro aux;
@@ -105,7 +109,7 @@ public class DAOEgresoCobro implements IDAOEgresoCobro{
 	/**
 	 * Nos retorna una lista con todos los egresos de cobro otros del sistema para la emrpesa
 	 */
-	public ArrayList<IngresoCobro> getEgresoCobroOtroTodos(Connection con, String codEmp) throws ObteniendoEgresoCobroException, ConexionException {
+	public ArrayList<IngresoCobro> getEgresoCobroOtroTodos(Connection con, String codEmp, Timestamp inicio, Timestamp fin) throws ObteniendoEgresoCobroException, ConexionException {
 		
 		ArrayList<IngresoCobro> lst = new ArrayList<IngresoCobro>();
 	
@@ -118,6 +122,9 @@ public class DAOEgresoCobro implements IDAOEgresoCobro{
 	    	ResultSet rs;
 	    	
 	    	pstmt1.setString(1, codEmp);
+	    	pstmt1.setTimestamp(2, inicio);
+	    	pstmt1.setTimestamp(3, fin);
+	    	
 			rs = pstmt1.executeQuery();
 			
 			IngresoCobro aux;

@@ -1,5 +1,6 @@
 package com.controladores;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
@@ -30,11 +31,11 @@ public class CotizacionControlador {
 	 * @throws NoTienePermisosException 
 	 * @throws ObteniendoPermisosException 
 	 */
-	public ArrayList<CotizacionVO> getCotizaciones(UsuarioPermisosVO permisos) throws ObteniendoCotizacionesException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException {
+	public ArrayList<CotizacionVO> getCotizaciones(UsuarioPermisosVO permisos, Timestamp inicio, Timestamp fin) throws ObteniendoCotizacionesException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException {
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			return FachadaDD.getInstance().getCotizaciones(permisos.getCodEmp());
+			return FachadaDD.getInstance().getCotizaciones(permisos.getCodEmp(), inicio, fin);
 		else
 			throw new NoTienePermisosException();
 	}

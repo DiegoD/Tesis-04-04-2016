@@ -9,24 +9,20 @@ import java.util.ArrayList;
 import com.excepciones.ConexionException;
 import com.excepciones.Factura.*;
 import com.logica.MonedaInfo;
-import com.logica.Docum.BancoInfo;
-import com.logica.Docum.CuentaBcoInfo;
 import com.logica.Docum.CuentaInfo;
-import com.logica.Docum.DatosDocum;
 import com.logica.Docum.Factura;
 import com.logica.Docum.FacturaDetalle;
 import com.logica.Docum.ImpuestoInfo;
 import com.logica.Docum.RubroInfo;
 import com.logica.Docum.TitularInfo;
-import com.logica.IngresoCobro.IngresoCobro;
-import com.logica.IngresoCobro.IngresoCobroLinea;
 
 public class DAOFacturas implements IDAOFacturas{
   
 	/**
 	 * Nos retorna una lista con todos las facturas del sistema para la emrpesa
 	 */
-	public ArrayList<Factura> getFacturaTodos(Connection con, String codEmp) throws ObteniendoFacturasException, ConexionException {
+	public ArrayList<Factura> getFacturaTodos(Connection con, String codEmp, java.sql.Timestamp inicio,
+			java.sql.Timestamp fin) throws ObteniendoFacturasException, ConexionException  {
 		
 		ArrayList<Factura> lst = new ArrayList<Factura>();
 	
@@ -39,6 +35,9 @@ public class DAOFacturas implements IDAOFacturas{
 	    	ResultSet rs;
 	    	
 	    	pstmt1.setString(1, codEmp);
+	    	pstmt1.setTimestamp(2, inicio);
+	    	pstmt1.setTimestamp(3, fin);
+	    	
 			rs = pstmt1.executeQuery();
 			
 			Factura fact;
@@ -496,6 +495,7 @@ public class DAOFacturas implements IDAOFacturas{
     	
     	return lst;
 	}
+
 	
 
 	

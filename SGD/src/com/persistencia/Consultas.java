@@ -915,7 +915,7 @@ public class Consultas {
 		sb.append("ON c_ingcobro.cod_bco = m_bancos.cod_bco  ");
 		sb.append("AND c_ingcobro.cod_emp = m_bancos.cod_emp  "); 
 		 
-		sb.append("WHERE c_ingcobro.cod_emp = ?  AND c_ingcobro.cod_docum = 'ingcobro' "); 
+		sb.append("WHERE c_ingcobro.cod_emp = ?  AND c_ingcobro.cod_docum = 'ingcobro' and c_ingcobro.fec_valor between DATE_SUB(?, INTERVAL 1 DAY) and ?"); 
 		
 		return sb.toString();
 	}
@@ -953,7 +953,7 @@ public String getIngresoCobroCabTodosOtros(){
 		sb.append("ON c_ingcobro.cod_bco = m_bancos.cod_bco  ");
 		sb.append("AND c_ingcobro.cod_emp = m_bancos.cod_emp  "); 
 		 
-		sb.append("WHERE c_ingcobro.cod_emp = ? AND c_ingcobro.cod_docum = 'otrcobro' "); 
+		sb.append("WHERE c_ingcobro.cod_emp = ? AND c_ingcobro.cod_docum = 'otrcobro' and c_ingcobro.fec_valor between DATE_SUB(?, INTERVAL 1 DAY) and ?"); 
 		
 		return sb.toString();
 	}
@@ -1132,7 +1132,8 @@ public String getIngresoCobroCabTodosOtros(){
 		sb.append("ON c_egrcobro.cod_bco = m_bancos.cod_bco  ");
 		sb.append("AND c_egrcobro.cod_emp = m_bancos.cod_emp  "); 
 		
-		sb.append("WHERE c_egrcobro.cod_emp = ? AND c_egrcobro.cod_docum = 'egrcobro' "); 
+		sb.append("WHERE c_egrcobro.cod_emp = ? AND c_egrcobro.cod_docum = 'egrcobro' "
+				+ "and fec_valor between DATE_SUB(?, INTERVAL 1 DAY) and ? "); 
 		
 		return sb.toString();
 	}
@@ -1170,7 +1171,8 @@ public String getIngresoCobroCabTodosOtros(){
 		sb.append("ON c_egrcobro.cod_bco = m_bancos.cod_bco  ");
 		sb.append("AND c_egrcobro.cod_emp = m_bancos.cod_emp  "); 
 		
-		sb.append("WHERE c_egrcobro.cod_emp = ? AND c_egrcobro.cod_docum = 'otroegr' "); 
+		sb.append("WHERE c_egrcobro.cod_emp = ? AND c_egrcobro.cod_docum = 'otroegr' "
+				+ "and fec_valor between DATE_SUB(?, INTERVAL 1 DAY) and ? "); 
 		
 		return sb.toString();
 	}
@@ -1344,7 +1346,7 @@ public String getIngresoCobroCabTodosOtros(){
 		sb.append("ON c_facturas.cod_emp = c_procesos.cod_emp ");  
 		sb.append("AND c_facturas.cod_proceso = c_procesos.cod_proceso  ");
 		
-		sb.append("WHERE c_facturas.cod_emp = ?  "); 
+		sb.append("WHERE c_facturas.cod_emp = ? and fec_valor between DATE_SUB(?, INTERVAL 1 DAY) and ? "); 
 		
 		return sb.toString();
 	}
@@ -1545,7 +1547,7 @@ public String getIngresoCobroCabTodosOtros(){
 		sb.append("AND c_recibos.cod_ctabco = m_ctasbcos.cod_ctabco ");  
 		sb.append("AND c_recibos.cod_bco = m_ctasbcos.cod_bco ");
 		
-		sb.append("WHERE c_recibos.cod_emp = ?  "); 
+		sb.append("WHERE c_recibos.cod_emp = ? and fec_valor between DATE_SUB(?, INTERVAL 1 DAY) and ?  "); 
 		
 		return sb.toString();
 	}
