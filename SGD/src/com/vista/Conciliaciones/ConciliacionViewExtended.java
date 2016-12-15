@@ -96,10 +96,6 @@ private static final long serialVersionUID = 1L;
 			}
 	    });
 	
-		this.cancelar.addClickListener(click -> {
-			main.cerrarVentana();
-		});
-				
 		comboMoneda.addValueChangeListener(new Property.ValueChangeListener() {
 
 			@Override

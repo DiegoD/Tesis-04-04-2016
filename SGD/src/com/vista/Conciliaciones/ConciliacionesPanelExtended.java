@@ -196,52 +196,54 @@ public class ConciliacionesPanelExtended extends ConciliacionesPanel {
 			
 			/*Agregamos los filtros a la grilla*/
 			this.filtroGrilla();
+			
+			gridConciliaciones.addSelectionListener(new SelectionListener() {
+				
+			    @Override
+			    public void select(SelectionEvent event) {
+			       
+			    	try{
+			    		
+			    		if(gridConciliaciones.getSelectedRow() != null){
+			    			BeanItem<ConciliacionVO> item = container.getItem(gridConciliaciones.getSelectedRow());
+					    	
+					    	/*Puede ser null si accedemos luego de haberlo agregado, ya que no va a la base*/
+					    	if(item.getBean().getFechaMod() == null)
+					    	{
+					    		item.getBean().setFechaMod(new Timestamp(System.currentTimeMillis()));
+					    	}
+								
+					    	form = new ConciliacionViewExtended(Variables.OPERACION_LECTURA, ConciliacionesPanelExtended.this);
+					    	sub = new MySub("90%","50%");
+							sub.setModal(true);
+							sub.setVista(form);
+							/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
+							form.setDataSourceFormulario(item);
+							form.setLstDetalle(item.getBean().getLstDetalle());
+							
+							UI.getCurrent().addWindow(sub);
+			    		}
+				    	
+					}
+			    	
+			    	catch(Exception e){
+				    	Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+				    }
+			      
+			    }
+			});
+			
+			this.btnActualizar.addClickListener(click -> {
+				try {
+					this.inicializarGrilla();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			});
 		}
 		
-		gridConciliaciones.addSelectionListener(new SelectionListener() {
-						
-		    @Override
-		    public void select(SelectionEvent event) {
-		       
-		    	try{
-		    		
-		    		if(gridConciliaciones.getSelectedRow() != null){
-		    			BeanItem<ConciliacionVO> item = container.getItem(gridConciliaciones.getSelectedRow());
-				    	
-				    	/*Puede ser null si accedemos luego de haberlo agregado, ya que no va a la base*/
-				    	if(item.getBean().getFechaMod() == null)
-				    	{
-				    		item.getBean().setFechaMod(new Timestamp(System.currentTimeMillis()));
-				    	}
-							
-				    	form = new ConciliacionViewExtended(Variables.OPERACION_LECTURA, ConciliacionesPanelExtended.this);
-				    	sub = new MySub("90%","50%");
-						sub.setModal(true);
-						sub.setVista(form);
-						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
-						form.setDataSourceFormulario(item);
-						form.setLstDetalle(item.getBean().getLstDetalle());
-						
-						UI.getCurrent().addWindow(sub);
-		    		}
-			    	
-				}
-		    	
-		    	catch(Exception e){
-			    	Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
-			    }
-		      
-		    }
-		});
 		
-		this.btnActualizar.addClickListener(click -> {
-			try {
-				this.inicializarGrilla();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		});
 		
 	}
 	
