@@ -3,6 +3,7 @@ package com.logica;
 import com.logica.Docum.BancoInfo;
 import com.logica.Docum.CuentaBcoInfo;
 import com.logica.Docum.DatosDocum;
+import com.logica.Docum.Recibo;
 import com.logica.IngresoCobro.IngresoCobro;
 
 public class Cheque extends DatosDocum{
@@ -64,6 +65,30 @@ public class Cheque extends DatosDocum{
 		cheque.setNroTrans(ing.getNroTrans());
 		cheque.setBanco(ing.getBancoInfo());
 		cheque.setCuentaBanco(ing.getCuentaBcoInfo());
+		
+		return cheque;
+		
+	}
+	
+	public Cheque convierteRec(Recibo rec){
+		
+		Cheque cheque = new Cheque();
+		
+		cheque.setCodDocum(rec.getCodDocRef());
+		cheque.setSerieDocum(rec.getSerieDocRef());
+		cheque.setNroDocum(rec.getNroDocRef());
+		cheque.setCodEmp(rec.getCodEmp());
+		cheque.setMoneda(rec.getMoneda());
+		cheque.setTitInfo(rec.getTitInfo());
+		cheque.setImpTotMn(rec.getImpTotMn());
+		cheque.setImpTotMo(rec.getImpTotMo());
+		cheque.setCodCuentaInd(rec.getCodCuentaInd());
+		cheque.setUsuarioMod(rec.getUsuarioMod());
+		cheque.setOperacion(rec.getOperacion());
+		cheque.setReferencia(rec.getReferencia());
+		cheque.setNroTrans(rec.getNroTrans());
+		cheque.setBanco(rec.getBancoInfo());
+		cheque.setCuentaBanco(rec.getCuentaBcoInfo());
 		
 		return cheque;
 		

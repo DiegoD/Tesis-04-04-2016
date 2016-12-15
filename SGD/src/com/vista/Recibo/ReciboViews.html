@@ -14,7 +14,10 @@
    <vaadin-horizontal-layout responsive size-full> 
     <vaadin-form-layout spacing="false" size-full margin-top="false" _id="formLay1"> 
      <vaadin-text-field enabled="false" id="nroTrans" visible="false" _id="nroTrans"></vaadin-text-field> 
-     <vaadin-text-field caption="Nro" style-name="tiny" null-representation="" width="144px" readonly _id="nroDocum"></vaadin-text-field> 
+     <vaadin-horizontal-layout caption="Documento" style-name="name-wrapper" spacing responsive _id="wrapper_docum"> 
+      <vaadin-text-field required style-name="tiny" null-representation="" responsive immediate width="50px" _id="serieDocum"></vaadin-text-field> 
+      <vaadin-text-field required style-name="tiny" null-representation="" responsive immediate width="144px" _id="nroDocum"></vaadin-text-field> 
+     </vaadin-horizontal-layout> 
      <vaadin-horizontal-layout caption="Tipo" spacing> 
       <vaadin-combo-box style-name="tiny" item-caption-mode="id" width="144px" _id="comboTipo"> 
        <option>Caja</option> 

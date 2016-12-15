@@ -3376,12 +3376,11 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 		boolean existe = false;
 		NumeradoresVO codigos = new NumeradoresVO();
 		
-		
 		try 
 		{
 		
 			Recibo rec = new Recibo(vo); 
-			Cotizacion cotiAux;
+			 Cotizacion cotiAux;
 			
 			if(nuevo)
 			{
@@ -3407,7 +3406,44 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 				/*El recibo no lleva saldo */
 				//this.saldos.modificarSaldo(rec, 1, rec.getTcMov(), con);
 				
-				/*Ingresamos la factura*/
+				/******************************************************************************/
+				/*Si el ingreso de cobro es con cheque, ingresamos el cheque*/
+				if(vo.getCodDocRef().equals("cheqrec"))
+				{
+					/*Primero obtenemos el DatosDocum para el cheque dado el ingreso cobro*/
+
+					DatosDocumVO auxCheque = ConvertirDocumento.getDatosDocumChequeDadoRecibo(vo);
+					Cheque cheque = new Cheque();
+					cheque = cheque.convierteRec(rec);
+					auxCheque.setCodMoneda(rec.getCuenta().getCodMoneda());
+				    auxCheque.setNacional(rec.getCuenta().isNacional());
+				     /*Obtenemos el importe moneda operativa de la cuenta del banco*/
+				    
+				    auxCheque.setImpTotMo(rec.getImpTotMo());
+				    
+					this.insertarChequeIntFachada(cheque, con);
+
+					/*Ingresamos el saldo para el cheque */
+					DatosDocum auxCheque2 = new DatosDocum(auxCheque);
+					
+					this.saldos.modificarSaldo(auxCheque2,1, vo.getTcMov() , con);
+				}
+				
+				/*Si es cheque no ingresamos el saldo al banco, esto se realiza cuando
+				 * se ingrese el deposito del cheque, para transferencia y caja si se mueven
+				 * sus respectivas cuentas*/
+				if(!vo.getCodDocRef().equals("cheqrec")) 
+				{
+					/*Ingresamos el saldo a la cuenta (Banco o caja)*/
+					DocumSaldo saldoCuenta = ConvertirDocumento.getDocumSaldoSaCuentasRecibo(vo);
+					
+					this.saldosCuentas.insertarSaldoCuenta(saldoCuenta, con);
+				}
+				
+				/******************************************************************************/
+				
+				
+				/*Ingresamos el recibo*/
 				this.recibos.insertarRecibo(rec, con);
 				
 			}
@@ -3489,8 +3525,41 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 				
 				}
 				
-				/*Eliminamos el saldo para la factura*/ 
-				this.saldos.eliminarSaldo(rec, con);
+				
+				/*******************************************************************************************/
+				/*Si el ingreso de cobro es con cheque, eliminamos el cheque de los saldos y de los cheques*/
+				if(vo.getCodDocRef().equals("cheqrec"))
+				{
+					/*Primero obtenemos el DatosDocum para el cheque dado el ingreso cobro*/
+					DatosDocumVO auxCheque = ConvertirDocumento.getDatosDocumChequeDadoRecibo(vo);
+					Cheque cheque = new Cheque();
+					cheque = cheque.convierteRec(rec);
+					/*Eliminamos el saldo para el cheque */
+					DatosDocum auxCheque2 = new DatosDocum(auxCheque);
+					this.saldos.eliminarSaldo(auxCheque2, con);
+					
+					auxCheque.setImpTotMo(rec.getImpTotMo());
+				    auxCheque.setCodMoneda(rec.getCuenta().getCodMoneda());
+				    auxCheque.setNacional(rec.getCuenta().isNacional());
+					/*Eliminamos el cheque de tabla base*/                                           
+					//DatosDocum chequeL = new DatosDocum(auxCheque); /*Lo convertimos a objeto de logica para pasarlo al DAO*/
+					this.cheques.eliminarCheque(cheque, con);
+				}
+				
+				
+				/*Si es cheque no ingresamos el saldo al banco, esto se realiza cuando
+				 * se ingrese el deposito del cheque, para transferencia y caja si se mueven
+				 * sus respectivas cuentas*/
+				if(!vo.getCodDocRef().equals("cheqrec")) 
+				{
+					/*Bajamos el saldo a la cuenta (Banco o caja)*/
+					/*Obtenemos el objeto DocumSaldo dado el ingreso de cobro*/
+					DocumSaldo saldoCuenta = ConvertirDocumento.getDocumSaldoChequeDadoRecibo(vo);
+					
+					this.saldosCuentas.eliminarSaldoCuenta(saldoCuenta, con);
+				}
+				
+				/*********************************************************************************************/
 				
 				/*Una vez hechos todos los movimientos de saldos y documentos
 				* procedemos a eliminar el recibo*/
@@ -3515,8 +3584,9 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 	/***
 	 * 
 	 * Modificamos el recibo
+	 * @throws Exception 
 	 */
-	public void modificarRecibo(ReciboVO recVO, ReciboVO copiaVO) throws  ConexionException, ModificandoReciboException, ExisteReciboException, NoExisteReciboException{
+	public void modificarRecibo(ReciboVO recVO, ReciboVO copiaVO) throws  ModificandoReciboException, ExisteReciboException, ConexionException , SQLException , InsertandoReciboException , EliminandoReciboException , NoExisteReciboException  {
 	
 		Connection con = null;
 		
@@ -3550,7 +3620,7 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 				throw new ConexionException();
 			}
 			
-			throw new ModificandoReciboException();
+			throw  e;
 		}
 		finally
 		{

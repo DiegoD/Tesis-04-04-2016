@@ -1,6 +1,7 @@
 package com.controladores;
 
 import java.sql.Date;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
@@ -13,7 +14,6 @@ import com.excepciones.Cotizaciones.ObteniendoCotizacionesException;
 import com.excepciones.Factura.ObteniendoFacturasException;
 import com.excepciones.Recibo.*;
 import com.excepciones.Monedas.ObteniendoMonedaException;
-import com.excepciones.Procesos.ObteniendoProcesosException;
 import com.excepciones.Titulares.ObteniendoTitularesException;
 import com.excepciones.clientes.ObteniendoClientesException;
 import com.logica.Fachada;
@@ -74,8 +74,9 @@ public class ReciboControlador {
 	
 	/**
 	 * Modifica los datos de un recibo
+	 * 
 	 */
-	public void modificarRecibo(ReciboVO recVO, ReciboVO copiaVO, UsuarioPermisosVO permisos) throws ConexionException, ModificandoReciboException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ExisteReciboException, NoExisteReciboException 
+	public void modificarRecibo(ReciboVO recVO, ReciboVO copiaVO, UsuarioPermisosVO permisos) throws ConexionException, ModificandoReciboException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ExisteReciboException, NoExisteReciboException, SQLException, InsertandoReciboException, EliminandoReciboException 
 	{
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))

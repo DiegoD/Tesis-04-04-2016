@@ -3,6 +3,7 @@ package com.logica.Docum;
 import com.logica.Moneda;
 import com.logica.MonedaInfo;
 import com.valueObject.Docum.DatosDocumVO;
+import com.valueObject.Docum.ReciboVO;
 import com.valueObject.IngresoCobro.IngresoCobroVO;
 
 /**
@@ -32,6 +33,26 @@ public class ConvertirDocumento {
 		return aux;
 		
 	}
+	
+	/**
+	*Nos retorna un DatosDocumVO para ingresar el cheque dado un Recibo
+	 * Lo utilizamos para ingresar el cheque
+	*
+	*/
+	public static DatosDocumVO getDatosDocumChequeDadoRecibo(ReciboVO recVO){
+		
+		DatosDocumVO aux = new DatosDocumVO();
+		
+		aux.copiar(recVO);
+		
+		aux.setCodDocum(recVO.getCodDocRef());
+		aux.setSerieDocum(recVO.getSerieDocRef());
+		aux.setNroDocum(recVO.getNroDocRef());
+		
+		return aux;
+		
+	}
+	
 	
 	/**
 	*Nos retorna un DatosDocumVO para ingresar el cheque dado un EgresoCobro
@@ -77,6 +98,34 @@ public class ConvertirDocumento {
 		docSaldo.setCodBco(ingVO.getCodBanco());
 		docSaldo.setCodCtaBco(ingVO.getCodCtaBco());
 		docSaldo.setMovimiento(ingVO.getReferencia());
+		
+		docSaldo.setSigno(1); /*Signo positivo*/
+		
+		return docSaldo;
+		
+	}
+	
+	/**
+	*Nos retorna un DocumSaldo para ingresar el saldo a la cuenta correspondiente
+	*dado el ingreso cobro
+	*
+	*/
+	public static DocumSaldo getDocumSaldoChequeDadoRecibo(ReciboVO rec){
+		
+		DatosDocumVO aux = new DatosDocumVO();
+		
+		aux.copiar(rec);
+		
+		DocumSaldo docSaldo = new DocumSaldo(aux);//new DocumSaldo(); //(DocumSaldo)doc;
+		//docSaldo
+		
+		docSaldo.setCodDocum(rec.getCodDocRef());
+		docSaldo.setSerieDocum(rec.getSerieDocRef());
+		docSaldo.setNroDocum(Integer.parseInt(rec.getNroDocRef()));
+		
+		docSaldo.setCodBco(rec.getCodBanco());
+		docSaldo.setCodCtaBco(rec.getCodCtaBco());
+		docSaldo.setMovimiento(rec.getReferencia());
 		
 		docSaldo.setSigno(1); /*Signo positivo*/
 		
@@ -136,9 +185,6 @@ public class ConvertirDocumento {
 		docSaldo.setSerieDocum("0");
 		docSaldo.setNroDocum(Integer.parseInt(ingVO.getNroDocum())); /*Nro docum del cobro*/
 		
-		//private String codBco;
-		//private String codCtaBco;
-		//private String movimiento;
 		
 		if(ingVO.getmPago().equals("Caja")) /*Si es caja */
 		{
@@ -190,6 +236,89 @@ public class ConvertirDocumento {
 		{
 			mInf.setCodMoneda(ingVO.getCodMoneda());
 			mInf.setNacional(ingVO.isNacional());
+		}
+		
+		docSaldo.setMoneda(mInf);
+		
+		if(docSaldo.getMoneda().isNacional())
+		{
+			docSaldo.setImpTotMo(docSaldo.getImpTotMn());
+		}
+		
+		return docSaldo;
+		
+	}
+	
+	/**
+	*Nos retorna un DocumSaldo para ingresar el saldo a la cuenta correspondiente
+	*dado un Recibo
+	*
+	*/
+	public static DocumSaldo getDocumSaldoSaCuentasRecibo(ReciboVO recVO){
+		
+		DatosDocumVO aux = new DatosDocumVO();
+		
+		aux.copiar(recVO);
+		
+		aux.setNroTrans(recVO.getNroTrans());
+		
+		DocumSaldo docSaldo = new DocumSaldo(aux);
+		
+		docSaldo.setCodDocum(recVO.getCodDocum()); /*Documento del cobro*/
+		docSaldo.setSerieDocum("0");
+		docSaldo.setNroDocum(Integer.parseInt(recVO.getNroDocum())); /*Nro docum del cobro*/
+		
+		
+		if(recVO.getmPago().equals("Caja")) /*Si es caja */
+		{
+			docSaldo.setCodBco("0");
+			docSaldo.setCodCtaBco("0");
+			docSaldo.setMovimiento("0");
+			
+			docSaldo.setCodDocumRef("0"); /*Documento del cobro*/
+			docSaldo.setSerieDocumRef("0");
+			docSaldo.setNroDocumRef(0); /*Nro docum del cobro*/
+		}else if(recVO.getmPago().toUpperCase().equals("TRANSFERENCIA")){ /*Si es transferencia*/
+			
+			docSaldo.setCodDocumRef(recVO.getCodDocRef()); /*Documento del cobro*/
+			docSaldo.setSerieDocumRef("0");
+			docSaldo.setNroDocumRef(Integer.parseInt(recVO.getNroDocRef())); /*Nro docum del cobro*/
+			
+		}else if(recVO.getmPago().toUpperCase().equals("CHEQUE")){ /*Si es transferencia*/
+			
+			docSaldo.setCodDocumRef(recVO.getCodDocRef()); /*Documento del cobro*/
+			docSaldo.setSerieDocumRef(recVO.getSerieDocRef());
+			docSaldo.setNroDocumRef(Integer.parseInt(recVO.getNroDocRef())); /*Nro docum del cobro*/
+			
+		}
+			
+		
+		if(!recVO.getmPago().equals("Caja")) {
+			
+			docSaldo.setCodBco(recVO.getCodBanco());
+			docSaldo.setCodCtaBco(recVO.getCodCtaBco());
+			docSaldo.setMovimiento(recVO.getReferencia());
+			
+		}else{
+			docSaldo.setCodBco("0");
+			docSaldo.setCodCtaBco("0");
+			docSaldo.setMovimiento("0");
+		}
+		
+		docSaldo.setSigno(1); /*Signo positivo*/
+		
+		MonedaInfo mInf = new MonedaInfo(); /*Moneda a setear*/
+		
+		/*Si es por banco si no la del cabezal*/
+		if(!recVO.getmPago().equals("Caja")) {
+			
+			mInf.setCodMoneda(recVO.getCodMonedaCtaBco());
+			mInf.setNacional(recVO.isNacionalMonedaCtaBco());
+	    	
+		}else 
+		{
+			mInf.setCodMoneda(recVO.getCodMoneda());
+			mInf.setNacional(recVO.isNacional());
 		}
 		
 		docSaldo.setMoneda(mInf);

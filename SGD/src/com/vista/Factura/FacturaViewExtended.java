@@ -2489,13 +2489,13 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	
 
 	boolean tryParseInt(String value) {  
-     try {  
-         Integer.parseInt(value);  
-         return true;  
-      } catch (NumberFormatException e) {  
-         return false;  
-    }  
-}
+	     try {  
+	         Integer.parseInt(value);  
+	         return true;  
+	      } catch (NumberFormatException e) {  
+	         return false;  
+	    }  
+	}
 
 	
 }

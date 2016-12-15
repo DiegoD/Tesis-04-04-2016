@@ -237,7 +237,7 @@ public class DAORecibos implements IDAORecibos{
 	public void eliminarRecibo(Recibo recibo, Connection con) throws InsertandoReciboException, ConexionException, EliminandoReciboException {
 
 		Consultas clts = new Consultas();
-    	String delete = clts.eliminarFacturaCab();
+    	String delete = clts.eliminarReciboCab();
     	
     	PreparedStatement pstmt1;
 
@@ -334,6 +334,7 @@ public class DAORecibos implements IDAORecibos{
 			pstmt1.setString(24, lin.getOperacion());
 			pstmt1.setInt(25,linea);
 		
+			String aux = pstmt1.toString();
 			
 			pstmt1.executeUpdate ();
 			

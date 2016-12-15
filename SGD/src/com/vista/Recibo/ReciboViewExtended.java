@@ -30,6 +30,7 @@ import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
+import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.TextField;
@@ -648,12 +649,17 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 					Mensajes.mostrarMensajeError(e.getMessage());
 				}
 				
+				ingCobroVO.setNroDocum(nroDocum.getValue());
+				ingCobroVO.setSerieDocum(this.serieDocum.getValue().trim());
+				ingCobroVO.setCodDocum("recibo");
+				
+				
 				ingCobroVO.setFecDoc(new java.sql.Timestamp(fecDoc.getValue().getTime()));
 				ingCobroVO.setFecValor(new java.sql.Timestamp(fecValor.getValue().getTime()));
 				ingCobroVO.setCodEmp(permisos.getCodEmp());
 				ingCobroVO.setReferencia(referencia.getValue());
 				
-				ingCobroVO.setCodCtaInd("ingcobro");
+				ingCobroVO.setCodCtaInd("recibo");
 				
 				
 				ingCobroVO.setCodTitular(codTitular.getValue());
@@ -768,6 +774,10 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 			    ingCobroVO.setCodMonedaCtaBco(auxctaBco.getMonedaVO().getCodMoneda());
 			    ingCobroVO.setNacionalMonedaCtaBco(auxctaBco.getMonedaVO().isNacional());
 				
+			    ingCobroVO.setCodCuenta("recibos");
+			    ingCobroVO.setNomCuenta("Recibos");
+			    
+			    
 				if(this.operacion.equals(Variables.OPERACION_NUEVO))	
 				{	
 					this.controlador.insertarRecibo(ingCobroVO, permisoAux);
@@ -784,7 +794,12 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 					
 					
 					/*VER DE IMPLEMENTAR PARA EDITAR BORRO TODO E INSERTO NUEVAMENTE*/
-					this.controlador.modificarRecibo(ingCobroVO,ingresoCopia, permisoAux);
+					try {
+						this.controlador.modificarRecibo(ingCobroVO,ingresoCopia, permisoAux);
+					} catch (SQLException e) {
+						
+						Mensajes.mostrarMensajeOK("Ah ocurrido un error modificando el recibo");
+					}
 					
 					this.mainView.actulaizarGrilla(ingCobroVO);
 					
@@ -799,7 +814,7 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 				Mensajes.mostrarMensajeWarning(Variables.WARNING_CAMPOS_NO_VALIDOS);
 			}
 				
-			} catch (ModificandoReciboException| NoExisteReciboException |InsertandoReciboException| ExisteReciboException | InicializandoException| ConexionException | NoTienePermisosException| ObteniendoPermisosException e) {
+			} catch (ModificandoReciboException| NoExisteReciboException |InsertandoReciboException| ExisteReciboException | InicializandoException| ConexionException | NoTienePermisosException| ObteniendoPermisosException| EliminandoReciboException e) {
 				
 				Mensajes.mostrarMensajeError(e.getMessage());
 				
@@ -1446,8 +1461,8 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 	private void iniFormNuevo()
 	{
 		/*Si es nuevo ocultamos el nroDocum (ya que aun no tenemos el numero)*/
-		this.nroDocum.setVisible(false);
-		this.nroDocum.setEnabled(false);
+		this.nroDocum.setVisible(true);
+		this.nroDocum.setEnabled(true);
 		importeTotalCalculado = (double) 0;
 		
 		/*Chequeamos si tiene permiso de editar*/
@@ -1686,6 +1701,11 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 					&& this.serieDocRef.isValid()
 					&& this.referencia.isValid())
 				valido = true;
+			
+			if(!this.tryParseInt(nroDocum.getValue())){ 
+				nroDocum.setComponentError(new UserError("Debe ingresar un número entero"));
+				valido = false;
+			}
 			
 		}catch(Exception e)
 		{
@@ -2789,6 +2809,10 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 			
 			recVO.setImpTotMo((Double) impTotMo.getConvertedValue());
 			
+			recVO.setSerieDocum(this.serieDocum.getValue().trim());
+			recVO.setNroDocum(this.nroDocum.getValue().trim());
+			recVO.setCodDocum("recibo");
+			
 			/*Obtenemos la cotizacion y calculamos el importe MN*/
 			Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
 			CotizacionVO coti = null;
@@ -3107,5 +3131,13 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 		return max;
 	}
 	
+	boolean tryParseInt(String value) {  
+	     try {  
+	         Integer.parseInt(value);  
+	         return true;  
+	      } catch (NumberFormatException e) {  
+	         return false;  
+	    }  
+	}
 	 
 }
