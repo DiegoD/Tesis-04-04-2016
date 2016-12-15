@@ -1,6 +1,7 @@
 package com.controladores;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
@@ -52,11 +53,11 @@ public class ConciliacionControlador {
 	 * Obtiene array list de VO de todos las concliaciones
 	 * @throws NoTienePermisosException 
 	 */
-	public ArrayList<ConciliacionVO> getConciliaciones(UsuarioPermisosVO permisos) throws ObteniendoConciliacionException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException {
+	public ArrayList<ConciliacionVO> getConciliaciones(UsuarioPermisosVO permisos, Timestamp inicio, Timestamp fin) throws ObteniendoConciliacionException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException {
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			return FachadaDD.getInstance().getConciliacionesTodos(permisos.getCodEmp());
+			return FachadaDD.getInstance().getConciliacionesTodos(permisos.getCodEmp(), inicio, fin);
 		else
 			throw new NoTienePermisosException();
 	}

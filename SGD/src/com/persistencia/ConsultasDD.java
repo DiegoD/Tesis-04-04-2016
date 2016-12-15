@@ -2246,7 +2246,7 @@ public String eliminarSaldoCuenta(){
 				+ "m_ctasbcos.cod_bco = c_conciliacion.cod_bco and m_ctasbcos.cod_ctabco = c_conciliacion.cod_ctabco "
 				+ "LEFT JOIN  m_monedas ON c_conciliacion.cod_emp = m_monedas.cod_emp and "
 				+ "m_monedas.cod_moneda = c_conciliacion.cod_moneda "
-				+ " WHERE c_conciliacion.cod_emp = ? " );
+				+ " WHERE c_conciliacion.cod_emp = ? and fec_valor between DATE_SUB(?, INTERVAL 1 DAY) and ? " );
 		
 		return sb.toString();
 	}

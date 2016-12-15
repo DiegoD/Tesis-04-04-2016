@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
@@ -158,7 +160,7 @@ public class DAOConciliaciones implements IDAOConciliaciones{
 	/**
 	 * Nos retorna una lista con todos las conciliaciones del sistema para la emrpesa
 	 */
-	public ArrayList<Conciliacion> getConciliacionesTodos(Connection con, String codEmp) throws ObteniendoConciliacionException, ConexionException {
+	public ArrayList<Conciliacion> getConciliacionesTodos(Connection con, String codEmp, Timestamp inicio, Timestamp fin) throws ObteniendoConciliacionException, ConexionException {
 		
 		ArrayList<Conciliacion> lst = new ArrayList<Conciliacion>();
 	
@@ -171,6 +173,8 @@ public class DAOConciliaciones implements IDAOConciliaciones{
 	    	ResultSet rs;
 	    	
 	    	pstmt1.setString(1, codEmp);
+	    	pstmt1.setTimestamp(2, inicio);
+	    	pstmt1.setTimestamp(3, fin);
 			rs = pstmt1.executeQuery();
 			
 			Conciliacion aux;

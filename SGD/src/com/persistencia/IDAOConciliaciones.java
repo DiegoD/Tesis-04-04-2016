@@ -1,6 +1,7 @@
 package com.persistencia;
 
 import java.sql.Connection;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
@@ -16,7 +17,7 @@ import com.logica.Conciliacion.ConciliacionDetalle;
 
 public interface IDAOConciliaciones {
 	
-	public ArrayList<Conciliacion> getConciliacionesTodos(Connection con, String codEmp) throws ObteniendoConciliacionException, ConexionException;
+	public ArrayList<Conciliacion> getConciliacionesTodos(Connection con, String codEmp, Timestamp inicio, Timestamp fin) throws ObteniendoConciliacionException, ConexionException;
 	public ArrayList<ConciliacionDetalle> getConciliacionLineaxTrans(Connection con, Conciliacion conciliacion, String codEmp) throws ObteniendoConciliacionException, ConexionException;
 	public void insertarConciliacion(Conciliacion conciliacion, Connection con, String codEmp) throws InsertandoConciliacionException, ConexionException;
 	public void insertarConciliacionDetalle(ConciliacionDetalle detalle, int linea, Connection con, String codEmp) throws InsertandoDepositoException, ConexionException, InsertandoConciliacionException;

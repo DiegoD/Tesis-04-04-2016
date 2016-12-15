@@ -2,10 +2,12 @@ package com.vista.Conciliaciones;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Locale;
 
 import com.controladores.ConciliacionControlador;
@@ -41,14 +43,18 @@ public class ConciliacionesPanelExtended extends ConciliacionesPanel {
 	private ConciliacionControlador controlador;
 	MySub sub = new MySub("65%", "65%");
 	PermisosUsuario permisos;
+	boolean actualiza = false;
 	
 	public ConciliacionesPanelExtended(){
+		
 		
 		controlador = new ConciliacionControlador();
 		this.lstConciliaciones = new ArrayList<ConciliacionVO>();
 		
 		String usuario = (String)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("usuario");
 		this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
+		
+		this.lblTitulo.setValue("Conciliaciones");
 		
 		/*Verificamos que el usuario tenga permisos de lectura para mostrar la vista*/
 		boolean permisoLectura = permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_CONCILIACION, VariablesPermisos.OPERACION_LEER);
@@ -57,6 +63,14 @@ public class ConciliacionesPanelExtended extends ConciliacionesPanel {
 	        
 			try {
 				
+				Calendar c = Calendar.getInstance();   // this takes current date
+			    c.set(Calendar.DAY_OF_MONTH, 1);
+				
+			    this.fechaInicio.setValue(new java.sql.Date(c.getTimeInMillis()));
+			    
+			    c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
+			    this.fechaFin.setValue(new java.sql.Date(c.getTimeInMillis()));
+			    
 				this.inicializarGrilla();
 				
 				/*Para el boton de nuevo, verificamos que tenga permisos de nuevoEditar*/
@@ -136,50 +150,53 @@ public class ConciliacionesPanelExtended extends ConciliacionesPanel {
 
 		});
 		
-		gridConciliaciones.removeColumn("codDocum");
-		gridConciliaciones.removeColumn("serieDocum");
-		gridConciliaciones.removeColumn("cod_emp");
-		gridConciliaciones.removeColumn("impTotMn");
-		gridConciliaciones.removeColumn("cuenta");
-		gridConciliaciones.removeColumn("nroTrans");
-		gridConciliaciones.removeColumn("fecDoc");
-		gridConciliaciones.removeColumn("codMoneda");
-		gridConciliaciones.removeColumn("simbolo");
-		gridConciliaciones.removeColumn("nacional");
-		gridConciliaciones.removeColumn("codBanco");
-		gridConciliaciones.removeColumn("codCuenta");
-		gridConciliaciones.removeColumn("lstDetalle");
-		
-		gridConciliaciones.removeColumn("fechaMod");
-		gridConciliaciones.removeColumn("usuarioMod");
-		gridConciliaciones.removeColumn("operacion");
-		
-		gridConciliaciones.setColumnOrder("fecValor", "nroDocum", "tipo",  "observaciones", "impTotMo",
-				"descripcion", "nomBanco", "nomCuenta");
-		
-		gridConciliaciones.getColumn("fecValor").setHeaderCaption("Fecha");
-		gridConciliaciones.getColumn("nroDocum").setHeaderCaption("Número");
-		gridConciliaciones.getColumn("tipo").setHeaderCaption("Tipo");
-		gridConciliaciones.getColumn("descripcion").setHeaderCaption("Moneda");
-		gridConciliaciones.getColumn("impTotMo").setHeaderCaption("Importe");
-		gridConciliaciones.getColumn("observaciones").setHeaderCaption("Obsersvaciones");
-		gridConciliaciones.getColumn("descripcion").setHeaderCaption("Moneda");
-		gridConciliaciones.getColumn("nomBanco").setHeaderCaption("Banco");
-		gridConciliaciones.getColumn("nomCuenta").setHeaderCaption("Cuenta");
-		
-		gridConciliaciones.getColumn("fecValor").setWidth(120);
-		gridConciliaciones.getColumn("nroDocum").setWidth(100);
-		gridConciliaciones.getColumn("tipo").setWidth(120);
-		gridConciliaciones.getColumn("impTotMo").setWidth(120);
-		gridConciliaciones.getColumn("observaciones").setWidth(300);
-		gridConciliaciones.getColumn("descripcion").setWidth(150);
-		gridConciliaciones.getColumn("nomBanco").setWidth(150);
-		gridConciliaciones.getColumn("nomCuenta").setWidth(150);
-		
-		
-		/*Agregamos los filtros a la grilla*/
-		this.filtroGrilla();
-		
+		if(!actualiza){
+			
+			actualiza = true;
+			
+			gridConciliaciones.removeColumn("codDocum");
+			gridConciliaciones.removeColumn("serieDocum");
+			gridConciliaciones.removeColumn("cod_emp");
+			gridConciliaciones.removeColumn("impTotMn");
+			gridConciliaciones.removeColumn("cuenta");
+			gridConciliaciones.removeColumn("nroTrans");
+			gridConciliaciones.removeColumn("fecDoc");
+			gridConciliaciones.removeColumn("codMoneda");
+			gridConciliaciones.removeColumn("simbolo");
+			gridConciliaciones.removeColumn("nacional");
+			gridConciliaciones.removeColumn("codBanco");
+			gridConciliaciones.removeColumn("codCuenta");
+			gridConciliaciones.removeColumn("lstDetalle");
+			
+			gridConciliaciones.removeColumn("fechaMod");
+			gridConciliaciones.removeColumn("usuarioMod");
+			gridConciliaciones.removeColumn("operacion");
+			
+			gridConciliaciones.setColumnOrder("fecValor", "nroDocum", "tipo",  "observaciones", "impTotMo",
+					"descripcion", "nomBanco", "nomCuenta");
+			
+			gridConciliaciones.getColumn("fecValor").setHeaderCaption("Fecha");
+			gridConciliaciones.getColumn("nroDocum").setHeaderCaption("Número");
+			gridConciliaciones.getColumn("tipo").setHeaderCaption("Tipo");
+			gridConciliaciones.getColumn("descripcion").setHeaderCaption("Moneda");
+			gridConciliaciones.getColumn("impTotMo").setHeaderCaption("Importe");
+			gridConciliaciones.getColumn("observaciones").setHeaderCaption("Obsersvaciones");
+			gridConciliaciones.getColumn("descripcion").setHeaderCaption("Moneda");
+			gridConciliaciones.getColumn("nomBanco").setHeaderCaption("Banco");
+			gridConciliaciones.getColumn("nomCuenta").setHeaderCaption("Cuenta");
+			
+			gridConciliaciones.getColumn("fecValor").setWidth(120);
+			gridConciliaciones.getColumn("nroDocum").setWidth(100);
+			gridConciliaciones.getColumn("tipo").setWidth(120);
+			gridConciliaciones.getColumn("impTotMo").setWidth(120);
+			gridConciliaciones.getColumn("observaciones").setWidth(300);
+			gridConciliaciones.getColumn("descripcion").setWidth(150);
+			gridConciliaciones.getColumn("nomBanco").setWidth(150);
+			gridConciliaciones.getColumn("nomCuenta").setWidth(150);
+			
+			/*Agregamos los filtros a la grilla*/
+			this.filtroGrilla();
+		}
 		
 		gridConciliaciones.addSelectionListener(new SelectionListener() {
 						
@@ -217,6 +234,15 @@ public class ConciliacionesPanelExtended extends ConciliacionesPanel {
 		    }
 		});
 		
+		this.btnActualizar.addClickListener(click -> {
+			try {
+				this.inicializarGrilla();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
+		
 	}
 	
 	/**
@@ -238,7 +264,7 @@ public class ConciliacionesPanelExtended extends ConciliacionesPanel {
 							VariablesPermisos.FORMULARIO_CONCILIACION,
 							VariablesPermisos.OPERACION_LEER);
 			
-			lstDepositos = controlador.getConciliaciones(permisoAux);
+			lstDepositos = controlador.getConciliaciones(permisoAux, new java.sql.Timestamp(fechaInicio.getValue().getTime()), new java.sql.Timestamp(fechaFin.getValue().getTime()));
 			
 		} 
 		catch (ObteniendoConciliacionException | InicializandoException | ConexionException

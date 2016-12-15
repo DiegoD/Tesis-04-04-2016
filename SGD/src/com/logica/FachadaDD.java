@@ -4503,7 +4503,7 @@ public class FachadaDD {
 //	}
 
 	@SuppressWarnings("unchecked") 
-	public ArrayList<ConciliacionVO> getConciliacionesTodos(String codEmp) throws ObteniendoConciliacionException, ConexionException {
+	public ArrayList<ConciliacionVO> getConciliacionesTodos(String codEmp, Timestamp inicio, Timestamp fin) throws ObteniendoConciliacionException, ConexionException {
 	
 		Connection con = null;
 		
@@ -4514,7 +4514,7 @@ public class FachadaDD {
 		{
 			con = this.pool.obtenerConeccion();
 			
-			lst = this.conciliaciones.getConciliacionesTodos(con, codEmp);
+			lst = this.conciliaciones.getConciliacionesTodos(con, codEmp, inicio, fin);
 			
 			
 			for (Conciliacion conciliacion : lst) 
