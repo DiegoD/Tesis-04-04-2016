@@ -1,6 +1,7 @@
 package com.controladores;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -34,11 +35,11 @@ public class ReciboControlador {
 	/**
 	 * Obtiene los recibos del sistema
 	 */
-	public ArrayList<ReciboVO> getReciboTodos(UsuarioPermisosVO permisos) throws ObteniendoReciboException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException  
+	public ArrayList<ReciboVO> getReciboTodos(UsuarioPermisosVO permisos, Timestamp inicio, Timestamp fin) throws ObteniendoReciboException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException  
 	{
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			return Fachada.getInstance().getRecibosTodos(permisos.getCodEmp());
+			return Fachada.getInstance().getRecibosTodos(permisos.getCodEmp(), inicio, fin);
 		else
 			throw new NoTienePermisosException();
     }
