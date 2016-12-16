@@ -203,6 +203,27 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 		}
     });
 	
+	comboMPagos.addValueChangeListener(new Property.ValueChangeListener() {
+
+		@Override
+		public void valueChange(ValueChangeEvent event) {
+			// TODO Auto-generated method stub
+			if(comboMPagos.getValue()!=null)
+			{
+				if(comboMPagos.getValue().equals("Transferencia")){
+					serieDocRef.setEnabled(false);
+					serieDocRef.setRequired(false);
+				}
+				else{
+					serieDocRef.setEnabled(true);
+					serieDocRef.setRequired(true);
+				}
+			}
+			
+		}
+    	
+    });
+	
 	fecValor.addValueChangeListener(new Property.ValueChangeListener() {
 
    		@Override
@@ -430,6 +451,8 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 	   					if(auxMoneda != null){
 	   						if(!auxMoneda.getCodMoneda().equals(ctaBcoAux.getMonedaVO().getCodMoneda()) && opera != Variables.OPERACION_LECTURA){
 		   						Mensajes.mostrarMensajeWarning("La moneda del banco es diferente a la moneda del documento");
+		   						//comboMoneda.setData("ProgramaticallyChanged");
+		   						//inicializarComboMoneda(ctaBcoAux.getMonedaVO().getCodMoneda());
 		   					}
 	   					}
 	   					
@@ -454,7 +477,10 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
    		@Override
 		public void valueChange(ValueChangeEvent event) {
    			
-   			
+   			if("ProgramaticallyChanged".equals(comboMoneda.getData())){
+   				comboCuentas.setData(null);
+   	            return;
+   	        }
    			
    			UsuarioPermisosVO permisoAux = 
    					new UsuarioPermisosVO(permisos.getCodEmp(),
@@ -601,12 +627,15 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 				
 				this.calcularImporteTotal(); /*Calculamos nuevamente por si se cambio en grilla el importe de un gasto*/		
 				
-				int comp = Double.compare(importeTotalCalculado, (Double)impTotMo.getConvertedValue());
-				
-				if(comp != 0){
-					Mensajes.mostrarMensajeError("El importe total es diferente a la suma del detalle");
-					return;
+				if(!this.chkDiferencia.getValue()){
+					int comp = Double.compare(importeTotalCalculado, (Double)impTotMo.getConvertedValue());
+					
+					if(comp != 0){
+						Mensajes.mostrarMensajeError("El importe total es diferente a la suma del detalle");
+						return;
+					}
 				}
+				
 				ReciboVO ingCobroVO = new ReciboVO();	
 				
 				ingCobroVO.setImpTotMo((Double) impTotMo.getConvertedValue());
@@ -1154,6 +1183,8 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 		this.inicializarComboCuentas(null, "");
 		this.inicializarComboMoneda(null);
 		
+		this.total.setEnabled(false);
+		
 		inicializarCampos();
 		
 		importeTotalCalculado = (Double) impTotMo.getConvertedValue();
@@ -1228,8 +1259,14 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 				this.comboMPagos.setRequired(setear);
 				this.comboMPagos.setRequiredError("Es requerido");
 				
-				this.serieDocRef.setRequired(setear);
-				this.serieDocRef.setRequiredError("Es requerido");
+				if(comboMPagos.getValue()!=null){
+					if(comboMPagos.getValue().equals("Cheque")){
+						this.serieDocRef.setRequired(setear);
+						this.serieDocRef.setRequiredError("Es requerido");
+					}
+					
+				}
+				
 				
 				this.nroDocRef.setRequired(setear);
 				this.nroDocRef.setRequiredError("Es requerido");
@@ -1363,6 +1400,9 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 		/*Verificamos que tenga permisos para editar*/
 		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_RECIBO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		boolean permisoEliminar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_RECIBO, VariablesPermisos.OPERACION_BORRAR);
+		
+		this.tcMov.setEnabled(false);
+		
 		
 		/*Si tiene permisos de editar habilitamos el boton de 
 		 * edicion*/
@@ -1670,10 +1710,18 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 		//nroDocRef.addValidator(new RegexpValidator("^[0-9]*(\\.[0-9]+)?$", true, "Dato numerico"));
 		
 		//impTotMo.addValidator(new RegexpValidator("^[0-9]*(\\.[0-9]+)?$", true, "Dato numerico"));
-		
-        this.serieDocRef.addValidator(
-                new StringLengthValidator(
-                     " 4 caracteres máximo", 1, 4, false));
+		if(this.comboTipo.getValue()!= null){
+			if(this.comboTipo.getValue().toString().equals("Banco") && this.comboBancos != null){
+				if(comboMPagos.getValue()!=null){
+					if(comboMPagos.getValue().equals("Cheque")){
+						this.serieDocRef.addValidator(
+				                new StringLengthValidator(
+				                     " 4 caracteres máximo", 1, 4, false));
+					}
+				}
+	        
+			}
+		}
         
         this.referencia.addValidator(
                 new StringLengthValidator(
@@ -1697,12 +1745,21 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 		this.agregarFieldsValidaciones();
 		try
 		{
-			if(this.nroDocRef.isValid() && this.impTotMo.isValid()
+			if(this.impTotMo.isValid()
 					&& this.serieDocRef.isValid()
 					&& this.referencia.isValid())
 				valido = true;
 			
-			if(!this.tryParseInt(nroDocum.getValue())){ 
+			if(this.comboTipo.getValue()!= null){
+				if(this.comboTipo.getValue().toString().equals("Banco") && this.comboBancos != null){
+					if(!this.tryParseInt(nroDocRef.getValue())){
+						nroDocRef.setComponentError(new UserError("Debe ingresar un número entero"));
+						valido = false;
+					}
+				}
+			}
+			
+			if(!this.tryParseInt(nroDocum.getValue())){
 				nroDocum.setComponentError(new UserError("Debe ingresar un número entero"));
 				valido = false;
 			}
@@ -2548,6 +2605,14 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 		//this.impTotMo.setValue(Double.toString(impMo));
 		//this.impTotMo.setConvertedValue(impMo);
 		importeTotalCalculado = impMo;
+		
+		Double truncatedDouble = new BigDecimal(importeTotalCalculado)
+			    .setScale(2, BigDecimal.ROUND_HALF_UP)
+			    .doubleValue();
+		
+		importeTotalCalculado = truncatedDouble;
+		
+		this.total.setConvertedValue(importeTotalCalculado);
 	}
 	
 	
@@ -2588,7 +2653,7 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 
 		//lstFormularios.setContainerDataSource(container);
 		this.actualizarGrillaContainer(container);
-		
+		this.calcularImporteTotal();
 	}
 	
 	
@@ -2727,11 +2792,14 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 		
 		nroTrans.setConverter(Long.class);
 		
-		nroDocum.setConverter(Integer.class);
-		nroDocum.setConversionError("Ingrese un número entero");
+//		nroDocum.setConverter(Integer.class);
+//		nroDocum.setConversionError("Ingrese un número entero");
+//		
+//		nroDocRef.setConverter(Integer.class);
+//		nroDocRef.setConversionError("Ingrese un número entero");
 		
-		nroDocRef.setConverter(Integer.class);
-		nroDocRef.setConversionError("Ingrese un número entero");
+		total.setConverter(BigDecimal.class);
+		total.setConversionError("Error en formato de número");
 		
 		tcMov.setConverter(BigDecimal.class);
 		tcMov.setConversionError("Error en formato de número");
@@ -2976,7 +3044,7 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 			
 			this.mainView.actulaizarGrilla(recVO);
 			
-			Mensajes.mostrarMensajeOK("Se ha eliminado el Cobro");
+			Mensajes.mostrarMensajeOK("Se ha eliminado el recibo");
 			UI.getCurrent().removeWindow(sub);
 			this.mainView.cerrarVentana();
 			

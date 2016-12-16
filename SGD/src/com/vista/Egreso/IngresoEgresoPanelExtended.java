@@ -82,7 +82,7 @@ public class IngresoEgresoPanelExtended extends IngresoEgresoPanel{
 				
 					this.btnNuevo.addClickListener(click -> {
 						
-							sub = new MySub("83%", "80%");
+							sub = new MySub("87%", "85%");
 							form = new IngresoEgresoViewExtended(Variables.OPERACION_NUEVO, this);
 							sub.setModal(true);
 							sub.setVista(form);
