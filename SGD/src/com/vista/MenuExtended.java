@@ -2,26 +2,15 @@ package com.vista;
 
 import java.util.ArrayList;
 
-import com.vaadin.server.Page;
-import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinService;
-import com.vaadin.shared.Position;
-import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.Panel;
-import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.valueObject.FormularioVO;
 import com.vista.Documentos.DocumentosPanelExtended;
 import com.vista.Egreso.IngresoEgresoPanelExtended;
-import com.vista.Egreso.IngresoEgresoViewExtended;
 import com.vista.EgresoOtro.IngresoEgresoOtroPanelExtended;
-//import com.vista.Clientes.ClienteView;
 import com.vista.Bancos.BancosPanelExtended;
 import com.vista.Clientes.ClientesPanelExtended;
 import com.vista.CodigosGeneralizados.CodigosGeneralizadosPanelExtended;
@@ -32,7 +21,6 @@ import com.vista.Deposito.DepositoPanelExtended;
 import com.vista.Deposito.DepositoViewExtended;
 import com.vista.Empresas.EmpresasPanelExtended;
 import com.vista.Factura.FacturaPanelExtended;
-import com.vista.Factura.FacturaViewExtended;
 import com.vista.Funcionarios.FuncionariosPanelExtended;
 import com.vista.Gastos.GastosPanelExtended;
 import com.vista.Grupos.GruposPanelExtended;
@@ -41,15 +29,14 @@ import com.vista.IngresoCobro.IngresoCobroPanelExtended;
 import com.vista.IngresoOtro.IngresoOtroPanelExtended;
 import com.vista.Login.LoginExtended;
 import com.vista.Monedas.MonedasPanelExtended;
+import com.vista.NotaCredito.NotaCreditoPanelExtended;
 import com.vista.Periodo.PeriodosPanelExtended;
 import com.vista.Procesos.ProcesosPanelExtended;
 import com.vista.Recibo.ReciboPanelExtended;
 import com.vista.ResumenProceso.ResProcesosPanelExtended;
-//import com.vista.ResumenProceso.ResProcesosPanelExtended;
 import com.vista.Rubros.RubrosPanelExtended;
 import com.vista.TipoRubro.TipoRubrosPanelExtended;
 import com.vista.Usuarios.UsuariosPanelExtend;
-import com.vaadin.ui.TabSheet.Tab;
 
 public class MenuExtended extends Menu{
 	
@@ -607,6 +594,21 @@ public class MenuExtended extends Menu{
 			}
 		});
 		
+		this.notaCredito.addClickListener(click -> {
+			
+			setSizeFull();
+			
+			this.content.removeAllComponents();
+			try {
+				
+				NotaCreditoPanelExtended u = new NotaCreditoPanelExtended(); 
+				this.content.addComponent(u);
+				
+			} catch (Exception e) {
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}
+		});
+		
 		this.conciliacion.addClickListener(click -> {
 			
 			setSizeFull();
@@ -684,6 +686,7 @@ public class MenuExtended extends Menu{
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_DEPOSITO) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_FACTURA) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_RECIBO) ||
+				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_NOTA_CREDITO) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_CONCILIACION) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_RUBROS))
 			{
@@ -817,6 +820,13 @@ public class MenuExtended extends Menu{
 					case VariablesPermisos.FORMULARIO_INGRESO_COBRO:
 						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_COBRO, VariablesPermisos.OPERACION_LEER)){
 							this.habilitarIngresoCobro();
+							this.layoutMenu.addComponent(this.ingCobro);
+						}
+					break;
+					
+					case VariablesPermisos.FORMULARIO_NOTA_CREDITO:
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_NOTA_CREDITO, VariablesPermisos.OPERACION_LEER)){
+							this.habilitarNotaCredito();
 							this.layoutMenu.addComponent(this.ingCobro);
 						}
 					break;
@@ -1051,6 +1061,9 @@ public class MenuExtended extends Menu{
 		this.recibo.setVisible(false);
 		this.recibo.setEnabled(false);
 		
+		this.notaCredito.setVisible(false);
+		this.notaCredito.setEnabled(false);
+		
 		this.conciliacion.setVisible(false);
 		this.conciliacion.setEnabled(false);
 	}
@@ -1169,6 +1182,12 @@ public class MenuExtended extends Menu{
 		this.ingCobro.setVisible(true);
 		this.ingCobro.setEnabled(true);
 		this.layoutMenu.addComponent(ingCobro);
+	}
+	
+	private void habilitarNotaCredito(){
+		this.notaCredito.setVisible(true);
+		this.notaCredito.setEnabled(true);
+		this.layoutMenu.addComponent(notaCredito);
 	}
 	
 	private void habilitarIngresoEgreso(){

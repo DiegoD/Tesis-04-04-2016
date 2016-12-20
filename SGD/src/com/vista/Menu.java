@@ -51,6 +51,7 @@ public class Menu extends HorizontalLayout {
 	protected Button resumenProc;
 	protected Button factura;
 	protected Button recibo;
+	protected Button notaCredito;
 	protected Button periodo;
 	protected Button deposito;
 	protected Button conciliacion;
