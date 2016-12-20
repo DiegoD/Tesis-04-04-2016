@@ -2432,20 +2432,20 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	public void agregarDetalle(){
 		try {
 		
-		UI.getCurrent().removeWindow(sub);
-		
-		AuxDetalleVO detalleCab = this.obtenerDatosCabezalParaDetalle();
-		
-		DetFacturaViewExtended form = new DetFacturaViewExtended(Variables.OPERACION_NUEVO, this, detalleCab );
-		
-		sub = new MySub("75%","55%");
-		sub.setModal(true);
-		sub.setVista(form);
-		//sub.setWidth("50%");
-		//sub.setHeight("50%");
-		sub.center();
-		
-		UI.getCurrent().addWindow(sub);
+			UI.getCurrent().removeWindow(sub);
+			
+			AuxDetalleVO detalleCab = this.obtenerDatosCabezalParaDetalle();
+			
+			DetFacturaViewExtended form = new DetFacturaViewExtended(Variables.OPERACION_NUEVO, this, detalleCab );
+			
+			sub = new MySub("75%","55%");
+			sub.setModal(true);
+			sub.setVista(form);
+			//sub.setWidth("50%");
+			//sub.setHeight("50%");
+			sub.center();
+			
+			UI.getCurrent().addWindow(sub);
 
 		}catch(Exception e)
 		{

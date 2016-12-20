@@ -8,35 +8,33 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
-import com.excepciones.Factura.*;
-import com.excepciones.Recibo.EliminandoReciboException;
-import com.excepciones.Recibo.ExisteReciboException;
-import com.excepciones.Recibo.InsertandoReciboException;
-import com.excepciones.Recibo.ObteniendoReciboException;
+
+import com.excepciones.NotaCredito.*;
 import com.logica.MonedaInfo;
 import com.logica.Docum.BancoInfo;
 import com.logica.Docum.CuentaBcoInfo;
 import com.logica.Docum.CuentaInfo;
+import com.logica.Docum.DatosDocum;
 import com.logica.Docum.ImpuestoInfo;
-import com.logica.Docum.Recibo;
-import com.logica.Docum.ReciboDetalle;
+import com.logica.Docum.NotaCredito;
+import com.logica.Docum.NotaCreditoDetalle;
 import com.logica.Docum.RubroInfo;
 import com.logica.Docum.TitularInfo;
 
 
-public class DAORecibos implements IDAORecibos{
+public class DAONotaCredito implements IDAONotaCredito{
   
 	/**
 	 * Nos retorna una lista con todos las facturas del sistema para la emrpesa
 	 */
-	public ArrayList<Recibo> getReciboTodos(Connection con, String codEmp, Timestamp inicio, Timestamp fin) throws ObteniendoReciboException, ConexionException {
+	public ArrayList<NotaCredito> getNCTodos(Connection con, String codEmp, Timestamp inicio, Timestamp fin) throws ObteniendoNotaCreditoException, ConexionException {
 		
-		ArrayList<Recibo> lst = new ArrayList<Recibo>();
+		ArrayList<NotaCredito> lst = new ArrayList<NotaCredito>();
 	
 		try {
 			
 	    	Consultas clts = new Consultas();
-	    	String query = clts.getReciboCabTodos();
+	    	String query = clts.getNCTodos();
 	    	PreparedStatement pstmt1 = con.prepareStatement(query);
 	    	
 	    	ResultSet rs;
@@ -47,61 +45,61 @@ public class DAORecibos implements IDAORecibos{
 	    	
 			rs = pstmt1.executeQuery();
 			
-			Recibo recibo;
+			NotaCredito nc;
 			
 			while(rs.next ()) {
 							
-				recibo = new Recibo();
+				nc = new NotaCredito();
 				
-				recibo.setCodCuentaInd(rs.getString("cod_cuenta")); /*El cabezal de ingreso cobro solamente tiene la cuenta interna*/
+				nc.setCodCuentaInd(rs.getString("cod_cuenta")); /*El cabezal de ingreso cobro solamente tiene la cuenta interna*/
 				
-				recibo.setCuenta(new CuentaInfo(recibo.getCodCuentaInd(), "Ingreso Cobro"));
+				nc.setCuenta(new CuentaInfo(nc.getCodCuentaInd(), "Ingreso Cobro"));
 				
-				recibo.getProcesoInfo().setCodProceso(rs.getInt("cod_proceso"));
-				recibo.getProcesoInfo().setDescProceso(rs.getString("cod_proceso"));
-				recibo.setFecDoc(rs.getTimestamp("fec_doc"));
-				recibo.setCodDocum(rs.getString("cod_docum"));
-				recibo.setSerieDocum(rs.getString("serie_docum"));
-				recibo.setNroDocum(rs.getInt("nro_docum"));
-				recibo.setCodEmp(rs.getString("cod_emp"));
+				nc.getProcesoInfo().setCodProceso(rs.getInt("cod_proceso"));
+				nc.getProcesoInfo().setDescProceso(rs.getString("cod_proceso"));
+				nc.setFecDoc(rs.getTimestamp("fec_doc"));
+				nc.setCodDocum(rs.getString("cod_docum"));
+				nc.setSerieDocum(rs.getString("serie_docum"));
+				nc.setNroDocum(rs.getInt("nro_docum"));
+				nc.setCodEmp(rs.getString("cod_emp"));
 				
-				recibo.setMoneda(new MonedaInfo(rs.getString("cod_moneda"), rs.getString("descripcion"), rs.getString("simbolo")));
+				nc.setMoneda(new MonedaInfo(rs.getString("cod_moneda"), rs.getString("descripcion"), rs.getString("simbolo")));
 				
-				recibo.setReferencia(rs.getString("observaciones"));
-				recibo.setTitInfo(new TitularInfo(rs.getString("cod_tit"), rs.getString("nom_tit"), rs.getString("tipo")));
-				recibo.setNroTrans(rs.getLong("nro_trans"));
+				nc.setReferencia(rs.getString("observaciones"));
+				nc.setTitInfo(new TitularInfo(rs.getString("cod_tit"), rs.getString("nom_tit"), rs.getString("tipo")));
+				nc.setNroTrans(rs.getLong("nro_trans"));
 			
-				recibo.setFecValor(rs.getTimestamp("fec_valor"));
+				nc.setFecValor(rs.getTimestamp("fec_valor"));
 				
-				recibo.setImpTotMn(rs.getDouble("imp_tot_mn"));
-				recibo.setImpTotMo(rs.getDouble("imp_tot_mo"));
-				recibo.setTcMov(rs.getDouble("tc_mov"));
+				nc.setImpTotMn(rs.getDouble("imp_tot_mn"));
+				nc.setImpTotMo(rs.getDouble("imp_tot_mo"));
+				nc.setTcMov(rs.getDouble("tc_mov"));
 				
-				recibo.setFechaMod(rs.getTimestamp("fecha_mod"));
-				recibo.setUsuarioMod(rs.getString("usuario_mod"));
-				recibo.setOperacion(rs.getString("operacion"));
+				nc.setFechaMod(rs.getTimestamp("fecha_mod"));
+				nc.setUsuarioMod(rs.getString("usuario_mod"));
+				nc.setOperacion(rs.getString("operacion"));
 				
-				recibo.setImpuTotMn(rs.getDouble("impu_tot_mn"));
-				recibo.setImpuTotMo(rs.getDouble("impu_tot_mo"));
-				recibo.setImpSubMo(rs.getDouble("imp_sub_mo"));
-				recibo.setImpSubMn(rs.getDouble("imp_sub_mn"));
+				nc.setImpuTotMn(rs.getDouble("impu_tot_mn"));
+				nc.setImpuTotMo(rs.getDouble("impu_tot_mo"));
+				nc.setImpSubMo(rs.getDouble("imp_sub_mo"));
+				nc.setImpSubMn(rs.getDouble("imp_sub_mn"));
 				
-				recibo.setmPago(rs.getString("cod_mpago"));
-				recibo.setCodDocRef(rs.getString("cod_doc_ref"));
-				recibo.setSerieDocRef(rs.getString("serie_doc_ref"));
-				recibo.setNroDocRef(rs.getInt("nro_doc_ref"));
+				nc.setmPago(rs.getString("cod_mpago"));
+				nc.setCodDocRef(rs.getString("cod_doc_ref"));
+				nc.setSerieDocRef(rs.getString("serie_doc_ref"));
+				nc.setNroDocRef(rs.getInt("nro_doc_ref"));
 				
 				
-				recibo.setBancoInfo(new BancoInfo(rs.getString("cod_bco"), rs.getString("nom_bco")));
+				nc.setBancoInfo(new BancoInfo(rs.getString("cod_bco"), rs.getString("nom_bco")));
 				
-				recibo.setCuentaBcoInfo(new CuentaBcoInfo(rs.getString("cod_ctabco"), rs.getString("nom_cta")));
+				nc.setCuentaBcoInfo(new CuentaBcoInfo(rs.getString("cod_ctabco"), rs.getString("nom_cta")));
 				
 				
 				/*Obtenemos las lineas de la transaccion*/				
-				recibo.setDetalle(this.getReciboLineaxTrans(con,recibo));
+				nc.setDetalle(this.getNotaCreditoLineaxTrans(con,nc));
 				
 
-				lst.add(recibo);
+				lst.add(nc);
 				
 			}
 			rs.close ();
@@ -110,7 +108,7 @@ public class DAORecibos implements IDAORecibos{
     	
 		
 		catch (SQLException e) {
-			throw new ObteniendoReciboException();
+			throw new ObteniendoNotaCreditoException();
 			
 		}
     	
@@ -122,7 +120,7 @@ public class DAORecibos implements IDAORecibos{
 	/**
 	 * Dado el nro, serie y codigo Valida si existe
 	 */
-	public boolean memberRecibos(int nroDocum, String serie, String codigo, String codEmp, Connection con) throws ExisteReciboException, ConexionException{
+	public boolean memberNC(int nroDocum, String serie, String codigo, String codEmp, Connection con) throws ExisteNotaCreditoException, ConexionException{
 		
 		boolean existe = false;
 		
@@ -130,7 +128,7 @@ public class DAORecibos implements IDAORecibos{
 			
 			
 			Consultas consultas = new Consultas();
-			String query = consultas.memberRecibo();
+			String query = consultas.memberNC();
 			
 			PreparedStatement pstmt1 = con.prepareStatement(query);
 			
@@ -151,7 +149,7 @@ public class DAORecibos implements IDAORecibos{
 			
 		}catch(SQLException e){
 			
-			throw new ExisteReciboException();
+			throw new ExisteNotaCreditoException();
 		}
 	}
 	
@@ -160,11 +158,11 @@ public class DAORecibos implements IDAORecibos{
 	 * Inserta un cabezal ingreso cobro
 	 * 
 	 */
-	public void insertarRecibo(Recibo recibo, Connection con) throws InsertandoReciboException, ConexionException {
+	public void insertarNC(NotaCredito nc, Connection con) throws InsertandoNotaCreditoException, ConexionException {
 
 		Consultas clts = new Consultas();
     	
-    	String insert = clts.insertReciboCab();
+    	String insert = clts.insertNCCab();
     	
     	PreparedStatement pstmt1;
 
@@ -173,48 +171,48 @@ public class DAORecibos implements IDAORecibos{
     		
 			pstmt1 =  con.prepareStatement(insert); 
 			
-			pstmt1.setString(1, recibo.getCodDocum());
-			pstmt1.setString(2, recibo.getSerieDocum());
-			pstmt1.setInt(3, recibo.getNroDocum());
-			pstmt1.setString(4, recibo.getTitInfo().getCodigo());
-			pstmt1.setString(5, recibo.getCuenta().getCodCuenta());
-			pstmt1.setString(6, recibo.getCodEmp());
-			pstmt1.setTimestamp(7, recibo.getFecDoc());
-			pstmt1.setTimestamp(8, recibo.getFecValor());
-			pstmt1.setString(9, recibo.getMoneda().getCodMoneda());
-			pstmt1.setDouble(10, recibo.getImpTotMn());
-			pstmt1.setDouble(11, recibo.getImpTotMo());
-			pstmt1.setDouble(12, recibo.getTcMov());
-			pstmt1.setString(13, recibo.getReferencia());
-			pstmt1.setLong(14, recibo.getNroTrans());
-			pstmt1.setString(15, recibo.getUsuarioMod());
-			pstmt1.setString(16, recibo.getOperacion());
-			pstmt1.setInt(17, recibo.getProcesoInfo().getCodProceso());
+			pstmt1.setString(1, nc.getCodDocum());
+			pstmt1.setString(2, nc.getSerieDocum());
+			pstmt1.setInt(3, nc.getNroDocum());
+			pstmt1.setString(4, nc.getTitInfo().getCodigo());
+			pstmt1.setString(5, nc.getCuenta().getCodCuenta());
+			pstmt1.setString(6, nc.getCodEmp());
+			pstmt1.setTimestamp(7, nc.getFecDoc());
+			pstmt1.setTimestamp(8, nc.getFecValor());
+			pstmt1.setString(9, nc.getMoneda().getCodMoneda());
+			pstmt1.setDouble(10, nc.getImpTotMn());
+			pstmt1.setDouble(11, nc.getImpTotMo());
+			pstmt1.setDouble(12, nc.getTcMov());
+			pstmt1.setString(13, nc.getReferencia());
+			pstmt1.setLong(14, nc.getNroTrans());
+			pstmt1.setString(15, nc.getUsuarioMod());
+			pstmt1.setString(16, nc.getOperacion());
+			pstmt1.setInt(17, nc.getProcesoInfo().getCodProceso());
 			
 			
-			pstmt1.setDouble(18, recibo.getImpuTotMn());
-			pstmt1.setDouble(19, recibo.getImpuTotMo());
-			pstmt1.setDouble(20, recibo.getImpSubMo());
-			pstmt1.setDouble(21, recibo.getImpSubMn());
+			pstmt1.setDouble(18, nc.getImpuTotMn());
+			pstmt1.setDouble(19, nc.getImpuTotMo());
+			pstmt1.setDouble(20, nc.getImpSubMo());
+			pstmt1.setDouble(21, nc.getImpSubMn());
 			
-			pstmt1.setString(22, recibo.getBancoInfo().getCodBanco());
-			pstmt1.setString(23, recibo.getCuentaBcoInfo().getCodCuenta());
-			pstmt1.setString(24, recibo.getmPago());
-			pstmt1.setString(25, recibo.getCodDocRef());
-			pstmt1.setString(26, recibo.getSerieDocRef());
-			pstmt1.setInt(27, recibo.getNroDocRef());
+			pstmt1.setString(22, nc.getBancoInfo().getCodBanco());
+			pstmt1.setString(23, nc.getCuentaBcoInfo().getCodCuenta());
+			pstmt1.setString(24, nc.getmPago());
+			pstmt1.setString(25, nc.getCodDocRef());
+			pstmt1.setString(26, nc.getSerieDocRef());
+			pstmt1.setInt(27, nc.getNroDocRef());
 			
 			
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
 			
 			int linea = 1;
-			for (ReciboDetalle lin : recibo.getDetalle()) {
+			for (NotaCreditoDetalle lin : nc.getDetalle()) {
 				
 				/*A cada linea le seteamos el nroTrans*/
-				lin.setNroTrans(recibo.getNroTrans());
+				lin.setNroTrans(nc.getNroTrans());
 				
-				this.insertarLineaRecibo(lin, linea, con);
+				this.insertarLineaNC(lin, linea, con);
 				
 				linea++;
 			}
@@ -223,7 +221,7 @@ public class DAORecibos implements IDAORecibos{
 		} 
     	catch (SQLException e) 
     	{
-			throw new InsertandoReciboException();
+			throw new InsertandoNotaCreditoException();
 		} 
 		
     	
@@ -234,10 +232,10 @@ public class DAORecibos implements IDAORecibos{
 	 * @throws EliminandoFacturaException 
 	 *
 	 */
-	public void eliminarRecibo(Recibo recibo, Connection con) throws InsertandoReciboException, ConexionException, EliminandoReciboException {
+	public void eliminarNC(NotaCredito nc, Connection con) throws InsertandoNotaCreditoException, ConexionException, EliminandoNotaCreditoException {
 
 		Consultas clts = new Consultas();
-    	String delete = clts.eliminarReciboCab();
+    	String delete = clts.eliminarNCCab();
     	
     	PreparedStatement pstmt1;
 
@@ -245,18 +243,18 @@ public class DAORecibos implements IDAORecibos{
     	try {
     		
 			pstmt1 =  con.prepareStatement(delete);
-			pstmt1.setLong(1, recibo.getNroTrans());
+			pstmt1.setLong(1, nc.getNroTrans());
 			
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
 			
-			this.eliminarReciboDetalle(recibo, con);
+			this.eliminarNCDetalle(nc, con);
 			
 					
 		} 
     	catch (SQLException e) 
     	{
-			throw new EliminandoReciboException();
+			throw new EliminandoNotaCreditoException();
 		} 
 		
     	
@@ -266,10 +264,10 @@ public class DAORecibos implements IDAORecibos{
 	 * Eliminamos el detalle de un cobro
 	 *
 	 */
-	private void eliminarReciboDetalle(Recibo recibo, Connection con) throws  ConexionException, EliminandoReciboException {
+	private void eliminarNCDetalle(NotaCredito nc, Connection con) throws  ConexionException, EliminandoNotaCreditoException {
 
 		Consultas clts = new Consultas();
-    	String delete = clts.deleteReciboCabDet();
+    	String delete = clts.deleteNCCabDet();
     	
     	PreparedStatement pstmt1;
 
@@ -277,7 +275,7 @@ public class DAORecibos implements IDAORecibos{
     	try {
     		
 			pstmt1 =  con.prepareStatement(delete);
-			pstmt1.setLong(1, recibo.getNroTrans());
+			pstmt1.setLong(1, nc.getNroTrans());
 			
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
@@ -286,7 +284,7 @@ public class DAORecibos implements IDAORecibos{
 		} 
     	catch (SQLException e) 
     	{
-			throw new EliminandoReciboException();
+			throw new EliminandoNotaCreditoException();
 		} 
 	}
 	
@@ -294,11 +292,11 @@ public class DAORecibos implements IDAORecibos{
 	 * Inserta una linea de factura
 	 * 
 	 */
-	private void insertarLineaRecibo(ReciboDetalle lin, int linea, Connection con) throws InsertandoReciboException, ConexionException {
+	private void insertarLineaNC(NotaCreditoDetalle lin, int linea, Connection con) throws InsertandoNotaCreditoException, ConexionException {
 
 		Consultas clts = new Consultas();
     	
-    	String insert = clts.insertReciboCabDet();
+    	String insert = clts.insertNCCabDet();
     	
     	PreparedStatement pstmt1;
     	
@@ -334,6 +332,7 @@ public class DAORecibos implements IDAORecibos{
 			pstmt1.setString(24, lin.getOperacion());
 			pstmt1.setInt(25,linea);
 		
+			
 			pstmt1.executeUpdate ();
 			
 			pstmt1.close ();
@@ -341,7 +340,7 @@ public class DAORecibos implements IDAORecibos{
 		} 
     	catch (SQLException e) 
     	{
-			throw new InsertandoReciboException();
+			throw new InsertandoNotaCreditoException();
 		} 
 		
 	}
@@ -349,16 +348,16 @@ public class DAORecibos implements IDAORecibos{
 /////////////////////////////////////DETALLE/////////////////////////////////////////////////////
 	
 	/**
-	 * Nos retorna una lista con todas las lineas del recibo, pasandole el recibo
+	 * Nos retorna una lista con todas las lineas de la nc, pasandole la nc
 	 */
-	private ArrayList<ReciboDetalle> getReciboLineaxTrans(Connection con, Recibo cab) throws ObteniendoReciboException, ConexionException {
+	private ArrayList<NotaCreditoDetalle> getNotaCreditoLineaxTrans(Connection con, NotaCredito cab) throws ObteniendoNotaCreditoException, ConexionException {
 		
-		ArrayList<ReciboDetalle> lst = new ArrayList<ReciboDetalle>();
+		ArrayList<NotaCreditoDetalle> lst = new ArrayList<NotaCreditoDetalle>();
 	
 		try {
 			
 	    	Consultas clts = new Consultas();
-	    	String query = clts.getReciboDetxTrans();
+	    	String query = clts.getNCDetxTrans();
 	    	PreparedStatement pstmt1 = con.prepareStatement(query);
 	    	
 	    	ResultSet rs;
@@ -366,12 +365,12 @@ public class DAORecibos implements IDAORecibos{
 	    	pstmt1.setLong(1, cab.getNroTrans());
 			rs = pstmt1.executeQuery();
 			
-			ReciboDetalle aux;
+			NotaCreditoDetalle aux;
 			
 			while(rs.next ()) {
 				
 				
-				aux = new ReciboDetalle();
+				aux = new NotaCreditoDetalle();
 				
 				/*Cuenta ind es el del cabezal (en la linea solo tenemos la cuenta)*/
 				aux.setCodCuentaInd(cab.getCuenta().getCodCuenta());
@@ -428,7 +427,7 @@ public class DAORecibos implements IDAORecibos{
     	}	
     	
 		catch (SQLException e) {
-			throw new ObteniendoReciboException();
+			throw new ObteniendoNotaCreditoException();
 			
 		}
     	

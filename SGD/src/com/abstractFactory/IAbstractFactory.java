@@ -21,6 +21,7 @@ import com.persistencia.IDAOGrupos;
 import com.persistencia.IDAOImpuestos;
 import com.persistencia.IDAOIngresoCobro;
 import com.persistencia.IDAOMonedas;
+import com.persistencia.IDAONotaCredito;
 import com.persistencia.IDAONumeradores;
 import com.persistencia.IDAOPeriodo;
 import com.persistencia.IDAOProcesos;
@@ -96,6 +97,8 @@ public interface IAbstractFactory
 	public IDAOFacturas crearDAOFactura();
 	
 	public IDAORecibos crearDAORecibos();
+	
+	public IDAONotaCredito crearDAONotaCredito();
 	
 	public IDAOConciliaciones crearDAOConciliaciones();
 }

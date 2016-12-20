@@ -295,7 +295,7 @@ public class DAOEgresoCobro implements IDAOEgresoCobro{
 	
 	/**
 	 * Eliminamos el cabezal de un cobro
-	 * @throws EliminandoReciboException 
+	 * @throws EliminandoNotaCreditoException 
 	 *
 	 */
 	public void eliminarEgresoCobro(IngresoCobro cobro, Connection con) throws InsertandoEgresoCobroException, ConexionException, EliminandoEgresoCobroException {

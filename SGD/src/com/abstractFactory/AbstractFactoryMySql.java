@@ -188,6 +188,10 @@ public class AbstractFactoryMySql implements IAbstractFactory
 		return new DAORecibos();
 	}
 	
+	public IDAONotaCredito crearDAONotaCredito(){
+		return new DAONotaCredito();
+	}
+	
 	public IDAOConciliaciones crearDAOConciliaciones(){
 		return new DAOConciliaciones();
 	}

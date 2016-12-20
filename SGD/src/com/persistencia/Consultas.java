@@ -1617,4 +1617,163 @@ public String getIngresoCobroCabTodosOtros(){
 
 //////////////////////FIN-RECIBO /////////////////////////////////////////////	
 
+///////////////////////NOTA DE CREDITO/////////////////////////////////////////////////
+
+	public String insertNCCab(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO c_notacred (cod_docum, serie_docum, nro_docum, cod_tit, cod_cuenta ");
+		sb.append(", cod_emp, fec_doc, fec_valor, cod_moneda, imp_tot_mn, imp_tot_mo, tc_mov ");
+		sb.append(", observaciones, nro_trans, fecha_mod, usuario_mod, operacion, cod_proceso, impu_tot_mn, impu_tot_mo, imp_sub_mo, imp_sub_mn, ");
+		sb.append("cod_bco, cod_ctabco,cod_mpago , cod_doc_ref, serie_doc_ref, nro_doc_ref)");
+		sb.append(" VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?,  ");
+		sb.append(" ?, ?, ?, ?, ?, ? ) ");
+		
+		return sb.toString();
+	}
+
+	public String insertNCCabDet(){
+	
+	StringBuilder sb = new StringBuilder();
+	
+		sb.append("INSERT INTO d_notacred (cod_cuenta, cod_emp, cod_docum, serie_docum, nro_docum, cod_proceso,  ");
+		sb.append("cod_rubro, cuenta, fec_doc, fec_valor, cod_moneda, cod_impuesto, imp_impu_mn, imp_impu_mo,  ");
+		sb.append("imp_sub_mn, imp_sub_mo, imp_tot_mn, imp_tot_mo, tc_mov, referencia, referencia2, ");
+		sb.append("nro_trans, fecha_mod, usuario_mod, operacion, linea) ");
+		sb.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?) ");
+		
+		return sb.toString();
+	}
+
+	public String eliminarNCCab(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("DELETE FROM c_notacred WHERE nro_trans = ? ");
+		
+		return sb.toString();
+	}
+
+	public String deleteNCCabDet(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("DELETE FROM d_notacred WHERE nro_trans = ?");
+		
+		
+		return sb.toString();
+	}
+
+	public String getNCTodos(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_docum, serie_docum, nro_docum, m_titulares.cod_tit, m_titulares.nom_tit, m_titulares.tipo ");
+		sb.append(",c_notacred.cod_emp, c_notacred.fec_doc, c_notacred.fec_valor, c_notacred.cod_proceso,  c_procesos.descripcion  ");
+		sb.append(", m_monedas.cod_moneda, m_monedas.descripcion, m_monedas.simbolo, c_notacred.imp_tot_mn ");
+		sb.append(", c_notacred.imp_tot_mo, c_notacred.tc_mov, c_notacred.observaciones, nro_trans, c_notacred.fecha_mod, c_notacred.usuario_mod ");
+		sb.append(", c_notacred.operacion, m_monedas.descripcion, m_monedas.simbolo, c_notacred.cod_cuenta,   "); 
+		sb.append("c_notacred.impu_tot_mn , c_notacred.impu_tot_mo, c_notacred.imp_sub_mo , c_notacred.imp_sub_mn, ");
+		sb.append("COALESCE(m_bancos.cod_bco,'0') cod_bco, COALESCE(m_bancos.nom_bco,'0') nom_bco, ");
+		sb.append("COALESCE(m_ctasbcos.cod_ctabco,'0') cod_ctabco, COALESCE(m_ctasbcos.nom_cta,'0') nom_cta, ");
+		sb.append("COALESCE(cod_mpago,'0') cod_mpago, ");
+		sb.append("cod_doc_ref, serie_doc_ref, nro_doc_ref "); 
+		
+		sb.append("	FROM c_notacred ");
+		
+		sb.append("INNER JOIN m_monedas "); 
+		sb.append("ON c_notacred.cod_moneda = m_monedas.cod_moneda  ");
+		sb.append("AND c_notacred.cod_emp = m_monedas.cod_emp  ");
+		
+		sb.append("INNER JOIN m_titulares ");
+		
+		sb.append("ON c_notacred.cod_emp = m_titulares.cod_emp ");  
+		sb.append("AND c_notacred.cod_tit = m_titulares.cod_tit  ");
+		
+		sb.append("INNER JOIN c_procesos ");
+		
+		sb.append("ON c_notacred.cod_emp = c_procesos.cod_emp ");  
+		sb.append("AND c_notacred.cod_proceso = c_procesos.cod_proceso  ");
+		
+		sb.append("LEFT JOIN m_bancos ");
+		sb.append("ON c_notacred.cod_bco = m_bancos.cod_bco  ");
+		sb.append("AND c_notacred.cod_emp = m_bancos.cod_emp  "); 
+		
+		sb.append("LEFT JOIN  m_ctasbcos "); 
+		sb.append("ON c_notacred.cod_emp = m_ctasbcos.cod_emp ");  
+		sb.append("AND c_notacred.cod_ctabco = m_ctasbcos.cod_ctabco ");  
+		sb.append("AND c_notacred.cod_bco = m_ctasbcos.cod_bco ");
+		
+		sb.append("WHERE c_notacred.cod_emp = ? and fec_valor between DATE_SUB(?, INTERVAL 1 DAY) and ?  "); 
+		
+		return sb.toString();
+	}
+
+
+
+	public String getNCDetxTrans(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT m_cuentas.cod_cuenta, m_cuentas.descripcion nom_cuenta, d_notacred.cod_emp, d_notacred.cod_docum, d_notacred.serie_docum, d_notacred.nro_docum, ");
+		sb.append("COALESCE(d_notacred.cod_proceso,0) cod_proceso, (SELECT COALESCE(descripcion,'Sin-Asignar') FROM c_procesos WHERE c_procesos.cod_proceso = d_notacred.cod_proceso AND c_procesos.cod_emp = d_notacred.cod_emp ) nom_proceso,  ");
+		sb.append("m_rubros.cod_rubro, m_rubros.descripcion nom_rubro, d_notacred.cuenta, fec_doc, fec_valor, m_monedas.cod_moneda, m_monedas.simbolo, m_monedas.descripcion nom_moneda ");
+		sb.append(", m_impuestos.cod_impuesto, m_impuestos.descripcion nom_impuesto, m_impuestos.porcentaje, d_notacred.imp_impu_mn,  ");
+		sb.append("d_notacred.imp_impu_mo, d_notacred.imp_sub_mn, d_notacred.imp_sub_mo, d_notacred.imp_tot_mn, d_notacred.imp_tot_mo, d_notacred.tc_mov, d_notacred.referencia,  ");
+		sb.append("d_notacred.referencia2, d_notacred.nro_trans, d_notacred.fecha_mod, d_notacred.usuario_mod, d_notacred.operacion, d_notacred.linea ");
+		
+		
+		sb.append("FROM d_notacred, m_monedas, m_impuestos, m_rubros, m_cuentas  ");
+		
+		sb.append("WHERE d_notacred.cod_moneda = m_monedas.cod_moneda  ");
+		sb.append("AND d_notacred.cod_emp = m_monedas.cod_emp "); 
+		
+		sb.append(" AND d_notacred.cod_impuesto = m_impuestos.cod_impuesto "); 
+		sb.append("AND d_notacred.cod_emp = m_impuestos.cod_emp "); 
+		
+		sb.append(" AND d_notacred.cod_rubro = m_rubros.cod_rubro  ");
+		sb.append("AND d_notacred.cod_emp = m_rubros.cod_emp "); 
+		sb.append("AND d_notacred.nro_trans  = ? ");
+		
+		sb.append(" AND d_notacred.cod_cuenta = m_cuentas.cod_cuenta  ");
+		sb.append("AND d_notacred.cod_emp = m_cuentas.cod_emp  "); 
+		
+		return sb.toString();
+	}
+
+
+	public String memberNC(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT nro_docum ");
+		sb.append("FROM c_notacred WHERE nro_docum = ? AND serie_docum = ? AND cod_docum = ? ");
+		sb.append( "AND cod_emp = ? ");
+		
+		return sb.toString();
+	}
+
+	public String deleteNCCab(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("DELETE FROM c_notacred WHERE nro_trans = ? ");
+		
+		return sb.toString();
+	}
+
+	public String deleteNCDet(){
+	
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("DELETE FROM d_notacred WHERE nro_trans = ? ");
+		
+		return sb.toString();
+	}
+
+
+//////////////////////FIN-NOTA DE CREDITO /////////////////////////////////////////////	
+	
+	
 }

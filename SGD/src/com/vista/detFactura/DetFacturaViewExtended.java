@@ -108,6 +108,8 @@ public class DetFacturaViewExtended extends DetFacturaView implements IBusqueda{
 
 	public DetFacturaViewExtended(String opera, IGastosMain main, AuxDetalleVO datosCabezal){
 
+		
+		
 		this.datosCabezal = datosCabezal;
 		
 		this.cotizacion =  new CotizacionVO();

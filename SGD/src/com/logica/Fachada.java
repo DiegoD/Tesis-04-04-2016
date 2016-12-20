@@ -83,13 +83,16 @@ import com.logica.Docum.DatosDocum;
 import com.logica.Docum.DocumDetalle;
 import com.logica.Docum.DocumSaldo;
 import com.logica.Docum.Factura;
+import com.logica.Docum.NotaCredito;
 import com.logica.Docum.Recibo;
 import com.logica.IngresoCobro.IngresoCobro;
+import com.excepciones.NotaCredito.*;
 import com.valueObject.*;
 import com.valueObject.Cotizacion.CotizacionVO;
 import com.valueObject.Docum.DatosDocumVO;
 import com.valueObject.Docum.DocumSaldoVO;
 import com.valueObject.Docum.FacturaVO;
+import com.valueObject.Docum.NotaCreditoVO;
 import com.valueObject.Docum.ReciboVO;
 import com.valueObject.IngresoCobro.IngresoCobroVO;
 import com.valueObject.Numeradores.NumeradoresVO;
@@ -99,6 +102,7 @@ import com.valueObject.cliente.ClienteVO;
 import com.vista.Mensajes;
 import com.vista.VariablesPermisos;
 import com.persistencia.*;
+
 
 public class Fachada {
 
@@ -127,6 +131,7 @@ public class Fachada {
 	private IDAOMonedas monedas;
 	private IDAOFacturas facturas;
 	private IDAORecibos recibos;
+	private IDAONotaCredito notaCredito;
 	
 	private AbstractFactoryBuilder fabrica;
 	private IAbstractFactory fabricaConcreta;
@@ -157,6 +162,7 @@ public class Fachada {
         this.monedas = fabricaConcreta.crearDAOMonedas();
         this.facturas = fabricaConcreta.crearDAOFactura();
         this.recibos = fabricaConcreta.crearDAORecibos();
+        this.notaCredito = fabricaConcreta.crearDAONotaCredito();
         
     }
     
@@ -3630,5 +3636,276 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 	}
 
 /////////////////////////////////FIN-RECIBO//////////////////////
+	
+/////////////////////////////////INICIO-NC////////////////////////////////
+	/**
+	*Nos retorna las nc del sistema para la empresa
+	* 
+	*
+	*/
+	@SuppressWarnings("unchecked") 
+	public ArrayList<NotaCreditoVO> getNotaCreditoTodos(String codEmp, Timestamp inicio, Timestamp fin) throws ObteniendoNotaCreditoException, ConexionException {
+	
+		Connection con = null;
+		
+		ArrayList<NotaCredito> lst;
+		ArrayList<NotaCreditoVO> lstVO = new ArrayList<NotaCreditoVO>();
+		
+		try
+		{
+			con = this.pool.obtenerConeccion();
+			
+			lst = this.notaCredito.getNCTodos(con, codEmp, inicio, fin);
+			
+			for (NotaCredito nc : lst) 
+			{
+				NotaCreditoVO aux = nc.retornarVO();
+				
+				lstVO.add(aux);
+			}
+		
+		}catch(ObteniendoNotaCreditoException  e){
+			throw e;
+		
+		} catch (ConexionException e) {
+		
+			throw e;
+		} 
+		finally
+		{
+			this.pool.liberarConeccion(con);
+		}
+		
+		return lstVO;
+	}	 
+
+
+	/**
+	*Ingresamos nc en el sistema
+	* 
+	*
+	*/
+	public void insertarNotaCredito(NotaCreditoVO vo, String codEmp) throws InsertandoNotaCreditoException, ConexionException{
+	
+		Connection con = null;
+		try 
+		{
+			con = this.pool.obtenerConeccion();
+			con.setAutoCommit(false);
+			
+			this.insertarNotaCreditoInterno(vo, codEmp, con, true); 
+			
+			con.commit();
+		
+		}catch(Exception e){
+		
+			try {
+				con.rollback();
+			
+			} catch (SQLException ex) {
+			
+				throw new InsertandoNotaCreditoException();
+			}
+			
+			throw new InsertandoNotaCreditoException();
+		
+		}
+		finally
+		{
+		pool.liberarConeccion(con);
+		}
+	
+	}
+
+	/***
+	* 
+	* Isertamos una nc, el booleano nuevo, es si es nuevo o editar
+	* si es nuevo generamos nroTrans nuevo de lo contrario no
+	*/
+	private void insertarNotaCreditoInterno(NotaCreditoVO vo, String codEmp, Connection con, boolean nuevo) throws InsertandoNotaCreditoException, ConexionException, ExisteNotaCreditoException{
+	
+		boolean existe = false;
+		NumeradoresVO codigos = new NumeradoresVO();
+		
+		try 
+		{
+		
+			NotaCredito nc = new NotaCredito(vo); 
+			Cotizacion cotiAux;
+			
+			if(nuevo)
+			{
+				codigos.setNumeroTrans(numeradores.getNumero(con, "03", codEmp)); //nro trans
+				nc.setNroTrans(codigos.getNumeroTrans()); /*Seteamos el nroTrans*/
+				vo.setNroTrans(codigos.getNumeroTrans()); /*Seteamos el nroTrans al VO para obtener el DocumSaldo*/
+				
+			}
+			
+			/*Verificamos que no exista nc con el mismo numero*/
+			if(!this.notaCredito.memberNC(nc.getNroDocum(), nc.getSerieDocum(), nc.getCodDocum(), codEmp, con))
+			{
+				/*Para cada linea  de nc le quitamos el saldo*/
+				for (DocumDetalle docum : nc.getDetalle()) {
+					
+					/*Signo -1 porque resta al saldo*/
+					this.saldos.modificarSaldo(docum, -1, nc.getTcMov(), con);
+					
+					/**Para cada factura tenemos que devlolver saldo a los gtos****/
+						
+					
+					/******************************************************************************/
+				
+				}
+			
+			/*Ingresamos NC*/
+			this.notaCredito.insertarNC(nc, con);
+		
+		}
+		else{
+			existe = true;
+		}
+		}catch(Exception e){
+	
+		throw new InsertandoNotaCreditoException();
+	}
+	if (existe){
+		throw new ExisteNotaCreditoException();
+	}
+}
+
+	/***
+	* 
+	*Eliminamos NC
+	*/
+	public void eliminarNotaCredito(NotaCreditoVO ncVO, String codEmp) throws EliminandoNotaCreditoException, ConexionException, ExisteNotaCreditoException{
+	
+		Connection con = null;
+		boolean existe = false;
+		
+		try 
+		{
+			con = this.pool.obtenerConeccion();
+			con.setAutoCommit(false);
+			
+			this.eliminarNotaCreditoInterno(ncVO, codEmp, con); 
+			
+			con.commit();
+		
+		}
+		catch(Exception e){
+		
+			try {
+				con.rollback();
+			
+			} catch (SQLException ex) {
+			
+				throw new EliminandoNotaCreditoException();
+			}
+			
+			throw new EliminandoNotaCreditoException();
+		}
+		finally
+		{
+			pool.liberarConeccion(con);
+		}
+		if (existe){
+			throw new ExisteNotaCreditoException();
+		}
+	}
+
+	private void eliminarNotaCreditoInterno(NotaCreditoVO vo, String codEmp, Connection con) throws EliminandoNotaCreditoException, ConexionException, ExisteNotaCreditoException, NoExisteNotaCreditoException{
+	
+		boolean existe = false;
+		Integer codigo;
+		NumeradoresVO codigos = new NumeradoresVO();
+		
+		try 
+		{
+		
+		NotaCredito nc = new NotaCredito(vo); 
+		Cotizacion cotiAux;
+		
+		
+		/*Verificamos que exista la factura*/
+		if(this.notaCredito.memberNC(nc.getNroDocum(), nc.getSerieDocum(), nc.getCodDocum(), codEmp, con))
+		{
+		
+			/*Para cada linea reintegramos el saldo*/
+			for (DocumDetalle docum : nc.getDetalle()) {
+			
+				/*Signo 1 porque devuelve el saldo a la factura*/
+				this.saldos.modificarSaldo(docum, 1, nc.getTcMov(), con);
+				
+				/***ACA VOLVER LOS GASTOS A LA VIDA****/
+				
+		
+			}
+		
+		/*Una vez hechos todos los movimientos de saldos y documentos
+		* procedemos a eliminar la NC*/
+		this.notaCredito.eliminarNC(nc, con); 
+		
+		
+		}
+		else{
+			throw new NoExisteNotaCreditoException();
+		}
+		
+		}catch(Exception e){
+		
+			throw new EliminandoNotaCreditoException();
+		
+		}
+		if (existe){
+			throw new ExisteNotaCreditoException();
+		}
+	}
+
+	/***
+	* 
+	* Modificamos la NC
+	*/
+	public void modificarNotaCredito(NotaCreditoVO ncVO, NotaCreditoVO copiaVO) throws  ModificandoNotaCreditoException, ExisteNotaCreditoException, ConexionException , SQLException , InsertandoNotaCreditoException , EliminandoNotaCreditoException , NoExisteNotaCreditoException  {
+	
+		Connection con = null;
+		
+		try 
+		{
+			con = this.pool.obtenerConeccion();
+			con.setAutoCommit(false);
+			
+			NotaCredito nc = new NotaCredito(ncVO);
+			NotaCredito copia = new NotaCredito(copiaVO);
+			
+			/*Verificamos que exista el nro de cobro*/
+			if(this.notaCredito.memberNC(nc.getNroDocum(), nc.getSerieDocum(), nc.getCodDocum(), ncVO.getCodEmp(), con))
+			{
+				this.eliminarNotaCreditoInterno(copiaVO, copiaVO.getCodEmp(), con);
+				
+				this.insertarNotaCreditoInterno(ncVO, ncVO.getCodEmp(), con, false);
+				
+				con.commit();
+			}
+			else
+				throw new ModificandoNotaCreditoException();
+			
+		}catch(ModificandoNotaCreditoException| ExisteNotaCreditoException| ConexionException | SQLException | InsertandoNotaCreditoException | EliminandoNotaCreditoException | NoExisteNotaCreditoException  e){
+		try {
+		
+			con.rollback();
+		
+		} catch (SQLException e1) {
+		
+			throw new ConexionException();
+		}
+			throw  e;
+		}
+		finally
+		{
+			pool.liberarConeccion(con);
+		}
+	}
+
+/////////////////////////////////FIN-NC//////////////////////
 	
 }
