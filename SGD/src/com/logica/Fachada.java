@@ -1781,7 +1781,8 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 
 				/*Ingresamos el saldo para el cheque */
 				DatosDocum auxCheque2 = new DatosDocum(auxCheque);
-				this.saldos.modificarSaldo(auxCheque2,1, ingVO.getTcMov() , con);
+				// VER ESTO YA LO HACE EL INSERTAR CHEUQE INT FACAHADA
+				//this.saldos.modificarSaldo(auxCheque2,1, ingVO.getTcMov() , con);
 			}
 			
 			/*Si es cheque no ingresamos el saldo al banco, esto se realiza cuando
@@ -3130,11 +3131,13 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 				
 				if(docum.getCodDocum().equals("Gasto")){ /*Para los gastos modificamos el saldo al documento*/
 					/*Signo -1 porque resta al saldo, al facturar se deja sin saldo al gto*/
-					this.saldos.modificarSaldo(docum, -1, fact.getTcMov(), con);
+					if(fact.getTipoFactura().equals("Factura"))
+						this.saldos.modificarSaldo(docum, -1, fact.getTcMov(), con);
 				}
 			}
 			/*Ingresamos saldo para la factura*/
-			this.saldos.modificarSaldo(fact, 1, fact.getTcMov(), con);
+			if(fact.getTipoFactura().equals("Factura"))
+				this.saldos.modificarSaldo(fact, 1, fact.getTcMov(), con);
 			
 			/*Ingresamos la factura*/
 			this.facturas.insertarFactura(fact, con);
@@ -3214,12 +3217,14 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 
 					if(docum.getCodDocum().equals("Gasto")){ /*Para los gastos modificamos el saldo al documento*/
 						/*Signo 1 porque devuelve el saldo al gasto*/
-						this.saldos.modificarSaldo(docum, 1, fact.getTcMov(), con);
+						if(fact.getTipoFactura().equals("Factura"))
+							this.saldos.modificarSaldo(docum, 1, fact.getTcMov(), con);
 					}
 				
 				}
 				/*Eliminamos el saldo para la factura*/ 
-				this.saldos.eliminarSaldo(fact, con);
+				if(fact.getTipoFactura().equals("Factura"))
+					this.saldos.eliminarSaldo(fact, con);
 				
 				/*Una vez hechos todos los movimientos de saldos y documentos
 				* procedemos a eliminar la factura*/
@@ -3431,9 +3436,9 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 					this.insertarChequeIntFachada(cheque, con);
 
 					/*Ingresamos el saldo para el cheque */
-					DatosDocum auxCheque2 = new DatosDocum(auxCheque);
+					//DatosDocum auxCheque2 = new DatosDocum(auxCheque);
 					
-					this.saldos.modificarSaldo(auxCheque2,1, vo.getTcMov() , con);
+					//this.saldos.modificarSaldo(auxCheque2,1, vo.getTcMov() , con);
 				}
 				
 				/*Si es cheque no ingresamos el saldo al banco, esto se realiza cuando
