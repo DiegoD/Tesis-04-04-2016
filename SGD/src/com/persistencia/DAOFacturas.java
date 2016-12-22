@@ -81,6 +81,7 @@ public class DAOFacturas implements IDAOFacturas{
 				fact.setImpuTotMo(rs.getDouble("impu_tot_mo"));
 				fact.setImpSubMo(rs.getDouble("imp_sub_mo"));
 				fact.setImpSubMn(rs.getDouble("imp_sub_mn"));
+				fact.setTipoFactura(rs.getString("tipo_factura"));
 				
 				/*Obtenemos las lineas de la transaccion*/				
 				fact.setDetalle(this.getEgresoFacturaLineaxTrans(con,fact));
@@ -163,6 +164,7 @@ public class DAOFacturas implements IDAOFacturas{
 				fact.setImpuTotMo(rs.getDouble("impu_tot_mo"));
 				fact.setImpSubMo(rs.getDouble("imp_sub_mo"));
 				fact.setImpSubMn(rs.getDouble("imp_sub_mn"));
+				fact.setTipoFactura(rs.getString("tipo_factura"));
 				
 				/*Obtenemos las lineas de la transaccion*/				
 				fact.setDetalle(this.getEgresoFacturaLineaxTrans(con,fact));
@@ -222,6 +224,36 @@ public class DAOFacturas implements IDAOFacturas{
 		}
 	}
 	
+	public boolean existeGasto(int nroDocum, String codEmp, Connection con) throws ExisteFacturaException, ConexionException{
+		
+		boolean existe = false;
+		
+		try{
+			
+			
+			Consultas consultas = new Consultas();
+			String query = consultas.existeGasto();
+			
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			
+			pstmt1.setInt(1, nroDocum);
+			pstmt1.setString(2, codEmp);
+			
+			ResultSet rs = pstmt1.executeQuery();
+			
+			if (rs.next ()) 
+				existe = true;
+						
+			rs.close ();
+			pstmt1.close ();
+			
+			return existe;
+			
+		}catch(SQLException e){
+			
+			throw new ExisteFacturaException();
+		}
+	}
 
 	/**
 	 * Inserta un cabezal ingreso cobro
@@ -263,6 +295,7 @@ public class DAOFacturas implements IDAOFacturas{
 			pstmt1.setDouble(19, factura.getImpuTotMo());
 			pstmt1.setDouble(20, factura.getImpSubMo());
 			pstmt1.setDouble(21, factura.getImpSubMn());
+			pstmt1.setString(22, factura.getTipoFactura());
 			
 			
 			pstmt1.executeUpdate ();

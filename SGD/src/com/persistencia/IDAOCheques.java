@@ -33,4 +33,6 @@ public interface IDAOCheques {
 	
 	public ArrayList<DepositoDetalle> getChequesBanco(Connection con, String codEmp, String codMoneda) throws ObteniendoChequeException, ConexionException, ObteniendoCuentasBcoException, ObteniendoBancosException;
 	
+	public boolean exixsteCheque(String serie, Integer nro, String codEmp, String codBco, String codCta, Connection con) throws ExisteChequeException;
+	
 }

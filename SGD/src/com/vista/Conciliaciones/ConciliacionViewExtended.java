@@ -18,8 +18,6 @@ import com.excepciones.Bancos.ObteniendoBancosException;
 import com.excepciones.Bancos.ObteniendoCuentasBcoException;
 import com.excepciones.Conciliaciones.ObteniendoConciliacionException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
-import com.excepciones.clientes.ObteniendoClientesException;
-import com.logica.MonedaInfo;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
@@ -32,7 +30,6 @@ import com.vaadin.server.VaadinService;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Grid.SelectionMode;
-import com.vaadin.ui.Notification;
 import com.valueObject.MonedaVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.Conciliaciones.ConciliacionDetalleVO;
@@ -357,6 +354,9 @@ private static final long serialVersionUID = 1L;
 							moneda = (MonedaVO) comboMoneda.getValue();
 							conciliacion.setCodMoneda(moneda.getCodMoneda());
 							conciliacion.setDescripcion(moneda.getDescripcion());
+							conciliacion.setCodBanco("0");
+							conciliacion.setCodCuenta("0");
+							
 						}
 						
 						
@@ -529,6 +529,7 @@ private static final long serialVersionUID = 1L;
 		this.fecValor.setEnabled(false);
 		this.observaciones.setEnabled(false);
 		this.nroDocum.setVisible(true);
+		this.lblComprobante.setVisible(true);
 		
 		/*Seteamos la grilla con los formularios*/
 		this.container = 
@@ -587,6 +588,7 @@ private static final long serialVersionUID = 1L;
 		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_CONCILIACION, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
 		this.nroDocum.setVisible(false);
+		this.lblComprobante.setVisible(false);
 		
 		importeTotalCalculado = (double) 0;
 		
@@ -872,11 +874,7 @@ private static final long serialVersionUID = 1L;
 					this.importeConciliado.setConvertedValue(saldoConciliadoMoneda);
 					
 				}
-				
-				
-				
 			}
-			
 			else{
 				MonedaVO moneda = null;
 				if(comboMoneda.getValue()!= null){
@@ -1056,12 +1054,18 @@ private static final long serialVersionUID = 1L;
 		gridDetalle.getColumn("fecValor").setHeaderCaption("Fecha");
 		gridDetalle.getColumn("impTotMo").setHeaderCaption("Importe");
 		gridDetalle.getColumn("descripcion").setHeaderCaption("Descripción");
+		gridDetalle.getColumn("cod_doc_ref").setHeaderCaption("Tipo");
+		gridDetalle.getColumn("nro_doc_ref").setHeaderCaption("Número ref.");
+		gridDetalle.getColumn("serie_doc_ref").setHeaderCaption("Serie ref.");
 		
-		gridDetalle.setColumnOrder("fecValor", "nro_docum", "impTotMo");
+		gridDetalle.setColumnOrder("fecValor", "nro_docum", "impTotMo", "descripcion", "cod_doc_ref", "nro_doc_ref", "serie_doc_ref");
 		gridDetalle.getColumn("fecValor").setWidth(120);
 		gridDetalle.getColumn("nro_docum").setWidth(100);
 		gridDetalle.getColumn("impTotMo").setWidth(100);
 		gridDetalle.getColumn("descripcion").setWidth(283);
+		gridDetalle.getColumn("cod_doc_ref").setWidth(100);
+		gridDetalle.getColumn("nro_doc_ref").setWidth(120);
+		gridDetalle.getColumn("serie_doc_ref").setWidth(100);
 		
 		this.filtroGrilla();
 	}
@@ -1126,6 +1130,7 @@ private static final long serialVersionUID = 1L;
 			
 			
 			this.setearValidaciones(true);
+			MonedaVO moneda = new MonedaVO();
 			/*Validamos los campos antes de invocar al controlador*/
 			if(this.fieldsValidos())
 			{
@@ -1162,24 +1167,39 @@ private static final long serialVersionUID = 1L;
 					
 					conciliacion.setNroDocum(nroDocum.getValue());
 					
-					BancoVO banco = new BancoVO();
-					banco = (BancoVO) comboBancos.getValue();
-					conciliacion.setNomBanco(banco.getNombre());
-					conciliacion.setCodBanco(banco.getCodigo());
+					if(comboCajaBanco.getValue()!=null){
+						if(comboCajaBanco.getValue().equals("Banco")){
+							
+							BancoVO banco = new BancoVO();
+							banco = (BancoVO) comboBancos.getValue();
+							conciliacion.setNomBanco(banco.getNombre());
+							conciliacion.setCodBanco(banco.getCodigo());
+							
+							CtaBcoVO cuentaBanco = new CtaBcoVO();
+							cuentaBanco = (CtaBcoVO) comboCuentas.getValue();
+							conciliacion.setCodCuenta(cuentaBanco.getCodigo());
+							conciliacion.setNomCuenta(cuentaBanco.getNombre());
+							conciliacion.setCodMoneda(cuentaBanco.getMonedaVO().getCodMoneda());
+							
+							
+							moneda.setCodMoneda(cuentaBanco.getMonedaVO().getCodMoneda());
+							moneda.setNacional(cuentaBanco.getMonedaVO().isNacional());
+							moneda.setDescripcion(cuentaBanco.getMonedaVO().getDescripcion());
+							moneda.setSimbolo(cuentaBanco.getMonedaVO().getSimbolo());
+							conciliacion.setDescripcion(moneda.getDescripcion());
+							conciliacion.setCodMoneda(moneda.getDescripcion());
+						}
+						else{
+							if(comboMoneda.getValue()!=null){
+								moneda = (MonedaVO) comboMoneda.getValue();
+								conciliacion.setCodMoneda(moneda.getCodMoneda());
+								conciliacion.setDescripcion(moneda.getDescripcion());
+								conciliacion.setCodBanco("0");
+								conciliacion.setCodCuenta("0");
+							}
+						}
+					}
 					
-					CtaBcoVO cuentaBanco = new CtaBcoVO();
-					cuentaBanco = (CtaBcoVO) comboCuentas.getValue();
-					conciliacion.setCodCuenta(cuentaBanco.getCodigo());
-					conciliacion.setNomCuenta(cuentaBanco.getNombre());
-					conciliacion.setCodMoneda(cuentaBanco.getMonedaVO().getCodMoneda());
-					
-					MonedaInfo moneda = new MonedaInfo();
-					moneda.setCodMoneda(cuentaBanco.getMonedaVO().getCodMoneda());
-					moneda.setNacional(cuentaBanco.getMonedaVO().isNacional());
-					moneda.setDescripcion(cuentaBanco.getMonedaVO().getDescripcion());
-					moneda.setSimbolo(cuentaBanco.getMonedaVO().getSimbolo());
-					conciliacion.setDescripcion(moneda.getDescripcion());
-					conciliacion.setCodMoneda(moneda.getDescripcion());
 					
 					conciliacion.setImpTotMo((Double)impTotMo.getConvertedValue());
 					
@@ -1190,17 +1210,7 @@ private static final long serialVersionUID = 1L;
 						
 					}else
 					{
-						Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
-						CotizacionVO coti = null;
-						coti = this.controlador.getCotizacion(permisoAux, fecha, moneda.getCodMoneda());
-						if(coti.getCotizacionVenta() != 0){
-							tcMov = coti.getCotizacionVenta();
-							conciliacion.setImpTotMn((conciliacion.getImpTotMo()*tcMov));
-						}
-						else{
-							Mensajes.mostrarMensajeError("Debe cargar la cotización para la moneda");
-							return;
-						}
+						conciliacion.setImpTotMn(conciliacion.getImpTotMo());
 						
 					}
 					

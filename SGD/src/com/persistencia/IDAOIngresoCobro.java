@@ -21,4 +21,5 @@ public interface IDAOIngresoCobro {
 	//public ArrayList<IngresoCobroLinea> getIngresoCobroLineaxTrans(Connection con, String codEmp, long nroTrans) throws ObteniendoIngresoCobroException, ConexionException;
 	public void eliminarIngresoCobro(IngresoCobro ing, Connection con)throws InsertandoIngresoCobroException, ConexionException, EliminandoIngresoCobroException ;
 	public ArrayList<IngresoCobro> getIngresoCobroTodosOtro(Connection con, String codEmp, Timestamp inicio, Timestamp fin) throws ObteniendoIngresoCobroException, ConexionException ;
+	public boolean existeGastoIngresoCobro(int nroDocum, String codEmp, Connection con) throws ExisteIngresoCobroException, ConexionException;
 }

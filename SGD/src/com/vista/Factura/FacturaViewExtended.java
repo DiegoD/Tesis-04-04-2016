@@ -514,7 +514,19 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 				
 				try {
 					
+					
 					/////////////////////////////MONEDA//////////////////////////////////////////////////
+					
+					if(this.comboTipo.getValue()!= null){
+						
+						if(this.comboTipo.getValue().equals("Factura")){
+							factVO.setTipoFactura("Factura");
+						}
+						else{
+							factVO.setTipoFactura("PreFactura");
+						}
+						
+					}
 					
 					MonedaVO auxMoneda = null;
 					
@@ -1019,6 +1031,9 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		this.comboMoneda.setRequired(setear);
 		this.comboMoneda.setRequiredError("Es requerido");
 		
+		this.comboTipo.setRequired(setear);
+		this.comboTipo.setRequiredError("Es requerido");
+		
 		this.impTotMo.setRequired(setear);
 		this.impTotMo.setRequiredError("Es requerido");
 		
@@ -1071,6 +1086,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		}
 		
 		this.inicializarComboMoneda(item.getBean().getCodMoneda());
+		this.inicializarComboTipo(item.getBean());
 	}
 	
 	
@@ -1093,6 +1109,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		this.serieDocum.setEnabled(false);
 		this.btnBuscarProceso.setVisible(false);
 		this.tcMov.setEnabled(false);
+		this.comboTipo.setEnabled(false);
 		
 		/*Si tiene permisos de editar habilitamos el boton de 
 		 * edicion*/
@@ -1149,6 +1166,13 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		
 		this.btnBuscarCliente.setVisible(false);
 		this.impTotMo.setEnabled(true);
+		
+		if(comboTipo.getValue()!=null){
+			if(comboTipo.getValue().equals("Pre Factura")){
+				this.comboTipo.setEnabled(true);
+			}
+		}
+		
 		/*Verificamos que tenga permisos*/
 		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_FACTURA, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
@@ -1826,6 +1850,15 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		
 	}
 	
+	public void inicializarComboTipo(FacturaVO fact){
+		
+		if(fact.getTipoFactura().equals("Factura")){
+			this.comboTipo.setValue("Factura");
+		}
+		else{
+			this.comboTipo.setValue("Pre Factura");
+		}
+	}
 	
 	
 	@Override

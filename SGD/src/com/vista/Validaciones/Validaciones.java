@@ -5,15 +5,28 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 
 import com.controladores.PeriodoControlador;
+import com.controladores.ValidacionesControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.InicializandoException;
 import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
+import com.excepciones.Cheques.ExisteChequeException;
+import com.excepciones.Conciliaciones.MovimientoConciliadoException;
+import com.excepciones.Depositos.ExisteDepositoException;
+import com.excepciones.Egresos.ExisteEgresoCobroException;
+import com.excepciones.Factura.ExisteFacturaException;
+import com.excepciones.IngresoCobros.ExisteIngresoCobroException;
 import com.excepciones.Periodo.ExistePeriodoException;
 import com.excepciones.Periodo.NoExistePeriodoException;
+import com.excepciones.SaldoCuentas.ExisteNroTransferencia;
+import com.excepciones.Saldos.ExisteSaldoException;
 import com.valueObject.UsuarioPermisosVO;
+import com.valueObject.Cheque.ChequeVO;
+import com.valueObject.Deposito.DepositoVO;
 
 public class Validaciones {
+	
+	ValidacionesControlador validaciones;
 	
 	public Validaciones(){
 		
@@ -71,5 +84,58 @@ public class Validaciones {
 		
 		return periodo.validaPeriodo(mesValidar, anio, permisos);
 	}
+	
+	public boolean existeCheque(UsuarioPermisosVO permisos, ChequeVO cheque) throws ObteniendoPermisosException, ConexionException, InicializandoException, ExisteChequeException, NoTienePermisosException{
+		
+		validaciones = new ValidacionesControlador();
+		return validaciones.existeCheque(cheque, permisos);
+	}
+	
+	public boolean existeTransferencia(UsuarioPermisosVO permisos, String nro, String codBco, String codCta) throws ObteniendoPermisosException, ConexionException, InicializandoException, NoTienePermisosException, NumberFormatException, ExisteNroTransferencia{
+		
+		validaciones = new ValidacionesControlador();
+		return validaciones.existeNroTransferencia(nro, codBco, codCta, permisos);
+	}
 
+	public boolean existeChequeDepositado(UsuarioPermisosVO permisos, ChequeVO cheque) throws ObteniendoPermisosException, ConexionException, InicializandoException, NoTienePermisosException, ExisteDepositoException{
+		
+		validaciones = new ValidacionesControlador();
+		return validaciones.existeChequeDepospitado(cheque, permisos);
+	}
+	
+	public boolean existeEgreso(UsuarioPermisosVO permisos, Integer nro_docum) throws ConexionException, ExisteEgresoCobroException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException {
+		
+		validaciones = new ValidacionesControlador();
+		return validaciones.existeEgreso(nro_docum, permisos);
+	}
+	
+	public boolean existeFacturaGasto(UsuarioPermisosVO permisos, Integer nro_docum) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ExisteFacturaException {
+		
+		validaciones = new ValidacionesControlador();
+		return validaciones.existeGastoFactura(nro_docum, permisos);
+	}
+	
+	public boolean existeGastoIngresoCobro(UsuarioPermisosVO permisos, Integer nro_docum) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ExisteIngresoCobroException {
+		
+		validaciones = new ValidacionesControlador();
+		return validaciones.existeGastoIngresoCobro(nro_docum, permisos);
+	}
+
+	public boolean depositoConciliado(UsuarioPermisosVO permisos, DepositoVO deposito) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, NumberFormatException, MovimientoConciliadoException {
+		
+		validaciones = new ValidacionesControlador();
+		return validaciones.depositoConciliado(deposito, permisos);
+	}
+	
+	public boolean validaNumDeposito(UsuarioPermisosVO permisos, String codBco, String codCta, String nro) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, NumberFormatException, ExisteDepositoException {
+		
+		validaciones = new ValidacionesControlador();
+		return validaciones.validaNumDeposito(permisos, codBco, codCta, nro);
+	}
+	
+	public boolean egresoConciliado(UsuarioPermisosVO permisos, String nroEgreso) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, NumberFormatException, MovimientoConciliadoException {
+		
+		validaciones = new ValidacionesControlador();
+		return validaciones.egresoConciliado(permisos, nroEgreso);
+	}
 }

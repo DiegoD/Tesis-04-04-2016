@@ -40,6 +40,7 @@ import com.valueObject.MonedaVO;
 import com.valueObject.Docum.FacturaVO;
 import com.valueObject.TitularVO;
 import com.valueObject.UsuarioPermisosVO;
+import com.valueObject.Cheque.ChequeVO;
 import com.valueObject.Cotizacion.CotizacionVO;
 import com.valueObject.Docum.DocumDetalleVO;
 import com.valueObject.Docum.ReciboDetalleVO;
@@ -78,6 +79,7 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 	Double cotizacionVenta = null;
 	Double importeTotalCalculado;
 	Validaciones val = new Validaciones();
+	ChequeVO chequeVO = new ChequeVO();
 	
 	MonedaVO monedaNacional = new MonedaVO();
 	
@@ -703,6 +705,22 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 				
 				/*Si es banco tomamos estos cmapos de lo contrario caja*/
 				if(this.comboTipo.getValue().toString().equals("Banco")){
+					
+					//Datos del banco y cuenta
+					CtaBcoVO auxctaBco = new CtaBcoVO();
+					if(this.comboCuentas.getValue() != null){
+						
+						auxctaBco = (CtaBcoVO) this.comboCuentas.getValue();
+						
+					}
+					
+					ingCobroVO.setCodBanco(auxctaBco.getCodBco());
+					ingCobroVO.setCodCtaBco(auxctaBco.getCodigo());
+					ingCobroVO.setNomCtaBco(auxctaBco.getNombre());
+					ingCobroVO.setCodMonedaCtaBco(auxctaBco.getMonedaVO().getCodMoneda());
+					ingCobroVO.setNacional(auxctaBco.getMonedaVO().isNacional());
+					/*Falta poner el nombre de la cuenta*/
+					
 				
 					ingCobroVO.setmPago((String)comboMPagos.getValue());
 					
@@ -718,6 +736,21 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 						ingCobroVO.setNroDocRef(nroDocRef.getValue().trim());
 						ingCobroVO.setSerieDocRef(serieDocRef.getValue().trim());
 						
+						chequeVO.setCodBanco(ingCobroVO.getCodBanco());
+					    chequeVO.setCodCuenta(ingCobroVO.getCodCtaBco());
+					    chequeVO.setSerieDocum(ingCobroVO.getSerieDocRef());
+					    chequeVO.setNroDocum(Integer.parseInt(ingCobroVO.getNroDocRef()));
+					    
+					    try {
+							if(val.existeCheque(permisoAux, chequeVO)){
+								Mensajes.mostrarMensajeError("El cheque ya existe para el banco/cuenta");
+								return;
+							}
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							Mensajes.mostrarMensajeError(e.toString());
+							
+						}
 					}else
 					{
 						
@@ -726,20 +759,7 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 						ingCobroVO.setSerieDocRef("0");
 					}
 												
-					//Datos del banco y cuenta
-					CtaBcoVO auxctaBco = new CtaBcoVO();
-					if(this.comboCuentas.getValue() != null){
-						
-						auxctaBco = (CtaBcoVO) this.comboCuentas.getValue();
-						
-					}
 					
-					ingCobroVO.setCodBanco(auxctaBco.getCodBco());
-					ingCobroVO.setCodCtaBco(auxctaBco.getCodigo());
-					ingCobroVO.setNomCtaBco(auxctaBco.getNombre());
-					ingCobroVO.setCodMonedaCtaBco(auxctaBco.getMonedaVO().getCodMoneda());
-					ingCobroVO.setNacional(auxctaBco.getMonedaVO().isNacional());
-					/*Falta poner el nombre de la cuenta*/
 					
 				}
 				else {
@@ -2147,13 +2167,12 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 	      		
 	      		
 	      		ReciboDetalleVO aux = obtenerFactEnLista(formSelecccionado.getNroDocum(), formSelecccionado.getSerieDocum(), formSelecccionado.getCodDocum());
-		    	//factSaldo = saldoOriginalFact.get(formSelecccionado.getNroDocum());
-		    	
+		    	factSaldo = saldoOriginalFact.get(formSelecccionado.getNroDocum());
 	  		}
 	      	else if(formSelecccionado != null && (formSelecccionado.getSerieDocum() == "Proc")){
 	      		
 	      		ReciboDetalleVO aux = obtenerFactEnLista(formSelecccionado.getNroDocum(), formSelecccionado.getSerieDocum(), formSelecccionado.getCodDocum());
-		    	//factSaldo = saldoOriginalFact.get(formSelecccionado.getNroDocum());
+		    	factSaldo = saldoOriginalFact.get(formSelecccionado.getNroDocum());
 	      	}
       }
 

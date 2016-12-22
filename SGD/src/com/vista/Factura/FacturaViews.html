@@ -12,14 +12,21 @@
     <vaadin-link caption="Auditori" responsive _id="auditoria" :middle :right></vaadin-link> 
    </vaadin-horizontal-layout> 
    <vaadin-horizontal-layout responsive size-full> 
-    <vaadin-form-layout spacing="false" responsive size-full _id="formLay1"> 
+    <vaadin-form-layout spacing="false" responsive height="100.99%" margin-top="false" _id="formLay1"> 
+     <vaadin-combo-box caption="Tipo" style-name="tiny" item-caption-mode="id" width="105px" _id="comboTipo"> 
+      <option>Pre Factura</option> 
+      <option>Factura</option> 
+     </vaadin-combo-box> 
      <vaadin-text-field enabled="false" id="nroTrans" visible="false" responsive _id="nroTrans"></vaadin-text-field> 
      <vaadin-horizontal-layout caption="Documento" style-name="name-wrapper" spacing responsive _id="wrapper_docum"> 
       <vaadin-text-field required style-name="tiny" null-representation="" responsive immediate width="50px" _id="serieDocum"></vaadin-text-field> 
       <vaadin-text-field required style-name="tiny" null-representation="" responsive immediate width="144px" _id="nroDocum"></vaadin-text-field> 
      </vaadin-horizontal-layout> 
-     <vaadin-date-field caption="Fec Doc" id="fecDoc" style-name="tiny" responsive width="144px" _id="fecDoc"></vaadin-date-field> 
-     <vaadin-date-field caption="Fec Valor" id="fecValor" style-name="tiny" responsive width="144px" _id="fecValor"></vaadin-date-field> 
+     <vaadin-horizontal-layout caption="Fec Doc" spacing height="22px" _id="horizontalFecha"> 
+      <vaadin-date-field id="fecDoc" style-name="tiny" responsive width="105px" _id="fecDoc"></vaadin-date-field> 
+      <vaadin-label caption="Fec Valor" size-auto _id="lblFec"></vaadin-label> 
+      <vaadin-date-field id="fecValor" style-name="tiny" responsive width="105px" _id="fecValor"></vaadin-date-field> 
+     </vaadin-horizontal-layout> 
      <vaadin-horizontal-layout caption="Cliente" style-name="name-wrapper" spacing responsive _id="name_wrapper"> 
       <vaadin-text-field id="codTitular" style-name="tiny" responsive width="144px" _id="codTitular"></vaadin-text-field> 
       <vaadin-text-field id="nomTitular" style-name="tiny" responsive _id="nomTitular"></vaadin-text-field> 

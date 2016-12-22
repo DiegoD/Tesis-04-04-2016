@@ -6,7 +6,10 @@ public class ConciliacionDetalleVO {
 	
 	private String cod_docum;
 	private String serie_docum;
-	private int nro_docum;
+	private String nro_docum;
+	private String cod_doc_ref;
+	private String serie_doc_ref;
+	private String nro_doc_ref;
 	private Timestamp fecValor;
 	private Timestamp fecDoc;
 	private long nroTrans;
@@ -28,10 +31,10 @@ public class ConciliacionDetalleVO {
 	public void setSerie_docum(String serie_docum) {
 		this.serie_docum = serie_docum;
 	}
-	public int getNro_docum() {
+	public String getNro_docum() {
 		return nro_docum;
 	}
-	public void setNro_docum(int nro_docum) {
+	public void setNro_docum(String nro_docum) {
 		this.nro_docum = nro_docum;
 	}
 	public Timestamp getFecValor() {
@@ -82,6 +85,23 @@ public class ConciliacionDetalleVO {
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
-	
+	public String getCod_doc_ref() {
+		return cod_doc_ref;
+	}
+	public void setCod_doc_ref(String cod_doc_ref) {
+		this.cod_doc_ref = cod_doc_ref;
+	}
+	public String getSerie_doc_ref() {
+		return serie_doc_ref;
+	}
+	public void setSerie_doc_ref(String serie_doc_ref) {
+		this.serie_doc_ref = serie_doc_ref;
+	}
+	public String getNro_doc_ref() {
+		return nro_doc_ref;
+	}
+	public void setNro_doc_ref(String nro_doc_ref) {
+		this.nro_doc_ref = nro_doc_ref;
+	}
 	
 }

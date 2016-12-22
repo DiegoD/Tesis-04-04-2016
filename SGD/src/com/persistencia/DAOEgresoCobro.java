@@ -225,6 +225,36 @@ public class DAOEgresoCobro implements IDAOEgresoCobro{
 		}
 	}
 	
+	public boolean existeEgreso(int nroDocum, String codEmp, Connection con) throws ExisteEgresoCobroException, ConexionException{
+		
+		boolean existe = false;
+		
+		try{
+			
+			
+			Consultas consultas = new Consultas();
+			String query = consultas.existeEgresoCobro();
+			
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			
+			pstmt1.setInt(1, nroDocum);
+			pstmt1.setString(2, codEmp);
+			
+			ResultSet rs = pstmt1.executeQuery();
+			
+			if (rs.next ()) 
+				existe = true;
+						
+			rs.close ();
+			pstmt1.close ();
+			
+			return existe;
+			
+		}catch(SQLException e){
+			
+			throw new ExisteEgresoCobroException();
+		}
+	}
 
 	/**
 	 * Inserta un cabezal ingreso cobro

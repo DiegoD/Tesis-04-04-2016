@@ -29,6 +29,7 @@ import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.converter.StringToDateConverter;
 import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.data.validator.StringLengthValidator;
+import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
@@ -36,6 +37,7 @@ import com.vaadin.ui.Grid.SelectionMode;
 import com.valueObject.MonedaVO;
 import com.valueObject.TitularVO;
 import com.valueObject.UsuarioPermisosVO;
+import com.valueObject.Cheque.ChequeVO;
 import com.valueObject.Cotizacion.CotizacionVO;
 import com.valueObject.Deposito.DepositoDetalleVO;
 import com.valueObject.Deposito.DepositoVO;
@@ -68,6 +70,8 @@ public class DepositoViewExtended extends DepositoView implements IMensaje{
 	private BeanFieldGroup<DepositoVO> fieldGroup;
 	UsuarioPermisosVO permisoAux;
 	Validaciones val = new Validaciones();
+	ChequeVO chequeVO = new ChequeVO();
+	DepositoVO depositoVO = new DepositoVO();
 	CotizacionVO cotizacion =  new CotizacionVO();
 	MySub sub;
 	Double importeTotalCalculado;
@@ -297,6 +301,10 @@ public class DepositoViewExtended extends DepositoView implements IMensaje{
 						deposito.setNomMoneda(moneda.getDescripcion());
 						//deposito.setMoneda(moneda);
 						
+						if(val.validaNumDeposito(permisoAux, deposito.getCodBanco(), deposito.getCodCuenta(), deposito.getNroDocum())){
+							Mensajes.mostrarMensajeError("Ya existe el número de depósito para el banco/cuenta");
+							return;
+						}
 						deposito.setImpTotMo((Double)impTotMo.getConvertedValue());
 						
 						int comp = Double.compare(importeTotalCalculado, (Double)impTotMo.getConvertedValue());
@@ -944,6 +952,11 @@ public class DepositoViewExtended extends DepositoView implements IMensaje{
 					&& this.impTotMo.isValid() && this.observaciones.isValid())
 				valido = true;
 			
+			if(!this.tryParseInt(nroDocum.getValue())){
+				nroDocum.setComponentError(new UserError("Debe ingresar un número entero"));
+				valido = false;
+			}
+			
 		}catch(Exception e)
 		{
 			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
@@ -995,8 +1008,8 @@ public class DepositoViewExtended extends DepositoView implements IMensaje{
 		
 		gridCheques.removeColumn("fecDoc");
 		gridCheques.removeColumn("codDocum");
-		gridCheques.removeColumn("serieDocum");
-		gridCheques.removeColumn("nroDocum");
+		//gridCheques.removeColumn("serieDocum");
+		//gridCheques.removeColumn("nroDocum");
 		gridCheques.removeColumn("codEmp");
 		gridCheques.removeColumn("nacional");
 		gridCheques.removeColumn("referencia");
@@ -1038,9 +1051,15 @@ public class DepositoViewExtended extends DepositoView implements IMensaje{
 		gridCheques.getColumn("fecValor").setHeaderCaption("Fecha");
 		gridCheques.getColumn("nomBanco").setHeaderCaption("Banco");
 		gridCheques.getColumn("impTotMo").setHeaderCaption("Importe");
+		gridCheques.getColumn("nroDocum").setHeaderCaption("Cheque");
+		gridCheques.getColumn("serieDocum").setHeaderCaption("Serie");
 		
 		gridCheques.getColumn("fecValor").setWidth(100);
-	
+		gridCheques.getColumn("impTotMo").setWidth(100);
+		gridCheques.getColumn("nomBanco").setWidth(150);
+		gridCheques.getColumn("nroDocum").setWidth(130);
+		gridCheques.getColumn("serieDocum").setWidth(100);
+		
 		this.filtroGrilla();
 	}
 	
@@ -1133,6 +1152,7 @@ public class DepositoViewExtended extends DepositoView implements IMensaje{
 					
 					aux = (DepositoDetalleVO)object;
 					lstSeleccionados.add(aux);
+					
 				}
 				if(lstSeleccionados.size() > 0 || this.operacion.equals(Variables.OPERACION_ELIMINAR)){
 					
@@ -1173,6 +1193,12 @@ public class DepositoViewExtended extends DepositoView implements IMensaje{
 					
 					deposito.setImpTotMo((Double)impTotMo.getConvertedValue());
 					
+					if(val.depositoConciliado(permisoAux, deposito)){
+						UI.getCurrent().removeWindow(sub);
+						Mensajes.mostrarMensajeError("El depósito está conciliado");
+						return;
+					}
+					
 					if(moneda.isNacional()) /*Si la moneda seleccionada es nacional*/
 					{
 						/*Si la moneda es la nacional, el TC es 1 y el importe MN es el mismo*/
@@ -1197,8 +1223,11 @@ public class DepositoViewExtended extends DepositoView implements IMensaje{
 					
 					deposito.setObservaciones(observaciones.getValue());
 					
+					
 					if(this.operacion.equals(Variables.OPERACION_ELIMINAR)){
 						deposito.setLstDetalle(lstCheques);
+						
+						
 					}
 					
 					
@@ -1229,6 +1258,15 @@ public class DepositoViewExtended extends DepositoView implements IMensaje{
 			Mensajes.mostrarMensajeError(e.getMessage());
 		}	
 		
+	}
+	
+	boolean tryParseInt(String value) {  
+	     try {  
+	         Integer.parseInt(value);  
+	         return true;  
+	      } catch (NumberFormatException e) {  
+	         return false;  
+	      }  
 	}
 		
 	

@@ -62,7 +62,7 @@ public class Deposito extends Auditoria{
 		depositoVO.setNomMoneda(deposito.getMoneda().getDescripcion());
 		depositoVO.setNroDocum(String.valueOf(deposito.getNroDocum()));
 		depositoVO.setNroTrans(deposito.getNroTrans());
-		depositoVO.setNumComprobante(deposito.getNumComprobante());
+		depositoVO.setNumComprobante(String.valueOf(deposito.getNumComprobante()));
 		depositoVO.setObservaciones(deposito.getObservaciones());
 		depositoVO.setSerieDocum(deposito.getSerieDocum());
 		depositoVO.setTcMov(deposito.getTcMov());
@@ -116,7 +116,6 @@ public class Deposito extends Auditoria{
 		deposito.setMoneda(moneda);
 		deposito.setNroDocum(Integer.parseInt(depositoVO.getNroDocum()));
 		deposito.setNroTrans(depositoVO.getNroTrans());
-		deposito.setNumComprobante(depositoVO.getNumComprobante());
 		deposito.setObservaciones(depositoVO.getObservaciones());
 		deposito.setOperacion(depositoVO.getOperacion());
 		deposito.setSerieDocum(depositoVO.getSerieDocum());
@@ -170,7 +169,7 @@ public class Deposito extends Auditoria{
 			moneda2.setNacional(depositoDetalleVO.isNacional());
 			cheque.setMoneda(moneda2);
 			
-			cheque.setNroDocum(depositoDetalleVO.getNroDocum());
+			cheque.setNroDocum(Integer.parseInt(depositoDetalleVO.getNroDocum()));
 			cheque.setNroTrans(depositoDetalleVO.getNroTrans());
 			cheque.setReferencia(depositoDetalleVO.getReferencia());
 			cheque.setSerieDocum(depositoDetalleVO.getSerieDocum());

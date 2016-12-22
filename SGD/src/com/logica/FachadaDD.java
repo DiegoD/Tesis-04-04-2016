@@ -12,6 +12,7 @@ import com.abstractFactory.IAbstractFactory;
 import com.excepciones.*;
 import com.excepciones.Bancos.ObteniendoBancosException;
 import com.excepciones.Bancos.ObteniendoCuentasBcoException;
+import com.excepciones.Cheques.ExisteChequeException;
 import com.excepciones.Cheques.ObteniendoChequeException;
 import com.excepciones.CodigosGeneralizados.EliminandoCodigoGeneralizadoException;
 import com.excepciones.CodigosGeneralizados.ExisteCodigoException;
@@ -23,6 +24,7 @@ import com.excepciones.Conciliaciones.EliminandoConcialiacionException;
 import com.excepciones.Conciliaciones.ExisteConciliacionException;
 import com.excepciones.Conciliaciones.InsertandoConciliacionException;
 import com.excepciones.Conciliaciones.ModificandoConciliacionException;
+import com.excepciones.Conciliaciones.MovimientoConciliadoException;
 import com.excepciones.Conciliaciones.NoExisteConciliacionException;
 import com.excepciones.Conciliaciones.ObteniendoConciliacionException;
 import com.excepciones.Cotizaciones.ExisteCotizacionException;
@@ -49,11 +51,13 @@ import com.excepciones.Documentos.InsertandoDocumentoException;
 import com.excepciones.Documentos.ModificandoDocumentoException;
 import com.excepciones.Documentos.NoExisteDocumentoException;
 import com.excepciones.Documentos.ObteniendoDocumentosException;
+import com.excepciones.Egresos.ExisteEgresoCobroException;
 import com.excepciones.Empresas.ExisteEmpresaException;
 import com.excepciones.Empresas.InsertandoEmpresaException;
 import com.excepciones.Empresas.ModificandoEmpresaException;
 import com.excepciones.Empresas.NoExisteEmpresaException;
 import com.excepciones.Empresas.ObteniendoEmpresasException;
+import com.excepciones.Factura.ExisteFacturaException;
 import com.excepciones.Gastos.EliminandoGastoException;
 import com.excepciones.Gastos.ExisteGastoException;
 import com.excepciones.Gastos.IngresandoGastoException;
@@ -93,6 +97,7 @@ import com.excepciones.Rubros.ModificandoRubroException;
 import com.excepciones.Rubros.NoExisteRubroException;
 import com.excepciones.Rubros.ObteniendoRubrosException;
 import com.excepciones.SaldoCuentas.EliminandoSaldoCuetaException;
+import com.excepciones.SaldoCuentas.ExisteNroTransferencia;
 import com.excepciones.SaldoCuentas.InsertandoSaldoCuentaException;
 import com.excepciones.Saldos.EliminandoSaldoException;
 import com.excepciones.Saldos.ExisteSaldoException;
@@ -123,6 +128,7 @@ import com.logica.Docum.TitularInfo;
 import com.logica.IngresoCobro.IngresoCobro;
 import com.logica.Periodo.Periodo;
 import com.valueObject.*;
+import com.valueObject.Cheque.ChequeVO;
 import com.valueObject.Conciliaciones.ConciliacionDetalleVO;
 import com.valueObject.Conciliaciones.ConciliacionVO;
 import com.valueObject.Cotizacion.CotizacionVO;
@@ -174,6 +180,9 @@ public class FachadaDD {
 	private IDAODepositos depositos;
 	private IDAOSaldosCuentas saldosCuentas;
 	private IDAOConciliaciones conciliaciones;
+	private IDAOEgresoCobro egresoCobro;
+	private IDAOFacturas facturas;
+	private IDAOIngresoCobro ingresoCobro;
 	
 	
     private FachadaDD() throws InstantiationException, IllegalAccessException, ClassNotFoundException, FileNotFoundException, IOException
@@ -206,6 +215,9 @@ public class FachadaDD {
         this.depositos = fabricaConcreta.crearDAODeposito();
         this.saldosCuentas = fabricaConcreta.crearDAOSaldosCuenta();
         this.conciliaciones = fabricaConcreta.crearDAOConciliaciones();
+        this.egresoCobro = fabricaConcreta.crearDAOEgresoCobro();
+        this.facturas = fabricaConcreta.crearDAOFactura();
+        this.ingresoCobro = fabricaConcreta.crearDAOIngresoCobro();
     }
     
     public static FachadaDD getInstance() throws InicializandoException {
@@ -4979,4 +4991,279 @@ public class FachadaDD {
 		return saldo_conciliado;
 
 	}
+	
+	
+	///////////////////////////////////////////////INI VALIDACIONES////////////////////////////////////////////////////////////
+	
+	public boolean existeCheque(ChequeVO cheque,  String codEmp) throws ConexionException, ExisteChequeException{
+		   
+		   Boolean existe = false;
+		   Connection con = null;
+		   try {
+			   
+			   con = this.pool.obtenerConeccion();
+			   con.setAutoCommit(false);
+			   existe = this.cheques.exixsteCheque(cheque.getSerieDocum(), cheque.getNroDocum(), codEmp, cheque.getCodBanco(), cheque.getCodCuenta(), con);
+			
+		   } catch(ConexionException | SQLException e)
+		   {
+			   try {
+				   con.rollback();
+
+			   } 
+			   catch (SQLException e1) {
+
+				   throw new ConexionException();
+			   }
+			   
+		   }
+		   finally
+		   {
+			   pool.liberarConeccion(con);
+		   }
+		  
+		   return existe;
+	   }
+	
+	  public boolean existeChequeDepositado(ChequeVO cheque,  String codEmp) throws ConexionException, ExisteDepositoException{
+		   
+		   Boolean existe = false;
+		   Connection con = null;
+		   try {
+			   
+			   con = this.pool.obtenerConeccion();
+			   con.setAutoCommit(false);
+			   existe = this.depositos.existeChequeDepositado(cheque.getSerieDocum(), cheque.getNroDocum(), codEmp, cheque.getCodBanco(), cheque.getCodCuenta(), con);
+			
+		   } catch(ConexionException | SQLException e)
+		   {
+			   try {
+				   con.rollback();
+
+			   } 
+			   catch (SQLException e1) {
+
+				   throw new ConexionException();
+			   }
+			   
+		   }
+		   finally
+		   {
+			   pool.liberarConeccion(con);
+		   }
+		  
+		   return existe;
+	   }
+	
+		public boolean existeEgreso(Integer nro_docum,  String codEmp) throws ConexionException, ExisteEgresoCobroException{
+		   
+		   Boolean existe = false;
+		   Connection con = null;
+		   try {
+			   
+			   con = this.pool.obtenerConeccion();
+			   con.setAutoCommit(false);
+			   existe = this.egresoCobro.existeEgreso(nro_docum, codEmp, con);
+			
+		   } catch(ConexionException | SQLException e)
+		   {
+			   try {
+				   con.rollback();
+
+			   } 
+			   catch (SQLException e1) {
+
+				   throw new ConexionException();
+			   }
+			   
+		   }
+		   finally
+		   {
+			   pool.liberarConeccion(con);
+		   }
+		  
+		   return existe;
+	   }
+		
+		public boolean existeGastoIngresoCobro(Integer nro_docum,  String codEmp) throws ConexionException, ExisteIngresoCobroException{
+			   
+		   Boolean existe = false;
+		   Connection con = null;
+		   try {
+			   
+			   con = this.pool.obtenerConeccion();
+			   con.setAutoCommit(false);
+			   existe = this.ingresoCobro.existeGastoIngresoCobro(nro_docum, codEmp, con);
+			
+		   } catch(ConexionException | SQLException e)
+		   {
+			   try {
+				   con.rollback();
+
+			   } 
+			   catch (SQLException e1) {
+
+				   throw new ConexionException();
+			   }
+			   
+		   }
+		   finally
+		   {
+			   pool.liberarConeccion(con);
+		   }
+		  
+		   return existe;
+	   }
+		
+		
+	
+		public boolean existeGastoFactura(Integer nro_docum,  String codEmp) throws ConexionException, ExisteFacturaException{
+			   
+			   Boolean existe = false;
+			   Connection con = null;
+			   try {
+				   
+				   con = this.pool.obtenerConeccion();
+				   con.setAutoCommit(false);
+				   existe = this.facturas.existeGasto(nro_docum, codEmp, con);
+				
+			   } catch(ConexionException | SQLException e)
+			   {
+				   try {
+					   con.rollback();
+
+				   } 
+				   catch (SQLException e1) {
+
+					   throw new ConexionException();
+				   }
+				   
+			   }
+			   finally
+			   {
+				   pool.liberarConeccion(con);
+			   }
+			  
+			   return existe;
+		}
+		
+		public boolean depositoConciliado(DepositoVO deposito,  String codEmp) throws ConexionException, NumberFormatException, MovimientoConciliadoException{
+			   
+			   Boolean existe = false;
+			   Connection con = null;
+			   try {
+				   
+				   con = this.pool.obtenerConeccion();
+				   con.setAutoCommit(false);
+				   existe = this.conciliaciones.depositoConciliado(deposito.getSerieDocum(), Integer.parseInt(deposito.getNroDocum()), codEmp, deposito.getCodBanco(), deposito.getCodCuenta(), con);
+				
+			   } catch(ConexionException | SQLException e)
+			   {
+				   try {
+					   con.rollback();
+
+				   } 
+				   catch (SQLException e1) {
+
+					   throw new ConexionException();
+				   }
+				   
+			   }
+			   finally
+			   {
+				   pool.liberarConeccion(con);
+			   }
+			  
+			   return existe;
+		}
+		
+		public boolean validaNumDeposito(String codBco, String codCta, String nro,  String codEmp) throws ConexionException, NumberFormatException, ExisteDepositoException{
+			   
+			   Boolean existe = false;
+			   Connection con = null;
+			   try {
+				   
+				   con = this.pool.obtenerConeccion();
+				   con.setAutoCommit(false);
+				   existe = this.depositos.validaNumDeposito(codBco, codCta, Integer.parseInt(nro), codEmp, con);
+			   } catch(ConexionException | SQLException e)
+			   {
+				   try {
+					   con.rollback();
+
+				   } 
+				   catch (SQLException e1) {
+
+					   throw new ConexionException();
+				   }
+				   
+			   }
+			   finally
+			   {
+				   pool.liberarConeccion(con);
+			   }
+			  
+			   return existe;
+		}
+		
+		public boolean egresoConciliado(String codEmp, String nroEgreso) throws ConexionException, NumberFormatException, MovimientoConciliadoException{
+			   
+			   Boolean existe = false;
+			   Connection con = null;
+			   try {
+				   
+				   con = this.pool.obtenerConeccion();
+				   con.setAutoCommit(false);
+				   existe = this.conciliaciones.egresoConciliado(codEmp, Integer.parseInt(nroEgreso), con);
+			   } catch(ConexionException | SQLException e)
+			   {
+				   try {
+					   con.rollback();
+
+				   } 
+				   catch (SQLException e1) {
+
+					   throw new ConexionException();
+				   }
+				   
+			   }
+			   finally
+			   {
+				   pool.liberarConeccion(con);
+			   }
+			  
+			   return existe;
+		}
+		
+		public boolean existeNroTransferencia(String nro, String codBco, String codCta,  String codEmp) throws ConexionException, NumberFormatException, ExisteNroTransferencia{
+			   
+			   Boolean existe = false;
+			   Connection con = null;
+			   try {
+				   
+				   con = this.pool.obtenerConeccion();
+				   con.setAutoCommit(false);
+				   existe = this.saldosCuentas.existeNroTransferencia(Integer.parseInt(nro), codBco, codCta, codEmp, con);
+				
+			   } catch(ConexionException | SQLException e)
+			   {
+				   try {
+					   con.rollback();
+
+				   } 
+				   catch (SQLException e1) {
+
+					   throw new ConexionException();
+				   }
+				   
+			   }
+			   finally
+			   {
+				   pool.liberarConeccion(con);
+			   }
+			  
+			   return existe;
+		   }
+	///////////////////////////////////////////////FIN VALIDACIONES////////////////////////////////////////////////////////////
+	
 }

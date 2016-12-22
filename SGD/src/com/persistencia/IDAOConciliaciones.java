@@ -10,8 +10,10 @@ import com.excepciones.Bancos.ObteniendoCuentasBcoException;
 import com.excepciones.Conciliaciones.EliminandoConcialiacionException;
 import com.excepciones.Conciliaciones.ExisteConciliacionException;
 import com.excepciones.Conciliaciones.InsertandoConciliacionException;
+import com.excepciones.Conciliaciones.MovimientoConciliadoException;
 import com.excepciones.Conciliaciones.ObteniendoConciliacionException;
 import com.excepciones.Depositos.InsertandoDepositoException;
+import com.excepciones.Saldos.ExisteSaldoException;
 import com.logica.Conciliacion.Conciliacion;
 import com.logica.Conciliacion.ConciliacionDetalle;
 
@@ -29,4 +31,6 @@ public interface IDAOConciliaciones {
 	public ArrayList<ConciliacionDetalle> getMovimientosCajaMoneda(Connection con, String codEmp, String codMoneda) throws ObteniendoConciliacionException, ConexionException, ObteniendoCuentasBcoException, ObteniendoBancosException;
 	public double getSaldoConciliadoMoneda(Connection con, String codEmp, String codMoneda) throws ObteniendoConciliacionException, ConexionException, ObteniendoCuentasBcoException, ObteniendoBancosException;
 	public double getSaldoConciliadoCuentaBanco(Connection con, String codBco, String codCta, String codEmp) throws ObteniendoConciliacionException, ConexionException, ObteniendoCuentasBcoException, ObteniendoBancosException;
+	public boolean depositoConciliado(String serie, Integer nro, String codEmp, String codBco, String codCtaBco, Connection con) throws MovimientoConciliadoException;
+	public boolean egresoConciliado(String codEmp, Integer nro, Connection con) throws MovimientoConciliadoException;
 }

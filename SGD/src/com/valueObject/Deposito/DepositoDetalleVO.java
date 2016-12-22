@@ -11,7 +11,7 @@ public class DepositoDetalleVO {
 	
 	private String codDocum;
 	private String serieDocum;
-	private int nroDocum;
+	private String nroDocum;
 	private String codEmp;
 	private boolean nacional;
 	
@@ -77,11 +77,11 @@ public class DepositoDetalleVO {
 		this.serieDocum = serieDocum;
 	}
 
-	public int getNroDocum() {
+	public String getNroDocum() {
 		return nroDocum;
 	}
 
-	public void setNroDocum(int nroDocum) {
+	public void setNroDocum(String nroDocum) {
 		this.nroDocum = nroDocum;
 	}
 

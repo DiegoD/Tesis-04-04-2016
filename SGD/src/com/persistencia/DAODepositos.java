@@ -334,6 +334,40 @@ public class DAODepositos implements IDAODepositos{
 		}
 	}
 	
+	public boolean existeChequeDepositado(String serie, Integer nro, String codEmp, String codBco, String codCta, Connection con) throws ExisteDepositoException, ConexionException{
+		
+		boolean existe = false;
+		
+		try{
+			
+			
+			ConsultasDD consultas = new ConsultasDD();
+			String query = consultas.existeChequeDepositado();
+			
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			
+			pstmt1.setString(1, serie);
+			pstmt1.setInt(2, nro);
+			pstmt1.setString(3, codEmp);
+			pstmt1.setString(4, codBco);
+			pstmt1.setString(5, codCta);
+			
+			ResultSet rs = pstmt1.executeQuery();
+			
+			if (rs.next ()) 
+				existe = true;
+						
+			rs.close ();
+			pstmt1.close ();
+			
+			return existe;
+			
+		}catch(SQLException e){
+			
+			throw new ExisteDepositoException();
+		}
+	}
+	
 	public void eliminarDeposito(Deposito deposito, Connection con, String codEmp) throws EliminandoDepositoException, ConexionException{
 		
 		try{
@@ -379,4 +413,36 @@ public class DAODepositos implements IDAODepositos{
 		}
 	}
 	
+	public boolean validaNumDeposito(String codBco, String codCta, Integer nro,  String codEmp, Connection con) throws ExisteDepositoException, ConexionException{
+		
+		boolean existe = false;
+		
+		try{
+			
+			
+			ConsultasDD consultas = new ConsultasDD();
+			String query = consultas.existeDeposito();
+			
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			
+			pstmt1.setInt(1, nro);
+			pstmt1.setString(2, codBco);
+			pstmt1.setString(3, codCta);
+			pstmt1.setString(4, codEmp);
+			
+			ResultSet rs = pstmt1.executeQuery();
+			
+			if (rs.next ()) 
+				existe = true;
+						
+			rs.close ();
+			pstmt1.close ();
+			
+			return existe;
+			
+		}catch(SQLException e){
+			
+			throw new ExisteDepositoException();
+		}
+	}
 }

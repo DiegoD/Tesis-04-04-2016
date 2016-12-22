@@ -16,4 +16,5 @@ public interface IDAOEgresoCobro {
 	public void insertarEgresoCobro(IngresoCobro cobro, Connection con) throws InsertandoEgresoCobroException, ConexionException;
 	//public ArrayList<IngresoCobroLinea> getIngresoCobroLineaxTrans(Connection con, String codEmp, long nroTrans) throws ObteniendoIngresoCobroException, ConexionException;
 	public void eliminarEgresoCobro(IngresoCobro ing, Connection con)throws InsertandoEgresoCobroException, ConexionException, EliminandoEgresoCobroException ;
+	public boolean existeEgreso(int nroDocum, String codEmp, Connection con) throws ExisteEgresoCobroException, ConexionException;
 }

@@ -16,6 +16,7 @@ import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Bancos.ObteniendoBancosException;
 import com.excepciones.Bancos.ObteniendoCuentasBcoException;
 import com.excepciones.Cotizaciones.ObteniendoCotizacionesException;
+import com.excepciones.Depositos.ExisteDepositoException;
 import com.excepciones.IngresoCobros.ExisteIngresoCobroException;
 import com.excepciones.IngresoCobros.InsertandoIngresoCobroException;
 import com.excepciones.IngresoCobros.ModificandoIngresoCobroException;
@@ -41,6 +42,7 @@ import com.vaadin.ui.UI;
 import com.valueObject.MonedaVO;
 import com.valueObject.TitularVO;
 import com.valueObject.UsuarioPermisosVO;
+import com.valueObject.Cheque.ChequeVO;
 import com.valueObject.Cotizacion.CotizacionVO;
 import com.valueObject.Docum.DocumDetalleVO;
 import com.valueObject.Gasto.GastoVO;
@@ -81,6 +83,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	Double cotizacionVenta = null;
 	Double importeTotalCalculado;
 	Validaciones val = new Validaciones();
+	ChequeVO chequeVO = new ChequeVO();
+	String nroCheque, serieCheque;
 	
 	MonedaVO monedaNacional = new MonedaVO();
 	
@@ -728,28 +732,6 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				/*Si es banco tomamos estos cmapos de lo contrario caja*/
 				if(this.comboTipo.getValue().toString().equals("Banco")){
 				
-					ingCobroVO.setmPago((String)comboMPagos.getValue());
-					
-					if(ingCobroVO.getmPago().equals("Transferencia"))
-					{
-						ingCobroVO.setCodDocRef("tranrec");
-						ingCobroVO.setNroDocRef(nroDocRef.getValue());
-						ingCobroVO.setSerieDocRef("0");
-					}
-					else if(ingCobroVO.getmPago().equals("Cheque"))
-					{
-						ingCobroVO.setCodDocRef("cheqrec");
-						ingCobroVO.setNroDocRef( nroDocRef.getValue());
-						ingCobroVO.setSerieDocRef(serieDocRef.getValue().trim());
-						
-					}else
-					{
-						
-						ingCobroVO.setCodDocRef("0");
-						ingCobroVO.setNroDocRef("0");
-						ingCobroVO.setSerieDocRef("0");
-					}
-												
 					//Datos del banco y cuenta
 					CtaBcoVO auxctaBco = new CtaBcoVO();
 					if(this.comboCuentas.getValue() != null){
@@ -764,6 +746,85 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 					ingCobroVO.setCodMonedaCtaBco(auxctaBco.getMonedaVO().getCodMoneda());
 					ingCobroVO.setNacional(auxctaBco.getMonedaVO().isNacional());
 					/*Falta poner el nombre de la cuenta*/
+					
+					ingCobroVO.setmPago((String)comboMPagos.getValue());
+					
+					if(ingCobroVO.getmPago().equals("Transferencia"))
+					{
+						ingCobroVO.setCodDocRef("tranrec");
+						ingCobroVO.setNroDocRef(nroDocRef.getValue());
+						ingCobroVO.setSerieDocRef("0");
+						
+						if(operacion.equals(Variables.OPERACION_NUEVO) || 
+								(!ingresoCopia.getNroDocRef().equals(ingCobroVO.getNroDocRef()))){
+							
+							try {
+								
+								if(val.existeTransferencia(permisoAux, ingCobroVO.getNroDocRef(), ingCobroVO.getCodBanco(), ingCobroVO.getCodCtaBco())){
+									Mensajes.mostrarMensajeError("Existe el número de transferencia para el banco/cuenta");
+									return;
+								}
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								Mensajes.mostrarMensajeError(e.toString());
+							}
+							
+						}
+						
+					}
+					else if(ingCobroVO.getmPago().equals("Cheque"))
+					{
+						ingCobroVO.setCodDocRef("cheqrec");
+						ingCobroVO.setNroDocRef( nroDocRef.getValue());
+						ingCobroVO.setSerieDocRef(serieDocRef.getValue().trim());
+						
+						chequeVO.setCodBanco(ingCobroVO.getCodBanco());
+					    chequeVO.setCodCuenta(ingCobroVO.getCodCtaBco());
+					    chequeVO.setSerieDocum(ingCobroVO.getSerieDocRef());
+					    chequeVO.setNroDocum(Integer.parseInt(ingCobroVO.getNroDocRef()));
+					    
+					    if(operacion.equals(Variables.OPERACION_NUEVO)){  
+								
+					    	
+					    	try {
+								if(val.existeCheque(permisoAux, chequeVO)){
+									Mensajes.mostrarMensajeError("El cheque ya existe para el banco/cuenta");
+									return;
+								}
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								Mensajes.mostrarMensajeError(e.toString());
+								
+							}
+					    }
+					    if(!operacion.equals(Variables.OPERACION_NUEVO)){
+					    	
+					    	if((!ingresoCopia.getNroDocRef().equals(ingCobroVO.getNroDocRef())) || 
+							 (!ingresoCopia.getSerieDocRef().equals(ingCobroVO.getSerieDocRef()))){
+					    		
+					    		try {
+									if(val.existeCheque(permisoAux, chequeVO)){
+										Mensajes.mostrarMensajeError("El cheque ya existe para el banco/cuenta");
+										return;
+									}
+								} catch (Exception e) {
+									// TODO Auto-generated catch block
+									Mensajes.mostrarMensajeError(e.toString());
+									
+								}
+					    	}
+					    }
+					    
+						
+					}else
+					{
+						
+						ingCobroVO.setCodDocRef("0");
+						ingCobroVO.setNroDocRef("0");
+						ingCobroVO.setSerieDocRef("0");
+					}
+												
+					
 					
 				}
 				else {
@@ -828,6 +889,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			    ingCobroVO.setCodMonedaCtaBco(auxctaBco.getMonedaVO().getCodMoneda());
 			    ingCobroVO.setNacionalMonedaCtaBco(auxctaBco.getMonedaVO().isNacional());
 				
+			    
 				if(this.operacion.equals(Variables.OPERACION_NUEVO))	
 				{	
 					ingCobroVO.setNroDocum("0");
@@ -2914,6 +2976,20 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			/*Si es banco tomamos estos cmapos de lo contrario caja*/
 			if(this.comboTipo.getValue().toString().equals("Banco")){
 			
+				//Datos del banco y cuenta
+				CtaBcoVO auxctaBco = new CtaBcoVO();
+				if(this.comboCuentas.getValue() != null){
+					
+					auxctaBco = (CtaBcoVO) this.comboCuentas.getValue();
+					
+				}
+				
+				ingCobroVO.setCodBanco(auxctaBco.getCodBco());
+				ingCobroVO.setCodCtaBco(auxctaBco.getCodigo());
+				ingCobroVO.setNomCtaBco(auxctaBco.getNombre());
+				ingCobroVO.setCodMonedaCtaBco(auxctaBco.getMonedaVO().getCodMoneda());
+				/*Falta poner el nombre de la cuenta*/
+				
 				ingCobroVO.setmPago((String)comboMPagos.getValue());
 				
 				if(ingCobroVO.getmPago().equals("Transferencia"))
@@ -2928,6 +3004,22 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 					ingCobroVO.setNroDocRef(nroDocRef.getValue());
 					ingCobroVO.setSerieDocRef(serieDocRef.getValue().trim());
 					
+					chequeVO.setCodBanco(ingCobroVO.getCodBanco());
+				    chequeVO.setCodCuenta(ingCobroVO.getCodCtaBco());
+				    chequeVO.setSerieDocum(ingCobroVO.getSerieDocRef());
+				    chequeVO.setNroDocum(Integer.parseInt(ingCobroVO.getNroDocRef()));
+				    
+					try {
+						if(val.existeChequeDepositado(permisoAux, chequeVO)){
+							Mensajes.mostrarMensajeError("El cheque está depositado");
+							UI.getCurrent().removeWindow(sub);
+							return;
+						}
+					} catch (ExisteDepositoException e) {
+						// TODO Auto-generated catch block
+						Mensajes.mostrarMensajeError(e.toString());
+					}
+					
 				}else
 				{
 					
@@ -2936,19 +3028,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 					ingCobroVO.setSerieDocRef("0");
 				}
 											
-				//Datos del banco y cuenta
-				CtaBcoVO auxctaBco = new CtaBcoVO();
-				if(this.comboCuentas.getValue() != null){
-					
-					auxctaBco = (CtaBcoVO) this.comboCuentas.getValue();
-					
-				}
 				
-				ingCobroVO.setCodBanco(auxctaBco.getCodBco());
-				ingCobroVO.setCodCtaBco(auxctaBco.getCodigo());
-				ingCobroVO.setNomCtaBco(auxctaBco.getNombre());
-				ingCobroVO.setCodMonedaCtaBco(auxctaBco.getMonedaVO().getCodMoneda());
-				/*Falta poner el nombre de la cuenta*/
 				
 			}
 			else {

@@ -430,6 +430,8 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 				e1.printStackTrace();
 			}
 			
+			
+			
 			try {
 				
 				GastoVO gastoVO = new GastoVO();
@@ -440,6 +442,36 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 				gastoVO.setCodEmp(permisoAux.getCodEmp());
 				gastoVO.setCodTitular(codTitular.getValue());
 				gastoVO.setNroTrans((long) nroTrans.getConvertedValue());
+				
+				try {
+					if(val.existeEgreso(permisoAux, Integer.valueOf(gastoVO.getNroDocum()))){
+						Mensajes.mostrarMensajeError("Existe un egreso asociado al gasto");
+						return;
+					}
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					Mensajes.mostrarMensajeError(e.getMessage());
+				}
+				
+				try {
+					if(val.existeFacturaGasto(permisoAux, Integer.valueOf(gastoVO.getNroDocum()))){
+						Mensajes.mostrarMensajeError("Existe una factura asociada al gasto");
+						return;
+					}
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					Mensajes.mostrarMensajeError(e.getMessage());
+				}
+				
+				try {
+					if(val.existeGastoIngresoCobro(permisoAux, Integer.valueOf(gastoVO.getNroDocum()))){
+						Mensajes.mostrarMensajeError("Existe un ingreso de cobro asociada al gasto");
+						return;
+					}
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					Mensajes.mostrarMensajeError(e.getMessage());
+				}
 				
 				controlador.eliminarGasto(gastoVO, permisoAux);
 				this.mainView.actuilzarGrillaEliminado((long) nroTrans.getConvertedValue());
@@ -1088,8 +1120,6 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 			/*Oculatamos Editar y mostramos el de guardar y de agregar formularios*/
 			this.enableBotonAceptar();
 			
-			
-			
 			this.disableBotonLectura();
 
 			/*Dejamos los textfields que se pueden editar
@@ -1171,15 +1201,16 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 	{
 		
 		this.fecDoc.setReadOnly(false);
-		this.fecValor.setReadOnly(false);
+		this.fecValor.setReadOnly(true);
 		this.tcMov.setReadOnly(false);
 		this.impImpuMn.setReadOnly(false);
 		this.impImpuMn.setEnabled(false);
 		this.impImpuMo.setReadOnly(false);
 		this.impImpuMo.setEnabled(false);
-		this.impTotMn.setReadOnly(false);
+		this.impTotMn.setReadOnly(true);
 		this.impTotMn.setEnabled(false);
-		this.impTotMo.setReadOnly(false);
+		this.impTotMo.setReadOnly(true);
+		this.impTotMo.setEnabled(false);
 		this.referencia.setReadOnly(false);
 		
 		this.codProceso.setReadOnly(false);
@@ -1194,8 +1225,9 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		this.nomImpuesto.setReadOnly(false);
 		this.porcentajeImpuesto.setReadOnly(false);
 		this.nroDocum.setReadOnly(false);
+		this.tcMov.setEnabled(false);
+		this.comboMoneda.setEnabled(false);
 		
-		this.comboMoneda.setEnabled(true);
 		
 	}
 	

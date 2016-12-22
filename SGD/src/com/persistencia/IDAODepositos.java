@@ -21,4 +21,6 @@ public interface IDAODepositos {
 	public boolean memberDeposito(Long nroTrans, String codEmp, Connection con) throws ExisteDepositoException, ConexionException;
 	public void eliminarDeposito(Deposito deposito, Connection con, String codEmp) throws EliminandoDepositoException, ConexionException;
 	public void eliminarDepositoDetalle(Deposito deposito, Connection con, String codEmp) throws EliminandoDepositoException, ConexionException;
+	public boolean existeChequeDepositado(String serie, Integer nro, String codEmp, String codBco, String codCta, Connection con) throws ExisteDepositoException, ConexionException;
+	public boolean validaNumDeposito(String codBco, String codCta, Integer nro,  String codEmp, Connection con) throws ExisteDepositoException, ConexionException;
 }

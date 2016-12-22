@@ -17,6 +17,7 @@ import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Bancos.ObteniendoBancosException;
 import com.excepciones.Bancos.ObteniendoCuentasBcoException;
+import com.excepciones.Conciliaciones.MovimientoConciliadoException;
 import com.excepciones.Cotizaciones.ObteniendoCotizacionesException;
 import com.excepciones.Egresos.*;
 import com.excepciones.Monedas.ObteniendoMonedaException;
@@ -54,6 +55,7 @@ import com.valueObject.MonedaVO;
 import com.valueObject.TipoInCobVO;
 import com.valueObject.TitularVO;
 import com.valueObject.UsuarioPermisosVO;
+import com.valueObject.Cheque.ChequeVO;
 import com.valueObject.Cotizacion.CotizacionVO;
 import com.valueObject.Docum.DocumDetalleVO;
 import com.valueObject.Gasto.GastoVO;
@@ -117,6 +119,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 	private PermisosUsuario permisos; /*Variable con los permisos del usuario*/
 	ArrayList<MonedaVO> lstMonedas = new ArrayList<MonedaVO>();
 	Validaciones val = new Validaciones();
+	ChequeVO chequeVO = new ChequeVO();
 	
 	/**
 	 * Constructor del formulario, conInfo indica
@@ -741,6 +744,20 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 				
 				/*Si es banco tomamos estos cmapos de lo contrario caja*/
 				if(this.comboTipo.getValue().toString().equals("Banco")){
+					
+					//Datos del banco y cuenta
+					CtaBcoVO auxctaBco = new CtaBcoVO();
+					if(this.comboCuentas.getValue() != null){
+						
+						auxctaBco = (CtaBcoVO) this.comboCuentas.getValue();
+						
+					}
+					
+					ingCobroVO.setCodBanco(auxctaBco.getCodBco());
+					ingCobroVO.setCodCtaBco(auxctaBco.getCodigo());
+					ingCobroVO.setNomCtaBco(auxctaBco.getNombre());
+					ingCobroVO.setCodMonedaCtaBco(auxctaBco.getMonedaVO().getCodMoneda());
+					ingCobroVO.setNacionalMonedaCtaBco(auxctaBco.getMonedaVO().isNacional());
 				
 					ingCobroVO.setmPago((String)comboMPagos.getValue());
 					
@@ -749,12 +766,65 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 						ingCobroVO.setCodDocRef("tranemi");
 						ingCobroVO.setNroDocRef(nroDocRef.getValue());
 						ingCobroVO.setSerieDocRef("0");
+						
+						if(operacion.equals(Variables.OPERACION_NUEVO) || 
+								(!ingresoCopia.getNroDocRef().equals(ingCobroVO.getNroDocRef()))){
+							
+							try {
+								
+								if(val.existeTransferencia(permisoAux, ingCobroVO.getNroDocRef(), ingCobroVO.getCodBanco(), ingCobroVO.getCodCtaBco())){
+									Mensajes.mostrarMensajeError("Existe el número de transferencia para el banco/cuenta");
+									return;
+								}
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								Mensajes.mostrarMensajeError(e.toString());
+							}
+							
+						}
 					}
 					else if(ingCobroVO.getmPago().equals("Cheque"))
 					{
 						ingCobroVO.setCodDocRef("cheqemi");
 						ingCobroVO.setNroDocRef(nroDocRef.getValue());
 						ingCobroVO.setSerieDocRef(serieDocRef.getValue());
+						
+						chequeVO.setCodBanco(ingCobroVO.getCodBanco());
+					    chequeVO.setCodCuenta(ingCobroVO.getCodCtaBco());
+					    chequeVO.setSerieDocum(ingCobroVO.getSerieDocRef());
+					    chequeVO.setNroDocum(Integer.parseInt(ingCobroVO.getNroDocRef()));
+					    
+					    if(operacion.equals(Variables.OPERACION_NUEVO)){  
+								
+					    	
+					    	try {
+								if(val.existeCheque(permisoAux, chequeVO)){
+									Mensajes.mostrarMensajeError("El cheque ya existe para el banco/cuenta");
+									return;
+								}
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								Mensajes.mostrarMensajeError(e.toString());
+								
+							}
+					    }
+					    if(!operacion.equals(Variables.OPERACION_NUEVO)){
+					    	
+					    	if((!ingresoCopia.getNroDocRef().equals(ingCobroVO.getNroDocRef())) || 
+							 (!ingresoCopia.getSerieDocRef().equals(ingCobroVO.getSerieDocRef()))){
+					    		
+					    		try {
+									if(val.existeCheque(permisoAux, chequeVO)){
+										Mensajes.mostrarMensajeError("El cheque ya existe para el banco/cuenta");
+										return;
+									}
+								} catch (Exception e) {
+									// TODO Auto-generated catch block
+									Mensajes.mostrarMensajeError(e.toString());
+									
+								}
+					    	}
+					    }
 						
 					}else
 					{
@@ -764,19 +834,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 						ingCobroVO.setSerieDocRef("0");
 					}
 												
-						//Datos del banco y cuenta
-						CtaBcoVO auxctaBco = new CtaBcoVO();
-						if(this.comboCuentas.getValue() != null){
-							
-							auxctaBco = (CtaBcoVO) this.comboCuentas.getValue();
-							
-						}
 						
-						ingCobroVO.setCodBanco(auxctaBco.getCodBco());
-						ingCobroVO.setCodCtaBco(auxctaBco.getCodigo());
-						ingCobroVO.setNomCtaBco(auxctaBco.getNombre());
-						ingCobroVO.setCodMonedaCtaBco(auxctaBco.getMonedaVO().getCodMoneda());
-						ingCobroVO.setNacionalMonedaCtaBco(auxctaBco.getMonedaVO().isNacional());
 					
 						
 						
@@ -2853,6 +2911,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 					return;
 				}
 				
+				
 				IngresoCobroVO ingCobroVO = new IngresoCobroVO();	
 				
 				ingCobroVO.setImpTotMo((Double) impTotMo.getConvertedValue());
@@ -2927,6 +2986,16 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 				/*Si es nuevo aun no tenemos el nro del cobro*/
 				if(this.nroDocum.getValue() != null)
 					ingCobroVO.setNroDocum(this.nroDocum.getValue());
+				
+				try {
+					if(val.egresoConciliado(permisoAux, ingCobroVO.getNroDocum())){
+						Mensajes.mostrarMensajeError("El egreso está conciliado");
+						return;
+					}
+				} catch (NumberFormatException | MovimientoConciliadoException e) {
+					// TODO Auto-generated catch block
+					Mensajes.mostrarMensajeError(e.toString());
+				}
 				
 				
 				/*Si es banco tomamos estos cmapos de lo contrario caja*/

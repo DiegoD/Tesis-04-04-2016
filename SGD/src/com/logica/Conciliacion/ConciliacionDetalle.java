@@ -9,6 +9,9 @@ public class ConciliacionDetalle {
 	private String cod_docum;
 	private String serie_docum;
 	private int nro_docum;
+	private String cod_doc_ref;
+	private String serie_doc_ref;
+	private int nro_doc_ref;
 	private Timestamp fecValor;
 	private Timestamp fecDoc;
 	private long nroTrans;
@@ -28,7 +31,7 @@ public class ConciliacionDetalle {
 		
 		detalleVO.setCod_docum(detalle.getCod_docum());
 		detalleVO.setSerie_docum(detalle.getSerie_docum());
-		detalleVO.setNro_docum(detalle.getNro_docum());
+		detalleVO.setNro_docum(String.valueOf(detalle.getNro_docum()));
 		detalleVO.setFecDoc(detalle.getFecDoc());
 		detalleVO.setFecValor(detalle.getFecValor());
 		detalleVO.setNroTrans(detalle.getNroTrans());
@@ -37,6 +40,9 @@ public class ConciliacionDetalle {
 		detalleVO.setImpTotMo(detalle.getImpTotMo());
 		detalleVO.setCodEmp(detalle.getCod_emp());
 		detalleVO.setDescripcion(detalle.getDescripcion());
+		detalleVO.setCod_doc_ref(detalle.getCod_doc_ref());
+		detalleVO.setSerie_doc_ref(detalle.getSerie_doc_ref());
+		detalleVO.setNro_doc_ref(String.valueOf(detalle.getNro_doc_ref()));
 		
 		return detalleVO;
 	}
@@ -111,6 +117,30 @@ public class ConciliacionDetalle {
 
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
+	}
+
+	public String getCod_doc_ref() {
+		return cod_doc_ref;
+	}
+
+	public void setCod_doc_ref(String cod_doc_ref) {
+		this.cod_doc_ref = cod_doc_ref;
+	}
+
+	public String getSerie_doc_ref() {
+		return serie_doc_ref;
+	}
+
+	public void setSerie_doc_ref(String serie_doc_ref) {
+		this.serie_doc_ref = serie_doc_ref;
+	}
+
+	public int getNro_doc_ref() {
+		return nro_doc_ref;
+	}
+
+	public void setNro_doc_ref(int nro_doc_ref) {
+		this.nro_doc_ref = nro_doc_ref;
 	}
 	
 	

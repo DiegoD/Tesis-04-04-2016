@@ -15,7 +15,9 @@ import com.excepciones.Cheques.ObteniendoChequeException;
 import com.excepciones.Conciliaciones.EliminandoConcialiacionException;
 import com.excepciones.Conciliaciones.ExisteConciliacionException;
 import com.excepciones.Conciliaciones.InsertandoConciliacionException;
+import com.excepciones.Conciliaciones.MovimientoConciliadoException;
 import com.excepciones.Conciliaciones.ObteniendoConciliacionException;
+import com.excepciones.Saldos.ExisteSaldoException;
 import com.logica.Cheque;
 import com.logica.MonedaInfo;
 import com.logica.Conciliacion.Conciliacion;
@@ -70,6 +72,9 @@ public class DAOConciliaciones implements IDAOConciliaciones{
 				aux.setImpTotMo(rs.getDouble("imp_tot_mo"));
 				aux.setCod_emp(rs.getString("cod_emp"));
 				aux.setDescripcion(rs.getString("referencia"));
+				aux.setCod_doc_ref(rs.getString("cod_doc_ref"));
+				aux.setSerie_doc_ref(rs.getString("serie_doc_ref"));
+				aux.setNro_doc_ref(rs.getInt("nro_doc_ref"));
 				
 				lstMovimientos.add(aux);
 				
@@ -91,6 +96,9 @@ public class DAOConciliaciones implements IDAOConciliaciones{
 				aux.setImpTotMo(rs2.getDouble("imp_tot_mo"));
 				aux.setCod_emp(rs2.getString("cod_emp"));
 				aux.setDescripcion(rs2.getString("referencia"));
+				aux.setCod_doc_ref(rs2.getString("cod_doc_ref"));
+				aux.setSerie_doc_ref(rs2.getString("serie_doc_ref"));
+				aux.setNro_doc_ref(rs2.getInt("nro_doc_ref"));
 				
 				lstMovimientos.add(aux);
 				
@@ -139,6 +147,9 @@ public class DAOConciliaciones implements IDAOConciliaciones{
 				aux.setImpTotMo(rs.getDouble("imp_tot_mo"));
 				aux.setCod_emp(rs.getString("cod_emp"));
 				aux.setDescripcion(rs.getString("referencia"));
+				aux.setCod_doc_ref(rs.getString("cod_doc_ref"));
+				aux.setSerie_doc_ref(rs.getString("serie_doc_ref"));
+				aux.setNro_doc_ref(rs.getInt("nro_doc_ref"));
 				
 				lstMovimientos.add(aux);
 				
@@ -280,6 +291,9 @@ public class DAOConciliaciones implements IDAOConciliaciones{
 				aux.setNroTrans(rs.getLong("nro_trans"));
 				aux.setCod_emp(rs.getString("cod_emp"));
 				aux.setDescripcion(rs.getString("referencia"));
+				aux.setCod_doc_ref(rs.getString("cod_doc_ref"));
+				aux.setSerie_doc_ref(rs.getString("serie_doc_ref"));
+				aux.setNro_doc_ref(rs.getInt("nro_doc_ref"));
 				
 				lst.add(aux);
 				
@@ -368,6 +382,9 @@ public class DAOConciliaciones implements IDAOConciliaciones{
 			pstmt1.setTimestamp(9, detalle.getFecValor());
 			pstmt1.setString(10, detalle.getDescripcion());
 			pstmt1.setInt(11, linea);
+			pstmt1.setString(12, detalle.getCod_doc_ref());
+			pstmt1.setString(13, detalle.getSerie_doc_ref());
+			pstmt1.setInt(14, detalle.getNro_doc_ref());
 			
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
@@ -548,6 +565,72 @@ public class DAOConciliaciones implements IDAOConciliaciones{
 		}
     	
     	return saldo_conciliado;
+	}
+	
+	public boolean depositoConciliado(String serie, Integer nro, String codEmp, String codBco, String codCtaBco, Connection con) throws MovimientoConciliadoException{
+		
+		boolean existe = false;
+		
+		try{
+			
+			ConsultasDD consultas = new ConsultasDD ();
+			String query = consultas.chequeConciliado();
+			
+			
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			
+			pstmt1.setString(1, serie);
+			pstmt1.setInt(2, nro);
+			pstmt1.setString(3, codEmp);
+			pstmt1.setString(4, codBco);
+			pstmt1.setString(5, codCtaBco);
+			
+			ResultSet rs = pstmt1.executeQuery();
+			
+			if (rs.next ()) 
+				existe = true;
+						
+			rs.close ();
+			pstmt1.close ();
+			
+			return existe;
+			
+		}catch(SQLException e){
+			
+			throw new MovimientoConciliadoException();
+		}
+	}
+	
+	public boolean egresoConciliado(String codEmp, Integer nro, Connection con) throws MovimientoConciliadoException{
+		
+		boolean existe = false;
+		
+		try{
+			
+			ConsultasDD consultas = new ConsultasDD ();
+			String query = consultas.egresoConciliado();
+			
+			
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			
+			pstmt1.setInt(1, nro);
+			pstmt1.setString(2, codEmp);
+			
+			
+			ResultSet rs = pstmt1.executeQuery();
+			
+			if (rs.next ()) 
+				existe = true;
+						
+			rs.close ();
+			pstmt1.close ();
+			
+			return existe;
+			
+		}catch(SQLException e){
+			
+			throw new MovimientoConciliadoException();
+		}
 	}
 	
 }

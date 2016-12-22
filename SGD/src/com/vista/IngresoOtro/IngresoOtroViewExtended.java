@@ -36,6 +36,7 @@ import com.vaadin.ui.UI;
 import com.valueObject.MonedaVO;
 import com.valueObject.TitularVO;
 import com.valueObject.UsuarioPermisosVO;
+import com.valueObject.Cheque.ChequeVO;
 import com.valueObject.Cotizacion.CotizacionVO;
 import com.valueObject.Gasto.GtoSaldoAux;
 import com.valueObject.IngresoCobro.IngresoCobroDetalleVO;
@@ -73,6 +74,7 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 	MonedaVO monedaNacional = new MonedaVO();
 	ArrayList<MonedaVO> lstMonedas = new ArrayList<MonedaVO>();
 	Validaciones val = new Validaciones();
+	ChequeVO chequeVO = new ChequeVO();
 	
 	//private UsuarioPermisosVO permisos; /*Variable con los permisos del usuario*/
 	
@@ -671,29 +673,6 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 				/*Si es banco tomamos estos cmapos de lo contrario caja*/
 				if(this.comboTipo.getValue().toString().equals("Banco")){
 				
-					ingCobroVO.setmPago((String)comboMPagos.getValue());
-					
-					if(ingCobroVO.getmPago().equals("Transferencia"))
-					{
-						ingCobroVO.setCodDocRef("tranrec");
-						ingCobroVO.setNroDocRef(nroDocRef.getValue());
-						ingCobroVO.setSerieDocRef("0");
-						
-					}
-					else if(ingCobroVO.getmPago().equals("Cheque"))
-					{
-						ingCobroVO.setCodDocRef("cheqrec");
-						ingCobroVO.setNroDocRef(nroDocRef.getValue());
-						ingCobroVO.setSerieDocRef(serieDocRef.getValue());
-						
-					}else
-					{
-						
-						ingCobroVO.setCodDocRef("0");
-						ingCobroVO.setNroDocRef("0");
-						ingCobroVO.setSerieDocRef("0");
-					}
-												
 					//Datos del banco y cuenta
 					CtaBcoVO auxctaBco = new CtaBcoVO();
 					if(this.comboCuentas.getValue() != null){
@@ -706,6 +685,84 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 					ingCobroVO.setNomCtaBco(auxctaBco.getNombre());
 					ingCobroVO.setCodMonedaCtaBco(auxctaBco.getMonedaVO().getCodMoneda());
 					ingCobroVO.setNacionalMonedaCtaBco(auxctaBco.getMonedaVO().isNacional());
+					
+					ingCobroVO.setmPago((String)comboMPagos.getValue());
+					
+					if(ingCobroVO.getmPago().equals("Transferencia"))
+					{
+						ingCobroVO.setCodDocRef("tranrec");
+						ingCobroVO.setNroDocRef(nroDocRef.getValue());
+						ingCobroVO.setSerieDocRef("0");
+						
+						if(operacion.equals(Variables.OPERACION_NUEVO) || 
+								(!ingresoCopia.getNroDocRef().equals(ingCobroVO.getNroDocRef()))){
+							
+							try {
+								
+								if(val.existeTransferencia(permisoAux, ingCobroVO.getNroDocRef(), ingCobroVO.getCodBanco(), ingCobroVO.getCodCtaBco())){
+									Mensajes.mostrarMensajeError("Existe el número de transferencia para el banco/cuenta");
+									return;
+								}
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								Mensajes.mostrarMensajeError(e.toString());
+							}
+							
+						}
+						
+					}
+					else if(ingCobroVO.getmPago().equals("Cheque"))
+					{
+						ingCobroVO.setCodDocRef("cheqrec");
+						ingCobroVO.setNroDocRef(nroDocRef.getValue());
+						ingCobroVO.setSerieDocRef(serieDocRef.getValue());
+						
+						chequeVO.setCodBanco(ingCobroVO.getCodBanco());
+					    chequeVO.setCodCuenta(ingCobroVO.getCodCtaBco());
+					    chequeVO.setSerieDocum(ingCobroVO.getSerieDocRef());
+					    chequeVO.setNroDocum(Integer.parseInt(ingCobroVO.getNroDocRef()));
+					    
+					    if(operacion.equals(Variables.OPERACION_NUEVO)){  
+								
+					    	
+					    	try {
+								if(val.existeCheque(permisoAux, chequeVO)){
+									Mensajes.mostrarMensajeError("El cheque ya existe para el banco/cuenta");
+									return;
+								}
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								Mensajes.mostrarMensajeError(e.toString());
+								
+							}
+					    }
+					    if(!operacion.equals(Variables.OPERACION_NUEVO)){
+					    	
+					    	if((!ingresoCopia.getNroDocRef().equals(ingCobroVO.getNroDocRef())) || 
+							 (!ingresoCopia.getSerieDocRef().equals(ingCobroVO.getSerieDocRef()))){
+					    		
+					    		try {
+									if(val.existeCheque(permisoAux, chequeVO)){
+										Mensajes.mostrarMensajeError("El cheque ya existe para el banco/cuenta");
+										return;
+									}
+								} catch (Exception e) {
+									// TODO Auto-generated catch block
+									Mensajes.mostrarMensajeError(e.toString());
+									
+								}
+					    	}
+					    }
+						
+					}
+					else{
+						
+						ingCobroVO.setCodDocRef("0");
+						ingCobroVO.setNroDocRef("0");
+						ingCobroVO.setSerieDocRef("0");
+					}
+												
+					
 					
 					/*Falta poner el nombre de la cuenta*/
 					

@@ -15,6 +15,7 @@ public class FacturaVO extends DatosDocumVO{
 	private double impuTotMo;
 	private double impSubMo;
 	private double impSubMn;
+	private String tipoFactura;
 	
 	public FacturaVO(){
 		super();
@@ -33,6 +34,7 @@ public class FacturaVO extends DatosDocumVO{
 		this.impuTotMo = t.impuTotMo;
 		this.impSubMo = t.impSubMo;
 		this.impSubMn = t.impSubMn;
+		this.tipoFactura = t.tipoFactura;
 		
 		FacturaDetalleVO aux;
 		for (FacturaDetalleVO detVO : t.detalle) {
@@ -98,6 +100,14 @@ public class FacturaVO extends DatosDocumVO{
 
 	public void setImpSubMn(double impSubMn) {
 		this.impSubMn = impSubMn;
+	}
+
+	public String getTipoFactura() {
+		return tipoFactura;
+	}
+
+	public void setTipoFactura(String tipo) {
+		this.tipoFactura = tipo;
 	}
 	
 	

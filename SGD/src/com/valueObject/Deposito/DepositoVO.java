@@ -31,7 +31,7 @@ public class DepositoVO extends AuditoriaVO{
 	private String nomMoneda;
 	
 	private FuncionarioInfo funcionario;
-	private int numComprobante;
+	private String numComprobante;
 	private String observaciones;
 	private double impTotMo;
 	private double impTotMn;
@@ -126,11 +126,11 @@ public class DepositoVO extends AuditoriaVO{
 		this.funcionario = funcionario;
 	}
 
-	public int getNumComprobante() {
+	public String getNumComprobante() {
 		return numComprobante;
 	}
 
-	public void setNumComprobante(int numComprobante) {
+	public void setNumComprobante(String numComprobante) {
 		this.numComprobante = numComprobante;
 	}
 

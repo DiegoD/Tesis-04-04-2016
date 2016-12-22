@@ -5,6 +5,7 @@ import java.sql.SQLException;
 
 import com.excepciones.ConexionException;
 import com.excepciones.SaldoCuentas.EliminandoSaldoCuetaException;
+import com.excepciones.SaldoCuentas.ExisteNroTransferencia;
 import com.excepciones.SaldoCuentas.ExisteSaldoCuentaException;
 import com.excepciones.SaldoCuentas.InsertandoSaldoCuentaException;
 import com.excepciones.SaldoCuentas.ModificandoSaldoCuentaException;
@@ -20,5 +21,5 @@ public interface IDAOSaldosCuentas {
 			throws EliminandoSaldoCuetaException, ConexionException;
 	public void modificarSaldoCuenta(DocumSaldo saldo, Connection con)
 			throws ModificandoSaldoCuentaException, ConexionException, EliminandoSaldoCuetaException, InsertandoSaldoCuentaException, ExisteSaldoCuentaException, NoExisteSaldoCuentaException;
-	
+	public boolean existeNroTransferencia(Integer nro, String codBco, String codCta, String codEmp, Connection con) throws ExisteNroTransferencia;
 }

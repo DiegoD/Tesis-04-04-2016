@@ -125,7 +125,7 @@ public class Conciliacion extends Auditoria{
 			auxDetalle = new ConciliacionDetalle();
 			auxDetalle.setNroTrans(conciliacion.getNroTrans());
 			auxDetalle.setSerie_docum(conciliacionDetalleVO.getSerie_docum());
-			auxDetalle.setNro_docum(conciliacionDetalleVO.getNro_docum());
+			auxDetalle.setNro_docum(Integer.parseInt(conciliacionDetalleVO.getNro_docum()));
 			auxDetalle.setFecDoc(conciliacionDetalleVO.getFecDoc());
 			auxDetalle.setFecValor(conciliacionDetalleVO.getFecValor());
 			auxDetalle.setNroTransDoc(conciliacionDetalleVO.getNroTransDoc());
@@ -134,8 +134,9 @@ public class Conciliacion extends Auditoria{
 			auxDetalle.setCod_docum(conciliacionDetalleVO.getCod_docum());
 			auxDetalle.setCod_emp(conciliacion.getCod_emp());
 			auxDetalle.setDescripcion(conciliacionDetalleVO.getDescripcion());
-			
-			
+			auxDetalle.setCod_doc_ref(conciliacionDetalleVO.getCod_doc_ref());
+			auxDetalle.setSerie_doc_ref(conciliacionDetalleVO.getSerie_doc_ref());
+			auxDetalle.setNro_doc_ref(Integer.parseInt(conciliacionDetalleVO.getNro_doc_ref()));
 			
 			conciliacion.getLstDetalle().add(auxDetalle);
 			

@@ -243,5 +243,39 @@ public class DAOCheques implements IDAOCheques{
 		
 	}
 
+	public boolean exixsteCheque(String serie, Integer nro, String codEmp, String codBco, String codCta, Connection con) throws ExisteChequeException{
+		
+		boolean existe = false;
+		
+		try{
+			
+			ConsultasDD consultas = new ConsultasDD ();
+			String query = consultas.existeCheque();
+			
+			
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			
+			pstmt1.setString(1, serie);
+			pstmt1.setInt(2, nro);
+			pstmt1.setString(3, codEmp);
+			pstmt1.setString(4, codBco);
+			pstmt1.setString(5, codCta);
+			
+			ResultSet rs = pstmt1.executeQuery();
+			
+			if (rs.next ()) 
+				existe = true;
+						
+			rs.close ();
+			pstmt1.close ();
+			
+			return existe;
+			
+		}catch(SQLException e){
+			
+			throw new ExisteChequeException();
+		}
+	}
+	
 	
 }

@@ -1696,6 +1696,8 @@ public String getGastosAnuladosxProceso(){
 	}
 	
 	
+	
+	
 	public String eliminarSaldo(){
 	
 		StringBuilder sb = new StringBuilder();
@@ -1819,7 +1821,18 @@ public String getGastosAnuladosxProceso(){
 		
 		return sb.toString();
 	}
-	
+
+	public String existeCheque(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT nro_docum ");
+		sb.append("FROM c_cheques WHERE serie_docum = ? AND nro_docum = ? "
+				+ "AND cod_emp = ? AND cod_bco = ? AND cod_ctabco = ? ");
+		
+		return sb.toString();
+	}
+
 	public String insertarCheque()
 	{
 	
@@ -1849,12 +1862,23 @@ public String getGastosAnuladosxProceso(){
 	
 ////////////////////////SALDO CUENTAS////////////////////////////////////////////
 	
-public String memberSaldoCuenta(){
+	public String memberSaldoCuenta(){
 		
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("SELECT cod_docum ");
 		sb.append("FROM sa_cuentas WHERE nro_trans = ? ");
+		
+		return sb.toString();
+	}
+	
+	public String existeNroTransferencia(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_docum ");
+		sb.append("FROM sa_cuentas WHERE nro_doc_ref = ? and cod_bco = ? and cod_ctabco = ? and cod_emp = ? "
+				+ "and (cod_doc_ref = 'tranrec' or cod_doc_ref = 'tranemi') ");
 		
 		return sb.toString();
 	}
@@ -2040,7 +2064,8 @@ public String eliminarSaldoCuenta(){
 				+ "and m_ctasbcos.cod_bco = c_ingcobro.cod_bco "
 				+ "and m_ctasbcos.cod_ctabco = c_ingcobro.cod_ctabco "
 				+ "and m_monedas.cod_moneda = c_cheques.cod_moneda "
-				+ "and m_monedas.cod_emp = c_cheques.cod_emp ");
+				+ "and m_monedas.cod_emp = c_cheques.cod_emp "
+				+ "and c_cheques.cod_tit = sa_docum.cod_tit ");
 		
 		return sb.toString();
 	}	
@@ -2140,6 +2165,27 @@ public String eliminarSaldoCuenta(){
 		return sb.toString();
 	}
 	
+	public String existeDeposito(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT nro_trans ");
+		sb.append("FROM c_deposito WHERE nro_docum = ? AND cod_bco = ? AND cod_ctabco = ? and cod_emp = ? ");
+		
+		return sb.toString();
+	}
+	
+	public String existeChequeDepositado(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT nro_trans ");
+		sb.append("FROM d_deposito WHERE serie_docum = ? AND nro_docum = ? AND cod_emp = ? "
+				+ "AND cod_bco = ? and cod_ctabco = ? ");
+		
+		return sb.toString();
+	}
+	
 	public String eliminarDeposito(){
 		
 		StringBuilder sb = new StringBuilder();
@@ -2177,7 +2223,7 @@ public String eliminarSaldoCuenta(){
 
 		sb.append(" from sa_cuentas ");
 		
-		sb.append("WHERE sa_cuentas.cod_doc_ref = 'cheqrec'  "
+		sb.append("WHERE sa_cuentas.cod_doc_ref <> 'cheqemi' "
 		+ "and sa_cuentas.cod_emp = ? and sa_cuentas.cod_bco = ? and sa_cuentas.cod_ctabco = ? "
 		+ "and sa_cuentas.conciliado = 0  ");
 		
@@ -2282,7 +2328,7 @@ public String eliminarSaldoCuenta(){
 		sb.append("SELECT d_conciliacion.cod_docum, d_conciliacion.serie_docum, d_conciliacion.nro_docum, "
 		+ "d_conciliacion.fec_doc, d_conciliacion.fec_valor, "
 		+ "d_conciliacion.imp_tot_mn, d_conciliacion.imp_tot_mo, d_conciliacion.nro_trans, "
-		+ "d_conciliacion.cod_emp, referencia ");
+		+ "d_conciliacion.cod_emp, referencia, cod_doc_ref, serie_doc_ref, nro_doc_ref ");
 		
 		sb.append("FROM d_conciliacion "
 		+ "WHERE d_conciliacion.cod_emp = ? AND d_conciliacion.nro_trans = ? ");
@@ -2307,13 +2353,13 @@ public String eliminarSaldoCuenta(){
 	public String insertarDetalleConciliacion()
 	{
 	
-	StringBuilder sb = new StringBuilder();
-	
-	sb.append("INSERT INTO d_conciliacion (cod_docum, serie_docum, nro_docum, cod_emp, imp_tot_mn, imp_tot_mo, "
-	+ " nro_trans, fec_doc, fec_valor, referencia, linea ) ");
-	sb.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?	) ");
-	
-	return sb.toString();
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO d_conciliacion (cod_docum, serie_docum, nro_docum, cod_emp, imp_tot_mn, imp_tot_mo, "
+		+ " nro_trans, fec_doc, fec_valor, referencia, linea, cod_doc_ref, serie_doc_ref, nro_doc_ref ) ");
+		sb.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?	) ");
+		
+		return sb.toString();
 	
 	}
 
@@ -2358,6 +2404,29 @@ public String eliminarSaldoCuenta(){
       	return sb.toString();
     }
 
+	public String chequeConciliado(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT d_conciliacion.cod_docum, c_conciliacion.nro_trans ");
+		sb.append("FROM d_conciliacion, c_conciliacion WHERE d_conciliacion.serie_doc_ref = ? "
+				+ "AND d_conciliacion.nro_doc_ref = ? AND d_conciliacion.cod_emp = ? AND c_conciliacion.cod_bco = ? "
+				+ "AND c_conciliacion.cod_ctabco = ? AND d_conciliacion.nro_trans = c_conciliacion.nro_trans "
+				+ "and d_conciliacion.cod_emp = c_conciliacion.cod_emp ");
+		
+		return sb.toString();
+	}
+	
+	public String egresoConciliado(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT d_conciliacion.nro_trans ");
+		sb.append("FROM d_conciliacion WHERE (d_conciliacion.cod_docum = 'egrcobro' or d_conciliacion.cod_docum = 'otroegr') "
+				+ "AND d_conciliacion.nro_docum = ? AND d_conciliacion.cod_emp = ? ");
+		
+		return sb.toString();
+	}
 
 
 /////////////////////// FIN DEPOSITOS ///////////////////////////////////////////////////

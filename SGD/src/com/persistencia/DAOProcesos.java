@@ -103,7 +103,7 @@ public class DAOProcesos implements IDAOProcesos{
 		try {
 			
 	    	ConsultasDD clts = new ConsultasDD();
-	    	String query = clts.getProcesos();
+	    	String query = clts.getProcesosSinFecha();
 	    	PreparedStatement pstmt1 = con.prepareStatement(query);
 	    	
 	    	ResultSet rs;

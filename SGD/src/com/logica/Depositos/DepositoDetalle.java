@@ -30,7 +30,7 @@ public class DepositoDetalle {
 		detalleVO.setCodCtaInd(detalle.getCheque().getCodCuentaInd());
 		detalleVO.setCodDocum(detalle.getCheque().getCodDocum());
 		detalleVO.setSerieDocum(detalle.getCheque().getSerieDocum());
-		detalleVO.setNroDocum(detalle.getCheque().getNroDocum());
+		detalleVO.setNroDocum(String.valueOf(detalle.getCheque().getNroDocum()));
 		detalleVO.setCodEmp(detalle.getCheque().getCodEmp());
 		detalleVO.setFecDoc(detalle.getCheque().getFecDoc());
 		detalleVO.setFecValor(detalle.getCheque().getFecValor());

@@ -47,6 +47,39 @@ public class DAOSaldoCuentas implements IDAOSaldosCuentas{
 		}
 	}
 	
+	public boolean existeNroTransferencia(Integer nro, String codBco, String codCta, String codEmp, Connection con) throws ExisteNroTransferencia{
+		
+		boolean existe = false;
+		
+		try{
+			
+			ConsultasDD consultas = new ConsultasDD ();
+			String query = consultas.existeNroTransferencia();
+			
+			
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			
+			pstmt1.setInt(1, nro);
+			pstmt1.setString(2, codBco);
+			pstmt1.setString(3, codCta);
+			pstmt1.setString(4, codEmp);
+			
+			
+			ResultSet rs = pstmt1.executeQuery();
+			
+			if (rs.next ()) 
+				existe = true;
+						
+			rs.close ();
+			pstmt1.close ();
+			
+			return existe;
+			
+		}catch(SQLException e){
+			
+			throw new ExisteNroTransferencia();
+		}
+	}
 
 
 	public void insertarSaldoCuenta(DocumSaldo documento, Connection con)
