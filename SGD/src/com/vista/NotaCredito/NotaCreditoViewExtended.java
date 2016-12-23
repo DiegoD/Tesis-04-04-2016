@@ -182,46 +182,8 @@ public class NotaCreditoViewExtended extends NotaCreditoViews implements IBusque
 		
 	});
 	
-	/**
-	* Agregamos listener al combo de tipo (banco, caja), determinamos si mostramos
-	* los campos del banco o no;
-	*
-	*/
-	comboBancos.addValueChangeListener(new Property.ValueChangeListener() {
 
-   		@Override
-		public void valueChange(ValueChangeEvent event) {
-   			BancoVO bcoAux;
-			
-			if(comboBancos.getValue() != null){
-				bcoAux = new BancoVO();
-				bcoAux = (BancoVO) comboBancos.getValue();
-				
-				inicializarComboCuentas(bcoAux.getCodigo(), "Banco");
-			}		
-		}
-    });
-	
-	comboMPagos.addValueChangeListener(new Property.ValueChangeListener() {
 
-		@Override
-		public void valueChange(ValueChangeEvent event) {
-			// TODO Auto-generated method stub
-			if(comboMPagos.getValue()!=null)
-			{
-				if(comboMPagos.getValue().equals("Transferencia")){
-					serieDocRef.setEnabled(false);
-					serieDocRef.setRequired(false);
-				}
-				else{
-					serieDocRef.setEnabled(true);
-					serieDocRef.setRequired(true);
-				}
-			}
-			
-		}
-    	
-    });
 	
 	fecValor.addValueChangeListener(new Property.ValueChangeListener() {
 
@@ -271,56 +233,6 @@ public class NotaCreditoViewExtended extends NotaCreditoViews implements IBusque
    			
    			CtaBcoVO ctaBcoAux;
    			ctaBcoAux = new CtaBcoVO();
-   			if(comboCuentas.getValue() != null){
-   				ctaBcoAux = (CtaBcoVO) comboCuentas.getValue();
-   			
-	   			MonedaVO auxMoneda = new MonedaVO();
-	   			Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
-	   			
-	   			auxMoneda = (MonedaVO) ctaBcoAux.getMonedaVO();
-	   			
-	   			try {
-	   				if(!auxMoneda.isNacional()){
-	   					cotizacion = controlador.getCotizacion(permisoAux, fecha, ctaBcoAux.getMonedaVO().getCodMoneda());
-	   				}
-	   				else{
-	   					cotizacion.setCotizacionVenta(1);
-	   				}
-				} catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
-						| InicializandoException | NoTienePermisosException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				if(cotizacion.getCotizacionVenta() != 0){
-					cotizacionVenta = cotizacion.getCotizacionVenta();
-				}
-				else{
-					Mensajes.mostrarMensajeError("Debe cargar la cotización para la moneda");
-					comboCuentas.setErrorHandler(null);
-					comboCuentas.setData("ProgramaticallyChanged");
-					comboCuentas.setValue(null);
-					monedaBanco.setValue("");
-					cuentaBanco.setValue("");
-					
-				}
-   			
-				if(comboCuentas.getValue()!=null){
-					if(ctaBcoAux != null && !comboCuentas.getValue().equals("")){
-		   				monedaBanco.setValue(ctaBcoAux.getMonedaVO().getSimbolo());
-		   				cuentaBanco.setValue(ctaBcoAux.getCodigo());
-		   				if(comboMoneda.getValue()!= ""){
-		   					auxMoneda = (MonedaVO) comboMoneda.getValue();
-		   					if(auxMoneda != null){
-		   						if(!auxMoneda.getCodMoneda().equals(ctaBcoAux.getMonedaVO().getCodMoneda()) && opera != Variables.OPERACION_LECTURA){
-			   						Mensajes.mostrarMensajeWarning("La moneda del banco es diferente a la moneda del documento");
-			   					}
-		   					}
-		   					
-		   				}
-		   			}
-				}
-	   			
-   			}
    			
    			if(comboMoneda.getValue()!= null){
    				
@@ -336,14 +248,7 @@ public class NotaCreditoViewExtended extends NotaCreditoViews implements IBusque
 						cotizacion = controlador.getCotizacion(permisoAux, fecha, auxMoneda.getCodMoneda());
 						if(cotizacion.getCotizacionVenta() != 0 && !auxMoneda.isNacional()){
 							cotizacionVenta = cotizacion.getCotizacionVenta();
-							if(comboCuentas.getValue() != "" && comboCuentas.getValue()!=null){
-								
-					   			ctaBcoAux = new CtaBcoVO();
-					   			ctaBcoAux = (CtaBcoVO) comboCuentas.getValue();
-					   			if(!auxMoneda.getCodMoneda().equals(ctaBcoAux.getMonedaVO().getCodMoneda())&& opera != Variables.OPERACION_LECTURA){
-					   				Mensajes.mostrarMensajeWarning("La moneda del banco es diferente a la moneda del documento");
-					   			}
-				   			}
+						
 							calculos();
 						}
 						else{
@@ -353,8 +258,8 @@ public class NotaCreditoViewExtended extends NotaCreditoViews implements IBusque
 					} 
 	   				catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
 							| InicializandoException | NoTienePermisosException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						
+	   					Mensajes.mostrarMensajeError(e.getMessage());
 					}
 	   				if(fecha != null){
 	   					
@@ -371,101 +276,6 @@ public class NotaCreditoViewExtended extends NotaCreditoViews implements IBusque
 	
 	 
 	
-	
-	/**
-	* Agregamos listener al combo de tipo (banco, caja), determinamos si mostramos
-	* los campos del banco o no;
-	*
-	*/
-    comboTipo.addValueChangeListener(new Property.ValueChangeListener() {
-
-   		@Override
-		public void valueChange(ValueChangeEvent event) {
-
-   			mostrarDatosDeBanco();
-		}
-    });
-    
-    comboCuentas.addValueChangeListener(new Property.ValueChangeListener() {
-
-    	
-    	
-   		@Override
-		public void valueChange(ValueChangeEvent event) {
-   			
-   			if("ProgramaticallyChanged".equals(comboCuentas.getData())){
-   				comboCuentas.setData(null);
-   	            return;
-   	        }
-   			
-   			/*Inicializamos VO de permisos para el usuario, formulario y operacion
-   			 * para confirmar los permisos del usuario*/
-   			UsuarioPermisosVO permisoAux = 
-   					new UsuarioPermisosVO(permisos.getCodEmp(),
-   							permisos.getUsuario(),
-   							VariablesPermisos.FORMULARIO_NOTA_CREDITO,
-   							VariablesPermisos.OPERACION_NUEVO_EDITAR);
-   			
-   			CtaBcoVO ctaBcoAux;
-   			ctaBcoAux = new CtaBcoVO();
-   			if(comboCuentas.getValue() != null){
-   				ctaBcoAux = (CtaBcoVO) comboCuentas.getValue();
-   			
-	   			MonedaVO auxMoneda = new MonedaVO();
-	   			Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
-	   			
-	   			auxMoneda = (MonedaVO) ctaBcoAux.getMonedaVO();
-	   			
-	   			try {
-	   				if(!auxMoneda.isNacional()){
-	   					cotizacion = controlador.getCotizacion(permisoAux, fecha, ctaBcoAux.getMonedaVO().getCodMoneda());
-	   				}
-	   				else{
-	   					cotizacion.setCotizacionVenta(1);
-	   				}
-				} catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
-						| InicializandoException | NoTienePermisosException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				if(cotizacion.getCotizacionVenta() != 0){
-					cotizacionVenta = cotizacion.getCotizacionVenta();
-				}
-				else{
-					Mensajes.mostrarMensajeError("Debe cargar la cotización para la moneda");
-					comboCuentas.setErrorHandler(null);
-					comboCuentas.setData("ProgramaticallyChanged");
-					comboCuentas.setValue(null);
-					monedaBanco.setValue("");
-					cuentaBanco.setValue("");
-					
-					return;
-				}
-				
-	   			if(ctaBcoAux != null && !comboCuentas.getValue().equals("")){
-	   				monedaBanco.setValue(ctaBcoAux.getMonedaVO().getSimbolo());
-	   				cuentaBanco.setValue(ctaBcoAux.getCodigo());
-	   				if(comboMoneda.getValue()!= ""){
-	   					auxMoneda = (MonedaVO) comboMoneda.getValue();
-	   					if(auxMoneda != null){
-	   						if(!auxMoneda.getCodMoneda().equals(ctaBcoAux.getMonedaVO().getCodMoneda()) && opera != Variables.OPERACION_LECTURA){
-		   						Mensajes.mostrarMensajeWarning("La moneda del banco es diferente a la moneda del documento");
-		   						//comboMoneda.setData("ProgramaticallyChanged");
-		   						//inicializarComboMoneda(ctaBcoAux.getMonedaVO().getCodMoneda());
-		   					}
-	   					}
-	   					
-	   				}
-	   				
-	   				
-	   			}
-   			}
-   			
-   			
-			
-		}
-    });
-
     
     /**
 	* Agregamos listener al combo de monedas, para verificar que no modifique la moneda
@@ -477,7 +287,7 @@ public class NotaCreditoViewExtended extends NotaCreditoViews implements IBusque
 		public void valueChange(ValueChangeEvent event) {
    			
    			if("ProgramaticallyChanged".equals(comboMoneda.getData())){
-   				comboCuentas.setData(null);
+   				
    	            return;
    	        }
    			
@@ -501,14 +311,7 @@ public class NotaCreditoViewExtended extends NotaCreditoViews implements IBusque
 					cotizacion = controlador.getCotizacion(permisoAux, fecha, auxMoneda.getCodMoneda());
 					if(cotizacion.getCotizacionVenta() != 0 && !auxMoneda.isNacional()){
 						cotizacionVenta = cotizacion.getCotizacionVenta();
-						if(comboCuentas.getValue() != "" && comboCuentas.getValue()!=null){
-							
-				   			ctaBcoAux = new CtaBcoVO();
-				   			ctaBcoAux = (CtaBcoVO) comboCuentas.getValue();
-				   			if(!auxMoneda.getCodMoneda().equals(ctaBcoAux.getMonedaVO().getCodMoneda())&& opera != Variables.OPERACION_LECTURA){
-				   				Mensajes.mostrarMensajeWarning("La moneda del banco es diferente a la moneda del documento");
-				   			}
-			   			}
+					
 						calculos();
 					}
 					else{
@@ -533,14 +336,7 @@ public class NotaCreditoViewExtended extends NotaCreditoViews implements IBusque
    			}
    			else{
    				
-   				if(comboCuentas.getValue() != "" && comboCuentas.getValue()!=null){
-		   			ctaBcoAux = new CtaBcoVO();
-		   			ctaBcoAux = (CtaBcoVO) comboCuentas.getValue();
-		   			
-		   			if(!auxMoneda.getCodMoneda().equals(ctaBcoAux.getMonedaVO().getCodMoneda())){
-		   				Mensajes.mostrarMensajeWarning("La moneda del banco es diferente a la moneda del documento");
-		   			}
-   				}
+   			
    				tcMov.setVisible(false);
    				cotizacionVenta = (double)1;
    				calculos();
@@ -700,66 +496,6 @@ public class NotaCreditoViewExtended extends NotaCreditoViews implements IBusque
 					ncVO.setNroDocum(this.nroDocum.getValue().toString().trim());
 				
 				
-				/*Si es banco tomamos estos cmapos de lo contrario caja*/
-				if(this.comboTipo.getValue().toString().equals("Banco")){
-				
-					ncVO.setmPago((String)comboMPagos.getValue());
-					
-					if(ncVO.getmPago().equals("transferencia"))
-					{
-						ncVO.setCodDocRef("tranrec");
-						
-						ncVO.setSerieDocRef("0");
-					}
-					else if(ncVO.getmPago().equals("Cheque"))
-					{
-						ncVO.setCodDocRef("cheqrec");
-						ncVO.setNroDocRef(nroDocRef.getValue().trim());
-						ncVO.setSerieDocRef(serieDocRef.getValue().trim());
-						
-					}else
-					{
-						
-						ncVO.setCodDocRef("0");
-						ncVO.setNroDocRef("0");
-						ncVO.setSerieDocRef("0");
-					}
-												
-					//Datos del banco y cuenta
-					CtaBcoVO auxctaBco = new CtaBcoVO();
-					if(this.comboCuentas.getValue() != null){
-						
-						auxctaBco = (CtaBcoVO) this.comboCuentas.getValue();
-						
-					}
-					
-					ncVO.setCodBanco(auxctaBco.getCodBco());
-					ncVO.setCodCtaBco(auxctaBco.getCodigo());
-					ncVO.setNomCtaBco(auxctaBco.getNombre());
-					ncVO.setCodMonedaCtaBco(auxctaBco.getMonedaVO().getCodMoneda());
-					ncVO.setNacional(auxctaBco.getMonedaVO().isNacional());
-					/*Falta poner el nombre de la cuenta*/
-					
-				}
-				else {
-					
-					if(((String)comboTipo.getValue()).equals("Caja"))
-					{
-						ncVO.setCodBanco("0");
-						ncVO.setNomBanco("0");
-						
-						ncVO.setCodCtaBco("0");
-						ncVO.setNomCtaBco("0");
-						
-						ncVO.setCodDocRef("0");
-						ncVO.setNroDocRef("0");
-						ncVO.setSerieDocRef("0");
-						
-						ncVO.setmPago("Caja");
-					}
-								
-				}
-				
 				ncVO.setUsuarioMod(this.permisos.getUsuario());
 				
 				if(this.operacion != Variables.OPERACION_NUEVO){
@@ -788,22 +524,10 @@ public class NotaCreditoViewExtended extends NotaCreditoViews implements IBusque
 					Mensajes.mostrarMensajeError("El cobro no tiene detalle");
 					return;
 				}
+	
 				
-				 /*Obtenemos la moneda de la cuenta*/
-			    //Datos del banco y cuenta y moneda de la cuenta
-			    CtaBcoVO auxctaBco = new CtaBcoVO();
-			    if(this.comboCuentas.getValue() != null){
-			     
-			    	auxctaBco = (CtaBcoVO) this.comboCuentas.getValue();
-			     
-			    }
-			    
-			    /*Seteamos la moneda de la cta del banco*/
-			    ncVO.setCodMonedaCtaBco(auxctaBco.getMonedaVO().getCodMoneda());
-			    ncVO.setNacionalMonedaCtaBco(auxctaBco.getMonedaVO().isNacional());
-				
-			    ncVO.setCodCuenta("recibos");
-			    ncVO.setNomCuenta("Recibos");
+			    ncVO.setCodCuenta("nccred");
+			    ncVO.setNomCuenta("Nota de Credito");
 			    
 			    
 				if(this.operacion.equals(Variables.OPERACION_NUEVO))	
@@ -1121,12 +845,6 @@ public class NotaCreditoViewExtended extends NotaCreditoViews implements IBusque
 					
 		this.fieldGroup =  new BeanFieldGroup<NotaCreditoVO>(NotaCreditoVO.class);
 		
-		/*Mostramos o ocultamos los datos del Banco, dependiendo del combo tipo (banco, caja)*/
-		this.mostrarDatosDeBanco();
-		
-		/*Inicializamos los combos*/
-		this.inicializarComboBancos(null);
-		this.inicializarComboCuentas(null, "");
 		this.inicializarComboMoneda(null);
 		
 		this.total.setEnabled(false);
@@ -1172,10 +890,6 @@ public class NotaCreditoViewExtended extends NotaCreditoViews implements IBusque
 	 */
 	private void setearValidaciones(boolean setear){
 		
-		this.comboTipo.setRequired(setear);
-		this.comboTipo.setRequiredError("Es requerido");
-		
-		
 		
 		this.fecDoc.setRequired(setear);
 		this.fecDoc.setRequiredError("Es requerido");
@@ -1195,57 +909,6 @@ public class NotaCreditoViewExtended extends NotaCreditoViews implements IBusque
 		this.codTitular.setRequired(setear);
 		this.codTitular.setRequiredError("Es requerido");
 		
-		this.comboMPagos.setRequired(setear);
-		this.comboMPagos.setRequiredError("Es requerido");
-		
-		/*De Bco*/
-		if(this.comboTipo.getValue()!=null){
-			if(this.comboTipo.getValue().equals("Banco") && this.comboTipo.getValue()!=null)
-			{
-				this.comboMPagos.setRequired(setear);
-				this.comboMPagos.setRequiredError("Es requerido");
-				
-				if(comboMPagos.getValue()!=null){
-					if(comboMPagos.getValue().equals("Cheque")){
-						this.serieDocRef.setRequired(setear);
-						this.serieDocRef.setRequiredError("Es requerido");
-					}
-					
-				}
-				
-				
-				this.nroDocRef.setRequired(setear);
-				this.nroDocRef.setRequiredError("Es requerido");
-				
-				this.comboBancos.setRequired(setear);
-				this.comboBancos.setRequiredError("Es requerido");
-				
-				this.comboCuentas.setRequired(setear);
-				this.comboCuentas.setRequiredError("Es requerido");
-			}
-			else
-			{
-				this.serieDocRef.setReadOnly(false);
-				this.nroDocRef.setReadOnly(false);
-				this.comboBancos.setReadOnly(false);
-				this.comboCuentas.setReadOnly(false);
-				this.comboMPagos.setReadOnly(false);
-				
-				this.serieDocRef.setValue("0");
-				this.serieDocRef.setRequired(false);
-				this.nroDocRef.setRequired(false);
-				this.comboBancos.setRequired(false);
-				this.comboCuentas.setRequired(false);
-				this.comboMPagos.setRequired(false);
-				
-				this.serieDocRef.setReadOnly(true);
-				this.nroDocRef.setReadOnly(true);
-				this.comboBancos.setReadOnly(true);
-				this.comboCuentas.setReadOnly(true);
-				this.comboMPagos.setReadOnly(true);
-				
-			}
-		}
 		
 	}
 	
@@ -1264,56 +927,18 @@ public class NotaCreditoViewExtended extends NotaCreditoViews implements IBusque
 		rec = fieldGroup.getItemDataSource().getBean();
 		String fecha = new SimpleDateFormat("dd/MM/yyyy").format(rec.getFechaMod());
 		
-		/*Inicializamos los combos*/
-		this.inicializarComboBancos(rec.getCodBanco());
-		this.inicializarComboCuentas(rec.getCodCtaBco(), "CuentaBanco");
+
 		this.inicializarComboMoneda(rec.getCodMoneda());
 		
 		//Se setea manual ya que si no lo carga del detalle
 		this.tcMov.setConvertedValue(rec.getTcMov());
 		
-		//Obtenemos bco
-		BancoVO auxBco = new BancoVO();
-		if(this.comboBancos.getValue() != null){
-			
-			auxBco = (BancoVO) this.comboBancos.getValue();
-			
-		}
-		else{
-			auxBco.setCodigo("0");
-		}
-		this.comboTipo.setImmediate(true);
-		this.comboTipo.setReadOnly(false);
-		this.comboTipo.setNullSelectionAllowed(false);
-		this.comboTipo.setBuffered(true);
-		
-		/*Seteamos el tipo*/
-		//this.comboTipo = new ComboBox();
-		if(auxBco.getCodigo().equals("0"))
-			this.comboTipo.setValue("Caja");
-		else
-			this.comboTipo.setValue("Banco");
+	
+
 		
 		this.nroDocum.setReadOnly(true);
-		this.serieDocRef.setReadOnly(false);
-		this.serieDocRef.setValue(item.getBean().getSerieDocRef());
-		//this.comboMPagos = new ComboBox();
 		
-		this.comboMPagos.setImmediate(true);
-		this.comboMPagos.setNullSelectionAllowed(false);
-		this.comboMPagos.setReadOnly(false);
-		this.comboMPagos.addItem("Sin Asignar");
-		this.comboMPagos.addItem("Cheque");
-		this.comboMPagos.addItem("Transferencia");
-		/*Seteamos el combo de medio de pago*/
-		if(item.getBean().getmPago().equals("0"))
-		{
-			this.comboMPagos.setValue("Sin Asignar");
-			
-		}else {
-			this.comboMPagos.setValue(item.getBean().getmPago());
-		}
-		
+
 		auditoria.setDescription(
 			
 			"Usuario: " + rec.getUsuarioMod() + "<br>" +
@@ -1408,6 +1033,7 @@ public class NotaCreditoViewExtended extends NotaCreditoViews implements IBusque
 	{
 		/*Seteamos el form en editar*/
 		this.operacion = Variables.OPERACION_EDITAR;
+		this.btnEditarItem.setVisible(false);
 		
 		/*Verificamos que tenga permisos*/
 		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_NOTA_CREDITO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
@@ -1451,12 +1077,10 @@ public class NotaCreditoViewExtended extends NotaCreditoViews implements IBusque
 		this.nroDocum.setEnabled(true);
 		importeTotalCalculado = (double) 0;
 		
+		this.btnEditarItem.setVisible(false);
+		
 		/*Chequeamos si tiene permiso de editar*/
 		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_NOTA_CREDITO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
-		
-		
-		/*Mostramos o ocultamos los datos del Banco, dependiendo del combo tipo (banco, caja)*/
-		this.mostrarDatosDeBanco();
 		
 		/*Si no tiene permisos de Nuevo Cerrmamos la ventana y mostramos mensaje*/
 		if(!permisoNuevoEditar)
@@ -1492,18 +1116,10 @@ public class NotaCreditoViewExtended extends NotaCreditoViews implements IBusque
 	 */
 	private void setearFieldsEditar()
 	{
-		
 		this.fecDoc.setReadOnly(false);
-		
-		this.serieDocRef.setReadOnly(false);
-		
-		this.nroDocRef.setReadOnly(false);
-		
 		this.impTotMo.setReadOnly(false);
 		this.impTotMo.setEnabled(true);
 		this.tcMov.setReadOnly(false);
-		this.monedaBanco.setEnabled(false);
-		this.cuentaBanco.setEnabled(false);
 		this.referencia.setReadOnly(false);
 	}
 	
@@ -1610,39 +1226,16 @@ public class NotaCreditoViewExtended extends NotaCreditoViews implements IBusque
 	 */
 	private void readOnlyFields(boolean setear)
 	{
-		
 		this.nomTitular.setReadOnly(setear);
-		
-		this.comboTipo.setReadOnly(setear);
-		
-		this.comboBancos.setReadOnly(setear);
-		
-		this.comboCuentas.setReadOnly(setear);
-		
 		this.fecDoc.setReadOnly(setear);
-		
 		this.fecValor.setReadOnly(setear);
-		
-		this.comboMPagos.setReadOnly(setear);
-		
-		this.serieDocRef.setReadOnly(setear);
-		
-		this.nroDocRef.setReadOnly(setear);
-		
 		this.comboMoneda.setReadOnly(setear);
-		
 		this.impTotMo.setReadOnly(setear);
-		
 		this.tcMov.setReadOnly(setear);
-		
 		this.referencia.setReadOnly(setear);
-		
 		this.codTitular.setReadOnly(setear);
 		this.codTitular.setEnabled(false);
 		this.nomTitular.setEnabled(false);
-		this.monedaBanco.setEnabled(false);
-		this.cuentaBanco.setEnabled(false);
-		
 	}
 	
 	/**
@@ -1652,18 +1245,6 @@ public class NotaCreditoViewExtended extends NotaCreditoViews implements IBusque
 	 */
 	private void agregarFieldsValidaciones()
 	{
-		if(this.comboTipo.getValue()!= null){
-			if(this.comboTipo.getValue().toString().equals("Banco") && this.comboBancos != null){
-				if(comboMPagos.getValue()!=null){
-					if(comboMPagos.getValue().equals("Cheque")){
-						this.serieDocRef.addValidator(
-				                new StringLengthValidator(
-				                     " 4 caracteres máximo", 1, 4, false));
-					}
-				}
-	        
-			}
-		}
         
         this.referencia.addValidator(
                 new StringLengthValidator(
@@ -1688,18 +1269,9 @@ public class NotaCreditoViewExtended extends NotaCreditoViews implements IBusque
 		try
 		{
 			if(this.impTotMo.isValid()
-					&& this.serieDocRef.isValid()
 					&& this.referencia.isValid())
 				valido = true;
 			
-			if(this.comboTipo.getValue()!= null){
-				if(this.comboTipo.getValue().toString().equals("Banco") && this.comboBancos != null){
-					if(!this.tryParseInt(nroDocRef.getValue())){
-						nroDocRef.setComponentError(new UserError("Debe ingresar un número entero"));
-						valido = false;
-					}
-				}
-			}
 			
 			if(!this.tryParseInt(nroDocum.getValue())){
 				nroDocum.setComponentError(new UserError("Debe ingresar un número entero"));
@@ -2042,7 +1614,7 @@ public class NotaCreditoViewExtended extends NotaCreditoViews implements IBusque
 		lstGastos.getColumn("referencia").setEditable(false);
 		lstGastos.getColumn("codProceso").setEditable(false);
 		lstGastos.getColumn("simboloMoneda").setEditable(false);
-		lstGastos.getColumn("impTotMo").setEditable(true);
+		lstGastos.getColumn("impTotMo").setEditable(false);
 		
 		lstGastos.setEditorSaveCaption("Guardar");
 		lstGastos.setEditorCancelCaption("Cancelar");
@@ -2207,132 +1779,6 @@ public class NotaCreditoViewExtended extends NotaCreditoViews implements IBusque
 		
 	}
 	
-	public void inicializarComboCuentas(String cod, String llamador ){
-		
-		if(cod != "0" && cod != null){
-			BeanItemContainer<CtaBcoVO> ctaObj = new BeanItemContainer<CtaBcoVO>(CtaBcoVO.class);
-			CtaBcoVO cta = new CtaBcoVO();
-			ArrayList<CtaBcoVO> lstctas = new ArrayList<CtaBcoVO>();
-			UsuarioPermisosVO permisosAux;
-			
-			try {
-				permisosAux = 
-						new UsuarioPermisosVO(this.permisos.getCodEmp(),
-								this.permisos.getUsuario(),
-								VariablesPermisos.FORMULARIO_NOTA_CREDITO,
-								VariablesPermisos.OPERACION_LEER);
-				
-				/*Si se selacciona un banco buscamos las cuentas, de lo contrario no*/
-				if(this.comboBancos.getValue() != null)
-					lstctas = this.controlador.getCtaBcos(permisosAux,((BancoVO) this.comboBancos.getValue()).getCodigo());
-				
-			} catch (ObteniendoCuentasBcoException | InicializandoException | ConexionException | ObteniendoPermisosException | NoTienePermisosException e) {
-
-				Mensajes.mostrarMensajeError(e.getMessage());
-			}
-			
-			
-			for (CtaBcoVO ctav : lstctas) {
-					
-				ctaObj.addBean(ctav);
-				
-				if(llamador.equals("CuentaBanco")){
-					if(cod != null){
-						if(cod.equals(ctav.getCodigo())){
-							cta = ctav;
-							this.monedaBanco.setValue(cta.getMonedaVO().getSimbolo());
-							this.cuentaBanco.setValue(cta.getCodigo());
-						}
-					}
-				}
-			}
-			
-			
-			if(lstctas.size()>0){
-				
-				//this.comboCuentas.setData("ProgramaticallyChanged");
-				
-				this.comboCuentas.setContainerDataSource(ctaObj);
-				
-				this.comboCuentas.setItemCaptionPropertyId("nombre");
-			}
-			
-			
-			
-			
-			if(cod!=null)
-			{
-				try{
-					this.comboCuentas.setReadOnly(false);
-					this.comboCuentas.setValue(cta);
-					//this.comboCuentas.setReadOnly(true);
-				}catch(Exception e)
-				{}
-			}
-			
-			if(this.operacion.equals(Variables.OPERACION_EDITAR) || this.operacion.equals(Variables.OPERACION_NUEVO))
-			{
-				this.comboCuentas.setReadOnly(false);
-			}
-		}
-		else{
-			this.comboCuentas.setEnabled(false);
-			this.cuentaBanco.setValue("");
-			this.monedaBanco.setValue("");
-		}
-		
-		
-	}
-	
-	public void inicializarComboBancos(String cod){
-		
-		BeanItemContainer<BancoVO> bcoObj = new BeanItemContainer<BancoVO>(BancoVO.class);
-		BancoVO bcoVO = new BancoVO();
-		ArrayList<BancoVO> lstBcos = new ArrayList<BancoVO>();
-		UsuarioPermisosVO permisosAux;
-		
-		try {
-			permisosAux = 
-					new UsuarioPermisosVO(this.permisos.getCodEmp(),
-							this.permisos.getUsuario(),
-							VariablesPermisos.FORMULARIO_NOTA_CREDITO,
-							VariablesPermisos.OPERACION_LEER);
-			
-			lstBcos = this.controlador.getBcos(permisosAux);
-			
-		} catch ( InicializandoException | ConexionException | ObteniendoPermisosException | NoTienePermisosException | ObteniendoBancosException | ObteniendoCuentasBcoException e) {
-
-			Mensajes.mostrarMensajeError(e.getMessage());
-		}
-		
-		for (BancoVO bco : lstBcos) {
-			
-			if(bco.getCodigo().equals("0")){
-				lstBcos.remove(bco);
-			}
-			else{
-				bcoObj.addBean(bco);
-				
-				if(cod != null){
-					if(cod.equals(bco.getCodigo())){
-						bcoVO = bco;
-						bcoVO.setCodEmp("0");
-					}
-				}
-			}
-			
-		}
-		
-		this.comboBancos.setContainerDataSource(bcoObj);
-		this.comboBancos.setItemCaptionPropertyId("nombre");
-		
-		if(cod!=null)
-		{
-			this.comboBancos.setReadOnly(false);
-			this.comboBancos.setValue(bcoVO);
-			this.comboBancos.setReadOnly(true);
-		}
-	}
 	
 	
 	@Override
@@ -2497,41 +1943,6 @@ public class NotaCreditoViewExtended extends NotaCreditoViews implements IBusque
 	}
 	
 	
-	/**
-	* Si el combo de Tipo es caja: ocultamos los datos del banco
-	* Si el combo tipo es Banco: mostramos los datos de bando
-	*
-	*/
-	private void mostrarDatosDeBanco(){
-		
-		boolean activo = false;
-		
-		if(this.comboTipo.getValue() != null)
-		{
-			String tipo = this.comboTipo.getValue().toString().trim();
-			
-			if(tipo.equals("Banco"))
-				activo = true;
-		}
-		
-		//this.comboBancos.setVisible(activo);
-		this.comboBancos.setEnabled(activo);
-		
-		//this.comboCuentas.setVisible(activo);
-		this.comboCuentas.setEnabled(activo);
-		
-		
-		//this.comboMPagos.setVisible(activo);
-		this.comboMPagos.setEnabled(activo);
-		
-		//this.serieDocRef.setVisible(activo);
-		this.serieDocRef.setEnabled(activo);
-		
-		//this.nroDocRef.setVisible(activo);
-		this.nroDocRef.setEnabled(activo);
-		
-	}
-
 	public static java.sql.Date convertFromJAVADateToSQLDate(
             java.util.Date javaDate) {
         java.sql.Date sqlDate = null;
@@ -2773,66 +2184,6 @@ public class NotaCreditoViewExtended extends NotaCreditoViews implements IBusque
 			if(this.nroDocum.getValue() != null)
 				ncVO.setNroDocum(this.nroDocum.getValue().toString().trim());
 			
-			
-			/*Si es banco tomamos estos cmapos de lo contrario caja*/
-			if(this.comboTipo.getValue().toString().equals("Banco")){
-			
-				ncVO.setmPago((String)comboMPagos.getValue());
-				
-				if(ncVO.getmPago().equals("transferencia"))
-				{
-					ncVO.setCodDocRef("tranrec");
-					
-					ncVO.setSerieDocRef("0");
-				}
-				else if(ncVO.getmPago().equals("Cheque"))
-				{
-					ncVO.setCodDocRef("cheqrec");
-					ncVO.setNroDocRef(nroDocRef.getValue().trim());
-					ncVO.setSerieDocRef(serieDocRef.getValue().trim());
-					
-				}else
-				{
-					
-					ncVO.setCodDocRef("0");
-					ncVO.setNroDocRef("0");
-					ncVO.setSerieDocRef("0");
-				}
-											
-				//Datos del banco y cuenta
-				CtaBcoVO auxctaBco = new CtaBcoVO();
-				if(this.comboCuentas.getValue() != null){
-					
-					auxctaBco = (CtaBcoVO) this.comboCuentas.getValue();
-					
-				}
-				
-				ncVO.setCodBanco(auxctaBco.getCodBco());
-				ncVO.setCodCtaBco(auxctaBco.getCodigo());
-				ncVO.setNomCtaBco(auxctaBco.getNombre());
-				ncVO.setCodMonedaCtaBco(auxctaBco.getMonedaVO().getCodMoneda());
-				/*Falta poner el nombre de la cuenta*/
-				
-			}
-			else {
-				
-				if(((String)comboTipo.getValue()).equals("Caja"))
-				{
-					ncVO.setCodBanco("0");
-					ncVO.setNomBanco("0");
-					
-					ncVO.setCodCtaBco("0");
-					ncVO.setNomCtaBco("0");
-					
-					ncVO.setCodDocRef("0");
-					ncVO.setNroDocRef("0");
-					ncVO.setSerieDocRef("0");
-					
-					ncVO.setmPago("Caja");
-				}
-							
-			}
-			
 			ncVO.setUsuarioMod(this.permisos.getUsuario());
 			
 			if(this.operacion != Variables.OPERACION_NUEVO){
@@ -2851,19 +2202,6 @@ public class NotaCreditoViewExtended extends NotaCreditoViews implements IBusque
 				Mensajes.mostrarMensajeError("El cobro no tiene detalle");
 				return;
 			}
-			
-			 /*Obtenemos la moneda de la cuenta*/
-		    //Datos del banco y cuenta y moneda de la cuenta
-		    CtaBcoVO auxctaBco = new CtaBcoVO();
-		    if(this.comboCuentas.getValue() != null){
-		     
-		    	auxctaBco = (CtaBcoVO) this.comboCuentas.getValue();
-		     
-		    }
-		    
-		    /*Seteamos la moneda de la cta del banco*/
-		    ncVO.setCodMonedaCtaBco(auxctaBco.getMonedaVO().getCodMoneda());
-		    ncVO.setNacionalMonedaCtaBco(auxctaBco.getMonedaVO().isNacional());
 			
 		    this.controlador.eliminarNotaCredito(ncVO, permisoAux);
 			

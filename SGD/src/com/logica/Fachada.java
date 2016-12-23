@@ -9,8 +9,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 import com.abstractFactory.AbstractFactoryBuilder;
 import com.abstractFactory.IAbstractFactory;
@@ -18,7 +16,6 @@ import com.excepciones.*;
 import com.excepciones.Factura.*;
 import com.excepciones.Bancos.ExisteBancoException;
 import com.excepciones.Bancos.InsertandoBancoException;
-import com.excepciones.Bancos.InsertandoCuentaException;
 import com.excepciones.Bancos.ModificandoBancoException;
 import com.excepciones.Bancos.ModificandoCuentaBcoException;
 import com.excepciones.Bancos.ObteniendoBancosException;
@@ -99,7 +96,6 @@ import com.valueObject.Numeradores.NumeradoresVO;
 import com.valueObject.banco.BancoVO;
 import com.valueObject.banco.CtaBcoVO;
 import com.valueObject.cliente.ClienteVO;
-import com.vista.Mensajes;
 import com.vista.VariablesPermisos;
 import com.persistencia.*;
 
@@ -3738,6 +3734,8 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 			NotaCredito nc = new NotaCredito(vo); 
 			Cotizacion cotiAux;
 			
+			ArrayList<DatosDocum> lstGtosFact; /*Variable utilizada para tomar los gastos de las facturas*/
+			
 			if(nuevo)
 			{
 				codigos.setNumeroTrans(numeradores.getNumero(con, "03", codEmp)); //nro trans
@@ -3757,6 +3755,20 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 					
 					/**Para cada factura tenemos que devlolver saldo a los gtos****/
 						
+					/*Para cada linea de gasto de la factura modificamos el saldo*/
+					/*Obtenemos las lineas de la factura que son gastos*/
+					lstGtosFact = this.facturas.getGastosFacturaLinea(con, docum.getNroDocum()
+																							, docum.getSerieDocum()
+																							, docum.getCodDocum()
+																							, docum.getCodEmp());
+					
+					for (DatosDocum gto : lstGtosFact) {
+						
+						if(gto.getCodDocum().equals("Gasto")){ /*Para los gastos modificamos el saldo al documento*/
+							/*Signo 1 porque devuelve al saldo, al matar la factura con la NC*/
+							this.saldos.modificarSaldo(gto, 1, docum.getTcMov(), con);
+						}
+					}
 					
 					/******************************************************************************/
 				
@@ -3823,6 +3835,7 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 		boolean existe = false;
 		Integer codigo;
 		NumeradoresVO codigos = new NumeradoresVO();
+		ArrayList<DatosDocum> lstGtosFact;
 		
 		try 
 		{
@@ -3841,7 +3854,22 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 				/*Signo 1 porque devuelve el saldo a la factura*/
 				this.saldos.modificarSaldo(docum, 1, nc.getTcMov(), con);
 				
-				/***ACA VOLVER LOS GASTOS A LA VIDA****/
+				/**Para cada factura tenemos que devlolver saldo a los gtos****/
+				
+				/*Para cada linea de gasto de la factura modificamos el saldo*/
+				/*Obtenemos las lineas de la factura que son gastos*/
+				lstGtosFact = this.facturas.getGastosFacturaLinea(con, docum.getNroDocum()
+																						, docum.getSerieDocum()
+																						, docum.getCodDocum()
+																						, docum.getCodEmp());
+				
+				for (DatosDocum gto : lstGtosFact) {
+					
+						/*Signo -1 porque mata el saldo nuevamente, ya que la factura queda desafectada de la NC*/
+						this.saldos.modificarSaldo(gto, -1, docum.getTcMov(), con);
+				}
+				
+				/******************************************************************************/
 				
 		
 			}

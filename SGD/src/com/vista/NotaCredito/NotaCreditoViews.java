@@ -31,7 +31,6 @@ public class NotaCreditoViews extends FormLayout {
 	protected HorizontalLayout wrapper_docum;
 	protected TextField serieDocum;
 	protected TextField nroDocum;
-	protected ComboBox comboTipo;
 	protected DateField fecDoc;
 	protected DateField fecValor;
 	protected HorizontalLayout name_wrapper;
@@ -39,15 +38,6 @@ public class NotaCreditoViews extends FormLayout {
 	protected TextField nomTitular;
 	protected Button btnBuscarCliente;
 	protected TextField referencia;
-	protected ComboBox comboBancos;
-	protected HorizontalLayout cuenta;
-	protected ComboBox comboCuentas;
-	protected TextField monedaBanco;
-	protected TextField cuentaBanco;
-	protected HorizontalLayout name_wrappeer;
-	protected ComboBox comboMPagos;
-	protected TextField serieDocRef;
-	protected TextField nroDocRef;
 	protected TextField tcMov;
 	protected HorizontalLayout name_wrapper2;
 	protected ComboBox comboMoneda;

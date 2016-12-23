@@ -25,11 +25,9 @@ import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.Cotizacion.CotizacionVO;
 import com.valueObject.Docum.FacturaVO;
 import com.valueObject.Docum.NotaCreditoVO;
-import com.valueObject.Docum.ReciboVO;
 import com.valueObject.banco.BancoVO;
 import com.valueObject.banco.CtaBcoVO;
 import com.valueObject.cliente.ClienteVO;
-import com.valueObject.proceso.ProcesoVO;
 
 public class NotaCreditoControlador {
 

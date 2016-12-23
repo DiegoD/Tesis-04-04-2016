@@ -10,6 +10,7 @@ import com.excepciones.ConexionException;
 import com.excepciones.Factura.*;
 import com.logica.MonedaInfo;
 import com.logica.Docum.CuentaInfo;
+import com.logica.Docum.DatosDocum;
 import com.logica.Docum.Factura;
 import com.logica.Docum.FacturaDetalle;
 import com.logica.Docum.ImpuestoInfo;
@@ -517,6 +518,85 @@ public class DAOFacturas implements IDAOFacturas{
 				lst.add(aux);
 				
 			}
+			rs.close ();
+			pstmt1.close ();
+    	}	
+    	
+		catch (SQLException e) {
+			throw new ObteniendoFacturasException();
+			
+		}
+    	
+    	return lst;
+	}
+	
+	/**
+	 * Nos retorna una lista con las lineas de gastos asociados a la factura factura
+	 */
+	public ArrayList<DatosDocum> getGastosFacturaLinea(Connection con, int nroDocum, String serieDocum, String codDocum, String codEmp) throws ObteniendoFacturasException, ConexionException {
+		
+		ArrayList<DatosDocum> lst = new ArrayList<DatosDocum>();
+	
+		try {
+			
+	    	Consultas clts = new Consultas();
+	    	String query = clts.getGastosFactura();
+	    	PreparedStatement pstmt1 = con.prepareStatement(query);
+	    	
+	    	ResultSet rs;
+	    	
+	    	pstmt1.setInt(1, nroDocum);
+	    	pstmt1.setString(2, serieDocum);
+	    	pstmt1.setString(3, codDocum);
+	    	pstmt1.setString(4, codEmp);
+	    	
+	    	String s = pstmt1.toString();
+	    	
+			rs = pstmt1.executeQuery();
+			
+			DatosDocum aux;
+			
+			while(rs.next ()) {
+				
+				
+				aux = new DatosDocum();
+				
+				aux.setCodCuentaInd(rs.getString("cod_cuenta"));
+				
+				/*El titular es el del Cabezal*/
+				
+				aux.setTitInfo(new TitularInfo()); /*Esta info no interesa para calcular el saldo*/
+				
+				aux.setCuenta(new CuentaInfo(rs.getString("cod_cuenta"), rs.getString("nom_cuenta")));
+				
+				aux.setCodEmp(codEmp);
+				aux.setCodDocum(rs.getString("cod_docum"));
+				aux.setSerieDocum(rs.getString("serie_docum"));
+				aux.setNroDocum(rs.getInt("nro_docum"));
+				
+				aux.setFecDoc(rs.getTimestamp("fec_doc"));
+				aux.setFecValor(rs.getTimestamp("fec_valor"));
+				
+				aux.setMoneda(new MonedaInfo(rs.getString("cod_moneda"), rs.getString("nom_moneda"), rs.getString("simbolo")));
+				
+				aux.setImpTotMn(rs.getDouble("imp_tot_mn"));
+				aux.setImpTotMo(rs.getDouble("imp_tot_mo"));
+				
+				aux.setTcMov(rs.getDouble("tc_mov"));
+				
+				aux.setReferencia(rs.getString("referencia"));
+				aux.setNroTrans(rs.getInt("nro_trans"));
+				
+				aux.setUsuarioMod(rs.getString("usuario_mod"));
+				aux.setFechaMod(rs.getTimestamp("fecha_mod"));
+				aux.setOperacion(rs.getString("operacion"));
+				
+				aux.setTitInfo(new TitularInfo(rs.getString("cod_tit"),rs.getString("nom_tit")));
+				
+				lst.add(aux);
+				
+			}
+			
 			rs.close ();
 			pstmt1.close ();
     	}	

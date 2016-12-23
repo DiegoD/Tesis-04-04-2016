@@ -55,8 +55,6 @@ public class DAONotaCredito implements IDAONotaCredito{
 				
 				nc.setCuenta(new CuentaInfo(nc.getCodCuentaInd(), "Ingreso Cobro"));
 				
-				nc.getProcesoInfo().setCodProceso(rs.getInt("cod_proceso"));
-				nc.getProcesoInfo().setDescProceso(rs.getString("cod_proceso"));
 				nc.setFecDoc(rs.getTimestamp("fec_doc"));
 				nc.setCodDocum(rs.getString("cod_docum"));
 				nc.setSerieDocum(rs.getString("serie_docum"));
@@ -83,16 +81,6 @@ public class DAONotaCredito implements IDAONotaCredito{
 				nc.setImpuTotMo(rs.getDouble("impu_tot_mo"));
 				nc.setImpSubMo(rs.getDouble("imp_sub_mo"));
 				nc.setImpSubMn(rs.getDouble("imp_sub_mn"));
-				
-				nc.setmPago(rs.getString("cod_mpago"));
-				nc.setCodDocRef(rs.getString("cod_doc_ref"));
-				nc.setSerieDocRef(rs.getString("serie_doc_ref"));
-				nc.setNroDocRef(rs.getInt("nro_doc_ref"));
-				
-				
-				nc.setBancoInfo(new BancoInfo(rs.getString("cod_bco"), rs.getString("nom_bco")));
-				
-				nc.setCuentaBcoInfo(new CuentaBcoInfo(rs.getString("cod_ctabco"), rs.getString("nom_cta")));
 				
 				
 				/*Obtenemos las lineas de la transaccion*/				
@@ -187,22 +175,12 @@ public class DAONotaCredito implements IDAONotaCredito{
 			pstmt1.setLong(14, nc.getNroTrans());
 			pstmt1.setString(15, nc.getUsuarioMod());
 			pstmt1.setString(16, nc.getOperacion());
-			pstmt1.setInt(17, nc.getProcesoInfo().getCodProceso());
+			pstmt1.setDouble(17, nc.getImpuTotMn());
+			pstmt1.setDouble(18, nc.getImpuTotMo());
+			pstmt1.setDouble(19, nc.getImpSubMo());
+			pstmt1.setDouble(20, nc.getImpSubMn());
 			
-			
-			pstmt1.setDouble(18, nc.getImpuTotMn());
-			pstmt1.setDouble(19, nc.getImpuTotMo());
-			pstmt1.setDouble(20, nc.getImpSubMo());
-			pstmt1.setDouble(21, nc.getImpSubMn());
-			
-			pstmt1.setString(22, nc.getBancoInfo().getCodBanco());
-			pstmt1.setString(23, nc.getCuentaBcoInfo().getCodCuenta());
-			pstmt1.setString(24, nc.getmPago());
-			pstmt1.setString(25, nc.getCodDocRef());
-			pstmt1.setString(26, nc.getSerieDocRef());
-			pstmt1.setInt(27, nc.getNroDocRef());
-			
-			
+			String s = pstmt1.toString();
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
 			
