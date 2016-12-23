@@ -369,6 +369,36 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 					return;
 				}
 				
+				try {
+					if(val.existeEgreso(permisoAux, Integer.valueOf(nroDocum.getValue()))){
+						Mensajes.mostrarMensajeError("Existe un egreso asociado al gasto");
+						return;
+					}
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					Mensajes.mostrarMensajeError(e.getMessage());
+				}
+				
+				try {
+					if(val.existeFacturaGasto(permisoAux, Integer.valueOf(nroDocum.getValue()))){
+						Mensajes.mostrarMensajeError("Existe una factura asociada al gasto");
+						return;
+					}
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					Mensajes.mostrarMensajeError(e.getMessage());
+				}
+				
+				try {
+					if(val.existeGastoIngresoCobro(permisoAux, Integer.valueOf(nroDocum.getValue()))){
+						Mensajes.mostrarMensajeError("Existe un ingreso de cobro asociada al gasto");
+						return;
+					}
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					Mensajes.mostrarMensajeError(e.getMessage());
+				}
+				
 				this.iniFormEditar();
 			}
 			catch(Exception e)	{

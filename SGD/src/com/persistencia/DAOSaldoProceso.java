@@ -64,6 +64,37 @@ public class DAOSaldoProceso implements IDAOSaldosProc {
 		}
 	}
 	
+	public boolean existeSaldoAsociadoProceso(Connection con, Integer codProceso, String codEmp) throws ExisteSaldoException{
+		
+		boolean existe = false;
+		
+		try{
+			
+			ConsultasDD consultas = new ConsultasDD ();
+			String query = consultas.existeSaldoAsociadoProceso();
+			//DocumDetalle detalle = (DocumDetalle) docum;
+			
+			
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			
+			pstmt1.setInt(1, codProceso); /*Es el codigo del proceso*/
+			pstmt1.setString(2, codEmp);
+			
+			ResultSet rs = pstmt1.executeQuery();
+			
+			if (rs.next ()) 
+				existe = true;
+						
+			rs.close ();
+			pstmt1.close ();
+			
+			return existe;
+			
+		}catch(SQLException e){
+			
+			throw new ExisteSaldoException();
+		}
+	}
 
 	@Override
 	public void insertarSaldo(DatosDocum documento, Connection con, String codProceso)

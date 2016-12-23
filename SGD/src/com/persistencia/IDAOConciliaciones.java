@@ -33,4 +33,5 @@ public interface IDAOConciliaciones {
 	public double getSaldoConciliadoCuentaBanco(Connection con, String codBco, String codCta, String codEmp) throws ObteniendoConciliacionException, ConexionException, ObteniendoCuentasBcoException, ObteniendoBancosException;
 	public boolean depositoConciliado(String serie, Integer nro, String codEmp, String codBco, String codCtaBco, Connection con) throws MovimientoConciliadoException;
 	public boolean egresoConciliado(String codEmp, Integer nro, Connection con) throws MovimientoConciliadoException;
+	public boolean ingresoConciliado(String codEmp, Integer nro, Connection con) throws MovimientoConciliadoException;
 }

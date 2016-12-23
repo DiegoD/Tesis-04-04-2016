@@ -137,6 +137,7 @@ import com.valueObject.Deposito.DepositoDetalleVO;
 import com.valueObject.Deposito.DepositoVO;
 
 import com.valueObject.Gasto.GastoVO;
+import com.valueObject.IngresoCobro.IngresoCobroDetalleVO;
 import com.valueObject.IngresoCobro.IngresoCobroVO;
 import com.valueObject.Numeradores.NumeradoresVO;
 import com.valueObject.Periodo.PeriodoVO;
@@ -5235,6 +5236,35 @@ public class FachadaDD {
 			   return existe;
 		}
 		
+		public boolean ingresoConciliado(String codEmp, String nroEgreso) throws ConexionException, NumberFormatException, MovimientoConciliadoException{
+			   
+			   Boolean existe = false;
+			   Connection con = null;
+			   try {
+				   
+				   con = this.pool.obtenerConeccion();
+				   con.setAutoCommit(false);
+				   existe = this.conciliaciones.ingresoConciliado(codEmp, Integer.parseInt(nroEgreso), con);
+			   } catch(ConexionException | SQLException e)
+			   {
+				   try {
+					   con.rollback();
+
+				   } 
+				   catch (SQLException e1) {
+
+					   throw new ConexionException();
+				   }
+				   
+			   }
+			   finally
+			   {
+				   pool.liberarConeccion(con);
+			   }
+			  
+			   return existe;
+		}
+		
 		public boolean existeNroTransferencia(String nro, String codBco, String codCta,  String codEmp) throws ConexionException, NumberFormatException, ExisteNroTransferencia{
 			   
 			   Boolean existe = false;
@@ -5264,6 +5294,96 @@ public class FachadaDD {
 			  
 			   return existe;
 		   }
+		
+			public boolean existeGastoAsociado(IngresoCobroDetalleVO detalle,  String codEmp) throws ConexionException, NumberFormatException, ExisteGastoException{
+			   
+			   Boolean existe = false;
+			   Connection con = null;
+			   try {
+				   
+				   con = this.pool.obtenerConeccion();
+				   con.setAutoCommit(false);
+				   existe = this.gastos.existeGastoIngreso(detalle.getSerieDocum(), Integer.parseInt(detalle.getNroDocum()), codEmp, con);
+				
+			   } catch(ConexionException | SQLException e)
+			   {
+				   try {
+					   con.rollback();
+
+				   } 
+				   catch (SQLException e1) {
+
+					   throw new ConexionException();
+				   }
+				   
+			   }
+			   finally
+			   {
+				   pool.liberarConeccion(con);
+			   }
+			  
+			   return existe;
+		   }
+			
+			public boolean existeGastoAsociadoProceso(Integer nroProceso,  String codEmp) throws ConexionException, NumberFormatException, ExisteGastoException{
+				   
+				   Boolean existe = false;
+				   Connection con = null;
+				   try {
+					   
+					   con = this.pool.obtenerConeccion();
+					   con.setAutoCommit(false);
+					   existe = this.gastos.existeGastoAsociadoProceso(nroProceso, codEmp, con);
+					
+				   } catch(ConexionException | SQLException e)
+				   {
+					   try {
+						   con.rollback();
+
+					   } 
+					   catch (SQLException e1) {
+
+						   throw new ConexionException();
+					   }
+					   
+				   }
+				   finally
+				   {
+					   pool.liberarConeccion(con);
+				   }
+				  
+				   return existe;
+			   }
+			
+			public boolean existeSaldoAsociadoProceso(Integer nroProceso,  String codEmp) throws ConexionException, NumberFormatException, ExisteSaldoException{
+				   
+				   Boolean existe = false;
+				   Connection con = null;
+				   try {
+					   
+					   con = this.pool.obtenerConeccion();
+					   con.setAutoCommit(false);
+					   existe = this.saldosProceso.existeSaldoAsociadoProceso(con, nroProceso, codEmp);
+					
+				   } catch(ConexionException | SQLException e)
+				   {
+					   try {
+						   con.rollback();
+
+					   } 
+					   catch (SQLException e1) {
+
+						   throw new ConexionException();
+					   }
+					   
+				   }
+				   finally
+				   {
+					   pool.liberarConeccion(con);
+				   }
+				  
+				   return existe;
+			 }
 	///////////////////////////////////////////////FIN VALIDACIONES////////////////////////////////////////////////////////////
 	
 }

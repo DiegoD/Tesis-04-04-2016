@@ -1615,6 +1615,26 @@ public String getGastosAnuladosxProceso(){
 		return sb.toString();
 	}
 	
+	public String existeGastoIngreso(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT nro_trans ");
+		sb.append("FROM c_gastos WHERE serie_docum = ? AND nro_docum = ? AND cod_emp = ? and cod_docum = 'Gasto' ");
+		
+		return sb.toString();
+	}
+	
+	public String existeGastoAsociadoProceso(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT nro_trans ");
+		sb.append("FROM c_gastos WHERE cod_proceso = ? AND cod_emp = ? ");
+		
+		return sb.toString();
+	}	
+	
 	
 	public String eliminarGasto(){
 	
@@ -1776,6 +1796,17 @@ public String getGastosAnuladosxProceso(){
 		sb.append("SELECT cod_proceso ");
 		sb.append("FROM sa_proceso WHERE cod_proceso = ? "
 		+ "AND cod_emp = ? AND cod_tit = ? AND cod_moneda = ?");
+		
+		return sb.toString();
+	}
+	
+	public String existeSaldoAsociadoProceso(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_proceso ");
+		sb.append("FROM sa_proceso WHERE cod_proceso = ? "
+		+ "AND cod_emp = ? ");
 		
 		return sb.toString();
 	}
@@ -2417,12 +2448,36 @@ public String eliminarSaldoCuenta(){
 		return sb.toString();
 	}
 	
+	public String depositoConciliado(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT d_conciliacion.cod_docum, c_conciliacion.nro_trans ");
+		sb.append("FROM d_conciliacion, c_conciliacion WHERE d_conciliacion.serie_docum = ? "
+				+ "AND d_conciliacion.nro_docum = ? AND d_conciliacion.cod_emp = ? AND c_conciliacion.cod_bco = ? "
+				+ "AND c_conciliacion.cod_ctabco = ? AND d_conciliacion.nro_trans = c_conciliacion.nro_trans "
+				+ "and d_conciliacion.cod_emp = c_conciliacion.cod_emp and d_conciliacion.cod_docum = 'Deposito'");
+		
+		return sb.toString();
+	}
+	
 	public String egresoConciliado(){
 		
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("SELECT d_conciliacion.nro_trans ");
 		sb.append("FROM d_conciliacion WHERE (d_conciliacion.cod_docum = 'egrcobro' or d_conciliacion.cod_docum = 'otroegr') "
+				+ "AND d_conciliacion.nro_docum = ? AND d_conciliacion.cod_emp = ? ");
+		
+		return sb.toString();
+	}
+	
+	public String ingresoConciliado(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT d_conciliacion.nro_trans ");
+		sb.append("FROM d_conciliacion WHERE (d_conciliacion.cod_docum = 'ingcobro' or d_conciliacion.cod_docum = 'otrcobro') "
 				+ "AND d_conciliacion.nro_docum = ? AND d_conciliacion.cod_emp = ? ");
 		
 		return sb.toString();

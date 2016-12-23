@@ -41,7 +41,7 @@ public class ImpuestosPanelExtended extends ImpuestosPanel{
 		
 		controlador = new ImpuestoControlador();
 		this.lstImpuestos = new ArrayList<ImpuestoVO>();
-		
+		this.lblTitulo.setValue("Impuestos");
 		String usuario = (String)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("usuario");
 		this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
 		

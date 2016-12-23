@@ -15,6 +15,7 @@ import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Bancos.ObteniendoBancosException;
 import com.excepciones.Bancos.ObteniendoCuentasBcoException;
+import com.excepciones.Conciliaciones.MovimientoConciliadoException;
 import com.excepciones.Cotizaciones.ObteniendoCotizacionesException;
 import com.excepciones.Depositos.ExisteDepositoException;
 import com.excepciones.IngresoCobros.ExisteIngresoCobroException;
@@ -947,10 +948,53 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 							VariablesPermisos.FORMULARIO_GASTOS,
 							VariablesPermisos.OPERACION_NUEVO_EDITAR);
 			
+			//Controla que el período esté abierto
 			if(!val.validaPeriodo(fecValor.getValue(), permisoAux)){
 				String fecha = new SimpleDateFormat("dd/MM/yyyy").format(fecValor.getValue());
 				Mensajes.mostrarMensajeError("El período está cerrado para la fecha " + fecha);
 				return;
+			}
+			
+			
+			
+			//Controla que el cheque no esté depositado
+			if(this.comboMPagos.getValue().equals("Cheque")){
+				
+				//Datos del banco y cuenta
+				CtaBcoVO auxctaBco = new CtaBcoVO();
+				if(this.comboCuentas.getValue() != null){
+					auxctaBco = (CtaBcoVO) this.comboCuentas.getValue();
+				}
+				
+				chequeVO.setCodBanco(auxctaBco.getCodBco());
+			    chequeVO.setCodCuenta(auxctaBco.getCodigo());
+			    chequeVO.setSerieDocum(serieDocRef.getValue().trim());
+			    chequeVO.setNroDocum(Integer.parseInt(nroDocRef.getValue()));
+			    
+				try {
+					if(val.existeChequeDepositado(permisoAux, chequeVO)){
+						Mensajes.mostrarMensajeError("El cheque está depositado");
+						UI.getCurrent().removeWindow(sub);
+						return;
+					}
+				} catch (ExisteDepositoException e) {
+					// TODO Auto-generated catch block
+					Mensajes.mostrarMensajeError(e.toString());
+				}
+				
+			}
+			
+			
+			//Controla que el movimiento no esté conciliado
+			try {
+				if(val.ingresoConciliado(permisoAux, nroDocum.getValue() )){
+					UI.getCurrent().removeWindow(sub);
+					Mensajes.mostrarMensajeError("El ingreso está conciliado");
+					return;
+				}
+			} catch (NumberFormatException | MovimientoConciliadoException e) {
+				// TODO Auto-generated catch block
+				Mensajes.mostrarMensajeError(e.toString());
 			}
 			
 			
@@ -2972,6 +3016,16 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			if(this.nroDocum.getValue() != null)
 				ingCobroVO.setNroDocum(this.nroDocum.getValue());
 			
+			try {
+				if(val.ingresoConciliado(permisoAux, ingCobroVO.getNroDocum())){
+					UI.getCurrent().removeWindow(sub);
+					Mensajes.mostrarMensajeError("El ingreso está conciliado");
+					return;
+				}
+			} catch (NumberFormatException | MovimientoConciliadoException e) {
+				// TODO Auto-generated catch block
+				Mensajes.mostrarMensajeError(e.toString());
+			}
 			
 			/*Si es banco tomamos estos cmapos de lo contrario caja*/
 			if(this.comboTipo.getValue().toString().equals("Banco")){

@@ -892,6 +892,17 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 				return;
 			}
 			
+			try {
+				if(val.egresoConciliado(permisoAux, this.nroDocum.getValue())){
+					UI.getCurrent().removeWindow(sub);
+					Mensajes.mostrarMensajeError("El egreso está conciliado");
+					return;
+				}
+			} catch (NumberFormatException | MovimientoConciliadoException e) {
+				// TODO Auto-generated catch block
+				Mensajes.mostrarMensajeError(e.toString());
+			}
+			
 			/*Inicializamos el Form en modo Edicion*/
 			this.iniFormEditar();
 			

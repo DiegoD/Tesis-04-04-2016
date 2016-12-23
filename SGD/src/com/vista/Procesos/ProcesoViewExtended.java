@@ -41,6 +41,7 @@ import com.vista.MySub;
 import com.vista.PermisosUsuario;
 import com.vista.Variables;
 import com.vista.VariablesPermisos;
+import com.vista.Validaciones.Validaciones;
 
 public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 	
@@ -56,6 +57,7 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 	Double cotizacionVenta = null, importeMoneda = null;
 	MonedaVO monedaNacional = new MonedaVO();
 	ArrayList<MonedaVO> lstMonedas = new ArrayList<MonedaVO>();
+	Validaciones val = new Validaciones();
 	
 	public ProcesoViewExtended(String opera, ProcesosPanelExtended main){
 		
@@ -252,6 +254,27 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 							this.permisos.getUsuario(),
 							VariablesPermisos.FORMULARIO_PROCESOS,
 							VariablesPermisos.OPERACION_BORRAR);
+			
+			try {
+				if(val.existeGastoAsociadoProceso(permisoAux, (Integer)codigo.getConvertedValue())){
+					Mensajes.mostrarMensajeError("Existe un gasto asociado al proceso");
+					return;
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				Mensajes.mostrarMensajeError(e.getMessage());
+			}
+			
+			try {
+				if(val.existeSaldoAsociadoProceso(permisoAux, (Integer)codigo.getConvertedValue())){
+					Mensajes.mostrarMensajeError("Existe saldo asociado al proceso");
+					return;
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				Mensajes.mostrarMensajeError(e.getMessage());
+			}
+			
 			
 			try {
 				controlador.eliminarProceso((Integer)codigo.getConvertedValue(), permisoAux);

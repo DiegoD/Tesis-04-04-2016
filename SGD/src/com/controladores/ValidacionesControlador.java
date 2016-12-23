@@ -11,6 +11,7 @@ import com.excepciones.Conciliaciones.MovimientoConciliadoException;
 import com.excepciones.Depositos.ExisteDepositoException;
 import com.excepciones.Egresos.ExisteEgresoCobroException;
 import com.excepciones.Factura.ExisteFacturaException;
+import com.excepciones.Gastos.ExisteGastoException;
 import com.excepciones.IngresoCobros.ExisteIngresoCobroException;
 import com.excepciones.SaldoCuentas.ExisteNroTransferencia;
 import com.excepciones.Saldos.ExisteSaldoException;
@@ -19,6 +20,7 @@ import com.logica.FachadaDD;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.Cheque.ChequeVO;
 import com.valueObject.Deposito.DepositoVO;
+import com.valueObject.IngresoCobro.IngresoCobroDetalleVO;
 
 
 public class ValidacionesControlador {
@@ -97,5 +99,40 @@ public class ValidacionesControlador {
 		else
 			throw new NoTienePermisosException();
 	}
+	
+	public boolean ingresoConciliado(UsuarioPermisosVO permisos, String nroEgreso) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, NumberFormatException, MovimientoConciliadoException{
+		
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			return FachadaDD.getInstance().ingresoConciliado(permisos.getCodEmp(), nroEgreso);
+		else
+			throw new NoTienePermisosException();
+	}
+	
+	public boolean existeGastoAsociado(IngresoCobroDetalleVO detalle, UsuarioPermisosVO permisos) throws ObteniendoPermisosException, ConexionException, InicializandoException, NoTienePermisosException, NumberFormatException, ExisteGastoException{
+		
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			return FachadaDD.getInstance().existeGastoAsociado(detalle, permisos.getCodEmp());
+		else
+			throw new NoTienePermisosException();
+    }
+	
+	public boolean existeGastoAsociadoProceso(Integer nroProceso, UsuarioPermisosVO permisos) throws ObteniendoPermisosException, ConexionException, InicializandoException, NoTienePermisosException, NumberFormatException, ExisteGastoException{
+		
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			return FachadaDD.getInstance().existeGastoAsociadoProceso(nroProceso, permisos.getCodEmp());
+		else
+			throw new NoTienePermisosException();
+    }
+	
+	public boolean existeSaldoAsociadoProceso(Integer nroProceso, UsuarioPermisosVO permisos) throws ObteniendoPermisosException, ConexionException, InicializandoException, NoTienePermisosException, NumberFormatException, ExisteSaldoException{
+		
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			return FachadaDD.getInstance().existeSaldoAsociadoProceso(nroProceso, permisos.getCodEmp());
+		else
+			throw new NoTienePermisosException();
+    }
 }
 

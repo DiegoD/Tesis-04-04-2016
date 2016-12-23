@@ -44,7 +44,7 @@ public class MonedasPanelExtended extends MonedasPanel{
 		
 		controlador = new MonedaControlador();
 		this.lstMonedas = new ArrayList<MonedaVO>();
-		
+		this.lblTitulo.setValue("Monedas");
 		String usuario = (String)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("usuario");
 		this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
 		

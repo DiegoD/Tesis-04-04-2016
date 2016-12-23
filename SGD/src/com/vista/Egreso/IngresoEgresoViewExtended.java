@@ -20,6 +20,7 @@ import com.excepciones.Bancos.ObteniendoCuentasBcoException;
 import com.excepciones.Conciliaciones.MovimientoConciliadoException;
 import com.excepciones.Cotizaciones.ObteniendoCotizacionesException;
 import com.excepciones.Egresos.*;
+import com.excepciones.Gastos.ExisteGastoException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
 import com.excepciones.Periodo.ExistePeriodoException;
 import com.excepciones.Periodo.NoExistePeriodoException;
@@ -964,6 +965,34 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 				String fecha = new SimpleDateFormat("dd/MM/yyyy").format(fecValor.getValue());
 				Mensajes.mostrarMensajeError("El período está cerrado para la fecha " + fecha);
 				return;
+			}
+			
+			
+			try {
+				if(val.egresoConciliado(permisoAux, this.nroDocum.getValue())){
+					UI.getCurrent().removeWindow(sub);
+					Mensajes.mostrarMensajeError("El egreso está conciliado");
+					return;
+				}
+			} catch (NumberFormatException | MovimientoConciliadoException e) {
+				// TODO Auto-generated catch block
+				Mensajes.mostrarMensajeError(e.toString());
+			}
+			
+			for (IngresoCobroDetalleVO detVO : this.lstDetalleVO) {
+				
+				try {
+					
+					val.existeGastoAsociado(permisoAux, detVO);
+					UI.getCurrent().removeWindow(sub);
+					Mensajes.mostrarMensajeError("El gasto está asociado a un cobro");
+					return;
+					
+				} catch (NumberFormatException | ExisteGastoException e) {
+					// TODO Auto-generated catch block
+					Mensajes.mostrarMensajeError(e.toString());
+				}
+				
 			}
 			
 			/*Inicializamos el Form en modo Edicion*/
@@ -2978,17 +3007,13 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 				
 				ingCobroVO.setOperacion(operacion);
 				
-				/*Ver los totales y tc*/
-				//ingCobroVO.setImpTotMn(impTotMn);
-				//ingCobroVO.setImpTotMo(impTotMn);
-				//ingCobroVO.setTcMov(tcMov);
-				
 				/*Si es nuevo aun no tenemos el nro del cobro*/
 				if(this.nroDocum.getValue() != null)
 					ingCobroVO.setNroDocum(this.nroDocum.getValue());
 				
 				try {
 					if(val.egresoConciliado(permisoAux, ingCobroVO.getNroDocum())){
+						UI.getCurrent().removeWindow(sub);
 						Mensajes.mostrarMensajeError("El egreso está conciliado");
 						return;
 					}
@@ -3077,6 +3102,22 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 						if(!this.existeFormularioenLista(Integer.parseInt(f.getNroDocum())))
 							this.lstDetalleVO.add(f);
 					}
+				}
+				
+				for (IngresoCobroDetalleVO detVO : this.lstDetalleVO) {
+					
+					try {
+						
+						val.existeGastoAsociado(permisoAux, detVO);
+						UI.getCurrent().removeWindow(sub);
+						Mensajes.mostrarMensajeError("El gasto está asociado a un cobro");
+						return;
+						
+					} catch (NumberFormatException | ExisteGastoException e) {
+						// TODO Auto-generated catch block
+						Mensajes.mostrarMensajeError(e.toString());
+					}
+					
 				}
 					
 				ingCobroVO.setCodCuenta("egrcobro");

@@ -15,6 +15,7 @@ import com.excepciones.Conciliaciones.MovimientoConciliadoException;
 import com.excepciones.Depositos.ExisteDepositoException;
 import com.excepciones.Egresos.ExisteEgresoCobroException;
 import com.excepciones.Factura.ExisteFacturaException;
+import com.excepciones.Gastos.ExisteGastoException;
 import com.excepciones.IngresoCobros.ExisteIngresoCobroException;
 import com.excepciones.Periodo.ExistePeriodoException;
 import com.excepciones.Periodo.NoExistePeriodoException;
@@ -23,6 +24,7 @@ import com.excepciones.Saldos.ExisteSaldoException;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.Cheque.ChequeVO;
 import com.valueObject.Deposito.DepositoVO;
+import com.valueObject.IngresoCobro.IngresoCobroDetalleVO;
 
 public class Validaciones {
 	
@@ -137,5 +139,29 @@ public class Validaciones {
 		
 		validaciones = new ValidacionesControlador();
 		return validaciones.egresoConciliado(permisos, nroEgreso);
+	}
+	
+	public boolean ingresoConciliado(UsuarioPermisosVO permisos, String nroEgreso) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, NumberFormatException, MovimientoConciliadoException {
+		
+		validaciones = new ValidacionesControlador();
+		return validaciones.ingresoConciliado(permisos, nroEgreso);
+	}
+	
+	public boolean existeGastoAsociado(UsuarioPermisosVO permisos, IngresoCobroDetalleVO detalle) throws ObteniendoPermisosException, ConexionException, InicializandoException, NoTienePermisosException, NumberFormatException, ExisteGastoException{
+		
+		validaciones = new ValidacionesControlador();
+		return validaciones.existeGastoAsociado(detalle, permisos);
+	}
+	
+	public boolean existeGastoAsociadoProceso(UsuarioPermisosVO permisos, Integer nroProceso) throws ObteniendoPermisosException, ConexionException, InicializandoException, NoTienePermisosException, NumberFormatException, ExisteGastoException{
+		
+		validaciones = new ValidacionesControlador();
+		return validaciones.existeGastoAsociadoProceso(nroProceso, permisos);
+	}
+	
+	public boolean existeSaldoAsociadoProceso(UsuarioPermisosVO permisos, Integer nroProceso) throws ObteniendoPermisosException, ConexionException, InicializandoException, NoTienePermisosException, NumberFormatException, ExisteGastoException, ExisteSaldoException{
+		
+		validaciones = new ValidacionesControlador();
+		return validaciones.existeSaldoAsociadoProceso(nroProceso, permisos);
 	}
 }

@@ -574,7 +574,7 @@ public class DAOConciliaciones implements IDAOConciliaciones{
 		try{
 			
 			ConsultasDD consultas = new ConsultasDD ();
-			String query = consultas.chequeConciliado();
+			String query = consultas.depositoConciliado();
 			
 			
 			PreparedStatement pstmt1 = con.prepareStatement(query);
@@ -609,6 +609,38 @@ public class DAOConciliaciones implements IDAOConciliaciones{
 			
 			ConsultasDD consultas = new ConsultasDD ();
 			String query = consultas.egresoConciliado();
+			
+			
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			
+			pstmt1.setInt(1, nro);
+			pstmt1.setString(2, codEmp);
+			
+			
+			ResultSet rs = pstmt1.executeQuery();
+			
+			if (rs.next ()) 
+				existe = true;
+						
+			rs.close ();
+			pstmt1.close ();
+			
+			return existe;
+			
+		}catch(SQLException e){
+			
+			throw new MovimientoConciliadoException();
+		}
+	}
+	
+	public boolean ingresoConciliado(String codEmp, Integer nro, Connection con) throws MovimientoConciliadoException{
+		
+		boolean existe = false;
+		
+		try{
+			
+			ConsultasDD consultas = new ConsultasDD ();
+			String query = consultas.ingresoConciliado();
 			
 			
 			PreparedStatement pstmt1 = con.prepareStatement(query);

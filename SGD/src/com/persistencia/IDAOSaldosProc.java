@@ -22,4 +22,5 @@ public interface IDAOSaldosProc {
 	public void modificarSaldo(DatosDocum documento, int signo, double tc , Connection con, String codProceso)
 			throws ModificandoSaldoException, ConexionException, EliminandoSaldoException, IngresandoSaldoException, ExisteSaldoException;
 	public ArrayList<SaldoProceso> getSaldosSinAdjuxProceso(String codEmp, int codProceso, Connection con) throws ObteniendoSaldosException, ConexionException;
+	public boolean existeSaldoAsociadoProceso(Connection con, Integer codProceso, String codEmp) throws ExisteSaldoException;
 }

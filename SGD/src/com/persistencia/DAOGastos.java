@@ -229,6 +229,71 @@ public class DAOGastos implements IDAOGastos{
 			throw new ExisteGastoException();
 		}
 	}
+	
+	public boolean existeGastoIngreso(String serieDocum, Integer nroDocum, String codEmp, Connection con)
+			throws ExisteGastoException, ConexionException {
+		// TODO Auto-generated method stub
+		boolean existe = false;
+		
+		try{
+			
+			
+			ConsultasDD consultas = new ConsultasDD();
+			String query = consultas.existeGastoIngreso();
+			
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			
+			pstmt1.setString(1, serieDocum);
+			pstmt1.setInt(2, nroDocum);
+			pstmt1.setString(3, codEmp);
+			
+			ResultSet rs = pstmt1.executeQuery();
+			
+			if (rs.next ()) 
+				existe = true;
+						
+			rs.close ();
+			pstmt1.close ();
+			
+			return existe;
+			
+		}catch(SQLException e){
+			
+			throw new ExisteGastoException();
+		}
+	}
+	
+	public boolean existeGastoAsociadoProceso(Integer nroProceso, String codEmp, Connection con)
+			throws ExisteGastoException, ConexionException {
+		// TODO Auto-generated method stub
+		boolean existe = false;
+		
+		try{
+			
+			
+			ConsultasDD consultas = new ConsultasDD();
+			String query = consultas.existeGastoAsociadoProceso();
+			
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			
+			pstmt1.setInt(1, nroProceso);
+			pstmt1.setString(2, codEmp);
+			
+			ResultSet rs = pstmt1.executeQuery();
+			
+			if (rs.next ()) 
+				existe = true;
+						
+			rs.close ();
+			pstmt1.close ();
+			
+			return existe;
+			
+		}catch(SQLException e){
+			
+			throw new ExisteGastoException();
+		}
+	}
 
 	@Override
 	public void insertarGasto(DocumDetalle gasto, String codEmp, Connection con)

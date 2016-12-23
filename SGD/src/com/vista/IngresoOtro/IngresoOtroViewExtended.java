@@ -15,6 +15,7 @@ import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Bancos.ObteniendoBancosException;
 import com.excepciones.Bancos.ObteniendoCuentasBcoException;
+import com.excepciones.Conciliaciones.MovimientoConciliadoException;
 import com.excepciones.Cotizaciones.ObteniendoCotizacionesException;
 import com.excepciones.IngresoCobros.ExisteIngresoCobroException;
 import com.excepciones.IngresoCobros.InsertandoIngresoCobroException;
@@ -902,6 +903,17 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 			String fecha = new SimpleDateFormat("dd/MM/yyyy").format(fecValor.getValue());
 			Mensajes.mostrarMensajeError("El período está cerrado para la fecha " + fecha);
 			return;
+		}
+		
+		try {
+			if(val.ingresoConciliado(permisoAux, nroDocum.getValue() )){
+				UI.getCurrent().removeWindow(sub);
+				Mensajes.mostrarMensajeError("El ingreso está conciliado");
+				return;
+			}
+		} catch (NumberFormatException | MovimientoConciliadoException e) {
+			// TODO Auto-generated catch block
+			Mensajes.mostrarMensajeError(e.toString());
 		}
 		
 		/*Inicializamos el Form en modo Edicion*/
@@ -1899,6 +1911,17 @@ private void mostrarDatosDeBanco(){
 				/*Si es nuevo aun no tenemos el nro del cobro*/
 				if(this.nroDocum.getValue() != null)
 					ingCobroVO.setNroDocum(this.nroDocum.getValue());
+				
+				try {
+					if(val.ingresoConciliado(permisoAux, ingCobroVO.getNroDocum())){
+						UI.getCurrent().removeWindow(sub);
+						Mensajes.mostrarMensajeError("El ingreso está conciliado");
+						return;
+					}
+				} catch (NumberFormatException | MovimientoConciliadoException e) {
+					// TODO Auto-generated catch block
+					Mensajes.mostrarMensajeError(e.toString());
+				}
 				
 				
 				/*Si es banco tomamos estos cmapos de lo contrario caja*/
