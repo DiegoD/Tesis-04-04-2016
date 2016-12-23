@@ -707,6 +707,22 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 						ingCobroVO.setCodDocRef("tranemi");
 						ingCobroVO.setNroDocRef(nroDocRef.getValue());
 						ingCobroVO.setSerieDocRef("0");
+						
+						if(operacion.equals(Variables.OPERACION_NUEVO) || 
+								(!ingresoCopia.getNroDocRef().equals(ingCobroVO.getNroDocRef()))){
+							
+							try {
+								
+								if(val.existeTransferencia(permisoAux, ingCobroVO.getNroDocRef(), ingCobroVO.getCodBanco(), ingCobroVO.getCodCtaBco())){
+									Mensajes.mostrarMensajeError("Existe el número de transferencia para el banco/cuenta");
+									return;
+								}
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								Mensajes.mostrarMensajeError(e.toString());
+							}
+							
+						}
 					}
 					else if(ingCobroVO.getmPago().equals("Cheque"))
 					{
@@ -721,16 +737,37 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 					    chequeVO.setSerieDocum(ingCobroVO.getSerieDocRef());
 					    chequeVO.setNroDocum(Integer.parseInt(ingCobroVO.getNroDocRef()));
 					    
-					    try {
-							if(val.existeCheque(permisoAux, chequeVO)){
-								Mensajes.mostrarMensajeError("El cheque ya existe para el banco/cuenta");
-								return;
+					    if(operacion.equals(Variables.OPERACION_NUEVO)){  
+								
+					    	
+					    	try {
+								if(val.existeCheque(permisoAux, chequeVO)){
+									Mensajes.mostrarMensajeError("El cheque ya existe para el banco/cuenta");
+									return;
+								}
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								Mensajes.mostrarMensajeError(e.toString());
+								
 							}
-						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							Mensajes.mostrarMensajeError(e.toString());
-							
-						}
+					    }
+					    if(!operacion.equals(Variables.OPERACION_NUEVO)){
+					    	
+					    	if((!ingresoCopia.getNroDocRef().equals(ingCobroVO.getNroDocRef())) || 
+							 (!ingresoCopia.getSerieDocRef().equals(ingCobroVO.getSerieDocRef()))){
+					    		
+					    		try {
+									if(val.existeCheque(permisoAux, chequeVO)){
+										Mensajes.mostrarMensajeError("El cheque ya existe para el banco/cuenta");
+										return;
+									}
+								} catch (Exception e) {
+									// TODO Auto-generated catch block
+									Mensajes.mostrarMensajeError(e.toString());
+									
+								}
+					    	}
+					    }
 					    
 					}else
 					{
