@@ -16,6 +16,18 @@ public class FacturaSaldoAux {
 		this.nroDocum = nroDocum;
 		this.saldo = saldo;
 	}
+	
+	public FacturaSaldoAux getCopia(){
+		
+		FacturaSaldoAux aux = new FacturaSaldoAux();
+		
+		aux.codDocum = this.codDocum;
+		aux.serie = this.serie;
+		aux.nroDocum = this.nroDocum;
+		aux.saldo = this.saldo;
+		
+		return aux;
+	}
 
 	public String getCodDocum() {
 		return codDocum;

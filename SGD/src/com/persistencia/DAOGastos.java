@@ -8,6 +8,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
+import com.excepciones.Factura.ObteniendoSaldoException;
 import com.excepciones.Gastos.EliminandoGastoException;
 import com.excepciones.Gastos.ExisteGastoException;
 import com.excepciones.Gastos.IngresandoGastoException;
@@ -1073,6 +1074,44 @@ public class DAOGastos implements IDAOGastos{
 	    	return lstGastos;
 		}
 			
+		/**
+		 * Dado el nro, serie , codigo y empresa, retorna su saldo
+		 */
+		public double getSaldoGasto(int nroDocum, String codEmp, Connection con) throws ObteniendoSaldoException, ConexionException{
+			
+			double saldo = 0;
+			
+			try{
+				
+				
+				Consultas consultas = new Consultas();
+				String query = consultas.getSaldoGasto();
+				
+				PreparedStatement pstmt1 = con.prepareStatement(query);
+				
+				pstmt1.setInt(1, nroDocum);
+				pstmt1.setString(2, codEmp);
+				
+				ResultSet rs = pstmt1.executeQuery();
+				
+				while(rs.next ()) {
+					
+					saldo =	rs.getDouble("imp_tot_mo");
+					
+				}
+				
+				
+							
+				rs.close ();
+				pstmt1.close ();
+				
+				return saldo;
+				
+			}catch(SQLException e){
+				
+				throw new ObteniendoSaldoException();
+			}
+		}
 	
 		
 

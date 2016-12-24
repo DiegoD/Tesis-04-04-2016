@@ -61,7 +61,6 @@ public class ReciboViews extends FormLayout {
 	protected FormLayout formLay2;
 	protected Grid lstGastos;
 	protected Button btnAgregar;
-	protected Button btnEditarItem;
 	protected Button btnQuitar;
 	protected TextField total;
 

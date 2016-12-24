@@ -16,7 +16,10 @@ import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Bancos.ObteniendoBancosException;
 import com.excepciones.Bancos.ObteniendoCuentasBcoException;
 import com.excepciones.Cotizaciones.ObteniendoCotizacionesException;
+import com.excepciones.Factura.ExisteFacturaException;
+import com.excepciones.Factura.NoExisteFacturaException;
 import com.excepciones.Factura.ObteniendoFacturasException;
+import com.excepciones.Factura.ObteniendoSaldoException;
 import com.excepciones.Recibo.*;
 import com.excepciones.Monedas.ObteniendoMonedaException;
 import com.excepciones.Periodo.ExistePeriodoException;
@@ -86,6 +89,9 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 	private ArrayList<FacturaSaldoAux> saldoOriginalFact; /*Variable auxliar para poder
 	 															 controlar que el saldo de la factura quede
 	 															 en negativo*/
+	private ArrayList<FacturaSaldoAux> saldoOriginalFactControlar; /*Variable auxliar para poder
+																	 controlar que el saldo de la factura quede
+																	 en negativo*/
 	
 	ReciboVO ingresoCopia; /*Variable utilizada para la modificacion del recibo,
 	 							 para poder detectar las lineas eliminadas del cobro */
@@ -115,6 +121,7 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 	this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
 	
 	saldoOriginalFact = new ArrayList<FacturaSaldoAux>();
+	saldoOriginalFactControlar = new ArrayList<FacturaSaldoAux>();
 	
 	this.operacion = opera;
 	this.mainView = main;
@@ -1124,83 +1131,6 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 			}
 		});
 			
-		this.btnEditarItem.addClickListener(click -> {
-			
-			boolean esta = false;	
-
-			try {
-				
-				/*Verificamos que haya un formulario seleccionado para
-				 * eliminar*/
-				if(formSelecccionado != null){
-					
-					if(formSelecccionado.getCodDocum().equals("Proc")){
-						
-						ProcesoVO proceso = new ProcesoVO();
-						ProcesoVO datos = new ProcesoVO();
-						
-						UsuarioPermisosVO permisosAux;
-						permisosAux = 
-								new UsuarioPermisosVO(this.permisos.getCodEmp(),
-										this.permisos.getUsuario(),
-										VariablesPermisos.FORMULARIO_RECIBO,
-										VariablesPermisos.OPERACION_LEER);
-						
-						
-						
-						proceso.setCodCliente(codTitular.getValue());
-						proceso.setNomCliente(nomTitular.getValue());
-						
-						MonedaVO auxMoneda = new MonedaVO();
-			   			auxMoneda = (MonedaVO) comboMoneda.getValue();
-			   			
-			   			
-						proceso.setCodMoneda(auxMoneda.getCodMoneda());
-						proceso.setDescMoneda(auxMoneda.getDescripcion());
-						proceso.setSimboloMoneda(auxMoneda.getSimbolo());
-						proceso.setCodigo(Integer.valueOf(formSelecccionado.getCodProceso()));
-						proceso.setDescripcion(formSelecccionado.getDescProceso());
-						proceso.setCodRubro(formSelecccionado.getCodRubro());
-						proceso.setNomRubro(formSelecccionado.getNomRubro());
-						proceso.setCodCuenta(formSelecccionado.getCodCuenta());
-						proceso.setNomCuenta(formSelecccionado.getNomCuenta());
-						proceso.setImpMo(formSelecccionado.getImpTotMo());
-						proceso.setNroDocum(formSelecccionado.getNroDocum());
-						proceso.setLinea(formSelecccionado.getLinea());
-						proceso.setObservaciones(formSelecccionado.getReferencia());
-						proceso.setCodImpuesto(formSelecccionado.getCodImpuesto());
-						
-						//datos = controlador.getProceso(permisosAux, proceso.getCodigo());
-						
-						//proceso.setCarpeta(datos.getCarpeta());
-						//proceso.setNomDocum(datos.getNomDocum());
-						
-						
-						//BusquedaViewExtended form = new BusquedaViewExtended(this, new ProcesoVO());
-						IngresoCobroProcesoViewExtended form = new IngresoCobroProcesoViewExtended("EDITAR", this, proceso);
-						sub = new MySub("77%", "45%" );
-						sub.setModal(true);
-						sub.setVista(form);
-						sub.center();
-						
-						UI.getCurrent().addWindow(sub);
-						
-					}
-					else if(formSelecccionado.getCodDocum().equals("Gasto")){
-						Mensajes.mostrarMensajeWarning("El importe del gasto se edita en la grilla directamente");
-					}
-				}
-			
-				else /*De lo contrario mostramos mensaje que debe selcionar un gasto*/
-				{
-					Mensajes.mostrarMensajeError("Debe seleccionar un gasto para editar");
-				}
-		
-				}catch(Exception e)
-				{
-					Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
-				}
-		});
 		
 		/*Inicializamos el listener de la grilla de gastos*/
 		lstGastos.addSelectionListener(new SelectionListener() {
@@ -1501,10 +1431,14 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 				container.addBean(detVO);
 				FacturaSaldoAux saldoAux =  new FacturaSaldoAux(detVO.getCodDocum(), detVO.getSerieDocum() ,detVO.getNroDocum(), detVO.getImpTotMo());
 				this.saldoOriginalFact.add(saldoAux);
+				this.saldoOriginalFactControlar.add(saldoAux.getCopia());
 				
 				linea ++;
 			}
 		}
+		
+	
+		
 		this.actualizarGrillaContainer(container);
 		
 		this.btnBuscarCliente.setVisible(false);
@@ -1652,8 +1586,7 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 		this.btnQuitar.setEnabled(true);
 		this.btnQuitar.setVisible(true);
 		
-		this.btnEditarItem.setEnabled(true);
-		this.btnEditarItem.setVisible(true);
+
 		
 	}
 	
@@ -1669,8 +1602,7 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 		this.btnQuitar.setEnabled(false);
 		this.btnQuitar.setVisible(false);
 		
-		this.btnEditarItem.setEnabled(false);
-		this.btnEditarItem.setVisible(false);
+
 	}
 	
 	/**
@@ -1852,10 +1784,13 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 				
 				FacturaSaldoAux saldoAux =  new FacturaSaldoAux(det.getCodDocum(), det.getSerieDocum() , det.getNroDocum(), det.getImpTotMo());
 				this.saldoOriginalFact.add(saldoAux);
+				this.saldoOriginalFactControlar.add(saldoAux.getCopia());
 				
 				linea ++;
 			}
 		}
+		
+	
 
 		//lstFormularios.setContainerDataSource(container);
 		this.actualizarGrillaContainer(container);
@@ -2067,6 +2002,7 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 				esta = true;
 				
 				this.saldoOriginalFact.remove(i);
+				this.saldoOriginalFactControlar.remove(i);
 			}
 			
 			i++;
@@ -2161,6 +2097,8 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 		  lstGastos.getColumn("tcMov").setHidden(true);
 		  lstGastos.getColumn("usuarioMod").setHidden(true);
 		  lstGastos.getColumn("nacional").setHidden(true);
+		  lstGastos.getColumn("estadoGasto").setHidden(true);
+		  lstGastos.getColumn("tipo").setHidden(true);
 		  
 		lstGastos.setColumnOrder("nroDocum", "referencia", "simboloMoneda", "impTotMo", "codProceso");
 		
@@ -2204,12 +2142,12 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 	      		
 	      		
 	      		ReciboDetalleVO aux = obtenerFactEnLista(formSelecccionado.getNroDocum(), formSelecccionado.getSerieDocum(), formSelecccionado.getCodDocum());
-		    	factSaldo = saldoOriginalFact.get(formSelecccionado.getNroDocum());
+		    	factSaldo = obtenerSaldoFactura(aux);
 	  		}
 	      	else if(formSelecccionado != null && (formSelecccionado.getSerieDocum() == "Proc")){
 	      		
 	      		ReciboDetalleVO aux = obtenerFactEnLista(formSelecccionado.getNroDocum(), formSelecccionado.getSerieDocum(), formSelecccionado.getCodDocum());
-		    	factSaldo = saldoOriginalFact.get(formSelecccionado.getNroDocum());
+		    	factSaldo = obtenerSaldoFactura(aux);
 	      	}
       }
 
@@ -2275,6 +2213,72 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 	 });
 		
 	}
+	
+	/***
+	 * Nos retorna el saldo para una factura determinada 
+	 * sirve para control que no pueda ingresar un monto 
+	 * mayor al saldo de la factura, cuando se mdifica en 
+	 * la grilla
+	 */
+	private FacturaSaldoAux obtenerSaldoFactura(ReciboDetalleVO det){ 
+		
+		//private ArrayList<FacturaSaldoAux> saldoOriginalFact
+		boolean salir = false;
+		int i = 0;
+		FacturaSaldoAux aux = new FacturaSaldoAux();
+		FacturaSaldoAux aux2 = new FacturaSaldoAux();
+		
+		while(i < this.saldoOriginalFact.size() && !salir){
+			
+			double saldo;
+			double saldoEnTransaccion;
+			
+			aux = this.saldoOriginalFact.get(i);
+			aux2 = this.saldoOriginalFactControlar.get(i);
+			
+			if(det.getNroDocum().trim().equals(aux.getNroDocum()) 
+					&& aux.getSerie().trim().toUpperCase().equals(det.getSerieDocum().trim().toUpperCase())
+					&& aux.getCodDocum().trim().toUpperCase().equals(det.getCodDocum().trim().toUpperCase()))
+			{
+				
+				/*Si la operacion es editar tenemos que sumar el saldo de la transcaccion*/
+				if(this.operacion.equals("EDITAR"))
+					saldoEnTransaccion = aux2.getSaldo(); /*Obtenemos el importe de la transaccion*/
+				else /*Si es nuevo solamente es el saldo de la factura*/
+					saldoEnTransaccion = 0;
+				
+				UsuarioPermisosVO permisosAux;
+				permisosAux = 
+						new UsuarioPermisosVO(this.permisos.getCodEmp(),
+								this.permisos.getUsuario(),
+								VariablesPermisos.FORMULARIO_RECIBO,
+								VariablesPermisos.OPERACION_LEER);
+				
+				try {
+					
+					/*Obtenemos el saldo de la factura*/
+					saldo = this.controlador.getSaldoFactura(permisosAux, Integer.valueOf(aux.getNroDocum().trim()), aux.getSerie().trim(), aux.getCodDocum().trim());
+					
+					aux.setSaldo(saldo + saldoEnTransaccion);
+					
+				} catch (NumberFormatException | ObteniendoSaldoException | ExisteFacturaException
+						| NoExisteFacturaException | ConexionException | InicializandoException
+						| ObteniendoPermisosException | NoTienePermisosException e) {
+					
+					Mensajes.mostrarMensajeError(e.getMessage());
+				}
+				
+				salir = true;
+			}
+			
+			
+			i++;
+		}
+		
+		return aux;
+		
+	}
+	
 	
 	/**
 	 * Retornanoms true si esta la factura en la lista
@@ -2702,6 +2706,7 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 				container.addBean(det); /*Lo agregamos a la grilla*/
 				FacturaSaldoAux saldoAux =  new FacturaSaldoAux(det.getCodDocum(), det.getSerieDocum(), det.getNroDocum(), det.getImpTotMo());
 				this.saldoOriginalFact.add(saldoAux);
+				this.saldoOriginalFactControlar.add(saldoAux.getCopia());
 				
 				linea ++;
 			}
@@ -2808,6 +2813,7 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 							 * para poder controlar que no ingresen un saldo mayor al que tiene la factura*/
 							FacturaSaldoAux saldoAux =  new FacturaSaldoAux(g.getCodDocum(), g.getSerieDocum(), g.getNroDocum(), g.getImpTotMo());
 							this.saldoOriginalFact.add(saldoAux);
+							this.saldoOriginalFactControlar.add(saldoAux.getCopia());
 						}
 						else{
 							Mensajes.mostrarMensajeError("Debe ingresar la cotización de la moneda " + monedaVO.getDescripcion());
@@ -2823,6 +2829,7 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 				 * para poder controlar que no ingresen un saldo mayor al que tiene la factura*/
 				FacturaSaldoAux saldoAux =  new FacturaSaldoAux(g.getCodDocum(), g.getSerieDocum(), g.getNroDocum(), g.getImpTotMo());
 				this.saldoOriginalFact.add(saldoAux);
+				this.saldoOriginalFactControlar.add(saldoAux.getCopia());
 			}
 			
 			linea ++;

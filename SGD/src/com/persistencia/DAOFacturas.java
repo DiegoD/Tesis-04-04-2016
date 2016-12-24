@@ -608,6 +608,47 @@ public class DAOFacturas implements IDAOFacturas{
     	
     	return lst;
 	}
+	
+	/**
+	 * Dado el nro, serie , codigo y empresa, retorna su saldo
+	 */
+	public double getSaldoFactura(int nroDocum, String serie, String codigo, String codEmp, Connection con) throws ObteniendoSaldoException, ConexionException{
+		
+		double saldo = 0;
+		
+		try{
+			
+			
+			Consultas consultas = new Consultas();
+			String query = consultas.getSaldoFactura();
+			
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			
+			pstmt1.setInt(1, nroDocum);
+			pstmt1.setString(2, serie);
+			pstmt1.setString(3, codigo);
+			pstmt1.setString(4, codEmp);
+			
+			ResultSet rs = pstmt1.executeQuery();
+			
+			while(rs.next ()) {
+				
+				saldo =	rs.getDouble("imp_tot_mo");
+				
+			}
+			
+			
+						
+			rs.close ();
+			pstmt1.close ();
+			
+			return saldo;
+			
+		}catch(SQLException e){
+			
+			throw new ObteniendoSaldoException();
+		}
+	}
 
 	
 

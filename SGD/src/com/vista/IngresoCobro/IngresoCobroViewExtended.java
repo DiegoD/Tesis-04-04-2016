@@ -40,6 +40,7 @@ import com.vaadin.server.VaadinService;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
+import com.valueObject.FacturaSaldoAux;
 import com.valueObject.MonedaVO;
 import com.valueObject.TitularVO;
 import com.valueObject.UsuarioPermisosVO;
@@ -89,9 +90,13 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	
 	MonedaVO monedaNacional = new MonedaVO();
 	
-	private Hashtable<Integer, GtoSaldoAux> saldoOriginalGastos; /*Variable auxliar para poder
+	private ArrayList<GtoSaldoAux> saldoOriginalGastos; /*Variable auxliar para poder
 	 															 controlar que el saldo del gasto quede
 	 															 en negativo*/
+	
+	private ArrayList<GtoSaldoAux> saldoOriginalGastosControl; /*Variable auxliar para poder
+																 controlar que el saldo del gasto quede
+																 en negativo*/
 	
 	IngresoCobroVO ingresoCopia; /*Variable utilizada para la modificacion del cobro,
 	 							 para poder detectar las lineas eliminadas del cobro */
@@ -119,7 +124,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	/*Inicializamos lfos permisos para el usuario*/
 	this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
 	
-	saldoOriginalGastos = new Hashtable<Integer, GtoSaldoAux>();
+	saldoOriginalGastos = new ArrayList<GtoSaldoAux>();
+	saldoOriginalGastosControl = new ArrayList<GtoSaldoAux>();
 	
 	this.operacion = opera;
 	this.mainView = main;
@@ -2171,10 +2177,13 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		  lstGastos.getColumn("nroTrans").setHidden(true);
 		  lstGastos.getColumn("porcentajeImpuesto").setHidden(true);
 		  lstGastos.getColumn("serieDocum").setHidden(true);
-		  //lstGastos.getColumn("simboloMoneda").setHidden(true);
+		 
 		  lstGastos.getColumn("tcMov").setHidden(true);
 		  lstGastos.getColumn("usuarioMod").setHidden(true);
 		  lstGastos.getColumn("nacional").setHidden(true);
+		  
+		  lstGastos.getColumn("estadoGasto").setHidden(true);
+		  lstGastos.getColumn("tipo").setHidden(true);
 		  
 		lstGastos.setColumnOrder("nroDocum", "referencia", "simboloMoneda", "impTotMo", "codProceso");
 		
@@ -2218,7 +2227,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	      		
 	      		
 	      		IngresoCobroDetalleVO aux = obtenerGastoEnLista(Integer.parseInt(formSelecccionado.getNroDocum()));
-		    	gtoSaldo = saldoOriginalGastos.get(formSelecccionado.getNroDocum());
+		    	gtoSaldo = saldoOriginalGastos.get(formSelecccionado.getNroDocum());asdasdasda
 		    	
 	  		}
 	      	else if(formSelecccionado != null && (formSelecccionado.getSerieDocum() == "Proc")){
@@ -3303,5 +3312,34 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	      } catch (NumberFormatException e) {  
 	         return false;  
 	      }  
+	}
+	
+	/**
+	 * Quitamos objeto de la lista de saldo de factura auxiliar
+	 *
+	 */
+	private void quitarSaldoGastoAux(String nro, String serie, String codDocum) 
+	{
+		int i =0;
+		boolean esta = false;
+		
+		FacturaSaldoAux aux;
+		
+		while( i < this.saldoOriginalFact.size() && !esta)
+		{
+			aux = this.saldoOriginalFact.get(i);
+			if(nro.trim().equals(aux.getNroDocum().trim()) 
+				&& aux.getSerie().toUpperCase().trim().equals(serie.toUpperCase().trim())
+				&& aux.getCodDocum().toUpperCase().trim().equals(codDocum.toUpperCase().trim()))
+			{
+				esta = true;
+				
+				this.saldoOriginalFact.remove(i);
+				this.saldoOriginalFactControlar.remove(i);
+			}
+			
+			i++;
+		}
+		
 	}
 }

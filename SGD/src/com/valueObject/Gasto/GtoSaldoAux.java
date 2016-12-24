@@ -15,6 +15,16 @@ public class GtoSaldoAux {
 		this.saldo = saldo;
 	}
 	
+	public GtoSaldoAux getCopia(){
+		
+		GtoSaldoAux aux = new GtoSaldoAux();
+		
+		aux.setNroDocum(this.nroDocum);
+		aux.setSaldo(this.saldo);
+		
+		return aux;
+	}
+	
 	public int getNroDocum() {
 		return nroDocum;
 	}

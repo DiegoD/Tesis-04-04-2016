@@ -40,6 +40,8 @@ public class DAOEgresoCobro implements IDAOEgresoCobro{
 	    	pstmt1.setTimestamp(2, inicio);
 	    	pstmt1.setTimestamp(3, fin);
 	    	
+	    	String s = pstmt1.toString();
+	    	
 			rs = pstmt1.executeQuery();
 			
 			IngresoCobro aux;

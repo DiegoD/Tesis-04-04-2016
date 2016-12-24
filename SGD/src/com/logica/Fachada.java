@@ -3287,7 +3287,43 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 		}
 	}
 
-
+	public double getSaldoFactura(int nroDocum, String serie, String codigo, String codEmp) throws  ObteniendoSaldoException, ExisteFacturaException, NoExisteFacturaException, ConexionException{
+		
+		Connection con = null;
+		double saldo = 0;
+		
+		try 
+		{
+			con = this.pool.obtenerConeccion();
+			
+			/*Verificamos que exista el nro de cobro*/
+			if(this.facturas.memberFacturas(nroDocum, serie, codigo, codEmp, con))
+			{
+				saldo = this.facturas.getSaldoFactura(nroDocum, serie, codigo, codEmp, con);
+				
+			}
+			else
+				throw new NoExisteFacturaException();
+		
+		}catch(ObteniendoSaldoException | ExisteFacturaException| ConexionException  e)
+		{
+			try {
+				
+				con.rollback();
+			
+			} catch (SQLException e1) {
+			
+				throw new ConexionException();
+			}
+				throw new ObteniendoSaldoException();
+		}
+		finally
+		{
+			pool.liberarConeccion(con);
+		}
+		
+		return saldo;
+	}
 
 
 	

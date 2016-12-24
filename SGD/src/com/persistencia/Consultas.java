@@ -1521,6 +1521,15 @@ public String getIngresoCobroCabTodosOtros(){
 		
 		return sb.toString();
 	}
+	
+	public String getSaldoFactura(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT imp_tot_mo FROM sa_docum WHERE  nro_docum = ? AND serie_docum = ? AND cod_docum = ?  AND cod_emp = ? ");
+		
+		return sb.toString();
+	}
 
 
 //////////////////////FIN-FACTURA /////////////////////////////////////////////	
@@ -1823,5 +1832,13 @@ public String getIngresoCobroCabTodosOtros(){
 
 //////////////////////FIN-NOTA DE CREDITO /////////////////////////////////////////////	
 	
+	public String getSaldoGasto(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT imp_tot_mo FROM sa_docum WHERE  nro_docum = ? AND cod_docum = 'Gasto'  AND cod_emp = ? ");
+		
+		return sb.toString();
+	}
 	
 }

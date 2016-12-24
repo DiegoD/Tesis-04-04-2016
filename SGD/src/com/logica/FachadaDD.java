@@ -58,6 +58,8 @@ import com.excepciones.Empresas.ModificandoEmpresaException;
 import com.excepciones.Empresas.NoExisteEmpresaException;
 import com.excepciones.Empresas.ObteniendoEmpresasException;
 import com.excepciones.Factura.ExisteFacturaException;
+import com.excepciones.Factura.NoExisteFacturaException;
+import com.excepciones.Factura.ObteniendoSaldoException;
 import com.excepciones.Gastos.EliminandoGastoException;
 import com.excepciones.Gastos.ExisteGastoException;
 import com.excepciones.Gastos.IngresandoGastoException;
@@ -3125,6 +3127,40 @@ public class FachadaDD {
 		
 		
 		return lstGastosVO;
+	}
+	
+	public double getSaldoGasto(int nroDocum, String codEmp) throws  ObteniendoSaldoException, ExisteFacturaException, NoExisteFacturaException, ConexionException{
+		
+		Connection con = null;
+		double saldo = 0;
+		
+		try 
+		{
+			con = this.pool.obtenerConeccion();
+			
+			
+			saldo = this.gastos.getSaldoGasto(nroDocum, codEmp, con);
+				
+			
+		
+		}catch(ObteniendoSaldoException | ConexionException  e)
+		{
+			try {
+				
+				con.rollback();
+			
+			} catch (SQLException e1) {
+			
+				throw new ConexionException();
+			}
+				throw new ObteniendoSaldoException();
+		}
+		finally
+		{
+			pool.liberarConeccion(con);
+		}
+		
+		return saldo;
 	}
 	
 	/**

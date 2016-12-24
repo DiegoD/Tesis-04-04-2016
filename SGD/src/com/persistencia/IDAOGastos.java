@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
+import com.excepciones.Factura.ObteniendoSaldoException;
 import com.excepciones.Gastos.EliminandoGastoException;
 import com.excepciones.Gastos.ExisteGastoException;
 import com.excepciones.Gastos.IngresandoGastoException;
@@ -43,4 +44,5 @@ public interface IDAOGastos {
 	
 	public boolean existeGastoAsociadoProceso(Integer nroProceso, String codEmp, Connection con)
 			throws ExisteGastoException, ConexionException;
+	public double getSaldoGasto(int nroDocum, String codEmp, Connection con) throws ObteniendoSaldoException, ConexionException;
 }

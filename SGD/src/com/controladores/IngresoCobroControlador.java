@@ -17,6 +17,9 @@ import com.excepciones.Bancos.ObteniendoCuentasBcoException;
 import com.excepciones.Bancos.VerificandoBancosException;
 import com.excepciones.Cotizaciones.ObteniendoCotizacionesException;
 import com.excepciones.Cuentas.ObteniendoRubrosException;
+import com.excepciones.Factura.ExisteFacturaException;
+import com.excepciones.Factura.NoExisteFacturaException;
+import com.excepciones.Factura.ObteniendoSaldoException;
 import com.excepciones.Gastos.ObteniendoGastosException;
 import com.excepciones.IngresoCobros.ExisteIngresoCobroException;
 import com.excepciones.IngresoCobros.InsertandoIngresoCobroException;
@@ -211,4 +214,18 @@ public class IngresoCobroControlador {
 	}
 	
 	
+	/***
+	 *  Nos retorna el saldo de factura seleccionada
+	 *  para poder controlar el saldo de la misma a la hora
+	 *  de modificar el importe en la grilla, para no permitir
+	 *  ingresar un importe mayor al saldo
+	 */
+	public double getSaldoGasto(UsuarioPermisosVO permisos, int nroDocum, String serie, String codigo) throws  ObteniendoSaldoException, ExisteFacturaException, NoExisteFacturaException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException{
+		
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			return FachadaDD.getInstance().getSaldoGasto(nroDocum, permisos.getCodEmp());
+		else
+			throw new NoTienePermisosException();
+	}
 }
