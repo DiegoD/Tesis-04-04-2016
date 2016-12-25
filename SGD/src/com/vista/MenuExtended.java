@@ -51,6 +51,8 @@ public class MenuExtended extends Menu{
 	private DepositoViewExtended form;
 	MySub sub = new MySub("75%", "65%");
 	
+	//bground.addStyleName("backColorGrey");
+	
 	private void inicializarMenu(){
 		
 		/*
