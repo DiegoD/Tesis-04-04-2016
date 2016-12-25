@@ -129,6 +129,7 @@ public class ClientesPanelExtended extends ClientesPanel{
 		gridClientes.removeColumn("nombreDoc");
 		gridClientes.removeColumn("numeroDoc");
 		gridClientes.removeColumn("tel");
+		gridClientes.removeColumn("tipo");
 		
 		
 		/*Agregamos los filtros a la grilla*/

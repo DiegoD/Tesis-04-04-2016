@@ -127,6 +127,7 @@ public class FuncionariosPanelExtended extends FuncionariosPanel {
 			gridFuncionarios.removeColumn("nombreDoc");
 			gridFuncionarios.removeColumn("numeroDoc");
 			gridFuncionarios.removeColumn("tel");
+			gridFuncionarios.removeColumn("tipo");
 			
 			
 			/*Agregamos los filtros a la grilla*/
