@@ -95,4 +95,23 @@
     
 }
  
+ 
+  .backColorGrey{
+           background-color:#ACACAC;
+      }
+      
+      .loginImg{
+          background-image: url("Icons/logo.png");
+          
+          background-repeat: no-repeat;
+          background-attachment: fixed;
+  		  background-position: center; 
+  		  
+      }
+      
+      .loginCentro{
+      
+	   opacity : 1.0;
+
+      }
 }
