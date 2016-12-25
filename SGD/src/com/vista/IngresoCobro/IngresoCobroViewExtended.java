@@ -18,6 +18,9 @@ import com.excepciones.Bancos.ObteniendoCuentasBcoException;
 import com.excepciones.Conciliaciones.MovimientoConciliadoException;
 import com.excepciones.Cotizaciones.ObteniendoCotizacionesException;
 import com.excepciones.Depositos.ExisteDepositoException;
+import com.excepciones.Factura.ExisteFacturaException;
+import com.excepciones.Factura.NoExisteFacturaException;
+import com.excepciones.Factura.ObteniendoSaldoException;
 import com.excepciones.IngresoCobros.ExisteIngresoCobroException;
 import com.excepciones.IngresoCobros.InsertandoIngresoCobroException;
 import com.excepciones.IngresoCobros.ModificandoIngresoCobroException;
@@ -47,6 +50,7 @@ import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.Cheque.ChequeVO;
 import com.valueObject.Cotizacion.CotizacionVO;
 import com.valueObject.Docum.DocumDetalleVO;
+import com.valueObject.Docum.ReciboDetalleVO;
 import com.valueObject.Gasto.GastoVO;
 import com.valueObject.Gasto.GtoSaldoAux;
 import com.valueObject.IngresoCobro.IngresoCobroDetalleVO;
@@ -963,33 +967,37 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			
 			
 			
-			//Controla que el cheque no esté depositado
-			if(this.comboMPagos.getValue().equals("Cheque")){
+			if(this.comboMPagos.getValue() != null){ /*Si es caja no tiene info en este combo, evaluar si no es null*/
 				
-				//Datos del banco y cuenta
-				CtaBcoVO auxctaBco = new CtaBcoVO();
-				if(this.comboCuentas.getValue() != null){
-					auxctaBco = (CtaBcoVO) this.comboCuentas.getValue();
-				}
-				
-				chequeVO.setCodBanco(auxctaBco.getCodBco());
-			    chequeVO.setCodCuenta(auxctaBco.getCodigo());
-			    chequeVO.setSerieDocum(serieDocRef.getValue().trim());
-			    chequeVO.setNroDocum(Integer.parseInt(nroDocRef.getValue()));
-			    
-				try {
-					if(val.existeChequeDepositado(permisoAux, chequeVO)){
-						Mensajes.mostrarMensajeError("El cheque está depositado");
-						UI.getCurrent().removeWindow(sub);
-						return;
+				//Controla que el cheque no esté depositado
+				if(this.comboMPagos.getValue().equals("Cheque")){
+					
+					//Datos del banco y cuenta
+					CtaBcoVO auxctaBco = new CtaBcoVO();
+					if(this.comboCuentas.getValue() != null){
+						auxctaBco = (CtaBcoVO) this.comboCuentas.getValue();
 					}
-				} catch (ExisteDepositoException e) {
-					// TODO Auto-generated catch block
-					Mensajes.mostrarMensajeError(e.toString());
+					
+					chequeVO.setCodBanco(auxctaBco.getCodBco());
+				    chequeVO.setCodCuenta(auxctaBco.getCodigo());
+				    chequeVO.setSerieDocum(serieDocRef.getValue().trim());
+				    chequeVO.setNroDocum(Integer.parseInt(nroDocRef.getValue()));
+				    
+					try {
+						if(val.existeChequeDepositado(permisoAux, chequeVO)){
+							Mensajes.mostrarMensajeError("El cheque está depositado");
+							UI.getCurrent().removeWindow(sub);
+							return;
+						}
+					} catch (ExisteDepositoException e) {
+						// TODO Auto-generated catch block
+						Mensajes.mostrarMensajeError(e.toString());
+					}
+					
 				}
 				
 			}
-			
+		
 			
 			//Controla que el movimiento no esté conciliado
 			try {
@@ -1107,8 +1115,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 							{
 								/*Tambien lo quitamos de la lista de los saldos originales
 								 * para poder controlar que no ingresen un saldo mayor al que tien el gasto*/
-								GtoSaldoAux saldoAux =  new GtoSaldoAux(Integer.parseInt(lstDetalleVO.get(i).getNroDocum()), lstDetalleVO.get(i).getImpTotMo());
-								this.saldoOriginalGastos.remove(saldoAux.getNroDocum(),saldoAux);
+								quitarSaldoGastoAux(lstDetalleVO.get(i).getNroDocum());
 								
 								/*Quitamos el formulario seleccionado de la lista*/
 								lstDetalleVO.remove(lstDetalleVO.get(i));
@@ -1537,7 +1544,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				detVO.setLinea(linea);
 				container.addBean(detVO);
 				GtoSaldoAux saldoAux =  new GtoSaldoAux(Integer.parseInt(detVO.getNroDocum()), detVO.getImpTotMo());
-				this.saldoOriginalGastos.put(saldoAux.getNroDocum(),saldoAux);
+				this.saldoOriginalGastos.add(saldoAux);
+				this.saldoOriginalGastosControl.add(saldoAux.getCopia());
 				
 				linea ++;
 			}
@@ -1886,7 +1894,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				container.addBean(det);
 				
 				GtoSaldoAux saldoAux =  new GtoSaldoAux(Integer.parseInt(det.getNroDocum()), det.getImpTotMo());
-				this.saldoOriginalGastos.put(saldoAux.getNroDocum(),saldoAux);
+				this.saldoOriginalGastos.add(saldoAux);
+				this.saldoOriginalGastosControl.add(saldoAux.getCopia());
 				
 				linea ++;
 			}
@@ -1914,21 +1923,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		{
 			
 
-			/*Si esta lo eliminamos y lo volvemos a ingresar, para
-			 * que queden los ultimos cambios hechos*/
-			/*
-			for (FormularioVO formVO : lstForms) {
-				
-				if(hForms.containsKey(formVO.getCodigo())){
-					
-					hForms.remove(formVO.getCodigo());
-					
-				}
-								
-		        hForms.put(formVO.getCodigo(),formVO);
-				
-			}
-			*/
+			
 			
 			/*Recorremos hash e isertamos en lista de forms a agregar*/
 			/*para no duplicar formularios*/
@@ -2222,18 +2217,17 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		
 		@Override
 		public void preCommit(FieldGroup.CommitEvent commitEvent) throws     FieldGroup.CommitException {
-      	
-	      	if(formSelecccionado != null && (formSelecccionado.getSerieDocum() != "Proc")){
+	      	if(formSelecccionado != null && (formSelecccionado.getCodDocum() != "Proc")){
 	      		
 	      		
 	      		IngresoCobroDetalleVO aux = obtenerGastoEnLista(Integer.parseInt(formSelecccionado.getNroDocum()));
-		    	gtoSaldo = saldoOriginalGastos.get(formSelecccionado.getNroDocum());asdasdasda
+		    	gtoSaldo = obtenerSaldoGto(aux);
 		    	
 	  		}
-	      	else if(formSelecccionado != null && (formSelecccionado.getSerieDocum() == "Proc")){
+	      	else if(formSelecccionado != null && (formSelecccionado.getCodDocum() == "Proc")){
 	      		
 	      		IngresoCobroDetalleVO aux = obtenerGastoEnLista(Integer.parseInt(formSelecccionado.getNroDocum()));
-		    	gtoSaldo = saldoOriginalGastos.get(formSelecccionado.getNroDocum());
+	      		gtoSaldo = obtenerSaldoGto(aux);
 	      	}
       }
 
@@ -2723,7 +2717,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				det.setLinea(linea); /*Seteamos la linea*/
 				container.addBean(det); /*Lo agregamos a la grilla*/
 				GtoSaldoAux saldoAux =  new GtoSaldoAux(Integer.parseInt(det.getNroDocum()), det.getImpTotMo());
-				this.saldoOriginalGastos.put(saldoAux.getNroDocum(),saldoAux);
+				this.saldoOriginalGastos.add(saldoAux);
+				this.saldoOriginalGastosControl.add(saldoAux.getCopia());
 				
 				linea ++;
 			}
@@ -2829,7 +2824,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 							/*Tambien agrefamos a la lista de los saldos originales
 							 * para poder controlar que no ingresen un saldo mayor al que tien el gasto*/
 							GtoSaldoAux saldoAux =  new GtoSaldoAux(Integer.parseInt(g.getNroDocum()), g.getImpTotMo());
-							this.saldoOriginalGastos.put(saldoAux.getNroDocum(),saldoAux);
+							this.saldoOriginalGastos.add(saldoAux);
+							this.saldoOriginalGastosControl.add(saldoAux.getCopia());
 						}
 						else{
 							Mensajes.mostrarMensajeError("Debe ingresar la cotización de la moneda " + monedaVO.getDescripcion());
@@ -2844,7 +2840,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				/*Tambien agrefamos a la lista de los saldos originales
 				 * para poder controlar que no ingresen un saldo mayor al que tien el gasto*/
 				GtoSaldoAux saldoAux =  new GtoSaldoAux(Integer.parseInt(g.getNroDocum()), g.getImpTotMo());
-				this.saldoOriginalGastos.put(saldoAux.getNroDocum(),saldoAux);
+				this.saldoOriginalGastos.add(saldoAux);
+				this.saldoOriginalGastosControl.add(saldoAux.getCopia());
 			}
 			
 			linea ++;
@@ -3318,28 +3315,89 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 	 * Quitamos objeto de la lista de saldo de factura auxiliar
 	 *
 	 */
-	private void quitarSaldoGastoAux(String nro, String serie, String codDocum) 
+	private void quitarSaldoGastoAux(String nro) 
 	{
 		int i =0;
 		boolean esta = false;
 		
-		FacturaSaldoAux aux;
+		GtoSaldoAux aux;
 		
-		while( i < this.saldoOriginalFact.size() && !esta)
+		
+		while( i < this.saldoOriginalGastos.size() && !esta)
 		{
-			aux = this.saldoOriginalFact.get(i);
-			if(nro.trim().equals(aux.getNroDocum().trim()) 
-				&& aux.getSerie().toUpperCase().trim().equals(serie.toUpperCase().trim())
-				&& aux.getCodDocum().toUpperCase().trim().equals(codDocum.toUpperCase().trim()))
-			{
+			aux = this.saldoOriginalGastos.get(i);
+			if(nro.trim().equals(aux.getNroDocum())){
 				esta = true;
 				
-				this.saldoOriginalFact.remove(i);
-				this.saldoOriginalFactControlar.remove(i);
+				this.saldoOriginalGastos.remove(i);
+				this.saldoOriginalGastosControl.remove(i);
 			}
 			
 			i++;
 		}
+		
+	}
+	
+	/***
+	 * Nos retorna el saldo para una factura determinada 
+	 * sirve para control que no pueda ingresar un monto 
+	 * mayor al saldo de la factura, cuando se mdifica en 
+	 * la grilla
+	 */
+	private GtoSaldoAux obtenerSaldoGto(IngresoCobroDetalleVO det){ 
+		
+		//private ArrayList<FacturaSaldoAux> saldoOriginalFact
+		boolean salir = false;
+		int i = 0;
+		GtoSaldoAux aux = new GtoSaldoAux();
+		GtoSaldoAux aux2 = new GtoSaldoAux();
+		
+		while(i < this.saldoOriginalGastos.size() && !salir){
+			
+			double saldo;
+			double saldoEnTransaccion;
+			
+			aux = this.saldoOriginalGastos.get(i);
+			aux2 = this.saldoOriginalGastosControl.get(i);
+			
+			if(det.getNroDocum().trim().equals( String.valueOf(aux.getNroDocum()) ))
+			{
+				
+				/*Si la operacion es editar tenemos que sumar el saldo de la transcaccion*/
+				if(this.operacion.equals("EDITAR"))
+					saldoEnTransaccion = aux2.getSaldo(); /*Obtenemos el importe de la transaccion*/
+				else /*Si es nuevo solamente es el saldo de la factura*/
+					saldoEnTransaccion = 0;
+				
+				UsuarioPermisosVO permisosAux;
+				permisosAux = 
+						new UsuarioPermisosVO(this.permisos.getCodEmp(),
+								this.permisos.getUsuario(),
+								VariablesPermisos.FORMULARIO_RECIBO,
+								VariablesPermisos.OPERACION_LEER);
+				
+				try {
+					
+					/*Obtenemos el saldo de la factura*/
+					saldo = this.controlador.getSaldoGasto(permisosAux, aux.getNroDocum());
+					
+					aux.setSaldo(saldo + saldoEnTransaccion);
+					
+				} catch (NumberFormatException | ObteniendoSaldoException | ExisteFacturaException
+						| NoExisteFacturaException | ConexionException | InicializandoException
+						| ObteniendoPermisosException | NoTienePermisosException e) {
+					
+					Mensajes.mostrarMensajeError(e.getMessage());
+				}
+				
+				salir = true;
+			}
+			
+			
+			i++;
+		}
+		
+		return aux;
 		
 	}
 }

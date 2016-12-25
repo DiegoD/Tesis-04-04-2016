@@ -220,7 +220,7 @@ public class IngresoCobroControlador {
 	 *  de modificar el importe en la grilla, para no permitir
 	 *  ingresar un importe mayor al saldo
 	 */
-	public double getSaldoGasto(UsuarioPermisosVO permisos, int nroDocum, String serie, String codigo) throws  ObteniendoSaldoException, ExisteFacturaException, NoExisteFacturaException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException{
+	public double getSaldoGasto(UsuarioPermisosVO permisos, int nroDocum) throws  ObteniendoSaldoException, ExisteFacturaException, NoExisteFacturaException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException{
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
