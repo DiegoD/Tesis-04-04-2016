@@ -37,6 +37,9 @@ public class Menu extends HorizontalLayout {
 	protected Button clientesButton;
 	protected Button codigosGeneralizados;
 	protected Button rubros;
+	protected Label lbCobros;
+	protected Label lbFacturacion;
+	protected Label lbProcesos;
 	protected Label lbAdministracion;
 	protected Button cotizaciones;
 	protected Button tipoRubros;

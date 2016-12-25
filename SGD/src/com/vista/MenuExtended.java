@@ -646,6 +646,9 @@ public class MenuExtended extends Menu{
 	{
 		/*Permisos del usuario para los mantenimientos*/
 		this.setearOpcionesMenuMantenimientos();
+		this.setearOpcionesMenuFacturacion();
+		this.setearOpcionesMenuCobros();
+		setearOpcionesMenuProcesos();
 		this.setearOpcionesMenuAdministracion();
 	}
 	
@@ -676,17 +679,8 @@ public class MenuExtended extends Menu{
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_CUENTAS) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_BANCOS) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_PROCESOS) ||
-				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_GASTOS) ||
-				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_INGRESO_COBRO) ||
-				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_INGRESO_COBRO_OTRO) ||
-				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_INGRESO_EGRESO) ||
-				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_INGRESO_EGRESO_OTRO) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_RESUMEN_PROCESO) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_PERIODO) ||
-				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_DEPOSITO) ||
-				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_FACTURA) ||
-				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_RECIBO) ||
-				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_NOTA_CREDITO) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_CONCILIACION) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_RUBROS))
 			{
@@ -754,12 +748,14 @@ public class MenuExtended extends Menu{
 							this.habilitarRubros();
 							this.layoutMenu.addComponent(this.rubros);
 						}
+					break;
 						
 					case VariablesPermisos.FORMULARIO_CLIENTES:
 						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_CLIENTES, VariablesPermisos.OPERACION_LEER)){
 							this.habilitarClientes();
 							this.layoutMenu.addComponent(this.clientesButton);
 						}
+					break;
 						
 					case VariablesPermisos.FORMULARIO_FUNCIONARIOS:
 						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_FUNCIONARIOS, VariablesPermisos.OPERACION_LEER)){
@@ -809,50 +805,6 @@ public class MenuExtended extends Menu{
 						
 					break;
 					
-					case VariablesPermisos.FORMULARIO_GASTOS:
-						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GASTOS, VariablesPermisos.OPERACION_LEER)){
-							this.habilitarGastos();
-							this.layoutMenu.addComponent(this.gastos);
-						}
-						
-					break;
-					
-					case VariablesPermisos.FORMULARIO_INGRESO_COBRO:
-						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_COBRO, VariablesPermisos.OPERACION_LEER)){
-							this.habilitarIngresoCobro();
-							this.layoutMenu.addComponent(this.ingCobro);
-						}
-					break;
-					
-					case VariablesPermisos.FORMULARIO_NOTA_CREDITO:
-						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_NOTA_CREDITO, VariablesPermisos.OPERACION_LEER)){
-							this.habilitarNotaCredito();
-							this.layoutMenu.addComponent(this.ingCobro);
-						}
-					break;
-					
-					case VariablesPermisos.FORMULARIO_INGRESO_COBRO_OTRO:
-						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_COBRO_OTRO, VariablesPermisos.OPERACION_LEER)){
-							this.habilitarOtroCobro();
-							this.layoutMenu.addComponent(this.otroCobro);
-						}
-					break;
-					
-					case VariablesPermisos.FORMULARIO_INGRESO_EGRESO:
-						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO, VariablesPermisos.OPERACION_LEER)){
-							this.habilitarIngresoEgreso();
-							this.layoutMenu.addComponent(this.ingEgreso);
-						}
-						
-					break;
-					
-					case VariablesPermisos.FORMULARIO_INGRESO_EGRESO_OTRO:
-						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO_OTRO, VariablesPermisos.OPERACION_LEER)){
-							this.habilitarOtroEgreso();
-							this.layoutMenu.addComponent(this.otroEgreso);
-						}
-						
-					break;
 					
 					case VariablesPermisos.FORMULARIO_RESUMEN_PROCESO:
 						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_RESUMEN_PROCESO, VariablesPermisos.OPERACION_LEER)){
@@ -866,27 +818,6 @@ public class MenuExtended extends Menu{
 						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_PERIODO, VariablesPermisos.OPERACION_LEER)){
 							this.habilitarPeriodo();
 							this.layoutMenu.addComponent(this.periodo);
-						}
-					break;
-					
-					case VariablesPermisos.FORMULARIO_DEPOSITO:
-						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_DEPOSITO, VariablesPermisos.OPERACION_LEER)){
-							this.habilitarDeposito();
-							this.layoutMenu.addComponent(this.deposito);
-						}
-					break;
-					
-					case VariablesPermisos.FORMULARIO_FACTURA:
-						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_FACTURA, VariablesPermisos.OPERACION_LEER)){
-							this.habilitarFactura();
-							this.layoutMenu.addComponent(this.factura);
-						}
-					break;
-					
-					case VariablesPermisos.FORMULARIO_RECIBO:
-						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_RECIBO, VariablesPermisos.OPERACION_LEER)){
-							this.habilitarRecibo();
-							this.layoutMenu.addComponent(this.recibo);
 						}
 					break;
 					
@@ -1249,6 +1180,249 @@ public class MenuExtended extends Menu{
 		return this.permisos;
 	}
 	
+	
+	///////////////////////////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * Vemos los permisos del usuario para los mantenimientos
+	 * y lo agregamos al TAB de Cobros
+	 * 
+	 */
+	private void setearOpcionesMenuCobros()
+	{
+		ArrayList<FormularioVO> lstFormsMenuCobros = new ArrayList<FormularioVO>();
+		
+	
+		
+		/*Buscamos los Formulairos correspondientes a este TAB*/
+		for (FormularioVO formularioVO : this.permisos.getLstPermisos().values()) {
+			
+			if(	formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_INGRESO_COBRO) ||
+				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_INGRESO_COBRO_OTRO) ||
+				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_INGRESO_EGRESO) ||
+				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_GASTOS) ||
+				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_DEPOSITO) ||
+				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_INGRESO_EGRESO_OTRO))
+				
+			{
+				
+				lstFormsMenuCobros.add(formularioVO);
+			}
+			
+		}
+		
+		/*Si hay formularios para el tab*/
+		if(lstFormsMenuCobros.size()> 0)
+		{
+
+			this.layoutMenu = new VerticalLayout();
+			//this.tabMantenimientos.setMargin(true);
+			
+			this.lbCobros.setVisible(true);
+			this.layoutMenu.addComponent(this.lbCobros);
+			
+			
+			for (FormularioVO formularioVO : lstFormsMenuCobros) {
+				
+				switch(formularioVO.getCodigo())
+				{
+										
+			
+					case VariablesPermisos.FORMULARIO_INGRESO_COBRO:
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_COBRO, VariablesPermisos.OPERACION_LEER)){
+							this.habilitarIngresoCobro();
+							this.layoutMenu.addComponent(this.ingCobro);
+						}
+					break;
+					
+					case VariablesPermisos.FORMULARIO_INGRESO_COBRO_OTRO:
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_COBRO_OTRO, VariablesPermisos.OPERACION_LEER)){
+							this.habilitarOtroCobro();
+							this.layoutMenu.addComponent(this.otroCobro);
+						}
+					break;
+					
+					case VariablesPermisos.FORMULARIO_INGRESO_EGRESO:
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO, VariablesPermisos.OPERACION_LEER)){
+							this.habilitarIngresoEgreso();
+							this.layoutMenu.addComponent(this.ingEgreso);
+						}
+						
+					break;
+					
+					case VariablesPermisos.FORMULARIO_INGRESO_EGRESO_OTRO:
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO_OTRO, VariablesPermisos.OPERACION_LEER)){
+							this.habilitarOtroEgreso();
+							this.layoutMenu.addComponent(this.otroEgreso);
+						}
+						
+					break;
+					
+
+
+					case VariablesPermisos.FORMULARIO_GASTOS:
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GASTOS, VariablesPermisos.OPERACION_LEER)){
+							this.habilitarGastos();
+							this.layoutMenu.addComponent(this.gastos);
+						}
+						
+					break;
+
+
+					case VariablesPermisos.FORMULARIO_DEPOSITO:
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_DEPOSITO, VariablesPermisos.OPERACION_LEER)){
+							this.habilitarDeposito();
+							this.layoutMenu.addComponent(this.deposito);
+						}
+					break;
+					
+					
+				}
+				
+			}
+			
+			this.menuItems.addComponent(this.layoutMenu);
+			
+		}
+	}
+	
+	/**
+	 * Vemos los permisos del usuario para los mantenimientos
+	 * y lo agregamos al TAB de Cobros
+	 * 
+	 */
+	private void setearOpcionesMenuFacturacion()
+	{
+		ArrayList<FormularioVO> lstFormsMenuFacturacion = new ArrayList<FormularioVO>();
+		
+	
+		
+		/*Buscamos los Formulairos correspondientes a este TAB*/
+		for (FormularioVO formularioVO : this.permisos.getLstPermisos().values()) {
+			
+			if(formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_FACTURA) ||
+					formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_RECIBO) ||
+					formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_NOTA_CREDITO))
+				
+			{
+				
+				lstFormsMenuFacturacion.add(formularioVO);
+			}
+			
+		}
+		
+		/*Si hay formularios para el tab*/
+		if(lstFormsMenuFacturacion.size()> 0)
+		{
+
+			this.layoutMenu = new VerticalLayout();
+			//this.tabMantenimientos.setMargin(true);
+			
+			this.lbFacturacion.setVisible(true);
+			this.layoutMenu.addComponent(this.lbFacturacion);
+			
+			
+			for (FormularioVO formularioVO : lstFormsMenuFacturacion) {
+				
+				switch(formularioVO.getCodigo())
+				{
+										
+					case VariablesPermisos.FORMULARIO_NOTA_CREDITO:
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_NOTA_CREDITO, VariablesPermisos.OPERACION_LEER)){
+							this.habilitarNotaCredito();
+							this.layoutMenu.addComponent(this.ingCobro);
+						}
+					break;
+	
+	
+					
+					case VariablesPermisos.FORMULARIO_FACTURA:
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_FACTURA, VariablesPermisos.OPERACION_LEER)){
+							this.habilitarFactura();
+							this.layoutMenu.addComponent(this.factura);
+						}
+					break;
+					
+					case VariablesPermisos.FORMULARIO_RECIBO:
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_RECIBO, VariablesPermisos.OPERACION_LEER)){
+							this.habilitarRecibo();
+							this.layoutMenu.addComponent(this.recibo);
+						}
+					break;
+					
+				}
+				
+			}
+			
+			this.menuItems.addComponent(this.layoutMenu);
+			
+		}
+	}
+	
+	
+	/**
+	 * Vemos los permisos del usuario para los mantenimientos
+	 * y lo agregamos al TAB de Mantenimientos
+	 * 
+	 */
+	private void setearOpcionesMenuProcesos()
+	{
+		ArrayList<FormularioVO> lstFormsMenuProceso = new ArrayList<FormularioVO>();
+		
+	
+		
+		/*Buscamos los Formulairos correspondientes a este TAB*/
+		for (FormularioVO formularioVO : this.permisos.getLstPermisos().values()) {
+			
+			if(formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_PROCESOS) ||
+				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_RESUMEN_PROCESO))
+			{
+				lstFormsMenuProceso.add(formularioVO);
+			}
+			
+		}
+		
+		/*Si hay formularios para el tab*/
+		if(lstFormsMenuProceso.size()> 0)
+		{
+
+			this.layoutMenu = new VerticalLayout();
+			//this.tabMantenimientos.setMargin(true);
+			
+			this.lbProcesos.setVisible(true);
+			this.layoutMenu.addComponent(this.lbProcesos);
+			
+			
+			for (FormularioVO formularioVO : lstFormsMenuProceso) {
+				
+				switch(formularioVO.getCodigo())
+				{
+										
+					case VariablesPermisos.FORMULARIO_PROCESOS:
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_PROCESOS, VariablesPermisos.OPERACION_LEER)){
+							this.habilitarProcesos();
+							this.layoutMenu.addComponent(this.procesos);
+						}
+						
+					break;
+					
+					
+					case VariablesPermisos.FORMULARIO_RESUMEN_PROCESO:
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_RESUMEN_PROCESO, VariablesPermisos.OPERACION_LEER)){
+							this.habilitarResumenProceso();
+							this.layoutMenu.addComponent(this.resumenProc);
+						}
+						
+					break;
+					
+				}
+				
+			}
+			
+			this.menuItems.addComponent(this.layoutMenu);
+			
+		}
+	}
 	
 	
 }
