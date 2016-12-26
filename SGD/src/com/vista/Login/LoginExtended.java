@@ -50,14 +50,14 @@ public class LoginExtended extends Login implements ViewDisplay {
 		this.principal = principal;
 		
 		
+		/****************************************LOGO**************************************/
+		//ThemeResource resource = new ThemeResource("Icons/logo.png");
+		//Image image = new Image("", resource); 
+		//image.setHeight("30%");
+		//image.setWidth("100%");
 		
-		ThemeResource resource = new ThemeResource("Icons/logo.png");
-		Image image = new Image("", resource); 
-		image.setHeight("30%");
-		image.setWidth("100%");
-		
-		this.layout.addComponent(image);
-		
+		//this.layout.addComponent(image);
+		/************************************FIN LOGO**************************************/
 		
 		controlador = new LoginControlador();
 		this.tfUsuario.focus();
