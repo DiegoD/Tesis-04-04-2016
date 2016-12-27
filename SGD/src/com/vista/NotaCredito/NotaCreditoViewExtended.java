@@ -536,7 +536,7 @@ public class NotaCreditoViewExtended extends NotaCreditoViews implements IBusque
 					
 					this.mainView.actulaizarGrilla(ncVO);
 					
-					Mensajes.mostrarMensajeOK("Se ha guardado el Cobro");
+					Mensajes.mostrarMensajeOK("Se ha guardado la nota de crédito");
 					main.cerrarVentana();
 				
 				}else if(this.operacion.equals(Variables.OPERACION_EDITAR))
@@ -555,7 +555,7 @@ public class NotaCreditoViewExtended extends NotaCreditoViews implements IBusque
 					
 					this.mainView.actulaizarGrilla(ncVO);
 					
-					Mensajes.mostrarMensajeOK("Se ha modificado el Cobro");
+					Mensajes.mostrarMensajeOK("Se ha modificado la nota de crédito");
 					main.cerrarVentana();
 					
 				}
@@ -2210,7 +2210,7 @@ public class NotaCreditoViewExtended extends NotaCreditoViews implements IBusque
 			
 			this.mainView.actulaizarGrilla(ncVO);
 			
-			Mensajes.mostrarMensajeOK("Se ha eliminado el recibo");
+			Mensajes.mostrarMensajeOK("Se ha eliminado la nota de crédito");
 			UI.getCurrent().removeWindow(sub);
 			this.mainView.cerrarVentana();
 			
