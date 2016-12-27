@@ -4,11 +4,16 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
+import com.excepciones.Rubros.ObteniendoRubrosException;
 import com.excepciones.SaldoCuentas.*;
+import com.logica.RubroCuenta;
 import com.logica.Docum.DatosDocum;
 import com.logica.Docum.DocumSaldo;
+import com.valueObject.Saldos.SaCuentasVO;
+import com.valueObject.Saldos.SaDocumsVO;
 
 public class DAOSaldoCuentas implements IDAOSaldosCuentas{
 
@@ -176,5 +181,121 @@ public class DAOSaldoCuentas implements IDAOSaldosCuentas{
 			
 			throw new ModificandoSaldoCuentaException();
 		}
+	}
+	
+	///////////////////VISTAS////////////////////////////
+	
+	@Override
+	public ArrayList<SaDocumsVO> getSaldosDocum(String codEmp, Connection con) throws Exception {
+		// TODO Auto-generated method stub
+		ArrayList<SaDocumsVO> lst = new ArrayList<SaDocumsVO>();
+		
+		try
+		{
+			Consultas consultas = new Consultas ();
+			String query = consultas.getSaDocum();
+			
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			
+			pstmt1.setString(1, codEmp);
+			
+			String s = pstmt1.toString();
+			
+			ResultSet rs = pstmt1.executeQuery();
+			
+			SaDocumsVO doc;
+			
+			while(rs.next ()) {
+
+				doc = new SaDocumsVO();
+							
+				//doc.setCod_rubro(rs.getString(1));
+				
+				doc.setCod_docum(rs.getString(1));
+				doc.setSerie_docum(rs.getString(2));
+				doc.setNro_docum(rs.getInt(3));
+				doc.setCod_emp(rs.getString(4));
+				doc.setCod_moneda(rs.getString(5));
+				doc.setCod_tit(rs.getInt(6));
+				doc.setImp_tot_mn(rs.getDouble(7));
+				doc.setImp_tot_mo(rs.getDouble(8));
+				doc.setCuenta(rs.getString(9));
+
+				
+				
+				lst.add(doc);
+			}
+			
+			rs.close ();
+			pstmt1.close ();
+		}
+		catch (SQLException e) {
+			
+			throw new ObteniendoRubrosException();
+		}
+			
+		return lst;
+	}
+	
+	@Override
+	public ArrayList<SaCuentasVO> getSaCuentas(String codEmp, Connection con) throws Exception {
+		// TODO Auto-generated method stub
+		ArrayList<SaCuentasVO> lst = new ArrayList<SaCuentasVO>();
+		
+		try
+		{
+			Consultas consultas = new Consultas();
+			String query = consultas.getSaCuentas();
+			
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			
+			pstmt1.setString(1, codEmp);
+			
+			ResultSet rs = pstmt1.executeQuery();
+			
+			SaCuentasVO doc;
+			
+			while(rs.next ()) {
+
+				doc = new SaCuentasVO();
+				
+	
+				
+				doc.setCod_docum(rs.getString(1));
+				doc.setSerie_docum(rs.getString(2));
+				doc.setNro_docum(rs.getInt(3));
+				doc.setCod_doc_ref(rs.getString(4));
+				doc.setSerie_doc_ref(rs.getString(5));
+				doc.setNro_doc_ref(rs.getInt(6));
+				doc.setCod_bco(rs.getString(7));
+				doc.setCod_ctabco(rs.getString(8));
+				doc.setMovimiento(rs.getString(9));
+				doc.setCod_emp(rs.getString(10));
+				doc.setCod_moneda(rs.getString(11));
+				doc.setCod_tit(rs.getInt(12));
+				doc.setImp_tot_mn(rs.getDouble(13));
+				doc.setImp_tot_mo(rs.getDouble(14));
+				doc.setSigno(rs.getInt(15));
+				doc.setCuenta(rs.getString(16));
+				doc.setCod_cta(rs.getString(17));
+				doc.setReferencia(rs.getString(18));
+				doc.setNro_trans(rs.getInt(19));
+				doc.setFec_valor(rs.getTimestamp(20));
+				doc.setFec_doc(rs.getTimestamp(21));
+				doc.setConciliado(rs.getInt(22));
+
+				
+				lst.add(doc);
+			}
+			
+			rs.close ();
+			pstmt1.close ();
+		}
+		catch (SQLException e) {
+			
+			throw new ObteniendoRubrosException();
+		}
+			
+		return lst;
 	}
 }

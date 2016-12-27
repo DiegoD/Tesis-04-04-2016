@@ -93,6 +93,8 @@ import com.valueObject.Docum.NotaCreditoVO;
 import com.valueObject.Docum.ReciboVO;
 import com.valueObject.IngresoCobro.IngresoCobroVO;
 import com.valueObject.Numeradores.NumeradoresVO;
+import com.valueObject.Saldos.SaCuentasVO;
+import com.valueObject.Saldos.SaDocumsVO;
 import com.valueObject.banco.BancoVO;
 import com.valueObject.banco.CtaBcoVO;
 import com.valueObject.cliente.ClienteVO;
@@ -3976,5 +3978,69 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 	}
 
 /////////////////////////////////FIN-NC//////////////////////
+
+	/////////////////////////////////////VISTAS///////////////////////////
+
+	 @SuppressWarnings("unchecked")
+		public ArrayList<SaDocumsVO> getSaldosDocum(String codEmp) throws Exception {
+	    	
+	    	Connection con = null;
+	    	
+	    	ArrayList<SaDocumsVO> lst;
+	    	    	
+	    	try
+	    	{
+	    		con = this.pool.obtenerConeccion();
+	    		
+	    		lst = this.saldosCuentas.getSaldosDocum(codEmp, con);
+		
+	    	}catch(Exception  e)
+	    	{
+	    		throw e;
+	    		
+	    	} 
+	    	finally
+	    	{
+	    		this.pool.liberarConeccion(con);
+	    	}
+	    	    
+	    	
+	    	return lst;
+	    }	 
+	 
+	 
+	 @SuppressWarnings("unchecked")
+		public ArrayList<SaCuentasVO> getSaCuentas(String codEmp) throws Exception {
+	    	
+	    	Connection con = null;
+	    	
+	    	ArrayList<SaCuentasVO> lst;
+	    	    	
+	    	try
+	    	{
+	    		con = this.pool.obtenerConeccion();
+	    		
+	    		lst = this.saldosCuentas.getSaCuentas(codEmp, con);
+	    		
+	    		
+	    	
+		
+	    	}catch(Exception  e)
+	    	{
+	    		throw e;
+	    		
+	    	} 
+	    	finally
+	    	{
+	    		this.pool.liberarConeccion(con);
+	    	}
+	    	    
+	    	
+	    	return lst;
+	    }	 
+	 
+	
+	
+	
 	
 }

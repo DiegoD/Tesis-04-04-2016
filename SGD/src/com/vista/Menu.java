@@ -58,6 +58,8 @@ public class Menu extends HorizontalLayout {
 	protected Button periodo;
 	protected Button deposito;
 	protected Button conciliacion;
+	protected Button saldoDocumentos;
+	protected Button saldoCuentas;
 	protected VerticalLayout content;
 
 	public Menu() {

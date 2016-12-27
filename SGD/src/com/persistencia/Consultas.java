@@ -1841,4 +1841,30 @@ public String getIngresoCobroCabTodosOtros(){
 		return sb.toString();
 	}
 	
+	
+	////////////////////////////////////////VISTAS//////////////////////////////////////
+	
+	public String getSaCuentas(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_docum, serie_docum, nro_docum, cod_doc_ref, serie_doc_ref, nro_doc_ref, cod_bco, cod_ctabco, movimiento, cod_emp, cod_moneda, cod_tit, imp_tot_mn, imp_tot_mo, signo, cuenta, cod_cta, referencia, nro_trans, fec_valor, fec_doc, conciliado ");
+		sb.append("FROM sa_cuentas WHERE cod_emp = ? ");
+			
+		
+		return sb.toString();
+	}
+	
+	
+	public String getSaDocum(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT cod_docum, serie_docum, nro_docum, cod_emp, cod_moneda, cod_tit, imp_tot_mn, imp_tot_mo, cuenta, fecha_mod, usuario_mod, operacion ");
+		sb.append("FROM sa_docum WHERE cod_emp = ? ");
+			
+		
+		return sb.toString();
+	}
+	
 }

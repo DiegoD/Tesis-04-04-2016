@@ -33,6 +33,9 @@ import com.vista.NotaCredito.NotaCreditoPanelExtended;
 import com.vista.Periodo.PeriodosPanelExtended;
 import com.vista.Procesos.ProcesosPanelExtended;
 import com.vista.Recibo.ReciboPanelExtended;
+import com.vista.RepVis.VistaSaDocum;
+import com.vista.RepVis.VistaSaDocumExtended;
+import com.vista.RepVis2.VistaSaCuentasExtended;
 import com.vista.ResumenProceso.ResProcesosPanelExtended;
 import com.vista.Rubros.RubrosPanelExtended;
 import com.vista.TipoRubro.TipoRubrosPanelExtended;
@@ -186,6 +189,44 @@ public class MenuExtended extends Menu{
 			try {
 				
 				GruposPanelExtended c = new GruposPanelExtended();
+				c.setSizeFull();
+				this.content.setSizeFull();
+				
+				this.content.addComponent(c);
+				
+			} catch (Exception e) {
+				
+				Mensajes.mostrarMensajeError(e.getMessage());
+			}
+		});
+		
+		this.saldoDocumentos.addClickListener(click -> {
+			
+			setSizeFull();
+			
+			this.content.removeAllComponents();
+			try {
+				
+				VistaSaDocumExtended c = new VistaSaDocumExtended();
+				c.setSizeFull();
+				this.content.setSizeFull();
+				
+				this.content.addComponent(c);
+				
+			} catch (Exception e) {
+				
+				Mensajes.mostrarMensajeError(e.getMessage());
+			}
+		});
+		
+		this.saldoCuentas.addClickListener(click -> {
+			
+			setSizeFull();
+			
+			this.content.removeAllComponents();
+			try {
+				
+				VistaSaCuentasExtended c = new VistaSaCuentasExtended();
 				c.setSizeFull();
 				this.content.setSizeFull();
 				
@@ -684,6 +725,8 @@ public class MenuExtended extends Menu{
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_RESUMEN_PROCESO) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_PERIODO) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_CONCILIACION) ||
+				formularioVO.getCodigo().equals("SaldoDocumentos") ||
+				formularioVO.getCodigo().equals("SaldoCuentas") ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_RUBROS))
 			{
 				lstFormsMenuMant.add(formularioVO);
@@ -828,6 +871,22 @@ public class MenuExtended extends Menu{
 							this.habilitarConciliacion();
 							this.layoutMenu.addComponent(this.conciliacion);
 						}
+					break;
+					
+					case "SaldoDocumentos" :
+						
+							this.habilitarSaldoDocumentosButton(); 
+							
+							this.layoutMenu.addComponent(this.impuestoButton);
+							
+							
+					break;
+					
+					case "SaldoCuentas" :
+							this.habilitarSaldoDocumentosButton(); 
+							
+							this.layoutMenu.addComponent(this.impuestoButton);
+							
 					break;
 				}
 				
@@ -1182,6 +1241,21 @@ public class MenuExtended extends Menu{
 		return this.permisos;
 	}
 	
+	private void habilitarSaldoCuentaButton()
+	{
+		this.saldoCuentas.setVisible(true);
+		this.saldoCuentas.setEnabled(true);
+		
+		this.layoutMenu.addComponent(this.impuestoButton);
+	}
+	
+	private void habilitarSaldoDocumentosButton()
+	{
+		this.saldoDocumentos.setVisible(true);
+		this.saldoDocumentos.setEnabled(true);
+		
+		this.layoutMenu.addComponent(this.impuestoButton);
+	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
