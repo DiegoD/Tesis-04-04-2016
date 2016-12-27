@@ -45,7 +45,7 @@ public class RubrosPanelExtended extends RubrosPanel{
 	public RubrosPanelExtended() throws InicializandoException, ConexionException, ObteniendoImpuestosException{
 		controlador = new RubroControlador();
 		this.lstRubros = new ArrayList<RubroVO>();
-		
+		this.lblTitulo.setValue("Rubros");
 		String usuario = (String)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("usuario");
 		this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
 		
@@ -65,7 +65,7 @@ public class RubrosPanelExtended extends RubrosPanel{
 				
 					this.btnNuevoRubro.addClickListener(click -> {
 						
-						sub = new MySub("52%", "30%");
+						sub = new MySub("60%", "30%");
 						try {
 							form = new RubroViewExtended(Variables.OPERACION_NUEVO, this);
 						} catch (Exception e) {
@@ -157,7 +157,7 @@ public class RubrosPanelExtended extends RubrosPanel{
 				    	}
 							
 				    	form = new RubroViewExtended(Variables.OPERACION_LECTURA, RubrosPanelExtended.this);
-						sub = new MySub("52%","30%");
+						sub = new MySub("60%","30%");
 						sub.setModal(true);
 						sub.setVista(form);
 						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/

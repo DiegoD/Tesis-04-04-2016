@@ -11,7 +11,7 @@
    <vaadin-horizontal-layout width-full> 
     <vaadin-link caption="Auditoria" _id="auditoria" :middle :right></vaadin-link> 
    </vaadin-horizontal-layout> 
-   <vaadin-horizontal-layout responsive size-full> 
+   <vaadin-horizontal-layout responsive size-full :middle :right> 
     <vaadin-form-layout spacing="false" size-full _id="formLay1"> 
      <vaadin-text-field caption="Codigo" style-name="tiny" width="90%" readonly _id="codCuenta"></vaadin-text-field> 
      <vaadin-text-field caption="Nombre" style-name="tiny" width="90%" readonly _id="descripcion"></vaadin-text-field> 
@@ -29,8 +29,8 @@
      </vaadin-horizontal-layout> 
     </vaadin-form-layout> 
     <vaadin-form-layout spacing="false" size-full margin-bottom="false" _id="formLay2"> 
-     <vaadin-grid id="lstRubros" responsive width-full height="356px" _id="lstRubros"></vaadin-grid> 
-     <vaadin-horizontal-layout style-name="v-formlayout footer" responsive :middle :right> 
+     <vaadin-grid id="lstRubros" responsive width-full height="268px" _id="lstRubros"></vaadin-grid> 
+     <vaadin-horizontal-layout style-name="v-formlayout footer" spacing responsive :middle> 
       <vaadin-button style-name="primary tiny" responsive id="btnAgregar" plain-text _id="btnAgregar" :middle>
         Agregar 
       </vaadin-button> 
@@ -41,7 +41,7 @@
         Quitar 
       </vaadin-button> 
       <vaadin-button style-name="primary tiny" responsive id="btnVerPermisos" plain-text _id="btnVerPermisos" :middle>
-        Permisos 
+        Usos 
       </vaadin-button> 
      </vaadin-horizontal-layout> 
     </vaadin-form-layout> 

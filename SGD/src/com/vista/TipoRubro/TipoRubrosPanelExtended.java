@@ -46,7 +46,7 @@ public class TipoRubrosPanelExtended extends TipoRubrosPanel{
 		
 		controlador = new TipoRubroControlador();
 		this.lstTipoRubros = new ArrayList<TipoRubroVO>();
-		
+		this.lblTitulo.setValue("Tipo de rubros");
 		String usuario = (String)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("usuario");
 		this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
 		

@@ -21,6 +21,7 @@ import com.excepciones.Conciliaciones.MovimientoConciliadoException;
 import com.excepciones.Cotizaciones.ObteniendoCotizacionesException;
 import com.excepciones.Egresos.*;
 import com.excepciones.Gastos.ExisteGastoException;
+import com.excepciones.IngresoCobros.ExisteIngresoCobroException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
 import com.excepciones.Periodo.ExistePeriodoException;
 import com.excepciones.Periodo.NoExistePeriodoException;
@@ -983,12 +984,14 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 				
 				try {
 					
-					val.existeGastoAsociado(permisoAux, detVO);
-					UI.getCurrent().removeWindow(sub);
-					Mensajes.mostrarMensajeError("El gasto está asociado a un cobro");
-					return;
+					if(val.existeGastoIngresoCobro(permisoAux, Integer.valueOf(detVO.getNroDocum()))){
+						UI.getCurrent().removeWindow(sub);
+						Mensajes.mostrarMensajeError("El gasto está asociado a un cobro");
+						return;
+					}
 					
-				} catch (NumberFormatException | ExisteGastoException e) {
+					
+				} catch (NumberFormatException e) {
 					// TODO Auto-generated catch block
 					Mensajes.mostrarMensajeError(e.toString());
 				}
@@ -3108,12 +3111,19 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 					
 					try {
 						
-						val.existeGastoAsociado(permisoAux, detVO);
-						UI.getCurrent().removeWindow(sub);
-						Mensajes.mostrarMensajeError("El gasto está asociado a un cobro");
-						return;
+						try {
+							if(val.existeGastoIngresoCobro(permisoAux, Integer.valueOf(detVO.getNroDocum()))){
+								UI.getCurrent().removeWindow(sub);
+								Mensajes.mostrarMensajeError("El gasto está asociado a un cobro");
+								return;
+							}
+						} catch (ExisteIngresoCobroException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						
-					} catch (NumberFormatException | ExisteGastoException e) {
+						
+					} catch (NumberFormatException e) {
 						// TODO Auto-generated catch block
 						Mensajes.mostrarMensajeError(e.toString());
 					}

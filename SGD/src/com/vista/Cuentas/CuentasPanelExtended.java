@@ -42,7 +42,7 @@ public class CuentasPanelExtended extends CuentasPanel{
 		
 		controlador = new CuentaControlador();
 		this.lstCuentas = new ArrayList<CuentaVO>();
-		
+		this.lblTitulo.setValue("Cuentas");
 		String usuario = (String)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("usuario");
 		this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
 		
@@ -63,7 +63,7 @@ public class CuentasPanelExtended extends CuentasPanel{
 				
 					this.btnNuevo.addClickListener(click -> {
 						
-							sub = new MySub("75%", "80%");
+							sub = new MySub("70%","60%");
 							form = new CuentaViewExtended(Variables.OPERACION_NUEVO, this);
 							sub.setModal(true);
 							sub.setVista(form);
@@ -133,7 +133,7 @@ public class CuentasPanelExtended extends CuentasPanel{
 							
 						form = new CuentaViewExtended(Variables.OPERACION_LECTURA, CuentasPanelExtended.this);
 						//form.fieldGroup.setItemDataSource(item);
-						sub = new MySub("75%","80%");
+						sub = new MySub("70%","60%");
 						sub.setModal(true);
 						sub.setVista(form);
 						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/

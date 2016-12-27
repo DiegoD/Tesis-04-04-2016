@@ -44,7 +44,7 @@ public class FuncionariosPanelExtended extends FuncionariosPanel {
 			
 			controlador = new FuncionarioControlador();
 			this.lstFuncionarios = new ArrayList<FuncionarioVO>();
-			
+			this.lblTitulo.setValue("Funcionarios");
 			String usuario = (String)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("usuario");
 			this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
 			

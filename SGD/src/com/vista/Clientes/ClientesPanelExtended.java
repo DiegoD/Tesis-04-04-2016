@@ -46,7 +46,7 @@ public class ClientesPanelExtended extends ClientesPanel{
 		
 		controlador = new ClienteControlador();
 		this.lstClientes = new ArrayList<ClienteVO>();
-		
+		this.lblTitulo.setValue("Clientes");
 		String usuario = (String)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("usuario");
 		this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
 		

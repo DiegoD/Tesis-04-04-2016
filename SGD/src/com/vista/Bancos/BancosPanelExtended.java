@@ -41,7 +41,7 @@ public class BancosPanelExtended extends BancosPanel{
 		
 		controlador = new BancoControlador();
 		this.lstBancos = new ArrayList<BancoVO>();
-		
+		this.lblTitulo.setValue("Bancos");
 		String usuario = (String)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("usuario");
 		this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
 		

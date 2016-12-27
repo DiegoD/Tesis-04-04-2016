@@ -50,7 +50,7 @@ public class GruposPanelExtended extends GruposPanel {
 		
 		controlador = new GrupoControlador();
 		this.lstGrupos = new ArrayList<GrupoVO>();
-		
+		this.lblTitulo.setValue("Grupos");
 		String usuario = (String)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("usuario");
 		this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
 		

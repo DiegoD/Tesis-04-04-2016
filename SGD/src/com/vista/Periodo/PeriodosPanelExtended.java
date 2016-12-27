@@ -46,7 +46,7 @@ public class PeriodosPanelExtended extends PeriodosPanel{
 		
 		controlador = new PeriodoControlador();
 		this.lstPeriodos = new ArrayList<PeriodoVO>();
-		
+		this.lblTitulo.setValue("Períodos");
 		String usuario = (String)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("usuario");
 		this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
 		

@@ -43,7 +43,7 @@ public class DocumentosPanelExtended extends DocumentosPanel{
 		
 		controlador = new DocumentoControlador();
 		this.lstDocumentos = new ArrayList<DocumentoAduaneroVO>();
-		
+		this.lblTitulo.setValue("Documentos");
 		String usuario = (String)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("usuario");
 		this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
 		

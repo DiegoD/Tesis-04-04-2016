@@ -52,7 +52,7 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 	{
 		
 		this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
-		
+		this.lblTitulo.setValue("Usuarios");
 	    /*Verificamos que el usuario tenga permisos de lectura para mostrar la vista*/
 		boolean permisoLectura = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_USUARIO, VariablesPermisos.OPERACION_LEER);
 		

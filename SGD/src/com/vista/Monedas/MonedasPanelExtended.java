@@ -123,6 +123,7 @@ public class MonedasPanelExtended extends MonedasPanel{
 		gridMonedas.removeColumn("operacion");
 		gridMonedas.removeColumn("aceptaCotizacion");
 		gridMonedas.removeColumn("nacional");
+		gridMonedas.removeColumn("cotizacion");
 		
 		/*Agregamos los filtros a la grilla*/
 		this.filtroGrilla();
