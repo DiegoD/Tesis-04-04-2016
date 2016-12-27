@@ -526,7 +526,7 @@ public class ConsultasDD {
 				+ "m_rubrosxcuenta.oficina, m_rubrosxcuenta.proceso, m_rubrosxcuenta.persona, "
 				+ "m_tiporubro.cod_tipoRubro, m_tiporubro.descripcion, m_rubros.facturable ");
 		
-		sb.append("FROM m_cuentas, m_rubrosxcuenta, m_rubros, m_impuestos, m_tipoRubro ");
+		sb.append("FROM m_cuentas, m_rubrosxcuenta, m_rubros, m_impuestos, m_tiporubro ");
 		
 		sb.append("where m_rubrosxcuenta.cod_rubro = m_rubros.cod_rubro AND "
 				+ "m_rubrosxcuenta.cod_cuenta = m_cuentas.cod_cuenta and m_rubrosxcuenta.cod_emp = ? "
@@ -551,7 +551,7 @@ public class ConsultasDD {
 				+ "m_rubrosxcuenta.oficina, m_rubrosxcuenta.proceso, m_rubrosxcuenta.persona, "
 				+ "m_tiporubro.cod_tipoRubro, m_tiporubro.descripcion, m_rubros.facturable ");
 		
-		sb.append("FROM m_cuentas, m_rubrosxcuenta, m_rubros, m_impuestos, m_tipoRubro ");
+		sb.append("FROM m_cuentas, m_rubrosxcuenta, m_rubros, m_impuestos, m_tiporubro ");
 		
 		sb.append("where m_rubrosxcuenta.cod_rubro = m_rubros.cod_rubro AND "
 				+ "m_rubrosxcuenta.cod_cuenta = m_cuentas.cod_cuenta and m_rubrosxcuenta.cod_emp = ? "
