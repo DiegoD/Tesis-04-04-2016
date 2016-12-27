@@ -409,6 +409,11 @@ public class IngresoOtroPanelExtended extends IngresoOtroPanel{
 		grid.getColumn("codCuenta").setHidden(true);
 		grid.getColumn("nomCuenta").setHidden(true);
 		
+		grid.getColumn("nacionalMonedaCtaBco").setHidden(true);
+		grid.getColumn("codMonedaCtaBco").setHidden(true);
+		grid.getColumn("tipo").setHidden(true);
+		grid.getColumn("impTotMo").setHeaderCaption("Importe");
+		
 		grid.removeColumn("nacional");
 		grid.removeColumn("codCtaInd");
 		grid.getColumn("simboloMoneda").setHeaderCaption("Moneda");

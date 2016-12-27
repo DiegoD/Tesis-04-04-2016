@@ -416,9 +416,14 @@ public class IngresoEgresoOtroPanelExtended extends IngresoEgresoOtroPanel{
 		grid.getColumn("codCuenta").setHidden(true);
 		grid.getColumn("nomCuenta").setHidden(true);
 		
+		grid.getColumn("nacionalMonedaCtaBco").setHidden(true);
+		grid.getColumn("codMonedaCtaBco").setHidden(true);
+		grid.getColumn("tipo").setHidden(true);
+		
 		grid.removeColumn("nacional");
 		grid.removeColumn("codCtaInd");
 		grid.getColumn("simboloMoneda").setHeaderCaption("Moneda");
+		grid.getColumn("impTotMo").setHeaderCaption("Importe");
 		
 		grid.getColumn("fecValor").setConverter(new StringToDateConverter(){
 			/**

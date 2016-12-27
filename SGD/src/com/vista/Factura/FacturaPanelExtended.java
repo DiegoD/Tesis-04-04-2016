@@ -400,7 +400,13 @@ public class FacturaPanelExtended extends FacturaPanel{
 			grid.getColumn("tipo").setHidden(true);
 			grid.removeColumn("nacional");
 			grid.removeColumn("codCtaInd");
+			grid.removeColumn("impuTotMo");
+			grid.removeColumn("impSubMn");
+			grid.removeColumn("impSubMo");
+			grid.removeColumn("impuTotMn");
+			
 			grid.getColumn("simboloMoneda").setHeaderCaption("Moneda");
+			grid.getColumn("impTotMo").setHeaderCaption("Importe");
 			
 			grid.getColumn("fecValor").setConverter(new StringToDateConverter(){
 				/**
@@ -420,11 +426,11 @@ public class FacturaPanelExtended extends FacturaPanel{
 			
 			grid.getColumn("nroDocum").setWidth(150);
 			grid.getColumn("simboloMoneda").setWidth(150);
-			grid.getColumn("impTotMo").setWidth(150);
+			
 			grid.getColumn("fecValor").setWidth(150);
 			grid.getColumn("referencia").setWidth(300);
 			
-			grid.setColumnOrder("nomTitular", "referencia", "nroDocum", "simboloMoneda", "impTotMo", "fecValor");
+			grid.setColumnOrder("nomTitular", "referencia", "nroDocum", "simboloMoneda", "fecValor");
 			
 		}catch(Exception e)
 		{

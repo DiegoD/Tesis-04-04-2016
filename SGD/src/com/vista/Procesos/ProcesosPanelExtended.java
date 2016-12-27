@@ -159,6 +159,14 @@ public class ProcesosPanelExtended extends ProcesosPanel{
 			gridProcesos.removeColumn("observaciones");
 			gridProcesos.removeColumn("descMoneda");
 			
+			gridProcesos.removeColumn("codCuenta");
+			gridProcesos.removeColumn("codImpuesto");
+			gridProcesos.removeColumn("codRubro");
+			gridProcesos.removeColumn("impSubTot");
+			gridProcesos.removeColumn("linea");
+			gridProcesos.removeColumn("nomCuenta");
+			gridProcesos.removeColumn("nomRubro");
+			
 			/*Agregamos los filtros a la grilla*/
 			this.filtroGrilla();
 			

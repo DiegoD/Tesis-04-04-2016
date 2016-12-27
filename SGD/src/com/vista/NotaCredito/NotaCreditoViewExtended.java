@@ -1594,6 +1594,9 @@ public class NotaCreditoViewExtended extends NotaCreditoViews implements IBusque
 		  lstGastos.getColumn("tcMov").setHidden(true);
 		  lstGastos.getColumn("usuarioMod").setHidden(true);
 		  lstGastos.getColumn("nacional").setHidden(true);
+		  lstGastos.getColumn("estadoGasto").setHidden(true);
+		  lstGastos.getColumn("tipo").setHidden(true);
+		  
 		  
 		lstGastos.setColumnOrder("nroDocum", "referencia", "simboloMoneda", "impTotMo", "codProceso");
 		

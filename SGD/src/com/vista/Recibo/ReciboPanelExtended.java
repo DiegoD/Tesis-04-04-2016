@@ -404,9 +404,20 @@ public class ReciboPanelExtended extends ReciboPanel{
 		grid.getColumn("codCuenta").setHidden(true);
 		grid.getColumn("nomCuenta").setHidden(true);
 		
+		grid.getColumn("impSubMn").setHidden(true);
+		grid.getColumn("impSubMo").setHidden(true);
+		grid.getColumn("impuTotMn").setHidden(true);
+		grid.getColumn("impuTotMo").setHidden(true);
+		grid.getColumn("nacionalMonedaCtaBco").setHidden(true);
+		grid.getColumn("codMonedaCtaBco").setHidden(true);
+		
+		grid.getColumn("tipo").setHidden(true);
+		
+		
 		grid.removeColumn("nacional");
 		grid.removeColumn("codCtaInd");
 		grid.getColumn("simboloMoneda").setHeaderCaption("Moneda");
+		grid.getColumn("impTotMo").setHeaderCaption("Importe");
 		
 		grid.getColumn("fecValor").setConverter(new StringToDateConverter(){
 			/**
