@@ -96,6 +96,9 @@ public class DAOCheques implements IDAOCheques{
 			pstmt1.setLong(14, cheque.getNroTrans());
 			pstmt1.setString(15, cheque.getBanco().getCodBanco());
 			pstmt1.setString(16, cheque.getCuentaBanco().getCodCuenta());
+			pstmt1.setTimestamp(17, cheque.getFecDoc());
+			pstmt1.setTimestamp(18, cheque.getFecValor());
+			pstmt1.setDouble(19, cheque.getTcMov());
 			
 			pstmt1.executeUpdate ();
 			pstmt1.close ();

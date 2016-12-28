@@ -104,8 +104,6 @@ public class DAOFuncionarios implements IDAOFuncionarios{
 			Funcionario aux;
 			while(rs.next ()) {
 				
-				Timestamp t = rs.getTimestamp(7);
-				
 				aux = new Funcionario();
 				
 				aux.setCodigo(rs.getInt("cod_tit"));
@@ -119,6 +117,9 @@ public class DAOFuncionarios implements IDAOFuncionarios{
 				aux.setOperacion(rs.getString("operacion"));
 				aux.setFechaMod(rs.getTimestamp("fecha_mod"));
 				
+				
+				String s = rs.getString("operacion");
+				String r = rs.getString("usuario_mod");
 				
 				
 				lstFuncionarios.add(aux);

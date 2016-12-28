@@ -1872,8 +1872,9 @@ public String getGastosAnuladosxProceso(){
 		sb.append("INSERT INTO c_cheques ( cod_docum, serie_docum, nro_docum, "
 				+ " cod_emp, cod_moneda, cod_tit, "
 				+ " imp_tot_mn, imp_tot_mo, cuenta, "
-				+ " fecha_mod, usuario_mod, operacion, cod_cta, referencia, nro_trans, cod_bco, cod_ctabco ) ");
-		sb.append("VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?, ?, ?, ? ) ");
+				+ " fecha_mod, usuario_mod, operacion, cod_cta, referencia, nro_trans, cod_bco, cod_ctabco, "
+				+ " fec_doc, fec_valor, tc_mov ) ");
+		sb.append("VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ) ");
 		
 		return sb.toString();
 	}
@@ -2070,30 +2071,26 @@ public String eliminarSaldoCuenta(){
 		sb.append("SELECT c_cheques.cod_docum, c_cheques.serie_docum, c_cheques.nro_docum, "
 				+ " c_cheques.referencia, c_cheques.cod_moneda, m_monedas.descripcion, m_monedas.nacional, "
 				+ " m_monedas.simbolo, "
-				+ "sa_docum.imp_tot_mn, sa_docum.imp_tot_mo, c_ingcobro.cod_doc_ref, "
-				+ "c_ingcobro.serie_doc_ref, c_ingcobro.nro_doc_ref, c_ingcobro.cod_bco, "
-				+ "c_ingcobro.cod_ctabco , c_ingcobro.fec_valor, c_ingcobro.fec_doc, c_ingcobro.tc_mov, "
+				+ "sa_docum.imp_tot_mn, sa_docum.imp_tot_mo, "
+				+ "c_cheques.cod_bco, "
+				+ "c_cheques.cod_ctabco , c_cheques.fec_valor, c_cheques.fec_doc, c_cheques.tc_mov, "
 				+ "m_bancos.nom_bco, m_ctasbcos.nom_cta, c_cheques.cod_tit ");
 		
-		sb.append("FROM c_cheques, sa_docum, c_ingcobro, m_bancos, m_ctasbcos, m_monedas ");
+		sb.append("FROM c_cheques, sa_docum, m_bancos, m_ctasbcos, m_monedas ");
 		
 		sb.append("WHERE c_cheques.cod_docum = 'cheqrec' "
 				+ "and c_cheques.cod_docum = sa_docum.cod_docum "
 				+ "and c_cheques.serie_docum = sa_docum.serie_docum "
 				+ "and c_cheques.nro_docum = sa_docum.nro_docum "
 				+ "and c_cheques.cod_emp = sa_docum.cod_emp "
-				+ "and c_cheques.cod_docum = c_ingcobro.cod_doc_ref "
-				+ "and c_cheques.serie_docum = c_ingcobro.serie_doc_ref "
-				+ "and c_cheques.nro_docum = c_ingcobro.nro_doc_ref "
-				+ "and c_cheques.cod_emp = c_ingcobro.cod_emp "
 				+ "and c_cheques.cod_emp = ? "
 				+ "and c_cheques.cod_moneda = ? "
 				+ "and sa_docum.imp_tot_mo > 0 "
 				+ "and m_bancos.cod_emp = c_cheques.cod_emp "
-				+ "and m_bancos.cod_bco = c_ingcobro.cod_bco "
+				+ "and m_bancos.cod_bco = c_cheques.cod_bco "
 				+ "and m_ctasbcos.cod_emp = c_cheques.cod_emp "
-				+ "and m_ctasbcos.cod_bco = c_ingcobro.cod_bco "
-				+ "and m_ctasbcos.cod_ctabco = c_ingcobro.cod_ctabco "
+				+ "and m_ctasbcos.cod_bco = c_cheques.cod_bco "
+				+ "and m_ctasbcos.cod_ctabco = c_cheques.cod_ctabco "
 				+ "and m_monedas.cod_moneda = c_cheques.cod_moneda "
 				+ "and m_monedas.cod_emp = c_cheques.cod_emp "
 				+ "and c_cheques.cod_tit = sa_docum.cod_tit ");

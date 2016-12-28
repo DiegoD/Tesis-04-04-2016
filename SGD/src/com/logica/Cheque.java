@@ -65,6 +65,9 @@ public class Cheque extends DatosDocum{
 		cheque.setNroTrans(ing.getNroTrans());
 		cheque.setBanco(ing.getBancoInfo());
 		cheque.setCuentaBanco(ing.getCuentaBcoInfo());
+		cheque.setTcMov(ing.getTcMov());
+		cheque.setFecDoc(ing.getFecDoc());
+		cheque.setFecValor(ing.getFecValor());
 		
 		return cheque;
 		
@@ -89,6 +92,9 @@ public class Cheque extends DatosDocum{
 		cheque.setNroTrans(rec.getNroTrans());
 		cheque.setBanco(rec.getBancoInfo());
 		cheque.setCuentaBanco(rec.getCuentaBcoInfo());
+		cheque.setTcMov(rec.getTcMov());
+		cheque.setFecDoc(rec.getFecDoc());
+		cheque.setFecValor(rec.getFecValor());
 		
 		return cheque;
 		
