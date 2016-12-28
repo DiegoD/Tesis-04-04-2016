@@ -877,7 +877,7 @@ public class MenuExtended extends Menu{
 						
 							this.habilitarSaldoDocumentosButton(); 
 							
-							this.layoutMenu.addComponent(this.impuestoButton);
+							this.layoutMenu.addComponent(this.saldoDocumentos);
 							
 							
 					break;
@@ -885,7 +885,7 @@ public class MenuExtended extends Menu{
 					case "SaldoCuentas" :
 							this.habilitarSaldoDocumentosButton(); 
 							
-							this.layoutMenu.addComponent(this.impuestoButton);
+							this.layoutMenu.addComponent(this.saldoCuentas);
 							
 					break;
 				}
@@ -975,7 +975,6 @@ public class MenuExtended extends Menu{
 		
 		
 		this.lbAdministracion.setVisible(false);
-		
 		
 		
 		this.userButton.setVisible(false);
