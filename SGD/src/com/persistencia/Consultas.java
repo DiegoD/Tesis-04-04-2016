@@ -1688,6 +1688,17 @@ public String getIngresoCobroCabTodosOtros(){
 		
 		return sb.toString();
 	}
+	
+	public String existeReciboFactura(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT nro_docum ");
+		sb.append("FROM d_recibos WHERE nro_docum = ? AND serie_docum = ? AND cod_docum = ? ");
+		sb.append( "AND cod_emp = ? ");
+		
+		return sb.toString();
+	}
 
 
 //////////////////////FIN-RECIBO /////////////////////////////////////////////	
@@ -1806,6 +1817,17 @@ public String getIngresoCobroCabTodosOtros(){
 		
 		sb.append("SELECT nro_docum ");
 		sb.append("FROM c_notacred WHERE nro_docum = ? AND serie_docum = ? AND cod_docum = ? ");
+		sb.append( "AND cod_emp = ? ");
+		
+		return sb.toString();
+	}
+	
+	public String existeNCFactura(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT nro_docum ");
+		sb.append("FROM d_notacred WHERE nro_docum = ? AND serie_docum = ? AND cod_docum = ? ");
 		sb.append( "AND cod_emp = ? ");
 		
 		return sb.toString();

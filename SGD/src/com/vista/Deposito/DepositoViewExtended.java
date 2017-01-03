@@ -6,6 +6,7 @@ import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Locale;
 
@@ -569,6 +570,10 @@ public class DepositoViewExtended extends DepositoView implements IMensaje{
 		this.btnEliminar.setVisible(false);
 		this.btnEditar.setVisible(false);
 		this.botones.setWidth("187");
+		
+		Calendar c = Calendar.getInstance();    
+		this.fecDoc.setValue(new java.sql.Date(c.getTimeInMillis()));
+		this.fecValor.setValue(new java.sql.Date(c.getTimeInMillis()));
 		
 //		this.enableBotonAceptar();
 //		this.disableBotonLectura();

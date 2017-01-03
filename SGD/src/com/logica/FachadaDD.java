@@ -82,6 +82,7 @@ import com.excepciones.Monedas.InsertandoMonedaException;
 import com.excepciones.Monedas.ModificandoMonedaException;
 import com.excepciones.Monedas.NoExisteMonedaException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
+import com.excepciones.NotaCredito.ExisteNotaCreditoException;
 import com.excepciones.Periodo.ExistePeriodoException;
 import com.excepciones.Periodo.InsertandoPeriodoException;
 import com.excepciones.Periodo.ModificandoPeriodoException;
@@ -93,6 +94,7 @@ import com.excepciones.Procesos.IngresandoProcesoException;
 import com.excepciones.Procesos.ModificandoProcesoException;
 import com.excepciones.Procesos.NoExisteProcesoException;
 import com.excepciones.Procesos.ObteniendoProcesosException;
+import com.excepciones.Recibo.ExisteReciboException;
 import com.excepciones.Rubros.ExisteRubroException;
 import com.excepciones.Rubros.InsertandoRubroException;
 import com.excepciones.Rubros.ModificandoRubroException;
@@ -186,6 +188,8 @@ public class FachadaDD {
 	private IDAOEgresoCobro egresoCobro;
 	private IDAOFacturas facturas;
 	private IDAOIngresoCobro ingresoCobro;
+	private IDAORecibos recibos;
+	private IDAONotaCredito notaCredito;
 	
 	
     private FachadaDD() throws InstantiationException, IllegalAccessException, ClassNotFoundException, FileNotFoundException, IOException
@@ -221,6 +225,8 @@ public class FachadaDD {
         this.egresoCobro = fabricaConcreta.crearDAOEgresoCobro();
         this.facturas = fabricaConcreta.crearDAOFactura();
         this.ingresoCobro = fabricaConcreta.crearDAOIngresoCobro();
+        this.recibos = fabricaConcreta.crearDAORecibos();
+        this.notaCredito = fabricaConcreta.crearDAONotaCredito();
     }
     
     public static FachadaDD getInstance() throws InicializandoException {
@@ -5164,6 +5170,64 @@ public class FachadaDD {
 				   con.setAutoCommit(false);
 				   existe = this.facturas.existeGasto(nro_docum, codEmp, con);
 				
+			   } catch(ConexionException | SQLException e)
+			   {
+				   try {
+					   con.rollback();
+
+				   } 
+				   catch (SQLException e1) {
+
+					   throw new ConexionException();
+				   }
+				   
+			   }
+			   finally
+			   {
+				   pool.liberarConeccion(con);
+			   }
+			  
+			   return existe;
+		}
+		
+		public boolean existeReciboFactura(Integer nro_docum,  String serie, String codigo, String codEmp) throws ConexionException, ExisteReciboException{
+			   
+			   Boolean existe = false;
+			   Connection con = null;
+			   try {
+				   
+				   con = this.pool.obtenerConeccion();
+				   con.setAutoCommit(false);
+				   existe = this.recibos.existeReciboFactura(nro_docum, serie, codigo, codEmp, con);
+			   } catch(ConexionException | SQLException e)
+			   {
+				   try {
+					   con.rollback();
+
+				   } 
+				   catch (SQLException e1) {
+
+					   throw new ConexionException();
+				   }
+				   
+			   }
+			   finally
+			   {
+				   pool.liberarConeccion(con);
+			   }
+			  
+			   return existe;
+		}
+		
+		public boolean existeNCFactura(Integer nro_docum,  String serie, String codigo, String codEmp) throws ConexionException, ExisteNotaCreditoException{
+			   
+			   Boolean existe = false;
+			   Connection con = null;
+			   try {
+				   
+				   con = this.pool.obtenerConeccion();
+				   con.setAutoCommit(false);
+				   existe = this.notaCredito.existeNCFactura(nro_docum, serie, codigo, codEmp, con);
 			   } catch(ConexionException | SQLException e)
 			   {
 				   try {

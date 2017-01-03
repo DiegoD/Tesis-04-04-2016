@@ -68,7 +68,7 @@ public class FacturaPanelExtended extends FacturaPanel{
         
 			try {
 				
-				Calendar c = Calendar.getInstance();   // this takes current date
+				Calendar c = Calendar.getInstance();   
 			    c.set(Calendar.DAY_OF_MONTH, 1);
 				
 			    this.fechaInicio.setValue(new java.sql.Date(c.getTimeInMillis()));

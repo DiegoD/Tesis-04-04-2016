@@ -6,6 +6,7 @@ import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Locale;
 
@@ -607,6 +608,10 @@ private static final long serialVersionUID = 1L;
 		this.gridDetalle.setContainerDataSource(container);
 		
 		actualizarGrillaContainer(container);
+		
+		Calendar c = Calendar.getInstance();    
+		this.fecDoc.setValue(new java.sql.Date(c.getTimeInMillis()));
+		this.fecValor.setValue(new java.sql.Date(c.getTimeInMillis()));
 		
 		this.btnEliminar.setVisible(false);
 		this.btnEditar.setVisible(false);

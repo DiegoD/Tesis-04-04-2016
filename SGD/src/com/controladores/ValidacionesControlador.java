@@ -13,6 +13,8 @@ import com.excepciones.Egresos.ExisteEgresoCobroException;
 import com.excepciones.Factura.ExisteFacturaException;
 import com.excepciones.Gastos.ExisteGastoException;
 import com.excepciones.IngresoCobros.ExisteIngresoCobroException;
+import com.excepciones.NotaCredito.ExisteNotaCreditoException;
+import com.excepciones.Recibo.ExisteReciboException;
 import com.excepciones.SaldoCuentas.ExisteNroTransferencia;
 import com.excepciones.Saldos.ExisteSaldoException;
 import com.logica.Fachada;
@@ -134,5 +136,21 @@ public class ValidacionesControlador {
 		else
 			throw new NoTienePermisosException();
     }
+	
+	public boolean existeReciboFactura(Integer nro_docum, String serie_docum, UsuarioPermisosVO permisos) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ExisteReciboException{
+		
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			return FachadaDD.getInstance().existeReciboFactura(nro_docum, serie_docum, "fact", permisos.getCodEmp());
+		else
+			throw new NoTienePermisosException();
+	}
+	
+	public boolean existeNCFactura(Integer nro_docum, String serie_docum, UsuarioPermisosVO permisos) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ExisteNotaCreditoException{
+		
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			return FachadaDD.getInstance().existeNCFactura(nro_docum, serie_docum, "fact", permisos.getCodEmp());
+		else
+			throw new NoTienePermisosException();
+	}
 }
 

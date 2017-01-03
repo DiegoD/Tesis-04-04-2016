@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -1648,7 +1649,9 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		this.container = 
 				new BeanItemContainer<IngresoCobroDetalleVO>(IngresoCobroDetalleVO.class);
 		
-		
+		Calendar c = Calendar.getInstance();    
+		this.fecDoc.setValue(new java.sql.Date(c.getTimeInMillis()));
+		this.fecValor.setValue(new java.sql.Date(c.getTimeInMillis()));
 		
 		/*Como es en operacion nuevo, dejamos todos los campos editabls*/
 		this.readOnlyFields(false);

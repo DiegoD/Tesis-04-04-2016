@@ -612,7 +612,7 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 		/*Seteamos el form en editar*/
 		this.operacion = Variables.OPERACION_EDITAR;
 		this.disableBotonEliminar();
-		
+		this.btnBuscarCliente.setVisible(false);
 		/*Verificamos que tenga permisos*/
 		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_PROCESOS, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		if(permisoNuevoEditar){

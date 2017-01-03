@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import org.apache.james.mime4j.field.datetime.DateTime;
@@ -55,7 +56,6 @@ import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.server.VaadinService;
-import com.vaadin.ui.Calendar;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import com.valueObject.FuncionarioVO;
@@ -1209,6 +1209,9 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		/*Como es en operacion nuevo, dejamos todos los campos editabls*/
 		this.readOnlyFields(false);
 		
+		Calendar c = Calendar.getInstance();    
+		this.fecDoc.setValue(new java.sql.Date(c.getTimeInMillis()));
+		this.fecValor.setValue(new java.sql.Date(c.getTimeInMillis()));
 		
 		this.enableCombos();
 	}

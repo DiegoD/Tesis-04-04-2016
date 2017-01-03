@@ -17,8 +17,10 @@ import com.excepciones.Egresos.ExisteEgresoCobroException;
 import com.excepciones.Factura.ExisteFacturaException;
 import com.excepciones.Gastos.ExisteGastoException;
 import com.excepciones.IngresoCobros.ExisteIngresoCobroException;
+import com.excepciones.NotaCredito.ExisteNotaCreditoException;
 import com.excepciones.Periodo.ExistePeriodoException;
 import com.excepciones.Periodo.NoExistePeriodoException;
+import com.excepciones.Recibo.ExisteReciboException;
 import com.excepciones.SaldoCuentas.ExisteNroTransferencia;
 import com.excepciones.Saldos.ExisteSaldoException;
 import com.valueObject.UsuarioPermisosVO;
@@ -164,5 +166,17 @@ public class Validaciones {
 		
 		validaciones = new ValidacionesControlador();
 		return validaciones.existeSaldoAsociadoProceso(nroProceso, permisos);
+	}
+	
+	public boolean existeReciboFactura(UsuarioPermisosVO permisos, Integer nro_docum, String serie_docum) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ExisteReciboException {
+		
+		validaciones = new ValidacionesControlador();
+		return validaciones.existeReciboFactura(nro_docum, serie_docum, permisos);
+	}
+	
+	public boolean existeNCFactura(UsuarioPermisosVO permisos, Integer nro_docum, String serie_docum) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ExisteNotaCreditoException {
+		
+		validaciones = new ValidacionesControlador();
+		return validaciones.existeNCFactura(nro_docum, serie_docum, permisos);
 	}
 }

@@ -141,6 +141,38 @@ public class DAONotaCredito implements IDAONotaCredito{
 		}
 	}
 	
+	public boolean existeNCFactura(int nroDocum, String serie, String codigo, String codEmp, Connection con) throws ExisteNotaCreditoException, ConexionException{
+		
+		boolean existe = false;
+		
+		try{
+			
+			
+			Consultas consultas = new Consultas();
+			String query = consultas.existeNCFactura();
+			
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			
+			pstmt1.setInt(1, nroDocum);
+			pstmt1.setString(2, serie);
+			pstmt1.setString(3, codigo);
+			pstmt1.setString(4, codEmp);
+			
+			ResultSet rs = pstmt1.executeQuery();
+			
+			if (rs.next ()) 
+				existe = true;
+						
+			rs.close ();
+			pstmt1.close ();
+			
+			return existe;
+			
+		}catch(SQLException e){
+			
+			throw new ExisteNotaCreditoException();
+		}
+	}
 
 	/**
 	 * Inserta un cabezal ingreso cobro

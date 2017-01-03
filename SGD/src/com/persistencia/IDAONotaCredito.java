@@ -15,5 +15,6 @@ public interface IDAONotaCredito {
 	public boolean memberNC(int nroDocum, String serie, String codigo, String codEmp, Connection con) throws ExisteNotaCreditoException, ConexionException;
 	public void insertarNC(NotaCredito recibo, Connection con) throws InsertandoNotaCreditoException, ConexionException;
 	public void eliminarNC(NotaCredito recibo, Connection con) throws InsertandoNotaCreditoException, ConexionException, EliminandoNotaCreditoException;
-
+	public boolean existeNCFactura(int nroDocum, String serie, String codigo, String codEmp, Connection con) throws ExisteNotaCreditoException, ConexionException;
+		
 }

@@ -10,13 +10,10 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import com.controladores.GastoControlador;
-import com.controladores.ProcesoControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.InicializandoException;
 import com.excepciones.NoTienePermisosException;
-import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Gastos.ObteniendoGastosException;
-import com.excepciones.Procesos.ObteniendoProcesosException;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.converter.StringToDateConverter;
@@ -29,14 +26,11 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.Gasto.GastoVO;
-import com.valueObject.proceso.ProcesoVO;
 import com.vista.Mensajes;
 import com.vista.MySub;
 import com.vista.PermisosUsuario;
 import com.vista.Variables;
 import com.vista.VariablesPermisos;
-import com.vista.Procesos.ProcesoViewExtended;
-import com.vista.Procesos.ProcesosPanelExtended;
 
 public class GastosPanelExtended extends GastosPanel implements IGastosMain{
 

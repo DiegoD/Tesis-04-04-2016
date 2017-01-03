@@ -27,5 +27,6 @@ public interface IDAORecibos {
 	public boolean memberRecibos(int nroDocum, String serie, String codigo, String codEmp, Connection con) throws ExisteReciboException, ConexionException;
 	public void insertarRecibo(Recibo recibo, Connection con) throws InsertandoReciboException, ConexionException;
 	public void eliminarRecibo(Recibo recibo, Connection con) throws InsertandoReciboException, ConexionException, EliminandoReciboException;
-
+	public boolean existeReciboFactura(int nroDocum, String serie, String codigo, String codEmp, Connection con) throws ExisteReciboException, ConexionException;
+		
 }

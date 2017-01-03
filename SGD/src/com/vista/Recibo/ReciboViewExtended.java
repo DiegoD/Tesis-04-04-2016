@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -1522,7 +1523,9 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 		this.container = 
 				new BeanItemContainer<ReciboDetalleVO>(ReciboDetalleVO.class);
 		
-		
+		Calendar c = Calendar.getInstance();    
+		this.fecDoc.setValue(new java.sql.Date(c.getTimeInMillis()));
+		this.fecValor.setValue(new java.sql.Date(c.getTimeInMillis()));
 		
 		/*Como es en operacion nuevo, dejamos todos los campos editabls*/
 		this.readOnlyFields(false);

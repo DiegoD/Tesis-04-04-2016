@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -15,11 +16,14 @@ import com.excepciones.InicializandoException;
 import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Cotizaciones.ObteniendoCotizacionesException;
+import com.excepciones.Depositos.ExisteDepositoException;
 import com.excepciones.Factura.*;
 import com.excepciones.Monedas.ObteniendoMonedaException;
+import com.excepciones.NotaCredito.ExisteNotaCreditoException;
 import com.excepciones.Periodo.ExistePeriodoException;
 import com.excepciones.Periodo.NoExistePeriodoException;
 import com.excepciones.Procesos.ObteniendoProcesosException;
+import com.excepciones.Recibo.ExisteReciboException;
 import com.excepciones.clientes.ObteniendoClientesException;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup;
@@ -635,7 +639,6 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 				
 				if(this.operacion.equals(Variables.OPERACION_NUEVO))	
 				{	
-					this.controlador.insertarFactura(factVO, permisoAux, true);
 					
 					this.mainView.actulaizarGrilla();
 					
@@ -663,7 +666,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 				Mensajes.mostrarMensajeWarning(Variables.WARNING_CAMPOS_NO_VALIDOS);
 			}
 				
-			} catch (ModificandoFacturaException| NoExisteFacturaException |InsertandoFacturaException| ExisteFacturaException | InicializandoException| ConexionException | NoTienePermisosException| ObteniendoPermisosException e) {
+			} catch (ModificandoFacturaException| NoExisteFacturaException |ExisteFacturaException | InicializandoException| ConexionException | NoTienePermisosException| ObteniendoPermisosException e) {
 				
 				Mensajes.mostrarMensajeError(e.getMessage());
 			}
@@ -677,6 +680,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	/*Inicalizamos listener para boton de Editar*/
 	this.btnEditar.addClickListener(click -> {
 				
+		
 		try {
 			
 			permisoAux = 
@@ -689,6 +693,30 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 				String fecha = new SimpleDateFormat("dd/MM/yyyy").format(fecValor.getValue());
 				Mensajes.mostrarMensajeError("El período está cerrado para la fecha " + fecha);
 				return;
+			}
+			
+			try {
+				
+				if(val.existeReciboFactura(permisoAux, Integer.parseInt(this.nroDocum.getValue()), this.serieDocum.getValue())){
+					Mensajes.mostrarMensajeError("Existe un recibo para la factura");
+					UI.getCurrent().removeWindow(sub);
+					return;
+				}
+			} catch (ExisteReciboException e) {
+				// TODO Auto-generated catch block
+				Mensajes.mostrarMensajeError(e.toString());
+			}
+			
+			try {
+				
+				if(val.existeNCFactura(permisoAux, Integer.parseInt(this.nroDocum.getValue()), this.serieDocum.getValue())){
+					Mensajes.mostrarMensajeError("Existe una nota de crédito para la factura");
+					UI.getCurrent().removeWindow(sub);
+					return;
+				}
+			} catch (ExisteNotaCreditoException e) {
+				// TODO Auto-generated catch block
+				Mensajes.mostrarMensajeError(e.toString());
 			}
 			
 			/*Inicializamos el Form en modo Edicion*/
@@ -717,6 +745,27 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 			} catch (Exception e) {
 				
 				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}
+			
+			try {
+				if(val.existeReciboFactura(permisoAux, Integer.parseInt(this.nroDocum.getValue()), this.serieDocum.getValue())){
+					Mensajes.mostrarMensajeError("Existe un recibo para la factura");
+					UI.getCurrent().removeWindow(sub);
+					return;
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				Mensajes.mostrarMensajeError("Error inesperado");
+			}
+			try {
+				if(val.existeNCFactura(permisoAux, Integer.parseInt(this.nroDocum.getValue()), this.serieDocum.getValue())){
+					Mensajes.mostrarMensajeError("Existe una nota de crédito para la factura");
+					UI.getCurrent().removeWindow(sub);
+					return;
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				Mensajes.mostrarMensajeError("Error inesperado");
 			}
 			
 			MensajeExtended form = new MensajeExtended("Desea eliminar factura?",this);
@@ -1237,10 +1286,14 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		this.lstDetalleQuitar = new ArrayList<FacturaDetalleVO>();
 		this.lstDetalleVO = new ArrayList<FacturaDetalleVO>();
 		
+		
 		/*Inicializamos el container*/
 		this.container = 
 				new BeanItemContainer<FacturaDetalleVO>(FacturaDetalleVO.class);
 		
+		Calendar c = Calendar.getInstance();    
+		this.fecDoc.setValue(new java.sql.Date(c.getTimeInMillis()));
+		this.fecValor.setValue(new java.sql.Date(c.getTimeInMillis()));
 		
 		/*Como es en operacion nuevo, dejamos todos los campos editabls*/
 		this.readOnlyFields(false);

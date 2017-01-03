@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Hashtable;
 import com.controladores.IngresoEgresoOtroControlador;
 import com.excepciones.ConexionException;
@@ -1307,7 +1308,9 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 		this.container = 
 				new BeanItemContainer<IngresoCobroDetalleVO>(IngresoCobroDetalleVO.class);
 		
-		
+		Calendar c = Calendar.getInstance();    
+		this.fecDoc.setValue(new java.sql.Date(c.getTimeInMillis()));
+		this.fecValor.setValue(new java.sql.Date(c.getTimeInMillis()));
 		
 		/*Como es en operacion nuevo, dejamos todos los campos editabls*/
 		this.readOnlyFields(false);
