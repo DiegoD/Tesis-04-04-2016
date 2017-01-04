@@ -39,6 +39,9 @@ public final class VariablesPermisos {
 	public static final String FORMULARIO_NOTA_CREDITO = "TNotaCredito";
 	public static final String FORMULARIO_CONCILIACION = "MConciliacion";
 	
+	public static final String FORMULARIO_REPORTES = "MReportes";
+	public static final String FORMULARIO_REP_CHEQUE_CLIENTES = "RepCheqxCliente";
+	
 	/*Variables para las operaciones*/
 	public static final String OPERACION_NUEVO_EDITAR = "NUEVO_EDITAR";
 	public static final String OPERACION_LEER = "LEER";

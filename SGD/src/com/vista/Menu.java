@@ -60,6 +60,9 @@ public class Menu extends HorizontalLayout {
 	protected Button conciliacion;
 	protected Button saldoDocumentos;
 	protected Button saldoCuentas;
+	protected Label lbReportes;
+	protected Button btnRepCheque;
+	protected Button btnReportes;
 	protected VerticalLayout content;
 
 	public Menu() {

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.MenuBar;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.VerticalLayout;
 import com.valueObject.FormularioVO;
@@ -36,9 +37,12 @@ import com.vista.Recibo.ReciboPanelExtended;
 import com.vista.RepVis.VistaSaDocum;
 import com.vista.RepVis.VistaSaDocumExtended;
 import com.vista.RepVis2.VistaSaCuentasExtended;
+import com.vista.Reportes.ChequesxCliente.RepChequesxClienteViewExtended;
+import com.vista.Reportes.Ejemplo.ReportePanelExtended;
 import com.vista.ResumenProceso.ResProcesosPanelExtended;
 import com.vista.Rubros.RubrosPanelExtended;
 import com.vista.TipoRubro.TipoRubrosPanelExtended;
+import com.vista.Usuarios.UsuarioViewExtended;
 import com.vista.Usuarios.UsuariosPanelExtend;
 
 public class MenuExtended extends Menu{
@@ -57,29 +61,6 @@ public class MenuExtended extends Menu{
 	//bground.addStyleName("backColorGrey");
 	
 	private void inicializarMenu(){
-		
-		/*
-		this.barmenu = new MenuBar();
-		this.barmenu.setStyleName("valo-menu-responsive");
-		
-		
-		
-		// A top-level menu item that opens a submenu
-		MenuItem administracion = barmenu.addItem("Administración", null, null);
-		MenuItem mantenimientos = barmenu.addItem("Mantenimientos", null, null);
-		
-		
-		// Submenu item with a sub-submenu
-		MenuItem usuarios = administracion.addItem("Usuarios", cmdUsuario);
-		MenuItem grupos = administracion.addItem("Grupos", cmdGrupos);
-		
-		MenuItem impuestos = mantenimientos.addItem("Impuestos", cmdImpuestos);
-		
-		
-		
-		this.content.addComponent(barmenu);
-		*/
-		
 		
 	}
 	
@@ -666,8 +647,48 @@ public class MenuExtended extends Menu{
 				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 			}
 		});
+		
+		this.btnReportes.addClickListener(click -> {
+			
+			setSizeFull();
+			
+			this.content.removeAllComponents();
+			try {
+				
+				ReportePanelExtended u = new ReportePanelExtended(); 
+				this.content.addComponent(u);
+				
+			} catch (Exception e) {
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}
+		});
+		
+		this.btnRepCheque.addClickListener(click -> {
+			
+			setSizeFull();
+			
+			this.content.removeAllComponents();
+			try {
+				
+				//RepChequesxClienteViewExtended u = new RepChequesxClienteViewExtended(); 
+				//this.content.addComponent(u);
+				
+				RepChequesxClienteViewExtended form = new RepChequesxClienteViewExtended();
+				
+				sub = new MySub("50%","50%");
+				
+				sub.setModal(true);
+				
+				sub.setVista(form);
+				
+				UI.getCurrent().addWindow(sub);
+				
+			} catch (Exception e) {
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}
+		});
+		
 	}
-	
 	
 	
 	public  void setContent(Component comp)
@@ -691,7 +712,8 @@ public class MenuExtended extends Menu{
 		this.setearOpcionesMenuMantenimientos();
 		this.setearOpcionesMenuFacturacion();
 		this.setearOpcionesMenuCobros();
-		setearOpcionesMenuProcesos();
+		this.setearOpcionesMenuProcesos();
+		this.setearOpcionesReportes();
 		this.setearOpcionesMenuAdministracion();
 	}
 	
@@ -965,6 +987,67 @@ public class MenuExtended extends Menu{
 	}
 	
 	/**
+	 * Vemos los permisos del usuario para los mantenimientos
+	 * y lo agregamos al TAB de Mantenimientos
+	 * 
+	 */
+	private void setearOpcionesReportes()
+	{
+		ArrayList<FormularioVO> lstFormsReportes = new ArrayList<FormularioVO>();
+		
+		/*Buscamos los Formulairos correspondientes a este TAB*/
+		for (FormularioVO formularioVO : this.permisos.getLstPermisos().values()) {
+			
+			if(formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_REPORTES) ||
+			   formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_REP_CHEQUE_CLIENTES))
+				
+			{
+				lstFormsReportes.add(formularioVO);
+			}
+			
+		}
+		
+		/*Si hay formularios para el tab*/
+		if(lstFormsReportes.size()> 0)
+		{
+			//TODO
+			//this.tabAdministracion = new VerticalLayout();
+			//this.tabAdministracion.setMargin(true);
+			
+			this.lbReportes.setVisible(true);
+			this.layoutMenu.addComponent(this.lbReportes);
+			
+			for (FormularioVO formularioVO : lstFormsReportes) {
+				
+				switch(formularioVO.getCodigo())
+				{
+					case VariablesPermisos.FORMULARIO_REPORTES : 
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_REPORTES, VariablesPermisos.OPERACION_LEER)){
+							this.habilitarReporteBoton();
+							this.layoutMenu.addComponent(this.btnReportes);
+						}
+					break;
+					
+					case VariablesPermisos.FORMULARIO_REP_CHEQUE_CLIENTES : 
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_REP_CHEQUE_CLIENTES, VariablesPermisos.OPERACION_LEER)){
+							this.habilitarReporteChequeCliente();
+							this.layoutMenu.addComponent(this.btnRepCheque);
+						}
+					break;
+				
+				}
+				
+			}
+			
+			//TODO
+			//this.acordion.addTab(tabAdministracion, "Administración", null);
+			
+		}
+		//TODO
+		//acordion.setHeight("75%"); /*Seteamos alto  del accordion*/
+	}
+	
+	/**
 	 * Deshabiiltamos todas las funcionalidades
 	 * 
 	 */
@@ -1069,6 +1152,7 @@ public class MenuExtended extends Menu{
 		//this.tabAdministracion.addComponent(this.userButton);
 	}
 	
+		
 	private void habilitarGrupoButton()
 	{
 		this.gruposButton.setVisible(true);
@@ -1254,6 +1338,24 @@ public class MenuExtended extends Menu{
 		this.saldoDocumentos.setEnabled(true);
 		
 		this.layoutMenu.addComponent(this.impuestoButton);
+	}
+	
+	private void habilitarReporteBoton()
+	{
+		this.btnReportes.setVisible(true);
+		this.btnReportes.setEnabled(true);
+		
+		//TODO
+		//this.tabAdministracion.addComponent(this.userButton);
+	}
+	
+	private void habilitarReporteChequeCliente()
+	{
+		this.btnRepCheque.setVisible(true);
+		this.btnRepCheque.setEnabled(true);
+		
+		//TODO
+		//this.tabAdministracion.addComponent(this.userButton);
 	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////////
