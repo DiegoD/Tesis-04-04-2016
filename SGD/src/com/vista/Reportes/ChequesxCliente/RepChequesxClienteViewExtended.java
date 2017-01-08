@@ -85,7 +85,7 @@ public class RepChequesxClienteViewExtended extends RepChequesxClienteViews impl
 	 *
 	 */
 	@SuppressWarnings({ "unchecked", "deprecation" })
-	public RepChequesxClienteViewExtended(ReportePanelChequeExtended main){
+	public RepChequesxClienteViewExtended(){
 	
 	this.controlador = new RepChequeClienteControlador();
 	this.control = 0;
@@ -202,12 +202,12 @@ public class RepChequesxClienteViewExtended extends RepChequesxClienteViews impl
 					        fillParameters.put("codEmp",this.permisos.getCodEmp());
 					       
 					        fillParameters.put("nomTit", this.nomTitular.getValue().trim());
-					        fillParameters.put("fecDesde", fecDesde.getValue().getTime());
-					        fillParameters.put("fecHasta", fecHasta.getValue().getTime());
 					        
-					        //fillParameters.put("fecDesde", new java.util.Date(2017, 1, 3));
-					        //fillParameters.put("fecHasta", new java.util.Date(2017, 1, 4));
 					        
+					        fillParameters.put("fecDesde", convertFromJAVADateToSQLDate(fecDesde.getValue()));
+					        fillParameters.put("fecHasta", convertFromJAVADateToSQLDate(fecHasta.getValue()));
+					        fillParameters.put("codMoneda", this.getCodMonedaSeleccionada());
+					      
 						  }catch(Exception e) {}
 					        
 					        
@@ -219,16 +219,6 @@ public class RepChequesxClienteViewExtended extends RepChequesxClienteViews impl
 						//FileDownloader fileDownloader = new FileDownloader(myResource);
 						//fileDownloader.extend(aceptar); /*VER DOWNLOAD!!!*/
 						
-						
-						/*
-						Window window = new Window();
-				        ((VerticalLayout) window.getContent()).setSizeFull();
-				        window.setResizable(true);
-				        window.setWidth("800");
-				        window.setHeight("600");
-				        window.center();
-				        
-				        */
 				        Embedded e = new Embedded();
 				        e.setSizeFull();
 				        e.setType(Embedded.TYPE_BROWSER);
@@ -241,14 +231,10 @@ public class RepChequesxClienteViewExtended extends RepChequesxClienteViews impl
 				        
 				        // Set the right mime type
 				        resource.setMIMEType("application/pdf");
-
+ 
 				        e.setSource(resource);
 				        
-				        
-				        //window.addComponent(e);
-				        //getMainWindow().addWindow(window);
-				        
-				        sub = new MySub("50%","50%");
+				        sub = new MySub("80%","75%");
 						sub.setModal(true);
 						sub.setVista(e);
 						

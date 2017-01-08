@@ -672,14 +672,14 @@ public class MenuExtended extends Menu{
 			try {
 				
 				
-				ReportePanelChequeExtended u = new ReportePanelChequeExtended(); 
-				this.content.addComponent(u);
+				//ReportePanelChequeExtended u = new ReportePanelChequeExtended(); 
+				//this.content.addComponent(u);
 				
 				//RepChequesxClienteViewExtended u = new RepChequesxClienteViewExtended(); 
 				//this.content.addComponent(u);
 				
-				/*
-				ReportePanelExtended form = new ReportePanelExtended();
+				
+				RepChequesxClienteViewExtended form = new RepChequesxClienteViewExtended();
 				
 				sub = new MySub("50%","50%");
 				
@@ -689,7 +689,7 @@ public class MenuExtended extends Menu{
 				
 				UI.getCurrent().addWindow(sub);
 				
-				*/
+				
 				
 			} catch (Exception e) {
 				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);

@@ -113,12 +113,12 @@ public class ReportePanelChequeExtended extends ReportePanelCheque{
 			Mensajes.mostrarMensajeError(Variables.USUSARIO_SIN_PERMISOS);
 		}
 		
-		form = new RepChequesxClienteViewExtended(ReportePanelChequeExtended.this);
-		sub = new MySub("50%","50%");
-		sub.setModal(true);
-		sub.setVista(form);
+		//form = new RepChequesxClienteViewExtended(ReportePanelChequeExtended.this);
+		//sub = new MySub("50%","50%");
+		//sub.setModal(true);
+		//sub.setVista(form);
 		
-		UI.getCurrent().addWindow(sub);
+		//UI.getCurrent().addWindow(sub);
 		
 	}
 	
@@ -164,11 +164,11 @@ public class ReportePanelChequeExtended extends ReportePanelCheque{
 					    		item.getBean().setFechaMod(new Timestamp(System.currentTimeMillis()));
 					    	}
 					    	
-					    	form = new RepChequesxClienteViewExtended(ReportePanelChequeExtended.this);
+					    //	form = new RepChequesxClienteViewExtended(ReportePanelChequeExtended.this);
 							//form.fieldGroup.setItemDataSource(item);
-							sub = new MySub("65%","75%");
-							sub.setModal(true);
-							sub.setVista(form);
+							// = new MySub("65%","75%");
+							//sub.setModal(true);
+						//	sub.setVista(form);
 							
 					    	//form.setDataSourceFormulario(item); 
 							
