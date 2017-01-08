@@ -1,4 +1,4 @@
-package com.vista.Reportes.Ejemplo;
+package com.vista.Reportes.ChequesxCliente;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -34,9 +34,9 @@ import com.vista.PermisosUsuario;
 import com.vista.Variables;
 import com.vista.VariablesPermisos;
 
-public class ReportePanelExtended extends ReportePanel{
+public class ReportePanelChequeExtended extends ReportePanelCheque{
 	
-	private IngresoOtroViewExtended form; 
+	private RepChequesxClienteViewExtended form; 
 	private ArrayList<IngresoCobroVO> lstIngresoCobro; /*Lista con los cobros*/
 	private BeanItemContainer<IngresoCobroVO> container;
 	private IngresoCobroOtroControlador controlador;
@@ -44,7 +44,10 @@ public class ReportePanelExtended extends ReportePanel{
 	MySub sub = new MySub("60%","75%");
 	boolean actualiza = false;
 	
-	public ReportePanelExtended(){
+	
+	public ReportePanelChequeExtended(){
+		
+		
 		
 		try {
 			this.inicializarBoton();
@@ -60,6 +63,8 @@ public class ReportePanelExtended extends ReportePanel{
 		
 		String usuario = (String)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("usuario");
 		this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
+		
+		
 		
 			
         /*Verificamos que el usuario tenga permisos de lectura para mostrar la vista*/
@@ -108,6 +113,12 @@ public class ReportePanelExtended extends ReportePanel{
 			Mensajes.mostrarMensajeError(Variables.USUSARIO_SIN_PERMISOS);
 		}
 		
+		form = new RepChequesxClienteViewExtended(ReportePanelChequeExtended.this);
+		sub = new MySub("50%","50%");
+		sub.setModal(true);
+		sub.setVista(form);
+		
+		UI.getCurrent().addWindow(sub);
 		
 	}
 	
@@ -153,13 +164,13 @@ public class ReportePanelExtended extends ReportePanel{
 					    		item.getBean().setFechaMod(new Timestamp(System.currentTimeMillis()));
 					    	}
 					    	
-					    	form = new IngresoOtroViewExtended(Variables.OPERACION_LECTURA, ReportePanelExtended.this);
+					    	form = new RepChequesxClienteViewExtended(ReportePanelChequeExtended.this);
 							//form.fieldGroup.setItemDataSource(item);
 							sub = new MySub("65%","75%");
 							sub.setModal(true);
 							sub.setVista(form);
 							
-					    	form.setDataSourceFormulario(item); 
+					    	//form.setDataSourceFormulario(item); 
 							
 							/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
 							

@@ -38,6 +38,7 @@ import com.vista.RepVis.VistaSaDocum;
 import com.vista.RepVis.VistaSaDocumExtended;
 import com.vista.RepVis2.VistaSaCuentasExtended;
 import com.vista.Reportes.ChequesxCliente.RepChequesxClienteViewExtended;
+import com.vista.Reportes.ChequesxCliente.ReportePanelChequeExtended;
 import com.vista.Reportes.Ejemplo.ReportePanelExtended;
 import com.vista.ResumenProceso.ResProcesosPanelExtended;
 import com.vista.Rubros.RubrosPanelExtended;
@@ -670,10 +671,15 @@ public class MenuExtended extends Menu{
 			this.content.removeAllComponents();
 			try {
 				
+				
+				ReportePanelChequeExtended u = new ReportePanelChequeExtended(); 
+				this.content.addComponent(u);
+				
 				//RepChequesxClienteViewExtended u = new RepChequesxClienteViewExtended(); 
 				//this.content.addComponent(u);
 				
-				RepChequesxClienteViewExtended form = new RepChequesxClienteViewExtended();
+				/*
+				ReportePanelExtended form = new ReportePanelExtended();
 				
 				sub = new MySub("50%","50%");
 				
@@ -682,6 +688,8 @@ public class MenuExtended extends Menu{
 				sub.setVista(form);
 				
 				UI.getCurrent().addWindow(sub);
+				
+				*/
 				
 			} catch (Exception e) {
 				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);

@@ -37,6 +37,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.util.Calendar;
+import java.util.HashMap;
 
 /**
  * Created by Alvaro on 9/1/2015.
@@ -54,7 +55,7 @@ public class ReportsUtil {
      * @param buttonToExtend Vaadin button to extend
      */
     public void prepareForPdfReport(String reportTemplate,
-                                 String reportOutputFilename, Button buttonToExtend){
+                                 String reportOutputFilename, Button buttonToExtend, HashMap<String, Object> fillParameters){
         System.out.println("Generating report...");
         Connection conn = null;
 		try {
@@ -72,10 +73,42 @@ public class ReportsUtil {
         /*************/
         
         StreamResource myResource =
-                createPdfResource(conn, /*ACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA*/
-                        reportTemplate,reportOutputFilename);
+                createPdfResource(conn, reportTemplate,reportOutputFilename, fillParameters);
         FileDownloader fileDownloader = new FileDownloader(myResource);
-        fileDownloader.extend(buttonToExtend);
+        fileDownloader.extend(buttonToExtend); /*VER DOWNLOAD!!!*/
+
+    }
+    
+    /**
+     * Get database connection, call report generation method and export's report to Vaadin's FileDownloader
+     * @param reportTemplate Report template file name
+     * @param reportOutputFilename Pdf output file name
+     * @param buttonToExtend Vaadin button to extend
+     */
+    public StreamResource prepareForPdfReportReturn(String reportTemplate,
+                                 String reportOutputFilename,  HashMap<String, Object> fillParameters){
+        System.out.println("Generating report...");
+        Connection conn = null;
+		try {
+			
+			conn = Pool.getInstance().obtenerConeccion();
+			
+		} catch (InstantiationException | ConexionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        reportOutputFilename+=("_"+getDateAsString()+".pdf");
+        
+        /**************/
+       
+        /*************/
+        
+        StreamResource myResource =
+                createPdfResource(conn, reportTemplate,reportOutputFilename, fillParameters);
+        //FileDownloader fileDownloader = new FileDownloader(myResource);
+        //fileDownloader.extend(buttonToExtend); /*VER DOWNLOAD!!!*/
+        
+        return myResource;
 
     }
 
@@ -86,7 +119,7 @@ public class ReportsUtil {
      * @param reportFileName Pdf output file name
      * @return StreamResource with the generated pdf report
      */
-    private StreamResource createPdfResource(final Connection conn, final String templatePath, String reportFileName) {
+    private StreamResource createPdfResource(final Connection conn, final String templatePath, String reportFileName, HashMap<String, Object> fillParameters) {
         return new StreamResource(new StreamResource.StreamSource() {
             
     	   
@@ -103,7 +136,7 @@ public class ReportsUtil {
                 try {
                     //Generate the report
                     try {
-						reportGenerator.executeReport(templatePath, conn, pdfBuffer);
+						reportGenerator.executeReport(templatePath, conn, pdfBuffer, fillParameters);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

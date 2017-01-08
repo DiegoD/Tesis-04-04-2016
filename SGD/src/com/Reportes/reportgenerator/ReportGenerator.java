@@ -27,13 +27,13 @@ public class ReportGenerator {
     public ReportGenerator() {
     }
 
-    public void executeReport(String templatePath, Connection conn, OutputStream outputStream) throws Exception {
+    public void executeReport(String templatePath, Connection conn, OutputStream outputStream, HashMap<String, Object> fillParameters) throws Exception {
 
     	try{
     		JasperDesign jasperDesign=loadTemplate(templatePath);
     		setTempDirectory(templatePath);
     		JasperReport jasperReport=compileReport(jasperDesign);
-    		JasperPrint jasperPrint=fillReport(jasperReport, conn);
+    		JasperPrint jasperPrint=fillReport(jasperReport, conn, fillParameters);
     		exportReportToPdf(jasperPrint, outputStream);
     	}catch(Exception e){
     		throw e;
@@ -51,8 +51,8 @@ public class ReportGenerator {
         hm.put("REPORT_TITLE","This is the title of the report");
         
         //JasperPrint jasperPrint=fillReport(jasperReport, conn);
-        JasperPrint jasperPrint=fillReport(jasperReport, conn);
-        exportReportToPdf(jasperPrint, outputStream);
+        //JasperPrint jasperPrint=fillReport(jasperReport, conn);
+        //exportReportToPdf(jasperPrint, outputStream);
         
         
     }
@@ -98,10 +98,13 @@ public class ReportGenerator {
      * @param jasperReport The Compiled report design
      * @return JasperPrint
      */
-    private JasperPrint fillReport(JasperReport jasperReport, Connection conn){
+    private JasperPrint fillReport(JasperReport jasperReport, Connection conn, HashMap<String, Object> fillParameters){
         JasperPrint jasperPrint=null;
-        HashMap<String, Object> fillParameters=new HashMap<String, Object>();
-        fillParameters.put("codTit", "14");
+       // HashMap<String, Object> fillParameters=new HashMap<String, Object>();
+       // fillParameters.put("codTit", "14");
+        
+        String codTit = (String) fillParameters.get("codTit");
+        String nomTit = (String) fillParameters.get("nomTit");
         
         try {
             jasperPrint =JasperFillManager.fillReport(

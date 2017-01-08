@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8" name="design-properties" content="{&quot;RULERS_VISIBLE&quot;:true,&quot;GUIDELINES_VISIBLE&quot;:false,&quot;SNAP_TO_OBJECTS&quot;:true,&quot;SNAP_TO_GRID&quot;:true,&quot;SNAPPING_DISTANCE&quot;:10,&quot;JAVA_SOURCES_ROOT&quot;:&quot;src&quot;,&quot;THEME&quot;:&quot;sgd&quot;}">
+ </head> 
+ <body> 
+  <vaadin-vertical-layout size-full> 
+  <vaadin-horizontal-layout width-full height="44px"> 
+    <vaadin-horizontal-layout spacing> 
+     <vaadin-label style-name="h4 colored bold" size-auto plain-text _id="lblTitulo">
+       Label 
+     </vaadin-label> 
+    </vaadin-horizontal-layout> 
+    <vaadin-horizontal-layout spacing :right> 
+     <vaadin-label caption="Filtrar" width="0px" height="0px"></vaadin-label> 
+     <vaadin-date-field style-name="tiny" width="100px" _id="fechaInicio"></vaadin-date-field> 
+     <vaadin-date-field style-name="tiny" width="100px" _id="fechaFin" :right></vaadin-date-field> 
+     <vaadin-button icon="fonticon://FontAwesome/f021" style-name="icon-only borderless quiet tiny" _id="btnActualizar" :right>
+       Button 
+     </vaadin-button> 
+    </vaadin-horizontal-layout> 
+   </vaadin-horizontal-layout>
+   <vaadin-panel size-full :expand="100"> 
+    <vaadin-grid size-full _id="grid"></vaadin-grid> 
+   </vaadin-panel> 
+   <vaadin-button style-name="primary tiny" plain-text _id="btnNuevo">
+     Nuevo 
+   </vaadin-button> 
+  </vaadin-vertical-layout>  
+ </body>
+</html>

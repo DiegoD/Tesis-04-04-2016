@@ -9,10 +9,10 @@
      Cheques por Cliente 
    </vaadin-label> 
    <vaadin-horizontal-layout responsive size-full> 
-    <vaadin-form-layout spacing="false" width="103.39%" height-full _id="formLay1"> 
+    <vaadin-form-layout spacing="false" width="103.39%" height-full _id="formLay12"> 
      <vaadin-text-field enabled="false" id="nroTrans" visible="false" _id="nroTrans"></vaadin-text-field> 
-     <vaadin-date-field caption="Fec Doc" id="fecDoc" style-name="tiny" width="144px" _id="fecDoc"></vaadin-date-field> 
-     <vaadin-date-field caption="Fec Valor" id="fecValor" style-name="tiny" width="144px" _id="fecValor"></vaadin-date-field> 
+     <vaadin-date-field caption="Fec desde" id="fecDesde" style-name="tiny" width="144px" _id="fecDesde"></vaadin-date-field> 
+     <vaadin-date-field caption="Fec hasta" id="fecHasta" style-name="tiny" width="144px" _id="fecHasta"></vaadin-date-field> 
      <vaadin-combo-box caption="Moneda" id="comboMoneda" style-name="tiny" item-caption-mode="id" width="144px" _id="comboMoneda"></vaadin-combo-box> 
      <vaadin-horizontal-layout caption="Titular" style-name="name-wrapper" spacing _id="name_wrapper"> 
       <vaadin-text-field id="codTitular" style-name="tiny" width="144px" readonly _id="codTitular"></vaadin-text-field> 
@@ -24,6 +24,7 @@
        <vaadin-button style-name="primary tiny" plain-text _id="aceptar" :middle>
          Aceptar 
        </vaadin-button> 
+       <vaadin-check-box caption="Actualizar Parametros" id="chkParametros" immediate checked _id="chkParametros"></vaadin-check-box> 
       </vaadin-horizontal-layout> 
      </vaadin-horizontal-layout> 
     </vaadin-form-layout> 

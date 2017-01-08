@@ -6,8 +6,10 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 
+import com.Reportes.util.ReportsUtil;
 import com.controladores.IngresoCobroOtroControlador;
 import com.controladores.reportes.RepChequeClienteControlador;
 import com.excepciones.ConexionException;
@@ -19,8 +21,13 @@ import com.excepciones.Monedas.ObteniendoMonedaException;
 import com.excepciones.clientes.ObteniendoClientesException;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.server.FileDownloader;
+import com.vaadin.server.StreamResource;
 import com.vaadin.server.VaadinService;
+import com.vaadin.ui.Embedded;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 import com.valueObject.MonedaVO;
 import com.valueObject.TitularVO;
 import com.valueObject.UsuarioPermisosVO;
@@ -41,6 +48,7 @@ import com.vista.MySub;
 import com.vista.PermisosUsuario;
 import com.vista.Variables;
 import com.vista.VariablesPermisos;
+import com.vista.Periodo.PeriodosPanelExtended;
 import com.vista.Validaciones.Validaciones;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
@@ -54,6 +62,7 @@ public class RepChequesxClienteViewExtended extends RepChequesxClienteViews impl
 	
 	private RepChequeClienteControlador controlador;
 	private String operacion;
+	private int control;
 	
 	private IngresoCobroDetalleVO formSelecccionado; /*Variable utilizada cuando se selecciona
 	 										  un detalle, para poder quitarlo de la lista*/
@@ -76,9 +85,11 @@ public class RepChequesxClienteViewExtended extends RepChequesxClienteViews impl
 	 *
 	 */
 	@SuppressWarnings({ "unchecked", "deprecation" })
-	public RepChequesxClienteViewExtended(){
+	public RepChequesxClienteViewExtended(ReportePanelChequeExtended main){
 	
 	this.controlador = new RepChequeClienteControlador();
+	this.control = 0;
+
 		
 	/*Inicializamos los permisos para el usuario*/
 	this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
@@ -149,11 +160,13 @@ public class RepChequesxClienteViewExtended extends RepChequesxClienteViews impl
 			
 			/*Seteamos validaciones en nuevo, cuando es editar
 			 * solamente cuando apreta el boton editar*/
-			this.setearValidaciones(true);
+			//this.setearValidaciones(true);
 			
 			
 			/*Inicializamos VO de permisos para el usuario, formulario y operacion
 			 * para confirmar los permisos del usuario*/
+		
+		
 			UsuarioPermisosVO permisoAux = 
 					new UsuarioPermisosVO(this.permisos.getCodEmp(),
 							this.permisos.getUsuario(),
@@ -162,16 +175,133 @@ public class RepChequesxClienteViewExtended extends RepChequesxClienteViews impl
 				
 			//ACA LLAMAMOS AL REPORTE
 			
+			try {
+				
+				//inicializarBoton();
+				
+				com.Reportes.util.ReportsUtil report;
+				
+				String basepath = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath() + "\\WEB-INF\\Reportes";
+				
+				System.out.println(basepath);
+				
+			    report = new ReportsUtil();
+				 
+				  
+				  try {
+					  
+					  HashMap<String, Object> fillParameters=new HashMap<String, Object>();
+					  
+					  if(this.codTitular.getValue()!= "" && this.codTitular.getValue()!= null)
+					  {
+					  try{
+					  
+							 
+							fillParameters.put("codTit", this.codTitular.getValue());
+					        
+					        fillParameters.put("codEmp",this.permisos.getCodEmp());
+					       
+					        fillParameters.put("nomTit", this.nomTitular.getValue().trim());
+					        fillParameters.put("fecDesde", fecDesde.getValue().getTime());
+					        fillParameters.put("fecHasta", fecHasta.getValue().getTime());
+					        
+					        //fillParameters.put("fecDesde", new java.util.Date(2017, 1, 3));
+					        //fillParameters.put("fecHasta", new java.util.Date(2017, 1, 4));
+					        
+						  }catch(Exception e) {}
+					        
+					        
+						StreamResource myResource = report.prepareForPdfReportReturn( basepath+"\\RepChequesClientes.jrxml",
+									                "Cheques",
+									                fillParameters);
+					  
+						  
+						//FileDownloader fileDownloader = new FileDownloader(myResource);
+						//fileDownloader.extend(aceptar); /*VER DOWNLOAD!!!*/
+						
+						
+						/*
+						Window window = new Window();
+				        ((VerticalLayout) window.getContent()).setSizeFull();
+				        window.setResizable(true);
+				        window.setWidth("800");
+				        window.setHeight("600");
+				        window.center();
+				        
+				        */
+				        Embedded e = new Embedded();
+				        e.setSizeFull();
+				        e.setType(Embedded.TYPE_BROWSER);
+
+				        // Here we create a new StreamResource which downloads our StreamSource,
+				        // which is our pdf.
+				       
+				        // StreamResource resource = new StreamResource(new Pdf(), "test.pdf?" + System.currentTimeMillis(), this);
+				        StreamResource resource = myResource;
+				        
+				        // Set the right mime type
+				        resource.setMIMEType("application/pdf");
+
+				        e.setSource(resource);
+				        
+				        
+				        //window.addComponent(e);
+				        //getMainWindow().addWindow(window);
+				        
+				        sub = new MySub("50%","50%");
+						sub.setModal(true);
+						sub.setVista(e);
+						
+						UI.getCurrent().addWindow(sub);
+						
+				    
+					 }
+					  
+				  }
+				  catch(Exception e)
+				  {
+					  int o = 0;
+				  }
+				
+				
+			} catch (Exception e) {
+				
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}
 			
+			//if(this.control > 1 )
+				//main.cerrarVentana(); /*Si no ver de disable todos los campos aca*/
+			
+			/*Ver de pasar los parametros por otro lado, una clase aparte que
+			 * tenga los parametros y se pueda consultar desde la clase de reporte en logic
+			 * ver de hacerlo por usuario y reporte...*/
+			
+			this.control ++;
 			
 		});
 	
+	chkParametros.addListener(new Property.ValueChangeListener() {
+	    @Override
+	    public void valueChange(ValueChangeEvent event) {
+	    	try {
+				
+				inicializarBoton();
+				
+			} catch (ClassNotFoundException e) {
+				
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}
+	    }   
+	});
 		
 	}
+	
+	
 
 	public  void inicializarForm(){
 		
 		this.inicializarComboMoneda(null);
+		
 		
 	}
 
@@ -188,11 +318,11 @@ public class RepChequesxClienteViewExtended extends RepChequesxClienteViews impl
 	private void setearValidaciones(boolean setear){
 		
 		
-		this.fecDoc.setRequired(setear);
-		this.fecDoc.setRequiredError("Es requerido");
+		this.fecDesde.setRequired(setear);
+		this.fecDesde.setRequiredError("Es requerido");
 		
-		this.fecValor.setRequired(setear);
-		this.fecValor.setRequiredError("Es requerido");
+		this.fecHasta.setRequired(setear);
+		this.fecHasta.setRequiredError("Es requerido");
 		
 		this.comboMoneda.setRequired(setear);
 		this.comboMoneda.setRequiredError("Es requerido");
@@ -249,9 +379,9 @@ public class RepChequesxClienteViewExtended extends RepChequesxClienteViews impl
 	private void readOnlyFields(boolean setear)
 	{
 		
-		this.fecDoc.setReadOnly(setear);
+		this.fecDesde.setReadOnly(setear);
 		
-		this.fecValor.setReadOnly(setear);
+		this.fecHasta.setReadOnly(setear);
 		
 		this.comboMoneda.setReadOnly(setear);
 		
@@ -341,14 +471,7 @@ public void inicializarComboMoneda(String cod){
 		
 	}
 	
-	public static java.sql.Date convertFromJAVADateToSQLDate(
-            java.util.Date javaDate) {
-        java.sql.Date sqlDate = null;
-        if (javaDate != null) {
-            sqlDate = new Date(javaDate.getTime());
-        }
-        return sqlDate;
-    }
+
 	
 	private String getCodMonedaSeleccionada(){
 		
@@ -394,4 +517,58 @@ public void inicializarComboMoneda(String cod){
 		UI.getCurrent().removeWindow(sub);
 	}
 	
+	private void inicializarBoton() throws ClassNotFoundException{
+		
+		com.Reportes.util.ReportsUtil report;
+		
+		String basepath = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath() + "\\WEB-INF\\Reportes";
+		
+		System.out.println(basepath);
+		
+	    report = new ReportsUtil();
+		 
+		  
+		  try {
+			  
+			  HashMap<String, Object> fillParameters=new HashMap<String, Object>();
+			  
+			  try{
+			  
+				 
+				fillParameters.put("codTit", this.codTitular.getValue());
+		        
+		        fillParameters.put("codEmp",this.permisos.getCodEmp());
+		       
+		        fillParameters.put("nomTit", this.nomTitular.getValue().trim());
+		        fillParameters.put("fecDesde", fecDesde.getValue().getTime());
+		        fillParameters.put("fecHasta", fecHasta.getValue().getTime());
+		        
+		        //fillParameters.put("fecDesde", new java.util.Date(2017, 1, 3));
+		        //fillParameters.put("fecHasta", new java.util.Date(2017, 1, 4));
+		        
+			  }catch(Exception e) {}
+		        
+		        
+		  report.prepareForPdfReport( basepath+"\\RepChequesClientes.jrxml",
+						                "Cheques",
+						                aceptar, fillParameters);
+		  
+		 // report.prepareForPdfReport2("Test.jrxml");
+		  
+		  }
+		  catch(Exception e)
+		  {
+			  int o = 0;
+		  }
+		
+	}
+	
+	public static java.sql.Date convertFromJAVADateToSQLDate(
+            java.util.Date javaDate) {
+        java.sql.Date sqlDate = null;
+        if (javaDate != null) {
+            sqlDate = new Date(javaDate.getTime());
+        }
+        return sqlDate;
+    }
 }
