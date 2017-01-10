@@ -1751,7 +1751,7 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 		try
 		{
 		
-			com.vaadin.ui.Grid.HeaderRow filterRow = gridAnular.appendHeaderRow();
+			com.vaadin.ui.Grid.HeaderRow filterRow = gridSaldoProceso.appendHeaderRow();
 	
 			// Set up a filter for all columns
 			for (Object pid: gridSaldoProceso.getContainerDataSource()
