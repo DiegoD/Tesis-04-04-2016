@@ -79,7 +79,7 @@ public class ResProcesosPanelExtended extends ResProcesosPanel{
 				
 					this.btnNuevoProceso.addClickListener(click -> {
 						
-						sub = new MySub("85%","55%");
+						sub = new MySub("85%","45%");
 						form = new ResumenProcesoViewExtended(Variables.OPERACION_NUEVO, this);
 						sub.setModal(true);
 						sub.setVista((Component) form);
@@ -190,7 +190,7 @@ public class ResProcesosPanelExtended extends ResProcesosPanel{
 					    	}
 								
 					    	form = new ResumenProcesoViewExtended(Variables.OPERACION_LECTURA, ResProcesosPanelExtended.this);
-					    	sub = new MySub("95%","65%");
+					    	sub = new MySub("90%","55%");
 							sub.setModal(true);
 							sub.setVista((Component) form);
 							/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/

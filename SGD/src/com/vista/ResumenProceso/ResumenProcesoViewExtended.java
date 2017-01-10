@@ -315,206 +315,8 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 		
 		this.inicializarForm();
 		
-		/*Inicializamos listener de boton aceptar*/
-		this.aceptar.addClickListener(click -> {
 				
-			try {
 				
-				/*Validamos los campos antes de invocar al controlador*/
-				if(this.fieldsValidos())
-				{
-					/*Inicializamos VO de permisos para el usuario, formulario y operacion
-					 * para confirmar los permisos del usuario*/
-					permisoAux = 
-							new UsuarioPermisosVO(this.permisos.getCodEmp(),
-									this.permisos.getUsuario(),
-									VariablesPermisos.FORMULARIO_PROCESOS,
-									VariablesPermisos.OPERACION_NUEVO_EDITAR);
-									
-					ProcesoVO procesoVO = new ProcesoVO();		
-					
-					procesoVO.setUsuarioMod(this.permisos.getUsuario());
-					procesoVO.setOperacion(operacion);
-					
-					//Cliente
-					procesoVO.setCodCliente(codCliente.getValue().trim());
-					procesoVO.setNomCliente(nomCliente.getValue().trim());
-					//procesoVO.setCodMoneda(codMoneda.getValue().trim());
-					
-					//Moneda
-					if(this.comboMoneda.getValue() != null){
-						MonedaVO auxMoneda = new MonedaVO();
-						auxMoneda = (MonedaVO) this.comboMoneda.getValue();
-						procesoVO.setCodMoneda(auxMoneda.getCodMoneda());
-						procesoVO.setDescMoneda(auxMoneda.getDescripcion());
-						procesoVO.setSimboloMoneda(auxMoneda.getSimbolo());
-					}
-					else{
-						procesoVO.setCodMoneda("");
-						procesoVO.setDescMoneda("");
-						procesoVO.setSimboloMoneda("");
-					}
-					
-					//Documento
-					if(this.comboDocumento.getValue() != null){
-						DocumentoAduaneroVO auxDocumento = new DocumentoAduaneroVO();
-						auxDocumento = (DocumentoAduaneroVO) this.comboDocumento.getValue();
-						procesoVO.setCodDocum(auxDocumento.getcodDocumento());
-						procesoVO.setNomDocum(auxDocumento.getdescripcion());
-					}
-					else{
-						procesoVO.setCodDocum("");
-						procesoVO.setNomDocum("");
-					}
-					
-					
-					procesoVO.setObservaciones(obseAux.getValue());
-					
-					if(impMo.getValue() != "" && impMo.getValue() != null){
-						procesoVO.setImpMo((double) impMo.getConvertedValue());
-					}
-					else{
-						procesoVO.setImpMo(0);
-					}
-					
-					if(impMn.getValue() != "" && impMn.getValue() != null){
-						procesoVO.setImpMn((double) impMn.getConvertedValue());
-					}
-					else{
-						procesoVO.setImpMn(0);
-					}
-					
-					if(tcMov.getValue() != "" && tcMov.getValue() != null){
-						procesoVO.setTcMov(Double.valueOf(tcMov.getConvertedValue().toString()));
-					}
-					else{
-						procesoVO.setTcMov(0);
-					}
-					
-					if(this.operacion.equals(Variables.OPERACION_NUEVO)){
-						procesoVO.setCodigo(0);
-					}
-					else{
-						procesoVO.setCodigo((Integer) codigo.getConvertedValue());
-					}
-					
-					procesoVO.setFecha(new java.sql.Timestamp(fecha.getValue().getTime()));
-					
-					if(nroMega.getValue() != "" && nroMega.getValue() != null){
-						procesoVO.setNroMega((Integer) nroMega.getConvertedValue());
-					}
-					else{
-						procesoVO.setNroMega(0);
-					}
-					
-					if(nroDocum.getValue() != "" && nroDocum.getValue() != null){
-						procesoVO.setNroDocum(nroDocum.getValue());
-					}
-					else{
-						procesoVO.setNroDocum("0");
-					}
-						
-					if(Kilos.getValue() != "" && Kilos.getValue() != null){
-						procesoVO.setKilos((double) Kilos.getConvertedValue());
-					}
-					else{
-						procesoVO.setKilos(0);
-					}
-					
-					if(fecDocum.getValue() != null){
-						procesoVO.setFecDocum(new java.sql.Timestamp(fecDocum.getValue().getTime()));
-					}
-					else{
-						procesoVO.setFecDocum(null);
-					}
-					procesoVO.setCarpeta(carpeta.getValue().trim());
-					
-					if(fecCruce.getValue() != null){
-						procesoVO.setFecCruce(new java.sql.Timestamp(fecCruce.getValue().getTime()));
-					}
-					else{
-						procesoVO.setFecCruce(null);
-					}
-					
-					procesoVO.setMarca(marca.getValue().trim());
-					procesoVO.setMedio(medio.getValue().trim());
-					procesoVO.setDescripcion(descripcion.getValue().trim());
-
-					if(this.operacion.equals(Variables.OPERACION_NUEVO)) {	
-		
-						codigoInsert = this.controlador.insertarProceso(procesoVO, permisoAux);
-						procesoVO.setCodigo(codigoInsert);
-						
-						this.mainView.actulaizarGrilla(procesoVO);
-						
-						Mensajes.mostrarMensajeOK("Se ha guardado el proceso");
-						main.cerrarVentana();
-					
-					}
-					else if(this.operacion.equals(Variables.OPERACION_EDITAR))	{
-						
-						this.controlador.actualizarProceso(procesoVO, permisoAux);
-						this.mainView.actulaizarGrilla(procesoVO);
-						
-						Mensajes.mostrarMensajeOK("Se ha modificado el proceso");
-						main.cerrarVentana();
-						
-					}
-				}
-				else /*Si los campos no son válidos mostramos warning*/
-				{
-					Mensajes.mostrarMensajeWarning(Variables.WARNING_CAMPOS_NO_VALIDOS);
-				}
-					
-			} 
-			catch (ConexionException | ModificandoProcesoException | ExisteProcesoException | 
-					 InicializandoException | IngresandoProcesoException | NoExisteProcesoException |
-					 ErrorInesperadoException| ObteniendoPermisosException| NoTienePermisosException e) {
-				
-				Mensajes.mostrarMensajeError(e.getMessage());
-			}
-				
-		});
-		
-		/*Inicalizamos listener para boton de Editar*/
-		this.btnEditar.addClickListener(click -> {
-				
-			try {
-			
-				/*Inicializamos el Form en modo Edicion*/
-				this.iniFormEditar();
-				cotizacionVenta = Double.valueOf(tcMov.getConvertedValue().toString());
-				importeMoneda = (Double) impMo.getConvertedValue();
-				
-			}
-			catch(Exception e)	{
-				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
-			}
-		});
-		
-		this.cancelar.addClickListener(click -> {
-			main.cerrarVentana();
-		});
-		
-		this.eliminar.addClickListener(click -> {
-			UsuarioPermisosVO permisoAux = 
-					new UsuarioPermisosVO(this.permisos.getCodEmp(),
-							this.permisos.getUsuario(),
-							VariablesPermisos.FORMULARIO_PROCESOS,
-							VariablesPermisos.OPERACION_BORRAR);
-			
-			try {
-				controlador.eliminarProceso((Integer)codigo.getConvertedValue(), permisoAux);
-				this.mainView.actuilzarGrillaEliminado((Integer)codigo.getConvertedValue());
-				Mensajes.mostrarMensajeOK("Se ha eliminado el proceso");
-				main.cerrarVentana();
-				
-			} catch (ConexionException | NoExisteProcesoException | ExisteProcesoException | InicializandoException | ObteniendoPermisosException | NoTienePermisosException | EliminandoProcesoException e) {
-				// TODO Auto-generated catch block
-				Mensajes.mostrarMensajeError(e.getMessage());
-			}
-		});
-		
 		this.btnInfo.addClickListener(click -> {
 			
 			this.gastos_no_cobrables.setVisible(false);
@@ -523,13 +325,13 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 			this.gastos_cobrables.setVisible(false);
 			this.saldo_proceso.setVisible(false);
 			
-			this.info_form.setVisible(true);
+			this.info_form2.setVisible(true);
 			
 		});
 		
 		this.btnGtosNoCobrables.addClickListener(click -> {
 			
-			this.info_form.setVisible(false);
+			this.info_form2.setVisible(false);
 			this.gastos_apagar.setVisible(false);
 			this.gastos_anulados.setVisible(false);
 			this.gastos_cobrables.setVisible(false);
@@ -548,7 +350,7 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 		
 		this.btnGtosCobrables.addClickListener(click -> {
 			
-			this.info_form.setVisible(false);
+			this.info_form2.setVisible(false);
 			this.gastos_apagar.setVisible(false);
 			this.gastos_anulados.setVisible(false);
 			this.gastos_no_cobrables.setVisible(false);
@@ -568,7 +370,7 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 		
 		this.btnGtosAPagar.addClickListener(click -> {
 			
-			this.info_form.setVisible(false);
+			this.info_form2.setVisible(false);
 			this.gastos_cobrables.setVisible(false);
 			this.gastos_anulados.setVisible(false);
 			this.gastos_no_cobrables.setVisible(false);
@@ -587,7 +389,7 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 		
 		this.btnGtosAnulados.addClickListener(click -> {
 			
-			this.info_form.setVisible(false);
+			this.info_form2.setVisible(false);
 			this.gastos_cobrables.setVisible(false);
 			this.gastos_apagar.setVisible(false);
 			this.gastos_no_cobrables.setVisible(false);
@@ -607,7 +409,7 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 		
 		this.btnSinAdjudicar.addClickListener(click -> {
 			
-			this.info_form.setVisible(false);
+			this.info_form2.setVisible(false);
 			this.gastos_cobrables.setVisible(false);
 			this.gastos_apagar.setVisible(false);
 			this.gastos_no_cobrables.setVisible(false);
@@ -624,75 +426,7 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 			}
 		});
 		
-		this.btnBuscarCliente.addClickListener(click -> {
-			
-			BusquedaViewExtended form = new BusquedaViewExtended(this, new ClienteVO());
-			ArrayList<Object> lst = new ArrayList<Object>();
-			ArrayList<ClienteVO> lstClientes = new ArrayList<ClienteVO>();
-			
-			/*Inicializamos VO de permisos para el usuario, formulario y operacion
-			 * para confirmar los permisos del usuario*/
-			UsuarioPermisosVO permisoAux = 
-					new UsuarioPermisosVO(this.permisos.getCodEmp(),
-							this.permisos.getUsuario(),
-							VariablesPermisos.FORMULARIO_RESUMEN_PROCESO,
-							VariablesPermisos.OPERACION_NUEVO_EDITAR);
-			
-			try {
-				lstClientes = this.controlador.getClientes(permisoAux);
 				
-			} catch ( ConexionException | InicializandoException | ObteniendoPermisosException | NoTienePermisosException |
-					 ObteniendoClientesException e) {
-
-				Mensajes.mostrarMensajeError(e.getMessage());
-			}
-			Object obj;
-			for (ClienteVO i: lstClientes) {
-				obj = new Object();
-				obj = (Object)i;
-				lst.add(obj);
-			}
-			try {
-				
-				form.inicializarGrilla(lst);
-			
-				
-			} catch (Exception e) {
-				
-				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
-			}
-			
-			sub = new MySub("65%", "65%" );
-			sub.setModal(true);
-			sub.center();
-			sub.setModal(true);
-			sub.setVista(form);
-			sub.center();
-			sub.setDraggable(true);
-			UI.getCurrent().addWindow(sub);
-			
-		});
-		
-		/*Inicalizamos listener para boton de Editar*/
-		this.observaciones.addClickListener(click -> {
-			
-			ProcesoObservacionesViewExtended form = new ProcesoObservacionesViewExtended(this, obseAux.getValue(), this.operacion);
-			try {
-			
-				sub = new MySub("65%", "35%" );
-				sub.setModal(true);
-				sub.center();
-				sub.setModal(true);
-				sub.setVista(form);
-				sub.center();
-				sub.setDraggable(true);
-				UI.getCurrent().addWindow(sub);
-			}
-			catch(Exception e)	{
-				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
-			}
-		});
-		
 		comboMoneda.addValueChangeListener(new Property.ValueChangeListener(){
 			
 			@Override
@@ -748,6 +482,10 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 	   				}
 				}
 			}
+		});
+		
+		this.btnSalir.addClickListener(click -> {
+			main.cerrarVentana();
 		});
 		
 		this.impMo.addValueChangeListener(new Property.ValueChangeListener() {
@@ -894,9 +632,6 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 	 */
 	private void setearValidaciones(boolean setear){
 		
-		this.codCliente.setRequired(setear);
-		this.codCliente.setRequiredError("Es requerido");
-		
 		this.fecha.setRequired(setear);
 		this.fecha.setRequiredError("Es requerido");
 		
@@ -915,11 +650,6 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 		this.obseAux.setValue(proceso.getObservaciones()); 
 		String fecha = new SimpleDateFormat("dd/MM/yyyy").format(proceso.getFechaMod());
 		
-		
-		auditoria.setDescription(
-				"Usuario: " + proceso.getUsuarioMod() + "<br>" +
-			    "Fecha: " + fecha + "<br>" +
-			    "Operación: " + proceso.getOperacion());
 		
 		this.inicializarComboMoneda(proceso.getCodMoneda());
 		this.inicializarComboDocuemnto(proceso.getCodDocum());
@@ -945,21 +675,6 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 		
 		/*Si tiene permisos de editar habilitamos el boton de 
 		 * edicion*/
-		if(permisoNuevoEditar){
-			
-			this.enableBotonesLectura();
-			
-		}else{ /*de lo contrario lo deshabilitamos*/
-			
-			this.disableBotonLectura();
-		}
-		
-		if(permisoBorrar)
-			this.enableBotonEliminar();
-		
-		/*Deshabilitamos botn aceptar*/
-		this.disableBotonAceptar();
-		
 		
 		/*No mostramos las validaciones*/
 		this.setearValidaciones(false);
@@ -977,16 +692,11 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 	{
 		/*Seteamos el form en editar*/
 		this.operacion = Variables.OPERACION_EDITAR;
-		this.disableBotonEliminar();
 		
 		/*Verificamos que tenga permisos*/
 		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_PROCESOS, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		if(permisoNuevoEditar){
 			
-			/*Oculatamos Editar y mostramos el de guardar y de agregar formularios*/
-			this.enableBotonAceptar();
-			
-			this.disableBotonLectura();
 
 			/*Dejamos los textfields que se pueden editar
 			 * en readonly = false asi  se pueden editar*/
@@ -1019,9 +729,6 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 			mainView.mostrarMensaje(Variables.USUSARIO_SIN_PERMISOS);
 		}
 		
-		this.enableBotonAceptar();
-		this.enableBotonEliminar();
-		this.disableBotonLectura();
 		
 		/*Seteamos validaciones en nuevo, cuando es editar
 		 * solamente cuando apreta el boton editar*/
@@ -1062,8 +769,6 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 		this.marca.setReadOnly(false);
 		this.medio.setReadOnly(false);
 		this.descripcion.setReadOnly(false);
-		this.codCliente.setReadOnly(false);
-		this.codCliente.setEnabled(false);
 		this.nomCliente.setReadOnly(false);
 		this.nomCliente.setEnabled(false);
 		
@@ -1073,74 +778,10 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 	
 	
 	/**
-	 * Deshabilitamos el boton editar
-	 *
-	 */
-	private void disableBotonLectura()
-	{
-		this.btnEditar.setEnabled(false);
-		this.btnEditar.setVisible(false);
-		
-		
-	}
-	
-	/**
-	 * Habilitamos el boton editar 
-	 *
-	 */
-	private void enableBotonesLectura()
-	{
-		this.btnEditar.setEnabled(true);
-		this.btnEditar.setVisible(true);
-		
-	}
-	
-	/**
 	 * Deshabilitamos el boton aceptar
 	 *
 	 */
-	private void disableBotonAceptar()
-	{
-		this.aceptar.setEnabled(false);
-		this.aceptar.setVisible(false);
-		
-		this.btnBuscarCliente.setEnabled(false);
-		this.btnBuscarCliente.setVisible(false);
-	}
-	
-	private void disableBotonEliminar()
-	{
-		this.eliminar.setEnabled(false);
-		this.eliminar.setVisible(false);
-		this.botones.setWidth("187px");
-		
-		
-	}
-	
-	/**
-	 * Habilitamos el boton aceptar
-	 *
-	 */
-	private void enableBotonAceptar()
-	{
-		this.aceptar.setEnabled(true);
-		this.aceptar.setVisible(true);
-		
-		this.btnBuscarCliente.setEnabled(true);
-		this.btnBuscarCliente.setVisible(true);
-	}
-	
-	private void enableBotonEliminar()
-	{
-		if(operacion != Variables.OPERACION_NUEVO){
-			this.eliminar.setEnabled(true);
-			this.eliminar.setVisible(true);
-			this.botones.setWidth("270px");
-		}
-		else{
-			disableBotonEliminar();
-		}
-	}
+
 	
 	/**
 	 * Dejamos todos los Fields readonly o no,
@@ -1168,7 +809,6 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 
 		this.comboMoneda.setEnabled(false);
 		this.comboDocumento.setEnabled(false);
-		this.codCliente.setEnabled(false);
 		this.nomCliente.setEnabled(false);
 				
 	}
@@ -1211,22 +851,6 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 		//Agregamos validaciones a los campos para luego controlarlos
 		this.agregarFieldsValidaciones();
 				
-		try
-		{
-			if(this.codCliente.isValid() && this.fecha.isValid() 
-					&& this.nroMega.isValid() && this.nroDocum.isValid()
-					&& this.fecDocum.isValid() && this.carpeta.isValid()
-					&& this.impMn.isValid() && this.impMo.isValid()
-					&& this.tcMov.isValid() && this.Kilos.isValid()
-					&& this.fecCruce.isValid() && this.marca.isValid()
-					&& this.medio.isValid() && this.descripcion.isValid()
-					&& this.comboDocumento.isValid() && this.comboMoneda.isValid())
-				valido = true;
-			
-		}catch(Exception e)
-		{
-			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
-		}
 		
 		return valido;
 	}
@@ -1237,13 +861,6 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 
 	public void setInfo(Object datos) {
 		// TODO Auto-generated method stub
-		if(datos instanceof ClienteVO){
-			ClienteVO clienteVO = (ClienteVO) datos;
-			this.codCliente.setValue(String.valueOf(clienteVO.getCodigo()));
-			this.nomCliente.setValue(clienteVO.getNombre());
-//			this.descripcionMoneda.setValue(monedaVO.getDescripcion());
-//			this.codMoneda.setValue(monedaVO.getCodMoneda());
-		}
 		
 	}
 	
