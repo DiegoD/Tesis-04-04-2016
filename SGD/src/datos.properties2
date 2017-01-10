@@ -19,9 +19,46 @@ cantidad_conexiones=50
 
 ipServidor = localhost
 puertoServidor = 1099
-url = jdbc:mysql://node22005-env-0854208.jl.serv.net.mx/vaadin
+url = jdbc:mysql://node117907-env-2696399.jelasticlw.com.br//vaadin
 user = root
-password = NYRvcs56148
+password = AXDvik68337
+driver=com.mysql.jdbc.Driver
+abstractFactory = com.abstractFactory.AbstractFactoryMySql
+cantidad_conexiones=50
+
+
+ipServidor = localhost
+puertoServidor = 1099
+url = jdbc:mysql://node117907-env-0854208.jl.serv.net.mx/vaadin
+user = root
+password = AXDvik68337
+driver=com.mysql.jdbc.Driver
+abstractFactory = com.abstractFactory.AbstractFactoryMySql
+cantidad_conexiones=50
+
+ipServidor = localhost
+puertoServidor = 1099
+url = jdbc:mysql://localhost:3306/vaadin
+user = root
+password = root
+driver=com.mysql.jdbc.Driver
+abstractFactory = com.abstractFactory.AbstractFactoryMySql
+cantidad_conexiones=50
+
+ipServidor = localhost
+puertoServidor = 1099
+url = jdbc:mysql://node117907-env-2696399.jelasticlw.com.br/vaadin
+user = root
+password = AXDvik68337
+driver=com.mysql.jdbc.Driver
+abstractFactory = com.abstractFactory.AbstractFactoryMySql
+cantidad_conexiones=50
+
+ipServidor = localhost
+puertoServidor = 1099
+url = jdbc:mysql://node141254-env-4512589.j.layershift.co.uk/vaadin
+user = root
+password = XHVoia51550
 driver=com.mysql.jdbc.Driver
 abstractFactory = com.abstractFactory.AbstractFactoryMySql
 cantidad_conexiones=50
