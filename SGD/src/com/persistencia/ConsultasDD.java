@@ -1363,7 +1363,7 @@ public String getGastosAPagarxProceso(){
 				+ "m_cuentas.cod_cuenta, m_cuentas.descripcion, "
 				+ "m_rubros.cod_rubro, m_rubros.descripcion, m_rubros.cod_tipo_rubro, m_rubros.cod_impuesto, "
 				+ "m_impuestos.cod_impuesto, m_impuestos.descripcion, m_impuestos.porcentaje, "
-				+ "c_procesos.descripcion, c_gastos.estado ");
+				+ "c_procesos.descripcion, c_gastos.estado, sa_docum.imp_tot_mo ");
 		
 		sb.append("FROM c_gastos"
 				+ " INNER JOIN  m_clientes ON c_gastos.cod_tit = m_clientes.cod_tit AND m_clientes.cod_emp = c_gastos.cod_emp "
@@ -1373,7 +1373,7 @@ public String getGastosAPagarxProceso(){
 				+ " INNER JOIN m_impuestos ON c_gastos.cod_impuesto = m_impuestos.cod_impuesto AND m_impuestos.cod_emp = c_gastos.cod_emp "
 				+ " INNER JOIN c_procesos ON c_gastos.cod_proceso = c_procesos.cod_proceso and c_procesos.cod_emp = c_gastos.cod_emp "
 				+ " INNER JOIN sa_docum ON c_gastos.cod_docum = sa_docum.cod_docum AND sa_docum.serie_docum = c_gastos.serie_docum "
-				+ "			   AND sa_docum.nro_docum = c_gastos.nro_docum AND sa_docum.cod_emp = c_gastos.cod_emp "
+				+ "			   AND sa_docum.nro_docum = c_gastos.nro_docum AND sa_docum.cod_emp = c_gastos.cod_emp and sa_docum.imp_tot_mo > 0 "
 				+ " WHERE c_gastos.cod_emp = ? AND c_gastos.cod_proceso = ? AND c_gastos.estado = 'cobr' ");
 				
 				return sb.toString();

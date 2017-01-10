@@ -968,7 +968,8 @@ public class DAOGastos implements IDAOGastos{
 					aux.setImpSubMn(rs.getDouble(13));
 					aux.setImpSubMo(rs.getDouble(14));
 					aux.setImpTotMn(rs.getDouble(15));
-					aux.setImpTotMo(rs.getDouble(16));
+					//aux.setImpTotMo(rs.getDouble(16));
+					aux.setImpTotMo(rs.getDouble(38));
 					aux.setTcMov(rs.getDouble(17));
 					aux.setCodCuentaInd(rs.getString(18));
 					aux.setFechaMod(rs.getTimestamp(19));
