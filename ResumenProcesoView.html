@@ -1,0 +1,113 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="UTF-8" name="design-properties" content="{&quot;RULERS_VISIBLE&quot;:true,&quot;GUIDELINES_VISIBLE&quot;:false,&quot;SNAP_TO_OBJECTS&quot;:true,&quot;SNAP_TO_GRID&quot;:true,&quot;SNAPPING_DISTANCE&quot;:10,&quot;JAVA_SOURCES_ROOT&quot;:&quot;src&quot;,&quot;THEME&quot;:&quot;sgd&quot;}">
+ </head> 
+ <body> 
+  <vaadin-form-layout spacing="false" responsive id="auditoria" size-full margin-left margin-right margin-top="false" margin-bottom="false"> 
+   <vaadin-label style-name="colored h2" responsive plain-text :center>
+     Resumen Proceso 
+   </vaadin-label> 
+   <vaadin-horizontal-layout spacing width="545px" height="22px"> 
+    <vaadin-button style-name="borderless tiny colored" id="btnInfo" width="100px" plain-text _id="btnInfo">
+      Info 
+    </vaadin-button> 
+    <vaadin-button style-name="borderless tiny" id="btnGtosNoCobrables" width="100px" plain-text _id="btnGtosNoCobrables">
+      No cobrables 
+    </vaadin-button> 
+    <vaadin-button style-name="borderless tiny" id="btnGtosCobrables" width="100px" plain-text _id="btnGtosCobrables">
+      Cobrables 
+    </vaadin-button> 
+    <vaadin-button style-name="borderless tiny" id="btnGtosAPagar" width="100px" plain-text _id="btnGtosAPagar">
+      A pagar 
+    </vaadin-button> 
+    <vaadin-button style-name="borderless tiny" id="btnGtosAnulados" width="100px" plain-text _id="btnGtosAnulados">
+      Anulados 
+    </vaadin-button> 
+    <vaadin-button style-name="borderless tiny" id="btnSinAdjudicar" width="100px" plain-text _id="btnSinAdjudicar">
+      Sin adjudicar 
+    </vaadin-button> 
+   </vaadin-horizontal-layout> 
+   <vaadin-form-layout spacing="false" size-auto margin-top="false" margin-bottom="false"> 
+    <vaadin-form-layout spacing="false" width-auto height="110px"> 
+     <vaadin-horizontal-layout caption="Proceso" spacing> 
+      <vaadin-text-field style-name="tiny" null-representation="0" width="108px" readonly _id="codigo"></vaadin-text-field> 
+      <vaadin-label size-auto plain-text :middle>
+        Cliente 
+      </vaadin-label> 
+      <vaadin-text-field style-name="tiny" width="336px" _id="nomCliente"></vaadin-text-field> 
+     </vaadin-horizontal-layout> 
+     <vaadin-horizontal-layout caption="Descripción" spacing height="38px" margin-bottom> 
+      <vaadin-text-field style-name="tiny" width="502px" readonly _id="descripcion"></vaadin-text-field> 
+     </vaadin-horizontal-layout> 
+    </vaadin-form-layout> 
+   </vaadin-form-layout> 
+   <vaadin-form-layout spacing="false" width-auto height="304px" margin-top="false" _id="info_form2"> 
+    <vaadin-form-layout spacing="false" width-auto height="304px" margin-top="false" _id="info_form1"> 
+     <vaadin-horizontal-layout caption="Documento" spacing height="33px"> 
+      <vaadin-combo-box style-name="tiny" item-caption-mode="id" width="108px" _id="comboDocumento"> 
+       <option>Option 1</option> 
+       <option>Option 2</option> 
+       <option>Option 3</option> 
+      </vaadin-combo-box> 
+      <vaadin-text-field style-name="tiny" null-representation="0" width="226px" _id="nroDocum"></vaadin-text-field> 
+      <vaadin-date-field style-name="tiny" width="144px" _id="fecDocum"></vaadin-date-field> 
+     </vaadin-horizontal-layout> 
+     <vaadin-horizontal-layout caption="Moneda" spacing height="33px"> 
+      <vaadin-combo-box style-name="tiny" item-caption-mode="id" width="108px" _id="comboMoneda"> 
+       <option>Option 1</option> 
+       <option>Option 2</option> 
+       <option>Option 3</option> 
+      </vaadin-combo-box> 
+      <vaadin-label caption="T. Cambio" width="67px"></vaadin-label> 
+      <vaadin-text-field style-name="tiny" null-representation="0" width="108px" readonly _id="tcMov"></vaadin-text-field> 
+     </vaadin-horizontal-layout> 
+     <vaadin-horizontal-layout caption="Importe" spacing height="33px" _id="importe"> 
+      <vaadin-text-field style-name="tiny" null-representation="0" width="108px" readonly _id="impMo"></vaadin-text-field> 
+      <vaadin-label caption="V.N.A. $" width="65px" _id="lblimpMn"></vaadin-label> 
+      <vaadin-text-field style-name="tiny" null-representation="0" width="110px" readonly _id="impMn"></vaadin-text-field> 
+     </vaadin-horizontal-layout> 
+     <vaadin-horizontal-layout caption="Kilos" spacing height="33px"> 
+      <vaadin-text-field style-name="tiny" null-representation="0" width="108px" readonly _id="Kilos"></vaadin-text-field> 
+      <vaadin-label caption="Cruce" width="65px"></vaadin-label> 
+      <vaadin-date-field style-name="tiny" width="110px" _id="fecCruce"></vaadin-date-field> 
+      <vaadin-label caption="Carpeta" size-auto _id="lblCarpeta"></vaadin-label> 
+      <vaadin-text-field style-name="tiny" width="130px" _id="carpeta"></vaadin-text-field> 
+     </vaadin-horizontal-layout> 
+     <vaadin-horizontal-layout caption="Marca" spacing height="33px"> 
+      <vaadin-text-field style-name="tiny" width="208px" _id="marca"></vaadin-text-field> 
+      <vaadin-label caption="Transporte" size-auto></vaadin-label> 
+      <vaadin-text-field style-name="tiny" width="213px" readonly _id="medio"></vaadin-text-field> 
+     </vaadin-horizontal-layout> 
+     <vaadin-text-field caption="Importe Tr" visible="false" readonly _id="impTr"></vaadin-text-field> 
+     <vaadin-text-area visible="false" _id="obseAux"></vaadin-text-area> 
+     <vaadin-horizontal-layout caption="Mega" spacing height="33px"> 
+      <vaadin-text-field style-name="tiny" null-representation="0" width="108px" readonly _id="nroMega"></vaadin-text-field> 
+      <vaadin-label caption="Fecha" width-auto height="10px" _id="lblFecha" :right></vaadin-label> 
+      <vaadin-date-field style-name="tiny" width="110px" _id="fecha" :right></vaadin-date-field> 
+     </vaadin-horizontal-layout> 
+    </vaadin-form-layout> 
+   </vaadin-form-layout> 
+   <vaadin-form-layout style-name="billing-formlayout" spacing="false" responsive width="698px" height="304px" margin-right margin-top="false" _id="gastos_no_cobrables"> 
+    <vaadin-grid width-full height="304px" _id="gridNoCobrables"></vaadin-grid> 
+   </vaadin-form-layout> 
+   <vaadin-form-layout visible="false" style-name="billing-formlayout" spacing="false" responsive width="698px" height="304px" margin-right margin-top="false" _id="gastos_cobrables"> 
+    <vaadin-grid width-full height="305px" _id="gridCobrables"></vaadin-grid> 
+   </vaadin-form-layout> 
+   <vaadin-form-layout visible="false" style-name="billing-formlayout" spacing="false" responsive width="698px" height="304px" margin-right margin-top="false" _id="gastos_apagar"> 
+    <vaadin-grid width-full height="305px" _id="gridAPagar"></vaadin-grid> 
+   </vaadin-form-layout> 
+   <vaadin-form-layout visible="false" style-name="billing-formlayout" spacing="false" responsive width="698px" height="304px" margin-right margin-top="false" _id="gastos_anulados"> 
+    <vaadin-grid width-full height="305px" _id="gridAnular"></vaadin-grid> 
+   </vaadin-form-layout> 
+   <vaadin-form-layout visible="false" style-name="billing-formlayout" spacing="false" responsive width="698px" height="304px" margin-right margin-top="false" _id="saldo_proceso"> 
+    <vaadin-grid width-full height="305px" _id="gridSaldoProceso"></vaadin-grid> 
+   </vaadin-form-layout> 
+   <vaadin-form-layout responsive size-auto> 
+    <vaadin-button style-name="tiny primary" plain-text _id="btnSalir" :middle>
+      Salir 
+    </vaadin-button> 
+   </vaadin-form-layout> 
+  </vaadin-form-layout>  
+ </body>
+</html>
