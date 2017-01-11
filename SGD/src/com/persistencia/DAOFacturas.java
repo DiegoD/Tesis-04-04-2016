@@ -187,6 +187,87 @@ public class DAOFacturas implements IDAOFacturas{
     	return lst;
 	}
 	
+	/**
+	 * Nos retorna una lista con todos las facturas con saldo para titular, empresa y moneda
+	 */
+	public ArrayList<Factura> getFacturaxProceso(Connection con, String codEmp, Integer codProceso) throws ObteniendoFacturasException, ConexionException {
+		
+		ArrayList<Factura> lst = new ArrayList<Factura>();
+	
+		try {
+			//
+	    	Consultas clts = new Consultas();
+	    	String query = clts.getFacturaxProceso();
+	    	PreparedStatement pstmt1 = con.prepareStatement(query);
+	    	
+	    	ResultSet rs;
+	    	
+	    	pstmt1.setString(1, codEmp);
+	    	pstmt1.setInt(2, codProceso);
+			rs = pstmt1.executeQuery();
+			
+			Factura fact;
+			
+			while(rs.next ()) {
+							
+				fact = new Factura();
+				
+				fact.setCodCuentaInd(rs.getString("cod_cuenta")); /*El cabezal de ingreso cobro solamente tiene la cuenta interna*/
+				
+				fact.setCuenta(new CuentaInfo(fact.getCodCuentaInd(), "Ingreso Cobro"));
+				
+				fact.getProcesoInfo().setCodProceso(rs.getInt("cod_proceso"));
+				fact.getProcesoInfo().setDescProceso(rs.getString("cod_proceso"));
+				fact.setFecDoc(rs.getTimestamp("fec_doc"));
+				fact.setCodDocum(rs.getString("cod_docum"));
+				fact.setSerieDocum(rs.getString("serie_docum"));
+				fact.setNroDocum(rs.getInt("nro_docum"));
+				fact.setCodEmp(rs.getString("cod_emp"));
+				
+				fact.setMoneda(new MonedaInfo(rs.getString("cod_moneda"), rs.getString("descripcion"), rs.getString("simbolo"), rs.getBoolean("nacional")));
+				
+				fact.setReferencia(rs.getString("observaciones"));
+				fact.setTitInfo(new TitularInfo(rs.getString("cod_tit"), rs.getString("nom_tit"), rs.getString("tipo")));
+				fact.setNroTrans(rs.getLong("nro_trans"));
+			
+				//aux.setCuentaInfo(new CuentaInfo(rs.getString("cod_cuenta"), rs.getString("nom_cuenta")));
+				
+				
+				fact.setFecValor(rs.getTimestamp("fec_valor"));
+				
+				fact.setImpTotMn(rs.getDouble("imp_tot_mn"));
+				fact.setImpTotMo(rs.getDouble("imp_tot_mo"));
+				fact.setTcMov(rs.getDouble("tc_mov"));
+				
+				fact.setFechaMod(rs.getTimestamp("fecha_mod"));
+				fact.setUsuarioMod(rs.getString("usuario_mod"));
+				fact.setOperacion(rs.getString("operacion"));
+				
+				fact.setImpuTotMn(rs.getDouble("impu_tot_mn"));
+				fact.setImpuTotMo(rs.getDouble("impu_tot_mo"));
+				fact.setImpSubMo(rs.getDouble("imp_sub_mo"));
+				fact.setImpSubMn(rs.getDouble("imp_sub_mn"));
+				fact.setTipoFactura(rs.getString("tipo_factura"));
+				
+				/*Obtenemos las lineas de la transaccion*/				
+				fact.setDetalle(this.getEgresoFacturaLineaxTrans(con,fact));
+				
+				
+				lst.add(fact);
+				
+			}
+			rs.close ();
+			pstmt1.close ();
+    	}	
+    	
+		
+		catch (SQLException e) {
+			throw new ObteniendoFacturasException();
+			
+		}
+    	
+    	return lst;
+	}
 
 	
 	/**

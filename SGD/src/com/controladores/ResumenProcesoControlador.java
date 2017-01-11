@@ -11,6 +11,7 @@ import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Cotizaciones.ObteniendoCotizacionesException;
 import com.excepciones.Documentos.ObteniendoDocumentosException;
+import com.excepciones.Factura.ObteniendoFacturasException;
 import com.excepciones.Gastos.ObteniendoGastosException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
 import com.excepciones.Procesos.EliminandoProcesoException;
@@ -28,6 +29,7 @@ import com.valueObject.MonedaVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.Cotizacion.CotizacionVO;
 import com.valueObject.Docum.DocumDetalleVO;
+import com.valueObject.Docum.FacturaVO;
 import com.valueObject.Gasto.GastoVO;
 import com.valueObject.cliente.ClienteVO;
 import com.valueObject.proceso.ProcesoVO;
@@ -195,6 +197,20 @@ public class ResumenProcesoControlador {
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
 			return FachadaDD.getInstance().getSaldosSinAdjuxProceso(permisos.getCodEmp(), codProceso);
+		else
+			throw new NoTienePermisosException();
+	}
+	
+	/**
+	 * Obtenemos las facturas para el proceso
+	 * 
+	 *
+	 */
+	public ArrayList<FacturaVO> getFacturasxProceso(UsuarioPermisosVO permisos, int codProceso) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoFacturasException {
+		
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			return Fachada.getInstance().getFacturaxProceso(permisos.getCodEmp(), codProceso);
 		else
 			throw new NoTienePermisosException();
 	}

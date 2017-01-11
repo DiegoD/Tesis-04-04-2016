@@ -21,4 +21,6 @@ public interface IDAOFacturas {
 	public ArrayList<Factura> getFacturaConSaldoxMoneda(Connection con, String codEmp, String codMoneda, String codTit) throws ObteniendoFacturasException, ConexionException;
 	public boolean existeGasto(int nroDocum, String codEmp, Connection con) throws ExisteFacturaException, ConexionException;
 	public double getSaldoFactura(int nroDocum, String serie, String codigo, String codEmp, Connection con) throws ObteniendoSaldoException, ConexionException;
+	public ArrayList<Factura> getFacturaxProceso(Connection con, String codEmp, Integer codProceso) throws ObteniendoFacturasException, ConexionException;
+		
 }

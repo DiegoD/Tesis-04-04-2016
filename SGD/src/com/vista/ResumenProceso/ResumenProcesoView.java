@@ -31,6 +31,7 @@ public class ResumenProcesoView extends FormLayout {
 	protected Button btnGtosAPagar;
 	protected Button btnGtosAnulados;
 	protected Button btnSinAdjudicar;
+	protected Button btnFacturas;
 	protected TextField codigo;
 	protected TextField nomCliente;
 	protected TextField descripcion;
@@ -66,6 +67,8 @@ public class ResumenProcesoView extends FormLayout {
 	protected Grid gridAnular;
 	protected FormLayout saldo_proceso;
 	protected Grid gridSaldoProceso;
+	protected FormLayout form_facturas;
+	protected Grid gridFacturas;
 	protected Button btnSalir;
 
 	public ResumenProcesoView() {

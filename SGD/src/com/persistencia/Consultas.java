@@ -1415,7 +1415,46 @@ public String getIngresoCobroCabTodosOtros(){
 		return sb.toString();
 	}
 
-
+	public String getFacturaxProceso(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT c_facturas.cod_docum, c_facturas.serie_docum, c_facturas.nro_docum, m_titulares.cod_tit, m_titulares.nom_tit, m_titulares.tipo ");
+		sb.append(",c_facturas.cod_emp, c_facturas.fec_doc, c_facturas.fec_valor, c_facturas.cod_proceso,  c_procesos.descripcion  ");
+		sb.append(", m_monedas.cod_moneda, m_monedas.descripcion, m_monedas.simbolo, sa_docum.imp_tot_mn ");
+		sb.append(", sa_docum.imp_tot_mo, c_facturas.tc_mov, c_facturas.observaciones, nro_trans, c_facturas.fecha_mod, c_facturas.usuario_mod ");
+		sb.append(", c_facturas.operacion, m_monedas.descripcion, m_monedas.simbolo, c_facturas.cod_cuenta,   "); 
+		sb.append("c_facturas.impu_tot_mn , c_facturas.impu_tot_mo, c_facturas.imp_sub_mo , c_facturas.imp_sub_mn,  m_monedas.nacional, c_facturas.tipo_factura ");
+		sb.append("	FROM c_facturas ");
+		
+		sb.append("INNER JOIN m_monedas "); 
+		sb.append("ON c_facturas.cod_moneda = m_monedas.cod_moneda  ");
+		sb.append("AND c_facturas.cod_emp = m_monedas.cod_emp  ");
+		
+		sb.append("INNER JOIN m_titulares ");
+		
+		sb.append("ON c_facturas.cod_emp = m_titulares.cod_emp ");  
+		sb.append("AND c_facturas.cod_tit = m_titulares.cod_tit  ");
+		
+		sb.append("INNER JOIN c_procesos ");
+		
+		sb.append("ON c_facturas.cod_emp = c_procesos.cod_emp ");  
+		sb.append("AND c_facturas.cod_proceso = c_procesos.cod_proceso  ");
+		
+		
+		sb.append(" INNER JOIN sa_docum ON c_facturas.cod_docum = sa_docum.cod_docum  "); 
+		sb.append(" AND c_facturas.serie_docum = sa_docum.serie_docum  "); 
+		sb.append(" AND c_facturas.nro_docum = sa_docum.nro_docum  "); 
+		sb.append(" AND c_facturas.cod_emp = sa_docum.cod_emp  "); 
+		sb.append(" AND c_facturas.cod_tit = sa_docum.cod_tit "); 
+		
+		sb.append("WHERE c_facturas.cod_emp = ?  "); 
+		sb.append("AND c_facturas.cod_proceso = ?  "); 
+		
+		
+		
+		return sb.toString();
+	}
 
 	public String getFacturaDetxTrans(){
 	

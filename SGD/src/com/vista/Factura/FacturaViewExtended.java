@@ -640,6 +640,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 				if(this.operacion.equals(Variables.OPERACION_NUEVO))	
 				{	
 					
+					this.controlador.insertarFactura(factVO, permisoAux, true);
 					this.mainView.actulaizarGrilla();
 					
 					Mensajes.mostrarMensajeOK("Se ha guardado la Factura");
@@ -666,7 +667,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 				Mensajes.mostrarMensajeWarning(Variables.WARNING_CAMPOS_NO_VALIDOS);
 			}
 				
-			} catch (ModificandoFacturaException| NoExisteFacturaException |ExisteFacturaException | InicializandoException| ConexionException | NoTienePermisosException| ObteniendoPermisosException e) {
+			} catch (InsertandoFacturaException | ModificandoFacturaException| NoExisteFacturaException |ExisteFacturaException | InicializandoException| ConexionException | NoTienePermisosException| ObteniendoPermisosException e) {
 				
 				Mensajes.mostrarMensajeError(e.getMessage());
 			}

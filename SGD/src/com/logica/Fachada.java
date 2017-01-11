@@ -3059,7 +3059,41 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 		return lstVO;
 	}	 
 
-
+	@SuppressWarnings("unchecked") 
+	public ArrayList<FacturaVO> getFacturaxProceso(String codEmp, Integer codProceso) throws ObteniendoFacturasException, ConexionException {
+	
+		Connection con = null;
+		
+		ArrayList<Factura> lst;
+		ArrayList<FacturaVO> lstVO = new ArrayList<FacturaVO>();
+		
+		try
+		{
+			con = this.pool.obtenerConeccion();
+			
+			lst = this.facturas.getFacturaxProceso(con, codEmp, codProceso);
+			
+			for (Factura fac : lst) 
+			{
+				FacturaVO aux = fac.retornarVO();
+			
+				lstVO.add(aux);
+			}
+		
+		}catch(ObteniendoFacturasException  e){
+			throw e;
+		
+		} catch (ConexionException e) {
+		
+			throw e;
+		} 
+		finally
+		{
+			this.pool.liberarConeccion(con);
+		}
+		
+		return lstVO;
+	}	 
 	
 	public void insertarFactura(FacturaVO factVO, String codEmp, boolean nuevo) throws InsertandoFacturaException, ConexionException{
 		
