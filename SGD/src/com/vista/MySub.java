@@ -27,14 +27,10 @@ public class MySub extends Window{
 	
 	public MySub(String height, String width){
 		
-		//setContent(new CotizacionesView());
-		
 		center();
 		setClosable(true);
 		setDraggable(true);
-		//setModal(true);
 		setResizable(true);
-		//setScrollLeft(true);
 		
 		setHeight(height);
 		setWidth(width);

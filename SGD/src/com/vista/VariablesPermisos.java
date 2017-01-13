@@ -41,6 +41,8 @@ public final class VariablesPermisos {
 	
 	public static final String FORMULARIO_REPORTES = "MReportes";
 	public static final String FORMULARIO_REP_CHEQUE_CLIENTES = "RepCheqxCliente";
+	public static final String FORMULARIO_REP_GTOS_PENDIENTES_CLIENTES = "RepGtosPendxCliente";
+	public static final String FORMULARIO_REP_CHEQUES_PENDIENTES_DEPOSITAR = "RepChequesPendDep";
 	
 	/*Variables para las operaciones*/
 	public static final String OPERACION_NUEVO_EDITAR = "NUEVO_EDITAR";
