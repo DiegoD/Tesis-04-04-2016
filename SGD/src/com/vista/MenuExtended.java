@@ -37,9 +37,10 @@ import com.vista.Recibo.ReciboPanelExtended;
 import com.vista.RepVis.VistaSaDocum;
 import com.vista.RepVis.VistaSaDocumExtended;
 import com.vista.RepVis2.VistaSaCuentasExtended;
+import com.vista.Reportes.ChequesPendDepositar.ChequesDepositarViewExtended;
 import com.vista.Reportes.ChequesxCliente.RepChequesxClienteViewExtended;
 import com.vista.Reportes.ChequesxCliente.ReportePanelChequeExtended;
-import com.vista.Reportes.Ejemplo.ReportePanelExtended;
+import com.vista.Reportes.GastosPendCobro.GtosPendCobroxClienteViewExtended;
 import com.vista.ResumenProceso.ResProcesosPanelExtended;
 import com.vista.Rubros.RubrosPanelExtended;
 import com.vista.TipoRubro.TipoRubrosPanelExtended;
@@ -649,20 +650,6 @@ public class MenuExtended extends Menu{
 			}
 		});
 		
-		this.btnReportes.addClickListener(click -> {
-			
-			setSizeFull();
-			
-			this.content.removeAllComponents();
-			try {
-				
-				ReportePanelExtended u = new ReportePanelExtended(); 
-				this.content.addComponent(u);
-				
-			} catch (Exception e) {
-				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
-			}
-		});
 		
 		this.btnRepCheque.addClickListener(click -> {
 			
@@ -671,17 +658,67 @@ public class MenuExtended extends Menu{
 			this.content.removeAllComponents();
 			try {
 				
-				
-				//ReportePanelChequeExtended u = new ReportePanelChequeExtended(); 
-				//this.content.addComponent(u);
-				
-				//RepChequesxClienteViewExtended u = new RepChequesxClienteViewExtended(); 
-				//this.content.addComponent(u);
-				
-				
 				RepChequesxClienteViewExtended form = new RepChequesxClienteViewExtended();
 				
 				sub = new MySub("50%","50%");
+				
+				sub.setModal(true);
+				
+				sub.setVista(form);
+				
+				UI.getCurrent().addWindow(sub);
+				
+				
+				
+			} catch (Exception e) {
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}
+		});
+		
+		this.btnRepGastosPendCobro.addClickListener(click -> {
+			
+			setSizeFull();
+			
+			this.content.removeAllComponents();
+			try {
+				
+		
+				GtosPendCobroxClienteViewExtended form = new GtosPendCobroxClienteViewExtended();
+
+				
+				sub = new MySub("40%","50%");
+				
+
+				sub.setModal(true);
+
+
+				
+
+				sub.setVista(form);
+
+			
+				
+				UI.getCurrent().addWindow(sub);
+				
+				
+				
+			} catch (Exception e) {
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}
+		});
+		
+		this.btnCheqADepositar.addClickListener(click -> {
+			
+			setSizeFull();
+			
+			this.content.removeAllComponents();
+			
+			try {
+				
+				
+				ChequesDepositarViewExtended form = new ChequesDepositarViewExtended();
+				
+				sub = new MySub("40%","50%");
 				
 				sub.setModal(true);
 				
@@ -1007,7 +1044,9 @@ public class MenuExtended extends Menu{
 		for (FormularioVO formularioVO : this.permisos.getLstPermisos().values()) {
 			
 			if(formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_REPORTES) ||
-			   formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_REP_CHEQUE_CLIENTES))
+			   formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_REP_CHEQUE_CLIENTES)||
+			   formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_REP_GTOS_PENDIENTES_CLIENTES) ||
+			   formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_REP_CHEQUES_PENDIENTES_DEPOSITAR))
 				
 			{
 				lstFormsReportes.add(formularioVO);
@@ -1029,17 +1068,24 @@ public class MenuExtended extends Menu{
 				
 				switch(formularioVO.getCodigo())
 				{
-					case VariablesPermisos.FORMULARIO_REPORTES : 
-						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_REPORTES, VariablesPermisos.OPERACION_LEER)){
-							this.habilitarReporteBoton();
-							this.layoutMenu.addComponent(this.btnReportes);
-						}
-					break;
-					
 					case VariablesPermisos.FORMULARIO_REP_CHEQUE_CLIENTES : 
 						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_REP_CHEQUE_CLIENTES, VariablesPermisos.OPERACION_LEER)){
 							this.habilitarReporteChequeCliente();
 							this.layoutMenu.addComponent(this.btnRepCheque);
+						}
+					break;
+					
+					case VariablesPermisos.FORMULARIO_REP_GTOS_PENDIENTES_CLIENTES : 
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_REP_GTOS_PENDIENTES_CLIENTES, VariablesPermisos.OPERACION_LEER)){
+							this.habilitarReporteGtosPendCliente();
+							this.layoutMenu.addComponent(this.btnRepGastosPendCobro);
+						}
+					break;
+					
+					case VariablesPermisos.FORMULARIO_REP_CHEQUES_PENDIENTES_DEPOSITAR : 
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_REP_CHEQUES_PENDIENTES_DEPOSITAR, VariablesPermisos.OPERACION_LEER)){
+							this.habilitarReporteChequesPendDeposito();
+							this.layoutMenu.addComponent(this.btnCheqADepositar);
 						}
 					break;
 				
@@ -1148,6 +1194,15 @@ public class MenuExtended extends Menu{
 		
 		this.conciliacion.setVisible(false);
 		this.conciliacion.setEnabled(false);
+		
+		this.btnRepGastosPendCobro.setVisible(false);
+		this.btnRepGastosPendCobro.setEnabled(false);
+		
+		this.btnRepCheque.setVisible(false);
+		this.btnRepCheque.setEnabled(false);
+		
+		this.btnCheqADepositar.setVisible(false);
+		this.btnCheqADepositar.setEnabled(false);
 	}
 	
 	
@@ -1348,22 +1403,22 @@ public class MenuExtended extends Menu{
 		this.layoutMenu.addComponent(this.impuestoButton);
 	}
 	
-	private void habilitarReporteBoton()
-	{
-		this.btnReportes.setVisible(true);
-		this.btnReportes.setEnabled(true);
-		
-		//TODO
-		//this.tabAdministracion.addComponent(this.userButton);
-	}
-	
 	private void habilitarReporteChequeCliente()
 	{
 		this.btnRepCheque.setVisible(true);
 		this.btnRepCheque.setEnabled(true);
-		
-		//TODO
-		//this.tabAdministracion.addComponent(this.userButton);
+	}
+	
+	private void habilitarReporteGtosPendCliente()
+	{
+		this.btnRepGastosPendCobro.setVisible(true);
+		this.btnRepGastosPendCobro.setEnabled(true);
+	}
+	
+	private void habilitarReporteChequesPendDeposito()
+	{
+		this.btnCheqADepositar.setVisible(true);
+		this.btnCheqADepositar.setEnabled(true);
 	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////////

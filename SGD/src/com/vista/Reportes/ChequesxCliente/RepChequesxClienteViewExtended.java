@@ -62,7 +62,6 @@ public class RepChequesxClienteViewExtended extends RepChequesxClienteViews impl
 	
 	private RepChequeClienteControlador controlador;
 	private String operacion;
-	private int control;
 	
 	private IngresoCobroDetalleVO formSelecccionado; /*Variable utilizada cuando se selecciona
 	 										  un detalle, para poder quitarlo de la lista*/
@@ -88,8 +87,6 @@ public class RepChequesxClienteViewExtended extends RepChequesxClienteViews impl
 	public RepChequesxClienteViewExtended(){
 	
 	this.controlador = new RepChequeClienteControlador();
-	this.control = 0;
-
 		
 	/*Inicializamos los permisos para el usuario*/
 	this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
@@ -181,7 +178,7 @@ public class RepChequesxClienteViewExtended extends RepChequesxClienteViews impl
 				
 				com.Reportes.util.ReportsUtil report;
 				
-				String basepath = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath() + "\\WEB-INF\\Reportes";
+				String basepath = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath() + "/WEB-INF/Reportes";
 				
 				System.out.println(basepath);
 				
@@ -192,7 +189,11 @@ public class RepChequesxClienteViewExtended extends RepChequesxClienteViews impl
 					  
 					  HashMap<String, Object> fillParameters=new HashMap<String, Object>();
 					  
-					  if(this.codTitular.getValue()!= "" && this.codTitular.getValue()!= null)
+					  if(this.codTitular.getValue()!= "" && this.codTitular.getValue()!= null 
+							  && this.fecDesde.getValue()!= null 
+							  && this.fecHasta.getValue()!= null
+							  && this.comboMoneda.getValue() != null 
+							  )
 					  {
 					  try{
 					  
@@ -207,11 +208,13 @@ public class RepChequesxClienteViewExtended extends RepChequesxClienteViews impl
 					        fillParameters.put("fecDesde", convertFromJAVADateToSQLDate(fecDesde.getValue()));
 					        fillParameters.put("fecHasta", convertFromJAVADateToSQLDate(fecHasta.getValue()));
 					        fillParameters.put("codMoneda", this.getCodMonedaSeleccionada());
+					        
+					        fillParameters.put("REPORTS_DIR",basepath);
 					      
 						  }catch(Exception e) {}
 					        
 					        
-						StreamResource myResource = report.prepareForPdfReportReturn( basepath+"\\RepChequesClientes.jrxml",
+						StreamResource myResource = report.prepareForPdfReportReturn( basepath+"/RepChequesClientes.jrxml",
 									                "Cheques",
 									                fillParameters);
 					  
@@ -242,6 +245,10 @@ public class RepChequesxClienteViewExtended extends RepChequesxClienteViews impl
 						
 				    
 					 }
+					  else{
+						  
+						  Mensajes.mostrarMensajeWarning("Faltan datos por completar");
+					  }
 					  
 				  }
 				  catch(Exception e)
@@ -255,30 +262,7 @@ public class RepChequesxClienteViewExtended extends RepChequesxClienteViews impl
 				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 			}
 			
-			//if(this.control > 1 )
-				//main.cerrarVentana(); /*Si no ver de disable todos los campos aca*/
-			
-			/*Ver de pasar los parametros por otro lado, una clase aparte que
-			 * tenga los parametros y se pueda consultar desde la clase de reporte en logic
-			 * ver de hacerlo por usuario y reporte...*/
-			
-			this.control ++;
-			
 		});
-	
-	chkParametros.addListener(new Property.ValueChangeListener() {
-	    @Override
-	    public void valueChange(ValueChangeEvent event) {
-	    	try {
-				
-				inicializarBoton();
-				
-			} catch (ClassNotFoundException e) {
-				
-				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
-			}
-	    }   
-	});
 		
 	}
 	
