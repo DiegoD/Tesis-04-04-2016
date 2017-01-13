@@ -41,6 +41,7 @@ import com.vista.Reportes.ChequesPendDepositar.ChequesDepositarViewExtended;
 import com.vista.Reportes.ChequesxCliente.RepChequesxClienteViewExtended;
 import com.vista.Reportes.ChequesxCliente.ReportePanelChequeExtended;
 import com.vista.Reportes.GastosPendCobro.GtosPendCobroxClienteViewExtended;
+import com.vista.Reportes.IVA.RepIvaViewExtended;
 import com.vista.ResumenProceso.ResProcesosPanelExtended;
 import com.vista.Rubros.RubrosPanelExtended;
 import com.vista.TipoRubro.TipoRubrosPanelExtended;
@@ -733,6 +734,32 @@ public class MenuExtended extends Menu{
 			}
 		});
 		
+		this.btnRepIva.addClickListener(click -> {
+			
+			setSizeFull();
+			
+			this.content.removeAllComponents();
+			
+			try {
+				
+				
+				RepIvaViewExtended form = new RepIvaViewExtended();
+				
+				sub = new MySub("34%","45%");
+				
+				sub.setModal(true);
+				
+				sub.setVista(form);
+				
+				UI.getCurrent().addWindow(sub);
+				
+				
+				
+			} catch (Exception e) {
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}
+		});
+		
 	}
 	
 	
@@ -1046,6 +1073,7 @@ public class MenuExtended extends Menu{
 			if(formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_REPORTES) ||
 			   formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_REP_CHEQUE_CLIENTES)||
 			   formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_REP_GTOS_PENDIENTES_CLIENTES) ||
+			   formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_REP_IVA) ||
 			   formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_REP_CHEQUES_PENDIENTES_DEPOSITAR))
 				
 			{
@@ -1086,6 +1114,13 @@ public class MenuExtended extends Menu{
 						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_REP_CHEQUES_PENDIENTES_DEPOSITAR, VariablesPermisos.OPERACION_LEER)){
 							this.habilitarReporteChequesPendDeposito();
 							this.layoutMenu.addComponent(this.btnCheqADepositar);
+						}
+					break;
+					
+					case VariablesPermisos.FORMULARIO_REP_IVA : 
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_REP_IVA, VariablesPermisos.OPERACION_LEER)){
+							this.habilitarReporteRepIva();
+							this.layoutMenu.addComponent(this.btnRepIva);
 						}
 					break;
 				
@@ -1203,6 +1238,9 @@ public class MenuExtended extends Menu{
 		
 		this.btnCheqADepositar.setVisible(false);
 		this.btnCheqADepositar.setEnabled(false);
+		
+		this.btnRepIva.setVisible(false);
+		this.btnRepIva.setEnabled(false);
 	}
 	
 	
@@ -1420,6 +1458,13 @@ public class MenuExtended extends Menu{
 		this.btnCheqADepositar.setVisible(true);
 		this.btnCheqADepositar.setEnabled(true);
 	}
+	
+	private void habilitarReporteRepIva()
+	{
+		this.btnRepIva.setVisible(true);
+		this.btnRepIva.setEnabled(true);
+	}
+	
 	
 	///////////////////////////////////////////////////////////////////////////////////////////
 	

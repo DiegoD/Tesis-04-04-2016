@@ -64,6 +64,7 @@ public class Menu extends HorizontalLayout {
 	protected Button btnRepCheque;
 	protected Button btnRepGastosPendCobro;
 	protected Button btnCheqADepositar;
+	protected Button btnRepIva;
 	protected VerticalLayout content;
 
 	public Menu() {
