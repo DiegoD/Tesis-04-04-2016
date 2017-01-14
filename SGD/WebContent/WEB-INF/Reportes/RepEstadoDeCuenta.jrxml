@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RepChequesClientes" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="beb2c1cc-874d-46af-8109-6cf506587581">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Title" forecolor="#FFFFFF" fontName="Times New Roman" fontSize="50" isBold="false" pdfFontName="Times-Bold"/>
+	<style name="SubTitle" forecolor="#CCCCCC" fontName="Times New Roman" fontSize="18" isBold="false" pdfFontName="Times-Roman"/>
+	<style name="Column header" forecolor="#666666" fontName="Times New Roman" fontSize="14" isBold="true" pdfFontName="Times-Roman"/>
+	<style name="Detail" mode="Transparent" fontName="Times New Roman" pdfFontName="Times-Roman"/>
+	<style name="Row" mode="Transparent" fontName="Times New Roman" pdfFontName="Times-Roman">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style mode="Opaque" backcolor="#F0EFEF"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="codEmp" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fecDesde" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fecHasta" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="nomTit" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="codMoneda" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="REPORTS_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="periodo" class="java.lang.String"/>
+	<parameter name="codTit" class="java.lang.String"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\Users\\User\\Tesis3\\Repositorio\\trunk\\SGD\\WebContent\\WEB-INF\\Reportes\\"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT documento, fecha, proceso, carpeta, moneda, entrada, salida, cod_tit, cod_emp, fec_doc, cod_moneda FROM (
+
+SELECT
+CONCAT('FAC. ',f.serie_docum , ' ', f.nro_docum) documento
+,DATE_FORMAT(f.fec_doc , '%d-%m-%Y') fecha
+,f.cod_proceso proceso
+,p.carpeta carpeta
+,m.simbolo moneda
+,f.imp_tot_mo entrada
+,0 salida
+
+,f.cod_tit
+,f.cod_emp
+,f.fec_doc
+,f.cod_moneda
+FROM c_facturas f, c_procesos p, m_monedas m
+WHERE f.cod_proceso = p.cod_proceso AND f.cod_emp = p.cod_emp
+AND f.cod_moneda = m.cod_moneda AND m.cod_emp = f.cod_emp
+AND f.tipo_factura = 'Factura'
+
+UNION
+
+SELECT
+CONCAT('REC. ',r.serie_docum , ' ', r.nro_docum) documento
+,DATE_FORMAT(r.fec_doc , '%d-%m-%Y') fecha
+,'' proceso
+,'' carpeta
+,m.simbolo moneda
+,0 entrada
+,(r.imp_tot_mo * -1) salida
+
+,r.cod_tit
+,r.cod_emp
+,r.fec_doc
+,r.cod_moneda
+
+FROM c_recibos r,  m_monedas m
+WHERE  r.cod_moneda = m.cod_moneda AND m.cod_emp = r.cod_emp
+
+
+UNION
+
+
+SELECT
+CONCAT('NC. ',n.serie_docum , ' ', n.nro_docum) documento
+,DATE_FORMAT(n.fec_doc , '%d-%m-%Y') fecha
+,'' proceso
+,'' carpeta
+,m.simbolo moneda
+,0 entrada
+,(n.imp_tot_mo * -1) salida
+
+,n.cod_tit
+,n.cod_emp
+,n.fec_doc
+,n.cod_moneda
+
+FROM c_notacred n,  m_monedas m
+WHERE  n.cod_moneda = m.cod_moneda AND m.cod_emp = n.cod_emp
+
+)AUX
+
+WHERE cod_tit = $P{codTit} AND cod_emp = $P{codEmp} AND fec_doc BETWEEN $P{fecDesde} AND $P{fecHasta} AND cod_moneda = $P{codMoneda}
+ORDER BY documento, fec_doc ]]>
+	</queryString>
+	<field name="documento" class="java.lang.String"/>
+	<field name="fecha" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="proceso" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="carpeta" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="moneda" class="java.lang.String"/>
+	<field name="entrada" class="java.math.BigDecimal"/>
+	<field name="salida" class="java.math.BigDecimal"/>
+	<field name="cod_tit" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cod_emp" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fec_doc" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cod_moneda" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="114" splitType="Stretch">
+			<frame>
+				<reportElement mode="Opaque" x="0" y="0" width="451" height="95" forecolor="#0033CC" backcolor="#0033CC" uuid="c251db9f-f778-41e8-b4d6-dc47149157f6"/>
+				<staticText>
+					<reportElement style="Title" mode="Transparent" x="0" y="0" width="370" height="45" forecolor="#FFFFFF" backcolor="#0033CC" uuid="e1b8c498-c2c4-47bf-a0f5-32be0f7267f1"/>
+					<textElement>
+						<font size="28" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Estado de cuenta]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="157" y="45" width="294" height="29" forecolor="#CCCCCC" uuid="1c183dff-e7ee-4558-b778-229589eda54b"/>
+					<textElement>
+						<font fontName="Times New Roman" size="16"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{nomTit}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="157" y="74" width="294" height="21" forecolor="#CCCCCC" uuid="21af6863-06f7-44e5-9440-2a19768a9608"/>
+					<textElement>
+						<font fontName="Times New Roman" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{periodo}]]></textFieldExpression>
+				</textField>
+			</frame>
+			<image>
+				<reportElement x="464" y="0" width="89" height="81" uuid="ec45969f-1b51-4fc9-b21a-35b64a1e997b"/>
+				<imageExpression><![CDATA[$P{REPORTS_DIR} + "/logojasper.jpg"]]></imageExpression>
+			</image>
+			<subreport>
+				<reportElement x="157" y="95" width="83" height="19" uuid="c84412e3-975d-4ac3-a009-6d6b4182d13a"/>
+				<subreportParameter name="codTit">
+					<subreportParameterExpression><![CDATA[$P{codTit}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="codMoneda">
+					<subreportParameterExpression><![CDATA[$P{codMoneda}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="codEmp">
+					<subreportParameterExpression><![CDATA[$P{codEmp}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="fecDesde">
+					<subreportParameterExpression><![CDATA[$P{fecDesde}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "SaldoAnterior.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="26" splitType="Stretch">
+			<staticText>
+				<reportElement style="Column header" x="0" y="8" width="95" height="18" forecolor="#000000" uuid="d7e320f5-d900-4ac4-8e93-7342fa5ad41e"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Documento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="95" y="8" width="80" height="18" forecolor="#000000" uuid="0c0b84a8-031a-4bc2-852f-e1ce5ca4cced"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Fecha]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="175" y="8" width="65" height="18" forecolor="#000000" uuid="13d67d0c-7e43-4c4c-96ed-27eecb4ae506"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Proceso]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="240" y="8" width="92" height="18" forecolor="#000000" uuid="fb0a9ab0-af41-4887-95e2-7b4387a7238d"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Carpeta]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="332" y="8" width="56" height="18" forecolor="#000000" uuid="22db6754-4ec8-4ecc-8632-8b3536164be5"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Moneda]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="388" y="8" width="81" height="18" forecolor="#000000" uuid="beb87338-debc-4dad-af0b-83c3003ca5b7"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Entradas]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="469" y="8" width="81" height="18" forecolor="#000000" uuid="2521df5c-3dad-4992-a960-e461752ac863"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Salidas]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="18" splitType="Stretch">
+			<frame>
+				<reportElement style="Row" mode="Opaque" x="0" y="0" width="555" height="18" uuid="71c4d15f-0fa7-4fe1-a2f2-d9e6a02b6979"/>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="Detail" positionType="Float" x="2" y="0" width="93" height="18" backcolor="#1A85E2" uuid="14db90ad-97ce-44d8-974a-4136b163265c"/>
+					<textElement textAlignment="Center">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{documento}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="Detail" positionType="Float" x="95" y="0" width="80" height="18" backcolor="#1A85E2" uuid="43049990-0168-44a4-abb3-25482932755e"/>
+					<textElement textAlignment="Center">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="Detail" positionType="Float" x="175" y="0" width="65" height="18" backcolor="#1A85E2" uuid="6487ed52-98a1-4c1a-a023-235511c6f7fa"/>
+					<textElement textAlignment="Center">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{proceso}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="Detail" positionType="Float" x="240" y="0" width="92" height="18" backcolor="#1A85E2" uuid="072ec9ad-8bec-442e-ad69-5f6eb07b1113"/>
+					<textElement textAlignment="Center">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{carpeta}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="Detail" positionType="Float" x="332" y="0" width="56" height="18" backcolor="#1A85E2" uuid="8b645266-b534-4851-afc1-48e5a6d3637e"/>
+					<textElement textAlignment="Center">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{moneda}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="Detail" positionType="Float" x="388" y="0" width="81" height="18" backcolor="#1A85E2" uuid="3399f735-dff8-4ef6-8701-2e634660e69b"/>
+					<textElement textAlignment="Center">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{entrada}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="Detail" positionType="Float" x="469" y="0" width="81" height="18" backcolor="#1A85E2" uuid="19649327-e8f1-441f-b809-669e6b580a4d"/>
+					<textElement textAlignment="Center">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{salida}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="7" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1" uuid="51f1790b-dc8a-4987-b49b-cb9572aa69bb"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="25" splitType="Stretch">
+			<frame>
+				<reportElement mode="Opaque" x="0" y="1" width="555" height="24" forecolor="#D0B48E" backcolor="#0033CC" uuid="549920fb-ff22-4da9-acc9-5f8c0001a21c"/>
+				<textField evaluationTime="Report">
+					<reportElement style="Column header" x="513" y="0" width="40" height="20" forecolor="#FFFFFF" uuid="6004a4d8-04da-427e-b143-313e9aeb6132"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="Column header" x="433" y="0" width="80" height="20" forecolor="#FFFFFF" uuid="11002ecd-95df-437a-b54e-7232dd501c77"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

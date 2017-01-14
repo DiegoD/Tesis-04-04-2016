@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SaldoAnterior" language="groovy" pageWidth="199" pageHeight="752" columnWidth="199" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="ef74f72a-dbdc-4355-b455-6e79b915bc73">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="codTit" class="java.lang.String"/>
+	<parameter name="codEmp" class="java.lang.String"/>
+	<parameter name="fecDesde" class="java.util.Date"/>
+	<parameter name="codMoneda" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT sum(entrada) + sum(salida) saldo, MAX(moneda) moneda FROM (
+
+SELECT entrada, salida, cod_tit, cod_emp, fec_doc, cod_moneda, moneda  FROM (
+
+SELECT
+CONCAT('FAC. ',f.serie_docum , ' ', f.nro_docum) documento
+,DATE_FORMAT(f.fec_doc , '%d-%m-%Y') fecha
+,f.cod_proceso proceso
+,p.carpeta carpeta
+,m.simbolo moneda
+,f.imp_tot_mo entrada
+,0 salida
+
+,f.cod_tit
+,f.cod_emp
+,f.fec_doc
+,f.cod_moneda
+FROM c_facturas f, c_procesos p, m_monedas m
+WHERE f.cod_proceso = p.cod_proceso AND f.cod_emp = p.cod_emp
+AND f.cod_moneda = m.cod_moneda AND m.cod_emp = f.cod_emp
+AND f.tipo_factura = 'Factura'
+
+UNION
+
+SELECT
+CONCAT('REC. ',r.serie_docum , ' ', r.nro_docum) documento
+,DATE_FORMAT(r.fec_doc , '%d-%m-%Y') fecha
+,'' proceso
+,'' carpeta
+,m.simbolo moneda
+,0 entrada
+,(r.imp_tot_mo * -1) salida
+
+,r.cod_tit
+,r.cod_emp
+,r.fec_doc
+,r.cod_moneda
+
+FROM c_recibos r,  m_monedas m
+WHERE  r.cod_moneda = m.cod_moneda AND m.cod_emp = r.cod_emp
+
+
+UNION
+
+
+SELECT
+CONCAT('NC. ',n.serie_docum , ' ', n.nro_docum) documento
+,DATE_FORMAT(n.fec_doc , '%d-%m-%Y') fecha
+,'' proceso
+,'' carpeta
+,m.simbolo moneda
+,0 entrada
+,(n.imp_tot_mo * -1) salida
+
+,n.cod_tit
+,n.cod_emp
+,n.fec_doc
+,n.cod_moneda
+
+FROM c_notacred n,  m_monedas m
+WHERE  n.cod_moneda = m.cod_moneda AND m.cod_emp = n.cod_emp
+
+)AUX WHERE  cod_tit = $P{codTit} AND cod_emp = $P{codEmp} AND fec_doc < $P{fecDesde} AND cod_moneda = $P{codMoneda}
+
+)AUX2]]>
+	</queryString>
+	<field name="saldo" class="java.math.BigDecimal"/>
+	<field name="moneda" class="java.lang.String"/>
+	<pageHeader>
+		<band height="23" splitType="Stretch">
+			<textField>
+				<reportElement x="101" y="0" width="98" height="23" uuid="784f7a48-ba58-4734-8294-94e4e3688e21"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{saldo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="0" width="70" height="23" uuid="fcf4c9b6-02b0-4cc3-a970-3077c9bf2bc7"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Saldo anterior]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="71" y="0" width="30" height="23" uuid="3587f508-3325-44b1-8e5d-59533cff392a"/>
+				<textFieldExpression><![CDATA[$F{moneda}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+</jasperReport>
