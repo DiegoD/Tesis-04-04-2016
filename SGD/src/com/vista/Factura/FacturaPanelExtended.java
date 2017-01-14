@@ -41,7 +41,7 @@ import com.vista.VariablesPermisos;
 import com.vista.Bancos.BancoViewExtended;
 import com.vista.Bancos.BancosPanelExtended;
 
-public class FacturaPanelExtended extends FacturaPanel{
+public class FacturaPanelExtended extends FacturaPanel implements IFacturaMain{
 	
 	private FacturaViewExtended form; 
 	private ArrayList<FacturaVO> lstFacturas; /*Lista con las facturas*/

@@ -3259,6 +3259,8 @@ public class FachadaDD {
 		
 		ArrayList<SaldoProceso> lst;
 		ArrayList<SaldoProcesoVO> lstVO = new ArrayList<SaldoProcesoVO>();
+		SaldoProcesoVO aux;
+		
 		
 		try
 		{
@@ -3266,22 +3268,15 @@ public class FachadaDD {
 			
 			lst = this.saldosProceso.getSaldosSinAdjuxProceso(cod_emp, codProceso, con);
 			
-			
-			SaldoProcesoVO aux;
-			for (SaldoProceso saldo : lst) 
-			{
+			for (SaldoProceso saldos : lst){
 				aux = new SaldoProcesoVO();
-				
-				aux.setCodProceso(saldo.getCodProceso());
-				aux.setImpTotMN(saldo.getImpTotMN());
-				aux.setImpTotMO(saldo.getImpTotMO());
-				aux.setCodMoneda(saldo.getMoneda().getCodMoneda());
-				aux.setDescMoneda(saldo.getMoneda().getDescripcion());
-				aux.setSimboloMoneda(saldo.getMoneda().getSimbolo());
-				aux.setNacional(saldo.getMoneda().isNacional());
-				
+				aux = saldos.retronarSaldoProcesoVO();
 				lstVO.add(aux);
-			}
+			} 
+				
+			
+			
+			
 		
 		}
 		catch(ObteniendoSaldosException e){
@@ -3473,6 +3468,85 @@ public class FachadaDD {
 			con = this.pool.obtenerConeccion();
 			
 			lstGastos = this.gastos.getGastosConSaldoCobrable(con, cod_emp, codTit);
+			
+			
+			GastoVO aux;
+			for (Gasto gasto : lstGastos) 
+			{
+				aux = new GastoVO();
+				
+				aux.setFecDoc(gasto.getFecDoc());
+				aux.setCodDocum(gasto.getCodDocum());
+				aux.setSerieDocum(gasto.getSerieDocum());
+				aux.setNroDocum(String.valueOf(gasto.getNroDocum()));
+				aux.setCodEmp(gasto.getCodEmp());
+				aux.setCodMoneda(gasto.getMoneda().getCodMoneda());
+				aux.setNomMoneda(gasto.getMoneda().getDescripcion());
+				aux.setReferencia(gasto.getReferencia());
+				aux.setCodTitular(gasto.getTitInfo().getCodigo());
+				aux.setNomTitular(gasto.getTitInfo().getNombre());
+				aux.setNroTrans(gasto.getNroTrans());
+				aux.setFecValor(gasto.getFecValor());
+				aux.setCodProceso(gasto.getCodProceso());
+				aux.setReferencia(gasto.getReferencia());
+				aux.setImpImpuMn(gasto.getImpImpuMn());
+				aux.setImpImpuMo(gasto.getImpImpuMo());
+				aux.setImpSubMn(gasto.getImpSubMn());
+				aux.setImpSubMo(gasto.getImpSubMo());
+				aux.setImpTotMn(gasto.getImpTotMn());
+				aux.setImpTotMo(gasto.getImpTotMo());
+				aux.setTcMov(gasto.getTcMov());
+				aux.setCodCuenta(gasto.getCuenta().getCodCuenta());
+				aux.setNomCuenta(gasto.getCuenta().getNomCuenta());
+				aux.setCodRubro(gasto.getRubroInfo().getCodRubro());
+				aux.setNomRubro(gasto.getRubroInfo().getNomRubro());
+				aux.setCodCtaInd(gasto.getCodCuentaInd());
+				aux.setFechaMod(gasto.getFechaMod());
+				aux.setUsuarioMod(gasto.getUsuarioMod());
+				aux.setOperacion(gasto.getOperacion());
+				aux.setDescProceso(gasto.getDescProceso());
+				aux.setCodImpuesto(gasto.getImpuestoInfo().getCodImpuesto());
+				aux.setNomImpuesto(gasto.getImpuestoInfo().getNomImpuesto());
+				aux.setPorcentajeImpuesto(gasto.getImpuestoInfo().getPorcentaje());
+				aux.setSimboloMoneda(gasto.getMoneda().getSimbolo());
+				aux.setNacional(gasto.getMoneda().isNacional());
+				aux.setEstadoGasto(gasto.getEstadoGasto());
+				lstGastosVO.add(aux);
+			}
+		
+		}
+		catch(ObteniendoGastosException e){
+			throw e;
+		
+		} 
+		catch (ConexionException e) {
+		
+			throw e;
+		} 
+		finally{
+			this.pool.liberarConeccion(con);
+		}
+		
+		return lstGastosVO;
+	}
+	
+	/**
+	* Obtiene todos los gastos con saldo cobrables para el titular, proceso y empresa 
+	*/
+	@SuppressWarnings("unchecked")
+	public ArrayList<GastoVO> getGastosConSaldoCobrableProceso(String cod_emp, String codTit, Integer codProceso) throws ObteniendoGastosException, ConexionException
+	{
+	
+		Connection con = null;
+		
+		ArrayList<Gasto> lstGastos;
+		ArrayList<GastoVO> lstGastosVO = new ArrayList<GastoVO>();
+		
+		try
+		{
+			con = this.pool.obtenerConeccion();
+			
+			lstGastos = this.gastos.getGastosConSaldoCobrableProceso(con, cod_emp, codTit, codProceso);
 			
 			
 			GastoVO aux;
@@ -5486,4 +5560,96 @@ public class FachadaDD {
 			 }
 	///////////////////////////////////////////////FIN VALIDACIONES////////////////////////////////////////////////////////////
 	
+	///////////////////////////////////////////////INI RESUMEN PROCESO////////////////////////////////////////////////////////////
+	
+
+	public void adjudicarSaldoProceoGasto(String codEmp, ArrayList<GastoVO> lstGastos, SaldoProcesoVO saldo) throws ModificandoSaldoException, ConexionException, EliminandoSaldoException, IngresandoSaldoException, ExisteSaldoException {
+		
+		Connection con = null;
+		
+		
+		try {
+			   
+			   con = this.pool.obtenerConeccion();
+			   con.setAutoCommit(false);
+			   Double tcMov = null;
+			   Gasto gasto; 
+			   TitularInfo titular;
+			   MonedaInfo moneda;
+			   DatosDocum documento = new DatosDocum();
+			   
+			   
+			   for (GastoVO gastoVO : lstGastos) {
+					gasto = new Gasto();
+					gasto.setCodDocum(gastoVO.getCodDocum());
+					gasto.setCodEmp(gastoVO.getCodEmp());
+					gasto.setCodProceso(gastoVO.getCodProceso());
+					gasto.setNroDocum(Integer.valueOf(gastoVO.getNroDocum()));
+					gasto.setSerieDocum(gastoVO.getSerieDocum());
+					gasto.setImpTotMo(gastoVO.getImpTotMo());
+					gasto.setImpTotMn(gastoVO.getImpTotMo()*gastoVO.getTcMov() );
+					gasto.setTcMov(gastoVO.getTcMov());
+					tcMov = gastoVO.getTcMov();
+					titular = new TitularInfo();
+					titular.setCodigo(gastoVO.getCodTitular());
+					gasto.setTitInfo(titular);
+					gasto.setCodEmp(codEmp);
+					gasto.setUsuarioMod(gastoVO.getUsuarioMod());
+					gasto.setOperacion(gastoVO.getOperacion());
+					gasto.setCodCuentaInd("SaldoProceso");
+					moneda = new MonedaInfo();
+					moneda.setCodMoneda(gastoVO.getCodMoneda());
+					gasto.setMoneda(moneda);
+					this.saldos.modificarSaldo(gasto, -1, gasto.getTcMov(), con);
+				
+					
+			   }
+			   
+				documento.setFecDoc(saldo.getFecDoc());
+				documento.setCodDocum(saldo.getCodDoca());
+				documento.setSerieDocum(saldo.getSerieDoca());
+				documento.setNroDocum(saldo.getNroDoca());
+				documento.setCodEmp(saldo.getCodEmp());
+				moneda = new MonedaInfo();
+				moneda.setCodMoneda(saldo.getCodMoneda());
+				documento.setMoneda(moneda);
+				titular = new TitularInfo();
+				titular.setCodigo(saldo.getCodTit());
+				documento.setTitInfo(titular);
+				documento.setNroTrans(saldo.getNroTrans());
+				documento.setImpTotMn(saldo.getImpTotMN());
+				documento.setImpTotMo(saldo.getImpTotMO());
+				documento.setTcMov(tcMov);
+				documento.setFecValor(saldo.getFecValor());
+				documento.setOperacion(saldo.getOperacion());
+				documento.setUsuarioMod(saldo.getUsuarioMod());
+				
+				this.saldosProceso.modificarSaldo(documento, -1, tcMov, con, saldo.getCodProceso());
+				
+				con.commit();
+			
+		   } catch(ConexionException | SQLException e)
+		   {
+			   try {
+				   con.rollback();
+
+			   } 
+			   catch (SQLException e1) {
+
+				   throw new ConexionException();
+			   }
+			   
+		   }
+		   finally
+		   {
+			   pool.liberarConeccion(con);
+		   }
+		
+		
+	}
+				
+			
+			
+	///////////////////////////////////////////////FIN RESUMEN PROCESO////////////////////////////////////////////////////////////
+			
 }

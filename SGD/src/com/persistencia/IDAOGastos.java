@@ -45,4 +45,7 @@ public interface IDAOGastos {
 	public boolean existeGastoAsociadoProceso(Integer nroProceso, String codEmp, Connection con)
 			throws ExisteGastoException, ConexionException;
 	public double getSaldoGasto(int nroDocum, String codEmp, Connection con) throws ObteniendoSaldoException, ConexionException;
+	
+	public ArrayList<Gasto> getGastosConSaldoCobrableProceso(Connection con, String codEmp, String codTit, Integer codProceso)
+			throws ObteniendoGastosException, ConexionException;
 }

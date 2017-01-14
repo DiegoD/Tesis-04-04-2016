@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
@@ -23,6 +24,7 @@ import com.logica.Docum.DocumDetalle;
 import com.logica.Docum.TitularInfo;
 import com.mysql.jdbc.Statement;
 import com.valueObject.Docum.DatosDocumVO;
+import com.valueObject.proceso.SaldoProcesoVO;
 
 public class DAOSaldoProceso implements IDAOSaldosProc {
 	
@@ -270,6 +272,7 @@ public class DAOSaldoProceso implements IDAOSaldosProc {
 		
 		ArrayList<SaldoProceso> lst = new ArrayList<SaldoProceso>();
 		
+		
 			try {
 				//
 		    	ConsultasDD clts = new ConsultasDD();
@@ -283,18 +286,30 @@ public class DAOSaldoProceso implements IDAOSaldosProc {
 		    	
 				rs = pstmt1.executeQuery();
 				
+				
 				SaldoProceso aux;
 				
 				while(rs.next ()) {
 								
+					
 					aux = new SaldoProceso();
 					
 					aux.setCodProceso(rs.getString("cod_proceso"));
-					aux.setImpTotMN(rs.getDouble("imp_tot_mn"));
-					aux.setImpTotMO(rs.getDouble("imp_tot_mo"));
-					
+					aux.setImpTotMO(rs.getDouble("s.imp_tot_mo"));
+					aux.setImpTotMN(rs.getDouble("s.imp_tot_mn"));
 					aux.setMoneda(new MonedaInfo(rs.getString("cod_moneda"), rs.getString("descripcion"), rs.getString("simbolo")));
-					
+					aux.setCodDoca(rs.getString("s.cod_doca"));
+					aux.setSerieDoca(rs.getString("s.serie_doca"));
+					aux.setNroDoca(rs.getInt("s.nro_doca"));
+					aux.setCodEmp(rs.getString("s.cod_emp"));
+					aux.setCodTit(rs.getString("s.cod_tit"));
+					aux.setCodCta(rs.getString("s.cod_cta"));
+					aux.setNroTrans(rs.getLong("s.nro_trans"));
+					aux.setFecDoc(rs.getTimestamp("s.fec_doc"));
+					aux.setFecValor(rs.getTimestamp("s.fec_valor"));
+					aux.setUsuarioMod(rs.getString("s.usuario_mod"));
+					aux.setOperacion(rs.getString("operacion"));
+
 					lst.add(aux);
 					
 				}

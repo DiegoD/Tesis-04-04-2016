@@ -1,5 +1,7 @@
 package com.logica;
 
+import java.sql.Timestamp;
+
 import com.valueObject.proceso.SaldoProcesoVO;
 
 public class SaldoProceso {
@@ -10,6 +12,17 @@ public class SaldoProceso {
 	private MonedaInfo moneda;
 	private double impTotMO;
 	private double impTotMN;
+	private String codDoca;
+	private String serieDoca;
+	private int nroDoca;
+	private String codEmp;
+	private String codTit;
+	private String codCta;
+	private long nroTrans;
+	private Timestamp fecDoc;
+	private Timestamp fecValor;
+	private String usuarioMod;
+	private String operacion;
 	
 	public SaldoProceso(){
 		
@@ -23,6 +36,17 @@ public class SaldoProceso {
 		this.impTotMN = vo.getImpTotMN();
 		
 		this.moneda = new MonedaInfo(vo.getCodMoneda(), vo.getDescMoneda(), vo.getSimboloMoneda(), vo.isNacional());
+		this.codDoca = vo.getCodDoca();
+		this.serieDoca = vo.getSerieDoca();
+		this.nroDoca = vo.getNroDoca();
+		this.codEmp = vo.getCodEmp();
+		this.codTit = vo.getCodTit();
+		this.codCta = vo.getCodCta();
+		this.nroTrans = vo.getNroTrans();
+		this.fecDoc = vo.getFecDoc();
+		this.fecValor = vo.getFecValor();
+		this.usuarioMod = vo.getUsuarioMod();
+		this.operacion = vo.getOperacion();
 	}
 	
 	public SaldoProcesoVO retronarSaldoProcesoVO(){
@@ -37,7 +61,18 @@ public class SaldoProceso {
 		vo.setSimboloMoneda(this.moneda.getSimbolo());
 		vo.setDescMoneda(this.moneda.getDescripcion());
 		vo.setNacional(this.moneda.isNacional());
-		
+		vo.setCodDoca(this.getCodDoca());
+		vo.setSerieDoca(this.getSerieDoca());
+		vo.setNroDoca(this.getNroDoca());
+		vo.setCodEmp(this.getCodEmp());
+		vo.setCodTit(this.getCodTit());
+		vo.setCodCta(this.getCodCta());
+		vo.setNroTrans(this.getNroTrans());
+		vo.setFecDoc(this.getFecDoc());
+		vo.setFecValor(this.getFecValor());
+		vo.setUsuarioMod(this.getUsuarioMod());
+		vo.setOperacion(this.getOperacion());
+
 		return vo;
 	}
 	
@@ -64,6 +99,94 @@ public class SaldoProceso {
 	}
 	public void setImpTotMN(double impTotMN) {
 		this.impTotMN = impTotMN;
+	}
+
+	public String getCodDoca() {
+		return codDoca;
+	}
+
+	public void setCodDoca(String codDoca) {
+		this.codDoca = codDoca;
+	}
+
+	public String getSerieDoca() {
+		return serieDoca;
+	}
+
+	public void setSerieDoca(String serieDoca) {
+		this.serieDoca = serieDoca;
+	}
+
+	public int getNroDoca() {
+		return nroDoca;
+	}
+
+	public void setNroDoca(int nroDoca) {
+		this.nroDoca = nroDoca;
+	}
+
+	public String getCodEmp() {
+		return codEmp;
+	}
+
+	public void setCodEmp(String codEmp) {
+		this.codEmp = codEmp;
+	}
+
+	public String getCodTit() {
+		return codTit;
+	}
+
+	public void setCodTit(String codTit) {
+		this.codTit = codTit;
+	}
+
+	public String getCodCta() {
+		return codCta;
+	}
+
+	public void setCodCta(String codCta) {
+		this.codCta = codCta;
+	}
+
+	public long getNroTrans() {
+		return nroTrans;
+	}
+
+	public void setNroTrans(long nroTrans) {
+		this.nroTrans = nroTrans;
+	}
+
+	public Timestamp getFecDoc() {
+		return fecDoc;
+	}
+
+	public void setFecDoc(Timestamp fecDoc) {
+		this.fecDoc = fecDoc;
+	}
+
+	public Timestamp getFecValor() {
+		return fecValor;
+	}
+
+	public void setFecValor(Timestamp fecValor) {
+		this.fecValor = fecValor;
+	}
+
+	public String getUsuarioMod() {
+		return usuarioMod;
+	}
+
+	public void setUsuarioMod(String usuarioMod) {
+		this.usuarioMod = usuarioMod;
+	}
+
+	public String getOperacion() {
+		return operacion;
+	}
+
+	public void setOperacion(String operacion) {
+		this.operacion = operacion;
 	}
 
 	

@@ -70,6 +70,10 @@ public class ResumenProcesoView extends FormLayout {
 	protected FormLayout form_facturas;
 	protected Grid gridFacturas;
 	protected Button btnSalir;
+	protected Button btnAdjudicar;
+	protected HorizontalLayout horizontalSaldo;
+	protected Label lblSaldo;
+	protected TextField saldo;
 
 	public ResumenProcesoView() {
 		Design.read(this);

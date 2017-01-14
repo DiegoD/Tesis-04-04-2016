@@ -109,10 +109,21 @@
    <vaadin-form-layout visible="false" style-name="billing-formlayout" spacing="false" responsive width="698px" height="304px" margin-right margin-top="false" _id="form_facturas"> 
     <vaadin-grid width-full height="305px" _id="gridFacturas"></vaadin-grid> 
    </vaadin-form-layout> 
-   <vaadin-form-layout responsive size-auto> 
-    <vaadin-button style-name="tiny primary" plain-text _id="btnSalir" :middle>
-      Salir 
-    </vaadin-button> 
+   <vaadin-form-layout responsive width="686px"> 
+    <vaadin-horizontal-layout width-full> 
+     <vaadin-horizontal-layout spacing> 
+      <vaadin-button style-name="tiny primary" plain-text _id="btnSalir" :middle>
+        Salir 
+      </vaadin-button> 
+      <vaadin-button style-name="tiny primary" plain-text _id="btnAdjudicar">
+        Adjudicar 
+      </vaadin-button> 
+     </vaadin-horizontal-layout> 
+     <vaadin-horizontal-layout visible="false" spacing _id="horizontalSaldo" :right> 
+      <vaadin-label visible="false" caption="Saldo proceso" size-auto _id="lblSaldo" :right></vaadin-label> 
+      <vaadin-text-field visible="false" style-name="tiny" width="80px" _id="saldo" :right></vaadin-text-field> 
+     </vaadin-horizontal-layout> 
+    </vaadin-horizontal-layout> 
    </vaadin-form-layout> 
   </vaadin-form-layout>  
  </body>

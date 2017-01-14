@@ -83,7 +83,8 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	private ArrayList<FacturaDetalleVO> lstDetalleQuitar; /*Lista de detalle a agregar*/
 	private FacturaControlador controlador;
 	private String operacion;
-	private FacturaPanelExtended mainView;
+	//private FacturaPanelExtended mainView;
+	private IFacturaMain mainView;
 	BeanItemContainer<FacturaDetalleVO> container;
 	private FacturaDetalleVO lineaSelecccionada; /*Variable utilizada cuando se selecciona
 	 										  un detalle, para poder quitarlo de la lista*/
@@ -118,8 +119,8 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	 *
 	 */
 	@SuppressWarnings({ "unchecked", "deprecation" })
-	public FacturaViewExtended(String opera, FacturaPanelExtended main){
-	
+	//public FacturaViewExtended(String opera, FacturaPanelExtended main){
+	public FacturaViewExtended(String opera, IFacturaMain main){
 	
 	this.cambioMoneda = false;
 	
@@ -830,8 +831,13 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		
 		this.cancelar.addClickListener(click -> {
 			
-			this.mainView.actulaizarGrilla();
-			main.cerrarVentana();
+			if(this.mainView != null){
+				this.mainView.actulaizarGrilla();
+				main.cerrarVentana();
+			}
+			else{
+				UI.getCurrent().removeWindow(sub);
+			}
 		});
 			
 		/*Inicalizamos listener para boton de Quitar*/
@@ -1205,7 +1211,11 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		/*Dejamos todods los campos readonly*/
 		this.readOnlyFields(true);
 		
-		
+		if(mainView == null){
+			this.btnEditar.setEnabled(false);
+			this.btnEliminar.setEnabled(false);
+			
+		}
 		/*Seteamos la grilla */
 		this.container = 
 				new BeanItemContainer<FacturaDetalleVO>(FacturaDetalleVO.class);
@@ -1937,10 +1947,10 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	public void inicializarComboTipoContCred(FacturaVO fact){
 		
 		if(fact.getTipoContCred().equals("contado")){
-			this.comboContCred.setValue("contado");
+			this.comboContCred.setValue("Contado");
 		}
 		else{
-			this.comboContCred.setValue("credito");
+			this.comboContCred.setValue("Credito");
 		}
 	}
 	

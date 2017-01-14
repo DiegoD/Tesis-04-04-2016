@@ -20,6 +20,10 @@ import com.excepciones.Procesos.IngresandoProcesoException;
 import com.excepciones.Procesos.ModificandoProcesoException;
 import com.excepciones.Procesos.NoExisteProcesoException;
 import com.excepciones.Procesos.ObteniendoProcesosException;
+import com.excepciones.Saldos.EliminandoSaldoException;
+import com.excepciones.Saldos.ExisteSaldoException;
+import com.excepciones.Saldos.IngresandoSaldoException;
+import com.excepciones.Saldos.ModificandoSaldoException;
 import com.excepciones.Saldos.ObteniendoSaldosException;
 import com.excepciones.clientes.ObteniendoClientesException;
 import com.logica.Fachada;
@@ -215,4 +219,22 @@ public class ResumenProcesoControlador {
 			throw new NoTienePermisosException();
 	}
 	
+	public ArrayList<GastoVO> getGastosConSaldoProceso(UsuarioPermisosVO permisos, String cod_tit, int codProceso) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoGastosException{
+		
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			return FachadaDD.getInstance().getGastosConSaldoCobrableProceso(permisos.getCodEmp(), cod_tit, codProceso);
+		else
+			throw new NoTienePermisosException();
+	}
+	
+	public void adjudicarSaldo(UsuarioPermisosVO permisos, ArrayList<GastoVO> lstGastos, SaldoProcesoVO saldo) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ModificandoSaldoException, EliminandoSaldoException, IngresandoSaldoException, ExisteSaldoException{
+		
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			
+			FachadaDD.getInstance().adjudicarSaldoProceoGasto(permisos.getCodEmp(), lstGastos, saldo);
+		else
+			throw new NoTienePermisosException();
+	}
 }

@@ -5,6 +5,8 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
 
 import com.controladores.ProcesoControlador;
 import com.controladores.ResumenProcesoControlador;
@@ -24,8 +26,13 @@ import com.excepciones.Procesos.IngresandoProcesoException;
 import com.excepciones.Procesos.ModificandoProcesoException;
 import com.excepciones.Procesos.NoExisteProcesoException;
 import com.excepciones.Procesos.ObteniendoProcesosException;
+import com.excepciones.Saldos.EliminandoSaldoException;
+import com.excepciones.Saldos.ExisteSaldoException;
+import com.excepciones.Saldos.IngresandoSaldoException;
+import com.excepciones.Saldos.ModificandoSaldoException;
 import com.excepciones.Saldos.ObteniendoSaldosException;
 import com.excepciones.clientes.ObteniendoClientesException;
+import com.logica.MonedaInfo;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
@@ -36,12 +43,17 @@ import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.server.VaadinService;
+import com.vaadin.shared.ui.MultiSelectMode;
+import com.vaadin.shared.ui.grid.GridStaticSectionState;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.Grid.SelectionMode;
 import com.valueObject.DocumentoAduaneroVO;
 import com.valueObject.MonedaVO;
+import com.valueObject.RubroVO;
 import com.valueObject.UsuarioPermisosVO;
+import com.valueObject.Conciliaciones.ConciliacionDetalleVO;
 import com.valueObject.Cotizacion.CotizacionVO;
 import com.valueObject.Docum.DocumDetalleVO;
 import com.valueObject.Docum.FacturaVO;
@@ -57,11 +69,14 @@ import com.vista.MySub;
 import com.vista.PermisosUsuario;
 import com.vista.Variables;
 import com.vista.VariablesPermisos;
+import com.vista.Cuentas.CuentaRubroPermisosExtended;
+import com.vista.Factura.FacturaViewExtended;
+import com.vista.Factura.IFacturaMain;
 import com.vista.Gastos.GastoViewExtended;
 import com.vista.Gastos.GastosPanelExtended;
 import com.vista.Gastos.IGastosMain;
 
-public class ResumenProcesoViewExtended extends ResumenProcesoView implements IBusqueda, IGastosMain{
+public class ResumenProcesoViewExtended extends ResumenProcesoView implements IBusqueda, IGastosMain, IFacturaMain{
 	
 	private BeanFieldGroup<ProcesoVO> fieldGroup;
 	private ResumenProcesoControlador controlador;
@@ -75,6 +90,8 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 	Double cotizacionVenta = null, importeMoneda = null;
 	MonedaVO monedaNacional = new MonedaVO();
 	ArrayList<MonedaVO> lstMonedas = new ArrayList<MonedaVO>();
+	SaldoProcesoVO saldoProceso = new SaldoProcesoVO();
+	private SaldoProcesoVO saldoSelecccionado; 
 	
 	/*Variable para saber si hay que setear los filtros de la grilla*/
 	boolean filtroNoCobrablesSeteado; 
@@ -85,7 +102,7 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 	boolean filtroFacturasSeteado; 
 	
 	private GastoViewExtended form;  /*Para visualizar los gastos de las grillas*/
-	
+	private FacturaViewExtended formFactura;
 	
 	 /*Variable utilizada para setear que se cargaron los gastos, 
 	y no volver a traerlos de base a menos que se presione actualizar*/
@@ -319,6 +336,48 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 		    }
 		});
 		
+		this.gridFacturas.addSelectionListener(new SelectionListener() {
+			
+		    @Override
+		    public void select(SelectionEvent event) {
+		       
+		    	try{
+		    		
+		    		grillaDesde = "gridFacturas"; 
+		    		
+		    		if(gridFacturas.getSelectedRow() != null){
+		    			
+		    			BeanItem<FacturaVO> item = containerFacturas.getItem(gridFacturas.getSelectedRow());
+		    			
+		    			
+		    			
+				    	/*Puede ser null si accedemos luego de haberlo agregado, ya que no va a la base*/
+				    	if(item.getBean().getFechaMod() == null)
+				    	{
+				    		item.getBean().setFechaMod(new Timestamp(System.currentTimeMillis()));
+				    	}
+							
+						
+				    	formFactura = new FacturaViewExtended(Variables.OPERACION_LECTURA, ResumenProcesoViewExtended.this);
+				    	sub = new MySub("95%","80%");
+						sub.setModal(true);
+						sub.setVista((Component) formFactura);
+						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
+						formFactura.setDataSourceFormulario(item);
+						formFactura.setLstDetalle(item.getBean().getDetalle());
+						
+						UI.getCurrent().addWindow(sub);
+						
+		    		}
+			    	
+				}
+		    	
+		    	catch(Exception e){
+			    	Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			    }
+		      
+		    }
+		});
 		
 		this.inicializarForm();
 		
@@ -332,9 +391,177 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 			this.gastos_cobrables.setVisible(false);
 			this.saldo_proceso.setVisible(false);
 			this.form_facturas.setVisible(false);
+			this.horizontalSaldo.setVisible(false);
+			this.btnAdjudicar.setVisible(false);
+			
+			this.btnSinAdjudicar.setEnabled(true);
+			this.btnFacturas.setEnabled(true);
+			this.btnInfo.setEnabled(false);
+			this.btnGtosAnulados.setEnabled(true);
+			this.btnGtosAPagar.setEnabled(true);
+			this.btnGtosCobrables.setEnabled(true);
+			this.btnGtosNoCobrables.setEnabled(true);
 			
 			this.info_form2.setVisible(true);
 			
+		});
+
+
+		this.btnAdjudicar.addClickListener(click -> {
+			
+			if(this.saldoSelecccionado != null)
+			{
+				
+				try {
+					
+					UI.getCurrent().removeWindow(sub);
+					BusquedaViewExtended form = new BusquedaViewExtended(this, new GastoVO());
+					
+					sub = new MySub("93%", "64%" );
+					sub.setModal(true);
+					sub.setVista(form);
+
+					sub.center();
+					
+					String codCliente;/*Codigo del cliente para obtener los gastos a cobrar del mismo*/
+					int codProceso;
+					String codMoneda = null;
+					
+					/*Obtenemos moneda*/
+					MonedaVO auxMoneda = null;
+					
+					//Obtenemos la moneda del cabezal
+					auxMoneda = new MonedaVO();
+					if(this.comboMoneda.getValue() != null){
+						
+						auxMoneda = (MonedaVO) this.comboMoneda.getValue();
+						
+						codMoneda = auxMoneda.getCodMoneda(); 
+					}
+					
+					codCliente = fieldGroup.getItemDataSource().getBean().getCodCliente();
+					codProceso = Integer.parseInt(this.codigo.getValue());
+						
+					
+					/*Inicializamos VO de permisos para el usuario, formulario y operacion
+					 * para confirmar los permisos del usuario*/
+					UsuarioPermisosVO permisoAux = 
+							new UsuarioPermisosVO(this.permisos.getCodEmp(),
+									this.permisos.getUsuario(),
+									VariablesPermisos.FORMULARIO_RESUMEN_PROCESO,
+									VariablesPermisos.OPERACION_NUEVO_EDITAR);
+					
+
+
+					
+					/*Obtenemos los gastos con saldo del cliente*/
+					ArrayList<GastoVO> lstGastosConSaldo = this.controlador.getGastosConSaldoProceso(permisoAux, codCliente, Integer.valueOf(codProceso));
+					
+					/*Hacemos una lista auxliar para pasarselo al BusquedaViewExtended*/
+					ArrayList<Object> lst = new ArrayList<Object>();
+					Object obj;
+					for (GastoVO i: lstGastosConSaldo) {
+						
+							obj = new Object();
+							obj = (Object)i;
+							lst.add(obj);
+					}
+					
+					form.inicializarGrilla(lst);
+					
+					UI.getCurrent().addWindow(sub);
+
+					}catch(Exception e)
+					{
+						Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+					}
+				
+			}
+			else /*De lo contrario mostramos mensaje que debe selcionar un formulario*/
+			{
+				Mensajes.mostrarMensajeError("Debe seleccionar un saldo para adjudicar");
+			}
+	
+//			Collection<Object> col= gridSaldoProceso.getSelectedRows();
+//			
+//			GastoVO aux = null;
+//			String codMonedaCab = this.saldoProceso.getCodMoneda();
+//			Calendar c = Calendar.getInstance();    
+//			Date fecha = new java.sql.Date(c.getTimeInMillis()); 
+//			
+//			Double sumaGastos = (double) 0, importeAux, aux2;
+//			CotizacionVO cotAux = new CotizacionVO();
+//			Double saldoProceso = this.saldoProceso.getImpTotMO();
+//			
+//			for (Object object : col) {
+//				aux = (GastoVO)object;
+//				/*Si la moneda del cobro es igual  a la del documento*/
+//				if(codMonedaCab.equals(aux.getCodMoneda()))
+//				{
+//					sumaGastos += aux.getImpTotMo();
+//				}
+//				/*Si la moneda del saldo del proceso es distinta a la del documento pero
+//				 * igual a la moneda nacional, hago el calculo al tipo de cambio
+//				 * de la fecha valor del cobro*/
+//				else if(aux.isNacional() &&  !codMonedaCab.equals(aux.getCodMoneda()))
+//				{
+//					/*Obtenemos el tipo de cambio a pesos de la moneda de la linea */
+//					try {
+//						cotAux = this.controlador.getCotizacion(permisoAux, fecha, aux.getCodMoneda());
+//						
+//					} catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
+//							| InicializandoException | NoTienePermisosException e) {
+//						
+//						Mensajes.mostrarMensajeError(e.getMessage());
+//					}
+//					importeAux = aux.getImpTotMo() / cotAux.getCotizacionVenta();
+//					sumaGastos += importeAux;
+//				}
+//				else  /*Si no es moneda nacional y es distinto al moneda del cobro*/
+//				{
+//					
+//					/*Obtenemos el tipo de cambio a pesos de la moneda de la linea */
+//					try {
+//						cotAux = this.controlador.getCotizacion(permisoAux, fecha, aux.getCodMoneda());
+//						
+//					} catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
+//							| InicializandoException | NoTienePermisosException e) {
+//						
+//						Mensajes.mostrarMensajeError(e.getMessage());
+//					}
+//					
+//					
+//					
+//					sumaGastos = aux.getImpTotMo() * cotAux.getCotizacionVenta(); /*Paso a moneda nacional*/
+//					
+//					aux2 = sumaGastos / cotAux.getCotizacionVenta(); /*Paso la moneda nacional a la del cobro*/
+//					
+//					sumaGastos += aux2;
+//				}
+//				
+//				System.out.println(sumaGastos);
+//			}
+			
+		});
+		
+		this.gridSaldoProceso.addSelectionListener(new SelectionListener() {
+			
+		    @Override
+		    public void select(SelectionEvent event) {
+		       
+		    	try{
+		    		if(gridSaldoProceso.getSelectedRow() != null){
+		    			BeanItem<SaldoProcesoVO> item = containerSaldoProceso.getItem(gridSaldoProceso.getSelectedRow());
+				    	saldoSelecccionado = item.getBean(); /*Seteamos el formulario
+			    	 									seleccionado para poder quitarlo*/
+		    		}
+		    	}
+		    	catch(Exception e){
+		    		Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+		    	}
+		      
+		    }
+
 		});
 		
 		this.btnGtosNoCobrables.addClickListener(click -> {
@@ -345,6 +572,16 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 			this.gastos_cobrables.setVisible(false);
 			this.saldo_proceso.setVisible(false);
 			this.form_facturas.setVisible(false);
+			this.horizontalSaldo.setVisible(false);
+			this.btnAdjudicar.setVisible(false);
+			
+			this.btnSinAdjudicar.setEnabled(true);
+			this.btnFacturas.setEnabled(true);
+			this.btnInfo.setEnabled(true);
+			this.btnGtosAnulados.setEnabled(true);
+			this.btnGtosAPagar.setEnabled(true);
+			this.btnGtosCobrables.setEnabled(true);
+			this.btnGtosNoCobrables.setEnabled(false);
 			
 			this.actualizarGastosNoCobrables();
 			
@@ -365,6 +602,16 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 			this.gastos_no_cobrables.setVisible(false);
 			this.saldo_proceso.setVisible(false);
 			this.form_facturas.setVisible(false);
+			this.horizontalSaldo.setVisible(false);
+			this.btnAdjudicar.setVisible(false);
+			
+			this.btnSinAdjudicar.setEnabled(true);
+			this.btnFacturas.setEnabled(true);
+			this.btnInfo.setEnabled(true);
+			this.btnGtosAnulados.setEnabled(true);
+			this.btnGtosAPagar.setEnabled(true);
+			this.btnGtosCobrables.setEnabled(false);
+			this.btnGtosNoCobrables.setEnabled(true);
 			
 			this.actualizarGastosCobrables();
 			
@@ -386,6 +633,16 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 			this.gastos_no_cobrables.setVisible(false);
 			this.saldo_proceso.setVisible(false);
 			this.form_facturas.setVisible(false);
+			this.horizontalSaldo.setVisible(false);
+			this.btnAdjudicar.setVisible(false);
+			
+			this.btnSinAdjudicar.setEnabled(true);
+			this.btnFacturas.setEnabled(true);
+			this.btnInfo.setEnabled(true);
+			this.btnGtosAnulados.setEnabled(true);
+			this.btnGtosAPagar.setEnabled(false);
+			this.btnGtosCobrables.setEnabled(true);
+			this.btnGtosNoCobrables.setEnabled(true);
 			
 			this.actualizarGastosAPagar();
 			
@@ -406,6 +663,16 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 			this.gastos_no_cobrables.setVisible(false);
 			this.saldo_proceso.setVisible(false);
 			this.form_facturas.setVisible(false);
+			this.horizontalSaldo.setVisible(false);
+			this.btnAdjudicar.setVisible(false);
+			
+			this.btnSinAdjudicar.setEnabled(true);
+			this.btnFacturas.setEnabled(true);
+			this.btnInfo.setEnabled(true);
+			this.btnGtosAnulados.setEnabled(false);
+			this.btnGtosAPagar.setEnabled(true);
+			this.btnGtosCobrables.setEnabled(true);
+			this.btnGtosNoCobrables.setEnabled(true);
 			
 			this.actualizarGastosAnulados();
 			
@@ -427,6 +694,17 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 			this.gastos_no_cobrables.setVisible(false);
 			this.gastos_anulados.setVisible(false);
 			this.form_facturas.setVisible(false);
+			this.horizontalSaldo.setVisible(true);
+			this.btnAdjudicar.setVisible(true);
+			this.btnSinAdjudicar.setEnabled(false);
+			
+			this.btnSinAdjudicar.setEnabled(false);
+			this.btnFacturas.setEnabled(true);
+			this.btnInfo.setEnabled(true);
+			this.btnGtosAnulados.setEnabled(true);
+			this.btnGtosAPagar.setEnabled(true);
+			this.btnGtosCobrables.setEnabled(true);
+			this.btnGtosNoCobrables.setEnabled(true);
 			
 			this.actualizarSaldoProceso();
 			
@@ -447,6 +725,16 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 			this.gastos_no_cobrables.setVisible(false);
 			this.gastos_anulados.setVisible(false);
 			this.saldo_proceso.setVisible(false);
+			this.horizontalSaldo.setVisible(false);
+			this.btnAdjudicar.setVisible(false);
+			
+			this.btnSinAdjudicar.setEnabled(true);
+			this.btnFacturas.setEnabled(false);
+			this.btnInfo.setEnabled(true);
+			this.btnGtosAnulados.setEnabled(true);
+			this.btnGtosAPagar.setEnabled(true);
+			this.btnGtosCobrables.setEnabled(true);
+			this.btnGtosNoCobrables.setEnabled(true);
 			
 			this.actualizarFacturas();
 			
@@ -652,7 +940,8 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 		this.gastos_anulados.setVisible(false); 
 		this.saldo_proceso.setVisible(false);
 		this.form_facturas.setVisible(false);
-		
+		this.horizontalSaldo.setVisible(false);
+		this.btnAdjudicar.setVisible(false);
 	}
 	
 	/**
@@ -982,7 +1271,55 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 
 	@Override
 	public void setInfoLst(ArrayList<Object> lstDatos) {
-		// TODO Auto-generated method stub
+		
+		
+		GastoVO g;
+		ArrayList<GastoVO> lstGastos = new ArrayList<>();
+		Calendar c = Calendar.getInstance();    
+    	Date fecha = new java.sql.Date(c.getTimeInMillis()); 
+		
+		Double saldoProceso = (double)0, sumaGastos = (double)0;
+		saldoProceso = saldoSelecccionado.getImpTotMO();
+		
+		
+		for (Object obj : lstDatos) {
+			g = new GastoVO();
+			g = (GastoVO)obj;
+			
+			if(g.getCodMoneda().equals(saldoSelecccionado.getCodMoneda())){
+				sumaGastos = g.getImpTotMo();
+			}
+			
+			else if(g.isNacional() &&  !saldoSelecccionado.getCodMoneda().equals(g.getCodMoneda()))
+			{
+				//Gasto nacional saldo en otra moneda
+			}
+			else{
+				
+			}
+			
+			g.setUsuarioMod(this.permisos.getUsuario());
+			g.setOperacion(Variables.OPERACION_EDITAR);
+			
+			lstGastos.add((GastoVO)obj);
+		}
+		
+		if(saldoProceso >= sumaGastos){
+			
+			try {
+				
+				saldoSelecccionado.setImpTotMO(sumaGastos);
+				saldoSelecccionado.setUsuarioMod(permisoAux.getUsuario());
+				saldoSelecccionado.setOperacion(Variables.OPERACION_EDITAR);
+				this.controlador.adjudicarSaldo(permisoAux, lstGastos, saldoSelecccionado);
+			} 
+			catch (ConexionException | InicializandoException | ObteniendoPermisosException | NoTienePermisosException
+					| ModificandoSaldoException | EliminandoSaldoException | IngresandoSaldoException | ExisteSaldoException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
 		
 	}
 	
@@ -1312,6 +1649,46 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 			
 		}
 		
+//		this.lstSaldoProceso = new ArrayList<GastoVO>();
+//		
+//		/*Inicializamos VO de permisos para el usuario, formulario y operacion
+//		 * para confirmar los permisos del usuario*/
+//		UsuarioPermisosVO permisoAux = 
+//				new UsuarioPermisosVO(this.permisos.getCodEmp(),
+//						this.permisos.getUsuario(),
+//						VariablesPermisos.FORMULARIO_RESUMEN_PROCESO,
+//						VariablesPermisos.OPERACION_LEER);
+//		
+//		try {
+//			
+//			/*Si ya no fueron cargados, se cargan, de lo contrario ya estan en la grilla*/
+//			if(this.saldoProcesoSeteado == false) {
+//				
+//				
+//				String cod = this.codigo.getValue(); 
+//			
+//				this.lstSaldoProceso = this.controlador.getGastosAPagarxProceso(permisoAux, Integer.valueOf(cod));
+//				saldoProceso = this.controlador.getSaldosSinAdjuxProceso(permisoAux, Integer.valueOf(cod));
+//				this.lblSaldo.setCaption("Saldo Proceso " + saldoProceso.getSimboloMoneda());
+//				this.saldo.setEnabled(false);
+//				this.saldo.setValue(String.valueOf(saldoProceso.getImpTotMO()));
+//				/*Actualizamos el container y la grilla*/
+//				this.containerSaldoProceso.removeAllItems();
+//				this.containerSaldoProceso.addAll(this.lstSaldoProceso);
+//				//lstFormularios.setContainerDataSource(container);
+//				this.inicializarGrillaSaldoProceso(containerSaldoProceso); 
+//				
+//				this.saldoProcesoSeteado = true;
+//			}
+//			
+//			this.gridSaldoProceso.deselectAll();
+//			
+//		} catch (NumberFormatException | ConexionException | InicializandoException |  ObteniendoSaldosException
+//				| ObteniendoPermisosException | NoTienePermisosException | ObteniendoGastosException e) {
+//			
+//			Mensajes.mostrarMensajeError(e.getMessage());
+//			
+//		}
 	}
 	
 	/**
@@ -1628,18 +2005,30 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 		gridSaldoProceso.setContainerDataSource(container);
 		  
 		  
-		  /*Seteamos tamanios*/
 		
-		/*
-		gridAnular.getColumn("nroDocum").setWidth(100);
-		gridAnular.getColumn("referencia").setWidth(280);
-		gridAnular.getColumn("simboloMoneda").setWidth(95);
-		  
-		gridAnular.setColumnOrder("nroDocum", "referencia", "simboloMoneda", "impTotMo", "codProceso");
+		gridSaldoProceso.getColumn("impTotMN").setHidden(true);
+		gridSaldoProceso.getColumn("codMoneda").setHidden(true);
+		gridSaldoProceso.getColumn("descMoneda").setHidden(true);
+		gridSaldoProceso.getColumn("nacional").setHidden(true); 
+		gridSaldoProceso.getColumn("codDoca").setHidden(true); 
+		gridSaldoProceso.getColumn("serieDoca").setHidden(true);
+		gridSaldoProceso.getColumn("nroDoca").setHidden(true);
+		gridSaldoProceso.getColumn("codEmp").setHidden(true);
+		gridSaldoProceso.getColumn("codTit").setHidden(true);
+		gridSaldoProceso.getColumn("codCta").setHidden(true);
+		gridSaldoProceso.getColumn("nroTrans").setHidden(true);
+		gridSaldoProceso.getColumn("fecDoc").setHidden(true);
+		gridSaldoProceso.getColumn("fecValor").setHidden(true);
+		gridSaldoProceso.getColumn("usuarioMod").setHidden(true);
+		gridSaldoProceso.getColumn("operacion").setHidden(true);
 		
-		gridAnular.getColumn("simboloMoneda").setHeaderCaption("Moneda");
-		gridAnular.getColumn("impTotMo").setHeaderCaption("Importe");
-		*/
+		gridSaldoProceso.setColumnOrder("codProceso", "simboloMoneda", "impTotMO");
+		
+		gridSaldoProceso.getColumn("simboloMoneda").setHeaderCaption("Moneda");
+		gridSaldoProceso.getColumn("impTotMO").setHeaderCaption("Importe");
+		gridSaldoProceso.getColumn("impTotMO").setHeaderCaption("Importe");
+		
+		
 		
 	}
 	
@@ -2089,6 +2478,12 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 			
 			i++;
 		}
+	}
+
+	@Override
+	public void actulaizarGrilla() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }
