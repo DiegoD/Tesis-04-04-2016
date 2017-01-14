@@ -28,11 +28,12 @@ import com.vaadin.ui.declarative.Design;
 public class FacturaViews extends FormLayout {
 	protected Link auditoria;
 	protected FormLayout formLay1;
-	protected ComboBox comboTipo;
 	protected TextField nroTrans;
 	protected HorizontalLayout wrapper_docum;
 	protected TextField serieDocum;
 	protected TextField nroDocum;
+	protected ComboBox comboContCred;
+	protected ComboBox comboTipo;
 	protected HorizontalLayout horizontalFecha;
 	protected DateField fecDoc;
 	protected Label lblFec;

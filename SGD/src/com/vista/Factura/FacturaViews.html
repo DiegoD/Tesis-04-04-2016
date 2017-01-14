@@ -13,16 +13,20 @@
    </vaadin-horizontal-layout> 
    <vaadin-horizontal-layout responsive size-full> 
     <vaadin-form-layout spacing="false" responsive height="100.99%" margin-top="false" _id="formLay1"> 
- 
      <vaadin-text-field enabled="false" id="nroTrans" visible="false" responsive _id="nroTrans"></vaadin-text-field> 
      <vaadin-horizontal-layout caption="Documento" style-name="name-wrapper" spacing responsive _id="wrapper_docum"> 
       <vaadin-text-field required style-name="tiny" null-representation="" responsive immediate width="50px" _id="serieDocum"></vaadin-text-field> 
       <vaadin-text-field required style-name="tiny" null-representation="" responsive immediate width="144px" _id="nroDocum"></vaadin-text-field> 
+     <vaadin-combo-box  style-name="tiny" item-caption-mode="id" width="105px" _id="comboContCred"> 
+      <option>Credito</option> 
+      <option>Contado</option> 
+     </vaadin-combo-box>
+     
      </vaadin-horizontal-layout> 
-          <vaadin-combo-box caption="Tipo" style-name="tiny" item-caption-mode="id" width="105px" _id="comboTipo"> 
+     <vaadin-combo-box caption="Tipo" style-name="tiny" item-caption-mode="id" width="105px" _id="comboTipo"> 
       <option>Pre Factura</option> 
       <option>Factura</option> 
-     </vaadin-combo-box>
+     </vaadin-combo-box> 
      <vaadin-horizontal-layout caption="Fec Doc" spacing height="22px" _id="horizontalFecha"> 
       <vaadin-date-field id="fecDoc" style-name="tiny" responsive width="105px" _id="fecDoc"></vaadin-date-field> 
       <vaadin-label caption="Fec Valor" size-auto _id="lblFec"></vaadin-label> 

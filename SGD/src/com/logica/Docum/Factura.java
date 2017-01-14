@@ -14,6 +14,7 @@ public class Factura extends DatosDocum{
 	private double impSubMo;
 	private double impSubMn;
 	private String tipoFactura;
+	private String tipoContCred;
 	
 	
 	
@@ -43,7 +44,8 @@ public class Factura extends DatosDocum{
 		this.impSubMo = t.getImpSubMo();
 		this.impSubMn = t.getImpSubMn();
 		this.tipoFactura = t.getTipoFactura();
-
+		this.tipoContCred = t.getTipoContCred();
+		
 		
 		FacturaDetalle aux;
 		for (FacturaDetalleVO detVO : t.getDetalle()) {
@@ -79,7 +81,7 @@ public class Factura extends DatosDocum{
 		aux.setCodCuenta(this.getCuenta().getCodCuenta());
 		aux.setNomCuenta(this.getCuenta().getNomCuenta());
 		aux.setTipoFactura(this.getTipoFactura());
-		
+		aux.setTipoContCred(this.getTipoContCred());
 		
 		aux.setCodEmp(this.getCodEmp());
 		
@@ -150,6 +152,14 @@ public class Factura extends DatosDocum{
 
 	public void setTipoFactura(String tipoFactura) {
 		this.tipoFactura = tipoFactura;
+	}
+
+	public String getTipoContCred() {
+		return tipoContCred;
+	}
+
+	public void setTipoContCred(String tipo) {
+		this.tipoContCred = tipo;
 	}
 
 	

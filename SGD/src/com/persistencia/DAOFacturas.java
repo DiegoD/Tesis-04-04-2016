@@ -83,6 +83,7 @@ public class DAOFacturas implements IDAOFacturas{
 				fact.setImpSubMo(rs.getDouble("imp_sub_mo"));
 				fact.setImpSubMn(rs.getDouble("imp_sub_mn"));
 				fact.setTipoFactura(rs.getString("tipo_factura"));
+				fact.setTipoContCred(rs.getString("tipoContCred"));
 				
 				/*Obtenemos las lineas de la transaccion*/				
 				fact.setDetalle(this.getEgresoFacturaLineaxTrans(con,fact));
@@ -166,6 +167,7 @@ public class DAOFacturas implements IDAOFacturas{
 				fact.setImpSubMo(rs.getDouble("imp_sub_mo"));
 				fact.setImpSubMn(rs.getDouble("imp_sub_mn"));
 				fact.setTipoFactura(rs.getString("tipo_factura"));
+				fact.setTipoContCred(rs.getString("tipoContCred"));
 				
 				/*Obtenemos las lineas de la transaccion*/				
 				fact.setDetalle(this.getEgresoFacturaLineaxTrans(con,fact));
@@ -248,6 +250,7 @@ public class DAOFacturas implements IDAOFacturas{
 				fact.setImpSubMo(rs.getDouble("imp_sub_mo"));
 				fact.setImpSubMn(rs.getDouble("imp_sub_mn"));
 				fact.setTipoFactura(rs.getString("tipo_factura"));
+				fact.setTipoContCred(rs.getString("tipoContCred"));
 				
 				/*Obtenemos las lineas de la transaccion*/				
 				fact.setDetalle(this.getEgresoFacturaLineaxTrans(con,fact));
@@ -378,7 +381,7 @@ public class DAOFacturas implements IDAOFacturas{
 			pstmt1.setDouble(20, factura.getImpSubMo());
 			pstmt1.setDouble(21, factura.getImpSubMn());
 			pstmt1.setString(22, factura.getTipoFactura());
-			
+			pstmt1.setString(23, factura.getTipoContCred());
 			
 			pstmt1.executeUpdate ();
 			pstmt1.close ();

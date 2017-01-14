@@ -397,6 +397,7 @@ public class FacturaPanelExtended extends FacturaPanel{
 			
 			grid.getColumn("codCuenta").setHidden(true);
 			grid.getColumn("nomCuenta").setHidden(true);
+			grid.getColumn("tipoContCred").setHidden(true);
 			grid.getColumn("tipo").setHidden(true);
 			grid.removeColumn("nacional");
 			grid.removeColumn("codCtaInd");

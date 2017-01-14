@@ -518,8 +518,16 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 				
 				try {
 					
-					
-					/////////////////////////////MONEDA//////////////////////////////////////////////////
+					if(this.comboContCred.getValue()!= null){
+						
+						if(this.comboContCred.getValue().equals("contado")){
+							factVO.setTipoContCred("contado");
+						}
+						else{
+							factVO.setTipoContCred("credito");
+						}
+						
+					}
 					
 					if(this.comboTipo.getValue()!= null){
 						
@@ -532,6 +540,8 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 						
 					}
 					
+					
+/////////////////////////////MONEDA//////////////////////////////////////////////////
 					MonedaVO auxMoneda = null;
 					
 					//Obtenemos la moneda del cabezal
@@ -1031,6 +1041,8 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		/*Inicializamos los combos*/
 		this.inicializarComboMoneda(null);
 		this.total.setEnabled(false);
+		
+		
 		inicializarCampos();
 		
 		importeTotalCalculado = (Double) impTotMo.getConvertedValue();
@@ -1083,6 +1095,9 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		
 		this.comboTipo.setRequired(setear);
 		this.comboTipo.setRequiredError("Es requerido");
+		
+		this.comboContCred.setRequired(setear);
+		this.comboContCred.setRequiredError("Es requerido");
 		
 		this.impTotMo.setRequired(setear);
 		this.impTotMo.setRequiredError("Es requerido");
@@ -1137,6 +1152,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		
 		this.inicializarComboMoneda(item.getBean().getCodMoneda());
 		this.inicializarComboTipo(item.getBean());
+		inicializarComboTipoContCred(item.getBean());
 	}
 	
 	
@@ -1160,6 +1176,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		this.btnBuscarProceso.setVisible(false);
 		this.tcMov.setEnabled(false);
 		this.comboTipo.setEnabled(false);
+		this.comboContCred.setEnabled(false);
 		
 		/*Si tiene permisos de editar habilitamos el boton de 
 		 * edicion*/
@@ -1222,6 +1239,8 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 				this.comboTipo.setEnabled(true);
 			}
 		}
+		
+		this.comboContCred.setEnabled(true);
 		
 		/*Verificamos que tenga permisos*/
 		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_FACTURA, VariablesPermisos.OPERACION_NUEVO_EDITAR);
@@ -1754,6 +1773,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		  lstGastos.getColumn("usuarioMod").setHidden(true);
 		  lstGastos.getColumn("nacional").setHidden(true);
 		  lstGastos.getColumn("tipo").setHidden(true);
+		  //lstGastos.getColumn("tipoContCred").setHidden(true);
 		  
 		lstGastos.setColumnOrder("nroDocum", "simboloMoneda", "impSubMo",  "impImpuMo",  "impTotMo", "referencia");
 		
@@ -1914,6 +1934,15 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		}
 	}
 	
+	public void inicializarComboTipoContCred(FacturaVO fact){
+		
+		if(fact.getTipoContCred().equals("contado")){
+			this.comboContCred.setValue("contado");
+		}
+		else{
+			this.comboContCred.setValue("credito");
+		}
+	}
 	
 	@Override
 	public void setInfo(Object datos) {
