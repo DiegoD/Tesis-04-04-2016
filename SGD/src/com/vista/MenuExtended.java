@@ -40,6 +40,7 @@ import com.vista.RepVis2.VistaSaCuentasExtended;
 import com.vista.Reportes.ChequesPendDepositar.ChequesDepositarViewExtended;
 import com.vista.Reportes.ChequesxCliente.RepChequesxClienteViewExtended;
 import com.vista.Reportes.ChequesxCliente.ReportePanelChequeExtended;
+import com.vista.Reportes.EstadoCuenta.RepEstadoCuentaViewExtended;
 import com.vista.Reportes.GastosPendCobro.GtosPendCobroxClienteViewExtended;
 import com.vista.Reportes.IVA.RepIvaViewExtended;
 import com.vista.ResumenProceso.ResProcesosPanelExtended;
@@ -760,6 +761,32 @@ public class MenuExtended extends Menu{
 			}
 		});
 		
+		this.btnEstadoCuenta.addClickListener(click -> {
+			
+			setSizeFull();
+			
+			this.content.removeAllComponents();
+			
+			try {
+				
+				
+				RepEstadoCuentaViewExtended form = new RepEstadoCuentaViewExtended();
+				
+				sub = new MySub("50%","50%");
+				
+				sub.setModal(true);
+				
+				sub.setVista(form);
+				
+				UI.getCurrent().addWindow(sub);
+				
+				
+				
+			} catch (Exception e) {
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}
+		});
+		
 	}
 	
 	
@@ -1074,6 +1101,7 @@ public class MenuExtended extends Menu{
 			   formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_REP_CHEQUE_CLIENTES)||
 			   formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_REP_GTOS_PENDIENTES_CLIENTES) ||
 			   formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_REP_IVA) ||
+			   formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_REP_ESTADO_CUENTA) ||
 			   formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_REP_CHEQUES_PENDIENTES_DEPOSITAR))
 				
 			{
@@ -1121,6 +1149,13 @@ public class MenuExtended extends Menu{
 						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_REP_IVA, VariablesPermisos.OPERACION_LEER)){
 							this.habilitarReporteRepIva();
 							this.layoutMenu.addComponent(this.btnRepIva);
+						}
+					break;
+					
+					case VariablesPermisos.FORMULARIO_REP_ESTADO_CUENTA : 
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_REP_ESTADO_CUENTA, VariablesPermisos.OPERACION_LEER)){
+							this.habilitarReporteEstadoCuenta();
+							this.layoutMenu.addComponent(this.btnEstadoCuenta);
 						}
 					break;
 				
@@ -1241,6 +1276,9 @@ public class MenuExtended extends Menu{
 		
 		this.btnRepIva.setVisible(false);
 		this.btnRepIva.setEnabled(false);
+		
+		this.btnEstadoCuenta.setVisible(false);
+		this.btnEstadoCuenta.setEnabled(false);
 	}
 	
 	
@@ -1463,6 +1501,12 @@ public class MenuExtended extends Menu{
 	{
 		this.btnRepIva.setVisible(true);
 		this.btnRepIva.setEnabled(true);
+	}
+	
+	private void habilitarReporteEstadoCuenta()
+	{
+		this.btnEstadoCuenta.setVisible(true);
+		this.btnEstadoCuenta.setEnabled(true);
 	}
 	
 	

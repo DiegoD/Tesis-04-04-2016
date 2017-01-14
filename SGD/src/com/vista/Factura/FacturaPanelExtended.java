@@ -155,7 +155,7 @@ public class FacturaPanelExtended extends FacturaPanel{
 					    	}
 					    	
 					    	form = new FacturaViewExtended(Variables.OPERACION_LECTURA, FacturaPanelExtended.this);
-							sub = new MySub("90%","90%");
+							sub = new MySub("83%", "80%");
 							sub.setModal(true);
 							sub.setVista(form);
 							

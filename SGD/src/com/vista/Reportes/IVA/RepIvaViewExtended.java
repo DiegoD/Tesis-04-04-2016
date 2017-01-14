@@ -1,6 +1,7 @@
 package com.vista.Reportes.IVA;
 
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -138,9 +139,8 @@ public class RepIvaViewExtended extends RepIvaViews implements IBusqueda, IMensa
 					        fillParameters.put("codEmp",this.permisos.getCodEmp());
 					       
 					        fillParameters.put("periodo", this.mes.getValue().trim() + "-" +  this.anio.getValue().trim());
-					        
-					        
-					       
+					         
+			             
 					        fillParameters.put("REPORTS_DIR",basepath);
 					      
 						  }catch(Exception e) {}

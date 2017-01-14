@@ -3825,6 +3825,8 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 					/*Signo -1 porque resta al saldo*/
 					this.saldos.modificarSaldo(docum, -1, nc.getTcMov(), con);
 					
+					
+					
 					/**Para cada factura tenemos que devlolver saldo a los gtos****/
 						
 					/*Para cada linea de gasto de la factura modificamos el saldo*/

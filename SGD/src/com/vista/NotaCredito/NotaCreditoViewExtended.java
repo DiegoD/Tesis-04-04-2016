@@ -476,7 +476,7 @@ public class NotaCreditoViewExtended extends NotaCreditoViews implements IBusque
 				
 				ncVO.setNroDocum(nroDocum.getValue());
 				ncVO.setSerieDocum(this.serieDocum.getValue().trim());
-				ncVO.setCodDocum("recibo");
+				ncVO.setCodDocum("ncred");
 				
 				
 				ncVO.setFecDoc(new java.sql.Timestamp(fecDoc.getValue().getTime()));
@@ -484,7 +484,7 @@ public class NotaCreditoViewExtended extends NotaCreditoViews implements IBusque
 				ncVO.setCodEmp(permisos.getCodEmp());
 				ncVO.setReferencia(referencia.getValue());
 				
-				ncVO.setCodCtaInd("recibo");
+				ncVO.setCodCtaInd("ncred");
 				
 				
 				ncVO.setCodTitular(codTitular.getValue());
@@ -508,7 +508,7 @@ public class NotaCreditoViewExtended extends NotaCreditoViews implements IBusque
 				
 				
 
-				ncVO.setCodCuenta("recibo");
+				ncVO.setCodCuenta("ncred");
 				
 				
 				
@@ -551,7 +551,7 @@ public class NotaCreditoViewExtended extends NotaCreditoViews implements IBusque
 						this.controlador.modificarNotaCredito(ncVO,ingresoCopia, permisoAux);
 					} catch (SQLException e) {
 						
-						Mensajes.mostrarMensajeOK("Ah ocurrido un error modificando el recibo");
+						Mensajes.mostrarMensajeOK("Ah ocurrido un error modificando la nota de credito");
 					}
 					
 					this.mainView.actulaizarGrilla(ncVO);
@@ -731,7 +731,7 @@ public class NotaCreditoViewExtended extends NotaCreditoViews implements IBusque
 				if(formSelecccionado != null)
 				{
 	
-					/*Recorremos las facturas del recibo
+					/*Recorremos las facturas de la nota de credito
 					 * y buscamos el seleccionarlo para quitarlo*/
 					int i = 0;
 					while(i < lstDetalleVO.size() && !esta)
@@ -2131,7 +2131,7 @@ public class NotaCreditoViewExtended extends NotaCreditoViews implements IBusque
 			
 			ncVO.setSerieDocum(this.serieDocum.getValue().trim());
 			ncVO.setNroDocum(this.nroDocum.getValue().trim());
-			ncVO.setCodDocum("recibo");
+			ncVO.setCodDocum("ncred");
 			
 			/*Obtenemos la cotizacion y calculamos el importe MN*/
 			Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
@@ -2202,7 +2202,7 @@ public class NotaCreditoViewExtended extends NotaCreditoViews implements IBusque
 			
 			
 				
-			ncVO.setCodCuenta("recibo");
+			ncVO.setCodCuenta("ncred");
 			ncVO.setDetalle(this.lstDetalleVO);
 			
 			if(ncVO.getDetalle().size() <= 0){

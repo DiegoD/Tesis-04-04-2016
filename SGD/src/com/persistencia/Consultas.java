@@ -1408,6 +1408,7 @@ public String getIngresoCobroCabTodosOtros(){
 		sb.append("WHERE c_facturas.cod_emp = ?  "); 
 		sb.append("AND c_facturas.cod_moneda = ?  "); 
 		sb.append("AND c_facturas.cod_tit = ?  "); 
+		sb.append("AND c_facturas.tipo_factura = 'Factura'  "); 
 		
 		sb.append("AND sa_docum.imp_tot_mo <> 0 ");
 		
