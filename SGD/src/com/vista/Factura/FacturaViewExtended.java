@@ -1951,6 +1951,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		}
 		else{
 			this.comboContCred.setValue("Credito");
+			
 		}
 	}
 	
