@@ -80,7 +80,7 @@ WHERE  n.cod_moneda = m.cod_moneda AND m.cod_emp = n.cod_emp
 	<field name="moneda" class="java.lang.String"/>
 	<pageHeader>
 		<band height="23" splitType="Stretch">
-			<textField>
+			<textField pattern="#,##0.00">
 				<reportElement x="101" y="0" width="98" height="23" uuid="784f7a48-ba58-4734-8294-94e4e3688e21"/>
 				<textElement>
 					<font size="10"/>

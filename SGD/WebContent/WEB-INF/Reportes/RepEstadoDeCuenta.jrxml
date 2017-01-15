@@ -46,7 +46,7 @@ CONCAT('FAC. ',f.serie_docum , ' ', f.nro_docum) documento
 ,p.carpeta carpeta
 ,m.simbolo moneda
 ,f.imp_tot_mo entrada
-,0 salida
+,null salida
 
 ,f.cod_tit
 ,f.cod_emp
@@ -65,7 +65,7 @@ CONCAT('REC. ',r.serie_docum , ' ', r.nro_docum) documento
 ,'' proceso
 ,'' carpeta
 ,m.simbolo moneda
-,0 entrada
+,null entrada
 ,(r.imp_tot_mo * -1) salida
 
 ,r.cod_tit
@@ -75,27 +75,6 @@ CONCAT('REC. ',r.serie_docum , ' ', r.nro_docum) documento
 
 FROM c_recibos r,  m_monedas m
 WHERE  r.cod_moneda = m.cod_moneda AND m.cod_emp = r.cod_emp
-
-
-UNION
-
-
-SELECT
-CONCAT('NC. ',n.serie_docum , ' ', n.nro_docum) documento
-,DATE_FORMAT(n.fec_doc , '%d-%m-%Y') fecha
-,'' proceso
-,'' carpeta
-,m.simbolo moneda
-,0 entrada
-,(n.imp_tot_mo * -1) salida
-
-,n.cod_tit
-,n.cod_emp
-,n.fec_doc
-,n.cod_moneda
-
-FROM c_notacred n,  m_monedas m
-WHERE  n.cod_moneda = m.cod_moneda AND m.cod_emp = n.cod_emp
 
 )AUX
 
@@ -112,7 +91,9 @@ ORDER BY documento, fec_doc ]]>
 	<field name="carpeta" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="moneda" class="java.lang.String"/>
+	<field name="moneda" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
 	<field name="entrada" class="java.math.BigDecimal"/>
 	<field name="salida" class="java.math.BigDecimal"/>
 	<field name="cod_tit" class="java.lang.Integer">
@@ -186,7 +167,7 @@ ORDER BY documento, fec_doc ]]>
 		<band height="26" splitType="Stretch">
 			<staticText>
 				<reportElement style="Column header" x="0" y="8" width="95" height="18" forecolor="#000000" uuid="d7e320f5-d900-4ac4-8e93-7342fa5ad41e"/>
-				<textElement textAlignment="Center">
+				<textElement>
 					<font size="12" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Documento]]></text>
@@ -236,12 +217,12 @@ ORDER BY documento, fec_doc ]]>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="18" splitType="Stretch">
+		<band height="22" splitType="Stretch">
 			<frame>
 				<reportElement style="Row" mode="Opaque" x="0" y="0" width="555" height="18" uuid="71c4d15f-0fa7-4fe1-a2f2-d9e6a02b6979"/>
 				<textField isStretchWithOverflow="true">
 					<reportElement style="Detail" positionType="Float" x="2" y="0" width="93" height="18" backcolor="#1A85E2" uuid="14db90ad-97ce-44d8-974a-4136b163265c"/>
-					<textElement textAlignment="Center">
+					<textElement>
 						<font size="12"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{documento}]]></textFieldExpression>
@@ -274,14 +255,14 @@ ORDER BY documento, fec_doc ]]>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{moneda}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true">
+				<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
 					<reportElement style="Detail" positionType="Float" x="388" y="0" width="81" height="18" backcolor="#1A85E2" uuid="3399f735-dff8-4ef6-8701-2e634660e69b"/>
 					<textElement textAlignment="Center">
 						<font size="12"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{entrada}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true">
+				<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
 					<reportElement style="Detail" positionType="Float" x="469" y="0" width="81" height="18" backcolor="#1A85E2" uuid="19649327-e8f1-441f-b809-669e6b580a4d"/>
 					<textElement textAlignment="Center">
 						<font size="12"/>
@@ -292,7 +273,7 @@ ORDER BY documento, fec_doc ]]>
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="7" splitType="Stretch">
+		<band height="25" splitType="Stretch">
 			<line>
 				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1" uuid="51f1790b-dc8a-4987-b49b-cb9572aa69bb"/>
 				<graphicElement>
@@ -304,7 +285,7 @@ ORDER BY documento, fec_doc ]]>
 	<pageFooter>
 		<band height="25" splitType="Stretch">
 			<frame>
-				<reportElement mode="Opaque" x="0" y="1" width="555" height="24" forecolor="#D0B48E" backcolor="#0033CC" uuid="549920fb-ff22-4da9-acc9-5f8c0001a21c"/>
+				<reportElement mode="Opaque" x="0" y="0" width="555" height="25" forecolor="#D0B48E" backcolor="#0033CC" uuid="549920fb-ff22-4da9-acc9-5f8c0001a21c"/>
 				<textField evaluationTime="Report">
 					<reportElement style="Column header" x="513" y="0" width="40" height="20" forecolor="#FFFFFF" uuid="6004a4d8-04da-427e-b143-313e9aeb6132"/>
 					<textElement verticalAlignment="Middle">
@@ -323,6 +304,30 @@ ORDER BY documento, fec_doc ]]>
 		</band>
 	</pageFooter>
 	<summary>
-		<band splitType="Stretch"/>
+		<band height="55" splitType="Stretch">
+			<subreport>
+				<reportElement x="332" y="12" width="167" height="43" uuid="844acf6f-703f-4348-862b-05363e160508"/>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="codTit">
+					<subreportParameterExpression><![CDATA[$P{codTit}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="codMoneda">
+					<subreportParameterExpression><![CDATA[$P{codMoneda}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="codEmp">
+					<subreportParameterExpression><![CDATA[$P{codEmp}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="fecDesde">
+					<subreportParameterExpression><![CDATA[$P{fecDesde}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="fecHasta">
+					<subreportParameterExpression><![CDATA[$P{fecHasta}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "RepEstadoDeCuenta_TotSalidas.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
 	</summary>
 </jasperReport>

@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RepEstadoDeCuenta_TotSalidas" language="groovy" pageWidth="250" pageHeight="150" columnWidth="250" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" whenResourceMissingType="Empty" uuid="fcbd6e68-b903-4141-9180-7bc7a486d4ff">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="fecDesde" class="java.util.Date"/>
+	<parameter name="fecHasta" class="java.util.Date"/>
+	<parameter name="codEmp" class="java.lang.String"/>
+	<parameter name="codTit" class="java.lang.String"/>
+	<parameter name="codMoneda" class="java.lang.String"/>
+	<parameter name="moneda" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+
+(SELECT simbolo FROM m_monedas WHERE cod_moneda = $P{codMoneda} AND cod_emp = $P{codEmp}) moneda
+
+
+,(SELECT SUM(imp_tot_mo) FROM v_Estado_Cuenta_SubReport_Entradas WHERE cod_tit = $P{codTit}
+AND cod_moneda = $P{codMoneda}
+AND fec_doc BETWEEN $P{fecDesde} AND  $P{fecHasta}
+AND cod_emp = $P{codEmp} AND tipo = 'credito' ) AS totalEntradasCredito
+
+
+,(SELECT SUM(imp_tot_mo) FROM v_Estado_Cuenta_SubReport_Entradas WHERE cod_tit = $P{codTit}
+AND cod_moneda = $P{codMoneda}
+AND fec_doc BETWEEN $P{fecDesde} AND  $P{fecHasta}
+AND cod_emp = $P{codEmp} AND tipo = 'contado' ) AS totalEntradasContado
+
+,(SELECT SUM(imp_tot_mo*-1) importe FROM v_Estado_Cuenta_SubReport_Salidas
+WHERE cod_tit =  $P{codTit}
+AND cod_moneda =  $P{codMoneda}
+AND fec_doc BETWEEN $P{fecDesde}  AND  $P{fecHasta}
+AND cod_emp = $P{codEmp}
+GROUP BY moneda ) AS totalSalidas
+
+, (SELECT sum(entrada) + sum(salida) saldo FROM (
+
+SELECT entrada, salida, cod_tit, cod_emp, fec_doc, cod_moneda, moneda  FROM (
+
+SELECT
+CONCAT('FAC. ',f.serie_docum , ' ', f.nro_docum) documento
+,DATE_FORMAT(f.fec_doc , '%d-%m-%Y') fecha
+,f.cod_proceso proceso
+,p.carpeta carpeta
+,m.simbolo moneda
+,f.imp_tot_mo entrada
+,0 salida
+
+,f.cod_tit
+,f.cod_emp
+,f.fec_doc
+,f.cod_moneda
+FROM c_facturas f, c_procesos p, m_monedas m
+WHERE f.cod_proceso = p.cod_proceso AND f.cod_emp = p.cod_emp
+AND f.cod_moneda = m.cod_moneda AND m.cod_emp = f.cod_emp
+AND f.tipo_factura = 'Factura'
+
+UNION
+
+SELECT
+CONCAT('REC. ',r.serie_docum , ' ', r.nro_docum) documento
+,DATE_FORMAT(r.fec_doc , '%d-%m-%Y') fecha
+,'' proceso
+,'' carpeta
+,m.simbolo moneda
+,0 entrada
+,(r.imp_tot_mo * -1) salida
+
+,r.cod_tit
+,r.cod_emp
+,r.fec_doc
+,r.cod_moneda
+
+FROM c_recibos r,  m_monedas m
+WHERE  r.cod_moneda = m.cod_moneda AND m.cod_emp = r.cod_emp
+
+
+UNION
+
+
+SELECT
+CONCAT('NC. ',n.serie_docum , ' ', n.nro_docum) documento
+,DATE_FORMAT(n.fec_doc , '%d-%m-%Y') fecha
+,'' proceso
+,'' carpeta
+,m.simbolo moneda
+,0 entrada
+,(n.imp_tot_mo * -1) salida
+
+,n.cod_tit
+,n.cod_emp
+,n.fec_doc
+,n.cod_moneda
+
+FROM c_notacred n,  m_monedas m
+WHERE  n.cod_moneda = m.cod_moneda AND m.cod_emp = n.cod_emp
+
+)AUX WHERE  cod_tit = $P{codTit} AND cod_emp = $P{codEmp} AND fec_doc < $P{fecDesde} AND cod_moneda = $P{codMoneda}
+
+)AUX2
+
+) AS saldoAnterior]]>
+	</queryString>
+	<field name="moneda" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="totalEntradasCredito" class="java.math.BigDecimal"/>
+	<field name="totalEntradasContado" class="java.math.BigDecimal"/>
+	<field name="totalSalidas" class="java.math.BigDecimal"/>
+	<field name="saldoAnterior" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="140" splitType="Stretch">
+			<textField isBlankWhenNull="false">
+				<reportElement x="130" y="29" width="120" height="23" uuid="9451b31a-323c-4510-865c-4f58ff84c7ff"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{totalEntradasContado} == null) ? new Double("0") : $F{totalEntradasContado}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="29" width="30" height="23" uuid="fa167b73-2a62-45e1-b299-e7bf526584ae"/>
+				<textFieldExpression><![CDATA[$F{moneda}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="29" width="100" height="23" uuid="41ff2068-ecf3-4c8f-80ad-be63cce8efb2"/>
+				<text><![CDATA[Total contado]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="52" width="100" height="23" uuid="5521fcf6-4728-4e96-832e-ba6835aeb7b5"/>
+				<text><![CDATA[Total crédito]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="100" y="52" width="30" height="23" uuid="8a819c00-436a-4510-b515-897a1238e985"/>
+				<textFieldExpression><![CDATA[$F{moneda}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="130" y="52" width="120" height="23" uuid="1a49aabb-00ae-4830-ab86-746338b1aa73"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{totalEntradasCredito} == null) ? new Double("0") : $F{totalEntradasCredito}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="75" width="100" height="23" uuid="aa2e0628-aa4f-47fe-8ff5-259f70d0f780"/>
+				<text><![CDATA[Total recibos]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="100" y="75" width="30" height="23" uuid="ba3ebe50-3f2d-4974-9fd4-62ccbd05c39d"/>
+				<textFieldExpression><![CDATA[$F{moneda}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="130" y="75" width="120" height="23" uuid="3969dd46-30a0-4768-a35e-e5a2a5fe2744"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{totalSalidas}  == null) ? new Double("0") : $F{totalSalidas}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="130" y="108" width="120" height="1" uuid="679cf192-6dd2-470b-b673-3edfb3c5a74e"/>
+			</line>
+			<staticText>
+				<reportElement x="0" y="113" width="100" height="23" uuid="f8f8a8f7-0937-4f82-a9ab-92c91f449ded"/>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="100" y="113" width="30" height="23" uuid="d48e96e5-f8ba-4e27-8d02-365011392357"/>
+				<textFieldExpression><![CDATA[$F{moneda}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="130" y="113" width="120" height="23" uuid="4c5bfdf2-44c6-473d-b474-61b9c5d0b49a"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[( ( $F{saldoAnterior} == null) ? new Double("0") :  $F{saldoAnterior} ) + (($F{totalEntradasContado} == null) ? new Double("0") : $F{totalEntradasContado}) +  (($F{totalEntradasCredito} == null) ? new Double("0") : $F{totalEntradasCredito}) +  (($F{totalSalidas}  == null) ? new Double("0") : $F{totalSalidas} )]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="6" width="100" height="23" uuid="ac6a4e1a-901b-42b4-9b05-9fb91a3e10a6"/>
+				<text><![CDATA[Saldo anterior]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="100" y="6" width="30" height="23" uuid="027b45aa-3d21-43f4-b246-8e0a7a0cad6c"/>
+				<textFieldExpression><![CDATA[$F{moneda}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement x="130" y="6" width="120" height="23" uuid="36b8a1a2-beec-4e82-b2fd-bf99656ca278"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[( $F{saldoAnterior} == null) ? new Double("0") :  $F{saldoAnterior}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+</jasperReport>
