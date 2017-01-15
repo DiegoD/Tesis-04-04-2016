@@ -1276,26 +1276,69 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 		GastoVO g;
 		ArrayList<GastoVO> lstGastos = new ArrayList<>();
 		Calendar c = Calendar.getInstance();    
-    	Date fecha = new java.sql.Date(c.getTimeInMillis()); 
+    	Date fecha = new java.sql.Date(c.getTimeInMillis());
+    	CotizacionVO cotizacionSaldo = new CotizacionVO();
+    	CotizacionVO cotizacionGasto = new CotizacionVO();
 		
-		Double saldoProceso = (double)0, sumaGastos = (double)0;
+		Double saldoProceso = (double)0, sumaGastos = (double)0, aux = (double)0;
 		saldoProceso = saldoSelecccionado.getImpTotMO();
+		
 		
 		
 		for (Object obj : lstDatos) {
 			g = new GastoVO();
 			g = (GastoVO)obj;
 			
-			if(g.getCodMoneda().equals(saldoSelecccionado.getCodMoneda())){
-				sumaGastos = g.getImpTotMo();
-			}
-			
-			else if(g.isNacional() &&  !saldoSelecccionado.getCodMoneda().equals(g.getCodMoneda()))
-			{
-				//Gasto nacional saldo en otra moneda
+			if(saldoSelecccionado.isNacional()){
+				
+				if(g.getCodMoneda().equals(saldoSelecccionado.getCodMoneda())){
+					sumaGastos = sumaGastos + g.getImpTotMo();
+				}
+				else{
+					sumaGastos = sumaGastos + (g.getImpTotMo() * g.getTcMov());
+				}
 			}
 			else{
 				
+				try {
+					
+					cotizacionSaldo = this.controlador.getCotizacion(permisoAux, fecha, saldoSelecccionado.getCodMoneda());
+					if(cotizacionSaldo.getCotizacionVenta()==0){
+						Mensajes.mostrarMensajeError("Debe ingresar la cotización de la moneda " + saldoSelecccionado.getDescMoneda());
+						return;
+					}
+				} 
+				catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
+						| InicializandoException | NoTienePermisosException e) {
+					// TODO Auto-generated catch block
+					Mensajes.mostrarMensajeError("Error obteniendo cotización de la moneda " + g.getNomMoneda());
+				}
+				
+				if(g.isNacional()){ 
+					sumaGastos = sumaGastos + (g.getImpTotMo()/cotizacionSaldo.getCotizacionVenta()); 
+				}
+				else if(!g.isNacional() && g.getCodMoneda().equals(saldoSelecccionado.getCodMoneda())){
+					sumaGastos = sumaGastos + g.getImpTotMo();
+				}
+				else{
+					
+					try {
+						
+						cotizacionGasto = this.controlador.getCotizacion(permisoAux, fecha, g.getCodMoneda());
+						if(cotizacionGasto.getCotizacionVenta()==0){
+							Mensajes.mostrarMensajeError("Debe ingresar la cotización de la moneda " + g.getNomMoneda());
+							return;
+						}
+					} 
+					catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
+							| InicializandoException | NoTienePermisosException e) {
+						// TODO Auto-generated catch block
+						Mensajes.mostrarMensajeError("Error obteniendo cotización de la moneda " + g.getNomMoneda());
+					}
+					
+					aux = g.getImpTotMo() * cotizacionGasto.getCotizacionVenta();
+					sumaGastos = sumaGastos + (aux / cotizacionSaldo.getCotizacionVenta());
+				}
 			}
 			
 			g.setUsuarioMod(this.permisos.getUsuario());
@@ -1306,18 +1349,18 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 		
 		if(saldoProceso >= sumaGastos){
 			
-			try {
+			//try {
 				
 				saldoSelecccionado.setImpTotMO(sumaGastos);
 				saldoSelecccionado.setUsuarioMod(permisoAux.getUsuario());
 				saldoSelecccionado.setOperacion(Variables.OPERACION_EDITAR);
-				this.controlador.adjudicarSaldo(permisoAux, lstGastos, saldoSelecccionado);
-			} 
-			catch (ConexionException | InicializandoException | ObteniendoPermisosException | NoTienePermisosException
-					| ModificandoSaldoException | EliminandoSaldoException | IngresandoSaldoException | ExisteSaldoException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+				//this.controlador.adjudicarSaldo(permisoAux, lstGastos, saldoSelecccionado);
+			//} 
+//			catch (ConexionException | InicializandoException | ObteniendoPermisosException | NoTienePermisosException
+//					| ModificandoSaldoException | EliminandoSaldoException | IngresandoSaldoException | ExisteSaldoException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 		}
 		
 		
