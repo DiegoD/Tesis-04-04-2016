@@ -5619,12 +5619,12 @@ public class FachadaDD {
 				documento.setNroTrans(saldo.getNroTrans());
 				documento.setImpTotMn(saldo.getImpTotMN());
 				documento.setImpTotMo(saldo.getImpTotMO());
-				documento.setTcMov(tcMov);
+				documento.setTcMov(saldo.getTcMov());
 				documento.setFecValor(saldo.getFecValor());
 				documento.setOperacion(saldo.getOperacion());
 				documento.setUsuarioMod(saldo.getUsuarioMod());
 				
-				this.saldosProceso.modificarSaldo(documento, -1, tcMov, con, saldo.getCodProceso());
+				this.saldosProceso.modificarSaldo(documento, -1, saldo.getTcMov(), con, saldo.getCodProceso());
 				
 				con.commit();
 			

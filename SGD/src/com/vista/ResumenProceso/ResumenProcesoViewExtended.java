@@ -482,65 +482,6 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 				Mensajes.mostrarMensajeError("Debe seleccionar un saldo para adjudicar");
 			}
 	
-//			Collection<Object> col= gridSaldoProceso.getSelectedRows();
-//			
-//			GastoVO aux = null;
-//			String codMonedaCab = this.saldoProceso.getCodMoneda();
-//			Calendar c = Calendar.getInstance();    
-//			Date fecha = new java.sql.Date(c.getTimeInMillis()); 
-//			
-//			Double sumaGastos = (double) 0, importeAux, aux2;
-//			CotizacionVO cotAux = new CotizacionVO();
-//			Double saldoProceso = this.saldoProceso.getImpTotMO();
-//			
-//			for (Object object : col) {
-//				aux = (GastoVO)object;
-//				/*Si la moneda del cobro es igual  a la del documento*/
-//				if(codMonedaCab.equals(aux.getCodMoneda()))
-//				{
-//					sumaGastos += aux.getImpTotMo();
-//				}
-//				/*Si la moneda del saldo del proceso es distinta a la del documento pero
-//				 * igual a la moneda nacional, hago el calculo al tipo de cambio
-//				 * de la fecha valor del cobro*/
-//				else if(aux.isNacional() &&  !codMonedaCab.equals(aux.getCodMoneda()))
-//				{
-//					/*Obtenemos el tipo de cambio a pesos de la moneda de la linea */
-//					try {
-//						cotAux = this.controlador.getCotizacion(permisoAux, fecha, aux.getCodMoneda());
-//						
-//					} catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
-//							| InicializandoException | NoTienePermisosException e) {
-//						
-//						Mensajes.mostrarMensajeError(e.getMessage());
-//					}
-//					importeAux = aux.getImpTotMo() / cotAux.getCotizacionVenta();
-//					sumaGastos += importeAux;
-//				}
-//				else  /*Si no es moneda nacional y es distinto al moneda del cobro*/
-//				{
-//					
-//					/*Obtenemos el tipo de cambio a pesos de la moneda de la linea */
-//					try {
-//						cotAux = this.controlador.getCotizacion(permisoAux, fecha, aux.getCodMoneda());
-//						
-//					} catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
-//							| InicializandoException | NoTienePermisosException e) {
-//						
-//						Mensajes.mostrarMensajeError(e.getMessage());
-//					}
-//					
-//					
-//					
-//					sumaGastos = aux.getImpTotMo() * cotAux.getCotizacionVenta(); /*Paso a moneda nacional*/
-//					
-//					aux2 = sumaGastos / cotAux.getCotizacionVenta(); /*Paso la moneda nacional a la del cobro*/
-//					
-//					sumaGastos += aux2;
-//				}
-//				
-//				System.out.println(sumaGastos);
-//			}
 			
 		});
 		
@@ -1291,6 +1232,8 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 			
 			if(saldoSelecccionado.isNacional()){
 				
+				saldoSelecccionado.setTcMov(1);
+				
 				if(g.getCodMoneda().equals(saldoSelecccionado.getCodMoneda())){
 					sumaGastos = sumaGastos + g.getImpTotMo();
 				}
@@ -1303,6 +1246,8 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 				try {
 					
 					cotizacionSaldo = this.controlador.getCotizacion(permisoAux, fecha, saldoSelecccionado.getCodMoneda());
+					this.saldoSelecccionado.setTcMov(cotizacionSaldo.getCotizacionVenta());
+					
 					if(cotizacionSaldo.getCotizacionVenta()==0){
 						Mensajes.mostrarMensajeError("Debe ingresar la cotización de la moneda " + saldoSelecccionado.getDescMoneda());
 						return;
@@ -1347,20 +1292,42 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 			lstGastos.add((GastoVO)obj);
 		}
 		
+		Double truncatedDouble = new BigDecimal(sumaGastos)
+			    .setScale(2, BigDecimal.ROUND_HALF_UP)
+			    .doubleValue();
+		
+		sumaGastos = truncatedDouble;
+		
 		if(saldoProceso >= sumaGastos){
 			
-			//try {
+			try {
 				
 				saldoSelecccionado.setImpTotMO(sumaGastos);
 				saldoSelecccionado.setUsuarioMod(permisoAux.getUsuario());
 				saldoSelecccionado.setOperacion(Variables.OPERACION_EDITAR);
-				//this.controlador.adjudicarSaldo(permisoAux, lstGastos, saldoSelecccionado);
-			//} 
-//			catch (ConexionException | InicializandoException | ObteniendoPermisosException | NoTienePermisosException
-//					| ModificandoSaldoException | EliminandoSaldoException | IngresandoSaldoException | ExisteSaldoException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
+				this.controlador.adjudicarSaldo(permisoAux, lstGastos, saldoSelecccionado);
+				
+				Mensajes.mostrarMensajeOK("Se adjuicó el saldo a los gastos seleccionados");
+				
+				this.saldoProcesoSeteado = false;
+				this.gtosCobrablesSeteado = false;
+				this.gtosAPagarSeteado = false;
+				
+				this.actualizarGastosAPagar();
+				this.actualizarGastosCobrables();
+				this.actualizarSaldoProceso();
+				
+				
+				
+			} 
+			catch (ConexionException | InicializandoException | ObteniendoPermisosException | NoTienePermisosException
+					| ModificandoSaldoException | EliminandoSaldoException | IngresandoSaldoException | ExisteSaldoException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		else{
+			Mensajes.mostrarMensajeError("Los gastos seleccionados (" + saldoSelecccionado.getSimboloMoneda() + sumaGastos + ")  superan el valor del saldo");
 		}
 		
 		

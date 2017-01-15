@@ -297,7 +297,7 @@ public class DAOSaldoProceso implements IDAOSaldosProc {
 					aux.setCodProceso(rs.getString("cod_proceso"));
 					aux.setImpTotMO(rs.getDouble("s.imp_tot_mo"));
 					aux.setImpTotMN(rs.getDouble("s.imp_tot_mn"));
-					aux.setMoneda(new MonedaInfo(rs.getString("cod_moneda"), rs.getString("descripcion"), rs.getString("simbolo")));
+					aux.setMoneda(new MonedaInfo(rs.getString("cod_moneda"), rs.getString("descripcion"), rs.getString("simbolo"), rs.getBoolean("m.nacional")));
 					aux.setCodDoca(rs.getString("s.cod_doca"));
 					aux.setSerieDoca(rs.getString("s.serie_doca"));
 					aux.setNroDoca(rs.getInt("s.nro_doca"));

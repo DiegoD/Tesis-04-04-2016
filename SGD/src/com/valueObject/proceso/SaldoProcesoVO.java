@@ -24,6 +24,7 @@ public class SaldoProcesoVO {
 	private Timestamp fecValor;
 	private String usuarioMod;
 	private String operacion;
+	private double tcMov;
 	
 	public void copiar(SaldoProcesoVO saVO){
 		
@@ -46,6 +47,7 @@ public class SaldoProcesoVO {
 		this.fecValor = saVO.getFecValor();
 		this.usuarioMod = saVO.getUsuarioMod();
 		this.operacion = saVO.getOperacion();
+		this.tcMov = saVO.getTcMov();
 	}
 	
 	
@@ -213,6 +215,16 @@ public class SaldoProcesoVO {
 
 	public void setOperacion(String operacion) {
 		this.operacion = operacion;
+	}
+
+
+	public double getTcMov() {
+		return tcMov;
+	}
+
+
+	public void setTcMov(double tcMov) {
+		this.tcMov = tcMov;
 	}
 	
 	

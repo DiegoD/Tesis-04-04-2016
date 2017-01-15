@@ -23,6 +23,7 @@ public class SaldoProceso {
 	private Timestamp fecValor;
 	private String usuarioMod;
 	private String operacion;
+	private double tcMov;
 	
 	public SaldoProceso(){
 		
@@ -47,6 +48,7 @@ public class SaldoProceso {
 		this.fecValor = vo.getFecValor();
 		this.usuarioMod = vo.getUsuarioMod();
 		this.operacion = vo.getOperacion();
+		this.tcMov = vo.getTcMov();
 	}
 	
 	public SaldoProcesoVO retronarSaldoProcesoVO(){
@@ -72,6 +74,7 @@ public class SaldoProceso {
 		vo.setFecValor(this.getFecValor());
 		vo.setUsuarioMod(this.getUsuarioMod());
 		vo.setOperacion(this.getOperacion());
+		vo.setTcMov(this.getTcMov());
 
 		return vo;
 	}
@@ -189,6 +192,15 @@ public class SaldoProceso {
 		this.operacion = operacion;
 	}
 
+	public double getTcMov() {
+		return tcMov;
+	}
+
+	public void setTcMov(double tcMov) {
+		this.tcMov = tcMov;
+	}
+
+	
 	
 
 }
