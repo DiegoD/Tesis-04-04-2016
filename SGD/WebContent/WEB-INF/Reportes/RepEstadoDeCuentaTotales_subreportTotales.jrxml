@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RepEstadoDeCuentaTotales_subreportTotales" language="groovy" pageWidth="445" pageHeight="802" columnWidth="445" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="50ea5a10-cb50-4ef9-8f7c-ffef41e82393">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="codEmp" class="java.lang.String"/>
+	<parameter name="fecDesde" class="java.util.Date"/>
+	<parameter name="fecHasta" class="java.util.Date"/>
+	<queryString>
+		<![CDATA[SELECT simbolo, SUM(saldoAnterior) saldoAnterior, SUM(totalEntradas) totalEntradas, SUM(totalSalidas) totalSalidas FROM (
+
+SELECT simbolo, saldoAnterior, totalEntradas, totalSalidas FROM (
+
+SELECT
+a.nom_tit
+,m.simbolo
+
+,CASE WHEN (SELECT COUNT(*) FROM v_movimientos
+	WHERE cod_emp = a.cod_emp AND cod_moneda = m.cod_moneda
+	AND cod_tit = a.cod_tit
+	AND fec_doc < $P{fecDesde}) > 0
+
+	THEN
+
+	 (SELECT SUM(entrada + salida) FROM v_movimientos
+		WHERE cod_emp = a.cod_emp AND cod_moneda = m.cod_moneda
+		AND cod_tit = a.cod_tit
+		AND fec_doc < $P{fecDesde})
+
+	ELSE 0 END	AS saldoAnterior
+
+,CASE WHEN (SELECT COUNT(*) FROM v_Estado_Cuenta_SubReport_Entradas WHERE cod_tit = a.cod_tit
+			AND cod_moneda = m.cod_moneda
+			AND fec_doc BETWEEN $P{fecDesde} AND  $P{fecHasta}
+			AND cod_emp = a.cod_emp ) > 0
+	THEN
+
+			(SELECT SUM(imp_tot_mo) FROM v_Estado_Cuenta_SubReport_Entradas WHERE cod_tit = a.cod_tit
+			AND cod_moneda = m.cod_moneda
+			AND fec_doc BETWEEN $P{fecDesde} AND  $P{fecHasta}
+			AND cod_emp = a.cod_emp )
+
+	ELSE 0 END AS totalEntradas
+
+
+, CASE WHEN (SELECT COUNT(*) importe FROM v_Estado_Cuenta_SubReport_Salidas
+			WHERE cod_tit =  a.cod_tit
+			AND cod_moneda =  m.cod_moneda
+			AND fec_doc BETWEEN $P{fecDesde}  AND  $P{fecHasta}
+			AND cod_emp = a.cod_emp
+			GROUP BY moneda )
+	THEN
+
+			(SELECT SUM(imp_tot_mo*-1) importe FROM v_Estado_Cuenta_SubReport_Salidas
+			WHERE cod_tit =  a.cod_tit
+			AND cod_moneda =  m.cod_moneda
+			AND fec_doc BETWEEN $P{fecDesde}  AND  $P{fecHasta}
+			AND cod_emp = a.cod_emp
+			GROUP BY moneda )
+
+	ELSE 0 END  AS totalSalidas
+
+FROM m_clientes a, m_monedas m WHERE a.cod_emp = $P{codEmp} AND a.cod_emp = m.cod_emp
+ORDER BY a.nom_tit, m.simbolo
+
+)AUX
+
+)AUX2 GROUP BY simbolo ORDER BY simbolo]]>
+	</queryString>
+	<field name="simbolo" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="saldoAnterior" class="java.math.BigDecimal"/>
+	<field name="totalEntradas" class="java.math.BigDecimal"/>
+	<field name="totalSalidas" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="11" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement x="4" y="10" width="96" height="20" uuid="2b354849-a871-4c3d-b174-f9a7ba9050df"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Moneda]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="10" width="99" height="20" uuid="4b0b5bf4-6879-4d68-a07e-62b225bcccd8"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Saldo anterior]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="199" y="10" width="81" height="20" uuid="7612e6cd-e31c-49e3-a88d-3b7366519eb0"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Facturas]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="280" y="10" width="81" height="20" uuid="c8b075fa-2c6f-441e-9234-881749205bcb"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Recibos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="361" y="10" width="81" height="20" uuid="44c2001f-331d-4a96-905c-cf283bc6a8e0"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Saldo]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="4" y="0" width="96" height="20" uuid="54898d12-d8dc-4cac-a81d-12c495d43b3f"/>
+				<textFieldExpression><![CDATA["Total " + $F{simbolo} + ":"]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="100" y="0" width="99" height="20" uuid="feca540a-6817-4d76-935d-f4a2bdabd4b3"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{saldoAnterior}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="199" y="0" width="81" height="20" uuid="00522578-7ecb-43ec-bbb9-daeb5343b41e"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{totalEntradas}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="280" y="0" width="81" height="20" uuid="e4e46b5c-c434-431d-8c47-b653aa968b6b"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{totalSalidas}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="361" y="0" width="81" height="20" uuid="686b7b24-0f4d-4c34-9c1e-0001da3c145c"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{saldoAnterior}+$F{totalEntradas}+$F{totalSalidas}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

@@ -34,7 +34,7 @@
 	<parameter name="periodo" class="java.lang.String"/>
 	<parameter name="codTit" class="java.lang.String"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["C:\\Users\\User\\Tesis3\\Repositorio\\trunk\\SGD\\WebContent\\WEB-INF\\Reportes\\"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[$P{REPORTS_DIR} + "/"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT documento, fecha, proceso, carpeta, moneda, entrada, salida, cod_tit, cod_emp, fec_doc, cod_moneda FROM (
@@ -79,7 +79,7 @@ WHERE  r.cod_moneda = m.cod_moneda AND m.cod_emp = r.cod_emp
 )AUX
 
 WHERE cod_tit = $P{codTit} AND cod_emp = $P{codEmp} AND fec_doc BETWEEN $P{fecDesde} AND $P{fecHasta} AND cod_moneda = $P{codMoneda}
-ORDER BY documento, fec_doc ]]>
+ORDER BY documento, fec_doc]]>
 	</queryString>
 	<field name="documento" class="java.lang.String"/>
 	<field name="fecha" class="java.lang.String">
@@ -181,14 +181,14 @@ ORDER BY documento, fec_doc ]]>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="175" y="8" width="65" height="18" forecolor="#000000" uuid="13d67d0c-7e43-4c4c-96ed-27eecb4ae506"/>
-				<textElement textAlignment="Center">
+				<textElement>
 					<font size="12" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Proceso]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="240" y="8" width="92" height="18" forecolor="#000000" uuid="fb0a9ab0-af41-4887-95e2-7b4387a7238d"/>
-				<textElement textAlignment="Center">
+				<textElement>
 					<font size="12" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Carpeta]]></text>
@@ -236,14 +236,14 @@ ORDER BY documento, fec_doc ]]>
 				</textField>
 				<textField isStretchWithOverflow="true">
 					<reportElement style="Detail" positionType="Float" x="175" y="0" width="65" height="18" backcolor="#1A85E2" uuid="6487ed52-98a1-4c1a-a023-235511c6f7fa"/>
-					<textElement textAlignment="Center">
+					<textElement>
 						<font size="12"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{proceso}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
 					<reportElement style="Detail" positionType="Float" x="240" y="0" width="92" height="18" backcolor="#1A85E2" uuid="072ec9ad-8bec-442e-ad69-5f6eb07b1113"/>
-					<textElement textAlignment="Center">
+					<textElement>
 						<font size="12"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{carpeta}]]></textFieldExpression>

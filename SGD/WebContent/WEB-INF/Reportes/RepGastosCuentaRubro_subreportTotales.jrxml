@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RepGastosCuentaRubro_subreportTotales" language="groovy" pageWidth="480" pageHeight="655" columnWidth="480" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="747db4f2-4cfd-40c7-a722-cf7d0ee1e86d">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="codEmp" class="java.lang.String"/>
+	<parameter name="fecDesde" class="java.util.Date"/>
+	<parameter name="fecHasta" class="java.util.Date"/>
+	<parameter name="empleado" class="java.lang.String"/>
+	<parameter name="proceso" class="java.lang.String"/>
+	<parameter name="oficina" class="java.lang.String"/>
+	<parameter name="todos" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+
+g.cod_cuenta
+,c.descripcion nom_cta
+,m.cod_moneda
+,m.simbolo moneda
+,SUM(g.imp_tot_mo) importe
+
+FROM c_gastos g, m_cuentas c, m_rubros r, m_monedas m
+
+WHERE  g.cod_cuenta = c.cod_cuenta AND g.cod_emp = c.cod_emp
+AND g.cod_rubro = r.cod_rubro AND g.cod_emp = r.cod_emp
+AND g.cod_moneda = m.cod_moneda AND g.cod_emp = m.cod_emp
+AND g.cod_emp = $P{codEmp} AND g.fecDoc  BETWEEN $P{fecDesde}  AND  $P{fecHasta} AND g.estado <> 'anul'
+AND (
+	(cuenta = 'IngGastoEmpleado' AND $P{empleado} = 'S')
+	OR (cuenta = 'IngGastoProceso' AND $P{proceso} = 'S')
+	OR (cuenta = 'IngGastoOficina' AND $P{oficina} = 'S')
+    )
+
+AND (g.estado = 'fact' OR $P{todos} = 'S')
+
+GROUP BY  g.cod_cuenta
+,c.descripcion
+,m.cod_moneda
+,m.simbolo]]>
+	</queryString>
+	<field name="cod_cuenta" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nom_cta" class="java.lang.String"/>
+	<field name="cod_moneda" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="moneda" class="java.lang.String"/>
+	<field name="importe" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="45">
+			<staticText>
+				<reportElement x="78" y="17" width="100" height="20" uuid="a7c50998-03fe-4434-ad85-a8af1882922b"/>
+				<textElement>
+					<font size="14" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Totales]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="23" splitType="Stretch">
+			<textField>
+				<reportElement x="78" y="0" width="185" height="20" uuid="8a4977f7-7e7b-406e-917d-90f5a8e1165b"/>
+				<textFieldExpression><![CDATA[$F{nom_cta}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="263" y="0" width="78" height="20" uuid="9932477b-694d-48f4-82f7-72ee465d8057"/>
+				<textFieldExpression><![CDATA[$F{moneda}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="341" y="0" width="140" height="20" uuid="ebdc14a6-8aef-4202-a315-2ac4bc38904e"/>
+				<textFieldExpression><![CDATA[$F{importe}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>
