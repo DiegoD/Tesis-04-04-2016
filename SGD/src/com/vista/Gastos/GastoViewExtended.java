@@ -225,6 +225,9 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 						else if(this.comboEstado.getValue().equals("Facturable")){
 							gastoVO.setEstadoGasto("fact");
 						}
+						else if(this.comboEstado.getValue().equals("Anulado")){
+							gastoVO.setEstadoGasto("anul");
+						}
 					}
 					
 					

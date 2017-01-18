@@ -41,8 +41,10 @@ import com.vista.Reportes.ChequesPendDepositar.ChequesDepositarViewExtended;
 import com.vista.Reportes.ChequesxCliente.RepChequesxClienteViewExtended;
 import com.vista.Reportes.ChequesxCliente.ReportePanelChequeExtended;
 import com.vista.Reportes.EstadoCuenta.RepEstadoCuentaViewExtended;
+import com.vista.Reportes.EstadoCuentaTotales.RepEstadoCuentaTotalesViewExtended;
 import com.vista.Reportes.GastosPendCobro.GtosPendCobroxClienteViewExtended;
 import com.vista.Reportes.IVA.RepIvaViewExtended;
+import com.vista.Reportes.RepCuentaRubro.RepMovCtaRubroExtended;
 import com.vista.ResumenProceso.ResProcesosPanelExtended;
 import com.vista.Rubros.RubrosPanelExtended;
 import com.vista.TipoRubro.TipoRubrosPanelExtended;
@@ -787,6 +789,56 @@ public class MenuExtended extends Menu{
 			}
 		});
 		
+		this.btnEstadoCuentaTotales.addClickListener(click -> {
+			
+			setSizeFull();
+			
+			this.content.removeAllComponents();
+			
+			try {
+				
+				
+				RepEstadoCuentaTotalesViewExtended form = new RepEstadoCuentaTotalesViewExtended();
+				
+				sub = new MySub("34%","45%");
+				
+				sub.setModal(true);
+				
+				sub.setVista(form);
+				
+				UI.getCurrent().addWindow(sub);
+				
+				
+			} catch (Exception e) {
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}
+		});
+		
+		this.btnMovPorCuenta.addClickListener(click -> {
+			
+			setSizeFull();
+			
+			this.content.removeAllComponents();
+			
+			try {
+				
+				
+				RepMovCtaRubroExtended form = new RepMovCtaRubroExtended();
+				
+				sub = new MySub("50%","45%");
+				
+				sub.setModal(true);
+				
+				sub.setVista(form);
+				
+				UI.getCurrent().addWindow(sub);
+				
+				
+			} catch (Exception e) {
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}
+		});
+		
 	}
 	
 	
@@ -1102,6 +1154,8 @@ public class MenuExtended extends Menu{
 			   formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_REP_GTOS_PENDIENTES_CLIENTES) ||
 			   formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_REP_IVA) ||
 			   formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_REP_ESTADO_CUENTA) ||
+			   formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_REP_ESTADO_CUENTA_TOTALES) ||
+			   formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_REP_MOVIMIENTOS_POR_CUENTA) ||
 			   formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_REP_CHEQUES_PENDIENTES_DEPOSITAR))
 				
 			{
@@ -1156,6 +1210,20 @@ public class MenuExtended extends Menu{
 						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_REP_ESTADO_CUENTA, VariablesPermisos.OPERACION_LEER)){
 							this.habilitarReporteEstadoCuenta();
 							this.layoutMenu.addComponent(this.btnEstadoCuenta);
+						}
+					break;
+					
+					case VariablesPermisos.FORMULARIO_REP_ESTADO_CUENTA_TOTALES : 
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_REP_ESTADO_CUENTA, VariablesPermisos.OPERACION_LEER)){
+							this.habilitarReporteEstadoCuentaTotales(); 
+							this.layoutMenu.addComponent(this.btnEstadoCuentaTotales); 
+						}
+					break;
+					
+					case VariablesPermisos.FORMULARIO_REP_MOVIMIENTOS_POR_CUENTA : 
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_REP_MOVIMIENTOS_POR_CUENTA, VariablesPermisos.OPERACION_LEER)){
+							this.habilitarReporteMovimientosxCuenta(); 
+							this.layoutMenu.addComponent(this.btnMovPorCuenta); 
 						}
 					break;
 				
@@ -1279,6 +1347,12 @@ public class MenuExtended extends Menu{
 		
 		this.btnEstadoCuenta.setVisible(false);
 		this.btnEstadoCuenta.setEnabled(false);
+		
+		this.btnEstadoCuentaTotales.setVisible(false);
+		this.btnEstadoCuentaTotales.setEnabled(false);
+		
+		this.btnMovPorCuenta.setVisible(false);
+		this.btnMovPorCuenta.setEnabled(false);
 	}
 	
 	
@@ -1509,6 +1583,17 @@ public class MenuExtended extends Menu{
 		this.btnEstadoCuenta.setEnabled(true);
 	}
 	
+	private void habilitarReporteEstadoCuentaTotales()
+	{
+		this.btnEstadoCuentaTotales.setVisible(true);
+		this.btnEstadoCuentaTotales.setEnabled(true);
+	}
+	
+	private void habilitarReporteMovimientosxCuenta()
+	{
+		this.btnMovPorCuenta.setVisible(true);
+		this.btnMovPorCuenta.setEnabled(true);
+	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
