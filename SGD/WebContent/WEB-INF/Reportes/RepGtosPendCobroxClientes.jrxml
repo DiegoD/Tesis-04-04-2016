@@ -35,8 +35,7 @@
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[
-SELECT
+		<![CDATA[SELECT
 nro_docum
 , cod_proceso
 , carpeta
@@ -56,8 +55,7 @@ g.nro_docum
 ,(SELECT imp_tot_mo FROM sa_docum sa WHERE  sa.cod_docum = g.cod_docum AND sa.serie_docum = g.serie_docum AND sa.nro_docum = g.nro_docum AND sa.cod_emp = g.cod_emp) saldo
 FROM c_gastos g,  c_procesos c
 WHERE g.cod_proceso = c.cod_proceso AND g.cod_emp = c.cod_emp
-AND g.cod_tit = $P{codTit} AND g.cod_emp = $P{codEmp} AND g.fecDoc <= $P{fecHasta} AND ( g.cod_moneda = $P{codMoneda} OR $P{codMoneda} = 'TODAS' ) ) AUX WHERE saldo > 0 ORDER BY saldo DESC
-]]>
+AND g.cod_tit = $P{codTit} AND g.estado <> 'nocobr' AND g.anulado = 'N' AND g.cod_emp = $P{codEmp} AND g.fecDoc <= $P{fecHasta} AND ( g.cod_moneda = $P{codMoneda} OR $P{codMoneda} = 'TODAS' ) ) AUX WHERE saldo > 0 ORDER BY saldo DESC]]>
 	</queryString>
 	<field name="nro_docum" class="java.lang.Integer">
 		<fieldDescription><![CDATA[]]></fieldDescription>
@@ -74,11 +72,19 @@ AND g.cod_tit = $P{codTit} AND g.cod_emp = $P{codEmp} AND g.fecDoc <= $P{fecHast
 	<field name="referencia" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="moneda" class="java.lang.String"/>
+	<field name="moneda" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
 	<field name="imp_tot_mo" class="java.math.BigDecimal">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="saldo" class="java.math.BigDecimal"/>
+	<variable name="totSaldo" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{saldo}]]></variableExpression>
+	</variable>
+	<variable name="totImporte" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{imp_tot_mo}]]></variableExpression>
+	</variable>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -178,7 +184,7 @@ AND g.cod_tit = $P{codTit} AND g.cod_emp = $P{codEmp} AND g.fecDoc <= $P{fecHast
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="18" splitType="Stretch">
+		<band height="20" splitType="Stretch">
 			<frame>
 				<reportElement style="Row" mode="Opaque" x="0" y="0" width="555" height="18" uuid="71c4d15f-0fa7-4fe1-a2f2-d9e6a02b6979"/>
 				<textField isStretchWithOverflow="true">
@@ -204,7 +210,7 @@ AND g.cod_tit = $P{codTit} AND g.cod_emp = $P{codEmp} AND g.fecDoc <= $P{fecHast
 				</textField>
 				<textField isStretchWithOverflow="true">
 					<reportElement style="Detail" positionType="Float" x="392" y="0" width="81" height="18" backcolor="#1A85E2" uuid="072ec9ad-8bec-442e-ad69-5f6eb07b1113"/>
-					<textElement textAlignment="Center">
+					<textElement textAlignment="Right">
 						<font size="12"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{imp_tot_mo}]]></textFieldExpression>
@@ -225,7 +231,7 @@ AND g.cod_tit = $P{codTit} AND g.cod_emp = $P{codEmp} AND g.fecDoc <= $P{fecHast
 				</textField>
 				<textField isStretchWithOverflow="true">
 					<reportElement style="Detail" positionType="Float" x="473" y="0" width="81" height="18" backcolor="#1A85E2" uuid="0226d043-9177-4e94-8f2b-3d3f4430b93a"/>
-					<textElement textAlignment="Center">
+					<textElement textAlignment="Right">
 						<font size="12"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{saldo}]]></textFieldExpression>
@@ -241,7 +247,7 @@ AND g.cod_tit = $P{codTit} AND g.cod_emp = $P{codEmp} AND g.fecDoc <= $P{fecHast
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="7" splitType="Stretch">
+		<band height="5" splitType="Stretch">
 			<line>
 				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1" uuid="51f1790b-dc8a-4987-b49b-cb9572aa69bb"/>
 				<graphicElement>
@@ -272,6 +278,28 @@ AND g.cod_tit = $P{codTit} AND g.cod_emp = $P{codEmp} AND g.fecDoc <= $P{fecHast
 		</band>
 	</pageFooter>
 	<summary>
-		<band splitType="Stretch"/>
+		<band height="30" splitType="Stretch">
+			<textField>
+				<reportElement x="475" y="10" width="80" height="20" uuid="fd31cb91-eb8c-457a-901e-d20c85e6d07e"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{totSaldo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="392" y="10" width="81" height="20" uuid="0fcd7ddf-e3f4-4b9a-8902-5c075ee5419e"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{totImporte}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="344" y="10" width="48" height="20" uuid="6dc6a310-9b2c-4fd5-8801-5bb9aa4ba726"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Totales]]></text>
+			</staticText>
+		</band>
 	</summary>
 </jasperReport>

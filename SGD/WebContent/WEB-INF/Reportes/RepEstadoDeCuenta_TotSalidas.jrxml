@@ -115,7 +115,7 @@ WHERE  n.cod_moneda = m.cod_moneda AND m.cod_emp = n.cod_emp
 		<band height="140" splitType="Stretch">
 			<textField isBlankWhenNull="false">
 				<reportElement x="130" y="29" width="120" height="23" uuid="9451b31a-323c-4510-865c-4f58ff84c7ff"/>
-				<textElement>
+				<textElement textAlignment="Right">
 					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[($F{totalEntradasContado} == null) ? new Double("0") : $F{totalEntradasContado}]]></textFieldExpression>
@@ -138,7 +138,7 @@ WHERE  n.cod_moneda = m.cod_moneda AND m.cod_emp = n.cod_emp
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement x="130" y="52" width="120" height="23" uuid="1a49aabb-00ae-4830-ab86-746338b1aa73"/>
-				<textElement>
+				<textElement textAlignment="Right">
 					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[($F{totalEntradasCredito} == null) ? new Double("0") : $F{totalEntradasCredito}]]></textFieldExpression>
@@ -153,7 +153,7 @@ WHERE  n.cod_moneda = m.cod_moneda AND m.cod_emp = n.cod_emp
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="130" y="75" width="120" height="23" uuid="3969dd46-30a0-4768-a35e-e5a2a5fe2744"/>
-				<textElement>
+				<textElement textAlignment="Right">
 					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[($F{totalSalidas}  == null) ? new Double("0") : $F{totalSalidas}]]></textFieldExpression>
@@ -171,7 +171,7 @@ WHERE  n.cod_moneda = m.cod_moneda AND m.cod_emp = n.cod_emp
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="130" y="113" width="120" height="23" uuid="4c5bfdf2-44c6-473d-b474-61b9c5d0b49a"/>
-				<textElement>
+				<textElement textAlignment="Right">
 					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[( ( $F{saldoAnterior} == null) ? new Double("0") :  $F{saldoAnterior} ) + (($F{totalEntradasContado} == null) ? new Double("0") : $F{totalEntradasContado}) +  (($F{totalEntradasCredito} == null) ? new Double("0") : $F{totalEntradasCredito}) +  (($F{totalSalidas}  == null) ? new Double("0") : $F{totalSalidas} )]]></textFieldExpression>
@@ -186,7 +186,7 @@ WHERE  n.cod_moneda = m.cod_moneda AND m.cod_emp = n.cod_emp
 			</textField>
 			<textField isBlankWhenNull="false">
 				<reportElement x="130" y="6" width="120" height="23" uuid="36b8a1a2-beec-4e82-b2fd-bf99656ca278"/>
-				<textElement>
+				<textElement textAlignment="Right">
 					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[( $F{saldoAnterior} == null) ? new Double("0") :  $F{saldoAnterior}]]></textFieldExpression>

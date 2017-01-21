@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RepEstadoDeCuentaTotales" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isSummaryNewPage="true" isSummaryWithPageHeaderAndFooter="true" uuid="beb2c1cc-874d-46af-8109-6cf506587581">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RepEstadoDeCuentaTotales" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="beb2c1cc-874d-46af-8109-6cf506587581">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="51"/>
+	<property name="ireport.y" value="16"/>
 	<style name="Title" forecolor="#FFFFFF" fontName="Times New Roman" fontSize="50" isBold="false" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#CCCCCC" fontName="Times New Roman" fontSize="18" isBold="false" pdfFontName="Times-Roman"/>
 	<style name="Column header" forecolor="#666666" fontName="Times New Roman" fontSize="14" isBold="true" pdfFontName="Times-Roman"/>
@@ -35,16 +35,15 @@
 	<parameter name="todos" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT
-g.nro_docum
-, g.cod_cuenta
+
+ g.cod_cuenta
 ,c.descripcion nom_cta
 , g.cod_rubro
 ,r.descripcion nom_rubro
-,g.referencia
 ,m.cod_moneda
 ,m.simbolo moneda
-,g.imp_tot_mo
-,DATE_FORMAT(fecDoc, '%d-%m-%Y') fecDoc
+,SUM(g.imp_tot_mo) imp_tot_mo
+
 
 FROM c_gastos g, m_cuentas c, m_rubros r, m_monedas m
 
@@ -60,11 +59,14 @@ AND (
 
 AND (g.estado = 'fact' OR $P{todos} = 'S')
 
-ORDER BY  g.cod_cuenta,  g.cod_rubro, m.cod_moneda]]>
+GROUP BY
+ g.cod_rubro
+,m.cod_moneda
+,g.cod_cuenta
+,c.descripcion
+,r.descripcion
+,m.simbolo]]>
 	</queryString>
-	<field name="nro_docum" class="java.lang.Integer">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
 	<field name="cod_cuenta" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
@@ -73,9 +75,6 @@ ORDER BY  g.cod_cuenta,  g.cod_rubro, m.cod_moneda]]>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="nom_rubro" class="java.lang.String"/>
-	<field name="referencia" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
 	<field name="cod_moneda" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
@@ -83,14 +82,11 @@ ORDER BY  g.cod_cuenta,  g.cod_rubro, m.cod_moneda]]>
 	<field name="imp_tot_mo" class="java.math.BigDecimal">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="fecDoc" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
 	<variable name="total" class="java.math.BigDecimal" resetType="Group" resetGroup="Moneda" calculation="Sum">
 		<variableExpression><![CDATA[$F{imp_tot_mo}]]></variableExpression>
 	</variable>
 	<group name="Cuenta">
-		<groupExpression><![CDATA[$F{cod_cuenta}]]></groupExpression>
+		<groupExpression><![CDATA[$F{cod_rubro}]]></groupExpression>
 		<groupHeader>
 			<band height="33">
 				<textField>
@@ -98,28 +94,11 @@ ORDER BY  g.cod_cuenta,  g.cod_rubro, m.cod_moneda]]>
 					<textElement>
 						<font size="14" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA["Cuenta " + $F{nom_cta}]]></textFieldExpression>
-				</textField>
-				<line>
-					<reportElement x="0" y="29" width="325" height="1" uuid="af719157-5432-4432-b84c-bf1e1309ef57"/>
-				</line>
-			</band>
-		</groupHeader>
-		<groupFooter>
-			<band/>
-		</groupFooter>
-	</group>
-	<group name="Rubro">
-		<groupExpression><![CDATA[$F{cod_rubro}]]></groupExpression>
-		<groupHeader>
-			<band height="21">
-				<textField>
-					<reportElement x="0" y="0" width="325" height="20" uuid="853778a5-2576-489f-8552-1c1dc33a2b01"/>
-					<textElement>
-						<font size="12" isBold="true"/>
-					</textElement>
 					<textFieldExpression><![CDATA["Rubro " + $F{nom_rubro}]]></textFieldExpression>
 				</textField>
+				<line>
+					<reportElement x="3" y="26" width="385" height="1" uuid="21e14c76-f813-4cec-b39b-332be59f200b"/>
+				</line>
 			</band>
 		</groupHeader>
 		<groupFooter>
@@ -129,27 +108,13 @@ ORDER BY  g.cod_cuenta,  g.cod_rubro, m.cod_moneda]]>
 	<group name="Moneda">
 		<groupExpression><![CDATA[$F{cod_moneda}]]></groupExpression>
 		<groupHeader>
-			<band height="38">
+			<band height="24">
 				<staticText>
-					<reportElement x="0" y="17" width="76" height="20" uuid="75fbaebc-e882-48d0-8d9a-b0265f167461"/>
+					<reportElement x="184" y="4" width="100" height="20" uuid="7dfed1ba-8387-4170-868f-77596bea4123"/>
 					<textElement>
-						<font size="10" isBold="false" isItalic="true"/>
+						<font isBold="false" isItalic="true" isUnderline="true"/>
 					</textElement>
-					<text><![CDATA[Documento]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="76" y="17" width="71" height="20" uuid="43daab3d-369d-4f24-96e2-455a459f460b"/>
-					<textElement>
-						<font size="10" isBold="false" isItalic="true"/>
-					</textElement>
-					<text><![CDATA[Fecha]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="147" y="17" width="178" height="20" uuid="2ac5f187-35c8-4909-ac78-a35198580000"/>
-					<textElement>
-						<font size="10" isBold="false" isItalic="true"/>
-					</textElement>
-					<text><![CDATA[Referencia]]></text>
+					<text><![CDATA[Cuenta]]></text>
 				</staticText>
 			</band>
 		</groupHeader>
@@ -160,13 +125,13 @@ ORDER BY  g.cod_cuenta,  g.cod_rubro, m.cod_moneda]]>
 					<textElement>
 						<font size="10" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA["TOTAL Rubro "+$F{moneda}]]></textFieldExpression>
+					<textFieldExpression><![CDATA["TOTAL CUENTA "+$F{moneda}]]></textFieldExpression>
 				</textField>
 				<line>
-					<reportElement x="388" y="6" width="146" height="1" uuid="90f2b1ba-4464-4723-ae6d-fe2508f6568b"/>
+					<reportElement x="388" y="6" width="125" height="1" uuid="90f2b1ba-4464-4723-ae6d-fe2508f6568b"/>
 				</line>
 				<textField pattern="#,##0.00">
-					<reportElement x="388" y="13" width="111" height="20" uuid="e41a31a0-2fc7-4ec6-9de3-b09060318885"/>
+					<reportElement x="399" y="13" width="100" height="20" uuid="e41a31a0-2fc7-4ec6-9de3-b09060318885"/>
 					<textElement textAlignment="Right">
 						<font size="10" isBold="true"/>
 					</textElement>
@@ -187,7 +152,7 @@ ORDER BY  g.cod_cuenta,  g.cod_rubro, m.cod_moneda]]>
 					<textElement>
 						<font size="28" isBold="false"/>
 					</textElement>
-					<text><![CDATA[Listado detallado de Gastos]]></text>
+					<text><![CDATA[Listado de gastos por rubro]]></text>
 				</staticText>
 				<textField>
 					<reportElement x="76" y="45" width="294" height="21" forecolor="#CCCCCC" uuid="21af6863-06f7-44e5-9440-2a19768a9608"/>
@@ -212,18 +177,6 @@ ORDER BY  g.cod_cuenta,  g.cod_rubro, m.cod_moneda]]>
 	<detail>
 		<band height="20" splitType="Stretch">
 			<textField>
-				<reportElement x="0" y="0" width="76" height="20" uuid="f230279e-f8ce-455b-9072-1f2ee26faf8b"/>
-				<textFieldExpression><![CDATA[$F{nro_docum}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="76" y="0" width="71" height="20" uuid="21670598-9bda-4430-8bde-569ca298bcc0"/>
-				<textFieldExpression><![CDATA[$F{fecDoc}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="147" y="0" width="178" height="20" uuid="fee36a80-cb36-45c1-af44-a27ef104323f"/>
-				<textFieldExpression><![CDATA[$F{referencia}]]></textFieldExpression>
-			</textField>
-			<textField>
 				<reportElement x="325" y="0" width="63" height="20" uuid="45682459-d6e2-4ced-b1c6-d2c04c99ec0c"/>
 				<textFieldExpression><![CDATA[$F{moneda}]]></textFieldExpression>
 			</textField>
@@ -231,6 +184,10 @@ ORDER BY  g.cod_cuenta,  g.cod_rubro, m.cod_moneda]]>
 				<reportElement x="388" y="0" width="111" height="20" uuid="653bb367-348e-4978-bf77-a79d27a845e0"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{imp_tot_mo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="184" y="0" width="128" height="20" uuid="23657309-be40-45a6-915e-b0e919214004"/>
+				<textFieldExpression><![CDATA[$F{nom_cta}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -266,39 +223,6 @@ ORDER BY  g.cod_cuenta,  g.cod_rubro, m.cod_moneda]]>
 		</band>
 	</pageFooter>
 	<summary>
-		<band height="57" splitType="Stretch">
-			<subreport>
-				<reportElement x="55" y="0" width="378" height="57" uuid="6c98e4e1-b07f-4d2d-9d83-d2f9d01a6e61"/>
-				<subreportParameter name="REPORTS_DIR">
-					<subreportParameterExpression><![CDATA[$P{REPORTS_DIR}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="SUBREPORT_DIR">
-					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="todos">
-					<subreportParameterExpression><![CDATA[$P{todos}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="proceso">
-					<subreportParameterExpression><![CDATA[$P{proceso}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="empleado">
-					<subreportParameterExpression><![CDATA[$P{empleado}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="codEmp">
-					<subreportParameterExpression><![CDATA[$P{codEmp}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="fecDesde">
-					<subreportParameterExpression><![CDATA[$P{fecDesde}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="oficina">
-					<subreportParameterExpression><![CDATA[$P{oficina}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="fecHasta">
-					<subreportParameterExpression><![CDATA[$P{fecHasta}]]></subreportParameterExpression>
-				</subreportParameter>
-				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "RepGastosCuentaRubro_subreportTotales.jasper"]]></subreportExpression>
-			</subreport>
-		</band>
+		<band height="57" splitType="Stretch"/>
 	</summary>
 </jasperReport>

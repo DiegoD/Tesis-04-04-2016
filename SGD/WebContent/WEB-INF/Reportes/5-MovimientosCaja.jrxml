@@ -13,9 +13,6 @@
 			<style mode="Opaque" backcolor="#F0EFEF"/>
 		</conditionalStyle>
 	</style>
-	<parameter name="codTit" class="java.lang.String">
-		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
-	</parameter>
 	<parameter name="codEmp" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -34,35 +31,51 @@
 	<parameter name="REPORTS_DIR" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
+	<parameter name="periodo" class="java.lang.String"/>
+	<parameter name="codTit" class="java.lang.String"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{REPORTS_DIR} + "/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="incNoConciliados" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT
-c.serie_docum
-,c.nro_docum
-,(SELECT simbolo FROM m_monedas m WHERE m.cod_moneda = c.cod_moneda AND m.cod_emp = c.cod_emp) moneda
-,c.imp_tot_mo
-,DATE_FORMAT(fec_doc, '%d-%m-%Y') fecha
-,(SELECT nom_bco FROM m_bancos WHERE cod_bco = c.cod_bco AND cod_emp = c.cod_emp )banco
-FROM c_cheques c, sa_docum sa WHERE c.cod_docum = 'cheqrec' AND (c.cod_tit = $P{codTit} OR $P{codTit} = '0') AND c.cod_emp = $P{codEmp} AND c.fec_doc <= $P{fecHasta} AND (c.cod_moneda = $P{codMoneda} OR  $P{codMoneda} = 'TODAS')
-AND c.cod_docum = sa.cod_docum AND c.serie_docum = sa.serie_docum
-AND c.nro_docum = sa.nro_docum AND c.cod_emp = sa.cod_emp
-AND sa.imp_tot_mo > 0 ORDER BY c.cod_bco]]>
+CONCAT(doc, ' ', serie_docum, ' ', CAST(nro_docum as CHAR(50))) AS documento
+,DATE_FORMAT(fec_valor , '%d-%m-%Y') fec_valor
+,referencia descripcion
+,simbolo
+,imp_tot_mo
+,DATE_FORMAT(fec_doc , '%d-%m-%Y') fec_doc
+ FROM (
+
+SELECT
+CASE WHEN cod_docum IN ('ingcobro', 'otrcobro') THEN 'ING'
+WHEN cod_docum IN ('egrcobro', 'otroegr') THEN  'EGR'
+WHEN cod_docum = 'recibo' THEN 'REC'
+ELSE 'MOV' END AS doc,
+cod_docum, serie_docum, nro_docum, sa_cuentas.cod_moneda, m_monedas.simbolo, referencia, fec_doc, fec_valor, imp_tot_mo * signo AS imp_tot_mo
+FROM sa_cuentas, m_monedas
+WHERE cod_bco = '0'
+AND sa_cuentas.cod_emp = m_monedas.cod_emp AND sa_cuentas.cod_moneda = m_monedas.cod_moneda
+AND sa_cuentas.cod_emp = $P{codEmp}
+AND sa_cuentas.cod_moneda = $P{codMoneda}
+AND fec_valor BETWEEN $P{fecDesde} AND $P{fecHasta}
+AND  (conciliado = 1 OR $P{incNoConciliados} = 'S')
+AND anulado = 0
+
+)AUX]]>
 	</queryString>
-	<field name="serie_docum" class="java.lang.String">
+	<field name="documento" class="java.lang.String"/>
+	<field name="fec_valor" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="nro_docum" class="java.lang.Integer">
+	<field name="descripcion" class="java.lang.String"/>
+	<field name="simbolo" class="java.lang.String"/>
+	<field name="imp_tot_mo" class="java.math.BigDecimal"/>
+	<field name="fec_doc" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="moneda" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="imp_tot_mo" class="java.math.BigDecimal">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="fecha" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="banco" class="java.lang.String"/>
 	<variable name="totImp" class="java.math.BigDecimal" calculation="Sum">
 		<variableExpression><![CDATA[$F{imp_tot_mo}]]></variableExpression>
 	</variable>
@@ -74,25 +87,18 @@ AND sa.imp_tot_mo > 0 ORDER BY c.cod_bco]]>
 			<frame>
 				<reportElement mode="Opaque" x="0" y="0" width="451" height="95" forecolor="#0033CC" backcolor="#0033CC" uuid="c251db9f-f778-41e8-b4d6-dc47149157f6"/>
 				<staticText>
-					<reportElement style="Title" mode="Transparent" x="0" y="0" width="370" height="66" forecolor="#FFFFFF" backcolor="#0033CC" uuid="e1b8c498-c2c4-47bf-a0f5-32be0f7267f1"/>
+					<reportElement style="Title" mode="Transparent" x="0" y="0" width="370" height="45" forecolor="#FFFFFF" backcolor="#0033CC" uuid="e1b8c498-c2c4-47bf-a0f5-32be0f7267f1"/>
 					<textElement>
-						<font size="26" isBold="false"/>
+						<font size="28" isBold="false"/>
 					</textElement>
-					<text><![CDATA[Cheques a depositar]]></text>
-				</staticText>
-				<staticText>
-					<reportElement style="SubTitle" x="157" y="66" width="249" height="29" uuid="109fd81c-a11b-4c57-bfbd-6767bc023369"/>
-					<textElement>
-						<font size="22" isBold="false"/>
-					</textElement>
-					<text><![CDATA[]]></text>
+					<text><![CDATA[Movimientos Caja]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="157" y="66" width="248" height="29" forecolor="#CCCCCC" uuid="1c183dff-e7ee-4558-b778-229589eda54b"/>
+					<reportElement x="157" y="74" width="294" height="21" forecolor="#CCCCCC" uuid="21af6863-06f7-44e5-9440-2a19768a9608"/>
 					<textElement>
-						<font fontName="Times New Roman" size="14"/>
+						<font fontName="Times New Roman" size="12"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$P{nomTit}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$P{periodo}]]></textFieldExpression>
 				</textField>
 			</frame>
 			<image>
@@ -107,100 +113,86 @@ AND sa.imp_tot_mo > 0 ORDER BY c.cod_bco]]>
 	<columnHeader>
 		<band height="26" splitType="Stretch">
 			<staticText>
-				<reportElement style="Column header" x="0" y="7" width="77" height="18" forecolor="#000000" uuid="d7e320f5-d900-4ac4-8e93-7342fa5ad41e"/>
-				<textElement textAlignment="Center">
-					<font size="10" isBold="false"/>
+				<reportElement style="Column header" x="0" y="8" width="95" height="18" forecolor="#000000" uuid="d7e320f5-d900-4ac4-8e93-7342fa5ad41e"/>
+				<textElement>
+					<font size="12" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Serie]]></text>
+				<text><![CDATA[Documento]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="78" y="8" width="92" height="18" forecolor="#000000" uuid="0c0b84a8-031a-4bc2-852f-e1ce5ca4cced"/>
+				<reportElement style="Column header" x="95" y="8" width="80" height="18" forecolor="#000000" uuid="0c0b84a8-031a-4bc2-852f-e1ce5ca4cced"/>
 				<textElement textAlignment="Center">
-					<font size="10" isBold="false"/>
-				</textElement>
-				<text><![CDATA[Nro]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="170" y="8" width="52" height="18" forecolor="#000000" uuid="13d67d0c-7e43-4c4c-96ed-27eecb4ae506"/>
-				<textElement textAlignment="Center">
-					<font size="10" isBold="false"/>
-				</textElement>
-				<text><![CDATA[Moneda]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="221" y="8" width="94" height="18" forecolor="#000000" uuid="fb0a9ab0-af41-4887-95e2-7b4387a7238d"/>
-				<textElement textAlignment="Center">
-					<font size="10" isBold="false"/>
-				</textElement>
-				<text><![CDATA[Importe]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="315" y="8" width="90" height="18" forecolor="#000000" uuid="22db6754-4ec8-4ecc-8632-8b3536164be5"/>
-				<textElement textAlignment="Center">
-					<font size="10" isBold="false"/>
+					<font size="12" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Fecha]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="405" y="8" width="148" height="18" forecolor="#000000" uuid="0d492d21-fba1-4be3-bc6f-83f85956d390"/>
+				<reportElement style="Column header" x="388" y="8" width="56" height="18" forecolor="#000000" uuid="22db6754-4ec8-4ecc-8632-8b3536164be5"/>
 				<textElement textAlignment="Center">
-					<font size="10" isBold="false"/>
+					<font size="12" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Banco]]></text>
+				<text><![CDATA[Moneda]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="444" y="8" width="106" height="18" forecolor="#000000" uuid="2521df5c-3dad-4992-a960-e461752ac863"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Importe]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="175" y="8" width="213" height="18" forecolor="#000000" uuid="b9a3a70f-3249-4252-a296-8aa914e3ee65"/>
+				<textElement>
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Descripción]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="18" splitType="Stretch">
+		<band height="22" splitType="Stretch">
 			<frame>
 				<reportElement style="Row" mode="Opaque" x="0" y="0" width="555" height="18" uuid="71c4d15f-0fa7-4fe1-a2f2-d9e6a02b6979"/>
 				<textField isStretchWithOverflow="true">
-					<reportElement style="Detail" positionType="Float" x="2" y="0" width="75" height="18" backcolor="#1A85E2" uuid="14db90ad-97ce-44d8-974a-4136b163265c"/>
-					<textElement textAlignment="Center">
-						<font size="10"/>
+					<reportElement style="Detail" positionType="Float" x="2" y="0" width="93" height="18" backcolor="#1A85E2" uuid="14db90ad-97ce-44d8-974a-4136b163265c"/>
+					<textElement>
+						<font size="12"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{serie_docum}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{documento}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
-					<reportElement style="Detail" positionType="Float" x="78" y="0" width="91" height="18" backcolor="#1A85E2" uuid="43049990-0168-44a4-abb3-25482932755e"/>
+					<reportElement style="Detail" positionType="Float" x="95" y="0" width="80" height="18" backcolor="#1A85E2" uuid="43049990-0168-44a4-abb3-25482932755e"/>
 					<textElement textAlignment="Center">
-						<font size="10"/>
+						<font size="12"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{nro_docum}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{fec_valor}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
-					<reportElement style="Detail" positionType="Float" x="170" y="0" width="52" height="18" backcolor="#1A85E2" uuid="6487ed52-98a1-4c1a-a023-235511c6f7fa"/>
+					<reportElement style="Detail" positionType="Float" x="388" y="0" width="56" height="18" backcolor="#1A85E2" uuid="8b645266-b534-4851-afc1-48e5a6d3637e"/>
 					<textElement textAlignment="Center">
-						<font size="10"/>
+						<font size="12"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{moneda}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{simbolo}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true">
-					<reportElement style="Detail" positionType="Float" x="405" y="0" width="148" height="18" backcolor="#1A85E2" uuid="072ec9ad-8bec-442e-ad69-5f6eb07b1113"/>
-					<textElement textAlignment="Center">
-						<font size="10"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{banco}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true">
-					<reportElement style="Detail" positionType="Float" x="315" y="0" width="91" height="18" backcolor="#1A85E2" uuid="8b645266-b534-4851-afc1-48e5a6d3637e"/>
-					<textElement textAlignment="Center">
-						<font size="10"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" pattern="#,##0.00">
-					<reportElement style="Detail" positionType="Float" x="221" y="0" width="94" height="18" backcolor="#1A85E2" uuid="a0b3519e-2c6b-4715-b84e-d491326a0957"/>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement style="Detail" positionType="Float" x="444" y="0" width="106" height="18" backcolor="#1A85E2" uuid="19649327-e8f1-441f-b809-669e6b580a4d"/>
 					<textElement textAlignment="Right">
-						<font size="10"/>
+						<font size="12"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{imp_tot_mo}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="Detail" positionType="Float" x="175" y="0" width="213" height="18" backcolor="#1A85E2" uuid="95f5f742-ab7f-4268-a7f2-1ab2f14e704e"/>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{descripcion}]]></textFieldExpression>
 				</textField>
 			</frame>
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="7" splitType="Stretch">
+		<band height="25" splitType="Stretch">
 			<line>
 				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1" uuid="51f1790b-dc8a-4987-b49b-cb9572aa69bb"/>
 				<graphicElement>
@@ -212,7 +204,7 @@ AND sa.imp_tot_mo > 0 ORDER BY c.cod_bco]]>
 	<pageFooter>
 		<band height="25" splitType="Stretch">
 			<frame>
-				<reportElement mode="Opaque" x="0" y="1" width="555" height="24" forecolor="#D0B48E" backcolor="#0033CC" uuid="549920fb-ff22-4da9-acc9-5f8c0001a21c"/>
+				<reportElement mode="Opaque" x="0" y="0" width="555" height="25" forecolor="#D0B48E" backcolor="#0033CC" uuid="549920fb-ff22-4da9-acc9-5f8c0001a21c"/>
 				<textField evaluationTime="Report">
 					<reportElement style="Column header" x="513" y="0" width="40" height="20" forecolor="#FFFFFF" uuid="6004a4d8-04da-427e-b143-313e9aeb6132"/>
 					<textElement verticalAlignment="Middle">
@@ -231,21 +223,24 @@ AND sa.imp_tot_mo > 0 ORDER BY c.cod_bco]]>
 		</band>
 	</pageFooter>
 	<summary>
-		<band height="30" splitType="Stretch">
-			<textField pattern="#,##0.00">
-				<reportElement x="222" y="0" width="93" height="20" uuid="cf3a04e7-16c0-4d2d-b700-ab60ef2b2849"/>
+		<band height="54" splitType="Stretch">
+			<textField>
+				<reportElement x="444" y="12" width="106" height="20" uuid="9d8585fb-a899-4566-815a-9d750431fcb9"/>
 				<textElement textAlignment="Right">
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{totImp}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="170" y="0" width="53" height="20" uuid="a400d9c2-07b5-43e1-8232-85d98e656597"/>
+				<reportElement x="388" y="12" width="56" height="20" uuid="f2db87cc-bf74-4191-a61c-57803e5cff5f"/>
 				<textElement textAlignment="Center">
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Total]]></text>
 			</staticText>
+			<line>
+				<reportElement x="444" y="4" width="106" height="1" uuid="e2293f96-b9d2-4879-8261-a06e1a8e5cbe"/>
+			</line>
 		</band>
 	</summary>
 </jasperReport>

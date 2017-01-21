@@ -56,6 +56,9 @@ FROM c_cheques c WHERE cod_docum = 'cheqrec' AND cod_tit = $P{codTit} AND cod_em
 	<field name="fecha" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
+	<variable name="totImp" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{imp_tot_mo}]]></variableExpression>
+	</variable>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -66,7 +69,7 @@ FROM c_cheques c WHERE cod_docum = 'cheqrec' AND cod_tit = $P{codTit} AND cod_em
 				<staticText>
 					<reportElement style="Title" mode="Transparent" x="0" y="0" width="370" height="66" forecolor="#FFFFFF" backcolor="#0033CC" uuid="e1b8c498-c2c4-47bf-a0f5-32be0f7267f1"/>
 					<textElement>
-						<font size="32" isBold="false"/>
+						<font size="26" isBold="false"/>
 					</textElement>
 					<text><![CDATA[Cheques]]></text>
 				</staticText>
@@ -80,7 +83,7 @@ FROM c_cheques c WHERE cod_docum = 'cheqrec' AND cod_tit = $P{codTit} AND cod_em
 				<textField>
 					<reportElement x="157" y="66" width="248" height="29" forecolor="#CCCCCC" uuid="1c183dff-e7ee-4558-b778-229589eda54b"/>
 					<textElement>
-						<font fontName="Times New Roman" size="18"/>
+						<font fontName="Times New Roman" size="14"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$P{nomTit}]]></textFieldExpression>
 				</textField>
@@ -99,35 +102,35 @@ FROM c_cheques c WHERE cod_docum = 'cheqrec' AND cod_tit = $P{codTit} AND cod_em
 			<staticText>
 				<reportElement style="Column header" x="0" y="7" width="77" height="18" forecolor="#000000" uuid="d7e320f5-d900-4ac4-8e93-7342fa5ad41e"/>
 				<textElement textAlignment="Center">
-					<font size="12" isBold="false"/>
+					<font size="10" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Serie]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="78" y="8" width="92" height="18" forecolor="#000000" uuid="0c0b84a8-031a-4bc2-852f-e1ce5ca4cced"/>
 				<textElement textAlignment="Center">
-					<font size="12" isBold="false"/>
+					<font size="10" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Nro]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="170" y="8" width="52" height="18" forecolor="#000000" uuid="13d67d0c-7e43-4c4c-96ed-27eecb4ae506"/>
 				<textElement textAlignment="Center">
-					<font size="12" isBold="false"/>
+					<font size="10" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Moneda]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="224" y="8" width="90" height="18" forecolor="#000000" uuid="fb0a9ab0-af41-4887-95e2-7b4387a7238d"/>
+				<reportElement style="Column header" x="224" y="8" width="109" height="18" forecolor="#000000" uuid="fb0a9ab0-af41-4887-95e2-7b4387a7238d"/>
 				<textElement textAlignment="Center">
-					<font size="12" isBold="false"/>
+					<font size="10" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Importe]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="315" y="8" width="90" height="18" forecolor="#000000" uuid="22db6754-4ec8-4ecc-8632-8b3536164be5"/>
+				<reportElement style="Column header" x="333" y="8" width="90" height="18" forecolor="#000000" uuid="22db6754-4ec8-4ecc-8632-8b3536164be5"/>
 				<textElement textAlignment="Center">
-					<font size="12" isBold="false"/>
+					<font size="10" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Fecha]]></text>
 			</staticText>
@@ -140,35 +143,35 @@ FROM c_cheques c WHERE cod_docum = 'cheqrec' AND cod_tit = $P{codTit} AND cod_em
 				<textField isStretchWithOverflow="true">
 					<reportElement style="Detail" positionType="Float" x="2" y="0" width="75" height="18" backcolor="#1A85E2" uuid="14db90ad-97ce-44d8-974a-4136b163265c"/>
 					<textElement textAlignment="Center">
-						<font size="12"/>
+						<font size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{serie_docum}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
 					<reportElement style="Detail" positionType="Float" x="78" y="0" width="91" height="18" backcolor="#1A85E2" uuid="43049990-0168-44a4-abb3-25482932755e"/>
 					<textElement textAlignment="Center">
-						<font size="12"/>
+						<font size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{nro_docum}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
 					<reportElement style="Detail" positionType="Float" x="170" y="0" width="52" height="18" backcolor="#1A85E2" uuid="6487ed52-98a1-4c1a-a023-235511c6f7fa"/>
 					<textElement textAlignment="Center">
-						<font size="12"/>
+						<font size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{moneda}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true">
-					<reportElement style="Detail" positionType="Float" x="223" y="0" width="91" height="18" backcolor="#1A85E2" uuid="072ec9ad-8bec-442e-ad69-5f6eb07b1113"/>
-					<textElement textAlignment="Center">
-						<font size="12"/>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00">
+					<reportElement style="Detail" positionType="Float" x="223" y="0" width="110" height="18" backcolor="#1A85E2" uuid="072ec9ad-8bec-442e-ad69-5f6eb07b1113"/>
+					<textElement textAlignment="Right">
+						<font size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{imp_tot_mo}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
-					<reportElement style="Detail" positionType="Float" x="315" y="0" width="91" height="18" backcolor="#1A85E2" uuid="8b645266-b534-4851-afc1-48e5a6d3637e"/>
+					<reportElement style="Detail" positionType="Float" x="333" y="0" width="90" height="18" backcolor="#1A85E2" uuid="8b645266-b534-4851-afc1-48e5a6d3637e"/>
 					<textElement textAlignment="Center">
-						<font size="12"/>
+						<font size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
 				</textField>
@@ -207,6 +210,21 @@ FROM c_cheques c WHERE cod_docum = 'cheqrec' AND cod_tit = $P{codTit} AND cod_em
 		</band>
 	</pageFooter>
 	<summary>
-		<band splitType="Stretch"/>
+		<band height="30" splitType="Stretch">
+			<textField pattern="#,##0.00">
+				<reportElement x="224" y="0" width="109" height="20" uuid="1c98b6db-787f-4b55-95a7-8bf68d274fc3"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{totImp}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="172" y="0" width="52" height="20" uuid="4afa04e6-7580-4652-814b-d5ba8082a480"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+		</band>
 	</summary>
 </jasperReport>

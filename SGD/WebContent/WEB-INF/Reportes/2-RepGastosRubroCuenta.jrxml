@@ -51,7 +51,7 @@ FROM c_gastos g, m_cuentas c, m_rubros r, m_monedas m
 WHERE  g.cod_cuenta = c.cod_cuenta AND g.cod_emp = c.cod_emp
 AND g.cod_rubro = r.cod_rubro AND g.cod_emp = r.cod_emp
 AND g.cod_moneda = m.cod_moneda AND g.cod_emp = m.cod_emp
-AND g.cod_emp = $P{codEmp} AND g.fecDoc  BETWEEN $P{fecDesde}  AND  $P{fecHasta} AND g.anulado = 'N'
+AND g.cod_emp = $P{codEmp} AND g.fecDoc  BETWEEN $P{fecDesde}  AND  $P{fecHasta} AND anulado = 'N'
 AND (
 	(cuenta = 'IngGastoEmpleado' AND $P{empleado} = 'S')
 	OR (cuenta = 'IngGastoProceso' AND $P{proceso} = 'S')
@@ -60,7 +60,8 @@ AND (
 
 AND (g.estado = 'fact' OR $P{todos} = 'S')
 
-ORDER BY  g.cod_cuenta,  g.cod_rubro, m.cod_moneda]]>
+
+ORDER BY  g.cod_rubro, g.cod_cuenta, m.cod_moneda]]>
 	</queryString>
 	<field name="nro_docum" class="java.lang.Integer">
 		<fieldDescription><![CDATA[]]></fieldDescription>
@@ -89,8 +90,8 @@ ORDER BY  g.cod_cuenta,  g.cod_rubro, m.cod_moneda]]>
 	<variable name="total" class="java.math.BigDecimal" resetType="Group" resetGroup="Moneda" calculation="Sum">
 		<variableExpression><![CDATA[$F{imp_tot_mo}]]></variableExpression>
 	</variable>
-	<group name="Cuenta">
-		<groupExpression><![CDATA[$F{cod_cuenta}]]></groupExpression>
+	<group name="Rubro11">
+		<groupExpression><![CDATA[$F{cod_rubro}]]></groupExpression>
 		<groupHeader>
 			<band height="33">
 				<textField>
@@ -98,10 +99,10 @@ ORDER BY  g.cod_cuenta,  g.cod_rubro, m.cod_moneda]]>
 					<textElement>
 						<font size="14" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA["Cuenta " + $F{nom_cta}]]></textFieldExpression>
+					<textFieldExpression><![CDATA["Rubro " + $F{nom_rubro}]]></textFieldExpression>
 				</textField>
 				<line>
-					<reportElement x="0" y="29" width="325" height="1" uuid="af719157-5432-4432-b84c-bf1e1309ef57"/>
+					<reportElement x="0" y="29" width="388" height="1" uuid="91411fb3-2c6c-47ce-b9d3-84d6da153003"/>
 				</line>
 			</band>
 		</groupHeader>
@@ -109,8 +110,8 @@ ORDER BY  g.cod_cuenta,  g.cod_rubro, m.cod_moneda]]>
 			<band/>
 		</groupFooter>
 	</group>
-	<group name="Rubro">
-		<groupExpression><![CDATA[$F{cod_rubro}]]></groupExpression>
+	<group name="Cuenta">
+		<groupExpression><![CDATA[$F{cod_cuenta}]]></groupExpression>
 		<groupHeader>
 			<band height="21">
 				<textField>
@@ -118,7 +119,7 @@ ORDER BY  g.cod_cuenta,  g.cod_rubro, m.cod_moneda]]>
 					<textElement>
 						<font size="12" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA["Rubro " + $F{nom_rubro}]]></textFieldExpression>
+					<textFieldExpression><![CDATA["Cuenta " + $F{nom_cta}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -163,10 +164,10 @@ ORDER BY  g.cod_cuenta,  g.cod_rubro, m.cod_moneda]]>
 					<textFieldExpression><![CDATA["TOTAL Rubro "+$F{moneda}]]></textFieldExpression>
 				</textField>
 				<line>
-					<reportElement x="388" y="6" width="146" height="1" uuid="90f2b1ba-4464-4723-ae6d-fe2508f6568b"/>
+					<reportElement x="388" y="6" width="125" height="1" uuid="90f2b1ba-4464-4723-ae6d-fe2508f6568b"/>
 				</line>
 				<textField pattern="#,##0.00">
-					<reportElement x="388" y="13" width="111" height="20" uuid="e41a31a0-2fc7-4ec6-9de3-b09060318885"/>
+					<reportElement x="388" y="13" width="100" height="20" uuid="e41a31a0-2fc7-4ec6-9de3-b09060318885"/>
 					<textElement textAlignment="Right">
 						<font size="10" isBold="true"/>
 					</textElement>
@@ -297,7 +298,7 @@ ORDER BY  g.cod_cuenta,  g.cod_rubro, m.cod_moneda]]>
 					<subreportParameterExpression><![CDATA[$P{fecHasta}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "RepGastosCuentaRubro_subreportTotales.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "2-RepGastosRubroCuenta_subreportTotales.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</summary>
