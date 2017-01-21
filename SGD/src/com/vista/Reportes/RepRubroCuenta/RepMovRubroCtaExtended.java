@@ -1,5 +1,6 @@
-package com.vista.Reportes.RepCuentaRubro;
+package com.vista.Reportes.RepRubroCuenta;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,10 +30,17 @@ import com.vista.Variables;
 import com.vista.Validaciones.Validaciones;
 
 
-public class RepMovCtaRubroExtended extends RepMovCtaRubro implements IBusqueda, IMensaje{
+public class RepMovRubroCtaExtended extends RepMovRubroCta implements IBusqueda, IMensaje{
 
 	MySub sub = new MySub("60%","75%");
 	
+	private BeanFieldGroup<IngresoCobroVO> fieldGroup;
+	
+	private RepChequeClienteControlador controlador;
+	private String operacion;
+	
+	private IngresoCobroDetalleVO formSelecccionado; /*Variable utilizada cuando se selecciona
+	 										  un detalle, para poder quitarlo de la lista*/
 	UsuarioPermisosVO permisoAux;
 	CotizacionVO cotizacion =  new CotizacionVO();
 	Double cotizacionVenta = null;
@@ -52,8 +60,9 @@ public class RepMovCtaRubroExtended extends RepMovCtaRubro implements IBusqueda,
 	 *
 	 */
 	@SuppressWarnings({ "unchecked", "deprecation" })
-	public RepMovCtaRubroExtended(){
+	public RepMovRubroCtaExtended(){
 	
+	this.controlador = new RepChequeClienteControlador();
 		
 	/*Inicializamos los permisos para el usuario*/
 	this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
@@ -82,8 +91,8 @@ public class RepMovCtaRubroExtended extends RepMovCtaRubro implements IBusqueda,
 					  
 					  if( this.fecDesde.getValue()!= null 
 						&& this.fecHasta.getValue()!= null
-						&& this.alMenosUnCheckChecked()
-						&& this.tipoReporte.getValue() != null && this.tipoReporte.getValue() != "")
+						&& this.tipoReporte.getValue() != null && this.tipoReporte.getValue() != ""
+						&& this.alMenosUnCheckChecked())
 					  {
 					  try{
 					  
@@ -112,14 +121,16 @@ public class RepMovCtaRubroExtended extends RepMovCtaRubro implements IBusqueda,
 					        fillParameters.put("REPORTS_DIR",basepath);
 					      
 						  }catch(Exception e) {}
-					     
-					  String reporte = tipoReporte.getValue().toString().trim().equals("Detalle") ? "/RepGastosCuentaRubro.jrxml" : "/3-RepGastosCuentaRubroTotales.jrxml";
-					  String nombreArchivo  = tipoReporte.getValue().toString().trim().equals("Detalle")? "GastosCuentaRubro" : "GastosCuentaRubroTotales";
+					    
 					  
-						StreamResource myResource = report.prepareForPdfReportReturn( basepath + reporte,
-													nombreArchivo,
-									                fillParameters);
+					  String reporte = tipoReporte.getValue().toString().trim().equals("Detalle") ? "/2-RepGastosRubroCuenta.jrxml" : "/2-RepGastosRubroTotales.jrxml";
+					  String nombreArchivo  = tipoReporte.getValue().toString().trim().equals("Detalle")? "GastosRubroCuenta" : "GastosRubroTotales";
 					  
+					        
+					  StreamResource myResource = report.prepareForPdfReportReturn( basepath + reporte,
+								nombreArchivo,
+				                fillParameters);
+
 						
 				        Embedded e = new Embedded();
 				        e.setSizeFull();

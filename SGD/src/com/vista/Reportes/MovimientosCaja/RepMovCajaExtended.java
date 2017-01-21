@@ -1,13 +1,21 @@
-package com.vista.Reportes.RepCuentaRubro;
+package com.vista.Reportes.MovimientosCaja;
+
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+
 import com.Reportes.util.ReportsUtil;
 import com.controladores.reportes.RepChequeClienteControlador;
+import com.excepciones.ConexionException;
+import com.excepciones.InicializandoException;
+import com.excepciones.NoTienePermisosException;
+import com.excepciones.ObteniendoPermisosException;
+import com.excepciones.Monedas.ObteniendoMonedaException;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
+import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.StreamResource;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.Embedded;
@@ -26,13 +34,21 @@ import com.vista.Mensajes;
 import com.vista.MySub;
 import com.vista.PermisosUsuario;
 import com.vista.Variables;
+import com.vista.VariablesPermisos;
 import com.vista.Validaciones.Validaciones;
 
 
-public class RepMovCtaRubroExtended extends RepMovCtaRubro implements IBusqueda, IMensaje{
+public class RepMovCajaExtended extends RepMovCajaViews implements IBusqueda, IMensaje{
 
 	MySub sub = new MySub("60%","75%");
 	
+	private BeanFieldGroup<IngresoCobroVO> fieldGroup;
+	
+	private RepChequeClienteControlador controlador;
+	private String operacion;
+	
+	private IngresoCobroDetalleVO formSelecccionado; /*Variable utilizada cuando se selecciona
+	 										  un detalle, para poder quitarlo de la lista*/
 	UsuarioPermisosVO permisoAux;
 	CotizacionVO cotizacion =  new CotizacionVO();
 	Double cotizacionVenta = null;
@@ -52,14 +68,16 @@ public class RepMovCtaRubroExtended extends RepMovCtaRubro implements IBusqueda,
 	 *
 	 */
 	@SuppressWarnings({ "unchecked", "deprecation" })
-	public RepMovCtaRubroExtended(){
+	public RepMovCajaExtended(){
 	
+	this.controlador = new RepChequeClienteControlador();
 		
 	/*Inicializamos los permisos para el usuario*/
 	this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
 	
 	this.inicializarForm();
-
+	
+	
 	/*Inicializamos listener de boton aceptar*/
 	this.aceptar.addClickListener(click -> {
 			
@@ -80,25 +98,18 @@ public class RepMovCtaRubroExtended extends RepMovCtaRubro implements IBusqueda,
 					  
 					  HashMap<String, Object> fillParameters=new HashMap<String, Object>();
 					  
-					  if( this.fecDesde.getValue()!= null 
-						&& this.fecHasta.getValue()!= null
-						&& this.alMenosUnCheckChecked()
-						&& this.tipoReporte.getValue() != null && this.tipoReporte.getValue() != "")
+					  if(	  this.fecDesde.getValue()!= null 
+							  && this.fecHasta.getValue()!= null
+							  && this.comboMoneda.getValue() != null 
+							  )
 					  {
 					  try{
 					  
-						  	String strConProceso = chkProceso.getValue() == true ? "S" : "N";
-						  	String strConEmpleado = chkEmpleado.getValue() == true ? "S" : "N";
-						  	String strConOficina = chkOficina.getValue() == true ? "S" : "N";
-						  	String strTodos = chkSoloFacturables.getValue() == true ? "N" : "S";
-						  			
-						  	fillParameters.put("proceso",strConProceso);
-						  	fillParameters.put("empleado",strConEmpleado);
-						  	fillParameters.put("oficina",strConOficina);
-						  	fillParameters.put("todos",strTodos);
-						  
+						  String strConProceso = chkNoConciliados.getValue() == true ? "S" : "N";
+							fillParameters.put("incNoConciliados", strConProceso);
+					        
 					        fillParameters.put("codEmp",this.permisos.getCodEmp());
-					       
+					        
 					        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 			                String fecDesdeStr = format.format(fecDesde.getValue());
 			                String fecHastaStr = format.format(fecHasta.getValue());
@@ -108,16 +119,15 @@ public class RepMovCtaRubroExtended extends RepMovCtaRubro implements IBusqueda,
 					        
 					        fillParameters.put("fecDesde", convertFromJAVADateToSQLDate(fecDesde.getValue()));
 					        fillParameters.put("fecHasta", convertFromJAVADateToSQLDate(fecHasta.getValue()));
+					        fillParameters.put("codMoneda", this.getCodMonedaSeleccionada());
 					        
 					        fillParameters.put("REPORTS_DIR",basepath);
 					      
 						  }catch(Exception e) {}
-					     
-					  String reporte = tipoReporte.getValue().toString().trim().equals("Detalle") ? "/RepGastosCuentaRubro.jrxml" : "/3-RepGastosCuentaRubroTotales.jrxml";
-					  String nombreArchivo  = tipoReporte.getValue().toString().trim().equals("Detalle")? "GastosCuentaRubro" : "GastosCuentaRubroTotales";
-					  
-						StreamResource myResource = report.prepareForPdfReportReturn( basepath + reporte,
-													nombreArchivo,
+					        
+					        
+						StreamResource myResource = report.prepareForPdfReportReturn( basepath+"/5-MovimientosCaja.jrxml",
+									                "MovimientosCaja",
 									                fillParameters);
 					  
 						
@@ -160,12 +170,68 @@ public class RepMovCtaRubroExtended extends RepMovCtaRubro implements IBusqueda,
 		
 	}
 	
+	
 
 	public  void inicializarForm(){
+		
+		this.inicializarComboMoneda(null);
+		
 		
 	}
 	
 	/////////////////////////////////////////////////
+	
+	
+public void inicializarComboMoneda(String cod){
+		
+		//this.comboMoneda = new ComboBox();
+		BeanItemContainer<MonedaVO> monedasObj = new BeanItemContainer<MonedaVO>(MonedaVO.class);
+		MonedaVO moneda = new MonedaVO();
+		ArrayList<MonedaVO> lstMonedas = new ArrayList<MonedaVO>();
+		UsuarioPermisosVO permisosAux;
+		
+		try {
+			permisosAux = 
+					new UsuarioPermisosVO(this.permisos.getCodEmp(),
+							this.permisos.getUsuario(),
+							VariablesPermisos.FORMULARIO_REP_CHEQUE_CLIENTES,
+							VariablesPermisos.OPERACION_LEER);
+			
+			lstMonedas = this.controlador.getMonedas(permisosAux);
+			
+		} catch (ObteniendoMonedaException | InicializandoException | ConexionException | ObteniendoPermisosException | NoTienePermisosException e) {
+
+			Mensajes.mostrarMensajeError(e.getMessage());
+		}
+		
+		for (MonedaVO monedaVO : lstMonedas) {
+			
+			monedaVO.setCotizacion(1);
+			monedasObj.addBean(monedaVO);
+			
+			if(cod != null){
+				if(cod.equals(monedaVO.getCodMoneda())){
+					moneda = monedaVO;
+				}
+			}
+		}
+		
+		
+		this.comboMoneda.setContainerDataSource(monedasObj);
+		this.comboMoneda.setItemCaptionPropertyId("descripcion");
+		
+		
+		if(cod!=null)
+		{
+			try{
+				this.comboMoneda.setReadOnly(false);
+				this.comboMoneda.setValue(moneda);
+				this.comboMoneda.setReadOnly(true);
+			}catch(Exception e)
+			{}
+		}
+		
+	}
 	
 	@Override
 	public void setInfo(Object datos) {
@@ -178,11 +244,26 @@ public class RepMovCtaRubroExtended extends RepMovCtaRubro implements IBusqueda,
 		
 		if(datos instanceof TitularVO){
 			titularVO = (TitularVO) datos;
-		
 		}
 		
 	}
 
+	private String getCodMonedaSeleccionada(){
+		
+		String codMoneda = null;
+		
+		//Moneda
+		if(this.comboMoneda.getValue() != null){
+			MonedaVO auxMoneda = new MonedaVO();
+			auxMoneda = (MonedaVO) this.comboMoneda.getValue();
+			codMoneda = auxMoneda.getCodMoneda();
+		}
+		
+		return codMoneda;
+	}
+
+	
+	
 	@Override
 	public void setInfoLst(ArrayList<Object> lstDatos) {
 		//TODO
@@ -218,19 +299,4 @@ public class RepMovCtaRubroExtended extends RepMovCtaRubro implements IBusqueda,
         }
         return sqlDate;
     }
-	
-	/*Retorna true si al menos un chek esta checked*/
-	private boolean alMenosUnCheckChecked(){
-		
-		boolean ok = true;
-		
-		if(chkProceso.getValue().booleanValue() == false &&
-			chkEmpleado.getValue().booleanValue() == false &&
-			chkOficina.getValue().booleanValue() == false){
-			
-			ok = false;
-		}
-		
-		return ok;
-	}
 }

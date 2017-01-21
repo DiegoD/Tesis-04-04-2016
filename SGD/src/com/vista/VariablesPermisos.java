@@ -48,6 +48,8 @@ public final class VariablesPermisos {
 	public static final String FORMULARIO_REP_ESTADO_CUENTA = "RepEstadoCuenta";
 	public static final String FORMULARIO_REP_ESTADO_CUENTA_TOTALES = "RepEstadoCtaTotales";
 	public static final String FORMULARIO_REP_MOVIMIENTOS_POR_CUENTA = "RepMovCtaRubro";
+	public static final String FORMULARIO_REP_MOVIMIENTOS_POR_RUBRO = "RepMovRubroCta";
+	public static final String FORMULARIO_REP_MOVIMIENTOS_CAJA	 = "RepMovCaja";
 	
 	/*Variables para las operaciones*/
 	public static final String OPERACION_NUEVO_EDITAR = "NUEVO_EDITAR";
