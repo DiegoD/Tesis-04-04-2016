@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SaldoAnterior" language="groovy" pageWidth="199" pageHeight="752" columnWidth="199" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="ef74f72a-dbdc-4355-b455-6e79b915bc73">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="codTit" class="java.lang.String"/>
+	<parameter name="codEmp" class="java.lang.String"/>
+	<parameter name="fecDesde" class="java.util.Date"/>
+	<parameter name="codMoneda" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="codBco" class="java.lang.String"/>
+	<parameter name="codCta" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT SUM(importe) saldo, simbolo AS moneda FROM v_rep_movimientos_bco
+	WHERE cod_emp = $P{codEmp}
+	AND fecha < $P{fecDesde}
+	AND cod_bco = $P{codBco} AND cod_ctabco = $P{codCta}]]>
+	</queryString>
+	<field name="saldo" class="java.math.BigDecimal"/>
+	<field name="moneda" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="saldoAnt" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$F{saldo}]]></variableExpression>
+	</variable>
+	<pageHeader>
+		<band height="25" splitType="Stretch">
+			<textField pattern="#,##0.00">
+				<reportElement x="101" y="0" width="98" height="23" uuid="784f7a48-ba58-4734-8294-94e4e3688e21"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(($F{saldo} == null) ? new Double("0") : $F{saldo})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="0" width="70" height="23" uuid="fcf4c9b6-02b0-4cc3-a970-3077c9bf2bc7"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Saldo anterior]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="71" y="0" width="30" height="23" uuid="3587f508-3325-44b1-8e5d-59533cff392a"/>
+				<textFieldExpression><![CDATA[$F{moneda}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<summary>
+		<band height="1"/>
+	</summary>
+</jasperReport>

@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RepChequesClientes" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="beb2c1cc-874d-46af-8109-6cf506587581">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Title" forecolor="#FFFFFF" fontName="Times New Roman" fontSize="50" isBold="false" pdfFontName="Times-Bold"/>
+	<style name="SubTitle" forecolor="#CCCCCC" fontName="Times New Roman" fontSize="18" isBold="false" pdfFontName="Times-Roman"/>
+	<style name="Column header" forecolor="#666666" fontName="Times New Roman" fontSize="14" isBold="true" pdfFontName="Times-Roman"/>
+	<style name="Detail" mode="Transparent" fontName="Times New Roman" pdfFontName="Times-Roman"/>
+	<style name="Row" mode="Transparent" fontName="Times New Roman" pdfFontName="Times-Roman">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style mode="Opaque" backcolor="#F0EFEF"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="codEmp" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fecDesde" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fecHasta" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="nomTit" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="codMoneda" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="REPORTS_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="periodo" class="java.lang.String"/>
+	<parameter name="codTit" class="java.lang.String"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{REPORTS_DIR} + "/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="codBco" class="java.lang.String"/>
+	<parameter name="codCta" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+documento
+,DATE_FORMAT(fecha , '%d-%m-%Y') fecha
+,mov
+,descripcion
+,debe
+,haber
+,simbolo as moneda
+ FROM v_rep_movimientos_bco
+ WHERE cod_emp = $P{codEmp}
+ AND fecha BETWEEN $P{fecDesde} AND $P{fecHasta} AND cod_bco = $P{codBco} AND cod_ctabco = $P{codCta}]]>
+	</queryString>
+	<field name="documento" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fecha" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="mov" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="descripcion" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="debe" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="haber" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="moneda" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="saldoAntSb" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="114" splitType="Stretch">
+			<frame>
+				<reportElement mode="Opaque" x="0" y="0" width="451" height="95" forecolor="#0033CC" backcolor="#0033CC" uuid="c251db9f-f778-41e8-b4d6-dc47149157f6"/>
+				<staticText>
+					<reportElement style="Title" mode="Transparent" x="0" y="0" width="370" height="45" forecolor="#FFFFFF" backcolor="#0033CC" uuid="e1b8c498-c2c4-47bf-a0f5-32be0f7267f1"/>
+					<textElement>
+						<font size="28" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Movimientos de banco]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="157" y="45" width="294" height="29" forecolor="#CCCCCC" uuid="1c183dff-e7ee-4558-b778-229589eda54b"/>
+					<textElement>
+						<font fontName="Times New Roman" size="16"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{nomTit}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="157" y="74" width="294" height="21" forecolor="#CCCCCC" uuid="21af6863-06f7-44e5-9440-2a19768a9608"/>
+					<textElement>
+						<font fontName="Times New Roman" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{periodo}]]></textFieldExpression>
+				</textField>
+			</frame>
+			<image>
+				<reportElement x="464" y="0" width="89" height="81" uuid="ec45969f-1b51-4fc9-b21a-35b64a1e997b"/>
+				<imageExpression><![CDATA[$P{REPORTS_DIR} + "/logojasper.jpg"]]></imageExpression>
+			</image>
+			<subreport>
+				<reportElement x="157" y="95" width="83" height="19" uuid="c84412e3-975d-4ac3-a009-6d6b4182d13a"/>
+				<subreportParameter name="codBco">
+					<subreportParameterExpression><![CDATA[$P{codBco}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORTS_DIR">
+					<subreportParameterExpression><![CDATA[$P{REPORTS_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="codTit">
+					<subreportParameterExpression><![CDATA[$P{codTit}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="codMoneda">
+					<subreportParameterExpression><![CDATA[$P{codMoneda}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="codCta">
+					<subreportParameterExpression><![CDATA[$P{codCta}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="codEmp">
+					<subreportParameterExpression><![CDATA[$P{codEmp}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="fecDesde">
+					<subreportParameterExpression><![CDATA[$P{fecDesde}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="fecHasta">
+					<subreportParameterExpression><![CDATA[$P{fecHasta}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<returnValue subreportVariable="saldoAnt" toVariable="saldoAntSb"/>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "6-SaldoAnteriorCta.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="26" splitType="Stretch">
+			<staticText>
+				<reportElement style="Column header" x="0" y="8" width="95" height="18" forecolor="#000000" uuid="d7e320f5-d900-4ac4-8e93-7342fa5ad41e"/>
+				<textElement>
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Documento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="95" y="8" width="80" height="18" forecolor="#000000" uuid="0c0b84a8-031a-4bc2-852f-e1ce5ca4cced"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Fecha]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="175" y="8" width="157" height="18" forecolor="#000000" uuid="13d67d0c-7e43-4c4c-96ed-27eecb4ae506"/>
+				<textElement>
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Descripción]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="332" y="8" width="56" height="18" forecolor="#000000" uuid="22db6754-4ec8-4ecc-8632-8b3536164be5"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Moneda]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="388" y="8" width="81" height="18" forecolor="#000000" uuid="beb87338-debc-4dad-af0b-83c3003ca5b7"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Entradas]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="469" y="8" width="81" height="18" forecolor="#000000" uuid="2521df5c-3dad-4992-a960-e461752ac863"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Salidas]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<frame>
+				<reportElement style="Row" mode="Opaque" x="0" y="0" width="555" height="18" uuid="71c4d15f-0fa7-4fe1-a2f2-d9e6a02b6979"/>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="Detail" positionType="Float" x="2" y="0" width="93" height="18" backcolor="#1A85E2" uuid="14db90ad-97ce-44d8-974a-4136b163265c"/>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{documento}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="Detail" positionType="Float" x="95" y="0" width="80" height="18" backcolor="#1A85E2" uuid="43049990-0168-44a4-abb3-25482932755e"/>
+					<textElement textAlignment="Center">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="Detail" positionType="Float" x="175" y="0" width="157" height="18" backcolor="#1A85E2" uuid="6487ed52-98a1-4c1a-a023-235511c6f7fa"/>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{descripcion}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="Detail" positionType="Float" x="332" y="0" width="56" height="18" backcolor="#1A85E2" uuid="8b645266-b534-4851-afc1-48e5a6d3637e"/>
+					<textElement textAlignment="Center">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{moneda}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement style="Detail" positionType="Float" x="388" y="0" width="81" height="18" backcolor="#1A85E2" uuid="3399f735-dff8-4ef6-8701-2e634660e69b"/>
+					<textElement textAlignment="Center">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{haber}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement style="Detail" positionType="Float" x="469" y="0" width="81" height="18" backcolor="#1A85E2" uuid="19649327-e8f1-441f-b809-669e6b580a4d"/>
+					<textElement textAlignment="Center">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{debe}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="25" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1" uuid="51f1790b-dc8a-4987-b49b-cb9572aa69bb"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="25" splitType="Stretch">
+			<frame>
+				<reportElement mode="Opaque" x="0" y="0" width="555" height="25" forecolor="#D0B48E" backcolor="#0033CC" uuid="549920fb-ff22-4da9-acc9-5f8c0001a21c"/>
+				<textField evaluationTime="Report">
+					<reportElement style="Column header" x="513" y="0" width="40" height="20" forecolor="#FFFFFF" uuid="6004a4d8-04da-427e-b143-313e9aeb6132"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="Column header" x="433" y="0" width="80" height="20" forecolor="#FFFFFF" uuid="11002ecd-95df-437a-b54e-7232dd501c77"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="36" splitType="Stretch">
+			<subreport>
+				<reportElement x="369" y="0" width="162" height="36" uuid="b222d494-a9d7-4801-9927-848846ae552b"/>
+				<subreportParameter name="codBco">
+					<subreportParameterExpression><![CDATA[$P{codBco}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORTS_DIR">
+					<subreportParameterExpression><![CDATA[$P{REPORTS_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="codCta">
+					<subreportParameterExpression><![CDATA[$P{codCta}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="codEmp">
+					<subreportParameterExpression><![CDATA[$P{codEmp}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="fecDesde">
+					<subreportParameterExpression><![CDATA[$P{fecDesde}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="fecHasta">
+					<subreportParameterExpression><![CDATA[$P{fecHasta}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "6-RepMovimietosBancoxCta_total.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</summary>
+</jasperReport>

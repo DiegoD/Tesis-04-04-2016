@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="6-RepMovimietosBancoxCta_total" language="groovy" pageWidth="190" pageHeight="802" columnWidth="190" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="b4fbc04f-4c63-4438-abfc-1db01620d2bf">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="codEmp" class="java.lang.String"/>
+	<parameter name="fecDesde" class="java.util.Date"/>
+	<parameter name="fecHasta" class="java.util.Date"/>
+	<parameter name="codBco" class="java.lang.String"/>
+	<parameter name="codCta" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT (importe + saldoAnt) importe FROM (
+
+SELECT
+COALESCE((SELECT
+SUM(importe)
+ FROM v_rep_movimientos_bco
+ WHERE cod_emp = $P{codEmp}
+ AND fecha BETWEEN $P{fecDesde}  AND $P{fecHasta}   AND cod_bco = $P{codBco} AND cod_ctabco = $P{codCta}),0) importe
+
+,COALESCE((SELECT SUM(importe) saldo FROM v_rep_movimientos_bco
+	WHERE cod_emp = $P{codEmp}
+	AND fecha < $P{fecDesde}
+	AND cod_bco = $P{codBco} AND cod_ctabco = $P{codCta} ),0) saldoAnt
+
+
+)AUX]]>
+	</queryString>
+	<field name="importe" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="1" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="30" splitType="Stretch">
+			<textField pattern="#,##0.00">
+				<reportElement x="83" y="10" width="100" height="20" uuid="3fa6e212-a53c-42a3-94c6-f9442f2c0bce"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{importe}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="3" y="10" width="80" height="20" uuid="e618bf26-7d7f-4058-931d-acc2832fd7a3"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<line>
+				<reportElement x="72" y="6" width="118" height="1" uuid="b6ef39a1-ef59-4955-bbe7-f8d6a55ddc81"/>
+			</line>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>
