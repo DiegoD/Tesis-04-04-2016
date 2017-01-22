@@ -70,6 +70,7 @@ public class Menu extends HorizontalLayout {
 	protected Button btnMovPorCuenta;
 	protected Button btnMovPorRubro;
 	protected Button btnMovCaja;
+	protected Button btnMovBco;
 	protected VerticalLayout content;
 
 	public Menu() {

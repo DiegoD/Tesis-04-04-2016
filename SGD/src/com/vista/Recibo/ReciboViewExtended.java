@@ -735,7 +735,7 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 					if(ingCobroVO.getmPago().equals("transferencia"))
 					{
 						ingCobroVO.setCodDocRef("tranrec");
-						
+						ingCobroVO.setNroDocRef(nroDocRef.getValue().trim());
 						ingCobroVO.setSerieDocRef("0");
 						
 						if(operacion.equals(Variables.OPERACION_NUEVO) || 
@@ -799,8 +799,8 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 					}else
 					{
 						
-						ingCobroVO.setCodDocRef("0");
-						ingCobroVO.setNroDocRef("0");
+						ingCobroVO.setCodDocRef("tranrec");
+						ingCobroVO.setNroDocRef(nroDocRef.getValue().trim());
 						ingCobroVO.setSerieDocRef("0");
 					}
 												

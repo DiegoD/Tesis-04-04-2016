@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.Reportes.util.ReportsUtil;
-import com.controladores.reportes.RepChequeClienteControlador;
+import com.controladores.reportes.ReportesControlador;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.server.StreamResource;
 import com.vaadin.server.VaadinService;
@@ -36,7 +36,7 @@ public class RepMovRubroCtaExtended extends RepMovRubroCta implements IBusqueda,
 	
 	private BeanFieldGroup<IngresoCobroVO> fieldGroup;
 	
-	private RepChequeClienteControlador controlador;
+	private ReportesControlador controlador;
 	private String operacion;
 	
 	private IngresoCobroDetalleVO formSelecccionado; /*Variable utilizada cuando se selecciona
@@ -62,7 +62,7 @@ public class RepMovRubroCtaExtended extends RepMovRubroCta implements IBusqueda,
 	@SuppressWarnings({ "unchecked", "deprecation" })
 	public RepMovRubroCtaExtended(){
 	
-	this.controlador = new RepChequeClienteControlador();
+	this.controlador = new ReportesControlador();
 		
 	/*Inicializamos los permisos para el usuario*/
 	this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");

@@ -831,8 +831,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 					}else
 					{
 						
-						ingCobroVO.setCodDocRef("0");
-						ingCobroVO.setNroDocRef("0");
+						ingCobroVO.setCodDocRef("tranrec");
+						ingCobroVO.setNroDocRef(nroDocRef.getValue().trim());
 						ingCobroVO.setSerieDocRef("0");
 					}
 												

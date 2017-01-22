@@ -44,6 +44,7 @@ import com.vista.Reportes.EstadoCuenta.RepEstadoCuentaViewExtended;
 import com.vista.Reportes.EstadoCuentaTotales.RepEstadoCuentaTotalesViewExtended;
 import com.vista.Reportes.GastosPendCobro.GtosPendCobroxClienteViewExtended;
 import com.vista.Reportes.IVA.RepIvaViewExtended;
+import com.vista.Reportes.MovimientoBancos.RepMovBancoViewExtended;
 import com.vista.Reportes.MovimientosCaja.RepMovCajaExtended;
 import com.vista.Reportes.RepCuentaRubro.RepMovCtaRubroExtended;
 import com.vista.Reportes.RepRubroCuenta.RepMovRubroCtaExtended;
@@ -892,6 +893,31 @@ public class MenuExtended extends Menu{
 			}
 		});
 		
+		this.btnMovBco.addClickListener(click -> {
+			
+			setSizeFull();
+			
+			this.content.removeAllComponents();
+			
+			try {
+				
+				
+				RepMovBancoViewExtended form = new RepMovBancoViewExtended(); 
+				
+				sub = new MySub("45%","40%");
+				
+				sub.setModal(true);
+				
+				sub.setVista(form);
+				
+				UI.getCurrent().addWindow(sub);
+				
+				
+			} catch (Exception e) {
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}
+		});
+		
 	}
 	
 	
@@ -1213,6 +1239,7 @@ public class MenuExtended extends Menu{
 			   formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_REP_MOVIMIENTOS_POR_CUENTA) ||
 			   formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_REP_MOVIMIENTOS_POR_RUBRO) ||
 			   formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_REP_MOVIMIENTOS_CAJA) ||
+			   formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_REP_MOVIMIENTOS_BANCO) ||
 			   formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_REP_CHEQUES_PENDIENTES_DEPOSITAR)) 
 				
 			{
@@ -1295,6 +1322,13 @@ public class MenuExtended extends Menu{
 						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_REP_MOVIMIENTOS_CAJA, VariablesPermisos.OPERACION_LEER)){
 							this.habilitarReporteMovimientosCaja(); 
 							this.layoutMenu.addComponent(this.btnMovCaja); 
+						}
+					break;
+					
+					case VariablesPermisos.FORMULARIO_REP_MOVIMIENTOS_BANCO : 
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_REP_MOVIMIENTOS_BANCO, VariablesPermisos.OPERACION_LEER)){
+							this.habilitarReporteMovimientosBanco(); 
+							this.layoutMenu.addComponent(this.btnMovBco); 
 						}
 					break;
 				
@@ -1430,6 +1464,9 @@ public class MenuExtended extends Menu{
 		
 		this.btnMovCaja.setVisible(false);
 		this.btnMovCaja.setEnabled(false);
+		
+		this.btnMovBco.setVisible(false);
+		this.btnMovBco.setEnabled(false);
 	}
 	
 	
@@ -1682,6 +1719,12 @@ public class MenuExtended extends Menu{
 	{
 		this.btnMovCaja.setVisible(true);
 		this.btnMovCaja.setEnabled(true);
+	}
+	
+	private void habilitarReporteMovimientosBanco()
+	{
+		this.btnMovBco.setVisible(true);
+		this.btnMovBco.setEnabled(true);
 	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////////

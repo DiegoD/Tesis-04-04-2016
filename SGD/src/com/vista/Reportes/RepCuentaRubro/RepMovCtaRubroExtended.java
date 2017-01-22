@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.Reportes.util.ReportsUtil;
-import com.controladores.reportes.RepChequeClienteControlador;
+import com.controladores.reportes.ReportesControlador;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.server.StreamResource;
 import com.vaadin.server.VaadinService;

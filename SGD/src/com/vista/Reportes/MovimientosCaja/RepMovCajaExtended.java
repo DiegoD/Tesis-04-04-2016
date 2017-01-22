@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 
 import com.Reportes.util.ReportsUtil;
-import com.controladores.reportes.RepChequeClienteControlador;
+import com.controladores.reportes.ReportesControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.InicializandoException;
 import com.excepciones.NoTienePermisosException;
@@ -44,7 +44,7 @@ public class RepMovCajaExtended extends RepMovCajaViews implements IBusqueda, IM
 	
 	private BeanFieldGroup<IngresoCobroVO> fieldGroup;
 	
-	private RepChequeClienteControlador controlador;
+	private ReportesControlador controlador;
 	private String operacion;
 	
 	private IngresoCobroDetalleVO formSelecccionado; /*Variable utilizada cuando se selecciona
@@ -70,7 +70,7 @@ public class RepMovCajaExtended extends RepMovCajaViews implements IBusqueda, IM
 	@SuppressWarnings({ "unchecked", "deprecation" })
 	public RepMovCajaExtended(){
 	
-	this.controlador = new RepChequeClienteControlador();
+	this.controlador = new ReportesControlador();
 		
 	/*Inicializamos los permisos para el usuario*/
 	this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");

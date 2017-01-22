@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.Reportes.util.ReportsUtil;
-import com.controladores.reportes.RepChequeClienteControlador;
+import com.controladores.reportes.ReportesControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.InicializandoException;
 import com.excepciones.NoTienePermisosException;
@@ -48,7 +48,7 @@ public class RepIvaViewExtended extends RepIvaViews implements IBusqueda, IMensa
 	
 	private BeanFieldGroup<IngresoCobroVO> fieldGroup;
 	
-	private RepChequeClienteControlador controlador;
+	private ReportesControlador controlador;
 	private String operacion;
 	
 	private IngresoCobroDetalleVO formSelecccionado; /*Variable utilizada cuando se selecciona
@@ -74,7 +74,7 @@ public class RepIvaViewExtended extends RepIvaViews implements IBusqueda, IMensa
 	@SuppressWarnings({ "unchecked", "deprecation" })
 	public RepIvaViewExtended(){
 	
-	this.controlador = new RepChequeClienteControlador();
+	this.controlador = new ReportesControlador();
 		
 	/*Inicializamos los permisos para el usuario*/
 	this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");

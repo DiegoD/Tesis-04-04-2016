@@ -11,7 +11,7 @@ import java.util.Hashtable;
 
 import com.Reportes.util.ReportsUtil;
 import com.controladores.IngresoCobroOtroControlador;
-import com.controladores.reportes.RepChequeClienteControlador;
+import com.controladores.reportes.ReportesControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.InicializandoException;
 import com.excepciones.NoTienePermisosException;
@@ -60,7 +60,7 @@ public class RepEstadoCuentaViewExtended extends RepEstadoCuentaViews implements
 	
 	private BeanFieldGroup<IngresoCobroVO> fieldGroup;
 	
-	private RepChequeClienteControlador controlador;
+	private ReportesControlador controlador;
 	private String operacion;
 	
 	private IngresoCobroDetalleVO formSelecccionado; /*Variable utilizada cuando se selecciona
@@ -86,7 +86,7 @@ public class RepEstadoCuentaViewExtended extends RepEstadoCuentaViews implements
 	@SuppressWarnings({ "unchecked", "deprecation" })
 	public RepEstadoCuentaViewExtended(){
 	
-	this.controlador = new RepChequeClienteControlador();
+	this.controlador = new ReportesControlador();
 		
 	/*Inicializamos los permisos para el usuario*/
 	this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
