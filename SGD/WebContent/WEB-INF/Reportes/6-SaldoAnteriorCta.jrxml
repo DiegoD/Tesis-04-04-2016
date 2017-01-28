@@ -11,11 +11,12 @@
 	</parameter>
 	<parameter name="codBco" class="java.lang.String"/>
 	<parameter name="codCta" class="java.lang.String"/>
+	<parameter name="conciliados" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT SUM(importe) saldo, simbolo AS moneda FROM v_rep_movimientos_bco
 	WHERE cod_emp = $P{codEmp}
 	AND fecha < $P{fecDesde}
-	AND cod_bco = $P{codBco} AND cod_ctabco = $P{codCta}]]>
+	AND cod_bco = $P{codBco} AND cod_ctabco = $P{codCta}  AND (conciliado = $P{conciliados} OR $P{conciliados} = '0')]]>
 	</queryString>
 	<field name="saldo" class="java.math.BigDecimal"/>
 	<field name="moneda" class="java.lang.String">

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RepChequesClientes" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="beb2c1cc-874d-46af-8109-6cf506587581">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RepChequesClientes" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isSummaryNewPage="true" isSummaryWithPageHeaderAndFooter="true" uuid="beb2c1cc-874d-46af-8109-6cf506587581">
 	<property name="ireport.zoom" value="1.0"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="5"/>
 	<property name="ireport.y" value="0"/>
 	<style name="Title" forecolor="#FFFFFF" fontName="Times New Roman" fontSize="50" isBold="false" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#CCCCCC" fontName="Times New Roman" fontSize="18" isBold="false" pdfFontName="Times-Roman"/>
@@ -34,6 +34,9 @@
 	<parameter name="REPORTS_DIR" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\Users\\User\\Tesis3\\Repositorio\\trunk\\SGD\\WebContent\\WEB-INF\\Reportes\\"]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT
 nro_docum
@@ -54,7 +57,7 @@ g.nro_docum
 ,g.imp_tot_mo
 ,(SELECT imp_tot_mo FROM sa_docum sa WHERE  sa.cod_docum = g.cod_docum AND sa.serie_docum = g.serie_docum AND sa.nro_docum = g.nro_docum AND sa.cod_emp = g.cod_emp) saldo
 FROM c_gastos g,  c_procesos c
-WHERE g.cod_proceso = c.cod_proceso AND g.cod_emp = c.cod_emp
+WHERE g.cod_proceso = c.cod_proceso AND (g.cod_emp = c.cod_emp OR g.cod_proceso = '0')
 AND g.cod_tit = $P{codTit} AND g.estado <> 'nocobr' AND g.anulado = 'N' AND g.cod_emp = $P{codEmp} AND g.fecDoc <= $P{fecHasta} AND ( g.cod_moneda = $P{codMoneda} OR $P{codMoneda} = 'TODAS' ) ) AUX WHERE saldo > 0 ORDER BY saldo DESC]]>
 	</queryString>
 	<field name="nro_docum" class="java.lang.Integer">
@@ -91,7 +94,7 @@ AND g.cod_tit = $P{codTit} AND g.estado <> 'nocobr' AND g.anulado = 'N' AND g.co
 	<title>
 		<band height="114" splitType="Stretch">
 			<frame>
-				<reportElement mode="Opaque" x="0" y="0" width="451" height="95" forecolor="#0033CC" backcolor="#0033CC" uuid="c251db9f-f778-41e8-b4d6-dc47149157f6"/>
+				<reportElement mode="Opaque" x="0" y="0" width="713" height="95" forecolor="#0033CC" backcolor="#0033CC" uuid="c251db9f-f778-41e8-b4d6-dc47149157f6"/>
 				<staticText>
 					<reportElement style="Title" mode="Transparent" x="0" y="0" width="370" height="66" forecolor="#FFFFFF" backcolor="#0033CC" uuid="e1b8c498-c2c4-47bf-a0f5-32be0f7267f1"/>
 					<textElement>
@@ -115,7 +118,7 @@ AND g.cod_tit = $P{codTit} AND g.estado <> 'nocobr' AND g.anulado = 'N' AND g.co
 				</textField>
 			</frame>
 			<image>
-				<reportElement x="464" y="0" width="89" height="81" uuid="ec45969f-1b51-4fc9-b21a-35b64a1e997b"/>
+				<reportElement x="713" y="0" width="89" height="81" uuid="ec45969f-1b51-4fc9-b21a-35b64a1e997b"/>
 				<imageExpression><![CDATA[$P{REPORTS_DIR} + "/logojasper.jpg"]]></imageExpression>
 			</image>
 		</band>
@@ -124,7 +127,7 @@ AND g.cod_tit = $P{codTit} AND g.estado <> 'nocobr' AND g.anulado = 'N' AND g.co
 		<band splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
-		<band height="26" splitType="Stretch">
+		<band height="30" splitType="Stretch">
 			<staticText>
 				<reportElement style="Column header" x="0" y="7" width="57" height="18" forecolor="#000000" uuid="d7e320f5-d900-4ac4-8e93-7342fa5ad41e"/>
 				<textElement textAlignment="Center">
@@ -147,7 +150,7 @@ AND g.cod_tit = $P{codTit} AND g.estado <> 'nocobr' AND g.anulado = 'N' AND g.co
 				<text><![CDATA[Fecha]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="392" y="7" width="81" height="19" forecolor="#000000" uuid="fb0a9ab0-af41-4887-95e2-7b4387a7238d"/>
+				<reportElement style="Column header" x="502" y="7" width="150" height="19" forecolor="#000000" uuid="fb0a9ab0-af41-4887-95e2-7b4387a7238d"/>
 				<textElement textAlignment="Center">
 					<font size="12" isBold="false"/>
 				</textElement>
@@ -161,21 +164,21 @@ AND g.cod_tit = $P{codTit} AND g.estado <> 'nocobr' AND g.anulado = 'N' AND g.co
 				<text><![CDATA[Carpeta]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="233" y="7" width="111" height="19" forecolor="#000000" uuid="cc9b513c-7c31-4026-b86d-ff8f57705467"/>
+				<reportElement style="Column header" x="233" y="7" width="221" height="19" forecolor="#000000" uuid="cc9b513c-7c31-4026-b86d-ff8f57705467"/>
 				<textElement textAlignment="Center">
 					<font size="12" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Descripción]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="473" y="7" width="81" height="19" forecolor="#000000" uuid="c68493da-5bb4-4ce1-a730-33066e2e07c9"/>
+				<reportElement style="Column header" x="652" y="7" width="150" height="19" forecolor="#000000" uuid="c68493da-5bb4-4ce1-a730-33066e2e07c9"/>
 				<textElement textAlignment="Center">
 					<font size="12" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Saldo]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="344" y="7" width="48" height="19" forecolor="#000000" uuid="ee6e8e1f-022e-4c38-bb93-eb30862f342a"/>
+				<reportElement style="Column header" x="454" y="7" width="48" height="19" forecolor="#000000" uuid="ee6e8e1f-022e-4c38-bb93-eb30862f342a"/>
 				<textElement textAlignment="Center">
 					<font size="12" isBold="false"/>
 				</textElement>
@@ -186,64 +189,64 @@ AND g.cod_tit = $P{codTit} AND g.estado <> 'nocobr' AND g.anulado = 'N' AND g.co
 	<detail>
 		<band height="20" splitType="Stretch">
 			<frame>
-				<reportElement style="Row" mode="Opaque" x="0" y="0" width="555" height="18" uuid="71c4d15f-0fa7-4fe1-a2f2-d9e6a02b6979"/>
+				<reportElement style="Row" mode="Opaque" x="0" y="0" width="802" height="18" uuid="71c4d15f-0fa7-4fe1-a2f2-d9e6a02b6979"/>
 				<textField isStretchWithOverflow="true">
 					<reportElement style="Detail" positionType="Float" x="0" y="0" width="57" height="18" backcolor="#1A85E2" uuid="14db90ad-97ce-44d8-974a-4136b163265c"/>
 					<textElement textAlignment="Center">
-						<font size="12"/>
+						<font size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{nro_docum}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
 					<reportElement style="Detail" positionType="Float" x="57" y="0" width="57" height="18" backcolor="#1A85E2" uuid="43049990-0168-44a4-abb3-25482932755e"/>
 					<textElement textAlignment="Center">
-						<font size="12"/>
+						<font size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{cod_proceso}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
 					<reportElement style="Detail" positionType="Float" x="167" y="0" width="66" height="18" backcolor="#1A85E2" uuid="6487ed52-98a1-4c1a-a023-235511c6f7fa"/>
 					<textElement textAlignment="Center">
-						<font size="12"/>
+						<font size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
-					<reportElement style="Detail" positionType="Float" x="392" y="0" width="81" height="18" backcolor="#1A85E2" uuid="072ec9ad-8bec-442e-ad69-5f6eb07b1113"/>
-					<textElement textAlignment="Right">
-						<font size="12"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{imp_tot_mo}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true">
 					<reportElement style="Detail" positionType="Float" x="115" y="0" width="52" height="18" backcolor="#1A85E2" uuid="0569db46-c9d4-4f9d-839f-f478dce34ea6"/>
 					<textElement textAlignment="Center">
-						<font size="12"/>
+						<font size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{carpeta}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
-					<reportElement style="Detail" positionType="Float" x="233" y="0" width="111" height="18" backcolor="#1A85E2" uuid="a08f118a-c335-42d6-977f-d3eea7504d17"/>
+					<reportElement style="Detail" positionType="Float" x="233" y="0" width="221" height="18" backcolor="#1A85E2" uuid="a08f118a-c335-42d6-977f-d3eea7504d17"/>
 					<textElement textAlignment="Center">
-						<font size="12"/>
+						<font size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{referencia}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
-					<reportElement style="Detail" positionType="Float" x="473" y="0" width="81" height="18" backcolor="#1A85E2" uuid="0226d043-9177-4e94-8f2b-3d3f4430b93a"/>
-					<textElement textAlignment="Right">
-						<font size="12"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{saldo}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true">
-					<reportElement style="Detail" positionType="Float" x="344" y="0" width="48" height="18" backcolor="#1A85E2" uuid="5a9aba52-e683-4bab-992c-ca5e7fa30cdd"/>
+					<reportElement style="Detail" positionType="Float" x="454" y="0" width="48" height="18" backcolor="#1A85E2" uuid="5a9aba52-e683-4bab-992c-ca5e7fa30cdd"/>
 					<textElement textAlignment="Center">
-						<font size="12"/>
+						<font size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{moneda}]]></textFieldExpression>
 				</textField>
 			</frame>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="Detail" positionType="Float" x="652" y="0" width="150" height="18" backcolor="#1A85E2" uuid="0226d043-9177-4e94-8f2b-3d3f4430b93a"/>
+				<textElement textAlignment="Right">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{saldo}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="Detail" positionType="Float" x="502" y="0" width="150" height="18" backcolor="#1A85E2" uuid="072ec9ad-8bec-442e-ad69-5f6eb07b1113"/>
+				<textElement textAlignment="Right">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{imp_tot_mo}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<columnFooter>
@@ -259,16 +262,16 @@ AND g.cod_tit = $P{codTit} AND g.estado <> 'nocobr' AND g.anulado = 'N' AND g.co
 	<pageFooter>
 		<band height="25" splitType="Stretch">
 			<frame>
-				<reportElement mode="Opaque" x="0" y="1" width="555" height="24" forecolor="#D0B48E" backcolor="#0033CC" uuid="549920fb-ff22-4da9-acc9-5f8c0001a21c"/>
+				<reportElement mode="Opaque" x="0" y="1" width="802" height="24" forecolor="#D0B48E" backcolor="#0033CC" uuid="549920fb-ff22-4da9-acc9-5f8c0001a21c"/>
 				<textField evaluationTime="Report">
-					<reportElement style="Column header" x="513" y="0" width="40" height="20" forecolor="#FFFFFF" uuid="6004a4d8-04da-427e-b143-313e9aeb6132"/>
+					<reportElement style="Column header" x="754" y="0" width="40" height="20" forecolor="#FFFFFF" uuid="6004a4d8-04da-427e-b143-313e9aeb6132"/>
 					<textElement verticalAlignment="Middle">
 						<font size="10" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement style="Column header" x="433" y="0" width="80" height="20" forecolor="#FFFFFF" uuid="11002ecd-95df-437a-b54e-7232dd501c77"/>
+					<reportElement style="Column header" x="674" y="0" width="80" height="20" forecolor="#FFFFFF" uuid="11002ecd-95df-437a-b54e-7232dd501c77"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="10" isBold="false"/>
 					</textElement>
@@ -278,28 +281,36 @@ AND g.cod_tit = $P{codTit} AND g.estado <> 'nocobr' AND g.anulado = 'N' AND g.co
 		</band>
 	</pageFooter>
 	<summary>
-		<band height="30" splitType="Stretch">
-			<textField>
-				<reportElement x="475" y="10" width="80" height="20" uuid="fd31cb91-eb8c-457a-901e-d20c85e6d07e"/>
-				<textElement textAlignment="Right">
-					<font isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{totSaldo}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="392" y="10" width="81" height="20" uuid="0fcd7ddf-e3f4-4b9a-8902-5c075ee5419e"/>
-				<textElement textAlignment="Right">
-					<font isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{totImporte}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="344" y="10" width="48" height="20" uuid="6dc6a310-9b2c-4fd5-8801-5bb9aa4ba726"/>
-				<textElement>
-					<font isBold="true"/>
-				</textElement>
-				<text><![CDATA[Totales]]></text>
-			</staticText>
+		<band height="79" splitType="Stretch">
+			<subreport>
+				<reportElement x="359" y="11" width="295" height="68" uuid="fd35293d-9910-4e81-9cb1-0932cd614b86"/>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORTS_DIR">
+					<subreportParameterExpression><![CDATA[$P{REPORTS_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="codTit">
+					<subreportParameterExpression><![CDATA[$P{codTit}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="codMoneda">
+					<subreportParameterExpression><![CDATA[$P{codMoneda}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="codEmp">
+					<subreportParameterExpression><![CDATA[$P{codEmp}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="fecDesde">
+					<subreportParameterExpression><![CDATA[$P{fecDesde}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="nomTit">
+					<subreportParameterExpression><![CDATA[$P{nomTit}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="fecHasta">
+					<subreportParameterExpression><![CDATA[$P{fecHasta}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "RepGtosPendCobroxClientes_TOTALES.jasper"]]></subreportExpression>
+			</subreport>
 		</band>
 	</summary>
 </jasperReport>

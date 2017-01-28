@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RepChequesClientes" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="beb2c1cc-874d-46af-8109-6cf506587581">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RepChequesClientes" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="beb2c1cc-874d-46af-8109-6cf506587581">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -27,35 +27,47 @@
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT movimiento, fecha, referencia, SUM(Importe) importe, SUM(MontoImponible) MontoImponible FROM (
-
+		<![CDATA[SELECT movimiento, fecha, SUM(importe) importe, SUM(MontoImponible) MontoImponible, SUM(total) total, descImp FROM (
+SELECT movimiento, fecha, referencia, Importe importe, MontoImponible, total
+,(SELECT CONCAT(descripcion, ' ', ROUND(porcentaje,2), '%') FROM m_impuestos WHERE cod_impuesto = codImp  AND cod_emp = codEmp ) descImp
+ FROM (
 SELECT
- CONCAT(c.serie_docum , ' ', c.nro_docum) Movimiento
+ CONCAT('FAC', ' ', c.serie_docum , ' ', c.nro_docum) Movimiento
 ,DATE_FORMAT(c.fec_doc, '%d-%m-%Y') fecha
 ,c.Observaciones Referencia
 
 ,d.imp_impu_mn Importe
-, d.imp_tot_mn MontoImponible
+, d.imp_sub_mn MontoImponible
+,d.imp_tot_mn total
+,d.cod_impuesto codImp
+,d.cod_emp codEmp
  FROM c_facturas c, d_facturas d
  WHERE c.nro_trans = d.nro_trans
   AND YEAR(c.fec_doc) =$P{anio} AND MONTH(c.fec_doc) = $P{mes} AND c.cod_emp = $P{codEmp} AND c.tipo_factura = 'Factura'
+AND d.imp_impu_mn > 0
 
-
-UNION
+UNION ALL
 
 SELECT
- CONCAT(c.serie_docum , ' ', c.nro_docum) Movimiento
+ CONCAT('NC', ' ',c.serie_docum , ' ', c.nro_docum) Movimiento
 
 ,DATE_FORMAT(c.fec_doc, '%d-%m-%Y') fecha
 ,c.Observaciones Referencia
 
-,d.imp_impu_mn * -1 Importe
-, d.imp_tot_mn * -1 MontoImponible
- FROM c_notacred c, d_notacred  d
+,fd.imp_impu_mn * -1 Importe
+, fd.imp_sub_mn * -1 MontoImponible
+,fd.imp_tot_mn * -1 total
+,fd.cod_impuesto codImp
+,d.cod_emp  codEmp
+ FROM c_notacred c, d_notacred  d, d_facturas fd, c_facturas fc
  WHERE c.nro_trans = d.nro_trans
  AND YEAR(c.fec_doc) =$P{anio} AND MONTH(c.fec_doc)=$P{mes} AND c.cod_emp = $P{codEmp}
+AND fd.imp_impu_mn > 0
 
-)AUX GROUP BY movimiento, fecha, referencia]]>
+AND d.cod_docum = fc.cod_docum AND fc.serie_docum = d.serie_docum AND d.nro_docum = fc.nro_docum
+AND d.cod_emp = fc.cod_emp
+AND  fd.nro_trans =  fc.nro_trans
+)AUX )AUX2 GROUP BY movimiento, fecha, descImp ]]>
 	</queryString>
 	<field name="movimiento" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
@@ -63,24 +75,34 @@ SELECT
 	<field name="fecha" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="referencia" class="java.lang.String">
+	<field name="importe" class="java.math.BigDecimal">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="importe" class="java.math.BigDecimal"/>
 	<field name="MontoImponible" class="java.math.BigDecimal"/>
+	<field name="total" class="java.math.BigDecimal"/>
+	<field name="descImp" class="java.lang.String"/>
+	<variable name="sumImponiblr" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{MontoImponible}]]></variableExpression>
+	</variable>
+	<variable name="sumImporte" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{importe}]]></variableExpression>
+	</variable>
+	<variable name="sumTot" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{total}]]></variableExpression>
+	</variable>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
 		<band height="114" splitType="Stretch">
 			<frame>
-				<reportElement mode="Opaque" x="0" y="0" width="451" height="95" forecolor="#0033CC" backcolor="#0033CC" uuid="c251db9f-f778-41e8-b4d6-dc47149157f6"/>
+				<reportElement mode="Opaque" x="0" y="0" width="713" height="95" forecolor="#0033CC" backcolor="#0033CC" uuid="c251db9f-f778-41e8-b4d6-dc47149157f6"/>
 				<staticText>
 					<reportElement style="Title" mode="Transparent" x="0" y="0" width="370" height="66" forecolor="#FFFFFF" backcolor="#0033CC" uuid="e1b8c498-c2c4-47bf-a0f5-32be0f7267f1"/>
 					<textElement>
 						<font size="26" isBold="false"/>
 					</textElement>
-					<text><![CDATA[Discriminación de Iva]]></text>
+					<text><![CDATA[Discriminación de Iva Venta]]></text>
 				</staticText>
 				<staticText>
 					<reportElement style="SubTitle" x="157" y="66" width="249" height="29" uuid="109fd81c-a11b-4c57-bfbd-6767bc023369"/>
@@ -98,7 +120,7 @@ SELECT
 				</textField>
 			</frame>
 			<image>
-				<reportElement x="464" y="0" width="89" height="81" uuid="ec45969f-1b51-4fc9-b21a-35b64a1e997b"/>
+				<reportElement x="713" y="0" width="89" height="81" uuid="ec45969f-1b51-4fc9-b21a-35b64a1e997b"/>
 				<imageExpression><![CDATA[$P{REPORTS_DIR} + "/logojasper.jpg"]]></imageExpression>
 			</image>
 		</band>
@@ -107,84 +129,98 @@ SELECT
 		<band splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
-		<band height="26" splitType="Stretch">
+		<band height="28" splitType="Stretch">
 			<staticText>
-				<reportElement style="Column header" x="0" y="8" width="170" height="18" forecolor="#000000" uuid="0c0b84a8-031a-4bc2-852f-e1ce5ca4cced"/>
-				<textElement textAlignment="Center">
+				<reportElement style="Column header" x="0" y="8" width="126" height="18" forecolor="#000000" uuid="0c0b84a8-031a-4bc2-852f-e1ce5ca4cced"/>
+				<textElement>
 					<font size="12" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Movimiento]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="170" y="8" width="69" height="18" forecolor="#000000" uuid="13d67d0c-7e43-4c4c-96ed-27eecb4ae506"/>
+				<reportElement style="Column header" x="126" y="8" width="92" height="18" forecolor="#000000" uuid="13d67d0c-7e43-4c4c-96ed-27eecb4ae506"/>
 				<textElement textAlignment="Center">
 					<font size="12" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Fecha]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="239" y="8" width="166" height="18" forecolor="#000000" uuid="fb0a9ab0-af41-4887-95e2-7b4387a7238d"/>
+				<reportElement style="Column header" x="652" y="8" width="150" height="18" forecolor="#000000" uuid="0d492d21-fba1-4be3-bc6f-83f85956d390"/>
 				<textElement textAlignment="Center">
 					<font size="12" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Referencia]]></text>
+				<text><![CDATA[IVA]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="405" y="8" width="65" height="18" forecolor="#000000" uuid="0d492d21-fba1-4be3-bc6f-83f85956d390"/>
+				<reportElement style="Column header" x="502" y="8" width="150" height="18" forecolor="#000000" uuid="556f1b15-0163-48ae-9425-e956c94d290a"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Imponible]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="352" y="8" width="150" height="18" forecolor="#000000" uuid="5dc6f186-759b-4512-8a0d-2486e36c64aa"/>
 				<textElement textAlignment="Center">
 					<font size="12" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Importe]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="470" y="8" width="83" height="18" forecolor="#000000" uuid="556f1b15-0163-48ae-9425-e956c94d290a"/>
-				<textElement textAlignment="Center">
+				<reportElement style="Column header" x="218" y="8" width="134" height="18" forecolor="#000000" uuid="98f84372-6323-4a42-a3e8-eb847140464f"/>
+				<textElement>
 					<font size="12" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Imponible]]></text>
+				<text><![CDATA[Impuesto]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="18" splitType="Stretch">
+		<band height="21" splitType="Stretch">
 			<frame>
-				<reportElement style="Row" mode="Opaque" x="0" y="0" width="555" height="18" uuid="71c4d15f-0fa7-4fe1-a2f2-d9e6a02b6979"/>
+				<reportElement style="Row" mode="Opaque" x="0" y="2" width="801" height="18" uuid="71c4d15f-0fa7-4fe1-a2f2-d9e6a02b6979"/>
 				<textField isStretchWithOverflow="true">
-					<reportElement style="Detail" positionType="Float" x="0" y="0" width="169" height="18" backcolor="#1A85E2" uuid="43049990-0168-44a4-abb3-25482932755e"/>
-					<textElement textAlignment="Center">
-						<font size="12"/>
+					<reportElement style="Detail" positionType="Float" x="0" y="0" width="126" height="18" backcolor="#1A85E2" uuid="43049990-0168-44a4-abb3-25482932755e"/>
+					<textElement>
+						<font size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{movimiento}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
-					<reportElement style="Detail" positionType="Float" x="170" y="0" width="69" height="18" backcolor="#1A85E2" uuid="6487ed52-98a1-4c1a-a023-235511c6f7fa"/>
+					<reportElement style="Detail" positionType="Float" x="126" y="0" width="92" height="18" backcolor="#1A85E2" uuid="6487ed52-98a1-4c1a-a023-235511c6f7fa"/>
 					<textElement textAlignment="Center">
-						<font size="12"/>
+						<font size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true">
-					<reportElement style="Detail" positionType="Float" x="405" y="0" width="65" height="18" backcolor="#1A85E2" uuid="072ec9ad-8bec-442e-ad69-5f6eb07b1113"/>
-					<textElement textAlignment="Center">
-						<font size="12"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{importe}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true">
-					<reportElement style="Detail" positionType="Float" x="239" y="0" width="166" height="18" backcolor="#1A85E2" uuid="a0b3519e-2c6b-4715-b84e-d491326a0957"/>
-					<textElement textAlignment="Center">
-						<font size="12"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{referencia}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true">
-					<reportElement style="Detail" positionType="Float" x="470" y="0" width="83" height="18" backcolor="#1A85E2" uuid="2c89caf8-3b37-4618-a7ef-dfb640583887"/>
-					<textElement textAlignment="Center">
-						<font size="12"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{MontoImponible}]]></textFieldExpression>
-				</textField>
 			</frame>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00">
+				<reportElement style="Detail" positionType="Float" x="501" y="2" width="150" height="18" backcolor="#1A85E2" uuid="2c89caf8-3b37-4618-a7ef-dfb640583887"/>
+				<textElement textAlignment="Right">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MontoImponible}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00">
+				<reportElement style="Detail" positionType="Float" x="651" y="2" width="150" height="18" isPrintWhenDetailOverflows="true" backcolor="#1A85E2" uuid="072ec9ad-8bec-442e-ad69-5f6eb07b1113"/>
+				<textElement textAlignment="Right">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{importe}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00">
+				<reportElement style="Detail" positionType="Float" x="351" y="0" width="150" height="20" isPrintWhenDetailOverflows="true" backcolor="#1A85E2" uuid="63d73cca-0afb-4a48-87f7-2da3a128aaac"/>
+				<textElement textAlignment="Right">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="Detail" positionType="Float" x="218" y="0" width="134" height="20" backcolor="#1A85E2" uuid="1ac0102c-6bb0-4bfc-ad1a-3aedaf26f569"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{descImp}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<columnFooter>
@@ -200,16 +236,16 @@ SELECT
 	<pageFooter>
 		<band height="25" splitType="Stretch">
 			<frame>
-				<reportElement mode="Opaque" x="0" y="1" width="555" height="24" forecolor="#D0B48E" backcolor="#0033CC" uuid="549920fb-ff22-4da9-acc9-5f8c0001a21c"/>
+				<reportElement mode="Opaque" x="0" y="1" width="802" height="24" forecolor="#D0B48E" backcolor="#0033CC" uuid="549920fb-ff22-4da9-acc9-5f8c0001a21c"/>
 				<textField evaluationTime="Report">
-					<reportElement style="Column header" x="513" y="0" width="40" height="20" forecolor="#FFFFFF" uuid="6004a4d8-04da-427e-b143-313e9aeb6132"/>
+					<reportElement style="Column header" x="761" y="0" width="40" height="20" forecolor="#FFFFFF" uuid="6004a4d8-04da-427e-b143-313e9aeb6132"/>
 					<textElement verticalAlignment="Middle">
 						<font size="10" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement style="Column header" x="433" y="0" width="80" height="20" forecolor="#FFFFFF" uuid="11002ecd-95df-437a-b54e-7232dd501c77"/>
+					<reportElement style="Column header" x="681" y="0" width="80" height="20" forecolor="#FFFFFF" uuid="11002ecd-95df-437a-b54e-7232dd501c77"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="10" isBold="false"/>
 					</textElement>
@@ -219,6 +255,35 @@ SELECT
 		</band>
 	</pageFooter>
 	<summary>
-		<band splitType="Stretch"/>
+		<band height="26" splitType="Stretch">
+			<textField pattern="#,##0.00" isBlankWhenNull="false">
+				<reportElement x="651" y="6" width="150" height="20" uuid="9e2712e4-b1ec-4a7a-b280-409c12c4cb75"/>
+				<textElement textAlignment="Right">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sumImporte}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="501" y="6" width="149" height="20" uuid="e7f9a9e3-3c40-453c-b8b7-181a16ca81d7"/>
+				<textElement textAlignment="Right">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sumImponiblr}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="300" y="6" width="52" height="20" uuid="d7f105c9-412d-4c05-b490-fb2d586f9fd1"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement x="352" y="6" width="149" height="20" uuid="000e6227-628c-4a82-a873-533e3acdae84"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sumTot}]]></textFieldExpression>
+			</textField>
+		</band>
 	</summary>
 </jasperReport>

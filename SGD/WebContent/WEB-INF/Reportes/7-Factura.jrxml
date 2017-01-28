@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RepChequesClientes" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="beb2c1cc-874d-46af-8109-6cf506587581">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="85"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Title" forecolor="#FFFFFF" fontName="Times New Roman" fontSize="50" isBold="false" pdfFontName="Times-Bold"/>
+	<style name="SubTitle" forecolor="#CCCCCC" fontName="Times New Roman" fontSize="18" isBold="false" pdfFontName="Times-Roman"/>
+	<style name="Column header" forecolor="#666666" fontName="Times New Roman" fontSize="14" isBold="true" pdfFontName="Times-Roman"/>
+	<style name="Detail" mode="Transparent" fontName="Times New Roman" pdfFontName="Times-Roman"/>
+	<style name="Row" mode="Transparent" fontName="Times New Roman" pdfFontName="Times-Roman">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style mode="Opaque" backcolor="#F0EFEF"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="REPORTS_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{REPORTS_DIR} + "/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="nroTrans" class="java.lang.String"/>
+	<parameter name="codEmp" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+CONCAT(i.descripcion, ' ', ROUND(i.porcentaje,2), '%') desImp
+,(SELECT CONCAT(descripcion,' ',simbolo ) FROM m_monedas mon WHERE mon.cod_moneda = f.cod_moneda AND mon.cod_emp = f.cod_emp) moneda
+,d.imp_impu_mo
+,c.cod_tit
+,CONCAT(f.serie_docum, ' ' , f.nro_docum ) docSerie
+,c.nom_tit
+,c.nro_dgi
+,DATE_FORMAT(f.fec_doc, '%d-%m-%Y') fec_doc
+,(SELECT descripcion FROM m_documentos_aduaneros WHERE cod_documento = p.cod_documento AND cod_emp = p.cod_emp ) documento
+,CONCAT(p.fecha_documento, ' ' , f.nro_docum ) fecha_documento
+,p.carpeta
+,(SELECT simbolo FROM m_monedas WHERE m_monedas.cod_emp = f.cod_emp AND m_monedas.cod_moneda = f.cod_moneda) simboloMoneda
+,(SELECT CASE WHEN f.cod_moneda = 2 THEN f.imp_tot_mo
+		ELSE f.imp_tot_mn/CAST((SELECT cotizacion_venta
+	   	   		FROM  m_cotizaciones WHERE m_cotizaciones.cod_emp = f.cod_emp
+	   			AND m_cotizaciones.cod_moneda = 2 AND m_cotizaciones.fecha = f.fec_valor) AS DECIMAL(12,3) )
+		END ) impDolares
+,(CASE WHEN f.cod_moneda = 2 THEN f.tc_mov ELSE CAST((SELECT cotizacion_venta
+	   	   		FROM  m_cotizaciones WHERE m_cotizaciones.cod_emp = f.cod_emp
+	   			AND m_cotizaciones.cod_moneda = 2 AND m_cotizaciones.fecha = f.fec_valor) AS DECIMAL(12,3) ) END ) tc_mov
+,p.peso kilos
+,p.cod_proceso
+,p.medio
+,p.descripcion
+,f.observaciones
+/*DETALLE*/
+,r.descripcion descRubro
+,d.referencia
+,i.porcentaje
+,d.imp_sub_mo
+,f.nro_trans
+,d.imp_tot_mo
+ FROM c_facturas f, m_clientes  c, c_procesos p , d_facturas d, m_rubros r, m_impuestos i
+ WHERE f.cod_tit = c.cod_tit AND f.cod_emp = c.cod_emp
+ AND p.cod_proceso = f.cod_proceso AND p.cod_emp = f.cod_emp
+ AND f.nro_trans = d.nro_trans
+ AND d.cod_rubro = r.cod_rubro AND d.cod_emp = r.cod_emp
+ AND d.cod_impuesto = i.cod_impuesto AND d.cod_emp = i.cod_emp
+ AND f.nro_trans = $P{nroTrans} AND f.cod_emp = $P{codEmp}]]>
+	</queryString>
+	<field name="desImp" class="java.lang.String"/>
+	<field name="moneda" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="imp_impu_mo" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cod_tit" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="docSerie" class="java.lang.String"/>
+	<field name="nom_tit" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nro_dgi" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fec_doc" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="documento" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fecha_documento" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="carpeta" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="simboloMoneda" class="java.lang.String"/>
+	<field name="impDolares" class="java.math.BigDecimal"/>
+	<field name="tc_mov" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="kilos" class="java.math.BigDecimal"/>
+	<field name="cod_proceso" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="medio" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="descripcion" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="observaciones" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="descRubro" class="java.lang.String"/>
+	<field name="referencia" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="porcentaje" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="imp_sub_mo" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nro_trans" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="imp_tot_mo" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="saldoAntSb" class="java.math.BigDecimal"/>
+	<variable name="totalRow" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="252" splitType="Stretch">
+			<staticText>
+				<reportElement x="502" y="10" width="67" height="20" uuid="2bf4578a-d907-44e5-bc59-69613abea2bb"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FACTURA]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="574" y="10" width="100" height="20" uuid="755290d1-72e4-4230-ae36-dea8dfbfb15e"/>
+				<textElement>
+					<font size="12" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{docSerie}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="39" width="339" height="20" uuid="fcbe2d7a-4904-4072-8601-6e52ee51a183"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nom_tit}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="206" y="59" width="138" height="20" uuid="0cbb7e42-7120-4ed3-861e-9e9c0bf0b675"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nro_dgi}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="633" y="59" width="100" height="20" uuid="2c0363ab-7b42-43c2-a115-66da2172539d"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fec_doc}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="89" width="65" height="20" uuid="6e118b9d-ab2f-42cf-8bf1-a69ab86ce8b2"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PERMISO]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="75" y="89" width="142" height="20" uuid="b2af5af3-e92c-4b41-8c38-22407a8b71c4"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{documento}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="298" y="89" width="100" height="20" uuid="931a9072-2679-4c4f-898e-54c35860d399"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fec_doc}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="234" y="89" width="71" height="20" uuid="4d719d31-5951-4fcb-88c8-83a8337f91b9"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="439" y="89" width="60" height="20" uuid="eb37936a-d28e-4326-8e3e-a89ed76c21c9"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CARPETA]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="499" y="89" width="234" height="20" uuid="a8f32709-1459-4306-88b7-b4908d6ec4a1"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{carpeta}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="123" width="75" height="20" uuid="276a5c45-5b75-4f33-b837-5798e7a575cc"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[VALOR U$S]]></text>
+			</staticText>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="75" y="123" width="109" height="20" uuid="ccf37534-d698-42b3-bc75-1422f0a97767"/>
+				<textElement textAlignment="Right">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{impDolares}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="196" y="123" width="71" height="20" uuid="844cde30-6e1e-4f61-a0b6-45a71ad8784e"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[T.CAMBIO]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="267" y="123" width="81" height="20" uuid="02012264-46a0-474b-888d-1c5d3aaac7cf"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tc_mov}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="349" y="123" width="55" height="20" uuid="516f456d-be36-4422-aca5-fee152435c6e"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[KILOS]]></text>
+			</staticText>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="404" y="123" width="95" height="20" uuid="400f53b0-b7b3-4b2d-ab04-12cea484fb6f"/>
+				<textElement textAlignment="Right">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{kilos}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="510" y="123" width="125" height="20" uuid="ae07a6cb-e391-422c-b8f5-b45b1f3dc8e7"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PROCESO]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="574" y="123" width="134" height="20" uuid="cbf77042-0f39-45ae-a36e-e99160aa89c3"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cod_proceso}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="153" width="117" height="20" uuid="e17b8911-cc60-40dd-bc1c-0bba678a2a89"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MEDIO]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="117" y="153" width="591" height="20" uuid="885ca7b4-7bb0-4666-9ddc-6d05fee3dae2"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{medio}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="180" width="117" height="20" uuid="bfbd1058-46ea-412b-9b75-ef4e1ff89ad5"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DESCRIPCION]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="117" y="180" width="591" height="20" uuid="379e7dd2-347b-47a4-959d-e3a7f1e532fd"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{descripcion}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="5" y="210" width="112" height="20" uuid="a53505e4-4ca7-451f-aed5-debe3d093f04"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[OBSERVACIONES]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="117" y="210" width="591" height="20" uuid="ff99551d-6f05-43fd-abeb-a654385dab2e"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{observaciones}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="17" y="230" width="229" height="20" uuid="b0e45347-1b96-4847-9880-f0052924c407"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CARGAS, TASAS Y SERVICIOS FISCALES]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="569" y="37" width="181" height="20" uuid="f48c0286-a7e1-4598-89cb-8923df504d1b"/>
+				<textElement>
+					<font size="12" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{moneda}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="502" y="37" width="67" height="20" uuid="232c90e6-4d03-43b8-b236-a276a1654dbc"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MONEDA]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement style="Detail" positionType="Float" x="2" y="0" width="244" height="18" backcolor="#1A85E2" uuid="14db90ad-97ce-44d8-974a-4136b163265c"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{descRubro}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="###0.00">
+				<reportElement style="Detail" positionType="Float" x="246" y="0" width="120" height="18" backcolor="#1A85E2" uuid="709e7361-8989-466c-8217-02178d092e43"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{desImp}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00">
+				<reportElement style="Detail" positionType="Float" x="366" y="0" width="115" height="18" backcolor="#1A85E2" uuid="97e9b6a1-3edd-4f2b-aac1-a3dbb4b1eb0c"/>
+				<textElement textAlignment="Right">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{imp_impu_mo}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00">
+				<reportElement style="Detail" positionType="Float" x="593" y="0" width="115" height="18" backcolor="#1A85E2" uuid="09c518e8-713c-4f5c-9184-109491d3e1fa"/>
+				<textElement textAlignment="Right">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{imp_tot_mo}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00">
+				<reportElement style="Detail" positionType="Float" x="481" y="0" width="111" height="18" backcolor="#1A85E2" uuid="85bcaafe-089d-422b-ba0b-a85337989d60"/>
+				<textElement textAlignment="Right">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{imp_sub_mo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="5" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1" uuid="51f1790b-dc8a-4987-b49b-cb9572aa69bb"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="193" splitType="Stretch">
+			<subreport>
+				<reportElement x="337" y="29" width="354" height="100" uuid="e6193174-5a74-43bf-990d-be7f4379f7bf"/>
+				<subreportParameter name="REPORTS_DIR">
+					<subreportParameterExpression><![CDATA[$P{REPORTS_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="nroTrans">
+					<subreportParameterExpression><![CDATA[$P{nroTrans}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="codEmp">
+					<subreportParameterExpression><![CDATA[$P{codEmp}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "7-Factura_subreportTOTALES.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="569" y="129" width="141" height="41" uuid="e18fea90-22f5-4975-b4c2-633ffda7d094"/>
+				<subreportParameter name="REPORTS_DIR">
+					<subreportParameterExpression><![CDATA[$P{REPORTS_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="nroTrans">
+					<subreportParameterExpression><![CDATA[$P{nroTrans}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="codEmp">
+					<subreportParameterExpression><![CDATA[$P{codEmp}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "7-Factura_subreportSOLOTOTAL.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</summary>
+</jasperReport>

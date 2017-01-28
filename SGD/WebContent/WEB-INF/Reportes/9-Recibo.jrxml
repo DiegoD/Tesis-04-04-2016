@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="9-Recibo" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7af01cd6-f3a5-4d26-9cd7-a27532987b5d">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="codEmp" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="nroTrans" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+CONCAT(r.serie_docum, ' ', r.nro_docum) AS serieNumero
+,r.imp_tot_mo
+,m.simbolo
+,c.nom_tit
+,DATE_FORMAT(r.fec_doc, '%d-%m-%Y') fec_doc
+
+/*DETALLE*/
+,CONCAT(d.serie_docum, ' ', d.nro_docum) factura
+,(SELECT cod_proceso FROM c_procesos p WHERE p.cod_proceso = d.cod_proceso AND p.cod_emp = d.cod_emp) proceso
+,d.referencia concepto
+,d.imp_tot_mn
+, CASE WHEN r.cod_mpago = 'Caja' THEN 'EFECTIVO'
+	   WHEN cod_mpago = 'Cheque'
+								 THEN CONCAT('Cheque', ' ', CONCAT(serie_doc_ref, ' ' , nro_doc_ref), ' '
+								 			,(SELECT LTRIM(RTRIM(nom_bco))
+								 			  FROM m_bancos b WHERE b.cod_bco = r.cod_bco AND b.cod_emp = r.cod_emp))
+	 	WHEN cod_mpago = 'Transferencia'
+								 THEN CONCAT('Transferencia', ' ', CONCAT( nro_doc_ref), ' '
+								 			,(SELECT LTRIM(RTRIM(nom_bco))
+								 			  FROM m_bancos b WHERE b.cod_bco = r.cod_bco AND b.cod_emp = r.cod_emp)) END formaPAgo
+
+  FROM c_recibos r, m_monedas m, m_clientes c, d_recibos d
+  WHERE r.cod_moneda = m.cod_moneda AND r.cod_emp = m.cod_emp
+  AND r.cod_tit = c.cod_tit AND r.cod_emp = c.cod_emp
+  AND d.nro_trans = r.nro_trans AND d.cod_emp = r.cod_emp
+  AND r.nro_trans = $P{nroTrans} AND r.cod_emp = $P{codEmp}]]>
+	</queryString>
+	<field name="serieNumero" class="java.lang.String"/>
+	<field name="imp_tot_mo" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="simbolo" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nom_tit" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fec_doc" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="factura" class="java.lang.String"/>
+	<field name="proceso" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="concepto" class="java.lang.String"/>
+	<field name="imp_tot_mn" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="formaPAgo" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="150" splitType="Stretch">
+			<staticText>
+				<reportElement x="368" y="19" width="58" height="20" uuid="1fe88081-bcc8-4954-a8f6-38e80523c694"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nº]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="252" y="51" width="74" height="20" uuid="c4c4ee88-f79e-4c05-8f63-e06a7f60dda8"/>
+				<textElement textAlignment="Right">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{simbolo}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="326" y="51" width="229" height="20" uuid="6cd3cd4e-5679-46f4-9733-a8db772a990c"/>
+				<textElement textAlignment="Right">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{imp_tot_mo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="326" y="77" width="128" height="20" uuid="c5e01b8c-c271-41d3-807e-d5c0c7e632f5"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fec_doc}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="252" y="77" width="74" height="20" uuid="79bf7353-1437-44cd-8f9e-796f8dbfbfc5"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="109" width="368" height="20" uuid="4f13e93b-6502-4642-95fe-3bcaaa47921b"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nom_tit}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="426" y="19" width="128" height="20" uuid="2d7f53f4-2742-4473-ab3b-f8464ef56fce"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{serieNumero}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="23" splitType="Stretch">
+			<staticText>
+				<reportElement x="2" y="0" width="100" height="20" uuid="6c0b669f-aa60-46ad-a1b5-2de6ec80a9ca"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Proceso]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="102" y="0" width="100" height="20" uuid="a30c3aea-9b43-418c-893e-2e04fd8293a2"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Factura]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="202" y="0" width="203" height="20" uuid="21564710-2251-4039-8c5d-e50a37f6ff95"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Concepto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="405" y="0" width="149" height="20" uuid="98ed38a0-ce94-4ad2-887e-3a4d08fcbfb0"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Importe]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<textField>
+				<reportElement x="2" y="0" width="100" height="20" uuid="16b6f85b-20ef-45bc-acf2-97a609022bd8"/>
+				<textFieldExpression><![CDATA[$F{proceso}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="102" y="0" width="100" height="20" uuid="1f26da97-191a-4fed-b7ce-4cc96fd8c280"/>
+				<textFieldExpression><![CDATA[$F{factura}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="202" y="0" width="203" height="20" uuid="13aaae88-af93-47aa-9df3-de41a85c6642"/>
+				<textFieldExpression><![CDATA[$F{concepto}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="405" y="0" width="150" height="20" uuid="3861d271-d28f-4720-8e07-324ae14a15b6"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{imp_tot_mn}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="87" splitType="Stretch">
+			<staticText>
+				<reportElement x="2" y="36" width="100" height="20" uuid="a37a06c1-ebec-46d6-b6cd-96890726798c"/>
+				<text><![CDATA[Forma de Pago]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="102" y="36" width="303" height="20" uuid="adb5747b-3666-4cf8-8e36-bbb051e0c0a6"/>
+				<textFieldExpression><![CDATA[$F{formaPAgo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

@@ -105,46 +105,46 @@ AND sa.imp_tot_mo > 0 ORDER BY c.cod_bco]]>
 		<band splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
-		<band height="26" splitType="Stretch">
+		<band height="30" splitType="Stretch">
 			<staticText>
-				<reportElement style="Column header" x="0" y="7" width="77" height="18" forecolor="#000000" uuid="d7e320f5-d900-4ac4-8e93-7342fa5ad41e"/>
+				<reportElement style="Column header" x="0" y="8" width="77" height="18" forecolor="#000000" uuid="d7e320f5-d900-4ac4-8e93-7342fa5ad41e"/>
 				<textElement textAlignment="Center">
-					<font size="10" isBold="false"/>
+					<font size="12" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Serie]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="78" y="8" width="92" height="18" forecolor="#000000" uuid="0c0b84a8-031a-4bc2-852f-e1ce5ca4cced"/>
+				<reportElement style="Column header" x="78" y="8" width="79" height="18" forecolor="#000000" uuid="0c0b84a8-031a-4bc2-852f-e1ce5ca4cced"/>
 				<textElement textAlignment="Center">
-					<font size="10" isBold="false"/>
+					<font size="12" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Nro]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="170" y="8" width="52" height="18" forecolor="#000000" uuid="13d67d0c-7e43-4c4c-96ed-27eecb4ae506"/>
+				<reportElement style="Column header" x="157" y="8" width="52" height="18" forecolor="#000000" uuid="13d67d0c-7e43-4c4c-96ed-27eecb4ae506"/>
 				<textElement textAlignment="Center">
-					<font size="10" isBold="false"/>
+					<font size="12" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Moneda]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="221" y="8" width="94" height="18" forecolor="#000000" uuid="fb0a9ab0-af41-4887-95e2-7b4387a7238d"/>
+				<reportElement style="Column header" x="209" y="8" width="124" height="18" forecolor="#000000" uuid="fb0a9ab0-af41-4887-95e2-7b4387a7238d"/>
 				<textElement textAlignment="Center">
-					<font size="10" isBold="false"/>
+					<font size="12" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Importe]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="315" y="8" width="90" height="18" forecolor="#000000" uuid="22db6754-4ec8-4ecc-8632-8b3536164be5"/>
+				<reportElement style="Column header" x="333" y="8" width="72" height="18" forecolor="#000000" uuid="22db6754-4ec8-4ecc-8632-8b3536164be5"/>
 				<textElement textAlignment="Center">
-					<font size="10" isBold="false"/>
+					<font size="12" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Fecha]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="405" y="8" width="148" height="18" forecolor="#000000" uuid="0d492d21-fba1-4be3-bc6f-83f85956d390"/>
 				<textElement textAlignment="Center">
-					<font size="10" isBold="false"/>
+					<font size="12" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Banco]]></text>
 			</staticText>
@@ -162,18 +162,11 @@ AND sa.imp_tot_mo > 0 ORDER BY c.cod_bco]]>
 					<textFieldExpression><![CDATA[$F{serie_docum}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
-					<reportElement style="Detail" positionType="Float" x="78" y="0" width="91" height="18" backcolor="#1A85E2" uuid="43049990-0168-44a4-abb3-25482932755e"/>
+					<reportElement style="Detail" positionType="Float" x="78" y="0" width="79" height="18" backcolor="#1A85E2" uuid="43049990-0168-44a4-abb3-25482932755e"/>
 					<textElement textAlignment="Center">
 						<font size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{nro_docum}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true">
-					<reportElement style="Detail" positionType="Float" x="170" y="0" width="52" height="18" backcolor="#1A85E2" uuid="6487ed52-98a1-4c1a-a023-235511c6f7fa"/>
-					<textElement textAlignment="Center">
-						<font size="10"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{moneda}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
 					<reportElement style="Detail" positionType="Float" x="405" y="0" width="148" height="18" backcolor="#1A85E2" uuid="072ec9ad-8bec-442e-ad69-5f6eb07b1113"/>
@@ -183,18 +176,25 @@ AND sa.imp_tot_mo > 0 ORDER BY c.cod_bco]]>
 					<textFieldExpression><![CDATA[$F{banco}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
-					<reportElement style="Detail" positionType="Float" x="315" y="0" width="91" height="18" backcolor="#1A85E2" uuid="8b645266-b534-4851-afc1-48e5a6d3637e"/>
+					<reportElement style="Detail" positionType="Float" x="333" y="0" width="73" height="18" backcolor="#1A85E2" uuid="8b645266-b534-4851-afc1-48e5a6d3637e"/>
 					<textElement textAlignment="Center">
 						<font size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0.00">
-					<reportElement style="Detail" positionType="Float" x="221" y="0" width="94" height="18" backcolor="#1A85E2" uuid="a0b3519e-2c6b-4715-b84e-d491326a0957"/>
+					<reportElement style="Detail" positionType="Float" x="209" y="0" width="124" height="18" backcolor="#1A85E2" uuid="a0b3519e-2c6b-4715-b84e-d491326a0957"/>
 					<textElement textAlignment="Right">
 						<font size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{imp_tot_mo}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="Detail" positionType="Float" x="157" y="0" width="52" height="18" backcolor="#1A85E2" uuid="6487ed52-98a1-4c1a-a023-235511c6f7fa"/>
+					<textElement textAlignment="Center">
+						<font size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{moneda}]]></textFieldExpression>
 				</textField>
 			</frame>
 		</band>

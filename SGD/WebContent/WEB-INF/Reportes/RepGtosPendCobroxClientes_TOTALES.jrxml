@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RepGtosPendCobroxClientes_TOTALES" language="groovy" pageWidth="405" pageHeight="802" columnWidth="405" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="26993385-1456-4e85-85fc-72ff07e51d53">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="codEmp" class="java.lang.String"/>
+	<parameter name="codTit" class="java.lang.String"/>
+	<parameter name="fecHasta" class="java.lang.String"/>
+	<parameter name="codMoneda" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT moneda, SUM(imp_tot_mo) importe, SUM(saldo) saldo FROM (
+
+SELECT
+nro_docum
+, cod_proceso
+, carpeta
+, fecha
+,referencia
+,moneda
+,imp_tot_mo
+,saldo FROM (
+SELECT
+g.nro_docum
+, g.cod_proceso
+, c.carpeta
+, DATE_FORMAT(g.fecdoc, '%d-%m-%Y') fecha
+,g.referencia
+,(SELECT simbolo FROM m_monedas m WHERE m.cod_moneda = g.cod_moneda AND m.cod_emp = g.cod_emp) moneda
+,g.imp_tot_mo
+,(SELECT imp_tot_mo FROM sa_docum sa WHERE  sa.cod_docum = g.cod_docum AND sa.serie_docum = g.serie_docum AND sa.nro_docum = g.nro_docum AND sa.cod_emp = g.cod_emp) saldo
+FROM c_gastos g,  c_procesos c
+WHERE g.cod_proceso = c.cod_proceso AND (g.cod_emp = c.cod_emp OR g.cod_proceso = 0)
+AND g.cod_tit = $P{codTit} AND g.estado <> 'nocobr' AND g.anulado = 'N' AND g.cod_emp = $P{codEmp} AND g.fecDoc <= $P{fecHasta} AND ( g.cod_moneda = $P{codMoneda} OR $P{codMoneda} = 'TODAS' ) ) AUX WHERE saldo > 0 ORDER BY saldo DESC
+
+)AUX2 GROUP BY moneda]]>
+	</queryString>
+	<field name="moneda" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="importe" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="saldo" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="32" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="12" width="100" height="20" uuid="ad3c6020-0334-4f19-8118-5383bf60d284"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTALES]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="23" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="20" uuid="2bd6fea7-645f-49a4-a171-65fe35f750da"/>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Moneda]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="0" width="150" height="20" uuid="d8afb6f4-ee8e-43b8-a12f-8f8bbf3cdfc6"/>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Importe]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="250" y="0" width="150" height="20" uuid="217637a7-1dc4-467a-87ba-5d337d9eeef1"/>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Saldo]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="23" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="100" height="20" uuid="c8ec758b-dd49-4f42-a0f3-78a20d62d55c"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{moneda}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="100" y="0" width="150" height="20" uuid="ae5f8fd5-e0e6-4537-9f0e-20199278f14e"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{importe}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="250" y="0" width="150" height="20" uuid="963a7439-41fe-4383-b400-bf8b383ad7a8"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{saldo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="7-Factura_subreportTOTALES" language="groovy" pageWidth="395" pageHeight="802" columnWidth="395" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="56bdbdf3-2018-49ee-90f7-d9652bac15fd">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="nroTrans" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="codEmp" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT CASE WHEN i.porcentaje <> 0 THEN
+	CONCAT('SUB-TOTAL GRAVADO ',i.descripcion) ELSE CONCAT('SUB-TOTAL NO GRAVADO ',i.descripcion) END descImp
+
+	, SUM(d.imp_sub_mo) importe, i.porcentaje
+
+FROM c_facturas c, d_facturas d , m_impuestos i
+WHERE  i.cod_impuesto = d.cod_impuesto AND i.cod_emp = d.cod_emp
+AND d.nro_trans = c.nro_trans
+AND d.nro_trans = $P{nroTrans} AND d.cod_emp = $P{codEmp}
+GROUP BY descImp,i.porcentaje
+
+UNION
+
+
+SELECT  i.descripcion  descImp, SUM(d.imp_impu_mo) importe, i.porcentaje
+
+FROM c_facturas c, d_facturas d , m_impuestos i
+WHERE  i.cod_impuesto = d.cod_impuesto AND i.cod_emp = d.cod_emp
+AND d.nro_trans = c.nro_trans AND i.porcentaje <> 0
+AND d.nro_trans = $P{nroTrans} AND d.cod_emp = $P{codEmp}
+GROUP BY descImp, i.porcentaje
+
+ORDER BY descImp DESC]]>
+	</queryString>
+	<field name="descImp" class="java.lang.String"/>
+	<field name="importe" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="porcentaje" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="240" height="20" uuid="b8c47cd6-df8e-456e-a618-3a4a523c9c5d"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{descImp}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="240" y="0" width="150" height="20" uuid="c907d1e2-96f2-4e79-a503-76e4c35bc9f9"/>
+				<textElement textAlignment="Right">
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{importe}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

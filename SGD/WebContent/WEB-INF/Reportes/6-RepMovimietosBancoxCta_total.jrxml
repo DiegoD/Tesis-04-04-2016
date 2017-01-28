@@ -8,6 +8,7 @@
 	<parameter name="fecHasta" class="java.util.Date"/>
 	<parameter name="codBco" class="java.lang.String"/>
 	<parameter name="codCta" class="java.lang.String"/>
+	<parameter name="conciliados" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT (importe + saldoAnt) importe FROM (
 
@@ -15,11 +16,11 @@ SELECT
 COALESCE((SELECT
 SUM(importe)
  FROM v_rep_movimientos_bco
- WHERE cod_emp = $P{codEmp}
+ WHERE cod_emp = $P{codEmp}  AND (conciliado = $P{conciliados} OR $P{conciliados} = '0')
  AND fecha BETWEEN $P{fecDesde}  AND $P{fecHasta}   AND cod_bco = $P{codBco} AND cod_ctabco = $P{codCta}),0) importe
 
 ,COALESCE((SELECT SUM(importe) saldo FROM v_rep_movimientos_bco
-	WHERE cod_emp = $P{codEmp}
+	WHERE cod_emp = $P{codEmp}  AND (conciliado = $P{conciliados} OR $P{conciliados} = '0')
 	AND fecha < $P{fecDesde}
 	AND cod_bco = $P{codBco} AND cod_ctabco = $P{codCta} ),0) saldoAnt
 
