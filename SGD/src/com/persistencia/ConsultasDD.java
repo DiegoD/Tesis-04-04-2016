@@ -8,54 +8,6 @@ public class ConsultasDD {
     protected final static String PASS  = "root";
     
     
-//    ////////////////////////<COTIZACIONES>/////////////////////////////////////////////////
-//    
-//    public String getCotizaciones(){
-//    	
-//     	 StringBuilder sb = new StringBuilder();
-//     	 
-//     	 sb.append("SELECT fec_cotizacion, cod_moneda, imp_venta, imp_compra, usuario_mod, fecha_mod ");
-//     	 sb.append("FROM ct_cotizaciones ");
-//
-//     	 return sb.toString();
-//     }
-//    
-//    public String getCotizacion(){
-//    	
-//      	 StringBuilder sb = new StringBuilder();
-//      	 
-//      	 sb.append("SELECT fec_cotizacion, cod_moneda, imp_venta, imp_compra, usuario_mod, fecha_mod ");
-//      	 sb.append("FROM ct_cotizaciones WHERE fec_cotizacion = ? AND cod_moneda = ? ");
-//
-//      	 return sb.toString();
-//      }
-//    
-//    
-//    public String insertCotizacion(){
-//    	
-//    	 StringBuilder sb = new StringBuilder();
-//    	 
-//    	 sb.append("INSERT INTO ct_cotizaciones (fec_cotizacion, cod_moneda, imp_venta, imp_compra, usuario_mod, fecha_mod) ");
-//    	 sb.append("VALUES (?, ?, ?, ?, ?, NOW())");
-//    	 
-//    	 return sb.toString();
-//    }
-//
-//    public String memberCotizacion(){
-//    	
-//   	 StringBuilder sb = new StringBuilder();
-//   	 
-//   	 sb.append("SELECT fec_cotizacion, cod_moneda ");
-//   	 sb.append("FROM ct_cotizaciones WHERE fec_cotizacion = ? AND cod_moneda = ? ");
-//
-//   	 return sb.toString();
-//   }
-//    
-   ////////////////////////<COTIZACIONES/>/////////////////////////////////////////////////
-
-    
-
-    
 ////////////////////////INI-USUARIOS///////////////////////////////////////////////////
     
     public String getUsuarioValido(){
@@ -350,7 +302,6 @@ public class ConsultasDD {
 
 	public String memberMoneda()
 	{
-	
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("SELECT cod_moneda ");
@@ -1305,8 +1256,14 @@ public class ConsultasDD {
 				+" AND c_gastos.nro_docum = sa_docum.nro_docum "
 				+" AND c_gastos.cod_emp = sa_docum.cod_emp "
 				+" AND c_gastos.cod_tit = sa_docum.cod_tit "
+				
+				/*Y QUE NO EXISTAN EN UNA PRE FACTURA*/
+				+"AND NOT EXISTS (SELECT * FROM d_facturas df WHERE df.nro_docum = c_gastos.nro_docum AND df.serie_docum = c_gastos.serie_docum AND df.cod_docum = c_gastos.cod_docum AND df.cod_emp = c_gastos.cod_emp) "
+				
+				
 				+ " AND c_gastos.cod_emp = ? AND c_gastos.cod_proceso = ? AND c_gastos.estado = 'fact' "); 
-		
+				
+				
 		
 		sb.append(" AND c_gastos.cod_tit = ? AND c_gastos.cod_moneda = ? "
 				+ " AND sa_docum.imp_tot_mo <> 0 ");
@@ -1347,7 +1304,7 @@ public class ConsultasDD {
 
 	}
 	
-public String getGastosAPagarxProceso(){
+	public String getGastosAPagarxProceso(){
 		
 		StringBuilder sb = new StringBuilder();
 		
@@ -1381,7 +1338,7 @@ public String getGastosAPagarxProceso(){
 	}
 	
 
-public String getGastosAnuladosxProceso(){
+	public String getGastosAnuladosxProceso(){
 	
 	StringBuilder sb = new StringBuilder();
 	
@@ -1411,7 +1368,6 @@ public String getGastosAnuladosxProceso(){
 			return sb.toString();
 
 }
-
 
 
 	public String getGastosEmpleados(){
@@ -1956,30 +1912,30 @@ public String getGastosAnuladosxProceso(){
 		return sb.toString();
 	}
 
-public String insertarSaldoCuenta()
-{
-
-	StringBuilder sb = new StringBuilder();
+	public String insertarSaldoCuenta()
+	{
 	
-	sb.append("INSERT INTO sa_cuentas ( cod_docum, serie_docum, nro_docum, "
-			+ " cod_emp, cod_moneda, cod_tit, "
-			+ " imp_tot_mn, imp_tot_mo, cuenta, "
-			+ " fecha_mod, usuario_mod, operacion, cod_cta, referencia, nro_trans, cod_doc_ref, "
-			+ " serie_doc_ref, nro_doc_ref, cod_bco, cod_ctabco, movimiento, signo, fec_doc, fec_valor ) ");
-	sb.append("VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO sa_cuentas ( cod_docum, serie_docum, nro_docum, "
+				+ " cod_emp, cod_moneda, cod_tit, "
+				+ " imp_tot_mn, imp_tot_mo, cuenta, "
+				+ " fecha_mod, usuario_mod, operacion, cod_cta, referencia, nro_trans, cod_doc_ref, "
+				+ " serie_doc_ref, nro_doc_ref, cod_bco, cod_ctabco, movimiento, signo, fec_doc, fec_valor ) ");
+		sb.append("VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+		
+		return sb.toString();
+	}
 	
-	return sb.toString();
-}
-
-public String eliminarSaldoCuenta(){
-	
-	StringBuilder sb = new StringBuilder();
-	
-	sb.append("DELETE FROM sa_cuentas ");
-	sb.append("WHERE nro_trans = ? ");
-	
-	return sb.toString();
-}	
+	public String eliminarSaldoCuenta(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("DELETE FROM sa_cuentas ");
+		sb.append("WHERE nro_trans = ? ");
+		
+		return sb.toString();
+	}	
 	
 ////////////////////////FIN SALO CUENTAS/////////////////////////////////////////
 	
@@ -2021,6 +1977,18 @@ public String eliminarSaldoCuenta(){
 		sb.append("SELECT m_titulares.cod_tit, m_titulares.nom_tit, m_titulares.cod_docdgi, m_titulares.nro_dgi, m_titulares.tipo, "
 				+ "m_titulares.nro_dgi, m_titulares.cod_emp, m_documdgi.nombre ");
 		sb.append("FROM m_titulares, m_documdgi WHERE m_titulares.cod_emp = ? and m_titulares.activo = 1 "
+				+ "and m_documdgi.cod_docdgi = m_titulares.cod_docdgi ");
+
+		return sb.toString();
+	}
+	
+	public String getTitularesTodos()
+	{
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT m_titulares.cod_tit, m_titulares.nom_tit, m_titulares.cod_docdgi, m_titulares.nro_dgi, m_titulares.tipo, "
+				+ "m_titulares.nro_dgi, m_titulares.cod_emp, m_documdgi.nombre ");
+		sb.append("FROM m_titulares, m_documdgi WHERE m_titulares.cod_emp = ? "
 				+ "and m_documdgi.cod_docdgi = m_titulares.cod_docdgi ");
 
 		return sb.toString();

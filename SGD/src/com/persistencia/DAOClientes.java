@@ -8,37 +8,18 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
-import com.excepciones.Login.LoginException;
-import com.excepciones.Usuarios.ExisteUsuarioException;
-import com.excepciones.Usuarios.InsertandoUsuarioException;
-import com.excepciones.Usuarios.ModificandoUsuarioException;
-import com.excepciones.Usuarios.ObteniendoUsuariosException;
-import com.excepciones.Usuarios.ObteniendoUsuariosxEmpExeption;
 import com.excepciones.clientes.ExisteClienteExeption;
 import com.excepciones.clientes.MemberClienteException;
 import com.excepciones.clientes.ModificandoClienteException;
 import com.excepciones.clientes.ObteniendoClientesException;
 import com.excepciones.clientes.VerificandoClienteException;
-import com.excepciones.grupos.ObteniendoFormulariosException;
-import com.excepciones.grupos.ObteniendoGruposException;
 import com.logica.Cliente;
 import com.logica.Documento;
-import com.logica.Formulario;
-import com.logica.Grupo;
-import com.logica.Usuario;
 import com.mysql.jdbc.Statement;
-import com.valueObject.EmpLoginVO;
-import com.valueObject.GrupoVO;
-import com.valueObject.LoginVO;
 
 public class DAOClientes implements IDAOClientes{
 	
 	
-	//private java.sql.Connection con = null;
-    private PreparedStatement pst = null;
-    private ResultSet rs = null;
-	
-
 	/**
 	 * Nos retorna una lista con todos los clientes del sistema
 	 */

@@ -7,23 +7,18 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
-import com.excepciones.Impuestos.ExisteImpuestoException;
-import com.excepciones.Impuestos.InsertandoImpuestoException;
-import com.excepciones.Impuestos.ModificandoImpuestoException;
-import com.excepciones.Impuestos.ObteniendoImpuestosException;
 import com.excepciones.Monedas.ExisteMonedaException;
 import com.excepciones.Monedas.ExisteNacional;
 import com.excepciones.Monedas.InsertandoMonedaException;
 import com.excepciones.Monedas.ModificandoMonedaException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
-import com.logica.Impuesto;
 import com.logica.Moneda;
 
 public class DAOMonedas implements IDAOMonedas{
 
 	@Override
 	public ArrayList<Moneda> getMonedas(String codEmp, Connection con) throws ObteniendoMonedaException, ConexionException {
-		// TODO Auto-generated method stub
+		
 		ArrayList<Moneda> lstMonedas = new ArrayList<Moneda>();
 		
 		try
@@ -72,7 +67,7 @@ public class DAOMonedas implements IDAOMonedas{
 	
 	@Override
 	public ArrayList<Moneda> getMonedasActivas(String codEmp, Connection con) throws ObteniendoMonedaException, ConexionException {
-		// TODO Auto-generated method stub
+		
 		ArrayList<Moneda> lstMonedas = new ArrayList<Moneda>();
 		
 		try
@@ -123,7 +118,7 @@ public class DAOMonedas implements IDAOMonedas{
 	 */
 	@Override
 	public void insertarMoneda(Moneda moneda, String codEmp, Connection con) throws InsertandoMonedaException, ConexionException {
-		// TODO Auto-generated method stub
+		
 		ConsultasDD clts = new ConsultasDD();
     	
     	String insert = clts.insertarMoneda();
@@ -155,7 +150,7 @@ public class DAOMonedas implements IDAOMonedas{
 
 	@Override
 	public boolean memberMoneda(String codMoneda, String codEmp, Connection con) throws ExisteMonedaException, ConexionException {
-		// TODO Auto-generated method stub
+		
 		boolean existe = false;
 		
 		try{
@@ -187,7 +182,7 @@ public class DAOMonedas implements IDAOMonedas{
 
 	@Override
 	public boolean existeNacional(String codMoneda, String codEmp, Connection con) throws ExisteNacional, ConexionException {
-		// TODO Auto-generated method stub
+
 		boolean existe = false;
 		
 		try{
@@ -218,7 +213,7 @@ public class DAOMonedas implements IDAOMonedas{
 	
 	@Override
 	public void eliminarMoneda(String cod_moneda, String codEmp, Connection con) throws ModificandoMonedaException, ConexionException {
-		// TODO Auto-generated method stub
+		
 		
 	}
 

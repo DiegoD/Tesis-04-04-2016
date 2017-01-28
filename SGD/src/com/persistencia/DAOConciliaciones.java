@@ -4,28 +4,22 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
 import com.excepciones.Bancos.ObteniendoBancosException;
 import com.excepciones.Bancos.ObteniendoCuentasBcoException;
-import com.excepciones.Cheques.ObteniendoChequeException;
 import com.excepciones.Conciliaciones.EliminandoConcialiacionException;
 import com.excepciones.Conciliaciones.ExisteConciliacionException;
 import com.excepciones.Conciliaciones.InsertandoConciliacionException;
 import com.excepciones.Conciliaciones.MovimientoConciliadoException;
 import com.excepciones.Conciliaciones.ObteniendoConciliacionException;
-import com.excepciones.Saldos.ExisteSaldoException;
-import com.logica.Cheque;
 import com.logica.MonedaInfo;
 import com.logica.Conciliacion.Conciliacion;
 import com.logica.Conciliacion.ConciliacionDetalle;
-import com.logica.Depositos.DepositoDetalle;
 import com.logica.Docum.BancoInfo;
 import com.logica.Docum.CuentaBcoInfo;
-import com.logica.Docum.TitularInfo;
 
 public class DAOConciliaciones implements IDAOConciliaciones{
 	

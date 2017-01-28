@@ -8,7 +8,7 @@ import com.valueObject.Docum.ReciboVO;
 
 public class Recibo extends DatosDocum{
 
-	private double impuTotMn ;
+	private double impuTotMn;
 	private double impuTotMo;
 	private double impSubMo;
 	private double impSubMn;
@@ -67,8 +67,6 @@ public class Recibo extends DatosDocum{
 	
 	public ReciboVO retornarVO(){
 			
-		
-		
 		ReciboVO aux = new ReciboVO();
 		
 		aux.copiar(super.retornarDatosDocumVO());

@@ -10,17 +10,12 @@ import com.excepciones.ConexionException;
 import com.excepciones.Bancos.ObteniendoBancosException;
 import com.excepciones.Bancos.ObteniendoCuentasBcoException;
 import com.excepciones.Cheques.*;
-import com.logica.Banco;
 import com.logica.Cheque;
 import com.logica.MonedaInfo;
-import com.logica.Depositos.Deposito;
 import com.logica.Depositos.DepositoDetalle;
 import com.logica.Docum.BancoInfo;
 import com.logica.Docum.CuentaBcoInfo;
-import com.logica.Docum.DatosDocum;
-import com.logica.Docum.DocumDetalle;
 import com.logica.Docum.TitularInfo;
-import com.mysql.jdbc.Statement;
 import com.valueObject.Deposito.DepositoVO;
 
 public class DAOCheques implements IDAOCheques{

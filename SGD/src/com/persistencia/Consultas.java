@@ -920,7 +920,7 @@ public class Consultas {
 		return sb.toString();
 	}
 
-public String getIngresoCobroCabTodosOtros(){
+	public String getIngresoCobroCabTodosOtros(){
 		
 		StringBuilder sb = new StringBuilder();
 		 

@@ -14,7 +14,7 @@ public class Banco extends Auditoria{
 	private String contacto;
 	private boolean activo;
 	private String codEmp;
-	
+	private ArrayList<CtaBco> lstCtas;
 
 	public ArrayList<CtaBco> getLstCtas() {
 		return lstCtas;
@@ -23,7 +23,7 @@ public class Banco extends Auditoria{
 	public void setLstCtas(ArrayList<CtaBco> lstCtas) {
 		this.lstCtas = lstCtas;
 	}
-	private ArrayList<CtaBco> lstCtas;
+	
 	
 	public Banco(){
 		
@@ -126,7 +126,5 @@ public class Banco extends Auditoria{
 	public void setCodEmp(String codEmp) {
 		this.codEmp = codEmp;
 	}
-
-	
 	
 }

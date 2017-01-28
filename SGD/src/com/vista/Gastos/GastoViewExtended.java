@@ -165,10 +165,12 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 							gastoVO.setCodProceso(codProceso.getValue());
 						}
 						else{
-							gastoVO.setCodProceso("");
+							gastoVO.setCodProceso("0");
 						}
 					}
-					
+					else{
+						gastoVO.setCodProceso("0");
+					}
 					
 					gastoVO.setCodDocum("Gasto");
 					gastoVO.setSerieDocum("A");

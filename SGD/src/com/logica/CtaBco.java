@@ -13,8 +13,6 @@ public class CtaBco extends Auditoria{
 	
 	private Moneda moneda;
 	
-	
-
 	public CtaBco(){
 		this.moneda = new Moneda();
 	}

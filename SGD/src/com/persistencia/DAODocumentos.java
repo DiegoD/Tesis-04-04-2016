@@ -10,12 +10,7 @@ import com.excepciones.Documentos.ExisteDocumentoException;
 import com.excepciones.Documentos.InsertandoDocumentoException;
 import com.excepciones.Documentos.ModificandoDocumentoException;
 import com.excepciones.Documentos.ObteniendoDocumentosException;
-import com.excepciones.Empresas.ExisteEmpresaException;
-import com.excepciones.Empresas.InsertandoEmpresaException;
-import com.excepciones.Empresas.ModificandoEmpresaException;
-import com.excepciones.Empresas.ObteniendoEmpresasException;
 import com.logica.DocumentoAduanero;
-import com.logica.Empresa;
 import java.sql.Connection;
 
 public class DAODocumentos implements IDAODocumentos{

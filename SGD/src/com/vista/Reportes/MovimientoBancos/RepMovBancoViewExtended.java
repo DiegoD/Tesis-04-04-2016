@@ -191,7 +191,8 @@ public class RepMovBancoViewExtended extends RepMovBancoViews implements IBusque
 					        
 					        fillParameters.put("codEmp",this.permisos.getCodEmp());
 					       
-					        
+					        String strConciliados = chkConciliados.getValue() == true ? "1" : "0";
+					        fillParameters.put("conciliados",strConciliados);
 					        
 					        CtaBcoVO ctaBcoAux = null;
 				   			ctaBcoAux = new CtaBcoVO();
@@ -227,11 +228,21 @@ public class RepMovBancoViewExtended extends RepMovBancoViews implements IBusque
 					      
 						  }catch(Exception e) {}
 					        
-					        
-						StreamResource myResource = report.prepareForPdfReportReturn( basepath+"/6-RepMovimietosBancoxCta.jrxml",
+					  
+					  StreamResource myResource = null;
+					  	if(this.chkSaldos.getValue() == true){
+					  		
+					  		myResource = report.prepareForPdfReportReturn( basepath+"/6-RepMovimietosBancoTotales.jrxml",
+					                "SaldoCuentasBancarias",
+					                fillParameters);
+					  		
+					  	}
+					  	else{
+					  		
+						 myResource = report.prepareForPdfReportReturn( basepath+"/6-RepMovimietosBancoxCta.jrxml",
 									                "MovimientosBanco",
 									                fillParameters);
-					  
+					  	}
 						
 				        Embedded e = new Embedded();
 				        e.setSizeFull();

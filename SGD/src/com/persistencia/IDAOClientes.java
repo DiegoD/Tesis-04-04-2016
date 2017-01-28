@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
-import com.excepciones.Usuarios.ExisteUsuarioException;
 import com.excepciones.clientes.ExisteClienteExeption;
 import com.excepciones.clientes.MemberClienteException;
 import com.excepciones.clientes.ModificandoClienteException;

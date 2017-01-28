@@ -18,7 +18,6 @@ import com.logica.DocumentoAduanero;
 import com.logica.MonedaInfo;
 import com.logica.Proceso;
 import com.mysql.jdbc.Statement;
-import com.valueObject.MonedaInfoVO;
 
 public class DAOProcesos implements IDAOProcesos{
 

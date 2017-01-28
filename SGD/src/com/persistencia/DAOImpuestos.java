@@ -11,21 +11,10 @@ import com.excepciones.Impuestos.ExisteImpuestoException;
 import com.excepciones.Impuestos.InsertandoImpuestoException;
 import com.excepciones.Impuestos.ModificandoImpuestoException;
 import com.excepciones.Impuestos.ObteniendoImpuestosException;
-import com.excepciones.Usuarios.ExisteUsuarioException;
-import com.excepciones.Usuarios.InsertandoUsuarioException;
-import com.excepciones.Usuarios.ModificandoUsuarioException;
-import com.excepciones.grupos.InsertandoGrupoException;
-import com.excepciones.grupos.ModificandoGrupoException;
-import com.excepciones.grupos.ObteniendoFormulariosException;
-import com.excepciones.grupos.ObteniendoGruposException;
-import com.logica.Grupo;
 import com.logica.Impuesto;
 
 public class DAOImpuestos implements IDAOImpuestos{
 
-	private PreparedStatement pst = null;
-    private ResultSet rs = null;
-    
     
     /**
 	 * Obtiene Array de todos lo impuestos existentes

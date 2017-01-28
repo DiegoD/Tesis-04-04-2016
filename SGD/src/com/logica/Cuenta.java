@@ -2,8 +2,6 @@ package com.logica;
 
 import java.util.ArrayList;
 
-import com.valueObject.FormularioVO;
-import com.valueObject.GrupoVO;
 import com.valueObject.RubroVO;
 import com.valueObject.Cuenta.CuentaVO;
 
@@ -16,15 +14,6 @@ public class Cuenta extends Auditoria{
 	
 	public Cuenta(){
 		this.lstRubros = new ArrayList<Rubro>();
-	}
-	
-	public Cuenta(String cod_cuenta, String descripcion, boolean activo, ArrayList<Rubro> lstRubros) {
-		
-		super();
-		this.cod_cuenta = cod_cuenta;
-		this.descripcion = descripcion;
-		this.activo = activo;
-		this.lstRubros = lstRubros;
 	}
 	
 	public Cuenta(CuentaVO cuentaVO){
@@ -42,10 +31,6 @@ public class Cuenta extends Auditoria{
 		}
 	}
 	
-	public Cuenta(String cod_cuenta, String descripcion){
-		this.cod_cuenta = cod_cuenta;
-		this.descripcion = descripcion;
-	}
 	
 	public String getCod_cuenta() {
 		return cod_cuenta;

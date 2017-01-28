@@ -8,12 +8,6 @@ import com.excepciones.Impuestos.ExisteImpuestoException;
 import com.excepciones.Impuestos.InsertandoImpuestoException;
 import com.excepciones.Impuestos.ModificandoImpuestoException;
 import com.excepciones.Impuestos.ObteniendoImpuestosException;
-import com.excepciones.grupos.InsertandoGrupoException;
-import com.excepciones.grupos.MemberGrupoException;
-import com.excepciones.grupos.ModificandoGrupoException;
-import com.excepciones.grupos.ObteniendoFormulariosException;
-import com.excepciones.grupos.ObteniendoGruposException;
-import com.logica.Grupo;
 import com.logica.Impuesto;
 
 public interface IDAOImpuestos {

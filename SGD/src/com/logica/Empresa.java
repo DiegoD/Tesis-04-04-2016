@@ -8,16 +8,8 @@ public class Empresa extends Auditoria{
 	private String nom_emp;
 	private boolean activo;
 	int i = 0;
-	public Empresa(){
-		
-	}
 	
-	public Empresa(String cod_emp, String nom_emp, boolean activo) {
-		super();
-		this.cod_emp = cod_emp;
-		this.nom_emp = nom_emp;
-		this.activo = activo;
-	}
+	public Empresa(){}
 	
 	public Empresa(EmpresaVO empresaVO){
 		

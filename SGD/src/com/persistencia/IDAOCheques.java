@@ -14,9 +14,7 @@ import com.excepciones.Cheques.ModificandoChequeException;
 import com.excepciones.Cheques.NoExisteChequeException;
 import com.excepciones.Cheques.ObteniendoChequeException;
 import com.logica.Cheque;
-import com.logica.Depositos.Deposito;
 import com.logica.Depositos.DepositoDetalle;
-import com.logica.Docum.DatosDocum;
 
 public interface IDAOCheques {
 	

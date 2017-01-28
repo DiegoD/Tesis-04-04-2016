@@ -11,7 +11,6 @@ import com.excepciones.Bancos.*;
 import com.logica.Banco;
 import com.logica.CtaBco;
 import com.logica.Moneda;
-import com.mysql.jdbc.Statement;
 
 public class DAOBancos implements IDAOBancos{
 

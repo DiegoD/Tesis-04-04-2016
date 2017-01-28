@@ -11,9 +11,7 @@ import com.excepciones.ConexionException;
 import com.excepciones.IngresoCobros.EliminandoIngresoCobroException;
 import com.excepciones.IngresoCobros.ExisteIngresoCobroException;
 import com.excepciones.IngresoCobros.InsertandoIngresoCobroException;
-import com.excepciones.IngresoCobros.ModificandoIngresoCobroException;
 import com.excepciones.IngresoCobros.ObteniendoIngresoCobroException;
-import com.logica.Moneda;
 import com.logica.MonedaInfo;
 import com.logica.Docum.BancoInfo;
 import com.logica.Docum.CuentaBcoInfo;
@@ -161,8 +159,6 @@ public class DAOIngresoCobro implements IDAOIngresoCobro{
 				aux.setBancoInfo(new BancoInfo(rs.getString("cod_bco"), rs.getString("nom_bco")));
 				
 				aux.setCuentaBcoInfo(new CuentaBcoInfo(rs.getString("cod_ctabco"), rs.getString("nom_cta")));
-				
-				//aux.setCuentaInfo(new CuentaInfo(rs.getString("cod_cuenta"), rs.getString("nom_cuenta")));
 				
 				
 				aux.setFecValor(rs.getTimestamp("fec_valor"));

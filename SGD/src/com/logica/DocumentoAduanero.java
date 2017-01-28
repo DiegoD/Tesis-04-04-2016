@@ -1,16 +1,13 @@
 package com.logica;
 
 import com.valueObject.DocumentoAduaneroVO;
-import com.valueObject.empresa.EmpresaVO;
 
 public class DocumentoAduanero extends Auditoria {
 	private String cod_docucmento;
 	private String descirpcion;
 	private boolean activo;
 	
-	public DocumentoAduanero(){
-		
-	}
+	public DocumentoAduanero(){}
 
 	public DocumentoAduanero(String cod_docucmento, String descirpcion) {
 		super();
@@ -18,12 +15,6 @@ public class DocumentoAduanero extends Auditoria {
 		this.descirpcion = descirpcion;
 	}
 	
-	public DocumentoAduanero(String cod_docucmento, String descirpcion, boolean activo) {
-		super();
-		this.cod_docucmento = cod_docucmento;
-		this.descirpcion = descirpcion;
-	}
-
 	public DocumentoAduanero(DocumentoAduaneroVO documentoVO){
 		
 		super(documentoVO.getUsuarioMod(), documentoVO.getFechaMod(), documentoVO.getOperacion());
@@ -56,7 +47,6 @@ public class DocumentoAduanero extends Auditoria {
 	public void setActivo(boolean activo) {
 		this.activo = activo;
 	}
-	
 	
 
 }

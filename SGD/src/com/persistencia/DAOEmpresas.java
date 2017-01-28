@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
@@ -12,15 +11,7 @@ import com.excepciones.Empresas.ExisteEmpresaException;
 import com.excepciones.Empresas.InsertandoEmpresaException;
 import com.excepciones.Empresas.ModificandoEmpresaException;
 import com.excepciones.Empresas.ObteniendoEmpresasException;
-import com.excepciones.Impuestos.ExisteImpuestoException;
-import com.excepciones.Impuestos.InsertandoImpuestoException;
-import com.excepciones.Impuestos.ModificandoImpuestoException;
-import com.excepciones.Impuestos.ObteniendoImpuestosException;
-import com.excepciones.Usuarios.ObteniendoUsuariosException;
-import com.excepciones.grupos.ObteniendoGruposException;
 import com.logica.Empresa;
-import com.logica.Impuesto;
-import com.logica.Usuario;
 
 public class DAOEmpresas implements IDAOEmpresas{
 

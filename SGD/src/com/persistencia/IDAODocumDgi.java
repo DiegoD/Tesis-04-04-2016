@@ -9,7 +9,6 @@ import com.excepciones.Documentos.InsertandoDocumentoException;
 import com.excepciones.Documentos.ModificandoDocumentoException;
 import com.excepciones.Documentos.ObteniendoDocumentosException;
 import com.logica.DocumDGI;
-import com.logica.DocumentoAduanero;
 
 public interface IDAODocumDgi {
 

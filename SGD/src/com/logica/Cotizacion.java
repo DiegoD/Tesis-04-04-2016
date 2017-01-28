@@ -3,7 +3,6 @@ package com.logica;
 import java.sql.Timestamp;
 
 import com.valueObject.Cotizacion.CotizacionVO;
-import com.valueObject.empresa.EmpresaVO;
 
 public class Cotizacion extends Auditoria{
 	
@@ -14,14 +13,6 @@ public class Cotizacion extends Auditoria{
 	
 	public Cotizacion(){
 		
-	}
-	
-	public Cotizacion(Moneda moneda, Timestamp fecha, double cotizacion_compra, double cotizacion_venta) {
-		super();
-		this.moneda = moneda;
-		this.fecha = fecha;
-		this.cotizacion_compra = cotizacion_compra;
-		this.cotizacion_venta = cotizacion_venta;
 	}
 	
 	public Cotizacion (CotizacionVO cotizacionVO){

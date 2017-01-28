@@ -21,5 +21,5 @@ public interface IDAOBancos {
 	public boolean memberBanco(String codBanco, String codEmp, Connection con) throws ExisteBancoException, ConexionException;
 	public void insertarBanco(Banco banco, String codEmp, Connection con) throws InsertandoBancoException, ConexionException, InsertandoCuentaException;
 	public void modificarBanco(Banco banco, String codEmp, Connection con) throws ModificandoBancoException, ModificandoCuentaBcoException, ConexionException;
-	 ArrayList<CtaBco> getCtaBcoActivos(Connection con, String codEmp, String codBco) throws ObteniendoCuentasBcoException, ConexionException;
+	ArrayList<CtaBco> getCtaBcoActivos(Connection con, String codEmp, String codBco) throws ObteniendoCuentasBcoException, ConexionException;
 }

@@ -6,9 +6,11 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 
+import com.Reportes.util.ReportsUtil;
 import com.controladores.NotaCreditoControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.InicializandoException;
@@ -31,9 +33,11 @@ import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
+import com.vaadin.server.StreamResource;
 import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.Grid.Column;
+import com.vaadin.ui.Embedded;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.valueObject.FacturaSaldoAux;
@@ -183,6 +187,82 @@ public class NotaCreditoViewExtended extends NotaCreditoViews implements IBusque
 		
 	});
 	
+	this.imprimir.addClickListener(click -> {
+		
+		/*REPORTE*/
+		
+		try {
+			
+			com.Reportes.util.ReportsUtil report;
+			
+			String basepath = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath() + "/WEB-INF/Reportes";
+			
+			System.out.println(basepath);
+			
+		    report = new ReportsUtil();
+			 
+			  
+			  try {
+				  
+				  HashMap<String, Object> fillParameters=new HashMap<String, Object>();
+				  
+				 
+				  try{
+						 
+					  
+				        fillParameters.put("nroTrans",fieldGroup.getItemDataSource().getBean().getNroTrans());
+				        fillParameters.put("codEmp",this.permisos.getCodEmp());
+				       
+		   			 /*Concatenamos banco y cuenta para mostrar en el titulo del reporte*/
+				        
+				        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+				        
+				        fillParameters.put("REPORTS_DIR",basepath);
+				      
+					  }catch(Exception e) {
+						  
+						  
+					  }
+				        
+				  
+				  StreamResource myResource = null;
+				  		
+					 myResource = report.prepareForPdfReportReturn( basepath+"/8-NC.jrxml",
+								                "Nc",
+								                fillParameters);
+					
+			        Embedded e = new Embedded();
+			        e.setSizeFull();
+			        e.setType(Embedded.TYPE_BROWSER);
+
+			        StreamResource resource = myResource;
+			        
+			        resource.setMIMEType("application/pdf");
+
+			        e.setSource(resource);
+			        
+			        sub = new MySub("80%","75%");
+					sub.setModal(true);
+					sub.setVista(e);
+					
+					UI.getCurrent().addWindow(sub);
+					
+			    
+				
+				  
+			  }
+			  catch(Exception e)
+			  {
+				  Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			  }
+			
+			
+		} catch (Exception e) {
+			
+			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+		}
+		
+	});
 
 
 	

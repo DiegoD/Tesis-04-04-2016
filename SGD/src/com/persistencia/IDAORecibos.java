@@ -1,9 +1,6 @@
 package com.persistencia;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
@@ -12,13 +9,7 @@ import com.excepciones.Recibo.EliminandoReciboException;
 import com.excepciones.Recibo.ExisteReciboException;
 import com.excepciones.Recibo.InsertandoReciboException;
 import com.excepciones.Recibo.ObteniendoReciboException;
-import com.logica.MonedaInfo;
-import com.logica.Docum.CuentaInfo;
-import com.logica.Docum.ImpuestoInfo;
 import com.logica.Docum.Recibo;
-import com.logica.Docum.ReciboDetalle;
-import com.logica.Docum.RubroInfo;
-import com.logica.Docum.TitularInfo;
 
 public interface IDAORecibos {
 

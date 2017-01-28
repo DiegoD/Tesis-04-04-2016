@@ -10,12 +10,7 @@ import com.excepciones.Cotizaciones.ExisteCotizacionException;
 import com.excepciones.Cotizaciones.InsertandoCotizacionException;
 import com.excepciones.Cotizaciones.ModificandoCotizacionException;
 import com.excepciones.Cotizaciones.ObteniendoCotizacionesException;
-import com.excepciones.Monedas.ExisteMonedaException;
-import com.excepciones.Monedas.InsertandoMonedaException;
-import com.excepciones.Monedas.ModificandoMonedaException;
-import com.excepciones.Monedas.ObteniendoMonedaException;
 import com.logica.Cotizacion;
-import com.logica.Moneda;
 
 public interface IDAOCotizaciones {
 	

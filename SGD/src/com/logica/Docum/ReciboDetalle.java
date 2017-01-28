@@ -14,9 +14,7 @@ public class ReciboDetalle extends DocumDetalle {
 	
 	public ReciboDetalleVO retornarVO(){
 	
-		
 		ReciboDetalleVO aux = new ReciboDetalleVO();
-		
 		
 		aux.setCodCuenta(this.getCuenta().getCodCuenta());
 		aux.setNomCuenta(this.getCuenta().getNomCuenta());

@@ -1,23 +1,13 @@
 package com.logica;
 
 import com.valueObject.DocumDGIVO;
-import com.valueObject.DocumentoAduaneroVO;
 
 public class DocumDGI extends Auditoria{
 	private String codigo;
 	private String nombre;
 	private boolean activo;
 	
-public DocumDGI(){
-		
-	}
-
-	public DocumDGI(String codigo, String nombre, boolean activo) {
-		super();
-		this.codigo = codigo;
-		this.nombre = nombre;
-		this.activo = activo;
-	}
+	public DocumDGI(){}
 
 	public DocumDGI(DocumDGIVO documentoVO){
 		

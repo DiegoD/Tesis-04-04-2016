@@ -4,11 +4,13 @@ import com.valueObject.Docum.DatosDocumVO;
 import com.valueObject.Titular.TitularInfoVO;
 
 public class TitularInfo {
+	
+	private String codigo;
+	private String nombre;
+	private String tipo;
+	
 
-	public TitularInfo(){
-		
-		
-	}
+	public TitularInfo(){}
 	
 	public TitularInfo(String codigo, String nombre){
 		
@@ -39,10 +41,6 @@ public class TitularInfo {
 		
 		return aux;
 	}
-	
-	private String codigo;
-	private String nombre;
-	private String tipo;
 	
 	
 	public String getCodigo() {

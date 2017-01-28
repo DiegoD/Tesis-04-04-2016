@@ -16,7 +16,7 @@ public abstract class DocumDetalle extends DatosDocum{
 	private double impSubMo ;
 	
 	private double tcMov;
-	private RubroInfo rubroInfo;
+	private RubroInfo rubroInfo; 
 	
 	private ImpuestoInfo impuestoInfo;
 	
@@ -92,14 +92,6 @@ public abstract class DocumDetalle extends DatosDocum{
 	public void setTcMov(double tcMov) {
 		this.tcMov = tcMov;
 	}
-
-//	public CuentaInfo getCuenta() {
-//		return cuenta;
-//	}
-//
-//	public void setCuenta(CuentaInfo cuenta) {
-//		this.cuenta = cuenta;
-//	}
 
 
 	public String getCodProceso() {

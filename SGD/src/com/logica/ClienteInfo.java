@@ -4,6 +4,9 @@ import com.valueObject.cliente.ClienteInfoVO;
 
 public class ClienteInfo {
 
+	private String codigo;
+	private String nombre;
+	
 	public ClienteInfo(){}
 	
 	public ClienteInfo(String codigo, String nombre){
@@ -18,9 +21,6 @@ public class ClienteInfo {
 		this.nombre = cliInfVO.getNombre();
 		
 	}
-	
-	private String codigo;
-	private String nombre;
 	
 	public String getCodigo() {
 		return codigo;

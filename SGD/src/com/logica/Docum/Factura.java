@@ -9,7 +9,7 @@ import com.valueObject.Docum.FacturaVO;
 
 public class Factura extends DatosDocum{
 
-	private double impuTotMn ;
+	private double impuTotMn;
 	private double impuTotMo;
 	private double impSubMo;
 	private double impSubMn;
@@ -55,12 +55,9 @@ public class Factura extends DatosDocum{
 			this.detalle.add(aux);
 		}
 	}
-		
 	
 	public FacturaVO retornarVO(){
 			
-		
-		
 		FacturaVO aux = new FacturaVO();
 		
 		aux.copiar(super.retornarDatosDocumVO());

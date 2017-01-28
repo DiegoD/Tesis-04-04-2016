@@ -8,7 +8,7 @@ import com.valueObject.Docum.NotaCreditoVO;
 
 public class NotaCredito extends DatosDocum{
 
-	private double impuTotMn ;
+	private double impuTotMn;
 	private double impuTotMo;
 	private double impSubMo;
 	private double impSubMn;
@@ -49,8 +49,6 @@ public class NotaCredito extends DatosDocum{
 	
 	public NotaCreditoVO retornarVO(){
 			
-		
-		
 		NotaCreditoVO aux = new NotaCreditoVO();
 		
 		aux.copiar(super.retornarDatosDocumVO());

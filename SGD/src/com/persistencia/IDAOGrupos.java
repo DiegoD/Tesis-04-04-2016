@@ -2,14 +2,11 @@ package com.persistencia;
 import java.sql.Connection;
 import java.util.ArrayList;
 
-import org.json.simple.JSONObject;
 
 import com.excepciones.ConexionException;
 import com.excepciones.grupos.*;
 import com.logica.Formulario;
 import com.logica.Grupo;
-import com.valueObject.FormularioVO;
-import com.valueObject.GrupoVO;
 
 public interface IDAOGrupos {
 

@@ -1,6 +1,7 @@
 package com.vista.Reportes.GastosPendCobro;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -89,6 +90,7 @@ public class GtosPendCobroxClienteViewExtended extends GtosPendCobroxClienteView
 		ArrayList<Object> lst = new ArrayList<Object>();
 		ArrayList<TitularVO> lstTitulares = new ArrayList<TitularVO>();
 		ArrayList<ClienteVO> lstClientes = new ArrayList<ClienteVO>();
+		ArrayList<ClienteVO> lstClientesAux = new ArrayList<ClienteVO>();
 		
 		/*Inicializamos VO de permisos para el usuario, formulario y operacion
 		 * para confirmar los permisos del usuario*/
@@ -100,7 +102,24 @@ public class GtosPendCobroxClienteViewExtended extends GtosPendCobroxClienteView
 		
 		try {
 			
+			
+			try {
+				
+				lstTitulares = this.controlador.getTitulares(permisoAux);
+				
+			} catch (Exception e) {
+				
+				Mensajes.mostrarMensajeError("Error obteniendo titulares");
+			}
+			
 			lstClientes = this.controlador.getClientes(permisoAux);
+			
+			/*Ingresamos tambien los titulares que no son clientes*/
+			lstClientesAux = this.agregarFuncionariosAlista(lstTitulares, lstClientes);
+			
+			for (ClienteVO cli : lstClientesAux) {
+				lstClientes.add(cli);
+			}
 			
 		} catch (ConexionException| InicializandoException| ObteniendoPermisosException| NoTienePermisosException| ObteniendoClientesException e) 
 		{
@@ -492,4 +511,40 @@ public void inicializarComboMoneda(String cod){
         }
         return sqlDate;
     }
+	
+	/*Agregamos los funcionarios a la lista a mostrar*/
+	private ArrayList<ClienteVO> agregarFuncionariosAlista(ArrayList<TitularVO> lstTit, ArrayList<ClienteVO> lstCli ){
+		
+		ArrayList<TitularVO> lstTitulares = new ArrayList<TitularVO>();
+		ArrayList<ClienteVO> lstClientes = new ArrayList<ClienteVO>();
+		
+		ClienteVO aux;
+		
+		for (TitularVO titVO : lstTit) {
+			
+			if(!titVO.getTipo().toUpperCase().equals("CLIENTE")){
+				
+				aux = new ClienteVO();
+				
+				aux.setActivo(true);
+				aux.setCodigo(titVO.getCodigo());
+				aux.setCodigoDoc("NA");
+				aux.setNombre(titVO.getNombre());
+				aux.setRazonSocial(titVO.getNombre());
+				aux.setDireccion("NA");
+				aux.setMail("NA");
+				aux.setNombreDoc("NA");
+				aux.setNumeroDoc("NA");
+				aux.setOperacion("NA");
+				aux.setTel("NA");
+				aux.setTipo("Func");
+				aux.setUsuarioMod("NA");
+				aux.setFechaMod(new Timestamp(System.currentTimeMillis()));
+				
+				lstClientes.add(aux);
+			}
+		}
+		
+		return lstClientes;
+	}
 }

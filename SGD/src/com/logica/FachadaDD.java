@@ -3777,9 +3777,11 @@ public class FachadaDD {
 		boolean existe = false;
 		Integer codigo;
 		NumeradoresVO codigos = new NumeradoresVO();
-		
+		for(int i =0 ; i<100000; i++){
 		try 
 		{
+			
+			
 			con = this.pool.obtenerConeccion();
 			con.setAutoCommit(false);
 			
@@ -3826,8 +3828,9 @@ public class FachadaDD {
 			this.logsDocumentos.insertarDocLog(logDocum, cod_emp, con);
 			
 			con.commit();
-			return codigos;
+			//return codigos;
 		
+			
 		}
 		catch(Exception IngresandoProcesoException)  	{
 			try {
@@ -3844,6 +3847,8 @@ public class FachadaDD {
 		finally{
 			pool.liberarConeccion(con);
 		}
+		}   /*FIN FOR*/
+		return codigos;
 	}
 
 	/**
@@ -3981,6 +3986,48 @@ public class FachadaDD {
     		con = this.pool.obtenerConeccion();
     		
     		lstTitulares = this.titulares.getTitularesActivos(con, codEmp);
+    		
+    		
+    		TitularVO aux;
+    		for (Titular titular : lstTitulares) 
+			{
+    			aux = new TitularVO();
+    			
+    			aux = titular.retornarTitularVO();
+
+    			lstTitularesVO.add(aux);
+			}
+	
+    	}catch(ObteniendoTitularesException  e)
+    	{
+    		throw e;
+    		
+    	} catch (ConexionException e) {
+			
+    		throw e;
+    	} 
+    	finally
+    	{
+    		this.pool.liberarConeccion(con);
+    	}
+    	    
+    	
+    	return lstTitularesVO;
+    }	 
+    
+    
+public ArrayList<TitularVO> getTitularesTodos(String codEmp) throws ObteniendoTitularesException, ConexionException {
+    	
+    	Connection con = null;
+    	
+    	ArrayList<Titular> lstTitulares;
+    	ArrayList<TitularVO> lstTitularesVO = new ArrayList<TitularVO>();
+    	    	
+    	try
+    	{
+    		con = this.pool.obtenerConeccion();
+    		
+    		lstTitulares = this.titulares.getTitularesTodos(con, codEmp);
     		
     		
     		TitularVO aux;

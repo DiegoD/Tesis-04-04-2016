@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
@@ -14,9 +13,6 @@ import com.excepciones.Cotizaciones.ExisteCotizacionException;
 import com.excepciones.Cotizaciones.InsertandoCotizacionException;
 import com.excepciones.Cotizaciones.ModificandoCotizacionException;
 import com.excepciones.Cotizaciones.ObteniendoCotizacionesException;
-import com.excepciones.Monedas.ExisteMonedaException;
-import com.excepciones.Monedas.InsertandoMonedaException;
-import com.excepciones.Monedas.ModificandoMonedaException;
 import com.logica.Cotizacion;
 import com.logica.Moneda;
 

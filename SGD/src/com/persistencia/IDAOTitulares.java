@@ -12,4 +12,5 @@ public interface IDAOTitulares {
 	
 	 public ArrayList<Titular> getTitularesActivos(Connection con, String codEmp) throws ObteniendoTitularesException, ConexionException;
 	 public ArrayList<Titular> getTitularesActivosFuncioanrios(Connection con, String codEmp) throws ObteniendoTitularesException, ConexionException;
+	 public ArrayList<Titular> getTitularesTodos(Connection con, String codEmp) throws ObteniendoTitularesException, ConexionException;
 }

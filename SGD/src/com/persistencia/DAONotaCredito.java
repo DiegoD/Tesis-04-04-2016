@@ -11,10 +11,7 @@ import com.excepciones.ConexionException;
 
 import com.excepciones.NotaCredito.*;
 import com.logica.MonedaInfo;
-import com.logica.Docum.BancoInfo;
-import com.logica.Docum.CuentaBcoInfo;
 import com.logica.Docum.CuentaInfo;
-import com.logica.Docum.DatosDocum;
 import com.logica.Docum.ImpuestoInfo;
 import com.logica.Docum.NotaCredito;
 import com.logica.Docum.NotaCreditoDetalle;

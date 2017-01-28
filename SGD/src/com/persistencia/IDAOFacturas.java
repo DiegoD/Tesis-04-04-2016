@@ -8,8 +8,6 @@ import com.excepciones.ConexionException;
 import com.excepciones.Factura.*;
 import com.logica.Docum.DatosDocum;
 import com.logica.Docum.Factura;
-import com.logica.Docum.FacturaDetalle;
-import com.valueObject.Docum.FacturaVO;
 
 public interface IDAOFacturas {
 

@@ -7,15 +7,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
-import com.excepciones.Empresas.ExisteEmpresaException;
-import com.excepciones.Empresas.InsertandoEmpresaException;
-import com.excepciones.Empresas.ModificandoEmpresaException;
-import com.excepciones.Empresas.ObteniendoEmpresasException;
 import com.excepciones.Rubros.ExisteRubroException;
 import com.excepciones.Rubros.InsertandoRubroException;
 import com.excepciones.Rubros.ModificandoRubroException;
 import com.excepciones.Rubros.ObteniendoRubrosException;
-import com.logica.Empresa;
 import com.logica.Impuesto;
 import com.logica.Rubro;
 import com.logica.RubroCuenta;

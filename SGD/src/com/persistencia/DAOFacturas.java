@@ -22,8 +22,7 @@ public class DAOFacturas implements IDAOFacturas{
 	/**
 	 * Nos retorna una lista con todos las facturas del sistema para la emrpesa
 	 */
-	public ArrayList<Factura> getFacturaTodos(Connection con, String codEmp, java.sql.Timestamp inicio,
-			java.sql.Timestamp fin) throws ObteniendoFacturasException, ConexionException  {
+	public ArrayList<Factura> getFacturaTodos(Connection con, String codEmp, java.sql.Timestamp inicio,	java.sql.Timestamp fin) throws ObteniendoFacturasException, ConexionException  {
 		
 		ArrayList<Factura> lst = new ArrayList<Factura>();
 	

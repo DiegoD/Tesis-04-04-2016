@@ -4,6 +4,8 @@ import com.valueObject.cliente.ClienteVO;
 
 public class Cliente extends Titular{
 
+	private String razonSocial;
+	
 	public Cliente(){}
 	
 	public Cliente(ClienteVO clienteVO){
@@ -49,7 +51,7 @@ public class Cliente extends Titular{
 		return aux;
 	}
 	
-	private String razonSocial;
+	
 	
 	public String getRazonSocial() {
 		return razonSocial;

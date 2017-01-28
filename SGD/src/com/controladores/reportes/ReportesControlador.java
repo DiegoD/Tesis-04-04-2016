@@ -9,10 +9,12 @@ import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Bancos.ObteniendoBancosException;
 import com.excepciones.Bancos.ObteniendoCuentasBcoException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
+import com.excepciones.Titulares.ObteniendoTitularesException;
 import com.excepciones.clientes.ObteniendoClientesException;
 import com.logica.Fachada;
 import com.logica.FachadaDD;
 import com.valueObject.MonedaVO;
+import com.valueObject.TitularVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.banco.BancoVO;
 import com.valueObject.banco.CtaBcoVO;
@@ -38,6 +40,19 @@ public class ReportesControlador {
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
 			return Fachada.getInstance().getClientesTodos(permisos.getCodEmp());
+		else
+			throw new NoTienePermisosException();
+	}
+	
+	/**
+	 * Retorna todos los titulares
+	 * @throws ObteniendoTitularesException 
+	 */
+	public ArrayList<TitularVO> getTitulares(UsuarioPermisosVO permisos) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoClientesException, ObteniendoTitularesException {
+		
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			return FachadaDD.getInstance().getTitularesTodos(permisos.getCodEmp());
 		else
 			throw new NoTienePermisosException();
 	}

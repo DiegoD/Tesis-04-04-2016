@@ -19,29 +19,6 @@ public class Rubro extends Auditoria{
 		impuesto = new Impuesto();
 	}
 
-	public Rubro(String cod_rubro, String descripcion, boolean activo, Impuesto impuesto,
-			     TipoRubro tipoRubro) {
-		super();
-		this.cod_rubro = cod_rubro;
-		this.descripcion = descripcion;
-		this.activo = activo;
-		this.impuesto = impuesto;
-		this.tipoRubro = tipoRubro;
-	}
-	
-	public Rubro(String cod_rubro, String descripcion, boolean activo, Impuesto impuesto,
-		     TipoRubro tipoRubro, boolean oficina, boolean proceso, boolean persona, boolean facturable) {
-		super();
-		this.cod_rubro = cod_rubro;
-		this.descripcion = descripcion;
-		this.activo = activo;
-		this.impuesto = impuesto;
-		this.tipoRubro = tipoRubro;
-		this.oficina = oficina;
-		this.proceso = proceso;
-		this.persona = persona;
-		this.facturable = facturable;
-	}
 
 	public Rubro(RubroVO rubroVO){
 		super(rubroVO.getUsuarioMod(), rubroVO.getFechaMod(), rubroVO.getOperacion());
@@ -60,12 +37,6 @@ public class Rubro extends Auditoria{
 		this.facturable = rubroVO.isFacturable();
 	}
 	
-	public Rubro(String cod_rubro, String descripcion, Impuesto impuesto){
-		this.cod_rubro = cod_rubro;
-		this.descripcion = descripcion;
-		this.impuesto = impuesto;
-	}
-
 	public String getCod_rubro() {
 		return cod_rubro;
 	}

@@ -12,7 +12,6 @@ import com.excepciones.Periodo.InsertandoPeriodoException;
 import com.excepciones.Periodo.ModificandoPeriodoException;
 import com.excepciones.Periodo.NoExistePeriodoException;
 import com.excepciones.Periodo.ObteniendoPeriodosException;
-import com.logica.Moneda;
 import com.logica.Periodo.Periodo;
 
 public class DAOPeriodo implements IDAOPeriodo{
@@ -165,7 +164,7 @@ public class DAOPeriodo implements IDAOPeriodo{
 
 	@Override
 	public boolean validaPeriodo(String mes, Integer anio, String codEmp, Connection con) throws NoExistePeriodoException {
-		// TODO Auto-generated method stub
+		
 		boolean existe = false;
 		
 		try{

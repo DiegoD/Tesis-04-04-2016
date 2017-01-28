@@ -1,6 +1,5 @@
 package com.logica;
 
-import com.valueObject.empresa.EmpresaVO;
 import com.valueObject.TipoRubro.TipoRubroVO;
 
 public class TipoRubro extends Auditoria{
@@ -10,18 +9,8 @@ public class TipoRubro extends Auditoria{
 	private boolean activo;
 	private String cod_emp;
 	
+	public TipoRubro(){}
 	
-	public TipoRubro(){
-		
-	}
-	
-	public TipoRubro(String cod_tipoRubro, String descripcion, boolean activo, String cod_emp) {
-		super();
-		this.cod_tipoRubro = cod_tipoRubro;
-		this.descripcion = descripcion;
-		this.activo = activo;
-		this.cod_emp = cod_emp;
-	}
 	
 	public TipoRubro(TipoRubroVO tipoRubroVO){
 		

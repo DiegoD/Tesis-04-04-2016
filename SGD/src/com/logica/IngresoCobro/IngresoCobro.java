@@ -165,9 +165,6 @@ public class IngresoCobro extends DatosDocum{
 	public void setCuentaBcoInfo(CuentaBcoInfo cuentaBcoInfo) {
 		this.cuentaBcoInfo = cuentaBcoInfo;
 	}
-
-
-
 	
 	
 }

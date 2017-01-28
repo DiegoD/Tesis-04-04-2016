@@ -7,9 +7,11 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 
+import com.Reportes.util.ReportsUtil;
 import com.controladores.FacturaControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.InicializandoException;
@@ -33,9 +35,11 @@ import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
+import com.vaadin.server.StreamResource;
 import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
@@ -50,6 +54,7 @@ import com.valueObject.Docum.FacturaVO;
 import com.valueObject.Gasto.GastoVO;
 import com.valueObject.Gasto.GtoSaldoAux;
 import com.valueObject.IngresoCobro.IngresoCobroDetalleVO;
+import com.valueObject.banco.BancoVO;
 import com.valueObject.banco.CtaBcoVO;
 import com.valueObject.cliente.ClienteVO;
 import com.valueObject.proceso.ProcesoVO;
@@ -202,6 +207,85 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		UI.getCurrent().addWindow(sub);
 		
 	});
+	
+	
+	this.imprimir.addClickListener(click -> {
+		
+		/*REPORTE*/
+		
+		try {
+			
+			com.Reportes.util.ReportsUtil report;
+			
+			String basepath = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath() + "/WEB-INF/Reportes";
+			
+			System.out.println(basepath);
+			
+		    report = new ReportsUtil();
+			 
+			  
+			  try {
+				  
+				  HashMap<String, Object> fillParameters=new HashMap<String, Object>();
+				  
+				 
+				  try{
+						 
+					  
+				        fillParameters.put("nroTrans",fieldGroup.getItemDataSource().getBean().getNroTrans());
+				        fillParameters.put("codEmp",this.permisos.getCodEmp());
+				       
+		   			 /*Concatenamos banco y cuenta para mostrar en el titulo del reporte*/
+				        
+				        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+				        
+				        fillParameters.put("REPORTS_DIR",basepath);
+				      
+					  }catch(Exception e) {
+						  
+						  
+					  }
+				        
+				  
+				  StreamResource myResource = null;
+				  		
+					 myResource = report.prepareForPdfReportReturn( basepath+"/7-Factura.jrxml",
+								                "Factura",
+								                fillParameters);
+					
+			        Embedded e = new Embedded();
+			        e.setSizeFull();
+			        e.setType(Embedded.TYPE_BROWSER);
+
+			        StreamResource resource = myResource;
+			        
+			        resource.setMIMEType("application/pdf");
+
+			        e.setSource(resource);
+			        
+			        sub = new MySub("80%","75%");
+					sub.setModal(true);
+					sub.setVista(e);
+					
+					UI.getCurrent().addWindow(sub);
+					
+			    
+				
+				  
+			  }
+			  catch(Exception e)
+			  {
+				  Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			  }
+			
+			
+		} catch (Exception e) {
+			
+			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+		}
+		
+	});
+	
 	
 
 	this.btnBuscarProceso.addClickListener(click -> {
@@ -2612,6 +2696,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		datosCab.setFecValor(new java.sql.Timestamp(fecValor.getValue().getTime()));
 		
 		return datosCab;
+		
 	}
 	
 
@@ -2623,6 +2708,8 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	         return false;  
 	    }  
 	}
+	
+	
 
 	
 }

@@ -81,11 +81,9 @@ public  class Titular extends Auditoria{
 		this.activo = activo;
 	}
 
-
 	public String getTipo() {
 		return tipo;
 	}
-
 
 	public void setTipo(String tipo) {
 		this.tipo = tipo;
