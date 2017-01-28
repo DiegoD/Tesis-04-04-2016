@@ -392,6 +392,7 @@ private static final long serialVersionUID = 1L;
 							conciliacion.setNroTrans(codigos.getNumeroTrans());
 							conciliacion.setNroDocum(String.valueOf(codigos.getCodigo()));
 							this.mainView.actulaizarGrilla(conciliacion, Variables.OPERACION_NUEVO);
+							Mensajes.mostrarMensajeOK("Se ha guardado la concilición");
     						main.cerrarVentana();
 						}
 						
@@ -403,6 +404,7 @@ private static final long serialVersionUID = 1L;
 							
 							controlador.modificarConciliacion(conciliacion, permisoAux);
 							this.mainView.actulaizarGrilla(conciliacion, Variables.OPERACION_EDITAR);
+							Mensajes.mostrarMensajeOK("Se ha modificado la concilición");
 							main.cerrarVentana();
 						}
 					}

@@ -360,7 +360,7 @@ public class ConsultasDD {
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("SELECT cod_emp, nom_emp, fecha_mod, usuario_mod, operacion, activo ");
-		sb.append("FROM m_empresas ");
+		sb.append("FROM m_empresas where cod_emp <> 01 ");
 		
 		return sb.toString();
 	}
