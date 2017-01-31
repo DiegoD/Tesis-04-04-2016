@@ -12,7 +12,7 @@ private ArrayList<ReciboDetalleVO> detalle;
 	private int codProceso;
 	private String descProceso;
 	
-	private double impuTotMn ;
+	private double impuTotMn;
 	private double impuTotMo;
 	private double impSubMo;
 	private double impSubMn;

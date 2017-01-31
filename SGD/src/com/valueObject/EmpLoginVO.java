@@ -17,6 +17,5 @@ public class EmpLoginVO
 	public void setNomEmp(String nomEmp) {
 		this.nomEmp = nomEmp;
 	}
-	
 
 }

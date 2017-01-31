@@ -8,11 +8,6 @@ public class DocumentoVO {
 
 	public DocumentoVO(){}
 	
-	public DocumentoVO(String codigo, String nombre, String numero){
-		
-		this.codigo =codigo;
-		this.nombre = nombre;
-	}
 	
 	public String getCodigo() {
 		return codigo;

@@ -3,7 +3,6 @@ package com.persistencia;
 import java.sql.*;
 import java.util.ArrayList;
 
-import org.json.simple.JSONObject;
 
 import com.excepciones.ConexionException;
 import com.excepciones.ObteniendoPermisosException;
@@ -16,7 +15,6 @@ import com.excepciones.Usuarios.ObteniendoUsuariosxEmpExeption;
 import com.excepciones.grupos.ObteniendoFormulariosException;
 import com.excepciones.grupos.ObteniendoGruposException;
 import com.logica.Formulario;
-import com.logica.Grupo;
 import com.logica.Usuario;
 import com.valueObject.EmpLoginVO;
 import com.valueObject.GrupoVO;
@@ -42,6 +40,5 @@ public interface IDAOUsuarios {
 	
 	public void modificarUsuario(Usuario user, String empresa, Connection con) throws ModificandoUsuarioException;
 	
-	public Formulario getPermisoFormularioOperacionUsuario(String usuario, String codEmp, String formulario,
-			Connection con)throws ObteniendoPermisosException;
+	public Formulario getPermisoFormularioOperacionUsuario(String usuario, String codEmp, String formulario,Connection con)throws ObteniendoPermisosException;
 }

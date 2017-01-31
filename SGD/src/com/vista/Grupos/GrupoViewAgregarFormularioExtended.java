@@ -3,12 +3,9 @@ package com.vista.Grupos;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.controladores.GrupoControlador;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.UI;
-import com.vaadin.ui.Window;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.valueObject.FormularioVO;
 import com.vista.Mensajes;

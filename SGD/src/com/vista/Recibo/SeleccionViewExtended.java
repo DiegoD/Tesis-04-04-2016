@@ -1,13 +1,7 @@
 package com.vista.Recibo;
 
-import com.vaadin.ui.Component;
-import com.vaadin.ui.UI;
-import com.vista.IMensaje;
 import com.vista.Mensajes;
-import com.vista.MySub;
-import com.vista.Variables;
 import com.vista.Factura.FacturaViewExtended;
-import com.vista.detFactura.DetFacturaViewExtended;
 
 public class SeleccionViewExtended extends SeleccionView{
 	

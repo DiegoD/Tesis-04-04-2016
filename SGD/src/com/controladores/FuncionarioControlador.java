@@ -21,7 +21,6 @@ import com.logica.Fachada;
 import com.valueObject.DocumDGIVO;
 import com.valueObject.FuncionarioVO;
 import com.valueObject.UsuarioPermisosVO;
-import com.valueObject.cliente.ClienteVO;
 
 public class FuncionarioControlador {
 

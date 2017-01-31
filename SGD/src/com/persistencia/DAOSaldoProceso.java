@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
@@ -13,18 +12,11 @@ import com.excepciones.Saldos.ExisteSaldoException;
 import com.excepciones.Saldos.IngresandoSaldoException;
 import com.excepciones.Saldos.ModificandoSaldoException;
 import com.excepciones.Saldos.ObteniendoSaldosException;
-import com.google.gwt.thirdparty.javascript.jscomp.SourceMap.DetailLevel;
 import com.logica.MonedaInfo;
 import com.logica.SaldoProceso;
-import com.logica.Docum.BancoInfo;
-import com.logica.Docum.CuentaBcoInfo;
-import com.logica.Docum.CuentaInfo;
 import com.logica.Docum.DatosDocum;
-import com.logica.Docum.DocumDetalle;
-import com.logica.Docum.TitularInfo;
 import com.mysql.jdbc.Statement;
 import com.valueObject.Docum.DatosDocumVO;
-import com.valueObject.proceso.SaldoProcesoVO;
 
 public class DAOSaldoProceso implements IDAOSaldosProc {
 	

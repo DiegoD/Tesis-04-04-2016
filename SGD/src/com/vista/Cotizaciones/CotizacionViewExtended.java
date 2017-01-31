@@ -1,12 +1,9 @@
 package com.vista.Cotizaciones;
 
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-import com.controladores.CodigoGeneralizadoControlador;
 import com.controladores.CotizacionControlador;
-import com.controladores.RubroControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
@@ -17,19 +14,14 @@ import com.excepciones.Cotizaciones.InsertandoCotizacionException;
 import com.excepciones.Cotizaciones.ModificandoCotizacionException;
 import com.excepciones.Cotizaciones.NoExisteCotizacionException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
-import com.excepciones.TipoRubro.ObteniendoTipoRubroException;
-import com.gargoylesoftware.htmlunit.javascript.host.PermissionStatus;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.UI;
-import com.valueObject.ImpuestoVO;
 import com.valueObject.MonedaVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.Cotizacion.CotizacionVO;
-import com.valueObject.TipoRubro.TipoRubroVO;
-import com.vista.BusquedaViewExtended;
 import com.vista.IBusqueda;
 import com.vista.Mensajes;
 import com.vista.MySub;
@@ -147,55 +139,6 @@ public class CotizacionViewExtended extends CotizacionView implements IBusqueda{
 			}
 		});
 		
-//		this.btnBuscarMoneda.addClickListener(click -> {
-//			
-//			BusquedaViewExtended form = new BusquedaViewExtended(this, new MonedaVO());
-//			ArrayList<Object> lst = new ArrayList<Object>();
-//			ArrayList<MonedaVO> lstMonedas = new ArrayList<MonedaVO>();
-//			//controladorImpuestos = new ImpuestoControlador();
-//			try {
-//				 /* para confirmar los permisos del usuario*/
-//				permisoAux = 
-//						new UsuarioPermisosVO(this.permisos.getCodEmp(),
-//								this.permisos.getUsuario(),
-//								VariablesPermisos.FORMULARIO_COTIZACIONES,
-//								VariablesPermisos.OPERACION_NUEVO_EDITAR);
-//				lstMonedas = this.controlador.getMonedas(permisoAux);
-//				
-//			} catch (ConexionException | InicializandoException | ObteniendoPermisosException | NoTienePermisosException e) {
-//
-//				Mensajes.mostrarMensajeError(e.getMessage());
-//			}
-//			catch (ObteniendoMonedaException e){
-//				Mensajes.mostrarMensajeError(e.getMessage());
-//			}
-//			Object obj;
-//			for (MonedaVO i: lstMonedas) {
-//				obj = new Object();
-//				obj = (Object)i;
-//				lst.add(obj);
-//			}
-//			try {
-//				
-//				form.inicializarGrilla(lst);
-//				
-//			} catch (Exception e) {
-//				
-//				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
-//			}
-//			
-//			
-//			
-//			sub = new MySub("65%", "65%" );
-//			sub.setModal(true);
-//			sub.center();
-//			sub.setModal(true);
-//			sub.setVista(form);
-//			sub.center();
-//			sub.setDraggable(true);
-//			UI.getCurrent().addWindow(sub);
-//			
-//		});
 		
 		this.cancelar.addClickListener(click -> {
 			main.cerrarVentana();
@@ -240,11 +183,6 @@ public class CotizacionViewExtended extends CotizacionView implements IBusqueda{
 	 */
 	private void setearValidaciones(boolean setear){
 		
-//		this.codMoneda.setRequired(setear);
-//		this.codMoneda.setRequiredError("Es requerido");
-//		
-//		this.descripcionMoneda.setRequired(setear);
-//		this.descripcionMoneda.setRequiredError("Es requerido");
 		
 		this.fecha.setRequired(setear);
 		this.fecha.setRequiredError("Es requerido");
@@ -396,11 +334,6 @@ public class CotizacionViewExtended extends CotizacionView implements IBusqueda{
 	{
 		this.cotizacionCompra.setReadOnly(false);
 		this.cotizacionVenta.setReadOnly(false);
-//		this.codMoneda.setReadOnly(false);
-//		this.descripcionMoneda.setReadOnly(false);
-//		this.codMoneda.setEnabled(true);
-//		this.descripcionMoneda.setEnabled(true);
-		
 	}
 	
 	
@@ -433,8 +366,6 @@ public class CotizacionViewExtended extends CotizacionView implements IBusqueda{
 	{
 		this.aceptar.setEnabled(false);
 		this.aceptar.setVisible(false);
-//		this.btnBuscarMoneda.setEnabled(false);
-//		this.btnBuscarMoneda.setVisible(false);
 	}
 	
 	/**
@@ -445,8 +376,6 @@ public class CotizacionViewExtended extends CotizacionView implements IBusqueda{
 	{
 		this.aceptar.setEnabled(true);
 		this.aceptar.setVisible(true);
-//		this.btnBuscarMoneda.setEnabled(true);
-//		this.btnBuscarMoneda.setVisible(true);
 	}
 	
 	/**
@@ -456,8 +385,6 @@ public class CotizacionViewExtended extends CotizacionView implements IBusqueda{
 	 */
 	private void readOnlyFields(boolean setear)
 	{
-//		this.codMoneda.setReadOnly(setear);
-//		this.descripcionMoneda.setReadOnly(setear);
 		this.cotizacionCompra.setReadOnly(setear);
 		this.cotizacionVenta.setReadOnly(setear);
 		this.fecha.setReadOnly(setear);
@@ -471,14 +398,6 @@ public class CotizacionViewExtended extends CotizacionView implements IBusqueda{
 	 */
 	private void agregarFieldsValidaciones()
 	{
-//        this.codMoneda.addValidator(
-//                new StringLengthValidator(
-//                     " 20 caracteres máximo", 1, 20, false));
-//        
-//        this.descripcion.addValidator(
-//                new StringLengthValidator(
-//                        " 45 caracteres máximo", 1, 45, false));
-        
 		
 	}
 	

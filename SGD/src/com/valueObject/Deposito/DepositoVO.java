@@ -4,12 +4,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import com.logica.FuncionarioInfo;
-import com.logica.MonedaInfo;
-import com.logica.Depositos.DepositoDetalle;
-import com.logica.Docum.BancoInfo;
-import com.logica.Docum.CuentaBcoInfo;
 import com.valueObject.AuditoriaVO;
-import com.valueObject.MonedaVO;
 
 public class DepositoVO extends AuditoriaVO{
 	
@@ -27,7 +22,6 @@ public class DepositoVO extends AuditoriaVO{
 	private String codMoneda;
 	private boolean nacional;
 	
-	//private MonedaInfo moneda;
 	private String nomMoneda;
 	
 	private FuncionarioInfo funcionario;
@@ -108,15 +102,6 @@ public class DepositoVO extends AuditoriaVO{
 	public void setFecDoc(Timestamp fecDoc) {
 		this.fecDoc = fecDoc;
 	}
-
-
-//	public MonedaInfo getMoneda() {
-//		return moneda;
-//	}
-//
-//	public void setMoneda(MonedaInfo moneda) {
-//		this.moneda = moneda;
-//	}
 
 	public FuncionarioInfo getFuncionario() {
 		return funcionario;

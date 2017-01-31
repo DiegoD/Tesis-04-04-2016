@@ -1333,8 +1333,7 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 		
 	}
 	
-	public static java.sql.Date convertFromJAVADateToSQLDate(
-            java.util.Date javaDate) {
+	public static java.sql.Date convertFromJAVADateToSQLDate(java.util.Date javaDate) {
         java.sql.Date sqlDate = null;
         if (javaDate != null) {
             sqlDate = new Date(javaDate.getTime());

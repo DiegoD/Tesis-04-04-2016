@@ -1,8 +1,5 @@
 package com.vista.Login;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.math.BigInteger;
 import java.util.ArrayList;
 
 
@@ -13,36 +10,22 @@ import com.excepciones.InicializandoException;
 import com.excepciones.Login.LoginException;
 import com.excepciones.Usuarios.ObteniendoUsuariosxEmpExeption;
 import com.excepciones.grupos.ObteniendoFormulariosException;
-import com.vaadin.event.FieldEvents.FocusEvent;
-import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.ShortcutAction.KeyCode;
-import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewDisplay;
-import com.vaadin.server.Page;
-import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinService;
-import com.vaadin.ui.Alignment;
-import com.vaadin.ui.Image;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.UI;
 import com.valueObject.EmpLoginVO;
 import com.valueObject.LoginVO;
 import com.vista.MD5;
 import com.vista.Mensajes;
 import com.vista.PermisosUsuario;
 import com.vista.Principal;
-import com.vista.Variables;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 public class LoginExtended extends Login implements ViewDisplay {
 	
 	LoginControlador controlador;
-	Navigator navigator;
 	private Principal principal;
-	private ArrayList<EmpLoginVO> lstEmpresasUsu;
 
 	
 	public LoginExtended(Principal principal){

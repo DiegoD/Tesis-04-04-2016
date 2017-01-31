@@ -1,6 +1,5 @@
 package com.vista;
 
-import java.util.ArrayList;
 import java.util.Hashtable;
 
 import com.valueObject.FormularioVO;
@@ -14,10 +13,6 @@ public class PermisosUsuario {
 	private String codEmp;
 	private String usuario;
 			
-	
-	/*Variable estaticas*/
-	
-
 
 	private Hashtable<String, FormularioVO> lstFormularios;
 	

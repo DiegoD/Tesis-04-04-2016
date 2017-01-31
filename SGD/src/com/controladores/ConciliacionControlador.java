@@ -125,15 +125,6 @@ public class ConciliacionControlador {
 	}
 	
 	
-//	public ArrayList<DepositoDetalleVO> getChequesBanco(UsuarioPermisosVO permisos, String codMoneda) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoChequeException, ObteniendoCuentasBcoException, ObteniendoBancosException {
-//		
-//		/*Primero se verifican los permisos*/
-//		if(Fachada.getInstance().permisoEnFormulario(permisos))
-//			return FachadaDD.getInstance().getChequesBanco(permisos.getCodEmp(), codMoneda);
-//		else
-//			throw new NoTienePermisosException();
-//	}
-//	
 	public NumeradoresVO insertarConciliacion(UsuarioPermisosVO permisos, ConciliacionVO conciliacion) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoConciliacionException, ObteniendoCuentasBcoException, ObteniendoBancosException, InsertandoConciliacionException, ExisteConciliacionException {
 		
 		/*Primero se verifican los permisos*/

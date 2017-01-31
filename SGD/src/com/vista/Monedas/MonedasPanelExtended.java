@@ -5,13 +5,11 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
-import com.controladores.ImpuestoControlador;
 import com.controladores.MonedaControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.InicializandoException;
 import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
-import com.excepciones.Impuestos.ObteniendoImpuestosException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
@@ -21,10 +19,8 @@ import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
-import com.valueObject.ImpuestoVO;
 import com.valueObject.MonedaVO;
 import com.valueObject.UsuarioPermisosVO;
-import com.valueObject.empresa.EmpresaVO;
 import com.vista.Mensajes;
 import com.vista.MySub;
 import com.vista.PermisosUsuario;
@@ -34,7 +30,7 @@ import com.vista.VariablesPermisos;
 public class MonedasPanelExtended extends MonedasPanel{
 	
 	private MonedaViewExtended form; 
-	private ArrayList<MonedaVO> lstMonedas; /*Lista con las empresas*/
+	private ArrayList<MonedaVO> lstMonedas; /*Lista con las monedas*/
 	private BeanItemContainer<MonedaVO> container;
 	private MonedaControlador controlador;
 	MySub sub = new MySub("65%", "65%");

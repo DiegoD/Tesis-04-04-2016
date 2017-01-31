@@ -1,7 +1,6 @@
 package com.valueObject.Periodo;
 
 import com.valueObject.AuditoriaVO;
-import com.valueObject.MonedaVO;
 
 public class PeriodoVO extends AuditoriaVO{
 	
@@ -50,7 +49,6 @@ public class PeriodoVO extends AuditoriaVO{
 	public void setAbierto(Boolean abierto) {
 		this.abierto = abierto;
 	}
-	
 	
 
 }

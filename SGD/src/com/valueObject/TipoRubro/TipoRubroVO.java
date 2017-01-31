@@ -1,7 +1,6 @@
 package com.valueObject.TipoRubro;
 
 import com.valueObject.AuditoriaVO;
-import com.valueObject.empresa.EmpresaVO;
 
 public class TipoRubroVO extends AuditoriaVO{
 
@@ -13,13 +12,6 @@ public class TipoRubroVO extends AuditoriaVO{
 		
 	}
 	
-	public TipoRubroVO(String codTipoRubro, String descripcion, boolean activo, String cod_emp) {
-		super();
-		this.codTipoRubro = codTipoRubro;
-		this.descripcion = descripcion;
-		this.activo = activo;
-		this.codEmp = cod_emp;
-	}
 
 	/**
 	 * Copiamos todos los datos del tipo rubro pasado

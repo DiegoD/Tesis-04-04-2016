@@ -2,11 +2,8 @@ package com.valueObject.Cheque;
 
 import java.sql.Timestamp;
 
-import com.logica.Docum.BancoInfo;
-import com.logica.Docum.CuentaBcoInfo;
-import com.valueObject.Docum.DatosDocumVO;
 
-public class ChequeVO { //extends DatosDocumVO{
+public class ChequeVO { 
 	
 	private Timestamp fecDoc;
 	private Timestamp fecValor;
@@ -42,41 +39,9 @@ public class ChequeVO { //extends DatosDocumVO{
 	private String codBanco;
 	private String nomBanco;
 	
-//	private BancoInfo banco;
-//	private CuentaBcoInfo cuentaBanco;
 	
 	public ChequeVO(){
 		
-	}
-
-	public ChequeVO(Timestamp fecDoc, Timestamp fecValor, String codDocum, String serieDocum, int nroDocum, String codEmp,
-			boolean nacional, String referencia, String codMoneda, String nomMoneda, String simboloMoneda,
-			String nomTitular, String codTitular, String tipo, long nroTrans, double impTotMn, double impTotMo,
-			double tcMov, String codCuenta, String nomCuenta, String codCtaInd, String codBanco, String nomBanco) {
-		super();
-		this.fecDoc = fecDoc;
-		this.fecValor = fecValor;
-		this.codDocum = codDocum;
-		this.serieDocum = serieDocum;
-		this.nroDocum = nroDocum;
-		this.codEmp = codEmp;
-		this.nacional = nacional;
-		this.referencia = referencia;
-		this.codMoneda = codMoneda;
-		this.nomMoneda = nomMoneda;
-		this.simboloMoneda = simboloMoneda;
-		this.nomTitular = nomTitular;
-		this.codTitular = codTitular;
-		this.tipo = tipo;
-		this.nroTrans = nroTrans;
-		this.impTotMn = impTotMn;
-		this.impTotMo = impTotMo;
-		this.tcMov = tcMov;
-		this.codCuenta = codCuenta;
-		this.nomCuenta = nomCuenta;
-		this.codCtaInd = codCtaInd;
-		this.codBanco = codBanco;
-		this.nomBanco = nomBanco;
 	}
 
 	public Timestamp getFecDoc() {

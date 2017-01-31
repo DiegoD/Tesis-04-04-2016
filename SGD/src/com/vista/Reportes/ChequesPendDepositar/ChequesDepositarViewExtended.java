@@ -23,16 +23,12 @@ import com.valueObject.TitularVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.Cheque.ChequeVO;
 import com.valueObject.Cotizacion.CotizacionVO;
-import com.valueObject.Gasto.GtoSaldoAux;
 import com.valueObject.IngresoCobro.IngresoCobroDetalleVO;
 import com.valueObject.IngresoCobro.IngresoCobroVO;
-import com.valueObject.banco.BancoVO;
-import com.valueObject.banco.CtaBcoVO;
 import com.valueObject.cliente.ClienteVO;
 import com.vista.BusquedaViewExtended;
 import com.vista.IBusqueda;
 import com.vista.IMensaje;
-import com.vista.MensajeExtended;
 import com.vista.Mensajes;
 import com.vista.MySub;
 import com.vista.PermisosUsuario;
@@ -45,13 +41,9 @@ public class ChequesDepositarViewExtended extends ChequesDepositarViews implemen
 
 	MySub sub = new MySub("60%","75%");
 	
-	private BeanFieldGroup<IngresoCobroVO> fieldGroup;
 	
 	private ReportesControlador controlador;
-	private String operacion;
 	
-	private IngresoCobroDetalleVO formSelecccionado; /*Variable utilizada cuando se selecciona
-	 										  un detalle, para poder quitarlo de la lista*/
 	UsuarioPermisosVO permisoAux;
 	CotizacionVO cotizacion =  new CotizacionVO();
 	Double cotizacionVenta = null;
@@ -266,8 +258,6 @@ public class ChequesDepositarViewExtended extends ChequesDepositarViews implemen
 	public  void inicializarForm(){
 		
 		this.inicializarComboMoneda(null);
-		
-		
 	}
 
 	
@@ -494,8 +484,7 @@ public void inicializarComboMoneda(String cod){
 	}
 	
 	
-	public static java.sql.Date convertFromJAVADateToSQLDate(
-            java.util.Date javaDate) {
+	public static java.sql.Date convertFromJAVADateToSQLDate(java.util.Date javaDate) {
         java.sql.Date sqlDate = null;
         if (javaDate != null) {
             sqlDate = new Date(javaDate.getTime());

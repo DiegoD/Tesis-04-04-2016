@@ -3,16 +3,12 @@ package com.vista.detFactura;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 
-import org.apache.james.mime4j.field.datetime.DateTime;
 
 //import org.vaadin.csvalidation.CSValidator;
 
-import com.controladores.CotizacionControlador;
 import com.controladores.GastoControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.ErrorInesperadoException;
@@ -20,7 +16,6 @@ import com.excepciones.InicializandoException;
 import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Cotizaciones.ObteniendoCotizacionesException;
-import com.excepciones.Cuentas.ObteniendoCuentasException;
 import com.excepciones.Cuentas.ObteniendoRubrosException;
 import com.excepciones.DocLog.InsertandoLogException;
 import com.excepciones.DocLog.ModificandoLogException;
@@ -34,29 +29,17 @@ import com.excepciones.Monedas.ObteniendoMonedaException;
 import com.excepciones.Periodo.ExistePeriodoException;
 import com.excepciones.Periodo.NoExistePeriodoException;
 import com.excepciones.Procesos.EliminandoProcesoException;
-import com.excepciones.Procesos.ObteniendoProcesosException;
 import com.excepciones.Saldos.EliminandoSaldoException;
 import com.excepciones.Saldos.ExisteSaldoException;
 import com.excepciones.Saldos.IngresandoSaldoException;
 import com.excepciones.Saldos.ModificandoSaldoException;
-import com.excepciones.funcionarios.ObteniendoFuncionariosException;
-import com.vaadin.data.Container.ItemSetChangeEvent;
-import com.vaadin.data.Container.ItemSetChangeListener;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.data.util.converter.Converter.ConversionException;
-import com.vaadin.data.validator.RegexpValidator;
 import com.vaadin.data.validator.StringLengthValidator;
-import com.vaadin.event.FieldEvents.BlurEvent;
-import com.vaadin.event.FieldEvents.BlurListener;
-import com.vaadin.event.FieldEvents.FocusEvent;
-import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.server.VaadinService;
-import com.vaadin.ui.Calendar;
-import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import com.valueObject.FuncionarioVO;
 import com.valueObject.ImpuestoVO;
@@ -435,10 +418,6 @@ public class DetFacturaViewExtended extends DetFacturaView implements IBusqueda{
 
 		this.btnBuscarRubro.addClickListener(click -> {
 			
-//			BusquedaViewExtended form = new BusquedaViewExtended(this, new RubroVO());
-//			ArrayList<Object> lst = new ArrayList<Object>();
-//			ArrayList<RubroVO> lstRubros = new ArrayList<RubroVO>();
-			
 			BusquedaViewExtended form = new BusquedaViewExtended(this, new RubroCuentaVO());
 			ArrayList<Object> lst = new ArrayList<Object>();
 			ArrayList<RubroCuentaVO> lstRubros = new ArrayList<RubroCuentaVO>();
@@ -579,8 +558,8 @@ public class DetFacturaViewExtended extends DetFacturaView implements IBusqueda{
 					}
 					catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
 							| InicializandoException | NoTienePermisosException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						
+						Mensajes.mostrarMensajeError(e.getMessage());
 					}
 					if(fecha != null){
 	   					
@@ -612,7 +591,7 @@ public class DetFacturaViewExtended extends DetFacturaView implements IBusqueda{
 		        	try {
 		        		importeMoneda = (Double) impTotMo.getConvertedValue();
 					} catch (Exception e) {
-						// TODO: handle exception
+						
 						return;
 					}
 		        	
@@ -645,7 +624,6 @@ public class DetFacturaViewExtended extends DetFacturaView implements IBusqueda{
 		        	try {
 		        		cotizacionVenta = Double.valueOf(tcMov.getConvertedValue().toString());
 					} catch (Exception e) {
-						// TODO: handle exception
 						return;
 					}
 		        	
@@ -681,7 +659,6 @@ public class DetFacturaViewExtended extends DetFacturaView implements IBusqueda{
 		        	try {
 		        		porcImpuesto = (Double) porcentajeImpuesto.getConvertedValue();
 					} catch (Exception e) {
-						// TODO: handle exception
 						return;
 					}
 		        	
@@ -962,8 +939,6 @@ public class DetFacturaViewExtended extends DetFacturaView implements IBusqueda{
 	private void enableCombos(){
 		this.comboMoneda.setEnabled(true);
 		this.comboEstado.setEnabled(true);
-		//this.comboImpuesto.setEnabled(true);
-		
 	}
 	
 	/**
@@ -1058,12 +1033,8 @@ public class DetFacturaViewExtended extends DetFacturaView implements IBusqueda{
 		this.btnBuscarRubro.setEnabled(true);
 		this.btnBuscarRubro.setVisible(true);
 		
-//		this.btnBuscarCuenta.setEnabled(true);
-//		this.btnBuscarCuenta.setVisible(true);
-		
 		this.btnBuscarImpuesto.setEnabled(true);
 		this.btnBuscarImpuesto.setVisible(true);
-		
 		
 	}
 	
@@ -1084,8 +1055,6 @@ public class DetFacturaViewExtended extends DetFacturaView implements IBusqueda{
 		this.btnEliminar.setEnabled(false);
 		this.btnEliminar.setVisible(false);
 		this.botones.setWidth("187px");
-		
-		
 	}
 	
 	/**
@@ -1135,26 +1104,6 @@ public class DetFacturaViewExtended extends DetFacturaView implements IBusqueda{
 		this.referencia.addValidator(
 				new StringLengthValidator(
 						"50 caracteres máximo", 0, 50, true));
-		
-//        this.referencia.addValidator(
-//                new StringLengthValidator(
-//                     " 50 caracteres máximo", 0, 50, true));
-        
-//        this.codCuenta.addValidator(
-//                new StringLengthValidator(
-//                        " 20 caracteres máximo", 0, 100, true));
-//        this.codRubro.addValidator(
-//                new StringLengthValidator(
-//                        " 100 caracteres máximo", 0, 100, true));
-//        
-//        this.comboImpuesto.addValidator(
-//                new StringLengthValidator(
-//                        " 100 caracteres máximo", 0, 100, true));
-//        
-//        this.comboMoneda.addValidator(
-//                new StringLengthValidator(
-//                        " 100 caracteres máximo", 0, 100, true));
-        
         
 	}
 	
@@ -1194,7 +1143,7 @@ public class DetFacturaViewExtended extends DetFacturaView implements IBusqueda{
 	}
 
 	public void setInfo(Object datos) {
-		// TODO Auto-generated method stub
+
 		if(datos instanceof ProcesoVO){
 			ProcesoVO procesoVO = (ProcesoVO) datos;
 			this.codProceso.setValue(String.valueOf(procesoVO.getCodigo()));
@@ -1327,17 +1276,13 @@ public class DetFacturaViewExtended extends DetFacturaView implements IBusqueda{
 	}
 	
 	
-	
-	
-	
 	@Override
 	 public void setInfoLst(ArrayList<Object> lstDatos) {
 	  // TODO Auto-generated method stub
 	  
 	}
 	
-	public static java.sql.Date convertFromJAVADateToSQLDate(
-            java.util.Date javaDate) {
+	public static java.sql.Date convertFromJAVADateToSQLDate(java.util.Date javaDate) {
         java.sql.Date sqlDate = null;
         if (javaDate != null) {
             sqlDate = new Date(javaDate.getTime());

@@ -18,11 +18,9 @@ import com.excepciones.grupos.NoExisteGrupoException;
 import com.excepciones.grupos.ObteniendoFormulariosException;
 import com.excepciones.grupos.ObteniendoGruposException;
 import com.logica.Fachada;
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 import com.valueObject.FormularioVO;
 import com.valueObject.GrupoVO;
 import com.valueObject.UsuarioPermisosVO;
-import com.vista.Grupos.GrupoViewExtended;
 
 public class GrupoControlador {
 

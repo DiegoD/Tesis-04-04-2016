@@ -14,7 +14,6 @@ import com.excepciones.ConexionException;
 import com.excepciones.InicializandoException;
 import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
-import com.excepciones.Monedas.ObteniendoMonedaException;
 import com.excepciones.Procesos.ObteniendoProcesosException;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
@@ -26,7 +25,6 @@ import com.vaadin.server.VaadinService;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
-import com.valueObject.MonedaVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.proceso.ProcesoVO;
 import com.vista.Mensajes;
@@ -34,8 +32,6 @@ import com.vista.MySub;
 import com.vista.PermisosUsuario;
 import com.vista.Variables;
 import com.vista.VariablesPermisos;
-import com.vista.Monedas.MonedaViewExtended;
-import com.vista.Monedas.MonedasPanelExtended;
 
 public class ProcesosPanelExtended extends ProcesosPanel{
 	

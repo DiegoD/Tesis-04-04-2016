@@ -18,30 +18,18 @@ import com.excepciones.Usuarios.InsertandoUsuarioException;
 import com.excepciones.Usuarios.ModificandoUsuarioException;
 import com.excepciones.Usuarios.ObteniendoUsuariosException;
 import com.excepciones.Usuarios.ObteniendoUsuariosxEmpExeption;
-import com.excepciones.grupos.InsertandoGrupoException;
-import com.excepciones.grupos.MemberGrupoException;
-import com.excepciones.grupos.ModificandoGrupoException;
 import com.excepciones.grupos.ObteniendoFormulariosException;
 import com.excepciones.grupos.ObteniendoGruposException;
 import com.logica.Formulario;
 import com.logica.Grupo;
-import com.logica.GruposUsuario;
 import com.logica.Usuario;
-import com.sun.jna.platform.win32.Sspi.TimeStamp;
 import com.valueObject.EmpLoginVO;
-import com.valueObject.FormularioVO;
 import com.valueObject.GrupoVO;
 import com.valueObject.LoginVO;
-import com.valueObject.UsuarioVO;
-import com.valueObject.empresa.EmpresaVO;
 
 public class DAOUsuarios implements IDAOUsuarios {
 
     
-	//private java.sql.Connection con = null;
-    private PreparedStatement pst = null;
-    private ResultSet rs = null;
-	
 	@Override
 	/**
 	 * Valida un usuario en la base de datos

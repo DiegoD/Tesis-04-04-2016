@@ -11,7 +11,7 @@ public class FacturaVO extends DatosDocumVO{
 	private int codProceso;
 	private String descProceso;
 	
-	private double impuTotMn ;
+	private double impuTotMn;
 	private double impuTotMo;
 	private double impSubMo;
 	private double impSubMn;
@@ -119,7 +119,5 @@ public class FacturaVO extends DatosDocumVO{
 	public void setTipoContCred(String tipo) {
 		this.tipoContCred = tipo;
 	}
-	
-	
 	
 }

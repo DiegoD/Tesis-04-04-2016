@@ -56,7 +56,6 @@ import com.valueObject.Docum.ReciboVO;
 import com.valueObject.banco.BancoVO;
 import com.valueObject.banco.CtaBcoVO;
 import com.valueObject.cliente.ClienteVO;
-import com.valueObject.proceso.ProcesoVO;
 import com.vista.BusquedaViewExtended;
 import com.vista.IBusqueda;
 import com.vista.IMensaje;
@@ -684,8 +683,6 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 			    	}
 		    		
 		    	}else{
-		    		
-		    		/*DIEGO ACA ES DONDE QUIERO PONER EL VALOR ANTERIOR*/
 		    		
 		    		Mensajes.mostrarMensajeWarning("No se puede cambiar TC si hay lineas ingresadas");
 		    		tcMov.setConvertedValue(cotizacionVenta);
@@ -2838,8 +2835,7 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 		
 	}
 
-	public static java.sql.Date convertFromJAVADateToSQLDate(
-            java.util.Date javaDate) {
+	public static java.sql.Date convertFromJAVADateToSQLDate(java.util.Date javaDate) {
         java.sql.Date sqlDate = null;
         if (javaDate != null) {
             sqlDate = new Date(javaDate.getTime());

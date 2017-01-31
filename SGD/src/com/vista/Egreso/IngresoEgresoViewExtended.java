@@ -12,7 +12,6 @@ import java.util.List;
 
 import com.controladores.IngresoEgresoControlador;
 import com.excepciones.ConexionException;
-import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
 import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
@@ -21,41 +20,27 @@ import com.excepciones.Bancos.ObteniendoCuentasBcoException;
 import com.excepciones.Conciliaciones.MovimientoConciliadoException;
 import com.excepciones.Cotizaciones.ObteniendoCotizacionesException;
 import com.excepciones.Egresos.*;
-import com.excepciones.Gastos.ExisteGastoException;
 import com.excepciones.IngresoCobros.ExisteIngresoCobroException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
 import com.excepciones.Periodo.ExistePeriodoException;
 import com.excepciones.Periodo.NoExistePeriodoException;
 import com.excepciones.Titulares.ObteniendoTitularesException;
 import com.excepciones.clientes.ObteniendoClientesException;
-import com.sun.org.apache.xpath.internal.operations.Variable;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup;
-import com.vaadin.data.fieldgroup.FieldGroup.CommitEvent;
-import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
-import com.vaadin.data.fieldgroup.FieldGroup.CommitHandler;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.filter.SimpleStringFilter;
-import com.vaadin.data.validator.RegexpValidator;
 import com.vaadin.data.validator.StringLengthValidator;
-import com.vaadin.event.FieldEvents.BlurEvent;
-import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinService;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
-import com.valueObject.DocumDGIVO;
-import com.valueObject.FormularioVO;
-import com.valueObject.GrupoVO;
 import com.valueObject.MonedaVO;
-import com.valueObject.TipoInCobVO;
 import com.valueObject.TitularVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.Cheque.ChequeVO;
@@ -68,7 +53,6 @@ import com.valueObject.IngresoCobro.IngresoCobroVO;
 import com.valueObject.banco.BancoVO;
 import com.valueObject.banco.CtaBcoVO;
 import com.valueObject.cliente.ClienteVO;
-import com.valueObject.proceso.ProcesoVO;
 import com.vista.BusquedaViewExtended;
 import com.vista.IBusqueda;
 import com.vista.IMensaje;
@@ -79,9 +63,7 @@ import com.vista.PermisosUsuario;
 import com.vista.Variables;
 import com.vista.VariablesPermisos;
 import com.vista.Gastos.GastoViewExtended;
-import com.vista.Gastos.GastosPanelExtended;
 import com.vista.Gastos.IGastosMain;
-import com.vista.IngresoCobro.IngresoCobroProcesoViewExtended;
 import com.vista.Validaciones.Validaciones;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
@@ -2650,8 +2632,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		
 	}
 
-	public static java.sql.Date convertFromJAVADateToSQLDate(
-            java.util.Date javaDate) {
+	public static java.sql.Date convertFromJAVADateToSQLDate(java.util.Date javaDate) {
         java.sql.Date sqlDate = null;
         if (javaDate != null) {
             sqlDate = new Date(javaDate.getTime());

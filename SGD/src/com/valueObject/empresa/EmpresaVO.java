@@ -12,6 +12,7 @@ public class EmpresaVO extends AuditoriaVO {
 	public EmpresaVO(){
 		
 	}
+	
 	public EmpresaVO(String cod_emp, String nom_emp, boolean activo) {
 		super();
 		this.codEmp = cod_emp;

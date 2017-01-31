@@ -3,7 +3,12 @@ package com.valueObject.Titular;
 
 public class TitularInfoVO {
 
-public TitularInfoVO(){}
+	private String codigo;
+	private String nombre;
+	private String tipo;
+	
+	
+	public TitularInfoVO(){}
 	
 	public TitularInfoVO(String codigo, String nombre, String tipo){
 		
@@ -11,10 +16,6 @@ public TitularInfoVO(){}
 		this.nombre = nombre;
 		this.tipo = tipo;
 	}
-	
-	private String codigo;
-	private String nombre;
-	private String tipo;
 	
 	public void copiar(TitularInfoVO t){
 		

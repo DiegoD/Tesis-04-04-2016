@@ -3,26 +3,19 @@ package com.controladores;
 import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
-import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
 import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Documentos.ObteniendoDocumentosException;
-import com.excepciones.Usuarios.ExisteUsuarioException;
-import com.excepciones.Usuarios.InsertandoUsuarioException;
-import com.excepciones.Usuarios.ObteniendoUsuariosException;
 import com.excepciones.clientes.ExisteClienteExeption;
 import com.excepciones.clientes.ExisteDocumentoClienteException;
 import com.excepciones.clientes.InsertandoClienteException;
 import com.excepciones.clientes.ModificandoClienteException;
 import com.excepciones.clientes.ObteniendoClientesException;
 import com.excepciones.clientes.VerificandoClienteException;
-import com.excepciones.grupos.ObteniendoGruposException;
 import com.logica.Fachada;
 import com.valueObject.DocumDGIVO;
-import com.valueObject.GrupoVO;
 import com.valueObject.UsuarioPermisosVO;
-import com.valueObject.UsuarioVO;
 import com.valueObject.cliente.ClienteVO;
 
 public class ClienteControlador {

@@ -3,7 +3,6 @@ package com.vista.IngresoOtro;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -33,7 +32,6 @@ import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinService;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.UI;
 import com.valueObject.MonedaVO;
 import com.valueObject.TitularVO;
@@ -1390,7 +1388,7 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 	private void readOnlyFields(boolean setear)
 	{
 		
-this.comboTipo.setReadOnly(setear);
+		this.comboTipo.setReadOnly(setear);
 		
 		this.comboBancos.setReadOnly(setear);
 		
@@ -1697,7 +1695,7 @@ public void inicializarComboMoneda(String cod){
 	* Si el combo tipo es Banco: mostramos los datos de bando
 	*
 	*/
-private void mostrarDatosDeBanco(){
+	private void mostrarDatosDeBanco(){
 		
 		boolean activo = false;
 		
@@ -1729,8 +1727,7 @@ private void mostrarDatosDeBanco(){
 		
 	}
 
-	public static java.sql.Date convertFromJAVADateToSQLDate(
-            java.util.Date javaDate) {
+	public static java.sql.Date convertFromJAVADateToSQLDate(java.util.Date javaDate) {
         java.sql.Date sqlDate = null;
         if (javaDate != null) {
             sqlDate = new Date(javaDate.getTime());

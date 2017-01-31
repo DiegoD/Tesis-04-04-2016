@@ -1,10 +1,7 @@
 package com.valueObject;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 public class GrupoVO extends AuditoriaVO{
 	
@@ -19,34 +16,6 @@ public class GrupoVO extends AuditoriaVO{
 		this.lstFormularios = new ArrayList<FormularioVO>();
 	 }
 	
-	
-	public GrupoVO(JSONObject obj){
-		
-		super(((String)obj.get("usuarioMod")),((Timestamp)obj.get("fechaMod")), ((String)obj.get("operacion")));
-		
-		this.codGrupo = (String) obj.get("codGrupo");
-		this.nomGrupo = (String) obj.get("nomGrupo");
-		this.activo = (boolean) obj.get("activo");
-		
-		this.lstFormularios = new ArrayList<FormularioVO>();
-		
-		JSONArray JlstForms = (JSONArray) obj.get("lstFormularios");
-		
-		if (JlstForms != null)
-		{
-			FormularioVO formVO;
-			for (int i = 0; i < JlstForms.size(); i++) {
-				
-			    JSONObject form = (JSONObject) JlstForms.get(i);
-			    formVO = new FormularioVO();		    
-			    formVO.setCodFormulario((String)form.get("codFormulario")); 
-			    formVO.setNomFormulario((String)form.get("nomFormulario")); 
-			  
-			    this.lstFormularios.add(formVO);
-			}
-		}
-		
-	}
 	
 	/**
 	 * Copiamos todos los datos del GrupoVO pasado
@@ -121,6 +90,5 @@ public class GrupoVO extends AuditoriaVO{
 		}
 		
 	}
-
 
 }

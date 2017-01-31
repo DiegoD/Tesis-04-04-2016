@@ -2377,47 +2377,6 @@ public class FachadaDD {
 	}
 
 
-//	@SuppressWarnings("unchecked")
-//	public Hashtable<String, FormularioVO> getFormulariosxUsuario(String usuario, String codEmp) throws ObteniendoFormulariosException, ConexionException 
-//	
-//	{
-//		Connection con = null;
-//		
-//		ArrayList<Formulario> lstFormularios = new ArrayList<Formulario>();
-//		Hashtable<String, FormularioVO> hLstFormSelVO = new Hashtable<String, FormularioVO>();
-//		
-//		try {
-//			con = this.pool.obtenerConeccion();
-//			
-//			
-//			lstFormularios = this.usuarios.getFormulariosxUsuario(usuario, codEmp, con);
-//			
-//			
-//			/*Transformamos al VO */
-//			FormularioVO formSelVO;
-//			for (Formulario formulario : lstFormularios) {
-//			formSelVO = new FormularioVO(formulario);
-//			
-//			hLstFormSelVO.put(formSelVO.getCodigo(), formSelVO);
-//			}
-//			
-//		} 
-//		catch (ObteniendoFormulariosException e) {
-//			throw e;
-//		
-//		} 
-//		catch (ConexionException e) {
-//		
-//			throw e;
-//		}
-//		finally{
-//			this.pool.liberarConeccion(con);
-//		}
-//		
-//		return hLstFormSelVO;
-//	
-//	}
-
 /////////////////////////////////FIN-CUENTAS/////////////////////////////////
 	
 	
@@ -4705,47 +4664,6 @@ public ArrayList<TitularVO> getTitularesTodos(String codEmp) throws ObteniendoTi
 	
 /////////////////////////////////INI-CONCILIACIONES/////////////////////////////////
 	   
-//	/**
-//	* Obtiene todos los cheques a depositar 
-//	* @throws ObteniendoBancosException 
-//	* @throws ObteniendoCuentasBcoException 
-//	*/
-//	@SuppressWarnings("unchecked")
-//	public ArrayList<DepositoDetalleVO> get(String codEmp, String codMoneda) throws ObteniendoChequeException, ConexionException, ObteniendoCuentasBcoException, ObteniendoBancosException
-//	{
-//	
-//		Connection con = null;
-//		ArrayList<DepositoDetalle> lstDepositos;
-//		ArrayList<DepositoDetalleVO> lstDepositosVO = new ArrayList<DepositoDetalleVO>();
-//		
-//		try 	
-//		{
-//			con = this.pool.obtenerConeccion();
-//			lstDepositos = this.cheques.getChequesBanco(con, codEmp, codMoneda);
-//			
-//			DepositoDetalleVO aux;
-//			
-//			for (DepositoDetalle deposito : lstDepositos) 
-//			{
-//			aux = new DepositoDetalleVO();
-//			
-//			aux = deposito.retornarDepositoDetalleVO(deposito);
-//			
-//			lstDepositosVO.add(aux);
-//			}
-//		}
-//	
-//		catch (ConexionException e) {
-//			throw e;
-//		}	 
-//	
-//		finally{
-//			this.pool.liberarConeccion(con);
-//		}
-//	
-//		return lstDepositosVO;
-//	
-//	}
 
 	@SuppressWarnings("unchecked") 
 	public ArrayList<ConciliacionVO> getConciliacionesTodos(String codEmp, Timestamp inicio, Timestamp fin) throws ObteniendoConciliacionException, ConexionException {

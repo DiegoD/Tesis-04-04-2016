@@ -728,8 +728,6 @@ public class Fachada {
 				else{
 					existe = true;
 				}
-			
-			
 			}
 			
 			catch(Exception InsertandoRubroException)  	{
@@ -796,8 +794,7 @@ public class Fachada {
 
 /////////////////////////////////FIN-DOCUMENTOS-DGI/////////////////////////////////	
 		
-/////////////////////////////////FUNCIONARIOS/////////////////////////////////
-		 
+/////////////////////////////////FUNCIONARIOS//////////////////////////////////////
 		 
 	/**
 	*Nos retorna todos los funcionarios para la empresa
@@ -1042,12 +1039,9 @@ public class Fachada {
 		
 		boolean tienePermiso = false;
 		
-		//FormularioVO frm = lstFormularios.get(formulario);
-		
 		try 
 		{
 			con = this.pool.obtenerConeccion();
-			
 			
 			
 		Formulario form = this.usuarios.getPermisoFormularioOperacionUsuario(permisosForm.getUsuario(), permisosForm.getCodEmp(), permisosForm.getFormulario(), con);
@@ -1464,15 +1458,9 @@ public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 				/*Primero obtenemos el DatosDocum para el cheque dado el ingreso cobro*/
 
 				/*Insertamos el cheque y saldo*/
-				//DatosDocumVO auxCheque = ConvertirDocumento.getDatosDocumChequeDadoIngCobro(ingVO);
 				
 				Cheque cheque = new Cheque();
 				cheque = cheque.convierteIng(ing);
-				
-				
-//				auxCheque.setCodMoneda(ing.getCuenta().getCodMoneda());
-//			    auxCheque.setNacional(ing.getCuenta().isNacional());
-//			    auxCheque.setImpTotMo(impMoCtaBco); /*Importe en moneda operativa de la cuenta bco*/
 				
 				/*Ingresamos el cheque y su saldo*/
 				this.insertarChequeIntFachada(cheque, con);
@@ -2063,12 +2051,6 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 						
 						i++;
 					}
-					/*else if(docum.getCodDocum().equals("Proceso")) //Modificamos el saldo para el proceso ingresado
-					{
-						//Para el proceso esl signo es 1 porque subo el saldo a la cuenta del proceso
-						this.saldosProceso.modificarSaldo(docum, 1, ingVO.getTcMov(), con);
-					}
-					*/
 				}
 				
 				
@@ -2428,13 +2410,6 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 						/*Luego eliminamos el gasto*/
 						this.gastos.eliminarGastoPK(docum.getNroDocum(), docum.getSerieDocum(), docum.getCodDocum(), ing.getCodEmp(), con);
 					}
-					/*
-					else if(docum.getCodDocum().equals("Proceso")) //Modificamos el saldo para el proceso ingresado
-					{
-						//Signo -1 para que le quite el saldo
-						this.saldosProceso.modificarSaldo(docum, -1, ingVO.getTcMov(), con);
-					}
-					*/
 				}
 			
 			/*Si el ingreso de cobro es con cheque, eliminamos el cheque de los saldos y de los cheques*/
@@ -2446,12 +2421,6 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 				
 				Cheque cheque = new Cheque();
 				cheque = cheque.convierteIng(ing);
-				
-				/*
-				//Eliminamos el saldo para el cheque 
-				DatosDocum auxCheque2 = new DatosDocum(auxCheque);
-				this.saldos.eliminarSaldo(auxCheque2, con);
-				*/
 				
 				/*Eliminamos el cheque de tabla base*/    
 				
@@ -2754,10 +2723,6 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 			con = this.pool.obtenerConeccion();
 			con.setAutoCommit(false);
 			
-			//DatosDocum cheque = new DatosDocum(chequeVO);
-			
-			
-			
 			
 			/*Verificamos que exista el cheque*/
 			if(this.cheques.memberCheque(cheque, con))
@@ -2797,7 +2762,6 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 			con = this.pool.obtenerConeccion();
 			con.setAutoCommit(false);
 			
-			//DatosDocum cheque = new DatosDocum(chequeVO);
 			
 			/*Verificamos que exista el cheque*/
 			if(this.cheques.memberCheque(cheque, con))

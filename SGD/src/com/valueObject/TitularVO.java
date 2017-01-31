@@ -1,6 +1,5 @@
 package com.valueObject;
 
-import com.logica.Documento;
 
 public class TitularVO extends AuditoriaVO{
 

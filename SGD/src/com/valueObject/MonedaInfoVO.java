@@ -9,15 +9,6 @@ public class MonedaInfoVO {
 	
 	public MonedaInfoVO(){}
 	
-	public MonedaInfoVO(String codMoneda, String descripcion, String simbolo, boolean nacional){
-		
-		this.cod_moneda = codMoneda;
-		this.descripcion = descripcion;
-		this.simbolo = simbolo;
-		this.nacional = nacional;
-	}
-	
-	
 	
 	public String getCod_moneda() {
 		return cod_moneda;

@@ -1,14 +1,11 @@
 package com.valueObject.Cotizacion;
 
-import java.sql.Timestamp;
 import java.util.Date;
 
 import com.valueObject.AuditoriaVO;
-import com.valueObject.empresa.EmpresaVO;
 
 public class CotizacionVO extends AuditoriaVO{
 	
-	//private Timestamp fecha;
 	private Date fecha;
 	private double cotizacionCompra;
 	private double cotizacionVenta;
@@ -22,19 +19,6 @@ public class CotizacionVO extends AuditoriaVO{
 		
 	}
 	
-	public CotizacionVO(Date fecha, double cotizacion_compra, double cotizacion_venta, String codMoneda, 
-			String descripcionMoneda, String simboloMoneda, boolean aceptaCotizacionMoneda, boolean activoMoneda) {
-		super();
-		this.fecha = fecha;
-		this.cotizacionCompra = cotizacion_compra;
-		this.cotizacionVenta = cotizacion_venta;
-		this.codMoneda = codMoneda;
-		this.descripcionMoneda = descripcionMoneda;
-		this.simboloMoneda = simboloMoneda;
-		this.aceptaCotizacionMoneda = aceptaCotizacionMoneda;
-		this.activoMoneda = activoMoneda;
-		
-	}
 
 	/**
 	 * Copiamos todos los datos de la cotización pasado

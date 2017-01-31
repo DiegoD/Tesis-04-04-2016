@@ -10,14 +10,11 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import com.controladores.FacturaControlador;
-import com.controladores.IngresoEgresoControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.InicializandoException;
 import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
-import com.excepciones.Egresos.*;
 import com.excepciones.Factura.ObteniendoFacturasException;
-import com.logica.IngresoCobro.IngresoCobro;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.converter.StringToDateConverter;
@@ -25,21 +22,15 @@ import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.server.VaadinService;
-import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.Docum.FacturaVO;
-import com.valueObject.IngresoCobro.IngresoCobroDetalleVO;
-import com.valueObject.IngresoCobro.IngresoCobroVO;
-import com.valueObject.banco.BancoVO;
 import com.vista.Mensajes;
 import com.vista.MySub;
 import com.vista.PermisosUsuario;
 import com.vista.Variables;
 import com.vista.VariablesPermisos;
-import com.vista.Bancos.BancoViewExtended;
-import com.vista.Bancos.BancosPanelExtended;
 
 public class FacturaPanelExtended extends FacturaPanel implements IFacturaMain{
 	
@@ -246,59 +237,6 @@ public class FacturaPanelExtended extends FacturaPanel implements IFacturaMain{
 
 	}
 	
-	
-	/**
-	 * Modificamos un bancoVO de la lista cuando
-	 * se hace una acutalizacion de un Banco
-	 *
-	 */
-	private void actualizarBancoenLista(FacturaVO factVO)
-	{
-		int i =0;
-		boolean salir = false;
-		
-		FacturaVO ingEnLista;
-		
-		while( i < this.lstFacturas.size() && !salir)
-		{
-			ingEnLista = this.lstFacturas.get(i);
-			if(factVO.getNroDocum()==ingEnLista.getNroDocum())
-			{
-				this.lstFacturas.get(i).copiar(factVO);
-
-				salir = true;
-			}
-			
-			i++;
-		}
-		
-	}
-	
-	/**
-	 * Retornanoms true si esta el bancoVO en la lista
-	 * de bancoss de la vista
-	 *
-	 */
-	private boolean existeEnLista(int nro)
-	{
-		int i =0;
-		boolean esta = false;
-		
-		FacturaVO aux;
-		
-		while( i < this.lstFacturas.size() && !esta)
-		{
-			aux = this.lstFacturas.get(i);
-			if(nro==Integer.parseInt(aux.getNroDocum()))
-			{
-				esta = true;
-			}
-			
-			i++;
-		}
-		
-		return esta;
-	}
 	
 	private void filtroGrilla()
 	{

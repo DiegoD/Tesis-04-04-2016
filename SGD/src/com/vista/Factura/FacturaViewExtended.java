@@ -18,7 +18,6 @@ import com.excepciones.InicializandoException;
 import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Cotizaciones.ObteniendoCotizacionesException;
-import com.excepciones.Depositos.ExisteDepositoException;
 import com.excepciones.Factura.*;
 import com.excepciones.Monedas.ObteniendoMonedaException;
 import com.excepciones.NotaCredito.ExisteNotaCreditoException;
@@ -54,7 +53,6 @@ import com.valueObject.Docum.FacturaVO;
 import com.valueObject.Gasto.GastoVO;
 import com.valueObject.Gasto.GtoSaldoAux;
 import com.valueObject.IngresoCobro.IngresoCobroDetalleVO;
-import com.valueObject.banco.BancoVO;
 import com.valueObject.banco.CtaBcoVO;
 import com.valueObject.cliente.ClienteVO;
 import com.valueObject.proceso.ProcesoVO;
@@ -2177,8 +2175,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	
 	
 
-	public static java.sql.Date convertFromJAVADateToSQLDate(
-            java.util.Date javaDate) {
+	public static java.sql.Date convertFromJAVADateToSQLDate(java.util.Date javaDate) {
         java.sql.Date sqlDate = null;
         if (javaDate != null) {
             sqlDate = new Date(javaDate.getTime());

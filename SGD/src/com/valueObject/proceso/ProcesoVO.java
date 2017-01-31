@@ -3,10 +3,7 @@ package com.valueObject.proceso;
 import java.sql.Timestamp;
 
 import com.valueObject.AuditoriaVO;
-import com.valueObject.MonedaInfoVO;
-import com.valueObject.Docum.DocumDetalleVO;
 import com.valueObject.IngresoCobro.IngresoCobroDetalleVO;
-import com.valueObject.cliente.ClienteInfoVO;
 
 public class ProcesoVO extends AuditoriaVO{
 
@@ -52,38 +49,6 @@ public class ProcesoVO extends AuditoriaVO{
 	
 	public ProcesoVO(){
 		
-	}
-	
-	public ProcesoVO(String codCliente, String nomCliente, String codMoneda, String descMoneda, String simboloMoneda,
-			int codigo, Timestamp fecha, int nroMega, String codDocum, String nomDocum, String nroDocum, Timestamp fecDocum, String carpeta,
-			double impMo, double impMn, double impTr, double tcMov, double kilos, Timestamp fecCruce, String marca, String medio,
-			String descripcion, String observaciones, double impSubTot, String codImpuesto) {
-		super();
-		this.codCliente = codCliente;
-		this.nomCliente = nomCliente;
-		this.codMoneda = codMoneda;
-		this.descMoneda = descMoneda;
-		this.simboloMoneda = simboloMoneda;
-		this.codigo = codigo;
-		this.fecha = fecha;
-		this.nroMega = nroMega;
-		this.codDocum = codDocum;
-		this.nomDocum = nomDocum;
-		this.nroDocum = nroDocum;
-		this.fecDocum = fecDocum;
-		this.carpeta = carpeta;
-		this.impMo = impMo;
-		this.impMn = impMn;
-		this.impTr = impTr;
-		this.tcMov = tcMov;
-		this.kilos = kilos;
-		this.fecCruce = fecCruce;
-		this.marca = marca;
-		this.medio = medio;
-		this.descripcion = descripcion;
-		this.observaciones = observaciones;
-		this.impSubTot = impSubTot;
-		this.codImpuesto = codImpuesto;
 	}
 	
 	public void copiar(ProcesoVO procesoVO){
@@ -274,7 +239,6 @@ public class ProcesoVO extends AuditoriaVO{
 	public void setKilos(double kilos) {
 		this.kilos = kilos;
 	}
-	
 	
 	public Timestamp getFecCruce() {
 		return fecCruce;

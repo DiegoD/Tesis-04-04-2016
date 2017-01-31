@@ -7,18 +7,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
-import com.excepciones.Empresas.ExisteEmpresaException;
-import com.excepciones.Empresas.InsertandoEmpresaException;
-import com.excepciones.Empresas.ModificandoEmpresaException;
-import com.excepciones.Empresas.ObteniendoEmpresasException;
 import com.excepciones.TipoRubro.ExisteTipoRubroException;
 import com.excepciones.TipoRubro.InsertandoTipoRubroException;
 import com.excepciones.TipoRubro.ModificandoTipoRubroException;
 import com.excepciones.TipoRubro.ObteniendoTipoRubroException;
-import com.gargoylesoftware.htmlunit.javascript.host.Console;
-import com.logica.Empresa;
 import com.logica.TipoRubro;
-import com.vista.Mensajes;
 
 public class DAOTipoRubro implements IDAOTipoRubro{
 

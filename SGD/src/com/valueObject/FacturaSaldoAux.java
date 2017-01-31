@@ -61,6 +61,4 @@ public class FacturaSaldoAux {
 		this.saldo = saldo;
 	}
 	
-	
-	
 }

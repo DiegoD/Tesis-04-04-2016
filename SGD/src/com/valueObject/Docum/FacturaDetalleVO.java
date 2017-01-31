@@ -1,7 +1,5 @@
 package com.valueObject.Docum;
 
-import com.logica.Docum.DocumDetalle;
-import com.valueObject.IngresoCobro.IngresoCobroDetalleVO;
 
 
 public class FacturaDetalleVO extends DocumDetalleVO{

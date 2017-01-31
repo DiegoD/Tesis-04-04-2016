@@ -19,7 +19,8 @@ import java.sql.Connection;
 import java.util.HashMap;
 
 /**
- * This class makes the work, loads the template, compile, fill and export the report.
+ * Esta clase carga los templates, compila y carga el reporte con datos y lo exporta
+ * 
  */
 public class ReportGenerator {
     private Log log= LogFactory.getLog(this.getClass());
@@ -40,26 +41,9 @@ public class ReportGenerator {
     	}
     }
     
-    public void executeReport2(String templatePath, Connection conn, OutputStream outputStream) throws Exception//JRException 
-    {
-
-        JasperDesign jasperDesign=loadTemplate(templatePath);
-        setTempDirectory(templatePath);
-        JasperReport jasperReport=compileReport(jasperDesign);
-        
-        HashMap hm = new HashMap();
-        hm.put("REPORT_TITLE","This is the title of the report");
-        
-        //JasperPrint jasperPrint=fillReport(jasperReport, conn);
-        //JasperPrint jasperPrint=fillReport(jasperReport, conn);
-        //exportReportToPdf(jasperPrint, outputStream);
-        
-        
-    }
-
 
     /**
-     * Load the template (defined by templatePath) and return a JasperDesign object representing the template
+     * Carga el template (definido por la ruta pasada por parametro) y retorna un JasperDesign que representa al template
      * @return JasperDesign
      */
     private JasperDesign loadTemplate(String templatePath){
@@ -70,17 +54,17 @@ public class ReportGenerator {
             try {
                 jasperDesign= JRXmlLoader.load(templateFile);
             } catch (JRException e) {
-                log.error("Error in loading the template... "+e.getMessage());
+                log.error("Error cargando el template... "+e.getMessage());
             }
         }
         else
-            log.error("Error, the file dont exists");
+            log.error("Error, el archivo no existe");
         return(jasperDesign);
     }
 
     /**
-     * Compile the report and generates a binary version of it
-     * @param jasperDesign The report design
+     * Comila el reporte y genera el binario del mismo
+     * @param jasperDesign 
      * @return JasperReport
      */
     private JasperReport compileReport(JasperDesign jasperDesign){
@@ -88,23 +72,18 @@ public class ReportGenerator {
         try {
             jasperReport= JasperCompileManager.compileReport(jasperDesign);
         } catch (JRException e) {
-            log.error("Error in compiling the report.... "+e.getMessage());
+            log.error("Error compilando el reporte.... "+e.getMessage());
         }
         return(jasperReport);
     }
 
     /**
-     * Fill the report and generates a binary version of it
-     * @param jasperReport The Compiled report design
+     * Llena el reporte y genera el binario
+     * @param jasperReport 
      * @return JasperPrint
      */
     private JasperPrint fillReport(JasperReport jasperReport, Connection conn, HashMap<String, Object> fillParameters){
         JasperPrint jasperPrint=null;
-       // HashMap<String, Object> fillParameters=new HashMap<String, Object>();
-       // fillParameters.put("codTit", "14");
-        
-        String codTit = (String) fillParameters.get("codTit");
-        String nomTit = (String) fillParameters.get("nomTit");
         
         try {
             jasperPrint =JasperFillManager.fillReport(
@@ -112,14 +91,14 @@ public class ReportGenerator {
                     fillParameters,
                     conn);
         } catch (JRException e) {
-            log.error("Error in filling the report..... "+e.getMessage());
+            log.error("Error llenando el reporte..... "+e.getMessage());
         }
         return(jasperPrint);
     }
 
     /**
-     * Prepare a JRExporter for the filled report (to HTML)
-     * @param jasperPrint The jasperPrint
+     * Prepara un JRExporter para el reporte generado
+     * @param jasperPrint 
      * @return The HTML text
      */
     private void exportReportToPdf(JasperPrint jasperPrint, OutputStream outputStream) throws JRException {
@@ -129,12 +108,12 @@ public class ReportGenerator {
         exporter.exportReport();
     }
     /**
-     * Set the temp directory for report generation
+     * Setea la carpeta temporal para la generacion del reporte
      */
     private void setTempDirectory(String templatePath){
         File templateFile=new File(templatePath);
         if(templateFile.exists()){
-            log.info("Setting parentDirectory: "+templateFile.getParent());
+            log.info("Seteando el directorio: "+templateFile.getParent());
             System.setProperty("jasper.reports.compile.temp", templateFile.getParent());
         }
     }

@@ -23,40 +23,6 @@ public class RubroVO extends Auditoria{
 		
 	}
 	
-
-	public RubroVO(String codRubro, String descripcion, boolean activo, String cod_impuesto, String descripcionImpuesto,
-			double porcentajeImpuesto, boolean activoImpuesto, String tipoRubro, String descripcionTipoRubro) {
-		super();
-		this.codRubro = codRubro;
-		this.descripcion = descripcion;
-		this.activo = activo;
-		this.codigoImpuesto = cod_impuesto;
-		this.descripcionImpuesto = descripcionImpuesto;
-		this.porcentajeImpuesto = porcentajeImpuesto;
-		this.activoImpuesto = activoImpuesto;
-		this.descripcionTipoRubro = descripcionTipoRubro;
-		this.codTipoRubro = tipoRubro;
-	}
-	
-	public RubroVO(String codRubro, String descripcion, boolean activo, String cod_impuesto, String descripcionImpuesto,
-			double porcentajeImpuesto, boolean activoImpuesto, String tipoRubro, String descripcionTipoRubro,
-			boolean oficina, boolean proceso, boolean persona, boolean facturable) {
-		super();
-		this.codRubro = codRubro;
-		this.descripcion = descripcion;
-		this.activo = activo;
-		this.codigoImpuesto = cod_impuesto;
-		this.descripcionImpuesto = descripcionImpuesto;
-		this.porcentajeImpuesto = porcentajeImpuesto;
-		this.activoImpuesto = activoImpuesto;
-		this.descripcionTipoRubro = descripcionTipoRubro;
-		this.codTipoRubro = tipoRubro;
-		this.oficina = oficina;
-		this.proceso = proceso;
-		this.persona = persona;
-	}
-
-
 	/**
 	 * Copiamos todos los datos del rubro pasado
 	 * por parametro

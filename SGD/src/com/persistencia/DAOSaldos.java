@@ -1,16 +1,12 @@
 package com.persistencia;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
-import com.excepciones.Gastos.IngresandoGastoException;
-import com.excepciones.Gastos.ModificandoGastoException;
-import com.excepciones.Rubros.ExisteRubroException;
 import com.excepciones.Saldos.EliminandoSaldoException;
 import com.excepciones.Saldos.ExisteSaldoException;
 import com.excepciones.Saldos.IngresandoSaldoException;

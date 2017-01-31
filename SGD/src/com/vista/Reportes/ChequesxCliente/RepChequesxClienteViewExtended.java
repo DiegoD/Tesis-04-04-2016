@@ -487,54 +487,8 @@ public void inicializarComboMoneda(String cod){
 		UI.getCurrent().removeWindow(sub);
 	}
 	
-	private void inicializarBoton() throws ClassNotFoundException{
-		
-		com.Reportes.util.ReportsUtil report;
-		
-		String basepath = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath() + "\\WEB-INF\\Reportes";
-		
-		System.out.println(basepath);
-		
-	    report = new ReportsUtil();
-		 
-		  
-		  try {
-			  
-			  HashMap<String, Object> fillParameters=new HashMap<String, Object>();
-			  
-			  try{
-			  
-				 
-				fillParameters.put("codTit", this.codTitular.getValue());
-		        
-		        fillParameters.put("codEmp",this.permisos.getCodEmp());
-		       
-		        fillParameters.put("nomTit", this.nomTitular.getValue().trim());
-		        fillParameters.put("fecDesde", fecDesde.getValue().getTime());
-		        fillParameters.put("fecHasta", fecHasta.getValue().getTime());
-		        
-		        //fillParameters.put("fecDesde", new java.util.Date(2017, 1, 3));
-		        //fillParameters.put("fecHasta", new java.util.Date(2017, 1, 4));
-		        
-			  }catch(Exception e) {}
-		        
-		        
-		  report.prepareForPdfReport( basepath+"\\RepChequesClientes.jrxml",
-						                "Cheques",
-						                aceptar, fillParameters);
-		  
-		 // report.prepareForPdfReport2("Test.jrxml");
-		  
-		  }
-		  catch(Exception e)
-		  {
-			  int o = 0;
-		  }
-		
-	}
 	
-	public static java.sql.Date convertFromJAVADateToSQLDate(
-            java.util.Date javaDate) {
+	public static java.sql.Date convertFromJAVADateToSQLDate(java.util.Date javaDate) {
         java.sql.Date sqlDate = null;
         if (javaDate != null) {
             sqlDate = new Date(javaDate.getTime());

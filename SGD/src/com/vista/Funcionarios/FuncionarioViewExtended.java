@@ -14,7 +14,6 @@ import com.excepciones.Impuestos.ObteniendoImpuestosException;
 import com.excepciones.funcionarios.ExisteFuncionarioDocumetnoException;
 import com.excepciones.funcionarios.ExisteFuncionarioException;
 import com.excepciones.funcionarios.InsertendoFuncionarioException;
-import com.excepciones.funcionarios.MemberFuncionarioException;
 import com.excepciones.funcionarios.ModificandoFuncionarioException;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;

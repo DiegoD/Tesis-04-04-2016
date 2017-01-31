@@ -3,19 +3,13 @@ package com.valueObject;
 import com.logica.Auditoria;
 
 public class DocumentoAduaneroVO extends Auditoria{
+	
 	private String codDocumento;
 	private String descripcion;
 	private boolean activo;
 	
 	public DocumentoAduaneroVO(){
 		
-	}
-	
-	public DocumentoAduaneroVO(String cod_docucmento, String descirpcion, boolean activo) {
-		super();
-		this.codDocumento = cod_docucmento;
-		this.descripcion = descirpcion;
-		this.activo = activo;
 	}
 	
 	/**
@@ -57,7 +51,5 @@ public class DocumentoAduaneroVO extends Auditoria{
 	public void setActivo(boolean activo) {
 		this.activo = activo;
 	}
-	
-	
 
 }

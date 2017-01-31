@@ -2,7 +2,6 @@ package com.valueObject.Deposito;
 
 import java.sql.Timestamp;
 
-import com.valueObject.Cheque.ChequeVO;
 
 public class DepositoDetalleVO {
 	

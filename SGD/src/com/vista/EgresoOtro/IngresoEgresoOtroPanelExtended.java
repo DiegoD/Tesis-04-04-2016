@@ -9,14 +9,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
-import com.controladores.IngresoEgresoControlador;
 import com.controladores.IngresoEgresoOtroControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.InicializandoException;
 import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Egresos.*;
-import com.logica.IngresoCobro.IngresoCobro;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.converter.StringToDateConverter;
@@ -24,20 +22,15 @@ import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.server.VaadinService;
-import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.valueObject.UsuarioPermisosVO;
-import com.valueObject.IngresoCobro.IngresoCobroDetalleVO;
 import com.valueObject.IngresoCobro.IngresoCobroVO;
-import com.valueObject.banco.BancoVO;
 import com.vista.Mensajes;
 import com.vista.MySub;
 import com.vista.PermisosUsuario;
 import com.vista.Variables;
 import com.vista.VariablesPermisos;
-import com.vista.Bancos.BancoViewExtended;
-import com.vista.Bancos.BancosPanelExtended;
 
 public class IngresoEgresoOtroPanelExtended extends IngresoEgresoOtroPanel{
 	
@@ -235,24 +228,6 @@ public class IngresoEgresoOtroPanelExtended extends IngresoEgresoOtroPanel{
 	public void actulaizarGrilla(IngresoCobroVO ingVO)
 	{
 
-		/*Si esta el banco en la lista, es una acutalizacion
-		 * y modificamos el objeto en la lista*/
-//		if(this.existeEnLista(ingVO.getNroDocum()))
-//		{
-//			this.actualizarBancoenLista(ingVO);
-//		}
-//		else  /*De lo contrario es uno nuevo y lo agregamos a la lista*/
-//		{
-//			this.lstIngresoCobro.add(ingVO);
-//		}
-//			
-//		/*Actualizamos la grilla*/
-//		this.container.removeAllItems();
-//		this.container.addAll(this.lstIngresoCobro);
-//		
-//		this.grid.setContainerDataSource(container);
-		
-		
 		/*Actualizamos la grilla*/
 		this.container.removeAllItems();
 		

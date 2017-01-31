@@ -2,7 +2,6 @@ package com.vista.IngresoCobro;
 
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Random;
 
 import com.controladores.IngresoCobroControlador;
 import com.excepciones.ConexionException;
@@ -11,7 +10,6 @@ import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Cuentas.ObteniendoRubrosException;
 import com.excepciones.Procesos.ObteniendoProcesosException;
-import com.vaadin.data.validator.IntegerValidator;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.UI;
@@ -598,8 +596,7 @@ public class IngresoCobroProcesoViewExtended extends IngresoCobroProcesoView imp
 		
 	}
 	
-	public static java.sql.Date convertFromJAVADateToSQLDate(
-            java.util.Date javaDate) {
+	public static java.sql.Date convertFromJAVADateToSQLDate(java.util.Date javaDate) {
         java.sql.Date sqlDate = null;
         if (javaDate != null) {
             sqlDate = new Date(javaDate.getTime());

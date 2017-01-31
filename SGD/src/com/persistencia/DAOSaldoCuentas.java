@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import com.excepciones.ConexionException;
 import com.excepciones.Rubros.ObteniendoRubrosException;
 import com.excepciones.SaldoCuentas.*;
-import com.logica.RubroCuenta;
-import com.logica.Docum.DatosDocum;
 import com.logica.Docum.DocumSaldo;
 import com.valueObject.Saldos.SaCuentasVO;
 import com.valueObject.Saldos.SaDocumsVO;

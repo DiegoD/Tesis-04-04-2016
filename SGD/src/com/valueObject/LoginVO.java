@@ -26,7 +26,5 @@ public class LoginVO {
 	public void setPass(String pass) {
 		this.pass = pass;
 	}
-
-	
 	
 }

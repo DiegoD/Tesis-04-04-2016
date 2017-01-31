@@ -10,7 +10,7 @@ public class NotaCreditoVO extends DatosDocumVO{
 private ArrayList<NotaCreditoDetalleVO> detalle;
 	
 	
-	private double impuTotMn ;
+	private double impuTotMn;
 	private double impuTotMo;
 	private double impSubMo;
 	private double impSubMn;
@@ -93,6 +93,5 @@ private ArrayList<NotaCreditoDetalleVO> detalle;
 	public void setNacionalMonedaCtaBco(boolean nacionalMonedaCtaBco) {
 		this.nacionalMonedaCtaBco = nacionalMonedaCtaBco;
 	}
-	
 	
 }

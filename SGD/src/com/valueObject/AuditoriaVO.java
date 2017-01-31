@@ -8,6 +8,19 @@ public abstract class AuditoriaVO {
 	private String usuarioMod;
 	private String operacion;
 	
+	public AuditoriaVO(){};
+	
+	public AuditoriaVO(String usuario, Timestamp fecha ){
+		
+		this.fechaMod = fecha;
+		this.usuarioMod = usuario;
+	}
+	
+	public AuditoriaVO(String usuario, Timestamp fecha, String operacion){
+		
+		this.fechaMod = fecha;
+		this.usuarioMod = usuario;
+	}
 	
 	public String getOperacion() {
 		return operacion;
@@ -15,20 +28,6 @@ public abstract class AuditoriaVO {
 
 	public void setOperacion(String operacion) {
 		this.operacion = operacion;
-	}
-
-	protected AuditoriaVO(){};
-	
-	protected AuditoriaVO(String usuario, Timestamp fecha ){
-		
-		this.fechaMod = fecha;
-		this.usuarioMod = usuario;
-	}
-	
-	protected AuditoriaVO(String usuario, Timestamp fecha, String operacion){
-		
-		this.fechaMod = fecha;
-		this.usuarioMod = usuario;
 	}
 		
 	public Timestamp getFechaMod() {

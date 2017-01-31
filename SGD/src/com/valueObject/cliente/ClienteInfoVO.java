@@ -2,6 +2,8 @@ package com.valueObject.cliente;
 
 public class ClienteInfoVO {
 
+	private String codigo;
+	private String nombre;
 	
 	public ClienteInfoVO(){}
 	
@@ -10,9 +12,6 @@ public class ClienteInfoVO {
 		this.codigo = codigo;
 		this.nombre = nombre;
 	}
-	
-	private String codigo;
-	private String nombre;
 	
 	public String getCodigo() {
 		return codigo;

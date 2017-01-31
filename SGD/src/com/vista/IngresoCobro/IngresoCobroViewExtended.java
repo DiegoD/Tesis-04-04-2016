@@ -44,14 +44,12 @@ import com.vaadin.server.VaadinService;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
-import com.valueObject.FacturaSaldoAux;
 import com.valueObject.MonedaVO;
 import com.valueObject.TitularVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.Cheque.ChequeVO;
 import com.valueObject.Cotizacion.CotizacionVO;
 import com.valueObject.Docum.DocumDetalleVO;
-import com.valueObject.Docum.ReciboDetalleVO;
 import com.valueObject.Gasto.GastoVO;
 import com.valueObject.Gasto.GtoSaldoAux;
 import com.valueObject.IngresoCobro.IngresoCobroDetalleVO;
@@ -2768,8 +2766,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		
 	}
 
-	public static java.sql.Date convertFromJAVADateToSQLDate(
-            java.util.Date javaDate) {
+	public static java.sql.Date convertFromJAVADateToSQLDate(java.util.Date javaDate) {
         java.sql.Date sqlDate = null;
         if (javaDate != null) {
             sqlDate = new Date(javaDate.getTime());
@@ -2790,6 +2787,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		
 		return codMoneda;
 	}
+	
 	@Override
 	public void setInfoLst(ArrayList<Object> lstDatos) {
 		

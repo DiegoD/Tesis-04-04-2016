@@ -143,7 +143,6 @@ public class DepositoViewExtended extends DepositoView implements IMensaje{
 								| IOException | ConexionException | InicializandoException
 								| ObteniendoPermisosException | NoTienePermisosException | ObteniendoChequeException
 								| ObteniendoCuentasBcoException | ObteniendoBancosException e) {
-							// TODO Auto-generated catch block
 							Mensajes.mostrarMensajeError("Error inesperado");
 						}
 		   			}
@@ -170,7 +169,6 @@ public class DepositoViewExtended extends DepositoView implements IMensaje{
 					return;
 				}
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
@@ -486,14 +484,6 @@ public class DepositoViewExtended extends DepositoView implements IMensaje{
 		this.fecValor.setEnabled(false);
 		this.observaciones.setEnabled(false);
 		
-//		/*Deshabilitamos botn aceptar*/
-//		this.disableBotonAceptar();
-//		this.disableBotonAgregarQuitar();
-//		
-//		if(permisoEliminar)
-//			this.enableBotonEliminar();
-		
-		
 		
 		/*Seteamos la grilla con los formularios*/
 		this.container = 
@@ -502,9 +492,6 @@ public class DepositoViewExtended extends DepositoView implements IMensaje{
 		/*No mostramos las validaciones*/
 		this.setearValidaciones(false);
 		
-		/*Dejamos todods los campos readonly*/
-		//this.readOnlyFields(true);
-		
 		if(this.lstCheques != null)
 		{
 			for (DepositoDetalleVO detVO : this.lstCheques) {
@@ -512,9 +499,6 @@ public class DepositoViewExtended extends DepositoView implements IMensaje{
 			}
 		}
 		
-		//this.actualizarGrillaContainer(container);
-		
-						
 	}
 	
 	private void iniFormEditar()
@@ -575,57 +559,8 @@ public class DepositoViewExtended extends DepositoView implements IMensaje{
 		this.fecDoc.setValue(new java.sql.Date(c.getTimeInMillis()));
 		this.fecValor.setValue(new java.sql.Date(c.getTimeInMillis()));
 		
-//		this.enableBotonAceptar();
-//		this.disableBotonLectura();
-//		this.abierto.setValue(true);
-		
-		/*Seteamos validaciones en nuevo, cuando es editar
-		 * solamente cuando apreta el boton editar*/
-		//this.setearValidaciones(true);
-		
-		/*Como es en operacion nuevo, dejamos todos los campos editabls*/
-		//this.readOnlyFields(false);
 	}
 
-	private void setearFieldsEditar(){
-		
-	}
-	
-	private void disableBotonLectura(){
-		
-	}
-	
-	private void disableBotonAceptar()
-	{
-	}
-	
-	/**
-	 * Habilitamos el boton aceptar
-	 *
-	 */
-	private void enableBotonAceptar()
-	{
-		
-	}
-	
-	private void enableBotonEliminar()
-	{
-		if(operacion != Variables.OPERACION_NUEVO){
-		}
-		else{
-			disableBotonEliminar();
-		}
-	}
-	
-	private void disableBotonEliminar()
-	{
-		
-		
-	}
-	
-	private void readOnlyFields(boolean setear){
-		
-	}
 	
 	public void setLstFormularios(ArrayList<DepositoDetalleVO> lst)
 	{
@@ -977,23 +912,9 @@ public class DepositoViewExtended extends DepositoView implements IMensaje{
 				new StringLengthValidator(
 						"50 caracteres máximo", 0, 50, true));
 		
-		
-		//nroDocRef.addValidator(new RegexpValidator("^[0-9]*(\\.[0-9]+)?$", true, "Dato numerico"));
-		
-		//impTotMo.addValidator(new RegexpValidator("^[0-9]*(\\.[0-9]+)?$", true, "Dato numerico"));
-		
-//        this.nroDocum.addValidator(
-//                new StringLengthValidator(
-//                     " 4 caracteres máximo", 1, 10, false));
-//        
-//        this.referencia.addValidator(
-//                new StringLengthValidator(
-//                        " 45 caracteres máximo", 1, 255, false));
-        
 	}
 	
-	public static java.sql.Date convertFromJAVADateToSQLDate(
-            java.util.Date javaDate) {
+	public static java.sql.Date convertFromJAVADateToSQLDate(java.util.Date javaDate) {
         java.sql.Date sqlDate = null;
         if (javaDate != null) {
             sqlDate = new Date(javaDate.getTime());
@@ -1005,8 +926,6 @@ public class DepositoViewExtended extends DepositoView implements IMensaje{
 	 * Seteamos el formulario en modo solo Lectura
 	 *
 	 */
-	
-	
 	private void actualizarGrillaContainer(BeanItemContainer<DepositoDetalleVO> container)
 	{
 		gridCheques.setContainerDataSource(container);
@@ -1050,8 +969,6 @@ public class DepositoViewExtended extends DepositoView implements IMensaje{
 
 		});
 				
-		
-		
 		
 		gridCheques.getColumn("fecValor").setHeaderCaption("Fecha");
 		gridCheques.getColumn("nomBanco").setHeaderCaption("Banco");

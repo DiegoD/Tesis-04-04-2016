@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
-import org.json.simple.JSONObject;
 
 import com.controladores.GrupoControlador;
 import com.excepciones.ConexionException;
@@ -20,15 +19,11 @@ import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
-import com.vaadin.server.Page;
 import com.vaadin.server.VaadinService;
-import com.vaadin.shared.Position;
-import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.valueObject.GrupoVO;
 import com.valueObject.UsuarioPermisosVO;
-import com.valueObject.UsuarioVO;
 import com.vista.Mensajes;
 import com.vista.MySub;
 import com.vista.PermisosUsuario;

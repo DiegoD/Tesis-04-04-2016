@@ -14,16 +14,6 @@ public class MonedaVO extends AuditoriaVO{
 		
 	}
 
-	public MonedaVO(String cod_moneda, String descripcion, String simbolo, boolean acepta_cotizacion, boolean activo, boolean nacional) {
-		super();
-		this.codMoneda = cod_moneda;
-		this.descripcion = descripcion;
-		this.simbolo = simbolo;
-		this.aceptaCotizacion = acepta_cotizacion;
-		this.activo = activo;
-		this.nacional = nacional;
-	}
-	
 	/**
 	 * Copiamos todos los datos de la MonedaVO pasado
 	 * por parametro

@@ -4,7 +4,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import com.valueObject.AuditoriaVO;
-import com.valueObject.Deposito.DepositoVO;
 
 public class ConciliacionVO extends AuditoriaVO{
 	
@@ -65,37 +64,25 @@ public class ConciliacionVO extends AuditoriaVO{
 		return codDocum;
 	}
 
-
-
 	public void setCodDocum(String codDocum) {
 		this.codDocum = codDocum;
 	}
-
-
 
 	public String getSerieDocum() {
 		return serieDocum;
 	}
 
-
-
 	public void setSerieDocum(String serieDocum) {
 		this.serieDocum = serieDocum;
 	}
-
-
 
 	public String getNroDocum() {
 		return nroDocum;
 	}
 
-
-
 	public void setNroDocum(String nroDocum) {
 		this.nroDocum = nroDocum;
 	}
-
-
 
 	public String getCod_emp() {
 		return cod_emp;
@@ -199,11 +186,9 @@ public class ConciliacionVO extends AuditoriaVO{
 	public void setLstDetalle(ArrayList<ConciliacionDetalleVO> lstDetalle) {
 		this.lstDetalle = lstDetalle;
 	}
-
 	public String getTipo() {
 		return tipo;
 	}
-
 	public void setTipo(String tipo) {
 		this.tipo = tipo;
 	}

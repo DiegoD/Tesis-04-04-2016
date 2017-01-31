@@ -23,15 +23,8 @@ import com.vista.Cuentas.CuentaViewExtended;
 
 public class CuentaControlador {
 	
-	private CuentaViewExtended vista;
 	
-	public CuentaControlador(CuentaViewExtended view){
-		this.vista = view;
-	}
-	
-	public CuentaControlador(){
-		
-	}
+	public CuentaControlador(){}
 	
 	public void insertarCuenta(CuentaVO cuentaVO, UsuarioPermisosVO permisos) throws InsertandoCuentaException, MemberCuentaException, ExisteCuentaException, InicializandoException, ConexionException, ErrorInesperadoException, NoTienePermisosException, ObteniendoPermisosException{
 		/*Primero se verifican los permisos*/

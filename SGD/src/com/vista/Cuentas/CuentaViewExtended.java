@@ -341,7 +341,7 @@ public class CuentaViewExtended extends CuentaView{
 	
 	public  void inicializarForm(){
 		
-		this.controlador = new CuentaControlador(this);
+		this.controlador = new CuentaControlador();
 					
 		this.fieldGroup =  new BeanFieldGroup<CuentaVO>(CuentaVO.class);
 		
@@ -906,8 +906,6 @@ public class CuentaViewExtended extends CuentaView{
 		lstRubros.getColumn("fechaMod").setHidden(true);
 		lstRubros.getColumn("usuarioMod").setHidden(true);
 		lstRubros.getColumn("operacion").setHidden(true);
-		
-		
 		
 	}
 	

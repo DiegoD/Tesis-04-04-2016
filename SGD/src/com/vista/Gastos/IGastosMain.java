@@ -1,6 +1,5 @@
 package com.vista.Gastos;
 
-import java.util.ArrayList;
 
 import com.valueObject.Gasto.GastoVO;
 

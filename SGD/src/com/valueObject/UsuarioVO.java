@@ -2,10 +2,6 @@ package com.valueObject;
 
 import java.util.ArrayList;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
-import com.logica.Grupo;
 
 public class UsuarioVO extends AuditoriaVO{
 	
@@ -19,33 +15,6 @@ public class UsuarioVO extends AuditoriaVO{
 	public UsuarioVO()
 	{
 		this.lstGrupos = new ArrayList<GrupoVO>();
-	}
-	/**
-	 * Crea un objeto UsuarioVO dado un JSON con sus datos
-	 */
-	public UsuarioVO(JSONObject obj){
-		
-		this.usuario = (String) obj.get("usuario");
-		this.pass = (String) obj.get("pass");
-		this.nombre = (String) obj.get("nombre");
-		this.activo = (Boolean) obj.get("activo");
-		this.lstGrupos = new ArrayList<GrupoVO>();
-		
-		JSONArray jLstGrupos = (JSONArray) obj.get("lstGruposUsuario");
-		GrupoVO grupoNombre;
-		if(jLstGrupos != null)
-		{
-			for(int i = 0; i < jLstGrupos.size(); i++)
-			{
-				JSONObject jGrupoUsuario = (JSONObject) jLstGrupos.get(i);
-				grupoNombre = new GrupoVO();
-				grupoNombre.setCodGrupo((String) jGrupoUsuario.get("codigo"));
-				grupoNombre.setNomGrupo((String) jGrupoUsuario.get("nombre"));
-				
-				this.lstGrupos.add(grupoNombre);
-			}
-		}
-		
 	}
 	
 	public ArrayList<GrupoVO> getLstGrupos() {

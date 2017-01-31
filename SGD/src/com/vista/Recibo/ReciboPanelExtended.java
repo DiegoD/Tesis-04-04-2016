@@ -9,18 +9,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
-import com.controladores.BancoControlador;
-import com.controladores.IngresoCobroControlador;
 import com.controladores.ReciboControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.InicializandoException;
 import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
-import com.excepciones.Bancos.ObteniendoBancosException;
-import com.excepciones.Bancos.ObteniendoCuentasBcoException;
-import com.excepciones.IngresoCobros.ObteniendoIngresoCobroException;
 import com.excepciones.Recibo.ObteniendoReciboException;
-import com.logica.IngresoCobro.IngresoCobro;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.converter.StringToDateConverter;
@@ -28,21 +22,15 @@ import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.server.VaadinService;
-import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.Docum.ReciboVO;
-import com.valueObject.IngresoCobro.IngresoCobroDetalleVO;
-import com.valueObject.IngresoCobro.IngresoCobroVO;
-import com.valueObject.banco.BancoVO;
 import com.vista.Mensajes;
 import com.vista.MySub;
 import com.vista.PermisosUsuario;
 import com.vista.Variables;
 import com.vista.VariablesPermisos;
-import com.vista.Bancos.BancoViewExtended;
-import com.vista.Bancos.BancosPanelExtended;
 
 public class ReciboPanelExtended extends ReciboPanel{
 	

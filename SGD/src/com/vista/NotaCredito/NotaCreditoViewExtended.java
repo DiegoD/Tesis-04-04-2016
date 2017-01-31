@@ -16,8 +16,6 @@ import com.excepciones.ConexionException;
 import com.excepciones.InicializandoException;
 import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
-import com.excepciones.Bancos.ObteniendoBancosException;
-import com.excepciones.Bancos.ObteniendoCuentasBcoException;
 import com.excepciones.Cotizaciones.ObteniendoCotizacionesException;
 import com.excepciones.Factura.ObteniendoFacturasException;
 import com.excepciones.NotaCredito.*;
@@ -49,7 +47,6 @@ import com.valueObject.TitularVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.Cotizacion.CotizacionVO;
 import com.valueObject.Docum.DocumDetalleVO;
-import com.valueObject.banco.BancoVO;
 import com.valueObject.banco.CtaBcoVO;
 import com.valueObject.cliente.ClienteVO;
 import com.vista.BusquedaViewExtended;
@@ -2030,8 +2027,7 @@ public class NotaCreditoViewExtended extends NotaCreditoViews implements IBusque
 	}
 	
 	
-	public static java.sql.Date convertFromJAVADateToSQLDate(
-            java.util.Date javaDate) {
+	public static java.sql.Date convertFromJAVADateToSQLDate(java.util.Date javaDate) {
         java.sql.Date sqlDate = null;
         if (javaDate != null) {
             sqlDate = new Date(javaDate.getTime());

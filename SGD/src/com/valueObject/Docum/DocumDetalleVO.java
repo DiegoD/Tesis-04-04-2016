@@ -1,6 +1,5 @@
 package com.valueObject.Docum;
 
-import com.valueObject.TitularVO;
 
 public class DocumDetalleVO extends DatosDocumVO{
 
@@ -9,24 +8,19 @@ public class DocumDetalleVO extends DatosDocumVO{
 	private double porcentajeImpuesto;
 	
 	private double impImpuMn;
-	private double impImpuMo ;
-	private double impSubMn ;
-	private double impSubMo ;
+	private double impImpuMo;
+	private double impSubMn;
+	private double impSubMo;
 	
 	private double tcMov;
-//	private String codCuenta;
-//	private String nomCuenta;
 	
 	private String codProceso;
 	private String descProceso;
-	
-
 
 	private String nomRubro;
 	private String codRubro;
 	private String estadoGasto;
 	
-	//private String codCtaInd; /*Cuenta interna del sistema*/
 	
 	private int linea;
 	
@@ -44,12 +38,11 @@ public class DocumDetalleVO extends DatosDocumVO{
 		this.impSubMn = t.impSubMn;
 		this.impSubMo = t.impSubMo;
 		this.tcMov = t.tcMov;
-		//this.codCuenta = t.codCuenta;
-		//this.nomCuenta = t.nomCuenta;
+	
 		this.codProceso = t.codProceso;
 		this.nomRubro = t.nomRubro;
 		this.codRubro = t.codRubro;
-		//this.codCtaInd = t.codCtaInd;
+		
 		this.linea = t.linea;
 		this.descProceso = t.descProceso;
 		this.estadoGasto = t.getEstadoGasto();

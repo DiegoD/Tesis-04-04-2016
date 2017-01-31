@@ -7,7 +7,6 @@ import java.util.ArrayList;
 
 import com.controladores.ImpuestoControlador;
 import com.excepciones.ConexionException;
-import com.excepciones.ErrorInesperadoException;
 import com.excepciones.InicializandoException;
 import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;

@@ -2,16 +2,17 @@ package com.valueObject.Saldos;
 
 public class SaDocumsVO {
 
-	private String cod_docum ;
-	private String  serie_docum ;
-	private int  nro_docum ;
-	private String  cod_emp ;
-	private String  cod_moneda ;
-	private int  cod_tit ;
-	private double  imp_tot_mn ;
-	private double  imp_tot_mo ;
-	private String  cuenta ;
+	private String cod_docum;
+	private String  serie_docum;
+	private int  nro_docum;
+	private String  cod_emp;
+	private String  cod_moneda;
+	private int  cod_tit;
+	private double  imp_tot_mn;
+	private double  imp_tot_mo;
+	private String  cuenta;
 	
+	public SaDocumsVO(){}
 	
 	public String getCod_docum() {
 		return cod_docum;
@@ -67,8 +68,6 @@ public class SaDocumsVO {
 	public void setCuenta(String cuenta) {
 		this.cuenta = cuenta;
 	}
-
-	
 	
 	
 }

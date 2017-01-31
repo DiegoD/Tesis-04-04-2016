@@ -8,15 +8,11 @@ import java.util.ArrayList;
 
 import com.excepciones.ConexionException;
 import com.excepciones.Titulares.ObteniendoTitularesException;
-import com.excepciones.clientes.ObteniendoClientesException;
-import com.logica.Cliente;
 import com.logica.Documento;
 import com.logica.Titular;
 
 public class DAOTitulares implements IDAOTitulares{
 	
-	private PreparedStatement pst = null;
-    private ResultSet rs = null;
     
     public ArrayList<Titular> getTitularesActivos(Connection con, String codEmp) throws ObteniendoTitularesException, ConexionException {
     	

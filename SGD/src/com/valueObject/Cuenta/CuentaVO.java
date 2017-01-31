@@ -2,10 +2,7 @@ package com.valueObject.Cuenta;
 
 import java.util.ArrayList;
 
-import com.logica.Rubro;
 import com.valueObject.AuditoriaVO;
-import com.valueObject.FormularioVO;
-import com.valueObject.GrupoVO;
 import com.valueObject.RubroVO;
 
 public class CuentaVO extends AuditoriaVO{
@@ -19,13 +16,6 @@ public class CuentaVO extends AuditoriaVO{
 		this.lstRubros = new ArrayList<RubroVO>();
 	}
 	
-	public CuentaVO(String codCuenta, String descripcion, boolean activo, ArrayList<RubroVO> lstRubros) {
-		super();
-		this.codCuenta = codCuenta;
-		this.descripcion = descripcion;
-		this.activo = activo;
-		this.lstRubros = lstRubros;
-	}
 
 	/**
 	 * Copiamos todos los datos de la CuentaVO pasado
@@ -99,7 +89,5 @@ public class CuentaVO extends AuditoriaVO{
 	public void setLstRubros(ArrayList<RubroVO> lstRubros) {
 		this.lstRubros = lstRubros;
 	}
-	
-	
 
 }

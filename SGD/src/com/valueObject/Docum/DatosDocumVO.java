@@ -3,8 +3,6 @@ package com.valueObject.Docum;
 import java.sql.Timestamp;
 
 import com.valueObject.AuditoriaVO;
-import com.valueObject.MonedaVO;
-import com.valueObject.Titular.TitularInfoVO;
 
 
 public class DatosDocumVO extends AuditoriaVO{

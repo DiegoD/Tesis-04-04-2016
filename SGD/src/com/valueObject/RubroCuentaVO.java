@@ -22,24 +22,6 @@ public class RubroCuentaVO {
 		
 	}
 
-	public RubroCuentaVO(String cod_rubro, String descripcionRubro, String cod_cuenta, String descripcionCuenta,
-			String cod_impuesto, String descripcionImpuesto, double porcentaje, boolean oficina, boolean proceso,
-			boolean persona, String cod_tipoRubro, String descripcionTipoRubro, boolean facturable) {
-		super();
-		this.cod_rubro = cod_rubro;
-		this.descripcionRubro = descripcionRubro;
-		this.cod_cuenta = cod_cuenta;
-		this.descripcionCuenta = descripcionCuenta;
-		this.cod_impuesto = cod_impuesto;
-		this.descripcionImpuesto = descripcionImpuesto;
-		this.porcentaje = porcentaje;
-		this.oficina = oficina;
-		this.proceso = proceso;
-		this.persona = persona;
-		this.cod_tipoRubro = cod_tipoRubro;
-		this.descripcionTipoRubro = descripcionTipoRubro;
-		this.facturable = facturable;
-	}
 
 	public RubroCuentaVO(RubroCuenta rubro){
 		
@@ -161,7 +143,5 @@ public class RubroCuentaVO {
 	public void setFacturable(boolean facturable) {
 		this.facturable = facturable;
 	}
-	
-	
 	
 }

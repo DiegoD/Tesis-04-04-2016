@@ -10,7 +10,6 @@ import com.excepciones.InicializandoException;
 import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Documentos.ObteniendoDocumentosException;
-import com.excepciones.Impuestos.ObteniendoImpuestosException;
 import com.excepciones.clientes.ExisteClienteExeption;
 import com.excepciones.clientes.ExisteDocumentoClienteException;
 import com.excepciones.clientes.InsertandoClienteException;
@@ -26,7 +25,6 @@ import com.vaadin.ui.UI;
 import com.valueObject.DocumDGIVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.cliente.ClienteVO;
-import com.vista.BusquedaViewExtended;
 import com.vista.IBusqueda;
 import com.vista.Mensajes;
 import com.vista.MySub;
@@ -143,47 +141,6 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 				main.cerrarVentana();
 			});
 			
-//			this.btnBuscarDoc.addClickListener(click -> {
-//				
-//				//ImpuestosHelpExtended form = new ImpuestosHelpExtended(this);
-//				
-//				BusquedaViewExtended form = new BusquedaViewExtended(this, new DocumDGIVO());
-//				ArrayList<Object> lst = new ArrayList<Object>();
-//				ArrayList<DocumDGIVO> lstDocumDgi = new ArrayList<DocumDGIVO>();
-//				
-//				try {
-//					
-//					lstDocumDgi = this.controlador.obtnerDocumentosDgi();
-//					
-//				} catch (ObteniendoDocumentosException| ConexionException| InicializandoException e) {
-//					
-//					Mensajes.mostrarMensajeError(e.getMessage());
-//				}
-//				Object obj;
-//				for (DocumDGIVO i: lstDocumDgi) {
-//					obj = new Object();
-//					obj = (Object)i;
-//					lst.add(obj);
-//				}
-//				try {
-//					form.inicializarGrilla(lst);
-//				
-//				} catch (ObteniendoImpuestosException| ConexionException| InicializandoException e) {
-//					
-//					Mensajes.mostrarMensajeError(e.getMessage());
-//				}
-//				
-//				sub = new MySub("60%", "60%" );
-//				sub.setModal(true);
-//				sub.center();
-//				sub.setModal(true);
-//				sub.setVista(form);
-//				sub.center();
-//				sub.setDraggable(true);
-//				UI.getCurrent().addWindow(sub);
-//				
-//			});
-		
 	}
 
 	public  void inicializarForm(){
@@ -230,12 +187,6 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 		
 		this.razonSocial.setRequired(setear);
 		this.razonSocial.setRequiredError("Es requerido");
-		
-//		this.codigoDoc.setRequired(setear);
-//		this.codigoDoc.setRequiredError("Es requerido");
-//		
-//		this.nombreDoc.setRequired(setear);
-//		this.nombreDoc.setRequiredError("Es requerido");
 		
 		this.numeroDoc.setRequired(setear);
 		this.numeroDoc.setRequiredError("Es requerido");
@@ -464,26 +415,6 @@ public class ClienteViewExtended extends ClienteView implements IBusqueda{
 		this.aceptar.setVisible(true);
 		
 	}
-	
-	/**
-	 * Deshabilitamos el boton busqueda documento
-	 *
-	 */
-//	private void disableBotonBusquedaDoc()
-//	{
-//		this.btnBuscarDoc.setEnabled(false);
-//		this.btnBuscarDoc.setVisible(false);
-//	}
-	
-	/**
-	 * habilitamos el boton busqueda documento
-	 *
-	 */
-//	private void enableBotonBusquedaDoc()
-//	{
-//		this.btnBuscarDoc.setEnabled(true);
-//		this.btnBuscarDoc.setVisible(true);
-//	}
 	
 	
 	/**

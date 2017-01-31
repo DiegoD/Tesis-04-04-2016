@@ -12,17 +12,10 @@ import com.excepciones.Empresas.InsertandoEmpresaException;
 import com.excepciones.Empresas.ModificandoEmpresaException;
 import com.excepciones.Empresas.NoExisteEmpresaException;
 import com.excepciones.Empresas.ObteniendoEmpresasException;
-import com.excepciones.Impuestos.ExisteImpuestoException;
-import com.excepciones.Impuestos.InsertandoImpuestoException;
-import com.excepciones.Impuestos.ModificandoImpuestoException;
-import com.excepciones.Impuestos.NoExisteImpuestoException;
-import com.excepciones.Impuestos.ObteniendoImpuestosException;
 import com.excepciones.Usuarios.ExisteUsuarioException;
 import com.logica.Fachada;
 import com.logica.FachadaDD;
-import com.valueObject.ImpuestoVO;
 import com.valueObject.UsuarioPermisosVO;
-import com.valueObject.UsuarioVO;
 import com.valueObject.empresa.EmpresaUsuVO;
 import com.valueObject.empresa.EmpresaVO;
 

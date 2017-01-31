@@ -7,8 +7,6 @@ public class TipoInCobVO {
 	
 	public TipoInCobVO(){
 		
-	
-		
 	}
 	
 	public TipoInCobVO(String cod, String nom){

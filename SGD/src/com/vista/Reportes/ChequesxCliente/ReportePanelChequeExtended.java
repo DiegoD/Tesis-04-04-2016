@@ -49,14 +49,6 @@ public class ReportePanelChequeExtended extends ReportePanelCheque{
 		
 		
 		
-		try {
-			this.inicializarBoton();
-			
-		} catch (ClassNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
 		controlador = new IngresoCobroOtroControlador();
 		this.lstIngresoCobro = new ArrayList<IngresoCobroVO>();
 		this.lblTitulo.setValue("Otros Ingresos");
@@ -460,43 +452,6 @@ public class ReportePanelChequeExtended extends ReportePanelCheque{
 		grid.setColumnOrder("nomTitular", "referencia", "nroDocum", "simboloMoneda", "impTotMo", "fecDoc");
 		
 	
-	}
-	
-	private void inicializarBoton() throws ClassNotFoundException{
-		
-		com.Reportes.util.ReportsUtil report;
-		
-		//String basepath = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath()+"/WEB-INF";
-		String basepath = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath() + "\\WEB-INF\\Reportes";
-		
-		System.out.println("ACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa+++++++++++");
-		System.out.println(basepath);
-		
-		  report = new ReportsUtil();
-		 
-		  
-		  try {
-			  
-			  HashMap<String, Object> fillParameters=new HashMap<String, Object>();
-		        fillParameters.put("codTit", "14");
-			  
-		  report.prepareForPdfReport(
-	                //"/reports/PersonListReport.jrxml",
-				  basepath+"\\Cheques_por_clientes.jrxml",
-	                "Cheques",
-	                btnNuevo, fillParameters);
-		  
-		 // report.prepareForPdfReport2("Test.jrxml");
-		  
-		  }
-		  catch(Exception e)
-		  {
-			  int o = 0;
-		  }
-		
-		  
-		  System.out.println(basepath+"\\src\\Test.jrxml");
-		
 	}
 
 }

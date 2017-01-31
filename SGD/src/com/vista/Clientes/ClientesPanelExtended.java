@@ -6,12 +6,10 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import com.controladores.ClienteControlador;
-import com.controladores.ImpuestoControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.InicializandoException;
 import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
-import com.excepciones.Impuestos.ObteniendoImpuestosException;
 import com.excepciones.clientes.ObteniendoClientesException;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
@@ -21,7 +19,6 @@ import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
-import com.valueObject.ImpuestoVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.cliente.ClienteVO;
 import com.vista.Mensajes;
@@ -29,12 +26,9 @@ import com.vista.MySub;
 import com.vista.PermisosUsuario;
 import com.vista.Variables;
 import com.vista.VariablesPermisos;
-import com.vista.Impuestos.ImpuestoViewExtended;
-import com.vista.Impuestos.ImpuestosPanelExtended;
 
 public class ClientesPanelExtended extends ClientesPanel{
 
-	//private ClienteViewExtended form; 
 	private ArrayList<ClienteVO> lstClientes; /*Lista con los impuestos*/
 	private BeanItemContainer<ClienteVO> container;
 	private ClienteControlador controlador;

@@ -1,6 +1,5 @@
 package com.valueObject;
 
-import java.util.ArrayList;
 
 public class ImpuestoVO extends AuditoriaVO{
 	
@@ -13,13 +12,6 @@ public class ImpuestoVO extends AuditoriaVO{
 		
 	}
 	
-	public ImpuestoVO(String codImpuesto, String descripcion, double porcentaje, boolean activo) {
-		super();
-		this.codImpuesto = codImpuesto;
-		this.descripcion = descripcion;
-		this.porcentaje = porcentaje;
-		this.activo = activo;
-	}
 
 	/**
 	 * Copiamos todos los datos del ImpuestoVO pasado

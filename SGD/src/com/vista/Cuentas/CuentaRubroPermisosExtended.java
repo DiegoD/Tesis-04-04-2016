@@ -1,10 +1,8 @@
 package com.vista.Cuentas;
 
-import com.valueObject.FormularioVO;
 import com.valueObject.RubroVO;
 import com.vista.Mensajes;
 import com.vista.Variables;
-import com.vista.Grupos.GrupoViewExtended;
 
 public class CuentaRubroPermisosExtended extends CuentaRubroPermisos{
 	

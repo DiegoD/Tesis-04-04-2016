@@ -27,7 +27,7 @@ public class SaCuentasVO {
 	private Timestamp  fec_doc;
 	private int  conciliado;
 	
-	
+	public SaCuentasVO(){}
 	
 	public String getCod_docum() {
 		return cod_docum;
@@ -161,8 +161,6 @@ public class SaCuentasVO {
 	public void setConciliado(int conciliado) {
 		this.conciliado = conciliado;
 	}
-	
-	
 
 
 }
