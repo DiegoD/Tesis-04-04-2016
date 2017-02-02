@@ -3807,7 +3807,7 @@ public class FachadaDD {
 		boolean existe = false;
 		Integer codigo;
 		NumeradoresVO codigos = new NumeradoresVO();
-		for(int i =0 ; i<100000; i++){
+		//for(int i =0 ; i<50000; i++){
 		try 
 		{
 			
@@ -3877,7 +3877,7 @@ public class FachadaDD {
 		finally{
 			pool.liberarConeccion(con);
 		}
-		}   /*FIN FOR*/
+		//}   /*FIN FOR*/
 		return codigos;
 	}
 

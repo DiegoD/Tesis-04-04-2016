@@ -509,6 +509,8 @@ public class DAOGastos implements IDAOGastos{
 		    	pstmt1.setString(2, codTit);
 				rs = pstmt1.executeQuery();
 				
+				String ss = pstmt1.toString();
+				
 				Gasto aux;
 				while(rs.next ()) {
 					

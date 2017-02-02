@@ -924,16 +924,41 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 			this.inicializoProceso();
 			
 			if(tipoTitular.toUpperCase().equals("FUNCIONARIO")){
-				this.comboSeleccion.setValue("Empleado");
-				this.inicializoEmpleado();
-				this.comboSeleccion.setEnabled(false);
-				this.btnBuscarEmpleado.setEnabled(false);
-				this.codTitular.setValue(String.valueOf(titularVO.getCodigo()));
-				this.nomTitular.setValue(titularVO.getNombre());
-				this.btnBuscarEmpleado.setVisible(false);
-				this.procesosCliente = "";
-				this.comboEstado.setValue("Cobrable");
-				this.comboEstado.setEnabled(false);
+				int cod = this.titularVO.getCodigo();
+				
+				/*Si no es cero es empleado*/
+				if(cod != 0){
+					
+					this.comboSeleccion.setValue("Empleado");
+					this.inicializoEmpleado();
+					this.comboSeleccion.setEnabled(false);
+					this.btnBuscarEmpleado.setEnabled(false);
+					this.codTitular.setValue(String.valueOf(titularVO.getCodigo()));
+					this.nomTitular.setValue(titularVO.getNombre());
+					this.btnBuscarEmpleado.setVisible(false);
+					this.procesosCliente = "";
+					this.comboEstado.setValue("Cobrable");
+					this.comboEstado.setEnabled(false);
+				}
+				else{ /*si es cero es oficina*/
+					
+					//inicializoOficina
+					if(cod == 0){
+						this.comboSeleccion.setValue("Oficina");
+						this.inicializoOficina();
+						this.comboSeleccion.setEnabled(false);
+						this.btnBuscarEmpleado.setEnabled(false);
+						this.codTitular.setValue(String.valueOf(titularVO.getCodigo()));
+						this.nomTitular.setValue(titularVO.getNombre());
+						this.btnBuscarEmpleado.setVisible(false);
+						this.procesosCliente = "";
+						this.comboEstado.setValue("Cobrable");
+						this.comboEstado.setEnabled(false);
+					}
+					
+				}
+				
+				
 			}
 			else if(tipoTitular.toUpperCase().equals("CLIENTE")){
 				this.comboSeleccion.setValue("Proceso");

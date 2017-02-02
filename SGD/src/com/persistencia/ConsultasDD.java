@@ -1445,14 +1445,14 @@ public class ConsultasDD {
 				+ "c_gastos.imp_sub_mn, c_gastos.imp_sub_mo, c_gastos.imp_tot_mn, "
 				+ "c_gastos.imp_tot_mo, c_gastos.tc_mov, c_gastos.cuenta, "
 				+ "c_gastos.fecha_mod, c_gastos.usuario_mod, c_gastos.operacion, "
-				+ "m_funcionarios.cod_tit, m_funcionarios.nom_tit, "
+				+ "m_titulares.cod_tit, m_titulares.nom_tit, "
 				+ "m_monedas.cod_moneda, m_monedas.descripcion, m_monedas.simbolo, "
 				+ "m_cuentas.cod_cuenta, m_cuentas.descripcion, "
 				+ "m_rubros.cod_rubro, m_rubros.descripcion, m_rubros.cod_tipo_rubro, m_rubros.cod_impuesto, "
 				+ "m_impuestos.cod_impuesto, m_impuestos.descripcion, m_impuestos.porcentaje, c_gastos.estado ");
 		
 		sb.append("FROM c_gastos"
-				+ " LEFT JOIN  m_funcionarios ON c_gastos.cod_tit = m_funcionarios.cod_tit AND m_funcionarios.cod_emp = c_gastos.cod_emp "
+				+ " LEFT JOIN  m_titulares ON c_gastos.cod_tit = m_titulares.cod_tit AND m_titulares.cod_emp = c_gastos.cod_emp "
 				+ " INNER JOIN m_cuentas ON c_gastos.cod_cuenta = m_cuentas.cod_cuenta AND m_cuentas.cod_emp = c_gastos.cod_emp "
 				+ " INNER JOIN m_rubros ON c_gastos.cod_rubro = m_rubros.cod_rubro AND m_rubros.cod_emp = c_gastos.cod_emp "
 				+ " INNER JOIN m_monedas ON c_gastos.cod_moneda = m_monedas.cod_moneda AND m_monedas.cod_emp = c_gastos.cod_emp "
@@ -1473,7 +1473,7 @@ public class ConsultasDD {
 				+ "c_gastos.imp_sub_mn, c_gastos.imp_sub_mo, c_gastos.imp_tot_mn, "
 				+ "c_gastos.imp_tot_mo, c_gastos.tc_mov, c_gastos.cuenta, "
 				+ "c_gastos.fecha_mod, c_gastos.usuario_mod, c_gastos.operacion, "
-				+ "m_clientes.cod_tit, m_clientes.nom_tit, "
+				+ "m_titulares.cod_tit, m_titulares.nom_tit, "
 				+ "m_monedas.cod_moneda, m_monedas.descripcion, m_monedas.simbolo, "
 				+ "m_cuentas.cod_cuenta, m_cuentas.descripcion, "
 				+ "m_rubros.cod_rubro, m_rubros.descripcion, m_rubros.cod_tipo_rubro, m_rubros.cod_impuesto, "
@@ -1481,7 +1481,7 @@ public class ConsultasDD {
 				+ "c_procesos.descripcion ");
 		
 		sb.append("FROM c_gastos"
-				+ " INNER JOIN  m_clientes ON c_gastos.cod_tit = m_clientes.cod_tit AND c_gastos.cod_emp = m_clientes.cod_emp  "
+				+ " INNER JOIN  m_titulares ON c_gastos.cod_tit = m_titulares.cod_tit AND c_gastos.cod_emp = m_titulares.cod_emp  "
 				+ " INNER JOIN m_cuentas ON c_gastos.cod_cuenta = m_cuentas.cod_cuenta AND c_gastos.cod_emp = m_cuentas.cod_emp "
 				+ " INNER JOIN m_rubros ON c_gastos.cod_rubro = m_rubros.cod_rubro AND c_gastos.cod_emp = m_rubros.cod_emp "
 				+ " INNER JOIN m_monedas ON c_gastos.cod_moneda = m_monedas.cod_moneda AND c_gastos.cod_emp = m_monedas.cod_emp "
@@ -1513,7 +1513,7 @@ public class ConsultasDD {
 				+ "c_gastos.imp_sub_mn, c_gastos.imp_sub_mo, sa_docum.imp_tot_mn, "
 				+ "sa_docum.imp_tot_mo, c_gastos.tc_mov, c_gastos.cuenta, "
 				+ "c_gastos.fecha_mod, c_gastos.usuario_mod, c_gastos.operacion, "
-				+ "m_clientes.cod_tit, m_clientes.nom_tit, "
+				+ "m_titulares.cod_tit, m_titulares.nom_tit, "
 				+ "m_monedas.cod_moneda, m_monedas.descripcion, m_monedas.simbolo, "
 				+ "m_cuentas.cod_cuenta, m_cuentas.descripcion, "
 				+ "m_rubros.cod_rubro, m_rubros.descripcion, m_rubros.cod_tipo_rubro, m_rubros.cod_impuesto, "
@@ -1521,7 +1521,7 @@ public class ConsultasDD {
 				+ "c_procesos.descripcion, m_monedas.nacional ");
 		
 		sb.append("FROM c_gastos"
-				+ " INNER JOIN  m_clientes ON c_gastos.cod_tit = m_clientes.cod_tit AND c_gastos.cod_emp = m_clientes.cod_emp  "
+				+ " INNER JOIN  m_titulares ON c_gastos.cod_tit = m_titulares.cod_tit AND c_gastos.cod_emp = m_titulares.cod_emp  "
 				+ " INNER JOIN m_cuentas ON c_gastos.cod_cuenta = m_cuentas.cod_cuenta AND c_gastos.cod_emp = m_cuentas.cod_emp "
 				+ " INNER JOIN m_rubros ON c_gastos.cod_rubro = m_rubros.cod_rubro AND c_gastos.cod_emp = m_rubros.cod_emp "
 				+ " INNER JOIN m_monedas ON c_gastos.cod_moneda = m_monedas.cod_moneda AND c_gastos.cod_emp = m_monedas.cod_emp "
@@ -1552,7 +1552,7 @@ public class ConsultasDD {
 				+ "c_gastos.imp_sub_mn, c_gastos.imp_sub_mo, sa_docum.imp_tot_mn, "
 				+ "sa_docum.imp_tot_mo, c_gastos.tc_mov, c_gastos.cuenta, "
 				+ "c_gastos.fecha_mod, c_gastos.usuario_mod, c_gastos.operacion, "
-				+ "m_clientes.cod_tit, m_clientes.nom_tit, "
+				+ "m_titulares.cod_tit, m_titulares.nom_tit, "
 				+ "m_monedas.cod_moneda, m_monedas.descripcion, m_monedas.simbolo, "
 				+ "m_cuentas.cod_cuenta, m_cuentas.descripcion, "
 				+ "m_rubros.cod_rubro, m_rubros.descripcion, m_rubros.cod_tipo_rubro, m_rubros.cod_impuesto, "
@@ -1560,7 +1560,7 @@ public class ConsultasDD {
 				+ "c_procesos.descripcion, m_monedas.nacional ");
 		
 		sb.append("FROM c_gastos"
-				+ " INNER JOIN  m_clientes ON c_gastos.cod_tit = m_clientes.cod_tit AND c_gastos.cod_emp = m_clientes.cod_emp  "
+				+ " INNER JOIN  m_titulares ON c_gastos.cod_tit = m_titulares.cod_tit AND c_gastos.cod_emp = m_titulares.cod_emp  "
 				+ " INNER JOIN m_cuentas ON c_gastos.cod_cuenta = m_cuentas.cod_cuenta AND c_gastos.cod_emp = m_cuentas.cod_emp "
 				+ " INNER JOIN m_rubros ON c_gastos.cod_rubro = m_rubros.cod_rubro AND c_gastos.cod_emp = m_rubros.cod_emp "
 				+ " INNER JOIN m_monedas ON c_gastos.cod_moneda = m_monedas.cod_moneda AND c_gastos.cod_emp = m_monedas.cod_emp "
@@ -1629,9 +1629,9 @@ public class ConsultasDD {
 				+ " cod_emp, cod_moneda, referencia, cod_tit, nro_trans, "
 				+ " fecValor, cod_proceso, referenciaDetalle, imp_impu_mn, imp_impu_mo, imp_sub_mn, "
 				+ " imp_sub_mo, imp_tot_mn, imp_tot_mo, tc_mov, cod_cuenta, cod_rubro, cuenta, "
-				+ " fecha_mod, usuario_mod, operacion, estado, cod_impuesto ) ");
+				+ " fecha_mod, usuario_mod, operacion, estado, cod_impuesto, anulado ) ");
 		sb.append("VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
-				+ " ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ? ) ");
+				+ " ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?, 'N' ) ");
 		
 		return sb.toString();
 	}
@@ -1729,8 +1729,8 @@ public class ConsultasDD {
 		sb.append("INSERT INTO sa_docum ( cod_docum, serie_docum, nro_docum, "
 				+ " cod_emp, cod_moneda, cod_tit, "
 				+ " imp_tot_mn, imp_tot_mo, cuenta, "
-				+ " fecha_mod, usuario_mod, operacion ) ");
-		sb.append("VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?) ");
+				+ " fecha_mod, usuario_mod, operacion, anulado ) ");
+		sb.append("VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, 0) ");
 		
 		return sb.toString();
 	}
@@ -1955,9 +1955,9 @@ public class ConsultasDD {
 		sb.append("INSERT INTO sa_cuentas ( cod_docum, serie_docum, nro_docum, "
 				+ " cod_emp, cod_moneda, cod_tit, "
 				+ " imp_tot_mn, imp_tot_mo, cuenta, "
-				+ " fecha_mod, usuario_mod, operacion, cod_cta, referencia, nro_trans, cod_doc_ref, "
+				+ " fecha_mod, usuario_mod, operacion, cod_cta, referencia, nro_trans, cod_doc_ref, anulado "
 				+ " serie_doc_ref, nro_doc_ref, cod_bco, cod_ctabco, movimiento, signo, fec_doc, fec_valor ) ");
-		sb.append("VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+		sb.append("VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0) ");
 		
 		return sb.toString();
 	}

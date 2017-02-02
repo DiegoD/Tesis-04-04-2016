@@ -1057,39 +1057,6 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 						codCliente = fieldGroup.getItemDataSource().getBean().getCodTitular();
 					}
 					
-//					/*Inicializamos VO de permisos para el usuario, formulario y operacion
-//					 * para confirmar los permisos del usuario*/
-//					UsuarioPermisosVO permisoAux = 
-//							new UsuarioPermisosVO(this.permisos.getCodEmp(),
-//									this.permisos.getUsuario(),
-//									VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
-//									VariablesPermisos.OPERACION_NUEVO_EDITAR);
-//					
-//
-//					//Moneda
-//					MonedaVO auxMoneda = new MonedaVO();
-//					if(this.comboMoneda.getValue() != null){
-//						auxMoneda = (MonedaVO) this.comboMoneda.getValue();
-//					}
-//					
-//					/*Obtenemos los gastos con saldo del cliente*/
-//					ArrayList<GastoVO> lstGastosConSaldo = this.controlador.getGastosConSaldo(permisoAux, codCliente);
-//					
-//					/*Hacemos una lista auxliar para pasarselo al BusquedaViewExtended*/
-//					ArrayList<Object> lst = new ArrayList<Object>();
-//					Object obj;
-//					for (GastoVO i: lstGastosConSaldo) {
-//						
-//						/*Verificamos que el gasto ya no esta en la grilla*/
-//						if(!this.existeFormularioenLista(i.getNroDocum()))
-//						{
-//							obj = new Object();
-//							obj = (Object)i;
-//							lst.add(obj);
-//						}
-//					}
-					
-					//form.inicializarGrilla(lst);
 					
 					UI.getCurrent().addWindow(sub);
 
