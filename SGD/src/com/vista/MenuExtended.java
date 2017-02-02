@@ -43,6 +43,7 @@ import com.vista.Reportes.ChequesxCliente.ReportePanelChequeExtended;
 import com.vista.Reportes.EstadoCuenta.RepEstadoCuentaViewExtended;
 import com.vista.Reportes.EstadoCuentaTotales.RepEstadoCuentaTotalesViewExtended;
 import com.vista.Reportes.GastosPendCobro.GtosPendCobroxClienteViewExtended;
+import com.vista.Reportes.GastosxProceso.GtosxProcesoViewExtended;
 import com.vista.Reportes.IVA.RepIvaViewExtended;
 import com.vista.Reportes.MovimientoBancos.RepMovBancoViewExtended;
 import com.vista.Reportes.MovimientosCaja.RepMovCajaExtended;
@@ -882,6 +883,32 @@ public class MenuExtended extends Menu{
 			}
 		});
 		
+		this.btnRepGastosxProceso.addClickListener(click -> {
+			
+			setSizeFull();
+			
+			this.content.removeAllComponents();
+			
+			try {
+				
+				
+				GtosxProcesoViewExtended form = new GtosxProcesoViewExtended();
+				
+				sub = new MySub("44%","45%");
+				
+				sub.setModal(true);
+				
+				sub.setVista(form);
+				
+				UI.getCurrent().addWindow(sub);
+				
+				
+				
+			} catch (Exception e) {
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}
+		});
+		
 	}
 	
 	
@@ -1187,6 +1214,7 @@ public class MenuExtended extends Menu{
 			   formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_REP_MOVIMIENTOS_POR_RUBRO) ||
 			   formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_REP_MOVIMIENTOS_CAJA) ||
 			   formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_REP_MOVIMIENTOS_BANCO) ||
+			   formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_REP_GASTOS_PROCESOS) ||
 			   formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_REP_CHEQUES_PENDIENTES_DEPOSITAR)) 
 				
 			{
@@ -1277,6 +1305,13 @@ public class MenuExtended extends Menu{
 						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_REP_MOVIMIENTOS_BANCO, VariablesPermisos.OPERACION_LEER)){
 							this.habilitarReporteMovimientosBanco(); 
 							this.layoutMenu.addComponent(this.btnMovBco); 
+						}
+					break;
+					
+					case VariablesPermisos.FORMULARIO_REP_GASTOS_PROCESOS : 
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_REP_GASTOS_PROCESOS, VariablesPermisos.OPERACION_LEER)){
+							this.habilitarReporteGastosProceso(); 
+							this.layoutMenu.addComponent(this.btnRepGastosxProceso); 
 						}
 					break;
 				
@@ -1415,6 +1450,10 @@ public class MenuExtended extends Menu{
 		
 		this.btnMovBco.setVisible(false);
 		this.btnMovBco.setEnabled(false);
+		
+		
+		this.btnRepGastosxProceso.setVisible(false);
+		this.btnRepGastosxProceso.setEnabled(false);
 	}
 	
 	
@@ -1658,6 +1697,12 @@ public class MenuExtended extends Menu{
 	{
 		this.btnMovBco.setVisible(true);
 		this.btnMovBco.setEnabled(true);
+	}
+	
+	private void habilitarReporteGastosProceso()
+	{
+		this.btnRepGastosxProceso.setVisible(true);
+		this.btnRepGastosxProceso.setEnabled(true);
 	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////////

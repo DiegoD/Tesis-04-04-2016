@@ -2525,6 +2525,75 @@ public class FachadaDD {
        }
     
     @SuppressWarnings("unchecked")
+   	public ArrayList<ProcesoVO> getProcesosxTit(String cod_emp, String codTit) throws ObteniendoProcesosException, ConexionException
+       {
+       	
+       	Connection con = null;
+       	
+       	ArrayList<Proceso> lstProcesos;
+       	ArrayList<ProcesoVO> lstProcesosVO = new ArrayList<ProcesoVO>();
+       	    	
+       	try
+       	{
+       		con = this.pool.obtenerConeccion();
+       		
+       		lstProcesos = this.procesos.getProcesosxTit(con, cod_emp, codTit);
+       		
+       		
+       		ProcesoVO aux;
+       		for (Proceso proceso : lstProcesos) 
+   			{
+       			aux = new ProcesoVO();
+       			
+       			aux.setOperacion(proceso.getOperacion());
+       			aux.setFechaMod(proceso.getFechaMod());
+       			aux.setUsuarioMod(proceso.getUsuarioMod());
+       			aux.setCodigo(proceso.getCodigo());
+       			aux.setCodCliente(proceso.getClienteInfo().getCodigo());
+       			aux.setNomCliente(proceso.getClienteInfo().getNombre());
+       			aux.setCodMoneda(proceso.getMonedaInfo().getCodMoneda());
+       			aux.setDescMoneda(proceso.getMonedaInfo().getDescripcion());
+       			aux.setSimboloMoneda(proceso.getMonedaInfo().getSimbolo());
+       			aux.setFecha(proceso.getFecha());
+       			aux.setNroMega(proceso.getNroMega());
+       			aux.setCodDocum(proceso.getDocumento().getCod_docucmento());
+       			aux.setNomDocum(proceso.getDocumento().getDescirpcion());
+       			aux.setNroDocum(String.valueOf(proceso.getNroDocum()));
+       			aux.setFecDocum(proceso.getFecDocum());
+       			aux.setCarpeta(proceso.getCarpeta());
+       			aux.setImpMo(proceso.getImpMo());
+       			aux.setImpMn(proceso.getImpMn());
+       			aux.setImpTr(proceso.getImpTr());
+       			aux.setTcMov(proceso.getTcMov());
+       			aux.setKilos(proceso.getKilos());
+       			aux.setFecCruce(proceso.getFecCruce());
+       			aux.setMarca(proceso.getMarca());
+       			aux.setMedio(proceso.getMedio());
+       			aux.setDescripcion(proceso.getDescripcion());
+       			aux.setObservaciones(proceso.getObservaciones());
+       			
+       			lstProcesosVO.add(aux);
+   			}
+   	
+       	}
+       	catch(ObteniendoProcesosException e){
+       		throw e;
+       		
+       	} 
+       	catch (ConexionException e) {
+   			
+       		throw e;
+       	} 
+       	finally
+       	{
+       		this.pool.liberarConeccion(con);
+       	}
+       	    
+       	
+       	return lstProcesosVO;
+       }
+    
+    @SuppressWarnings("unchecked")
    	public ArrayList<ProcesoVO> getProcesosCliente(String cod_emp, String cod_cliente) throws ObteniendoProcesosException, ConexionException
        {
        	

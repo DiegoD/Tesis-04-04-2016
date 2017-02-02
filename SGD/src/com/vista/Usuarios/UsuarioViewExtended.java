@@ -106,6 +106,7 @@ public class UsuarioViewExtended extends UsuarioView implements IBusqueda{
 					usuarioVO.setUsuarioMod(this.permisos.getUsuario());
 					usuarioVO.setMail(mail.getValue());
 					usuarioVO.setCodTit(Integer.valueOf(this.codTit.getValue().trim()));
+					usuarioVO.setNomTit(this.nomTit.getValue());
 					String empresa = this.permisos.getCodEmp();
 					
 					if(this.lstGruposAgregar.size() > 0)

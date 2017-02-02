@@ -9,6 +9,7 @@ import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Bancos.ObteniendoBancosException;
 import com.excepciones.Bancos.ObteniendoCuentasBcoException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
+import com.excepciones.Procesos.ObteniendoProcesosException;
 import com.excepciones.Titulares.ObteniendoTitularesException;
 import com.excepciones.Usuarios.ObteniendoUsuariosException;
 import com.excepciones.clientes.ObteniendoClientesException;
@@ -21,6 +22,7 @@ import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.banco.BancoVO;
 import com.valueObject.banco.CtaBcoVO;
 import com.valueObject.cliente.ClienteVO;
+import com.valueObject.proceso.ProcesoVO;
 
 public class ReportesControlador {
 	
@@ -91,5 +93,11 @@ public class ReportesControlador {
 		else
 			throw new NoTienePermisosException();
 	}
+	
+	public ArrayList<ProcesoVO> getProcesos(UsuarioPermisosVO permisos, String codTit) throws ObteniendoProcesosException, ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoProcesosException{
+		
+			return FachadaDD.getInstance().getProcesosxTit(permisos.getCodEmp(), codTit);
+	}
+	
 
 }

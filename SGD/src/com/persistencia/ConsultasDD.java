@@ -958,6 +958,29 @@ public class ConsultasDD {
 		return sb.toString();
 	}
 	
+	public String getProcesosxTit(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT c_procesos.cod_proceso, c_procesos.fecha, c_procesos.numero_documento, "
+				+ "c_procesos.fecha_documento, c_procesos.numero_mega, c_procesos.carpeta, "
+				+ "c_procesos.importe_moneda, c_procesos.importe_moneda_nacional, c_procesos.importe_transaccion, "
+				+ "c_procesos.tasa_cambio, c_procesos.peso, c_procesos.fecha_cruce, c_procesos.marca, "
+				+ "c_procesos.medio, c_procesos.descripcion, c_procesos.observaciones, "
+				+ "c_procesos.fecha_mod, c_procesos.usuario_mod, c_procesos.operacion, "
+				+ "m_documentos_aduaneros.cod_documento, m_documentos_aduaneros.descripcion, "
+				+ "m_clientes.cod_tit, m_clientes.nom_tit, "
+				+ "m_monedas.cod_moneda, m_monedas.descripcion, m_monedas.simbolo ");
+		
+		sb.append("FROM c_procesos LEFT JOIN  m_documentos_aduaneros ON c_procesos.cod_documento = m_documentos_aduaneros.cod_documento "
+				+ "AND m_documentos_aduaneros.cod_emp = c_procesos.cod_emp "
+				+ " LEFT JOIN  m_clientes ON c_procesos.cod_cliente = m_clientes.cod_tit AND m_clientes.cod_emp = c_procesos.cod_emp "
+				+ " LEFT JOIN m_monedas ON c_procesos.cod_moneda = m_monedas.cod_moneda AND m_monedas.cod_emp = c_procesos.cod_emp "
+				+ " WHERE c_procesos.cod_emp = ? AND c_procesos.cod_cliente = ? ");  
+		
+		return sb.toString();
+	}
+	
 	public String getProcesosSinFecha(){
 		
 		StringBuilder sb = new StringBuilder();
@@ -976,7 +999,7 @@ public class ConsultasDD {
 				+ "AND m_documentos_aduaneros.cod_emp = c_procesos.cod_emp "
 				+ " LEFT JOIN  m_clientes ON c_procesos.cod_cliente = m_clientes.cod_tit AND m_clientes.cod_emp = c_procesos.cod_emp "
 				+ " LEFT JOIN m_monedas ON c_procesos.cod_moneda = m_monedas.cod_moneda AND m_monedas.cod_emp = c_procesos.cod_emp "
-				+ " WHERE c_procesos.cod_emp = ? ");  
+				+ " WHERE c_procesos.cod_emp = ?  ");  
 		
 		return sb.toString();
 	}

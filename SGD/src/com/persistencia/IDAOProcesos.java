@@ -23,4 +23,5 @@ public interface IDAOProcesos {
 	public ArrayList<Proceso> getProcesosCliente(Connection con, String codEmp, String cod_cliente) throws ObteniendoProcesosException, ConexionException;
 	public Proceso getProceso(Connection con, String codEmp, Integer codProceso) throws ObteniendoProcesosException, ConexionException;
 	public ArrayList<Proceso> getProcesosTodosSinFecha(Connection con, String codEmp) throws ObteniendoProcesosException, ConexionException;
+	public ArrayList<Proceso> getProcesosxTit(Connection con, String codEmp, String codTit) throws ObteniendoProcesosException, ConexionException;
 }

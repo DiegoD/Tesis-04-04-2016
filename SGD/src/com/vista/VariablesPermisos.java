@@ -51,6 +51,7 @@ public final class VariablesPermisos {
 	public static final String FORMULARIO_REP_MOVIMIENTOS_POR_RUBRO = "RepMovRubroCta";
 	public static final String FORMULARIO_REP_MOVIMIENTOS_CAJA	 = "RepMovCaja";
 	public static final String FORMULARIO_REP_MOVIMIENTOS_BANCO	 = "RepMovBanco";
+	public static final String FORMULARIO_REP_GASTOS_PROCESOS	 = "RepGtosxProceso";
 	
 	/*Variables para las operaciones*/
 	public static final String OPERACION_NUEVO_EDITAR = "NUEVO_EDITAR";
