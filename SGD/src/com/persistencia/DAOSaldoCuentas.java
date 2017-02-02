@@ -124,6 +124,8 @@ public class DAOSaldoCuentas implements IDAOSaldosCuentas{
 			pstmt1.setTimestamp(22, documento.getFecDoc());
 			pstmt1.setTimestamp(23, documento.getFecValor());
 			
+			String ss = pstmt1.toString();
+			
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
 					

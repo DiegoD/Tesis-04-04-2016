@@ -1214,7 +1214,7 @@ public class ConsultasDD {
 				+ " INNER JOIN m_monedas ON c_gastos.cod_moneda = m_monedas.cod_moneda AND m_monedas.cod_emp = c_gastos.cod_emp "
 				+ " INNER JOIN m_impuestos ON c_gastos.cod_impuesto = m_impuestos.cod_impuesto AND m_impuestos.cod_emp = c_gastos.cod_emp "
 				+ " INNER JOIN c_procesos ON c_gastos.cod_proceso = c_procesos.cod_proceso and c_procesos.cod_emp = c_gastos.cod_emp "
-				+ " AND c_gastos.cod_emp = ? AND c_gastos.cod_proceso = ? AND c_gastos.estado = 'nocobr' ");
+				+ " AND c_gastos.cod_emp = ? AND c_gastos.cod_proceso = ? AND c_gastos.estado = 'nocobr' AND c_gastos.anulado = 'N' ");
 				
 				return sb.toString();
 
@@ -1254,7 +1254,7 @@ public class ConsultasDD {
 		
 		
 		sb.append(" AND c_gastos.cod_tit = ?  "
-				+ " AND sa_docum.imp_tot_mo <> 0 ");
+				+ " AND sa_docum.imp_tot_mo <> 0 AND c_gastos.anulado = 'N' ");
 				
 				
 		return sb.toString();
@@ -1301,7 +1301,7 @@ public class ConsultasDD {
 				
 		
 		sb.append(" AND c_gastos.cod_tit = ? AND c_gastos.cod_moneda = ? "
-				+ " AND sa_docum.imp_tot_mo <> 0 ");
+				+ " AND sa_docum.imp_tot_mo <> 0 AND c_gastos.anulado = 'N' ");
 				
 				
 		return sb.toString();
@@ -1333,7 +1333,7 @@ public class ConsultasDD {
 				+ " INNER JOIN m_monedas ON c_gastos.cod_moneda = m_monedas.cod_moneda AND m_monedas.cod_emp = c_gastos.cod_emp "
 				+ " INNER JOIN m_impuestos ON c_gastos.cod_impuesto = m_impuestos.cod_impuesto AND m_impuestos.cod_emp = c_gastos.cod_emp "
 				+ " INNER JOIN c_procesos ON c_gastos.cod_proceso = c_procesos.cod_proceso and c_procesos.cod_emp = c_gastos.cod_emp "
-				+ " AND c_gastos.cod_emp = ? AND c_gastos.cod_proceso = ? AND c_gastos.estado = 'cobr' ");
+				+ " AND c_gastos.cod_emp = ? AND c_gastos.cod_proceso = ? AND c_gastos.estado = 'cobr' AND c_gastos.anulado = 'N' ");
 				
 				return sb.toString();
 
@@ -1366,7 +1366,7 @@ public class ConsultasDD {
 				+ " INNER JOIN c_procesos ON c_gastos.cod_proceso = c_procesos.cod_proceso and c_procesos.cod_emp = c_gastos.cod_emp "
 				+ " INNER JOIN sa_docum ON c_gastos.cod_docum = sa_docum.cod_docum AND sa_docum.serie_docum = c_gastos.serie_docum "
 				+ "			   AND sa_docum.nro_docum = c_gastos.nro_docum AND sa_docum.cod_emp = c_gastos.cod_emp and sa_docum.imp_tot_mo > 0 "
-				+ " WHERE c_gastos.cod_emp = ? AND c_gastos.cod_proceso = ? AND c_gastos.estado = 'cobr' ");
+				+ " WHERE c_gastos.cod_emp = ? AND c_gastos.cod_proceso = ? AND c_gastos.estado = 'cobr' AND c_gastos.anulado = 'N' ");
 				
 				return sb.toString();
 
@@ -1398,7 +1398,7 @@ public class ConsultasDD {
 			+ " INNER JOIN m_monedas ON c_gastos.cod_moneda = m_monedas.cod_moneda AND m_monedas.cod_emp = c_gastos.cod_emp "
 			+ " INNER JOIN m_impuestos ON c_gastos.cod_impuesto = m_impuestos.cod_impuesto AND m_impuestos.cod_emp = c_gastos.cod_emp "
 			+ " INNER JOIN c_procesos ON c_gastos.cod_proceso = c_procesos.cod_proceso and c_procesos.cod_emp = c_gastos.cod_emp "
-			+ " AND c_gastos.cod_emp = ? AND c_gastos.cod_proceso = ? AND c_gastos.estado = 'anul' ");
+			+ " AND c_gastos.cod_emp = ? AND c_gastos.cod_proceso = ? AND c_gastos.anulado = 'S' ");
 			
 			return sb.toString();
 
@@ -1462,7 +1462,7 @@ public class ConsultasDD {
 				return sb.toString();
 	}
 	
-	public String getGastosConSaldoxMoneda(){
+		public String getGastosConSaldoxMoneda(){
 		
 		StringBuilder sb = new StringBuilder();
 		
@@ -1497,12 +1497,12 @@ public class ConsultasDD {
 		
 		sb.append(" AND c_gastos.cod_tit = ? "
 				+ " AND c_gastos.cod_moneda = ? "
-				+ " AND sa_docum.imp_tot_mo <> 0 ");
+				+ " AND sa_docum.imp_tot_mo <> 0 AND c_gastos.anulado = 'N' ");
 				
 				return sb.toString();
 	}
 
-	public String getGastosConSaldo(){
+		public String getGastosConSaldo(){
 	
 		StringBuilder sb = new StringBuilder();
 		
@@ -1535,7 +1535,7 @@ public class ConsultasDD {
 				+ " AND c_gastos.cod_emp = ? "); 
 		
 		
-		sb.append(" AND c_gastos.cod_tit = ? "
+		sb.append(" AND c_gastos.cod_tit = ? AND c_gastos.anulado = 'N' "
 				+ " AND sa_docum.imp_tot_mo <> 0 ");
 				
 		return sb.toString();
@@ -1571,7 +1571,7 @@ public class ConsultasDD {
 				+" AND c_gastos.nro_docum = sa_docum.nro_docum "
 				+" AND c_gastos.cod_emp = sa_docum.cod_emp "
 				+" AND c_gastos.cod_tit = sa_docum.cod_tit "
-				+ " AND c_gastos.cod_emp = ? AND c_gastos.estado = 'cobr' "); 
+				+ " AND c_gastos.cod_emp = ? AND c_gastos.estado = 'cobr' AND c_gastos.anulado = 'N' "); 
 		
 		
 		sb.append(" AND c_gastos.cod_tit = ? "
@@ -1610,7 +1610,7 @@ public class ConsultasDD {
 				+" AND c_gastos.nro_docum = sa_docum.nro_docum "
 				+" AND c_gastos.cod_emp = sa_docum.cod_emp "
 				+" AND c_gastos.cod_tit = sa_docum.cod_tit "
-				+ " AND c_gastos.cod_emp = ? AND c_gastos.estado = 'cobr' "); 
+				+ " AND c_gastos.cod_emp = ? AND c_gastos.estado = 'cobr' AND c_gastos.anulado = 'N' "); 
 		
 		
 		sb.append(" AND c_gastos.cod_tit = ? "
@@ -1955,9 +1955,10 @@ public class ConsultasDD {
 		sb.append("INSERT INTO sa_cuentas ( cod_docum, serie_docum, nro_docum, "
 				+ " cod_emp, cod_moneda, cod_tit, "
 				+ " imp_tot_mn, imp_tot_mo, cuenta, "
-				+ " fecha_mod, usuario_mod, operacion, cod_cta, referencia, nro_trans, cod_doc_ref, anulado "
-				+ " serie_doc_ref, nro_doc_ref, cod_bco, cod_ctabco, movimiento, signo, fec_doc, fec_valor ) ");
+				+ " fecha_mod, usuario_mod, operacion, cod_cta, referencia, nro_trans, cod_doc_ref, "
+				+ " serie_doc_ref, nro_doc_ref, cod_bco, cod_ctabco, movimiento, signo, fec_doc, fec_valor, anulado ) ");
 		sb.append("VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0) ");
+		
 		
 		return sb.toString();
 	}
