@@ -1,12 +1,9 @@
 package com.vista.Usuarios;
 
-import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
-import org.json.simple.JSONObject;
 
-import com.controladores.GrupoControlador;
 import com.controladores.UsuarioControlador;
 import com.excepciones.ConexionException;
 import com.excepciones.ErrorInesperadoException;
@@ -15,8 +12,6 @@ import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Usuarios.ObteniendoUsuariosException;
 import com.excepciones.grupos.ObteniendoGruposException;
-import com.vaadin.client.ui.VScrollTable.HeaderCell;
-import com.vaadin.client.widgets.Grid.HeaderRow;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.filter.SimpleStringFilter;
@@ -25,7 +20,6 @@ import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
-import com.valueObject.GrupoVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.UsuarioVO;
 import com.vista.Mensajes;
@@ -65,7 +59,7 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 		
 			controlador = new UsuarioControlador();
 			this.lstUsuarios = new ArrayList<UsuarioVO>();
-			sub = new MySub("65%", "65%");
+			sub = new MySub("65%", "75%");
 					
 			this.inicializarGrilla();
 			
@@ -120,6 +114,8 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 		gridUsuarios.removeColumn("operacion");
 		gridUsuarios.removeColumn("pass");
 		gridUsuarios.removeColumn("mail");
+		gridUsuarios.removeColumn("codTit");
+		gridUsuarios.removeColumn("nomTit");
 		
 		gridUsuarios.addSelectionListener(new SelectionListener() 
 		{

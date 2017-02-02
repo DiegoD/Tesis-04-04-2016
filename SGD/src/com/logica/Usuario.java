@@ -5,8 +5,6 @@ import java.util.ArrayList;
 
 import org.json.simple.JSONObject;
 
-import com.sun.jna.platform.win32.Sspi.TimeStamp;
-import com.valueObject.FormularioVO;
 import com.valueObject.GrupoVO;
 import com.valueObject.UsuarioVO;
 
@@ -17,13 +15,15 @@ public class Usuario extends Auditoria{
 	private String nombre;
 	private boolean activo;
 	private String mail;
+	private int codTit;
+	private String nomTit;
 	private ArrayList<Grupo> lstGrupos;
 	
 	public Usuario(){
 		this.lstGrupos = new ArrayList<Grupo>();
 	}
 	public Usuario(String usuario, String pass, String nombre, Boolean activo, 
-				   String usuarioMod, Timestamp fechaMod, String operacion, String mail) {
+				   String usuarioMod, Timestamp fechaMod, String operacion, String mail, int codTit, String nomTit) {
 		
 		super(usuarioMod, fechaMod, operacion);
 		this.usuario = usuario;
@@ -33,6 +33,8 @@ public class Usuario extends Auditoria{
 		this.lstGrupos = new ArrayList<Grupo>();
 		this.setUsuarioMod(usuarioMod);
 		this.mail = mail;
+		this.codTit = codTit;
+		this.nomTit = nomTit;
 	}
 	
 	
@@ -46,6 +48,8 @@ public class Usuario extends Auditoria{
 		this.activo = usuarioVO.isActivo();
 		this.lstGrupos = new ArrayList<Grupo>();
 		this.mail = usuarioVO.getMail();
+		this.codTit = usuarioVO.getCodTit();
+		this.nomTit = usuarioVO.getNomTit();
 		Grupo aux;
 		for (GrupoVO grupoVO : usuarioVO.getLstGrupos()) {
 			
@@ -103,5 +107,18 @@ public class Usuario extends Auditoria{
 	public void setMail(String mail) {
 		this.mail = mail;
 	}
+	public int getCodTit() {
+		return codTit;
+	}
+	public void setCodTit(int codTit) {
+		this.codTit = codTit;
+	}
+	public String getNomTit() {
+		return nomTit;
+	}
+	public void setNomTit(String nomTit) {
+		this.nomTit = nomTit;
+	}
 
+	
 }

@@ -278,6 +278,8 @@ public class FachadaDD {
 				aux.setUsuarioMod(usuario.getUsuarioMod());
 				aux.setOperacion(usuario.getOperacion());
 				aux.setMail(usuario.getMail());
+				aux.setCodTit(usuario.getCodTit());
+				aux.setNomTit(usuario.getNomTit());
 				
 				GrupoVO auxGrupo;
 				for (Grupo grupo: usuario.getLstGrupos())

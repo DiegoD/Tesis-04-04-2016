@@ -2,7 +2,6 @@ package com.controladores;
 
 import java.util.ArrayList;
 
-import org.json.simple.JSONObject;
 
 import com.excepciones.ConexionException;
 import com.excepciones.ErrorInesperadoException;
@@ -12,13 +11,14 @@ import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Usuarios.ExisteUsuarioException;
 import com.excepciones.Usuarios.InsertandoUsuarioException;
 import com.excepciones.Usuarios.ObteniendoUsuariosException;
+import com.excepciones.clientes.ObteniendoClientesException;
 import com.excepciones.grupos.ObteniendoGruposException;
 import com.logica.Fachada;
 import com.logica.FachadaDD;
-import com.valueObject.FormularioVO;
 import com.valueObject.GrupoVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.UsuarioVO;
+import com.valueObject.cliente.ClienteVO;
 
 public class UsuarioControlador {
 
@@ -73,4 +73,16 @@ public class UsuarioControlador {
 		return FachadaDD.getInstance().getGruposNoUsuario(nombreUsuario);
 	}
 
+	
+	/**
+	 * Trae los clientes activos
+	 */
+	public ArrayList<ClienteVO> getClientes(UsuarioPermisosVO permisos) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoClientesException {
+		
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			return Fachada.getInstance().getClientesActivos(permisos.getCodEmp());
+		else
+			throw new NoTienePermisosException();
+	}
 }

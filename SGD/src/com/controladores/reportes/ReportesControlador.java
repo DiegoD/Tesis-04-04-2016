@@ -10,9 +10,11 @@ import com.excepciones.Bancos.ObteniendoBancosException;
 import com.excepciones.Bancos.ObteniendoCuentasBcoException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
 import com.excepciones.Titulares.ObteniendoTitularesException;
+import com.excepciones.Usuarios.ObteniendoUsuariosException;
 import com.excepciones.clientes.ObteniendoClientesException;
 import com.logica.Fachada;
 import com.logica.FachadaDD;
+import com.valueObject.CodTitNomTitAuxVO;
 import com.valueObject.MonedaVO;
 import com.valueObject.TitularVO;
 import com.valueObject.UsuarioPermisosVO;
@@ -71,6 +73,21 @@ public class ReportesControlador {
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
 			return Fachada.getInstance().getBancosActivos(permisos.getCodEmp());
+		else
+			throw new NoTienePermisosException();
+	}
+	
+
+	/**
+	 * Utilizado para los reporte que ven los clientes
+	 * Si el titular es un cliente entonces el usuario no tiente
+	 * la opcion de elegir clientes y por defecto queda el suyo
+	 */
+	public CodTitNomTitAuxVO getTitUsu(UsuarioPermisosVO permisos) throws  ConexionException, ObteniendoUsuariosException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException {
+	
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			return Fachada.getInstance().getTitUsu(permisos.getCodEmp(), permisos.getUsuario());
 		else
 			throw new NoTienePermisosException();
 	}

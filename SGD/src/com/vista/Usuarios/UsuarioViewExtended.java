@@ -2,9 +2,6 @@ package com.vista.Usuarios;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
-
-import org.json.simple.JSONObject;
 
 import com.controladores.GrupoControlador;
 import com.controladores.UsuarioControlador;
@@ -15,27 +12,27 @@ import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Usuarios.ExisteUsuarioException;
 import com.excepciones.Usuarios.InsertandoUsuarioException;
-import com.excepciones.grupos.ExisteGrupoException;
-import com.excepciones.grupos.InsertandoGrupoException;
-import com.excepciones.grupos.MemberGrupoException;
-import com.excepciones.grupos.ObteniendoGruposException;
+import com.excepciones.clientes.ObteniendoClientesException;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.data.validator.StringLengthValidator;
+import com.vaadin.event.FieldEvents.TextChangeEvent;
+import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
 import com.vaadin.server.VaadinService;
-import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
-import com.valueObject.FormularioVO;
-import com.valueObject.GrupoNombreVO;
 import com.valueObject.GrupoVO;
+import com.valueObject.TitularVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.UsuarioVO;
+import com.valueObject.cliente.ClienteVO;
+import com.vista.BusquedaViewExtended;
+import com.vista.IBusqueda;
 import com.vista.MD5;
 import com.vista.Mensajes;
 import com.vista.MySub;
@@ -43,7 +40,7 @@ import com.vista.PermisosUsuario;
 import com.vista.Variables;
 import com.vista.VariablesPermisos;
 
-public class UsuarioViewExtended extends UsuarioView{
+public class UsuarioViewExtended extends UsuarioView implements IBusqueda{
 
 	private static final long serialVersionUID = 1L;
 	private BeanFieldGroup<UsuarioVO> fieldGroup;
@@ -60,6 +57,7 @@ public class UsuarioViewExtended extends UsuarioView{
 	GrupoControlador controladorGrupo;
 	BeanItemContainer<GrupoVO> containerGrupo;
 	private PermisosUsuario permisos; /*Permisos del usuario*/
+	private String msj;
 	
 	String passOld;
 	
@@ -67,6 +65,7 @@ public class UsuarioViewExtended extends UsuarioView{
 	 * Constructor: recibe operación (nuevo, editar)
 	 * También recibe la vista que lo llamó por parametro
 	 */
+	@SuppressWarnings("deprecation")
 	public UsuarioViewExtended(String opera, UsuariosPanelExtend main)
 	{
 		/*Inicializamos los permisos para el usuario*/
@@ -106,6 +105,7 @@ public class UsuarioViewExtended extends UsuarioView{
 					usuarioVO.setActivo(activo.getValue());
 					usuarioVO.setUsuarioMod(this.permisos.getUsuario());
 					usuarioVO.setMail(mail.getValue());
+					usuarioVO.setCodTit(Integer.valueOf(this.codTit.getValue().trim()));
 					String empresa = this.permisos.getCodEmp();
 					
 					if(this.lstGruposAgregar.size() > 0)
@@ -141,7 +141,7 @@ public class UsuarioViewExtended extends UsuarioView{
 				}
 				else /*Si los campos no son válidos mostramos warning*/
 				{
-					Mensajes.mostrarMensajeWarning(Variables.WARNING_CAMPOS_NO_VALIDOS);
+					Mensajes.mostrarMensajeWarning(this.msj);
 				}
 				
 			} 
@@ -159,9 +159,13 @@ public class UsuarioViewExtended extends UsuarioView{
 			
 			try
 			{
+				
+				boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_USUARIO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 				/*Inicializamos el Form en modo Edicion*/
 				passOld = this.pass.getValue().trim();
-				this.iniFormEditar();
+				this.iniFormEditar(permisoNuevoEditar);		
+				if(permisoNuevoEditar)
+					this.enableBotonCliente();
 	
 			}
 			catch(Exception e)
@@ -258,7 +262,91 @@ public class UsuarioViewExtended extends UsuarioView{
 				}
 			});
 		
+		this.btnBuscarCliente.addClickListener(click -> {
+			BusquedaViewExtended form;
+			
 		
+			form = new BusquedaViewExtended(this, new ClienteVO());
+			
+			
+			ArrayList<Object> lst = new ArrayList<Object>();
+			ArrayList<TitularVO> lstTitulares = new ArrayList<TitularVO>();
+			ArrayList<ClienteVO> lstClientes = new ArrayList<ClienteVO>();
+			
+			/*Inicializamos VO de permisos para el usuario, formulario y operacion
+			 * para confirmar los permisos del usuario*/
+			UsuarioPermisosVO permisoAux = 
+					new UsuarioPermisosVO(this.permisos.getCodEmp(),
+							this.permisos.getUsuario(),
+							VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+							VariablesPermisos.OPERACION_NUEVO_EDITAR);
+			
+			try {
+				
+				
+					
+					lstClientes = this.controlador.getClientes(permisoAux);
+				
+				
+			} catch ( ConexionException | InicializandoException | ObteniendoPermisosException | NoTienePermisosException |
+					 ObteniendoClientesException e) {
+
+				Mensajes.mostrarMensajeError(e.getMessage());
+			}
+			
+			/*Agregamos el 0 no asignado*/	
+			ClienteVO noAsig = new ClienteVO();
+			noAsig.setCodigo(0);
+			noAsig.setNombre("No asignado");
+			noAsig.setRazonSocial("No asignado");
+		    Object ob = new Object();
+		    ob = (Object)noAsig;
+		    lst.add(ob);
+			
+				Object obj;
+				for (ClienteVO i: lstClientes) {
+					obj = new Object();
+					obj = (Object)i;
+					lst.add(obj);
+				}
+			
+			try {
+				
+				form.inicializarGrilla(lst);
+			
+				
+			} catch (Exception e) {
+				
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}
+			
+			sub = new MySub("85%", "65%" );
+			sub.setModal(true);
+			sub.center();
+			sub.setModal(true);
+			sub.setVista(form);
+			sub.center();
+			sub.setDraggable(true);
+			UI.getCurrent().addWindow(sub);
+			
+		});
+		
+		 codTit.addListener(new TextChangeListener() {
+             @Override
+             public void textChange(TextChangeEvent event) {
+                
+            	 if(!codTit.getValue().equals("0")){
+            		 
+            		 
+            		 for (GrupoVO g : lstGruposUsuario) {
+						
+            			 
+					}
+            	 }
+                
+               
+             }
+         });
 		
 		grillaGrupos.addSelectionListener(new SelectionListener() 
 		{
@@ -282,6 +370,12 @@ public class UsuarioViewExtended extends UsuarioView{
 		    }
 		});
 
+		/*Si es operacion nuevo habilitamos el boton para seleccionar cliente*/
+		if(opera.equals(Variables.OPERACION_NUEVO)){
+				this.enableBotonCliente();
+		}
+		
+		this.nomTit.setEnabled(false);
 	}
 	
 	private void inicializarForm(){
@@ -294,13 +388,17 @@ public class UsuarioViewExtended extends UsuarioView{
 		if(fieldGroup != null)
 			fieldGroup.buildAndBindMemberFields(this);
 		
-		
+		this.codTit.setEnabled(false);
+		this.nomTit.setEnabled(false);
 		
 		/*SI LA OPERACION NO ES NUEVO, OCULTAMOS BOTON ACEPTAR*/
 		if(this.operacion.equals(Variables.OPERACION_NUEVO))
 		{
 			/*Chequeamos si tiene permiso de editar*/
 			boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_USUARIO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+			
+			this.codTit.setValue("0");
+			this.nomTit.setValue("No asignado");
 			
 			/*Si no tiene permisos de Nuevo Cerrmamos la ventana y mostramos mensaje*/
 			if(permisoNuevoEditar)
@@ -396,8 +494,11 @@ public class UsuarioViewExtended extends UsuarioView{
 	 */
 	private void iniFormNuevo()
 	{
+		
+		
 		this.enableBotonAceptar();
-		this.disableBotonEditar();
+		this.enableBotonCliente();
+		this.disableBotonEditar(); 
 		this.lstGruposAgregar = new ArrayList<GrupoVO>();
 		this.lstGruposUsuario = new ArrayList<GrupoVO>();
 		/*Seteamos validaciones en nuevo, cuando es editar
@@ -414,10 +515,9 @@ public class UsuarioViewExtended extends UsuarioView{
 	 * Seteamos el formulario en modo Edicion
 	 *
 	 */
-	private void iniFormEditar()
+	private void iniFormEditar(boolean permisoNuevoEditar)
 	{
 		/*Verificamos que tenga permisos*/
-		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_USUARIO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
 		if(permisoNuevoEditar){
 		
@@ -455,6 +555,12 @@ public class UsuarioViewExtended extends UsuarioView{
 		
 	}
 	
+	private void enableBotonCliente()
+	{
+		this.btnBuscarCliente.setEnabled(true);
+		this.btnBuscarCliente.setVisible(true);
+	}
+	
 	/**
 	 * Deshabilitamos el boton editar
 	 *
@@ -463,6 +569,8 @@ public class UsuarioViewExtended extends UsuarioView{
 	{
 		this.btnEditar.setEnabled(false);
 		this.btnEditar.setVisible(false);
+		this.btnBuscarCliente.setVisible(false);
+		this.btnBuscarCliente.setEnabled(false);
 	}
 	
 	/**
@@ -477,6 +585,9 @@ public class UsuarioViewExtended extends UsuarioView{
 		this.pass.setReadOnly(setear);
 		this.activo.setReadOnly(setear);
 		this.mail.setReadOnly(setear);
+	
+		this.codTit.setEnabled(false);
+		this.nomTit.setEnabled(false);
 				
 	}
 	
@@ -518,6 +629,7 @@ public class UsuarioViewExtended extends UsuarioView{
 		
 		/*Deshabilitamos botn aceptar*/
 		this.disableBotonAceptar();
+		this.disableBotonBuscarCliente();
 		this.disableBotonAgregarQuitar();
 		
 		/*No mostramos las validaciones*/
@@ -545,6 +657,13 @@ public class UsuarioViewExtended extends UsuarioView{
 	{
 		this.aceptar.setEnabled(false);
 		this.aceptar.setVisible(false);
+		
+	}
+	
+	private void disableBotonBuscarCliente()
+	{
+		this.btnBuscarCliente.setEnabled(false);
+		this.btnBuscarCliente.setVisible(false);
 	}
 	
 	private void disableBotonAgregarQuitar()
@@ -605,6 +724,8 @@ public class UsuarioViewExtended extends UsuarioView{
 		//Agregamos validaciones a los campos para luego controlarlos
 		this.agregarFieldsValidaciones();
 		
+		this.msj = "Verificar grupos no válidos";
+		
 		try
 		{
 			if(this.nombre.isValid() && this.usuario.isValid() && this.pass.isValid() && this.mail.isValid())
@@ -615,6 +736,22 @@ public class UsuarioViewExtended extends UsuarioView{
 			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 		}
 		
+		String aux;
+		aux = codTit.getValue().toString();
+		
+		if(!aux.equals("0")){
+			/*Si el usuario es cliente (codTit != 0) solo puede tener este grupo asignado*/
+			 for (GrupoVO g : containerGrupo.getItemIds()) {
+
+				 if(!g.getNomGrupo().equals("CLIENTE"))	{
+						 
+						 valido = false;
+						 
+						 this.msj = "Solamente Grupo Cliente es admitido";
+					 }
+				
+			}
+		}
 		return valido;
 	}
 	
@@ -748,6 +885,24 @@ public class UsuarioViewExtended extends UsuarioView{
 		{
 			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 		}
+		
+	}
+
+	@Override
+	public void setInfo(Object datos) {
+		// TODO Auto-generated method stub
+			
+		if(datos instanceof ClienteVO){
+			
+			ClienteVO clienteVO = (ClienteVO) datos;
+			this.codTit.setValue(String.valueOf(clienteVO.getCodigo()));
+			this.nomTit.setValue(clienteVO.getNombre());
+		}
+	}
+
+	@Override
+	public void setInfoLst(ArrayList<Object> lstDatos) {
+		// TODO Auto-generated method stub
 		
 	}
 }

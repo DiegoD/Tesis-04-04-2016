@@ -20,6 +20,7 @@ import com.excepciones.Usuarios.ObteniendoUsuariosException;
 import com.excepciones.Usuarios.ObteniendoUsuariosxEmpExeption;
 import com.excepciones.grupos.ObteniendoFormulariosException;
 import com.excepciones.grupos.ObteniendoGruposException;
+import com.logica.CodTitNomTitAux;
 import com.logica.Formulario;
 import com.logica.Grupo;
 import com.logica.Usuario;
@@ -92,7 +93,7 @@ public class DAOUsuarios implements IDAOUsuarios {
 				
 				Timestamp t = rs.getTimestamp(7);
 				
-				Usuario usr = new Usuario(rs.getString(1), rs.getString(2), rs.getString(3), rs.getBoolean(4), rs.getString(5), rs.getTimestamp(7), rs.getString(6), rs.getString(8));
+				Usuario usr = new Usuario(rs.getString(1), rs.getString(2), rs.getString(3), rs.getBoolean(4), rs.getString(5), rs.getTimestamp(7), rs.getString(6), rs.getString(8), rs.getInt(9), rs.getString(10));
 				
 				usr.setLstGrupos(this.getGruposxUsuario(usr.getUsuario(), con));
 				
@@ -167,6 +168,7 @@ public class DAOUsuarios implements IDAOUsuarios {
 			pstmt1.setString(5, user.getOperacion());
 			pstmt1.setBoolean(6, user.isActivo());
 			pstmt1.setString(7, user.getMail());
+			pstmt1.setInt(8, user.getCodTit());
 			
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
@@ -366,8 +368,8 @@ public class DAOUsuarios implements IDAOUsuarios {
 			pstmt1.setString(4, user.getOperacion());
 			pstmt1.setBoolean(5, user.isActivo());
 			pstmt1.setString(6, user.getMail());
-			pstmt1.setString(7, user.getUsuario());
-			
+			pstmt1.setInt(7, user.getCodTit());
+			pstmt1.setString(8, user.getUsuario());
 			
 			pstmt1.executeUpdate ();
 			
@@ -524,6 +526,48 @@ public class DAOUsuarios implements IDAOUsuarios {
 			
 			throw new InsertandoUsuarioException();
 		} 
+	}
+	
+	/**
+	 * Nos retorna el titular asignado al usuario
+	 * Se utiliza para determinar si el usuario es cliente
+	 */
+	public CodTitNomTitAux getUsuarioCliente(String codEmp, String usuario, Connection con) throws ObteniendoUsuariosException{
+		
+		CodTitNomTitAux tit = new CodTitNomTitAux();
+		
+		try {
+			
+	    	ConsultasDD clts = new ConsultasDD();
+	    	String query = clts.getUsuarioTitular();
+	    	PreparedStatement pstmt1 = con.prepareStatement(query);
+	    	
+	    	
+	    	
+	    	pstmt1.setString(1, codEmp);
+	    	pstmt1.setString(2, usuario);
+	    	
+	    	ResultSet rs;
+	    	
+			rs = pstmt1.executeQuery();
+			
+			while(rs.next ()) {
+			
+				
+				tit = new CodTitNomTitAux(rs.getString(1), rs.getString(2));
+				
+				
+			}
+			rs.close ();
+			pstmt1.close ();
+    	}	
+    	
+		catch (SQLException e) {
+			throw new ObteniendoUsuariosException();
+			
+		}
+    	
+    	return tit;
 	}
 	
 }

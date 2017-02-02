@@ -18,6 +18,7 @@ import com.excepciones.NoTienePermisosException;
 import com.excepciones.ObteniendoPermisosException;
 import com.excepciones.Cotizaciones.ObteniendoCotizacionesException;
 import com.excepciones.Monedas.ObteniendoMonedaException;
+import com.excepciones.Usuarios.ObteniendoUsuariosException;
 import com.excepciones.clientes.ObteniendoClientesException;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItemContainer;
@@ -28,6 +29,7 @@ import com.vaadin.ui.Embedded;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.valueObject.CodTitNomTitAuxVO;
 import com.valueObject.MonedaVO;
 import com.valueObject.TitularVO;
 import com.valueObject.UsuarioPermisosVO;
@@ -252,6 +254,48 @@ public class RepEstadoCuentaViewExtended extends RepEstadoCuentaViews implements
 		
 		this.inicializarComboMoneda(null);
 		
+		
+		CodTitNomTitAuxVO aux = null;
+		
+		/*Inicializamos VO de permisos para el usuario, formulario y operacion
+		 * para confirmar los permisos del usuario*/
+		UsuarioPermisosVO permisoAux = 
+				new UsuarioPermisosVO(this.permisos.getCodEmp(),
+						this.permisos.getUsuario(),
+						VariablesPermisos.FORMULARIO_REP_CHEQUE_CLIENTES,
+						VariablesPermisos.OPERACION_LEER);
+		
+		/*Inicializamos el formulario dependiendo si el usuario es un cliente o no
+		 * Si es cliente deshabilitamos la opcion para que pueda seleccionar un titular
+		 * y dejamos su titular por defecto*/
+		try {
+			aux = this.controlador.getTitUsu(permisoAux);
+			String cod = aux.getCodTit();
+			
+			if(!cod.equals("0"))
+			{
+				this.codTitular.setReadOnly(false);
+				this.nomTitular.setReadOnly(false);
+				
+				this.codTitular.setValue(aux.getCodTit());
+				this.nomTitular.setValue(aux.getNomTit());
+				
+				this.btnBuscarCliente.setEnabled(false);
+				this.btnBuscarCliente.setVisible(false);
+				
+				this.codTitular.setEnabled(false);
+				this.codTitular.setVisible(false);
+				
+				this.codTitular.setReadOnly(true);
+				this.nomTitular.setReadOnly(true);
+				
+			}
+			
+		} catch (ConexionException | ObteniendoUsuariosException | InicializandoException | ObteniendoPermisosException
+				| NoTienePermisosException e) {
+			
+			Mensajes.mostrarMensajeError(e.getMessage());
+		}
 		
 	}
 	

@@ -14,6 +14,7 @@ import com.excepciones.Usuarios.ObteniendoUsuariosException;
 import com.excepciones.Usuarios.ObteniendoUsuariosxEmpExeption;
 import com.excepciones.grupos.ObteniendoFormulariosException;
 import com.excepciones.grupos.ObteniendoGruposException;
+import com.logica.CodTitNomTitAux;
 import com.logica.Formulario;
 import com.logica.Usuario;
 import com.valueObject.EmpLoginVO;
@@ -41,4 +42,6 @@ public interface IDAOUsuarios {
 	public void modificarUsuario(Usuario user, String empresa, Connection con) throws ModificandoUsuarioException;
 	
 	public Formulario getPermisoFormularioOperacionUsuario(String usuario, String codEmp, String formulario,Connection con)throws ObteniendoPermisosException;
+	
+	public CodTitNomTitAux getUsuarioCliente(String codEmp, String usuario, Connection con) throws ObteniendoUsuariosException;
 }

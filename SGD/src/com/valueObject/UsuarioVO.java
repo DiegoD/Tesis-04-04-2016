@@ -10,6 +10,9 @@ public class UsuarioVO extends AuditoriaVO{
 	private String nombre;
 	private boolean activo;
 	private String mail;
+	private int codTit;
+	private String nomTit;
+	
 	private ArrayList<GrupoVO> lstGrupos;
 
 	public UsuarioVO()
@@ -70,6 +73,8 @@ public class UsuarioVO extends AuditoriaVO{
 		this.pass = usuarioVO.getPass();
 		this.activo = usuarioVO.isActivo();
 		this.mail = usuarioVO.mail;
+		this.codTit = usuarioVO.codTit;
+		this.nomTit = usuarioVO.nomTit;
 		
 		this.lstGrupos = new ArrayList<GrupoVO>();
 		
@@ -90,6 +95,22 @@ public class UsuarioVO extends AuditoriaVO{
 			
 		}
 		
+	}
+
+	public int getCodTit() {
+		return codTit;
+	}
+
+	public void setCodTit(int codTit) {
+		this.codTit = codTit;
+	}
+
+	public String getNomTit() {
+		return nomTit;
+	}
+
+	public void setNomTit(String nomTit) {
+		this.nomTit = nomTit;
 	}
 	
 	

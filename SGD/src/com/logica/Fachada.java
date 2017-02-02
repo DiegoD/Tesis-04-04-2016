@@ -50,6 +50,7 @@ import com.excepciones.SaldoCuentas.ExisteSaldoCuentaException;
 import com.excepciones.SaldoCuentas.InsertandoSaldoCuentaException;
 import com.excepciones.SaldoCuentas.ModificandoSaldoCuentaException;
 import com.excepciones.SaldoCuentas.NoExisteSaldoCuentaException;
+import com.excepciones.Usuarios.ObteniendoUsuariosException;
 import com.excepciones.clientes.ExisteClienteExeption;
 import com.excepciones.clientes.ExisteDocumentoClienteException;
 import com.excepciones.clientes.InsertandoClienteException;
@@ -203,6 +204,29 @@ public class Fachada {
     		this.pool.liberarConeccion(con);
     	}
     	
+    }
+    
+    public CodTitNomTitAuxVO getTitUsu(String codEmp, String usuario) throws ObteniendoUsuariosException, ConexionException{
+    	
+    	
+    	Connection con = null;
+    	CodTitNomTitAux aux;
+    	try
+    	{
+    		con = this.pool.obtenerConeccion();
+    	
+    		aux = this.usuarios.getUsuarioCliente(codEmp, usuario, con);
+    		
+    		return aux.retornarVO();
+    		
+    	}catch(ObteniendoUsuariosException | ConexionException e)
+    	{
+    		throw e;
+    	}
+    	finally
+    	{
+    		this.pool.liberarConeccion(con);
+    	}
     }
     
 /////////////////////////////////FIN-LOGIN/////////////////////////////////

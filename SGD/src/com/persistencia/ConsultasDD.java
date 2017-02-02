@@ -22,11 +22,22 @@ public class ConsultasDD {
     
     public String getUsuarios(){
     	StringBuilder sb = new StringBuilder();
-    	sb.append("SELECT m_usuarios.usuario, m_usuarios.pass, m_usuarios.nombre, m_usuarios.activo, m_usuarios.usuario_mod, m_usuarios.operacion, m_usuarios.fecha_mod, m_usuarios.mail ");
+    	sb.append("SELECT m_usuarios.usuario, m_usuarios.pass, m_usuarios.nombre, m_usuarios.activo, m_usuarios.usuario_mod, m_usuarios.operacion, m_usuarios.fecha_mod, m_usuarios.mail, m_usuarios.cod_tit ");
+    	sb.append(",(SELECT CASE WHEN m_usuarios.cod_tit = 0 THEN 'No Asignado' ELSE (SELECT m_clientes.nom_tit FROM m_clientes WHERE m_clientes.cod_tit = m_usuarios.cod_tit AND m_usuariosxemp.cod_emp = m_clientes.cod_emp) END) nom_tit  ");
     	sb.append("FROM m_usuarios, m_usuariosxemp WHERE m_usuarios.usuario = m_usuariosxemp.usuario ");
     	sb.append(" AND m_usuariosxemp.cod_emp = ? ");
     	return sb.toString();
     }
+    
+    public String getUsuarioTitular(){
+    	StringBuilder sb = new StringBuilder();
+    	sb.append("SELECT  m_usuarios.cod_tit ");
+    	sb.append(",(SELECT CASE WHEN m_usuarios.cod_tit = 0 THEN 'No Asignado' ELSE (SELECT m_clientes.nom_tit FROM m_clientes WHERE m_clientes.cod_tit = m_usuarios.cod_tit AND m_usuariosxemp.cod_emp = m_clientes.cod_emp) END) nom_tit  ");
+    	sb.append("FROM m_usuarios, m_usuariosxemp WHERE m_usuarios.usuario = m_usuariosxemp.usuario ");
+    	sb.append(" AND m_usuariosxemp.cod_emp = ? AND m_usuarios.usuario = ?");
+    	return sb.toString();
+    }
+    
     
     
    
@@ -81,8 +92,8 @@ public class ConsultasDD {
 	   	
 	   	StringBuilder sb = new StringBuilder();
 	   	 
-	   	sb.append("INSERT INTO vaadin.m_usuarios (usuario, nombre, pass, usuario_mod, operacion, fecha_mod, activo, mail)");
-	  	 	sb.append("VALUES (?, ?, ?, ?, ?, NOW(), ?, ?) ");
+	   	sb.append("INSERT INTO vaadin.m_usuarios (usuario, nombre, pass, usuario_mod, operacion, fecha_mod, activo, mail, cod_tit)");
+	  	 	sb.append("VALUES (?, ?, ?, ?, ?, NOW(), ?, ?, ?) ");
 	
 	   	return sb.toString();
 	}
@@ -165,7 +176,8 @@ public class ConsultasDD {
   		sb.append("usuario_mod = ?, ");
   		sb.append("operacion = ?, ");
   		sb.append("activo = ?, ");
-  		sb.append("mail = ?");
+  		sb.append("mail = ? ,");
+  		sb.append("cod_tit = ? ");
   		sb.append("WHERE usuario = ? ");
       	 
       	return sb.toString();

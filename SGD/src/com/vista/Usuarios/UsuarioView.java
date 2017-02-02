@@ -6,6 +6,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
@@ -28,6 +29,10 @@ public class UsuarioView extends FormLayout {
 	protected TextField usuario;
 	protected PasswordField pass;
 	protected TextField mail;
+	protected HorizontalLayout cliente;
+	protected TextField codTit;
+	protected TextField nomTit;
+	protected Button btnBuscarCliente;
 	protected CheckBox activo;
 	protected Button aceptar;
 	protected Button btnEditar;

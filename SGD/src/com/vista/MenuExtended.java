@@ -70,7 +70,8 @@ public class MenuExtended extends Menu{
 	//bground.addStyleName("backColorGrey");
 	
 	private void inicializarMenu(){
-		
+		this.layoutMenu = new VerticalLayout();
+		this.menuItems.addComponent(this.layoutMenu);
 	}
 	
 	MenuBar.Command cmdUsuario = new MenuBar.Command() {
@@ -190,43 +191,6 @@ public class MenuExtended extends Menu{
 			}
 		});
 		
-		this.saldoDocumentos.addClickListener(click -> {
-			
-			setSizeFull();
-			
-			this.content.removeAllComponents();
-			try {
-				
-				VistaSaDocumExtended c = new VistaSaDocumExtended();
-				c.setSizeFull();
-				this.content.setSizeFull();
-				
-				this.content.addComponent(c);
-				
-			} catch (Exception e) {
-				
-				Mensajes.mostrarMensajeError(e.getMessage());
-			}
-		});
-		
-		this.saldoCuentas.addClickListener(click -> {
-			
-			setSizeFull();
-			
-			this.content.removeAllComponents();
-			try {
-				
-				VistaSaCuentasExtended c = new VistaSaCuentasExtended();
-				c.setSizeFull();
-				this.content.setSizeFull();
-				
-				this.content.addComponent(c);
-				
-			} catch (Exception e) {
-				
-				Mensajes.mostrarMensajeError(e.getMessage());
-			}
-		});
 		
 		this.impuestoButton.addClickListener(click -> {
 			
@@ -990,7 +954,7 @@ public class MenuExtended extends Menu{
 		if(lstFormsMenuMant.size()> 0)
 		{
 
-			this.layoutMenu = new VerticalLayout();
+			//this.layoutMenu = new VerticalLayout();
 			//this.tabMantenimientos.setMargin(true);
 			
 			this.lbMantenimientos.setVisible(true);
@@ -1124,24 +1088,7 @@ public class MenuExtended extends Menu{
 							this.layoutMenu.addComponent(this.conciliacion);
 						}
 					break;
-					
-					
-					
-					case "SaldoDocumentos" :
-						
-							this.habilitarSaldoDocumentosButton(); 
-							
-							this.layoutMenu.addComponent(this.saldoDocumentos);
-							
-							
-					break;
-					
-					case "SaldoCuentas" :
-							this.habilitarSaldoDocumentosButton(); 
-							
-							this.layoutMenu.addComponent(this.saldoCuentas);
-							
-					break;
+				
 				}
 				
 			}
@@ -1149,7 +1096,7 @@ public class MenuExtended extends Menu{
 			//TODO
 			//this.acordion.addTab(tabMantenimientos, "Mantenimientos", null);
 			
-			this.menuItems.addComponent(this.layoutMenu);
+			//this.menuItems.addComponent(this.layoutMenu);
 			
 		}
 		
@@ -1254,6 +1201,7 @@ public class MenuExtended extends Menu{
 			//TODO
 			//this.tabAdministracion = new VerticalLayout();
 			//this.tabAdministracion.setMargin(true);
+			//this.layoutMenu = new VerticalLayout();
 			
 			this.lbReportes.setVisible(true);
 			this.layoutMenu.addComponent(this.lbReportes);
@@ -1651,21 +1599,6 @@ public class MenuExtended extends Menu{
 		return this.permisos;
 	}
 	
-	private void habilitarSaldoCuentaButton()
-	{
-		this.saldoCuentas.setVisible(true);
-		this.saldoCuentas.setEnabled(true);
-		
-		this.layoutMenu.addComponent(this.impuestoButton);
-	}
-	
-	private void habilitarSaldoDocumentosButton()
-	{
-		this.saldoDocumentos.setVisible(true);
-		this.saldoDocumentos.setEnabled(true);
-		
-		this.layoutMenu.addComponent(this.impuestoButton);
-	}
 	
 	private void habilitarReporteChequeCliente()
 	{

@@ -131,7 +131,11 @@ public class LoginExtended extends Login implements ViewDisplay {
 					permisos.setCodEmp(loginVO.getCodEmp());
 					
 					principal.setMenu();
+					
+					@SuppressWarnings("unused")
+					int i =0;
 				
+					
 				}else{
 					
 					Mensajes.mostrarMensajeError("Usuario o contraseña no válidos");
