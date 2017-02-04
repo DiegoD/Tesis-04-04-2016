@@ -1009,7 +1009,7 @@ public class FachadaDD {
     		throw new ExisteUsuarioException();
     	}
     }
-
+    
     /**
 	 * Actualiza los datos de una empresa dado su código
 	 * valida que exista el código 

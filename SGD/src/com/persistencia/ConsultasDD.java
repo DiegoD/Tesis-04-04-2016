@@ -414,6 +414,30 @@ public class ConsultasDD {
 		
 		return sb.toString();
 	}
+	
+	public String insMonedaDolares(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+	
+		sb.append("INSERT INTO vaadin.m_monedas (cod_moneda, descripcion ");
+		sb.append(", simbolo, acepta_cotizacion, activo, fecha_mod ");
+		sb.append(", usuario_mod, operacion, cod_emp, nacional) ");
+		sb.append("VALUES ('2', 'Dolares', 'U$S', 1, 1, NOW(), 'SISTE', 'EDITAR', ?, 0) ");
+		
+		return sb.toString();
+	}
+	
+	public String insBcoNoAsignado(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO vaadin.m_bancos (cod_bco, nom_bco, cod_emp, tel, direccion, contacto, activo, usuario_mod, operacion, fecha_mod) ");
+		sb.append("VALUES ('0', 'No asginado', ?, '0', '0', '0', 0, NOW(), 'NUEVO', '2016-09-04 14:45:03') ");
+		
+		return sb.toString();
+	}
+	
 
 ////////////////////////INI-RUBROS///////////////////////////////////////////////////
     
@@ -1739,7 +1763,7 @@ public class ConsultasDD {
 	
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("SELECT cod_docum ");
+		sb.append("SELECT cod_docum "); 
 		sb.append("FROM sa_docum WHERE cod_docum = ? AND serie_docum = ? "
 				+ "AND nro_docum = ? AND cod_emp = ? AND cod_tit = ? ");
 		

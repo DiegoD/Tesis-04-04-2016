@@ -91,6 +91,43 @@ public class DAOEmpresas implements IDAOEmpresas{
 		} 
 		
 	}
+	
+	/**
+	 * Inserta una empresa en la base
+	 * Pre condición: El código de empresa no debe existir previamente
+	 */
+	private void insertarAux(Connection con, String codEmp) throws InsertandoEmpresaException, ConexionException {
+		// TODO Auto-generated method stub
+		ConsultasDD clts = new ConsultasDD();
+    	
+    	String insertMonedaDolares = clts.insMonedaDolares();
+    	String insertBcoNoAsignado =clts.insBcoNoAsignado();
+    	
+    	PreparedStatement pstmMonDolares;
+    	PreparedStatement pstmBcoNoAsig;
+    	    	
+    	
+    	try {
+    		
+    		/*Insertamos moneda dolares*/
+			pstmMonDolares =  con.prepareStatement(insertMonedaDolares);
+			
+			pstmMonDolares.setString(1, codEmp);
+			pstmMonDolares.executeUpdate();
+			pstmMonDolares.close ();
+			
+			/*Insertamos Banco no asignado*/
+			pstmBcoNoAsig = con.prepareStatement(insertBcoNoAsignado);
+			pstmBcoNoAsig.setString(1, codEmp);
+			pstmBcoNoAsig.executeUpdate();
+			pstmBcoNoAsig.close ();
+			
+		} 
+    	catch (SQLException e) {
+			throw new InsertandoEmpresaException();
+		} 
+		
+	}
 
 	/**
 	 * Dado el codigo de empresa, valida si existe
