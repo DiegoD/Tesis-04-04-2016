@@ -81,7 +81,7 @@ public class DepositoPanelExtended extends DepositoPanel{
 				
 					this.btnNuevoDeposito.addClickListener(click -> {
 						
-						sub = new MySub("90%","50%");
+						sub = new MySub("600px","680px");
 						form = new DepositoViewExtended(Variables.OPERACION_NUEVO, this);
 						sub.setModal(true);
 						sub.setVista(form);
@@ -201,7 +201,7 @@ public class DepositoPanelExtended extends DepositoPanel{
 					    	}
 								
 					    	form = new DepositoViewExtended(Variables.OPERACION_LECTURA, DepositoPanelExtended.this);
-					    	sub = new MySub("90%","50%");
+					    	sub = new MySub("600px","680px");
 							sub.setModal(true);
 							sub.setVista(form);
 							/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/

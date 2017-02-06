@@ -202,7 +202,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 		}
 		
-		sub = new MySub("85%", "65%" );
+		sub = new MySub("1000px", "900px" );
 		sub.setModal(true);
 		sub.center();
 		sub.setModal(true);
@@ -1033,12 +1033,12 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 				
 					GastoViewExtended form = new GastoViewExtended(Variables.OPERACION_NUEVO, this, titularVO, "Egreso");
 					
-					sub = new MySub("100%","45%");
+					sub = new MySub("1000px","900px");
 					sub.setModal(true);
 					//sub.setVista(form);
 					sub.setVista((Component) form);
-					sub.setHeight("92%");
-					sub.setWidth("46%");
+					sub.setHeight("900px");
+					sub.setWidth("650px");
 					sub.center();
 					
 					String codCliente;/*Codigo del cliente para obtener los gastos a cobrar del mismo*/
@@ -1208,7 +1208,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 			    	}
 					
 			    	GastoViewExtended form = new GastoViewExtended(Variables.OPERACION_LECTURA, this, titularVO, "Egreso");
-			    	sub = new MySub("92%","50%");
+			    	sub = new MySub("900px","650px");
 					sub.setModal(true);
 					sub.setVista((Component) form);
 					/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/

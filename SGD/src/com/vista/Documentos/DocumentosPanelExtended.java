@@ -60,7 +60,7 @@ public class DocumentosPanelExtended extends DocumentosPanel{
 				
 					this.btnNuevoDocumento.addClickListener(click -> {
 						
-						sub = new MySub("45%","32%");
+						sub = new MySub("280px","350px");
 						form = new DocumentoViewExtended(Variables.OPERACION_NUEVO, this);
 						sub.setModal(true);
 						sub.setVista(form);
@@ -138,7 +138,7 @@ public class DocumentosPanelExtended extends DocumentosPanel{
 				    	}
 							
 				    	form = new DocumentoViewExtended(Variables.OPERACION_LECTURA, DocumentosPanelExtended.this);
-				    	sub = new MySub("45%","32%");
+				    	sub = new MySub("280px","350px");
 						sub.setModal(true);
 						sub.setVista(form);
 						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/

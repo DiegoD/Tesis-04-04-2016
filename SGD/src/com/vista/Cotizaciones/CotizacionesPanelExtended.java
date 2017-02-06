@@ -78,7 +78,7 @@ public class CotizacionesPanelExtended extends CotizacionesPanel{
 				
 					this.btnNuevaCotizacion.addClickListener(click -> {
 						
-						sub = new MySub("50%","35%");
+						sub = new MySub("320px","400px");
 						form = new CotizacionViewExtended(Variables.OPERACION_NUEVO, this);
 						sub.setModal(true);
 						sub.setVista(form);
@@ -167,7 +167,7 @@ public class CotizacionesPanelExtended extends CotizacionesPanel{
 					    	}
 								
 					    	form = new CotizacionViewExtended(Variables.OPERACION_LECTURA, CotizacionesPanelExtended.this);
-							sub = new MySub("50%","35%");
+					    	sub = new MySub("320px","400px");
 							sub.setModal(true);
 							sub.setVista(form);
 							/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/

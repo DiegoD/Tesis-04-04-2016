@@ -63,7 +63,7 @@ public class CuentasPanelExtended extends CuentasPanel{
 				
 					this.btnNuevo.addClickListener(click -> {
 						
-							sub = new MySub("70%","60%");
+							sub = new MySub("450px","850px");
 							form = new CuentaViewExtended(Variables.OPERACION_NUEVO, this);
 							sub.setModal(true);
 							sub.setVista(form);
@@ -133,7 +133,7 @@ public class CuentasPanelExtended extends CuentasPanel{
 							
 						form = new CuentaViewExtended(Variables.OPERACION_LECTURA, CuentasPanelExtended.this);
 						//form.fieldGroup.setItemDataSource(item);
-						sub = new MySub("70%","60%");
+						sub = new MySub("450px","850px");
 						sub.setModal(true);
 						sub.setVista(form);
 						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/

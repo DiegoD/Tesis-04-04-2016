@@ -62,7 +62,7 @@ public class BancosPanelExtended extends BancosPanel{
 				
 					this.btnNuevo.addClickListener(click -> {
 						
-							sub = new MySub("72%", "70%");
+							sub = new MySub("450px", "900px");
 							form = new BancoViewExtended(Variables.OPERACION_NUEVO, this);
 							sub.setModal(true);
 							sub.setVista(form);
@@ -130,7 +130,8 @@ public class BancosPanelExtended extends BancosPanel{
 							
 						form = new BancoViewExtended(Variables.OPERACION_LECTURA, BancosPanelExtended.this);
 						//form.fieldGroup.setItemDataSource(item);
-						sub = new MySub("72%","70%");
+						sub = new MySub("450px", "900px");
+						
 						sub.setModal(true);
 						sub.setVista(form);
 						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/

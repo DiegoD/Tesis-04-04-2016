@@ -80,7 +80,7 @@ public class ConciliacionesPanelExtended extends ConciliacionesPanel {
 					
 					this.btnNuevo.addClickListener(click -> {
 						
-						sub = new MySub("90%","50%");
+						sub = new MySub("550px","690px");
 						form = new ConciliacionViewExtended(Variables.OPERACION_NUEVO, this);
 						sub.setModal(true);
 						sub.setVista(form);
@@ -213,7 +213,7 @@ public class ConciliacionesPanelExtended extends ConciliacionesPanel {
 					    	}
 								
 					    	form = new ConciliacionViewExtended(Variables.OPERACION_LECTURA, ConciliacionesPanelExtended.this);
-					    	sub = new MySub("90%","50%");
+					    	sub = new MySub("550px","690px");
 							sub.setModal(true);
 							sub.setVista(form);
 							/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/

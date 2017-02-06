@@ -76,7 +76,7 @@ public class IngresoEgresoPanelExtended extends IngresoEgresoPanel{
 				
 					this.btnNuevo.addClickListener(click -> {
 						
-							sub = new MySub("87%", "85%");
+							sub = new MySub("550px", "1010px");
 							form = new IngresoEgresoViewExtended(Variables.OPERACION_NUEVO, this);
 							sub.setModal(true);
 							sub.setVista(form);
@@ -149,7 +149,7 @@ public class IngresoEgresoPanelExtended extends IngresoEgresoPanel{
 					    	
 					    	form = new IngresoEgresoViewExtended(Variables.OPERACION_LECTURA, IngresoEgresoPanelExtended.this);
 							//form.fieldGroup.setItemDataSource(item);
-							sub = new MySub("90%","90%");
+					    	sub = new MySub("550px", "1010px");
 							sub.setModal(true);
 							sub.setVista(form);
 							

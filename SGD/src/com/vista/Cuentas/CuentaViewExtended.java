@@ -158,7 +158,7 @@ public class CuentaViewExtended extends CuentaView{
 				
 				CuentaViewAgregarRubroExtended form = new CuentaViewAgregarRubroExtended(this);
 				
-				sub = new MySub("70%", "60%" );
+				sub = new MySub("400px","850px");
 				sub.setModal(true);
 				sub.setVista(form);
 				//sub.setWidth("50%");
@@ -285,7 +285,7 @@ public class CuentaViewExtended extends CuentaView{
 				
 				this.rubroFormPermisos = new CuentaRubroPermisosExtended(this, rubroSelecccionado, Variables.OPERACION_EDITAR);
 				
-				sub = new MySub("53%", "40%" );
+				sub = new MySub("350px", "400px" );
 				sub.setModal(true);
 				sub.setVista(this.rubroFormPermisos);
 				sub.center();
@@ -318,7 +318,7 @@ public class CuentaViewExtended extends CuentaView{
 				
 				this.rubroFormPermisos = new CuentaRubroPermisosExtended(this, rubroSelecccionado, Variables.OPERACION_LECTURA);
 				
-				sub = new MySub("53%", "40%" );
+				sub = new MySub("350px", "400px" );
 				sub.setModal(true);
 				sub.setVista(this.rubroFormPermisos);
 				sub.center();

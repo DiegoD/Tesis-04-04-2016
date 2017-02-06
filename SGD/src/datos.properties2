@@ -58,7 +58,16 @@ ipServidor = localhost
 puertoServidor = 1099
 url = jdbc:mysql://node141254-env-4512589.j.layershift.co.uk/vaadin
 user = root
-password = XHVoia51550
+password = QAYcay10523
+driver=com.mysql.jdbc.Driver
+abstractFactory = com.abstractFactory.AbstractFactoryMySql
+cantidad_conexiones=50
+
+ipServidor = localhost
+puertoServidor = 1099
+url = jdbc:mysql://node141832-env-5670891.j.layershift.co.uk/vaadin
+user = root
+password = QAYcay10523
 driver=com.mysql.jdbc.Driver
 abstractFactory = com.abstractFactory.AbstractFactoryMySql
 cantidad_conexiones=50

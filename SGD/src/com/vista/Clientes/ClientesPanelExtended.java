@@ -60,7 +60,7 @@ public class ClientesPanelExtended extends ClientesPanel{
 				
 					this.btnNuevo.addClickListener(click -> {
 						
-						sub = new MySub("70%","42%");
+						sub = new MySub("450px","550px");
 						ClienteViewExtended form = new ClienteViewExtended(Variables.OPERACION_NUEVO, this);
 						sub.setModal(true);
 						sub.setVista(form);
@@ -147,7 +147,7 @@ public class ClientesPanelExtended extends ClientesPanel{
 				    	}
 							
 				    	ClienteViewExtended form = new ClienteViewExtended(Variables.OPERACION_LECTURA, ClientesPanelExtended.this);
-				    	sub = new MySub("70%","42%");
+				    	sub = new MySub("450px","550px");
 						sub.setModal(true);
 						sub.setVista(form);
 						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
