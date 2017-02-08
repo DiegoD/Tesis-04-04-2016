@@ -2927,9 +2927,26 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			} 
 			catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
 					| InicializandoException | NoTienePermisosException e) {
-				// TODO Auto-generated catch block
+				
 				Mensajes.mostrarMensajeError(e.getMessage().toString());
 			}
+		}else {
+			/*Si la fecha es nula traemos la cotizacion del dia
+			 * esto pasa en operacion nuevo, por orden de inicializacion
+			 * entre monedas y fecha*/
+			Calendar c = Calendar.getInstance();    
+			
+			try {
+				
+				cotiz = this.controlador.getCotizacion(permisosAux, new java.sql.Date(c.getTimeInMillis()), monedaVO.getCodMoneda());
+				monedaVO.setCotizacion(cotiz.getCotizacionVenta());
+			} 
+			catch (ObteniendoCotizacionesException | ConexionException | ObteniendoPermisosException
+					| InicializandoException | NoTienePermisosException e) {
+				
+				Mensajes.mostrarMensajeError(e.getMessage().toString());
+			}
+			
 		}
 		return monedaVO;
 	}

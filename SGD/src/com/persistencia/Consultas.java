@@ -422,7 +422,7 @@ public class Consultas {
 		sb.append(", m_clientes.activo, m_clientes.usuario_mod, m_clientes.operacion, m_clientes.fecha_mod, m_titulares.tipo ");
 		sb.append("FROM m_clientes, m_documdgi, m_titulares "
 				+ " WHERE m_clientes.cod_docdgi = m_documdgi.cod_docdgi AND m_titulares.cod_tit = m_clientes.cod_tit AND "
-				+ " m_titulares.cod_emp = m_clientes.cod_emp AND m_clientes.cod_emp = ? AND m_clientes.activo = 1");
+				+ " m_titulares.cod_emp = m_clientes.cod_emp AND m_clientes.cod_emp = ? AND m_clientes.activo = 1 ");
 
 
 		return sb.toString();
@@ -1411,7 +1411,7 @@ public class Consultas {
 		sb.append("AND c_facturas.tipo_factura = 'Factura'  "); 
 		
 		sb.append("AND sa_docum.imp_tot_mo <> 0 ");
-		
+		sb.append("AND NOT EXISTS (SELECT * FROM d_recibos d WHERE d.cod_emp = c_facturas.cod_emp AND d.cod_docum = c_facturas.cod_docum AND d.serie_docum = c_facturas.serie_docum AND d.nro_docum = c_facturas.nro_docum ) ");
 		
 		return sb.toString();
 	}
