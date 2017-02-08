@@ -33,7 +33,7 @@ public interface IDAOUsuarios {
 	
 	public void eliminarUsuario(Usuario user, Connection con) throws InsertandoUsuarioException, ConexionException, ModificandoUsuarioException;
 	
-	public ArrayList<GrupoVO> getGruposNoUsuario(String nombreUsurio, Connection con) throws ObteniendoUsuariosException, ObteniendoGruposException;
+	public ArrayList<GrupoVO> getGruposNoUsuario(String nombreUsurio, Connection con, String codEmp) throws ObteniendoUsuariosException, ObteniendoGruposException;
 	
 	public ArrayList<Formulario> getFormulariosxUsuario(String usuario, String codemp, Connection con) throws ObteniendoFormulariosException;
 	

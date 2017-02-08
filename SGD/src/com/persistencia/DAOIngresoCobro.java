@@ -315,15 +315,12 @@ public class DAOIngresoCobro implements IDAOIngresoCobro{
 				
 				linea++;
 			}
-			
 					
 		} 
     	catch (SQLException e) 
     	{
 			throw new InsertandoIngresoCobroException();
 		} 
-		
-    	
 	}
 	
 	/**
@@ -348,14 +345,12 @@ public class DAOIngresoCobro implements IDAOIngresoCobro{
 			pstmt1.close ();
 			
 			this.eliminarIngresoCobroDetalle(cobro, con);
-			
 					
 		} 
     	catch (SQLException e) 
     	{
 			throw new EliminandoIngresoCobroException();
 		} 
-		
     	
 	}
 	

@@ -391,14 +391,14 @@ public class FachadaDD {
     /**
 	 * Obtiene los grupos que no tiene asignados un usuario
 	 */
-    public ArrayList<GrupoVO> getGruposNoUsuario(String nombreUsuario) throws ErrorInesperadoException, ConexionException
+    public ArrayList<GrupoVO> getGruposNoUsuario(String nombreUsuario, String codEmp) throws ErrorInesperadoException, ConexionException
     {
     	Connection con = null;
     	ArrayList<GrupoVO> lstGrupos = new ArrayList<GrupoVO>();
     	try 
     	{
 			con = this.pool.obtenerConeccion();
-			lstGrupos = this.usuarios.getGruposNoUsuario(nombreUsuario, con);
+			lstGrupos = this.usuarios.getGruposNoUsuario(nombreUsuario, con, codEmp);
 			
 			
 		} 

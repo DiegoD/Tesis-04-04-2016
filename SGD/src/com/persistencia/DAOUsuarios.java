@@ -257,7 +257,7 @@ public class DAOUsuarios implements IDAOUsuarios {
 	/**
 	 * OBtiene los grupos que un usuario no tiene asignados
 	 */
-	public ArrayList<GrupoVO> getGruposNoUsuario(String nombreUsurio, Connection con) throws ObteniendoUsuariosException, ObteniendoGruposException
+	public ArrayList<GrupoVO> getGruposNoUsuario(String nombreUsurio, Connection con, String codEmp) throws ObteniendoUsuariosException, ObteniendoGruposException
 	{
 		ArrayList<GrupoVO> lstGrupo = new ArrayList<GrupoVO>();
 		try 
@@ -267,6 +267,7 @@ public class DAOUsuarios implements IDAOUsuarios {
 			
 			PreparedStatement pstmt1 = con.prepareStatement(query);
 			pstmt1.setString(1, nombreUsurio);
+			pstmt1.setString(2, codEmp);
 			
 			ResultSet rs = pstmt1.executeQuery();
 			

@@ -398,6 +398,7 @@ public class DAOCuentas implements IDAOCuentas{
 			PreparedStatement pstmt1 = con.prepareStatement(query);
 			pstmt1.setString(1, codCuenta);
 			pstmt1.setString(2, codEmp);
+			pstmt1.setString(3, codEmp);
 			
 			ResultSet rs = pstmt1.executeQuery();
 			

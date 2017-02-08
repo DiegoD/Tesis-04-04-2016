@@ -85,6 +85,8 @@ public class DAOEmpresas implements IDAOEmpresas{
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
 			
+			this.insertarAux(con, empresa.getCod_emp());
+			
 		} 
     	catch (SQLException e) {
 			throw new InsertandoEmpresaException();
@@ -97,14 +99,20 @@ public class DAOEmpresas implements IDAOEmpresas{
 	 * Pre condición: El código de empresa no debe existir previamente
 	 */
 	private void insertarAux(Connection con, String codEmp) throws InsertandoEmpresaException, ConexionException {
-		// TODO Auto-generated method stub
+		
 		ConsultasDD clts = new ConsultasDD();
     	
     	String insertMonedaDolares = clts.insMonedaDolares();
-    	String insertBcoNoAsignado =clts.insBcoNoAsignado();
+    	String insertBcoNoAsignado = clts.insBcoNoAsignado();
+    	String insertImpuestoExento = clts.insImuestoExento();
+    	String insertTipoRubro = clts.insTipoRubroNoAsignado();
+    	String insertRubroNoAsig = clts.insRubroNoAsignado();
     	
     	PreparedStatement pstmMonDolares;
     	PreparedStatement pstmBcoNoAsig;
+    	PreparedStatement pstmImuestoExento;
+    	PreparedStatement pstmTipoRubroNoAsig;
+    	PreparedStatement pstmRubroNoAsig;
     	    	
     	
     	try {
@@ -114,13 +122,136 @@ public class DAOEmpresas implements IDAOEmpresas{
 			
 			pstmMonDolares.setString(1, codEmp);
 			pstmMonDolares.executeUpdate();
-			pstmMonDolares.close ();
+			pstmMonDolares.close();
 			
 			/*Insertamos Banco no asignado*/
 			pstmBcoNoAsig = con.prepareStatement(insertBcoNoAsignado);
 			pstmBcoNoAsig.setString(1, codEmp);
 			pstmBcoNoAsig.executeUpdate();
-			pstmBcoNoAsig.close ();
+			pstmBcoNoAsig.close();
+			
+			/*Insertamos impuesto exento*/
+			pstmImuestoExento = con.prepareStatement(insertImpuestoExento);
+			pstmImuestoExento.setString(1, codEmp);
+			pstmImuestoExento.executeUpdate();
+			pstmImuestoExento.close();
+			
+			/*Insertamos tipo rubro no asignado*/
+			pstmTipoRubroNoAsig = con.prepareStatement(insertTipoRubro);
+			pstmTipoRubroNoAsig.setString(1, codEmp);
+			pstmTipoRubroNoAsig.executeUpdate();
+			pstmTipoRubroNoAsig.close();
+			
+			/*Insertamos rubro no asignado*/
+			pstmRubroNoAsig = con.prepareStatement(insertRubroNoAsig);
+			pstmRubroNoAsig.setString(1, codEmp);
+			pstmRubroNoAsig.executeUpdate();
+			pstmRubroNoAsig.close();
+			
+			/*Insertamos titular oficina*/ 
+			String insTitOficina = clts.insTitularOficina();
+			PreparedStatement pstmTitOficina;
+			pstmTitOficina = con.prepareStatement(insTitOficina);
+			pstmTitOficina.setString(1, codEmp);
+			pstmTitOficina.executeUpdate();
+			pstmTitOficina.close();
+			
+			/*Insertamos cuenta factura*/ 
+			String insCuentaFactura = clts.insCuentaFacturas();
+			PreparedStatement pstmCuentaFactura;
+			pstmCuentaFactura = con.prepareStatement(insCuentaFactura);
+			pstmCuentaFactura.setString(1, codEmp);
+			pstmCuentaFactura.executeUpdate();
+			pstmCuentaFactura.close();
+			
+			/*Insertamos proceso no asignado*/ 
+			String insClienteNoAsig = clts.insClienteNoAsig();
+			PreparedStatement pstmClienteNoAsig;
+			pstmClienteNoAsig = con.prepareStatement(insClienteNoAsig);
+			pstmClienteNoAsig.setString(1, codEmp);
+			pstmClienteNoAsig.executeUpdate();
+			pstmClienteNoAsig.close();
+			
+			/*Insertamos proceso no asignado*/ 
+			String insProcNoAsig = clts.insProcesoNoAsig();
+			PreparedStatement pstmProcNoAsig;
+			pstmProcNoAsig = con.prepareStatement(insProcNoAsig);
+			pstmProcNoAsig.setString(1, codEmp);
+			pstmProcNoAsig.executeUpdate();
+			pstmProcNoAsig.close();
+			
+			
+			/*Insertamos grupo administrador */ 
+			String insGrupoAdm = clts.insGrupoAdm();
+			PreparedStatement pstmGrupoAdm;
+			pstmGrupoAdm = con.prepareStatement(insGrupoAdm);
+			pstmGrupoAdm.setString(1, codEmp);
+			pstmGrupoAdm.executeUpdate();
+			pstmGrupoAdm.close();
+			
+			/*Insertamos formularios para el grupo adm */ 
+			String insFormsAdm = clts.insGruposxFormAdm();
+			PreparedStatement pstmFormAdm;
+			pstmFormAdm = con.prepareStatement(insFormsAdm);
+			pstmFormAdm.setString(1, codEmp);
+			pstmFormAdm.executeUpdate();
+			pstmFormAdm.close();
+			
+			/*Insertamos numerador para procesos */ 
+			String insNumProc = clts.insNumProceso();
+			PreparedStatement pstmNumProc;
+			pstmNumProc = con.prepareStatement(insNumProc);
+			pstmNumProc.setString(1, codEmp);
+			pstmNumProc.executeUpdate();
+			pstmNumProc.close();
+			
+			/*Insertamos numerador para gastos */ 
+			String insNumGto = clts.insNumGasto();
+			PreparedStatement pstmNumGto;
+			pstmNumGto = con.prepareStatement(insNumGto);
+			pstmNumGto.setString(1, codEmp);
+			pstmNumGto.executeUpdate();
+			pstmNumGto.close();
+			
+			/*Insertamos numerador titulares */ 
+			String insNumTitulares = clts.insNumTitulares();
+			PreparedStatement pstmNumTitulares;
+			pstmNumTitulares = con.prepareStatement(insNumTitulares);
+			pstmNumTitulares.setString(1, codEmp);
+			pstmNumTitulares.executeUpdate();
+			pstmNumTitulares.close();
+			
+			/*Insertamos numerador ctaproc */ 
+			String insCtaProc = clts.insCtaProc();
+			PreparedStatement pstmCtaProc;
+			pstmCtaProc = con.prepareStatement(insCtaProc);
+			pstmCtaProc.setString(1, codEmp);
+			pstmCtaProc.executeUpdate();
+			pstmCtaProc.close();
+			
+			/*Insertamos numerador egreso cobro */ 
+			String insEgrCob = clts.insEgrCobro();
+			PreparedStatement pstmEgrCob;
+			pstmEgrCob = con.prepareStatement(insEgrCob);
+			pstmEgrCob.setString(1, codEmp);
+			pstmEgrCob.executeUpdate();
+			pstmEgrCob.close();
+			
+			/*Insertamos numerador factura */ 
+			String insFact = clts.insFact();
+			PreparedStatement pstmFact;
+			pstmFact = con.prepareStatement(insFact);
+			pstmFact.setString(1, codEmp);
+			pstmFact.executeUpdate();
+			pstmFact.close();
+			
+			/*Insertamos numerador ingreso cobro */ 
+			String insIngCob = clts.insIngCob();
+			PreparedStatement pstmIngCob;
+			pstmIngCob = con.prepareStatement(insIngCob);
+			pstmIngCob.setString(1, codEmp);
+			pstmIngCob.executeUpdate();
+			pstmIngCob.close();
 			
 		} 
     	catch (SQLException e) {

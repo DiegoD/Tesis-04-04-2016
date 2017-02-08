@@ -1494,8 +1494,8 @@ public class MenuExtended extends Menu{
 	
 	private void habilitarCodigosGeneralizadosButton()
 	{
-		this.codigosGeneralizados.setVisible(true);
-		this.codigosGeneralizados.setEnabled(true);
+		this.codigosGeneralizados.setVisible(false);
+		this.codigosGeneralizados.setEnabled(false);
 		
 		this.layoutMenu.addComponent(this.codigosGeneralizados);
 	}

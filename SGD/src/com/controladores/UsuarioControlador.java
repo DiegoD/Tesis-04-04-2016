@@ -68,9 +68,9 @@ public class UsuarioControlador {
 	/**
 	 * Obtiene un array de los grupos que un usuario no tiene asignado dado el usuario
 	 */
-	public ArrayList<GrupoVO> getUsuariosNoGrupo(String nombreUsuario) throws ObteniendoGruposException, ConexionException, ErrorInesperadoException, InicializandoException 
+	public ArrayList<GrupoVO> getUsuariosNoGrupo(String nombreUsuario, String codEmp) throws ObteniendoGruposException, ConexionException, ErrorInesperadoException, InicializandoException 
 	{
-		return FachadaDD.getInstance().getGruposNoUsuario(nombreUsuario);
+		return FachadaDD.getInstance().getGruposNoUsuario(nombreUsuario, codEmp);
 	}
 
 	

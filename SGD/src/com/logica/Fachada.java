@@ -1422,7 +1422,7 @@ public void insertarIngresoCobro(IngresoCobroVO ingVO, String codEmp) throws Ins
 		
 		//Obtengo numerador de gastos
 		codigos.setCodigo(numeradores.getNumero(con, "ingcobro", codEmp)); //Ingreso Cobro 
-		codigos.setNumeroTrans(numeradores.getNumero(con, "03", codEmp)); //nro trans
+		codigos.setNumeroTrans(numeradores.getNroTrans(con, "03")); //nro trans
 		
 		ing.setNroDocum(codigos.getCodigo()); /*Seteamos el nroDocum*/
 		ing.setNroTrans(codigos.getNumeroTrans()); /*Seteamos el nroTrans*/
@@ -2039,7 +2039,7 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 			
 			//Obtengo numerador de egreso de gasto
 			codigos.setCodigo(numeradores.getNumero(con, "egrcobro", codEmp)); //Ingreso Cobro 
-			codigos.setNumeroTrans(numeradores.getNumero(con, "03", codEmp)); //nro trans
+			codigos.setNumeroTrans(numeradores.getNroTrans(con, "03")); //nro trans
 			
 			ing.setNroDocum(codigos.getCodigo()); /*Seteamos el nroDocum*/
 			ing.setNroTrans(codigos.getNumeroTrans()); /*Seteamos el nroTrans*/
@@ -2651,7 +2651,7 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 			
 			//Obtenemos nroTrans 
 			//Obtengo numerador de gastos
-			codigos.setNumeroTrans(numeradores.getNumero(con, "03", cheque.getCodEmp())); //nro trans
+			codigos.setNumeroTrans(numeradores.getNroTrans(con, "03")); //nro trans
 			
 			
 			cheque.setNroTrans(codigos.getNumeroTrans()); /*Seteamos el nroTrans*/
@@ -2834,7 +2834,7 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 			
 			//Obtenemos nroTrans 
 			//Obtengo numerador de gastos
-			codigos.setNumeroTrans(numeradores.getNumero(con, "03", documento.getCodEmp())); //nro trans
+			codigos.setNumeroTrans(numeradores.getNroTrans(con, "03")); //nro trans
 			
 			
 			
@@ -3129,7 +3129,7 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 		
 		if(nuevo)
 		{
-			codigos.setNumeroTrans(numeradores.getNumero(con, "03", codEmp)); //nro trans
+			codigos.setNumeroTrans(numeradores.getNroTrans(con, "03")); //nro trans
 			fact.setNroTrans(codigos.getNumeroTrans()); /*Seteamos el nroTrans*/
 			factVO.setNroTrans(codigos.getNumeroTrans()); /*Seteamos el nroTrans al VO para obtener el DocumSaldo*/
 			
@@ -3446,7 +3446,7 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 			
 			if(nuevo)
 			{
-				codigos.setNumeroTrans(numeradores.getNumero(con, "03", codEmp)); //nro trans
+				codigos.setNumeroTrans(numeradores.getNroTrans(con, "03")); //nro trans
 				rec.setNroTrans(codigos.getNumeroTrans()); /*Seteamos el nroTrans*/
 				vo.setNroTrans(codigos.getNumeroTrans()); /*Seteamos el nroTrans al VO para obtener el DocumSaldo*/
 				
@@ -3792,7 +3792,7 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 			
 			if(nuevo)
 			{
-				codigos.setNumeroTrans(numeradores.getNumero(con, "03", codEmp)); //nro trans
+				codigos.setNumeroTrans(numeradores.getNroTrans(con, "03")); //nro trans
 				nc.setNroTrans(codigos.getNumeroTrans()); /*Seteamos el nroTrans*/
 				vo.setNroTrans(codigos.getNumeroTrans()); /*Seteamos el nroTrans al VO para obtener el DocumSaldo*/
 				

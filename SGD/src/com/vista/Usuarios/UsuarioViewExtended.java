@@ -202,7 +202,7 @@ public class UsuarioViewExtended extends UsuarioView implements IBusqueda{
 					usuario = fieldGroup.getItemDataSource().getBean().getUsuario();
 				}
 				
-				ArrayList<GrupoVO> lstGruposNoUsuario = this.controlador.getUsuariosNoGrupo(usuario);
+				ArrayList<GrupoVO> lstGruposNoUsuario = this.controlador.getUsuariosNoGrupo(usuario, this.permisos.getCodEmp());
 				form.setGrillaGrupos(lstGruposNoUsuario);
 				UI.getCurrent().addWindow(sub);
 			} 

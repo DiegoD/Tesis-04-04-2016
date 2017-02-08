@@ -272,6 +272,8 @@ public class DAOFuncionarios implements IDAOFuncionarios{
 			
 			//codigo = pstmt1.executeUpdate(Statement.RETURN_GENERATED_KEYS);
 			
+			String ss = pstmt1.toString();
+			
 			pstmt1.executeUpdate ();
 			
 			/*Obtenemos el codigo del cliente insertado*/

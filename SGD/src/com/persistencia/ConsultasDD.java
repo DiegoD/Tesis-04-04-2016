@@ -142,7 +142,8 @@ public class ConsultasDD {
 		StringBuilder sb = new StringBuilder();
 		sb.append("SELECT cod_grupo, nombre ");
 		sb.append("FROM m_grupos ");
-		sb.append("WHERE cod_grupo NOT IN (SELECT cod_grupo FROM m_gruposxusu WHERE usuario = ? )");
+		sb.append("WHERE cod_grupo NOT IN (SELECT cod_grupo FROM m_gruposxusu WHERE usuario = ? )"
+				+ " AND cod_emp = ? ");
 		return sb.toString();
 	}
 	
@@ -438,7 +439,169 @@ public class ConsultasDD {
 		return sb.toString();
 	}
 	
+	public String insImuestoExento(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO m_impuestos (cod_impuesto, cod_emp, descripcion, porcentaje, activo, fecha_mod, usuario_mod, operacion) ");
+		sb.append("VALUES ('0', ?, 'Exento', 0, 1, NOW(), 'SISTE', 'EDITAR')  ");
+		
+		return sb.toString();
+	}
+	
+	public String insTipoRubroNoAsignado(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO m_tiporubro (cod_tipoRubro, descripcion, fecha_mod, usuario_mod, operacion, activo, cod_emp) ");
+		sb.append("VALUES ('0', 'No Asignado', NOW(), 'SISTE', 'NUEVO', 1, ?) ");
+		
+		return sb.toString();
+	}
+	
+	public String insRubroNoAsignado(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO m_rubros (cod_rubro, descripcion, activo, cod_tipo_rubro, tipo_rubro, fecha_mod, usuario_mod, operacion, cod_impuesto, cod_emp, facturable) ");
+		sb.append("VALUES ('0', 'No Asignado', 0, '0', NULL, NOW(), 'p', 'EDITAR', '0', ?, 1)  ");
+		
+		return sb.toString();
+	}
+	
+	public String insTitularOficina(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO m_titulares (cod_tit, nom_tit, cod_docdgi, nro_dgi, tipo, cod_emp, activo)  ");
+		sb.append("VALUES (0, 'Oficina', '01', '0', 'funcionario', ?, 1)  ");
+		
+		return sb.toString();
+	}
+	
+	public String insCuentaFacturas(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO vaadin.m_cuentas (cod_cuenta, descripcion, fecha_mod, usuario_mod, operacion, activo, cod_emp)  ");
+		sb.append("VALUES ('factura', 'Facturas', NOW(), 'SISTE', 'NUEVO', 1, ?)  ");
+		
+		return sb.toString();
+	}
+	
+	public String insProcesoNoAsig(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO vaadin.c_procesos (cod_proceso, cod_documento, cod_cliente, cod_moneda, fecha, numero_documento, fecha_documento, numero_mega, carpeta, importe_moneda, importe_moneda_nacional, importe_transaccion, tasa_cambio, peso, fecha_cruce, marca, medio, descripcion, observaciones, cod_emp, fecha_mod, usuario_mod, operacion)  ");
+		sb.append("VALUES (0, '0', 1, '0', NOW(), 0, NOW(), 0, '0', 0, 0, 0, 0, 0, NOW(), '0', '0', 'No Asignado', 'No Asignado', ?, NOW(), 'SISTE', 'NUEVO')  ");
+		
+		return sb.toString();
+	}
 
+	public String insClienteNoAsig(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		
+		sb.append("INSERT INTO m_clientes (cod_tit, nom_tit, razon_social, cod_emp, tel, nro_dgi, cod_docdgi, direccion, mail, activo, usuario_mod, operacion, fecha_mod)  ");
+		sb.append("VALUES (1, 'No asignado', 'No asignado', ?, '0', '0', '02', '0', '0', 1, 'SISTE', 'NUEVO', NOW())  ");
+
+		
+	
+		return sb.toString();
+	}
+	
+	public String insGrupoAdm(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT m_grupos (cod_grupo, nombre, fecha_mod, usuario_mod, operacion, activo, cod_emp)  ");
+		sb.append("SELECT cod_grupo, nombre, fecha_mod, usuario_mod, operacion, activo, ? FROM m_grupos WHERE cod_grupo = 'Adm' AND cod_emp = 'Param'   ");
+		
+		return sb.toString();
+	}
+	
+	public String insGruposxFormAdm(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO m_grupoxform (formulario, cod_grupo, leer, nuevo_editar, borrar, cod_emp)  ");
+		sb.append("SELECT formulario, cod_grupo, leer, nuevo_editar, borrar, ? FROM m_grupoxform WHERE cod_emp = 'Param' AND cod_grupo = 'Adm'  ");
+		
+		return sb.toString();
+	}
+	
+	public String insNumProceso(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO g_numeradores (cod_numerador, nom_numerador, numero, cod_emp) ");
+		sb.append("VALUES ('01', 'Procesos', 1, ?) ");
+		
+		return sb.toString();
+	}
+	
+	public String insNumGasto(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO g_numeradores (cod_numerador, nom_numerador, numero, cod_emp) ");
+		sb.append("VALUES ('02', 'Gastos', 1, ?) ");
+		
+		return sb.toString();
+	}
+	
+	public String insNumTitulares(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO g_numeradores (cod_numerador, nom_numerador, numero, cod_emp) ");
+		sb.append("VALUES ('04', 'Titulares', 2, ?) ");
+		
+		return sb.toString();
+	}
+	
+	public String insCtaProc(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO vaadin.g_numeradores (cod_numerador, nom_numerador, numero, cod_emp) ");
+		sb.append("VALUES ('ctaproc', 'Ing Cobro Cta Proc', 1, ?) ");
+		
+		return sb.toString();
+	}
+	
+	public String insEgrCobro(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO vaadin.g_numeradores (cod_numerador, nom_numerador, numero, cod_emp) ");
+		sb.append("VALUES ('egrcobro', 'Egreso Cobro', 1, ?) ");
+		
+		return sb.toString();
+	}
+	
+	
+	public String insFact(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO g_numeradores (cod_numerador, nom_numerador, numero, cod_emp) ");
+		sb.append("VALUES ('factura', 'Factura', 1, ?) ");
+		
+		return sb.toString();
+	}
+	
+	public String insIngCob(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO g_numeradores (cod_numerador, nom_numerador, numero, cod_emp) ");
+		sb.append("VALUES ('ingcobro', 'Ingreso Cobro', 1, ?)  ");
+		
+		return sb.toString();
+	}
 ////////////////////////INI-RUBROS///////////////////////////////////////////////////
     
 	public String getRubros(){
@@ -949,7 +1112,7 @@ public class ConsultasDD {
 		sb.append("WHERE cod_rubro NOT IN (SELECT cod_rubro FROM m_rubrosxcuenta WHERE cod_cuenta = ? AND cod_emp = ?) ");
 		sb.append("AND m_rubros.cod_impuesto = m_impuestos.cod_impuesto AND m_impuestos.cod_emp = m_rubros.cod_emp ");
 		sb.append("AND m_rubros.cod_tipo_rubro = m_tiporubro.cod_tipoRubro AND m_tiporubro.cod_emp = m_rubros.cod_emp "
-				+ "AND m_rubros.activo = 1 ");
+				+ "AND m_rubros.activo = 1 AND m_rubros.cod_emp =  ? ");
 		
 		return sb.toString();
 	}
