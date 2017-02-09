@@ -4,18 +4,18 @@
   <meta charset="UTF-8" name="design-properties" content="{&quot;RULERS_VISIBLE&quot;:true,&quot;GUIDELINES_VISIBLE&quot;:false,&quot;SNAP_TO_OBJECTS&quot;:true,&quot;SNAP_TO_GRID&quot;:true,&quot;SNAPPING_DISTANCE&quot;:10,&quot;JAVA_SOURCES_ROOT&quot;:&quot;src&quot;,&quot;THEME&quot;:&quot;sgd&quot;}">
  </head> 
  <body> 
-  <vaadin-form-layout spacing="false" responsive id="auditoria" size-full margin-left margin-right margin-bottom="false"> 
+  <vaadin-form-layout spacing="false" responsive id="auditoria" width="1010px" height="550px" margin-left margin-right margin-bottom="false"> 
    <vaadin-label style-name="colored h2" responsive plain-text :center>
      Ingreso Cobro 
    </vaadin-label> 
-   <vaadin-horizontal-layout width-full> 
+   <vaadin-horizontal-layout width="956px"> 
     <vaadin-link caption="Auditoria" _id="auditoria" :middle :right></vaadin-link> 
    </vaadin-horizontal-layout> 
-   <vaadin-horizontal-layout responsive size-full> 
-    <vaadin-form-layout spacing="false" size-full _id="formLay1"> 
+   <vaadin-horizontal-layout responsive width="900px" height="430px"> 
+    <vaadin-form-layout spacing="false" height="100.99%" _id="formLay1"> 
      <vaadin-text-field enabled="false" id="nroTrans" visible="false" _id="nroTrans"></vaadin-text-field> 
      <vaadin-text-field caption="Nro" style-name="tiny" null-representation="" width="144px" readonly _id="nroDocum"></vaadin-text-field> 
-     <vaadin-horizontal-layout caption="Tipo" spacing> 
+     <vaadin-horizontal-layout caption="Tipo" spacing height="30px"> 
       <vaadin-combo-box style-name="tiny" item-caption-mode="id" width="144px" _id="comboTipo"> 
        <option>Caja</option> 
        <option>Banco</option> 
@@ -54,7 +54,7 @@
       </vaadin-label> 
       <vaadin-check-box style-name="tiny" _id="chkDiferencia" :middle></vaadin-check-box> 
      </vaadin-horizontal-layout> 
-     <vaadin-horizontal-layout spacing _id="botones"> 
+     <vaadin-horizontal-layout spacing width="187px" _id="botones"> 
       <vaadin-button style-name="primary tiny" plain-text _id="aceptar" :middle>
         Guardar 
       </vaadin-button> 
@@ -69,10 +69,10 @@
       </vaadin-button> 
      </vaadin-horizontal-layout> 
     </vaadin-form-layout> 
-    <vaadin-form-layout spacing="false" size-full _id="formLay2"> 
-     <vaadin-grid id="lstGastos" style-name="small" responsive width-full height="356px" editable _id="lstGastos"></vaadin-grid> 
-     <vaadin-horizontal-layout width-full> 
-      <vaadin-horizontal-layout style-name="v-formlayout" spacing responsive :middle> 
+    <vaadin-form-layout spacing="false" width="520px" height="450px" _id="formLay2"> 
+     <vaadin-grid id="lstGastos" style-name="small" responsive width="490px" height="356px" editable _id="lstGastos"></vaadin-grid> 
+     <vaadin-horizontal-layout width="475px"> 
+      <vaadin-horizontal-layout style-name="v-formlayout" spacing responsive width="249px" height-full :middle> 
        <vaadin-button style-name="primary tiny" responsive id="btnAgregar" plain-text _id="btnAgregar" :middle>
          Agregar 
        </vaadin-button> 
@@ -83,7 +83,7 @@
          Quitar 
        </vaadin-button> 
       </vaadin-horizontal-layout> 
-      <vaadin-horizontal-layout spacing responsive :middle :right> 
+      <vaadin-horizontal-layout spacing responsive width="140px" :middle :right> 
        <vaadin-label style-name="tiny" width="70px" plain-text :middle :right>
          Total detalle 
        </vaadin-label> 

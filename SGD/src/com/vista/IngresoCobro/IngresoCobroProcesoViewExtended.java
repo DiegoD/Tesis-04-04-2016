@@ -179,7 +179,7 @@ public class IngresoCobroProcesoViewExtended extends IngresoCobroProcesoView imp
 				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 			}
 			
-			sub = new MySub("65%", "65%" );
+			sub = new MySub("500px", "850px" );
 			sub.setModal(true);
 			sub.center();
 			sub.setModal(true);
@@ -232,7 +232,7 @@ public class IngresoCobroProcesoViewExtended extends IngresoCobroProcesoView imp
 				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 			}
 			
-			sub = new MySub("65%", "65%" );
+			sub = new MySub("550px", "950px" );
 			sub.setModal(true);
 			sub.center();
 			sub.setModal(true);

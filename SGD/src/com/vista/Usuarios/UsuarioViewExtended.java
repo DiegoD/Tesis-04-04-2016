@@ -74,7 +74,7 @@ public class UsuarioViewExtended extends UsuarioView implements IBusqueda{
 		operacion = opera;
 		this.mainView = main;
 		this.lstGruposAgregar = new ArrayList<GrupoVO>();
-		sub = new MySub("70%", "60%" );
+		sub = new MySub("500px", "550px" );
 		sub.setModal(true);
 		sub.center();
 		this.inicializarForm();
@@ -337,7 +337,7 @@ public class UsuarioViewExtended extends UsuarioView implements IBusqueda{
 				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 			}
 			
-			sub = new MySub("85%", "65%" );
+			sub = new MySub("550px", "780px" );
 			sub.setModal(true);
 			sub.center();
 			sub.setModal(true);

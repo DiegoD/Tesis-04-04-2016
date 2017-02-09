@@ -168,7 +168,7 @@ public class FuncionarioViewExtended extends FuncionarioView implements IBusqued
 					Mensajes.mostrarMensajeError(e.getMessage());
 				}
 				
-				sub = new MySub("60%", "60%" );
+				sub = new MySub("300px", "400px" );
 				sub.setModal(true);
 				sub.center();
 				sub.setModal(true);

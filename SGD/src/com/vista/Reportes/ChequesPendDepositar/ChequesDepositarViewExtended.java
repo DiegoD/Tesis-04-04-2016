@@ -127,7 +127,7 @@ public class ChequesDepositarViewExtended extends ChequesDepositarViews implemen
 			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 		}
 		
-		sub = new MySub("85%", "65%" );
+		sub = new MySub("500px", "650px" );
 		sub.setModal(true);
 		sub.center();
 		sub.setModal(true);

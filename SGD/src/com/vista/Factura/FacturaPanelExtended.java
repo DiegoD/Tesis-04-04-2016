@@ -75,8 +75,7 @@ public class FacturaPanelExtended extends FacturaPanel implements IFacturaMain{
 				{
 				
 					this.btnNuevo.addClickListener(click -> {
-						
-							sub = new MySub("83%", "80%");
+							sub = new MySub("550px", "1080px");
 							form = new FacturaViewExtended(Variables.OPERACION_NUEVO, this);
 							sub.setModal(true);
 							sub.setVista(form);
@@ -146,7 +145,7 @@ public class FacturaPanelExtended extends FacturaPanel implements IFacturaMain{
 					    	}
 					    	
 					    	form = new FacturaViewExtended(Variables.OPERACION_LECTURA, FacturaPanelExtended.this);
-							sub = new MySub("83%", "80%");
+							sub = new MySub("550px", "1080px");
 							sub.setModal(true);
 							sub.setVista(form);
 							

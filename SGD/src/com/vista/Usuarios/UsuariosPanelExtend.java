@@ -59,7 +59,7 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 		
 			controlador = new UsuarioControlador();
 			this.lstUsuarios = new ArrayList<UsuarioVO>();
-			sub = new MySub("65%", "75%");
+			sub = new MySub("450px", "900px");
 					
 			this.inicializarGrilla();
 			

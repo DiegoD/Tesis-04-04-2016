@@ -453,7 +453,7 @@ public class DetFacturaViewExtended extends DetFacturaView implements IBusqueda{
 				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 			}
 			
-			sub = new MySub("65%", "65%" );
+			sub = new MySub("550px", "950px" );
 			sub.setModal(true);
 			sub.center();
 			sub.setModal(true);
@@ -502,7 +502,7 @@ public class DetFacturaViewExtended extends DetFacturaView implements IBusqueda{
 				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 			}
 			
-			sub = new MySub("65%", "65%" );
+			sub = new MySub("450px", "850px" );
 			sub.setModal(true);
 			sub.center();
 			sub.setModal(true);

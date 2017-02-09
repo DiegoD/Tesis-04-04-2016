@@ -180,7 +180,7 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 							
 						
 				    	form = new GastoViewExtended(Variables.OPERACION_LECTURA, ResumenProcesoViewExtended.this, null, "ResumenProceso");
-				    	sub = new MySub("95%","50%");
+				    	sub = new MySub("600px","620px");
 						sub.setModal(true);
 						sub.setVista((Component) form);
 						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
@@ -226,7 +226,7 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 							
 						
 				    	form = new GastoViewExtended(Variables.OPERACION_LECTURA, ResumenProcesoViewExtended.this, null, "ResumenProceso");
-				    	sub = new MySub("95%","50%");
+				    	sub = new MySub("600px","620px");
 						sub.setModal(true);
 						sub.setVista((Component) form);
 						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
@@ -272,7 +272,7 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 							
 						
 				    	form = new GastoViewExtended(Variables.OPERACION_LECTURA, ResumenProcesoViewExtended.this, null, "ResumenProceso");
-				    	sub = new MySub("95%","50%");
+				    	sub = new MySub("600px","620px");
 						sub.setModal(true);
 						sub.setVista((Component) form);
 						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
@@ -318,7 +318,7 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 							
 						
 				    	form = new GastoViewExtended(Variables.OPERACION_LECTURA, ResumenProcesoViewExtended.this, null, "ResumenProceso");
-				    	sub = new MySub("95%","50%");
+				    	sub = new MySub("600px","620px");
 						sub.setModal(true);
 						sub.setVista((Component) form);
 						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
@@ -359,7 +359,7 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 							
 						
 				    	formFactura = new FacturaViewExtended(Variables.OPERACION_LECTURA, ResumenProcesoViewExtended.this);
-				    	sub = new MySub("95%","80%");
+				    	sub = new MySub("550px", "1080px");
 						sub.setModal(true);
 						sub.setVista((Component) formFactura);
 						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
@@ -417,7 +417,7 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 					UI.getCurrent().removeWindow(sub);
 					BusquedaViewExtended form = new BusquedaViewExtended(this, new GastoVO());
 					
-					sub = new MySub("93%", "64%" );
+					sub = new MySub("550px", "870px" );
 					sub.setModal(true);
 					sub.setVista(form);
 

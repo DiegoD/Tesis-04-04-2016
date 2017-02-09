@@ -194,7 +194,7 @@ public class GrupoViewExtended extends GrupoView {
 				
 				GrupoViewAgregarFormularioExtended form = new GrupoViewAgregarFormularioExtended(this);
 				
-				sub = new MySub("70%", "60%" );
+				sub = new MySub("400px", "800px" );
 				sub.setModal(true);
 				sub.setVista(form);
 				//sub.setWidth("50%");
@@ -319,7 +319,7 @@ public class GrupoViewExtended extends GrupoView {
 					
 					this.frmFormPermisos = new GrupoFormularioPermisosExtended(this, formSelecccionado, Variables.OPERACION_EDITAR);
 					
-					sub = new MySub("53%", "40%" );
+					sub = new MySub("350px", "350px" );
 					sub.setModal(true);
 					sub.setVista(this.frmFormPermisos);
 					sub.center();
@@ -352,7 +352,7 @@ public class GrupoViewExtended extends GrupoView {
 					
 					this.frmFormPermisos = new GrupoFormularioPermisosExtended(this, formSelecccionado, Variables.OPERACION_LECTURA);
 					
-					sub = new MySub("53%", "40%" );
+					sub = new MySub("350px", "350px" );
 					sub.setModal(true);
 					sub.setVista(this.frmFormPermisos);
 					sub.center();

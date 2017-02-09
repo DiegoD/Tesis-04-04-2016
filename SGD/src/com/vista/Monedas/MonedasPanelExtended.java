@@ -60,7 +60,7 @@ public class MonedasPanelExtended extends MonedasPanel{
 				
 					this.btnNuevaMoneda.addClickListener(click -> {
 						
-						sub = new MySub("60%","35%");
+						sub = new MySub("330px","380px");
 						form = new MonedaViewExtended(Variables.OPERACION_NUEVO, this);
 						sub.setModal(true);
 						sub.setVista(form);
@@ -142,7 +142,7 @@ public class MonedasPanelExtended extends MonedasPanel{
 				    	}
 							
 				    	form = new MonedaViewExtended(Variables.OPERACION_LECTURA, MonedasPanelExtended.this);
-				    	sub = new MySub("60%","35%");
+				    	sub = new MySub("330px","380px");
 						sub.setModal(true);
 						sub.setVista(form);
 						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/

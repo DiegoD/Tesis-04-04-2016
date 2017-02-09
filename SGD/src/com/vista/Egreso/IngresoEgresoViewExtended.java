@@ -1011,7 +1011,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 			
 			MensajeExtended form = new MensajeExtended("Elimina el cobro?",this);
 		
-			sub = new MySub("18%", "16%" );
+			sub = new MySub("140px", "210px" );
 			sub.setModal(true);
 			sub.center();
 			sub.setModal(true);
@@ -1156,10 +1156,6 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 			
 			boolean esta = false;
 			
-			this.titularVO.setCodigo(Integer.parseInt(codTitular.getValue()));
-			this.titularVO.setNombre(nomTitular.getValue());
-			this.titularVO.setTipo(tipo.getValue());
-			
 			
 			
 			try {
@@ -1168,6 +1164,10 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 				 * eliminar*/
 				if(formSelecccionado != null){
 					
+					this.titularVO.setCodigo(Integer.parseInt(codTitular.getValue()));
+					this.titularVO.setNombre(nomTitular.getValue());
+					this.titularVO.setTipo(tipo.getValue());
+
 					
 					GastoVO bean = new GastoVO();
 					BeanItem<GastoVO> item = new BeanItem<GastoVO> (bean);

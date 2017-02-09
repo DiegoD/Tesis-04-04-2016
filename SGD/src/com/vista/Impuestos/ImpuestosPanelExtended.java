@@ -60,7 +60,7 @@ public class ImpuestosPanelExtended extends ImpuestosPanel{
 				
 					this.btnNuevoImpuesto.addClickListener(click -> {
 						
-						sub = new MySub("48%","32%");;
+						sub = new MySub("320px","350px");
 						form = new ImpuestoViewExtended(Variables.OPERACION_NUEVO, this);
 						sub.setModal(true);
 						sub.setVista(form);
@@ -138,7 +138,7 @@ public class ImpuestosPanelExtended extends ImpuestosPanel{
 				    	}
 							
 				    	form = new ImpuestoViewExtended(Variables.OPERACION_LECTURA, ImpuestosPanelExtended.this);
-				    	sub = new MySub("48%","32%");;
+				    	sub = new MySub("320px","350px");
 						sub.setModal(true);
 						sub.setVista(form);
 						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/

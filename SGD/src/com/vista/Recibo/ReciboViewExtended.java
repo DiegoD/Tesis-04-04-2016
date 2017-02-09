@@ -185,7 +185,7 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 		}
 		
-		sub = new MySub("85%", "65%" );
+		sub = new MySub("500px", "650px" );
 		sub.setModal(true);
 		sub.center();
 		sub.setModal(true);
@@ -250,7 +250,7 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 
 			        e.setSource(resource);
 			        
-			        sub = new MySub("80%","75%");
+			        sub = new MySub("500px","650px");
 					sub.setModal(true);
 					sub.setVista(e);
 					
@@ -1051,7 +1051,7 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 			
 			
 			
-			sub = new MySub("25%", "20%" );
+			sub = new MySub("150px", "220px" );
 			sub.setModal(true);
 			sub.center();
 			sub.setModal(true);
@@ -1115,7 +1115,7 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 					Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 				}
 				
-				sub = new MySub("85%", "65%" );//sub = new MySub("40%", "25%" );
+				sub = new MySub("550px", "900px" );//sub = new MySub("40%", "25%" );
 				sub.setModal(true);
 				sub.center();
 				sub.setModal(true);

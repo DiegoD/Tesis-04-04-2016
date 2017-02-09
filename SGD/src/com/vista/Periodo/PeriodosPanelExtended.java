@@ -65,7 +65,7 @@ public class PeriodosPanelExtended extends PeriodosPanel{
 				
 					this.btnNuevoPeriodo.addClickListener(click -> {
 						
-						sub = new MySub("45%","30%");
+						sub = new MySub("300px","350px");
 						form = new PeriodoViewExtended(Variables.OPERACION_NUEVO, this);
 						sub.setModal(true);
 						sub.setVista(form);
@@ -143,7 +143,7 @@ public class PeriodosPanelExtended extends PeriodosPanel{
 				    	}
 							
 				    	form = new PeriodoViewExtended(Variables.OPERACION_LECTURA, PeriodosPanelExtended.this);
-				    	sub = new MySub("45%","30%");
+				    	sub = new MySub("300px","350px");
 						sub.setModal(true);
 						sub.setVista(form);
 						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/

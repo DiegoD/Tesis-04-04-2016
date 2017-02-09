@@ -8,23 +8,23 @@
    <vaadin-label style-name="colored h2" responsive width="18.71%" plain-text :center>
      Usuario
    </vaadin-label> 
-   <vaadin-horizontal-layout width-full :middle :right> 
+   <vaadin-horizontal-layout width="844px" :middle :right> 
     <vaadin-link caption="Auditoria" _id="auditoria" :middle :right></vaadin-link> 
    </vaadin-horizontal-layout> 
    <vaadin-horizontal-layout responsive size-full> 
-    <vaadin-form-layout spacing="false" size-full> 
-     <vaadin-text-field caption="Nombre" required style-name="tiny" immediate width-full _id="nombre"></vaadin-text-field> 
-     <vaadin-text-field caption="Usuario" required style-name="tiny" immediate width-full _id="usuario"></vaadin-text-field> 
-     <vaadin-password-field caption="Contraseña" required style-name="tiny" immediate width-full _id="pass"></vaadin-password-field> 
-     <vaadin-text-field caption="Mail" required style-name="tiny" immediate width-full _id="mail"></vaadin-text-field> 
+    <vaadin-form-layout spacing="false" width="350px" height-full> 
+     <vaadin-text-field caption="Nombre" required style-name="tiny" immediate width="200px" _id="nombre"></vaadin-text-field> 
+     <vaadin-text-field caption="Usuario" required style-name="tiny" immediate width="200px" _id="usuario"></vaadin-text-field> 
+     <vaadin-password-field caption="Contraseña" required style-name="tiny" immediate width="200px" _id="pass"></vaadin-password-field> 
+     <vaadin-text-field caption="Mail" required style-name="tiny" immediate width="200px" _id="mail"></vaadin-text-field> 
      <vaadin-horizontal-layout></vaadin-horizontal-layout> 
      <vaadin-horizontal-layout caption="Cliente" spacing height="33px" _id="cliente"> 
-      <vaadin-text-field style-name="tiny" width="90px" _id="codTit"></vaadin-text-field> 
-      <vaadin-text-field enabled="false" style-name="tiny" width="246px" _id="nomTit"></vaadin-text-field> 
+      <vaadin-text-field style-name="tiny" null-representation="" width="100px" _id="codTit"></vaadin-text-field> 
+      <vaadin-text-field enabled="false" style-name="tiny" null-representation="	" width="180px" _id="nomTit"></vaadin-text-field> 
       <vaadin-button icon="fonticon://FontAwesome/f002" style-name="icon-only borderless quiet" _id="btnBuscarCliente"></vaadin-button> 
      </vaadin-horizontal-layout> 
      <vaadin-check-box caption="Activo" style-name="tiny" _id="activo"></vaadin-check-box> 
-     <vaadin-horizontal-layout width="57%" height-full :middle :right> 
+     <vaadin-horizontal-layout width="170px" height-full :middle :right> 
       <vaadin-button style-name="primary tiny" responsive plain-text _id="aceptar" :middle>
         Guardar 
       </vaadin-button> 
@@ -36,8 +36,8 @@
       </vaadin-button> 
      </vaadin-horizontal-layout> 
     </vaadin-form-layout> 
-    <vaadin-form-layout spacing="false" size-full margin-top="false"> 
-     <vaadin-grid id="grillaGrupos" responsive width-full height="253px" _id="grillaGrupos"></vaadin-grid> 
+    <vaadin-form-layout spacing="false" width="500px" height-full margin-top="false"> 
+     <vaadin-grid id="grillaGrupos" responsive width="400px" height="253px" _id="grillaGrupos"></vaadin-grid> 
      <vaadin-horizontal-layout style-name="v-formlayout" responsive width="178px" height-full :middle :right> 
       <vaadin-button style-name="primary tiny" responsive id="btnAgregar" plain-text _id="btnAgregar" :middle>
         Agregar 

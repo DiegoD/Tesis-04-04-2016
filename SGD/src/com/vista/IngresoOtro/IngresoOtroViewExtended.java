@@ -180,7 +180,7 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 		}
 		
-		sub = new MySub("85%", "65%" );
+		sub = new MySub("500px", "870px" );
 		sub.setModal(true);
 		sub.center();
 		sub.setModal(true);
@@ -873,7 +873,7 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 		
 		
 		
-		sub = new MySub("18%", "16%" );
+		sub = new MySub("140px", "210px" );
 		sub.setModal(true);
 		sub.center();
 		sub.setModal(true);

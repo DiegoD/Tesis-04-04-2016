@@ -326,7 +326,7 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 			}
 			
-			sub = new MySub("65%", "65%" );
+			sub = new MySub("500px", "870px" );
 			sub.setModal(true);
 			sub.center();
 			sub.setModal(true);
@@ -343,7 +343,7 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 			ProcesoObservacionesViewExtended form = new ProcesoObservacionesViewExtended(this, obseAux.getValue(), this.operacion);
 			try {
 			
-				sub = new MySub("65%", "35%" );
+				sub = new MySub("400px", "350px" );
 				sub.setModal(true);
 				sub.center();
 				sub.setModal(true);

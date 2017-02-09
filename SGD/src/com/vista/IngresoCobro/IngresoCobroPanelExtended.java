@@ -76,7 +76,7 @@ public class IngresoCobroPanelExtended extends IngresoCobroPanel{
 				
 					this.btnNuevo.addClickListener(click -> {
 						
-							sub = new MySub("83%", "80%");
+							sub = new MySub("550px", "1010px");
 							form = new IngresoCobroViewExtended(Variables.OPERACION_NUEVO, this);
 							sub.setModal(true);
 							sub.setVista(form);
@@ -149,7 +149,7 @@ public class IngresoCobroPanelExtended extends IngresoCobroPanel{
 					    	
 					    	form = new IngresoCobroViewExtended(Variables.OPERACION_LECTURA, IngresoCobroPanelExtended.this);
 							//form.fieldGroup.setItemDataSource(item);
-							sub = new MySub("90%","90%");
+							sub = new MySub("550px","1010px");
 							sub.setModal(true);
 							sub.setVista(form);
 							

@@ -195,7 +195,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 		}
 		
-		sub = new MySub("85%", "65%" );
+		sub = new MySub("500px", "650px" );
 		sub.setModal(true);
 		sub.center();
 		sub.setModal(true);
@@ -261,7 +261,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 
 			        e.setSource(resource);
 			        
-			        sub = new MySub("80%","75%");
+			        sub = new MySub("500px","650px");
 					sub.setModal(true);
 					sub.setVista(e);
 					
@@ -327,7 +327,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 					Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 				}
 				
-				sub = new MySub("65%", "65%" );
+				sub = new MySub("500px", "850px" );
 				sub.setModal(true);
 				sub.center();
 				sub.setModal(true);
@@ -864,7 +864,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 			
 			MensajeExtended form = new MensajeExtended("Desea eliminar factura?",this);
 		
-			sub = new MySub("18%", "16%" );
+			sub = new MySub("150px", "220px" );
 			sub.setModal(true);
 			sub.center();
 			sub.setModal(true);
@@ -890,7 +890,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 				
 					SeleccionViewExtended form = new SeleccionViewExtended(this);
 					
-					sub = new MySub("35%", "25%" );
+					sub = new MySub("250px", "300px" );
 					sub.setModal(true);
 					sub.center();
 					sub.setModal(true);
@@ -1062,7 +1062,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 			    	if(item.getBean().getCodDocum().equals("Gasto")){
 			    		
 			    		GastoViewExtended form = new GastoViewExtended(Variables.OPERACION_LECTURA, this, titularVO, "Factura");
-				    	sub = new MySub("92%","50%");
+				    	sub = new MySub("600px","620px");
 						sub.setModal(true);
 						sub.setVista((Component) form);
 						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
@@ -1076,7 +1076,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 			   			AuxDetalleVO datosCab = this.obtenerDatosCabezalParaDetalle(); 
 			    		
 			    		DetFacturaViewExtended form = new DetFacturaViewExtended(Variables.OPERACION_LECTURA, this, datosCab);
-				    	sub = new MySub("75%","55%");
+			    		sub = new MySub("480px","650px");
 						sub.setModal(true);
 						sub.setVista((Component) form);
 						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
@@ -2559,7 +2559,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		UI.getCurrent().removeWindow(sub);
 		BusquedaViewExtended form = new BusquedaViewExtended(this, new GastoVO());
 		
-		sub = new MySub("93%", "64%" );
+		sub = new MySub("450px", "880px" );
 		sub.setModal(true);
 		sub.setVista(form);
 
@@ -2646,7 +2646,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 			
 			DetFacturaViewExtended form = new DetFacturaViewExtended(Variables.OPERACION_NUEVO, this, detalleCab );
 			
-			sub = new MySub("75%","55%");
+			sub = new MySub("480px","650px");
 			sub.setModal(true);
 			sub.setVista(form);
 			//sub.setWidth("50%");

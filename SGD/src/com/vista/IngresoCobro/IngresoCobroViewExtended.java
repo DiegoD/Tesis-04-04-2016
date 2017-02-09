@@ -207,7 +207,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 		}
 		
-		sub = new MySub("85%", "65%" );
+		sub = new MySub("500px", "870px" );
 		sub.setModal(true);
 		sub.center();
 		sub.setModal(true);
@@ -1045,7 +1045,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			
 			
 			
-			sub = new MySub("18%", "16%" );
+			sub = new MySub("140px", "210px" );
 			sub.setModal(true);
 			sub.center();
 			sub.setModal(true);
@@ -1068,7 +1068,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				
 				SeleccionViewExtended form = new SeleccionViewExtended(this);
 				
-				sub = new MySub("33%", "20%" );
+				sub = new MySub("210px", "270px" );
 				sub.setModal(true);
 				sub.center();
 				sub.setModal(true);
@@ -1206,7 +1206,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 						
 						//BusquedaViewExtended form = new BusquedaViewExtended(this, new ProcesoVO());
 						IngresoCobroProcesoViewExtended form = new IngresoCobroProcesoViewExtended("EDITAR", this, proceso);
-						sub = new MySub("77%", "45%" );
+						sub = new MySub("500px", "560px" );
 						sub.setModal(true);
 						sub.setVista(form);
 						sub.center();
@@ -3190,7 +3190,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		UI.getCurrent().removeWindow(sub);
 		BusquedaViewExtended form = new BusquedaViewExtended(this, new GastoVO());
 		
-		sub = new MySub("93%", "64%" );
+		sub = new MySub("550px", "870px" );
 		sub.setModal(true);
 		sub.setVista(form);
 		//sub.setWidth("50%");
@@ -3198,7 +3198,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		sub.center();
 		
 		String codCliente;/*Codigo del cliente para obtener los gastos a cobrar del mismo*/
-		
+	
 		/*Obtenemos los formularios que no estan en el grupo
 		 * para mostrarlos en la grilla para seleccionar*/
 		if(this.operacion.equals(Variables.OPERACION_NUEVO) )
@@ -3275,7 +3275,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			
 			//BusquedaViewExtended form = new BusquedaViewExtended(this, new ProcesoVO());
 			IngresoCobroProcesoViewExtended form = new IngresoCobroProcesoViewExtended("NUEVO", this, proceso);
-			sub = new MySub("77%", "45%" );
+			sub = new MySub("500px", "560px" );
 			sub.setModal(true);
 			sub.setVista(form);
 			sub.center();
