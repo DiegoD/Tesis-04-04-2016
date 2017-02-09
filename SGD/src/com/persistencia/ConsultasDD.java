@@ -602,6 +602,47 @@ public class ConsultasDD {
 		
 		return sb.toString();
 	}
+	
+	public String insGrupoCliente(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO vaadin.m_grupos (cod_grupo, nombre, fecha_mod, usuario_mod, operacion, activo, cod_emp) ");
+		sb.append("VALUES ('CLIENTE', 'CLIENTE', NOW(), 'SISTE', 'NUEVO', 1, ?) ");
+		
+		return sb.toString();
+	}
+	
+	public String insForm1(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO vaadin.m_grupoxform (formulario, cod_grupo, leer, nuevo_editar, borrar, cod_emp) ");
+		sb.append("VALUES ('RepCheqxCliente', 'CLIENTE', 1, 0, 0, ?) ");
+		
+		return sb.toString();
+	}
+	
+	public String insForm2(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO vaadin.m_grupoxform (formulario, cod_grupo, leer, nuevo_editar, borrar, cod_emp) ");
+		sb.append("VALUES ('RepEstadoCuenta', 'CLIENTE', 1, 0, 0, ?) ");
+		
+		return sb.toString();
+	}
+	
+	public String insForm3(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("INSERT INTO vaadin.m_grupoxform (formulario, cod_grupo, leer, nuevo_editar, borrar, cod_emp) ");
+		sb.append("VALUES ('RepGtosxProceso', 'CLIENTE', 1, 0, 0, ?) ");
+		
+		return sb.toString();
+	}
+	
 ////////////////////////INI-RUBROS///////////////////////////////////////////////////
     
 	public String getRubros(){
@@ -1480,7 +1521,7 @@ public class ConsultasDD {
 				+" AND c_gastos.cod_tit = sa_docum.cod_tit "
 				
 				/*Y QUE NO EXISTAN EN UNA PRE FACTURA*/
-				+"AND NOT EXISTS (SELECT * FROM d_facturas df WHERE df.nro_docum = c_gastos.nro_docum AND df.serie_docum = c_gastos.serie_docum AND df.cod_docum = c_gastos.cod_docum AND df.cod_emp = c_gastos.cod_emp) "
+				+"AND NOT EXISTS (SELECT * FROM d_facturas df, c_facturas cf WHERE df.nro_trans = cf.nro_trans AND cf.cod_emp = df.cod_emp  AND df.nro_docum = c_gastos.nro_docum AND df.serie_docum = c_gastos.serie_docum AND df.cod_docum = c_gastos.cod_docum AND df.cod_emp = c_gastos.cod_emp AND cf.tipo_factura = 'PreFactura' ) "
 				
 				
 				+ " AND c_gastos.cod_emp = ? AND c_gastos.cod_proceso = ? AND c_gastos.estado = 'fact' "); 

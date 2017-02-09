@@ -85,6 +85,7 @@ public class DAOEmpresas implements IDAOEmpresas{
 			pstmt1.executeUpdate ();
 			pstmt1.close ();
 			
+			
 			this.insertarAux(con, empresa.getCod_emp());
 			
 		} 
@@ -95,8 +96,8 @@ public class DAOEmpresas implements IDAOEmpresas{
 	}
 	
 	/**
-	 * Inserta una empresa en la base
-	 * Pre condición: El código de empresa no debe existir previamente
+	 * Se insertan datos en la base impresindibles para el funcionamiento 
+	 * de la nueva empresa en el sistema
 	 */
 	private void insertarAux(Connection con, String codEmp) throws InsertandoEmpresaException, ConexionException {
 		
@@ -252,6 +253,38 @@ public class DAOEmpresas implements IDAOEmpresas{
 			pstmIngCob.setString(1, codEmp);
 			pstmIngCob.executeUpdate();
 			pstmIngCob.close();
+			
+			/*Insertamos el Grupo cliente*/ 
+			String insGrpCli = clts.insGrupoCliente();
+			PreparedStatement pstmGrpCli;
+			pstmGrpCli = con.prepareStatement(insGrpCli);
+			pstmGrpCli.setString(1, codEmp);
+			pstmGrpCli.executeUpdate();
+			pstmGrpCli.close();
+			
+			/*Insertamos el formulario de reporte cliente 1*/ 
+			String insForm1 = clts.insForm1();
+			PreparedStatement pstmForm1;
+			pstmForm1 = con.prepareStatement(insForm1);
+			pstmForm1.setString(1, codEmp);
+			pstmForm1.executeUpdate();
+			pstmForm1.close();
+			
+			/*Insertamos el formulario de reporte cliente 2*/ 
+			String insForm2 = clts.insForm2();
+			PreparedStatement pstmForm2;
+			pstmForm2 = con.prepareStatement(insForm2);
+			pstmForm2.setString(1, codEmp);
+			pstmForm2.executeUpdate();
+			pstmForm2.close();
+			
+			/*Insertamos el formulario de reporte cliente 3*/ 
+			String insForm3 = clts.insForm3();
+			PreparedStatement pstmForm3;
+			pstmForm3 = con.prepareStatement(insForm3);
+			pstmForm3.setString(1, codEmp);
+			pstmForm3.executeUpdate();
+			pstmForm3.close();
 			
 		} 
     	catch (SQLException e) {

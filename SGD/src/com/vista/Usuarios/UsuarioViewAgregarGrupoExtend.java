@@ -17,6 +17,8 @@ public class UsuarioViewAgregarGrupoExtend extends UsuarioViewAgregarGrupo
 	
 	public UsuarioViewAgregarGrupoExtend(UsuarioViewExtended main)
 	{
+		
+		
 		mainView = main;
 		this.lstGrupos.setSelectionMode(SelectionMode.MULTI);
 		

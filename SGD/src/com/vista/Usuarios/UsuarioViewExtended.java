@@ -243,13 +243,13 @@ public class UsuarioViewExtended extends UsuarioView implements IBusqueda{
 					}
 					
 					/*Si lo encontro en la grilla*/
-					if(esta)
-					{
+					//if(esta)
+					//{
 						/*Actualizamos el container y la grilla*/
 						containerGrupo.removeAllItems();
 						containerGrupo.addAll(lstGruposUsuario);
 						grillaGrupos.setContainerDataSource(containerGrupo);
-					}
+					//}
 					
 				}
 				else /*De lo contrario mostramos mensaje que debe selcionar un formulario*/
@@ -283,10 +283,25 @@ public class UsuarioViewExtended extends UsuarioView implements IBusqueda{
 							VariablesPermisos.OPERACION_NUEVO_EDITAR);
 			
 			try {
-				
-				
 					
 					lstClientes = this.controlador.getClientes(permisoAux);
+					/*Quitamos el 1 no asignado, ya que esta la logica armada
+					 * para el 0 no asignado*/
+					int i = 0;
+					boolean esta = false;
+					ClienteVO cli;
+					while(!esta && i < lstClientes.size()  ){
+						cli = lstClientes.get(i);
+						
+						if(cli.getCodigo() == 1){
+							
+							lstClientes.remove(i);
+							
+							esta = true;
+						}
+						
+						i++;
+					}
 				
 				
 			} catch ( ConexionException | InicializandoException | ObteniendoPermisosException | NoTienePermisosException |
@@ -295,7 +310,7 @@ public class UsuarioViewExtended extends UsuarioView implements IBusqueda{
 				Mensajes.mostrarMensajeError(e.getMessage());
 			}
 			
-			/*Agregamos el 0 no asignado*/	
+			/*Agregamos el 0 no asignado*/
 			ClienteVO noAsig = new ClienteVO();
 			noAsig.setCodigo(0);
 			noAsig.setNombre("No asignado");
@@ -303,6 +318,7 @@ public class UsuarioViewExtended extends UsuarioView implements IBusqueda{
 		    Object ob = new Object();
 		    ob = (Object)noAsig;
 		    lst.add(ob);
+		    
 			
 				Object obj;
 				for (ClienteVO i: lstClientes) {

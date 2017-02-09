@@ -107,15 +107,26 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 		gridUsuarios.setContainerDataSource(container);
 		this.filtroGrilla();
 		
-		gridUsuarios.removeColumn("activo");
-		gridUsuarios.removeColumn("lstGrupos");
-		gridUsuarios.removeColumn("fechaMod");
-		gridUsuarios.removeColumn("usuarioMod");
-		gridUsuarios.removeColumn("operacion");
-		gridUsuarios.removeColumn("pass");
-		gridUsuarios.removeColumn("mail");
-		gridUsuarios.removeColumn("codTit");
-		gridUsuarios.removeColumn("nomTit");
+		
+		gridUsuarios.getColumn("activo").setHidden(true);
+		gridUsuarios.getColumn("lstGrupos").setHidden(true);
+		gridUsuarios.getColumn("fechaMod").setHidden(true);
+		gridUsuarios.getColumn("usuarioMod").setHidden(true);
+		gridUsuarios.getColumn("operacion").setHidden(true);
+		gridUsuarios.getColumn("pass").setHidden(true);
+		gridUsuarios.getColumn("mail").setHidden(true);	
+		gridUsuarios.getColumn("codTit").setHidden(true);	
+		gridUsuarios.getColumn("nomTit").setHidden(true);
+		
+		//gridUsuarios.removeColumn("activo");
+		//gridUsuarios.removeColumn("lstGrupos");
+		//gridUsuarios.removeColumn("fechaMod");
+		//gridUsuarios.removeColumn("usuarioMod");
+		//gridUsuarios.removeColumn("operacion");
+		//gridUsuarios.removeColumn("pass");
+		//gridUsuarios.removeColumn("mail");
+		//gridUsuarios.removeColumn("codTit");
+		//gridUsuarios.removeColumn("nomTit");
 		
 		gridUsuarios.addSelectionListener(new SelectionListener() 
 		{
@@ -247,6 +258,7 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 	
 	public void refreshGrilla(UsuarioVO usuarioVO)
 	{
+		
 		if(this.existeUsuarioLista(usuarioVO.getUsuario()))
 		{
 			this.actualizarUsuarioenLista(usuarioVO);
@@ -258,13 +270,14 @@ public class UsuariosPanelExtend extends UsuariosPanel{
 		this.container.removeAllItems();
 		this.container.addAll(this.lstUsuarios);
 		this.gridUsuarios.setContainerDataSource(container);
+		
 	}
 	
 	private void filtroGrilla()
 	{
 		try
 		{
-		
+			
 			com.vaadin.ui.Grid.HeaderRow filterRow = gridUsuarios.appendHeaderRow();
 	
 			// Set up a filter for all columns
