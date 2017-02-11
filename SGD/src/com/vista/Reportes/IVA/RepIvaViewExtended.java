@@ -169,7 +169,7 @@ public class RepIvaViewExtended extends RepIvaViews implements IBusqueda, IMensa
  
 				        e.setSource(resource);
 				        
-				        sub = new MySub("80%","75%");
+				        sub = new MySub("500px","900px");
 						sub.setModal(true);
 						sub.setVista(e);
 						

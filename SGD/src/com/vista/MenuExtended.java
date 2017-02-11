@@ -639,7 +639,7 @@ public class MenuExtended extends Menu{
 				
 				RepChequesxClienteViewExtended form = new RepChequesxClienteViewExtended();
 				
-				sub = new MySub("50%","50%");
+				sub = new MySub("450px","450px");
 				
 				sub.setModal(true);
 				
@@ -665,7 +665,7 @@ public class MenuExtended extends Menu{
 				GtosPendCobroxClienteViewExtended form = new GtosPendCobroxClienteViewExtended();
 
 				
-				sub = new MySub("40%","50%");
+				sub = new MySub("270px","500px");
 				
 
 				sub.setModal(true);
@@ -697,7 +697,7 @@ public class MenuExtended extends Menu{
 				
 				ChequesDepositarViewExtended form = new ChequesDepositarViewExtended();
 				
-				sub = new MySub("40%","50%");
+				sub = new MySub("270px","500px");
 				
 				sub.setModal(true);
 				
@@ -723,7 +723,7 @@ public class MenuExtended extends Menu{
 				
 				RepIvaViewExtended form = new RepIvaViewExtended();
 				
-				sub = new MySub("34%","45%");
+				sub = new MySub("250px","300px");
 				
 				sub.setModal(true);
 				
@@ -749,7 +749,7 @@ public class MenuExtended extends Menu{
 				
 				RepEstadoCuentaViewExtended form = new RepEstadoCuentaViewExtended();
 				
-				sub = new MySub("50%","50%");
+				sub = new MySub("260px","300px");
 				
 				sub.setModal(true);
 				
@@ -775,7 +775,7 @@ public class MenuExtended extends Menu{
 				
 				RepEstadoCuentaTotalesViewExtended form = new RepEstadoCuentaTotalesViewExtended();
 				
-				sub = new MySub("34%","45%");
+				sub = new MySub("260px","300px");
 				
 				sub.setModal(true);
 				
@@ -800,7 +800,7 @@ public class MenuExtended extends Menu{
 				
 				RepMovCtaRubroExtended form = new RepMovCtaRubroExtended();
 				
-				sub = new MySub("50%","45%");
+				sub = new MySub("350px","400px");
 				
 				sub.setModal(true);
 				
@@ -825,7 +825,7 @@ public class MenuExtended extends Menu{
 				
 				RepMovRubroCtaExtended form = new RepMovRubroCtaExtended();
 				
-				sub = new MySub("50%","45%");
+				sub = new MySub("350px","400px");
 				
 				sub.setModal(true);
 				
@@ -851,7 +851,7 @@ public class MenuExtended extends Menu{
 				
 				RepMovCajaExtended form = new RepMovCajaExtended(); 
 				
-				sub = new MySub("45%","40%");
+				sub = new MySub("300px","350px");
 				
 				sub.setModal(true);
 				
@@ -876,7 +876,7 @@ public class MenuExtended extends Menu{
 				
 				RepMovBancoViewExtended form = new RepMovBancoViewExtended(); 
 				
-				sub = new MySub("45%","40%");
+				sub = new MySub("330px","470px");
 				
 				sub.setModal(true);
 				
@@ -901,7 +901,7 @@ public class MenuExtended extends Menu{
 				
 				GtosxProcesoViewExtended form = new GtosxProcesoViewExtended();
 				
-				sub = new MySub("44%","45%");
+				sub = new MySub("400px","450px");
 				
 				sub.setModal(true);
 				

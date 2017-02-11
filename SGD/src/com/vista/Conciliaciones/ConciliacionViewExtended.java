@@ -230,7 +230,7 @@ private static final long serialVersionUID = 1L;
 			this.operacion = Variables.OPERACION_ELIMINAR;
 			
 			
-			sub = new MySub("18%", "16%" );
+			sub = new MySub("140px", "210px" );
 			sub.setModal(true);
 			sub.center();
 			sub.setModal(true);

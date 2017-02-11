@@ -148,7 +148,7 @@ public class GtosxProcesoViewExtended extends GtosxProcesoViews implements IBusq
 			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 		}
 		
-		sub = new MySub("85%", "65%" );
+		sub = new MySub("500px", "870px" );
 		sub.setModal(true);
 		sub.center();
 		sub.setModal(true);
@@ -239,7 +239,7 @@ public class GtosxProcesoViewExtended extends GtosxProcesoViews implements IBusq
  
 				        e.setSource(resource);
 				        
-				        sub = new MySub("80%","75%");
+				        sub = new MySub("500px","900px");
 						sub.setModal(true);
 						sub.setVista(e);
 						
@@ -305,7 +305,7 @@ public class GtosxProcesoViewExtended extends GtosxProcesoViews implements IBusq
 			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 		}
 		
-		sub = new MySub("65%", "65%" );
+		sub = new MySub("500px", "850px" );
 		sub.setModal(true);
 		sub.center();
 		sub.setModal(true);

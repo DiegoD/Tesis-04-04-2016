@@ -144,7 +144,7 @@ public class GtosPendCobroxClienteViewExtended extends GtosPendCobroxClienteView
 			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
 		}
 		
-		sub = new MySub("85%", "65%" );
+		sub = new MySub("500px", "870px" );
 		sub.setModal(true);
 		sub.center();
 		sub.setModal(true);
@@ -241,7 +241,7 @@ public class GtosPendCobroxClienteViewExtended extends GtosPendCobroxClienteView
  
 				        e.setSource(resource);
 				        
-				        sub = new MySub("80%","75%");
+				        sub = new MySub("500px","900px");
 						sub.setModal(true);
 						sub.setVista(e);
 						
