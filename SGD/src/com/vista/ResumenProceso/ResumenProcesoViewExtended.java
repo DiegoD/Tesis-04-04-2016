@@ -2011,8 +2011,7 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 		
 		gridSaldoProceso.setContainerDataSource(container);
 		  
-		  
-		gridSaldoProceso.getColumn("anulado").setHidden(true);
+		gridSaldoProceso.getColumn("tcMov").setHidden(true);
 		gridSaldoProceso.getColumn("impTotMN").setHidden(true);
 		gridSaldoProceso.getColumn("codMoneda").setHidden(true);
 		gridSaldoProceso.getColumn("descMoneda").setHidden(true);
