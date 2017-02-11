@@ -53,6 +53,7 @@ public class GastoView extends CssLayout {
 	protected Button btnBuscarImpuesto;
 	protected ComboBox comboMoneda;
 	protected TextField tcMov;
+	protected TextField anulado;
 	protected TextField impTotMo;
 	protected TextField impTotMn;
 	protected TextField impImpuMo;
@@ -63,6 +64,7 @@ public class GastoView extends CssLayout {
 	protected Button btnEditar;
 	protected Button cancelar;
 	protected Button btnEliminar;
+	protected Button btnAnular;
 
 	public GastoView() {
 		Design.read(this);

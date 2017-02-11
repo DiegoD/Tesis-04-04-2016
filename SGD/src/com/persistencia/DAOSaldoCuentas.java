@@ -158,6 +158,29 @@ public class DAOSaldoCuentas implements IDAOSaldosCuentas{
 		}
 	}
 	
+	public void anularSaldoCuenta(DocumSaldo documento, Connection con, boolean anula)
+			throws EliminandoSaldoCuetaException, ConexionException {
+		ConsultasDD consultas = new ConsultasDD();
+		String eliminar = consultas.anularSaldoCuenta();
+		PreparedStatement pstmt1;
+		
+		try {
+			
+			pstmt1 =  con.prepareStatement(eliminar);
+			pstmt1.setBoolean(1, anula);
+			pstmt1.setLong(2, documento.getNroTrans());
+			
+			pstmt1.executeUpdate ();
+			pstmt1.close ();
+	
+		} 
+		
+		catch (SQLException e) {
+			
+			throw new EliminandoSaldoCuetaException();
+		}
+	}
+	
 	public void modificarSaldoCuenta(DocumSaldo saldo, Connection con)
 			throws ModificandoSaldoCuentaException, ConexionException, EliminandoSaldoCuetaException, InsertandoSaldoCuentaException, ExisteSaldoCuentaException, NoExisteSaldoCuentaException {
 		

@@ -87,6 +87,7 @@ public class DAOGastos implements IDAOGastos{
 				aux.setImpuestoInfo(imp);
 				aux.setDescProceso(rs.getString(36));
 				aux.setEstadoGasto(rs.getString(37));
+				aux.setAnulado(rs.getString(38));
 				
 				lstGastos.add(aux);
 				
@@ -133,6 +134,7 @@ public class DAOGastos implements IDAOGastos{
 				imp.setPorcentaje(rs.getDouble(35));
 				aux.setImpuestoInfo(imp);
 				aux.setEstadoGasto(rs.getString(36));
+				aux.setAnulado(rs.getString(37));
 				lstGastos.add(aux);
 				
 			}
@@ -177,6 +179,7 @@ public class DAOGastos implements IDAOGastos{
 				imp.setPorcentaje(rs.getDouble(35));
 				aux.setImpuestoInfo(imp);
 				aux.setEstadoGasto(rs.getString(36));
+				aux.setAnulado(rs.getString(37));
 				lstGastos.add(aux);
 				
 			}
@@ -407,6 +410,38 @@ public class DAOGastos implements IDAOGastos{
 			pstmt1.setString(2, codEmp);
 			pstmt1.setString(3, serieDocum);
 			pstmt1.setString(4, codDocum);
+			
+			pstmt1.executeUpdate ();
+			pstmt1.close ();
+	
+		} 
+		
+		catch (SQLException e) {
+			
+			throw new EliminandoGastoException();
+		}
+	}
+	
+	@Override
+	public void anularGastoPK(int nroDocum, String serieDocum, String codDocum, String codEmp, Connection con, boolean anula) throws EliminandoGastoException, ConexionException {
+		// TODO Auto-generated method stub
+		ConsultasDD consultas = new ConsultasDD();
+		String eliminar = consultas.anularGasto();
+		PreparedStatement pstmt1;
+		
+		try {
+			
+			pstmt1 =  con.prepareStatement(eliminar);
+			if(anula){
+				pstmt1.setString(1, "S");
+			}
+			else{
+				pstmt1.setString(1, "N");
+			}
+			pstmt1.setInt(2, nroDocum);
+			pstmt1.setString(3, codEmp);
+			pstmt1.setString(4, serieDocum);
+			pstmt1.setString(5, codDocum);
 			
 			pstmt1.executeUpdate ();
 			pstmt1.close ();

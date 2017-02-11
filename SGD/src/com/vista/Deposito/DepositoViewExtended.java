@@ -172,7 +172,7 @@ public class DepositoViewExtended extends DepositoView implements IMensaje{
 				e.printStackTrace();
 			}
 			
-			MensajeExtended form = new MensajeExtended("Elimina el depósito?",this);
+			MensajeExtended form = new MensajeExtended("Elimina el depósito?",this, "Eliminar");
 			
 			this.operacion = Variables.OPERACION_ELIMINAR;
 			
@@ -1189,6 +1189,12 @@ public class DepositoViewExtended extends DepositoView implements IMensaje{
 	      } catch (NumberFormatException e) {  
 	         return false;  
 	      }  
+	}
+
+	@Override
+	public void anularFact() {
+		// TODO Auto-generated method stub
+		
 	}
 		
 	

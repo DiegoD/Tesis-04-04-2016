@@ -863,7 +863,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 				Mensajes.mostrarMensajeError("Error inesperado");
 			}
 			
-			MensajeExtended form = new MensajeExtended("Desea eliminar factura?",this);
+			MensajeExtended form = new MensajeExtended("Desea eliminar factura?",this, "Eliminar");
 		
 			sub = new MySub("150px", "220px" );
 			sub.setModal(true);
@@ -2705,6 +2705,12 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 	      } catch (NumberFormatException e) {  
 	         return false;  
 	    }  
+	}
+
+	@Override
+	public void anularFact() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	

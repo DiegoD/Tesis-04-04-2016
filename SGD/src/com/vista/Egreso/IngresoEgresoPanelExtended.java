@@ -399,6 +399,7 @@ public class IngresoEgresoPanelExtended extends IngresoEgresoPanel{
 		
 		grid.removeColumn("nacional");
 		grid.removeColumn("codCtaInd");
+		grid.removeColumn("anulado");
 		grid.getColumn("simboloMoneda").setHeaderCaption("Moneda");
 		
 		grid.getColumn("fecValor").setConverter(new StringToDateConverter(){

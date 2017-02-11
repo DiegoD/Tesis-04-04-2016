@@ -1042,7 +1042,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				e.printStackTrace();
 			}
 			
-			MensajeExtended form = new MensajeExtended("Elimina el cobro?",this);
+			MensajeExtended form = new MensajeExtended("Elimina el cobro?",this, "Eliminar");
 			
 			
 			
@@ -3417,6 +3417,14 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		}
 		
 		return aux;
+		
+	}
+
+
+
+	@Override
+	public void anularFact() {
+		// TODO Auto-generated method stub
 		
 	}
 }

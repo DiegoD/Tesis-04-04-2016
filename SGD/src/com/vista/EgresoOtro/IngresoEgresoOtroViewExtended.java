@@ -935,7 +935,7 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 				e.printStackTrace();
 			}
 			
-			MensajeExtended form = new MensajeExtended("Elimina el cobro?",this);
+			MensajeExtended form = new MensajeExtended("Elimina el cobro?",this, "Eliminar");
 			
 			sub = new MySub("140px", "210px" );
 			sub.setModal(true);
@@ -2107,6 +2107,12 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 	      } catch (NumberFormatException e) {  
 	         return false;  
 	      }  
+	}
+
+	@Override
+	public void anularFact() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

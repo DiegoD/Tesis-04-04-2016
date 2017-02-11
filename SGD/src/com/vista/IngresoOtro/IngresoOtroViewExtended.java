@@ -870,7 +870,7 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 			e.printStackTrace();
 		}
 		
-		MensajeExtended form = new MensajeExtended("Elimina el cobro?",this);
+		MensajeExtended form = new MensajeExtended("Elimina el cobro?",this, "Eliminar");
 		
 		
 		
@@ -2037,6 +2037,12 @@ public void inicializarComboMoneda(String cod){
 	      } catch (NumberFormatException e) {  
 	         return false;  
 	      }  
+	}
+
+	@Override
+	public void anularFact() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

@@ -461,5 +461,11 @@ public void inicializarComboBancos(String cod){
 		this.comboBancos.setReadOnly(true);
 	}
 }
+
+@Override
+public void anularFact() {
+	// TODO Auto-generated method stub
+	
+}
 	
 }

@@ -78,6 +78,20 @@ public class IngresoEgresoControlador {
 	}
 	
 	/**
+	 * Anula un cobro 
+	 * @throws NoExisteEgresoCobroException 
+	 */
+	public void anularIngresoEgreso(IngresoCobroVO ingVO, UsuarioPermisosVO permisos, boolean anula) throws InsertandoEgresoCobroException, ConexionException, ExisteEgresoCobroException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, NoExisteEgresoCobroException 
+	{
+		
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			Fachada.getInstance().anularEgresoCobro(ingVO, permisos.getCodEmp(), anula);
+		else
+			throw new NoTienePermisosException();
+		
+	}
+	/**
 	 * Modifica los datos de un cobro
 	 * @throws NoExisteNotaCreditoException 
 	 */

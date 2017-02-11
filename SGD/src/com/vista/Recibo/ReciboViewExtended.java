@@ -1048,7 +1048,7 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 				e.printStackTrace();
 			}
 			
-			MensajeExtended form = new MensajeExtended("Elimina el recibo?",this);
+			MensajeExtended form = new MensajeExtended("Elimina el recibo?",this, "Eliminar");
 			
 			
 			
@@ -3351,6 +3351,14 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 	      } catch (NumberFormatException e) {  
 	         return false;  
 	    }  
+	}
+
+
+
+	@Override
+	public void anularFact() {
+		// TODO Auto-generated method stub
+		
 	}
 	 
 }

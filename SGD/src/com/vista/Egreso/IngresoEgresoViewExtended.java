@@ -659,6 +659,13 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 				Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
 				CotizacionVO coti = null;
 				
+				if(this.anulado.getValue().equals("true")){
+					ingCobroVO.setAnulado(true);
+				}
+				else{
+					ingCobroVO.setAnulado(false);
+				}
+						
 				
 				try {
 					
@@ -922,6 +929,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 			else /*Si los campos no son válidos mostramos warning*/
 			{
 				Mensajes.mostrarMensajeWarning(Variables.WARNING_CAMPOS_NO_VALIDOS);
+				return;
 			}
 				
 			} catch (ModificandoEgresoCobroException| NoExisteEgresoCobroException |InsertandoEgresoCobroException| ExisteEgresoCobroException | InicializandoException| ConexionException | NoTienePermisosException| ObteniendoPermisosException e) {
@@ -1010,7 +1018,46 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 				e.printStackTrace();
 			}
 			
-			MensajeExtended form = new MensajeExtended("Elimina el cobro?",this);
+			MensajeExtended form = new MensajeExtended("Elimina el cobro?",this, "Eliminar");
+		
+			sub = new MySub("140px", "210px" );
+			sub.setModal(true);
+			sub.center();
+			sub.setModal(true);
+			sub.setVista(form);
+			sub.center();
+			sub.setClosable(false);
+			sub.setResizable(false);
+			sub.setDraggable(true);
+			UI.getCurrent().addWindow(sub);
+		});
+		
+		this.btnAnular.addClickListener(click -> {
+			
+			MensajeExtended form;
+			permisoAux = 
+					new UsuarioPermisosVO(permisos.getCodEmp(),
+							permisos.getUsuario(),
+							VariablesPermisos.FORMULARIO_GASTOS,
+							VariablesPermisos.OPERACION_NUEVO_EDITAR);
+			
+			try {
+				if(!val.validaPeriodo(fecValor.getValue(), permisoAux)){
+					String fecha = new SimpleDateFormat("dd/MM/yyyy").format(fecValor.getValue());
+					Mensajes.mostrarMensajeError("El período está cerrado para la fecha " + fecha);
+					return;
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			if(this.anulado.getValue().equals("true")){
+				form = new MensajeExtended("Desanula el cobro?",this, "Anular");
+			}
+			else{
+				form = new MensajeExtended("Anula el cobro?",this, "Anular");
+			}
 		
 			sub = new MySub("140px", "210px" );
 			sub.setModal(true);
@@ -1421,6 +1468,13 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		else
 			this.comboTipo.setValue("Banco");
 		
+		if(this.anulado.getValue().equals("true")){
+			this.btnAnular.setCaption("Desanular");
+		}
+		else{
+			this.btnAnular.setCaption("Anular");
+		}
+		
 		this.comboMPagos.setImmediate(true);
 		this.comboMPagos.setNullSelectionAllowed(false);
 		this.comboMPagos.setReadOnly(false);
@@ -1734,7 +1788,9 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		if(operacion != Variables.OPERACION_NUEVO){
 			this.btnEliminar.setEnabled(true);
 			this.btnEliminar.setVisible(true);
-			this.botones.setWidth("270px");
+			this.btnAnular.setEnabled(true);
+			this.btnAnular.setVisible(true);
+			this.botones.setWidth("350px");
 		}
 		else{
 			disableBotonEliminar();
@@ -1745,6 +1801,8 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 	{
 		this.btnEliminar.setEnabled(false);
 		this.btnEliminar.setVisible(false);
+		this.btnAnular.setEnabled(false);
+		this.btnAnular.setVisible(false);
 		this.botones.setWidth("187px");
 		
 		
@@ -3111,6 +3169,278 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 				
 				this.mainView.actulaizarGrilla(ingCobroVO);
 				Mensajes.mostrarMensajeOK("Se ha eliminado el egreso");
+				UI.getCurrent().removeWindow(sub);
+				this.mainView.cerrarVentana();
+			}
+					
+			else /*Si los campos no son válidos mostramos warning*/
+			{
+				Mensajes.mostrarMensajeWarning(Variables.WARNING_CAMPOS_NO_VALIDOS);
+			}
+				
+			} catch (NoExisteEgresoCobroException |InsertandoEgresoCobroException| ExisteEgresoCobroException | InicializandoException| ConexionException | NoTienePermisosException| ObteniendoPermisosException e) {
+				
+				Mensajes.mostrarMensajeError(e.getMessage());
+			}
+	}
+	
+	@Override
+	public void anularFact() {
+		// TODO Auto-generated method stub
+		try {
+			
+			/*Seteamos validaciones en nuevo, cuando es editar
+			 * solamente cuando apreta el boton editar*/
+			this.setearValidaciones(true);
+			
+			/*Validamos los campos antes de invocar al controlador*/
+			if(this.fieldsValidos())
+			{
+				/*Inicializamos VO de permisos para el usuario, formulario y operacion
+				 * para confirmar los permisos del usuario*/
+				UsuarioPermisosVO permisoAux = 
+						new UsuarioPermisosVO(this.permisos.getCodEmp(),
+								this.permisos.getUsuario(),
+								VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
+								VariablesPermisos.OPERACION_NUEVO_EDITAR);				
+				
+				
+				int comp = Double.compare(importeTotalCalculado, (Double)impTotMo.getConvertedValue());
+				
+				if(comp != 0){
+					Mensajes.mostrarMensajeError("El importe total es diferente a la suma del detalle");
+					return;
+				}
+				
+				
+				IngresoCobroVO ingCobroVO = new IngresoCobroVO();	
+				
+				ingCobroVO.setImpTotMo((Double) impTotMo.getConvertedValue());
+				
+				/*Obtenemos la cotizacion y calculamos el importe MN*/
+				Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
+				CotizacionVO coti = null;
+				
+				
+				try {
+					
+					/////////////////////////////MONEDA//////////////////////////////////////////////////
+					
+					MonedaVO auxMoneda = null;
+					
+					//Obtenemos la moneda del cabezal
+					auxMoneda = new MonedaVO();
+					if(this.comboMoneda.getValue() != null){
+						
+						auxMoneda = (MonedaVO) this.comboMoneda.getValue();
+						
+						/*SI EL TIPO ES CAJA TOMAMOS LA MONEDA DEL CABEZAL DEL COBRO*/
+						//if(((String)comboTipo.getValue()).equals("Caja")) { 
+						
+							ingCobroVO.setCodMoneda(auxMoneda.getCodMoneda());
+							ingCobroVO.setNomMoneda(auxMoneda.getDescripcion());
+							ingCobroVO.setSimboloMoneda(auxMoneda.getSimbolo());
+						//}
+					}
+					
+					
+					/////////////////////////////FIN MONEDA////////////////////////////////////////////
+					
+					/*Si la moneda del cabezal es nacional*/
+					if(auxMoneda.isNacional()) /*Si la moneda del cabezal del cobro seleccionada es nacional*/
+					{
+						/*Si la moneda es la nacional, el TC es 1 y el importe MN es el mismo*/
+						ingCobroVO.setTcMov(1);
+						ingCobroVO.setImpTotMn(ingCobroVO.getImpTotMo());
+						
+					}else
+					{
+						coti = this.controlador.getCotizacion(permisoAux, fecha, this.getCodMonedaSeleccionada());
+						ingCobroVO.setTcMov(coti.getCotizacionVenta());
+						ingCobroVO.setImpTotMn((ingCobroVO.getImpTotMo()*ingCobroVO.getTcMov()));
+					}
+					
+				} catch (Exception e) {
+					Mensajes.mostrarMensajeError(e.getMessage());
+				}
+				
+				ingCobroVO.setFecDoc(new java.sql.Timestamp(fecDoc.getValue().getTime()));
+				ingCobroVO.setFecValor(new java.sql.Timestamp(fecValor.getValue().getTime()));
+				/*Codigo y serie docum se inicializan en constructor*/
+				//ingCobroVO.setNroDocum(Integer.parseInt(nroDocum.getValue()));  VER ESTO CON EL NUMERADOR
+				ingCobroVO.setCodEmp(permisos.getCodEmp());
+				ingCobroVO.setReferencia(referencia.getValue());
+				
+				ingCobroVO.setCodCtaInd("egrcobro");
+				
+				
+				ingCobroVO.setCodTitular(codTitular.getValue());
+				ingCobroVO.setNomTitular(nomTitular.getValue());
+				
+				ingCobroVO.setOperacion(operacion);
+				
+				/*Si es nuevo aun no tenemos el nro del cobro*/
+				if(this.nroDocum.getValue() != null)
+					ingCobroVO.setNroDocum(this.nroDocum.getValue());
+				
+				try {
+					if(val.egresoConciliado(permisoAux, ingCobroVO.getNroDocum())){
+						UI.getCurrent().removeWindow(sub);
+						Mensajes.mostrarMensajeError("El egreso está conciliado");
+						return;
+					}
+				} catch (NumberFormatException | MovimientoConciliadoException e) {
+					// TODO Auto-generated catch block
+					Mensajes.mostrarMensajeError(e.toString());
+				}
+				
+				
+				/*Si es banco tomamos estos cmapos de lo contrario caja*/
+				if(this.comboTipo.getValue().toString().equals("Banco")){
+				
+					ingCobroVO.setmPago((String)comboMPagos.getValue());
+					
+					if(ingCobroVO.getmPago().equals("transferencia"))
+					{
+						ingCobroVO.setCodDocRef("tranemi");
+						
+						ingCobroVO.setSerieDocRef("0");
+					}
+					else if(ingCobroVO.getmPago().equals("Cheque"))
+					{
+						ingCobroVO.setCodDocRef("cheqemi");
+						ingCobroVO.setNroDocRef(nroDocRef.getValue());
+						ingCobroVO.setSerieDocRef(serieDocRef.getValue());
+						
+					}else
+					{
+						
+						ingCobroVO.setCodDocRef("0");
+						ingCobroVO.setNroDocRef("0");
+						ingCobroVO.setSerieDocRef("0");
+					}
+												
+						//Datos del banco y cuenta
+						CtaBcoVO auxctaBco = new CtaBcoVO();
+						if(this.comboCuentas.getValue() != null){
+							
+							auxctaBco = (CtaBcoVO) this.comboCuentas.getValue();
+							
+						}
+						
+						ingCobroVO.setCodBanco(auxctaBco.getCodBco());
+						ingCobroVO.setCodCtaBco(auxctaBco.getCodigo());
+						ingCobroVO.setNomCtaBco(auxctaBco.getNombre());
+						ingCobroVO.setCodMonedaCtaBco(auxctaBco.getMonedaVO().getCodMoneda());
+						ingCobroVO.setNacionalMonedaCtaBco(auxctaBco.getMonedaVO().isNacional());
+					
+				}
+				else {
+					
+					if(((String)comboTipo.getValue()).equals("Caja"))
+					{
+						ingCobroVO.setCodBanco("0");
+						ingCobroVO.setNomBanco("0");
+						
+						ingCobroVO.setCodCtaBco("0");
+						ingCobroVO.setNomCtaBco("0");
+						
+						ingCobroVO.setCodDocRef("0");
+						ingCobroVO.setNroDocRef("0");
+						ingCobroVO.setSerieDocRef("0");
+						
+						ingCobroVO.setmPago("Caja");
+					}
+								
+				}
+				
+				ingCobroVO.setUsuarioMod(this.permisos.getUsuario());
+				
+				if(this.operacion != Variables.OPERACION_NUEVO){
+					ingCobroVO.setNroTrans((long)this.nroTrans.getConvertedValue());
+				}
+				else{
+					ingCobroVO.setNroTrans(0);
+				}
+				
+				
+				/*Si hay detalle nuevo agregado
+				 * lo agregamos a la lista del formulario*/
+				if(this.lstDetalleAgregar.size() > 0)
+				{
+					for (IngresoCobroDetalleVO f : this.lstDetalleAgregar) {
+						
+						/*Si no esta lo agregamos*/
+						if(!this.existeFormularioenLista(Integer.parseInt(f.getNroDocum())))
+							this.lstDetalleVO.add(f);
+					}
+				}
+				
+				for (IngresoCobroDetalleVO detVO : this.lstDetalleVO) {
+					
+					try {
+						
+						try {
+							if(val.existeGastoIngresoCobro(permisoAux, Integer.valueOf(detVO.getNroDocum()))){
+								UI.getCurrent().removeWindow(sub);
+								Mensajes.mostrarMensajeError("El gasto está asociado a un cobro");
+								return;
+							}
+						} catch (ExisteIngresoCobroException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+						
+					} catch (NumberFormatException e) {
+						// TODO Auto-generated catch block
+						Mensajes.mostrarMensajeError(e.toString());
+					}
+					
+				}
+					
+				ingCobroVO.setCodCuenta("egrcobro");
+				ingCobroVO.setDetalle(this.lstDetalleVO);
+				
+				if(ingCobroVO.getDetalle().size() <= 0){
+					Mensajes.mostrarMensajeError("El egreso no tiene detalle");
+					return;
+				}
+				
+				/*Obtenemos la moneda de la cuenta*/
+				//Datos del banco y cuenta y moneda de la cuenta
+				CtaBcoVO auxctaBco = new CtaBcoVO();
+				if(this.comboCuentas.getValue() != null){
+					
+					auxctaBco = (CtaBcoVO) this.comboCuentas.getValue();
+					
+				}
+				
+				/*Seteamos la moneda de la cta del banco*/
+				ingCobroVO.setCodMonedaCtaBco(auxctaBco.getMonedaVO().getCodMoneda());
+				ingCobroVO.setNacionalMonedaCtaBco(auxctaBco.getMonedaVO().isNacional());
+				
+				ingCobroVO.setCodDocum("egrcobro");
+				
+				if(this.anulado.getValue().equals("true")){
+					this.controlador.anularIngresoEgreso(ingCobroVO, permisoAux, false);
+				}
+				else{
+					this.controlador.anularIngresoEgreso(ingCobroVO, permisoAux, true);
+				}
+				
+				
+				
+				if(this.anulado.getValue().equals("true")){
+					
+					Mensajes.mostrarMensajeOK("Se ha desanulado el egreso");
+					ingCobroVO.setAnulado(false);
+				}
+				else{
+					ingCobroVO.setAnulado(true);
+					Mensajes.mostrarMensajeOK("Se ha anulado el egreso");
+				}
+				this.mainView.actulaizarGrilla(ingCobroVO);
 				UI.getCurrent().removeWindow(sub);
 				this.mainView.cerrarVentana();
 			}

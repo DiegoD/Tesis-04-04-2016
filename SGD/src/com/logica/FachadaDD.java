@@ -2906,6 +2906,7 @@ public class FachadaDD {
 				aux.setNomImpuesto(gasto.getImpuestoInfo().getNomImpuesto());
 				aux.setPorcentajeImpuesto(gasto.getImpuestoInfo().getPorcentaje());
 				aux.setEstadoGasto(gasto.getEstadoGasto());
+				aux.setAnulado(gasto.getAnulado());
 				
 				lstGastosVO.add(aux);
 			}
@@ -3975,6 +3976,43 @@ public class FachadaDD {
        		if(this.gastos.memberGasto(gastoVO.getNroTrans(), cod_emp, con)){
        			this.gastos.eliminarGasto(gastoVO.getNroTrans(), cod_emp, con);
        			this.saldos.eliminarSaldo((DocumDetalle) gasto, con);
+       			con.commit();
+       		}
+   			
+   	    	else
+   	    		throw new NoExisteGastoException();
+       	
+       	}
+       	catch(NoExisteGastoException| ConexionException | ExisteGastoException |SQLException e){
+       		try {
+   				con.rollback();
+   				
+   			} 
+       		catch (SQLException e1) {
+   				
+   				throw new ConexionException();
+   			}
+       		throw new EliminandoGastoException();
+       	}
+       	finally
+       	{
+       		pool.liberarConeccion(con);
+       	}
+   	}
+    
+    public void anularGasto(GastoVO gastoVO, String cod_emp, boolean anula) throws ExisteGastoException, EliminandoGastoException, ConexionException, EliminandoProcesoException, EliminandoSaldoException 
+   	{
+   	    	
+       	Connection con = null;
+       	
+       	try 
+       	{
+       		Gasto gasto = new Gasto(gastoVO);
+       		con = this.pool.obtenerConeccion();
+   			con.setAutoCommit(false);
+       		if(this.gastos.memberGasto(gastoVO.getNroTrans(), cod_emp, con)){
+       			this.gastos.anularGastoPK(Integer.parseInt(gastoVO.getNroDocum()), gastoVO.getSerieDocum(), gastoVO.getCodDocum(), cod_emp, con, anula);
+       			this.saldos.anularSaldo((DocumDetalle) gasto, con, anula);
        			con.commit();
        		}
    			

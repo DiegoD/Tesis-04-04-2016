@@ -705,7 +705,7 @@ public class NotaCreditoViewExtended extends NotaCreditoViews implements IBusque
 				e.printStackTrace();
 			}
 			
-			MensajeExtended form = new MensajeExtended("Elimina la nota de credito?",this);
+			MensajeExtended form = new MensajeExtended("Elimina la nota de credito?",this, "Eliminar");
 			
 			
 			
@@ -2356,6 +2356,14 @@ public class NotaCreditoViewExtended extends NotaCreditoViews implements IBusque
 	      } catch (NumberFormatException e) {  
 	         return false;  
 	    }  
+	}
+
+
+
+	@Override
+	public void anularFact() {
+		// TODO Auto-generated method stub
+		
 	}
 	 
 }

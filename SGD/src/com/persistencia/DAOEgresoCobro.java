@@ -86,7 +86,7 @@ public class DAOEgresoCobro implements IDAOEgresoCobro{
 				aux.setFechaMod(rs.getTimestamp("fecha_mod"));
 				aux.setUsuarioMod(rs.getString("usuario_mod"));
 				aux.setOperacion(rs.getString("operacion"));
-				
+				aux.setAnulado(rs.getBoolean("anulado"));
 				
 				/*Obtenemos las lineas de la transaccion*/				
 				aux.setDetalle(this.getEgresoCobroLineaxTrans(con,aux));
@@ -347,6 +347,35 @@ public class DAOEgresoCobro implements IDAOEgresoCobro{
 			pstmt1.close ();
 			
 			this.eliminarEgresoCobroDetalle(cobro, con);
+			
+					
+		} 
+    	catch (SQLException e) 
+    	{
+			throw new EliminandoEgresoCobroException();
+		} 
+		
+    	
+	}
+	
+	public void anularEgresoCobro(IngresoCobro cobro, Connection con, boolean anula) throws InsertandoEgresoCobroException, ConexionException, EliminandoEgresoCobroException {
+
+		Consultas clts = new Consultas();
+    	String delete = clts.anularEgresoCobroCab();
+    	
+    	PreparedStatement pstmt1;
+
+    	
+    	try {
+    		
+			pstmt1 =  con.prepareStatement(delete);
+			pstmt1.setBoolean(1, anula);
+			pstmt1.setLong(2, cobro.getNroTrans());
+			
+			pstmt1.executeUpdate ();
+			pstmt1.close ();
+			
+			//this.eliminarEgresoCobroDetalle(cobro, con);
 			
 					
 		} 

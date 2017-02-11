@@ -98,6 +98,14 @@ public class GastoControlador {
 			throw new NoTienePermisosException();
 	}
 	
+	public void anularGasto(GastoVO gastoVO, UsuarioPermisosVO permisos, boolean anula) throws ObteniendoPermisosException, ConexionException, InicializandoException, ExisteGastoException, EliminandoGastoException, EliminandoProcesoException, NoTienePermisosException, EliminandoSaldoException  {
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			FachadaDD.getInstance().anularGasto(gastoVO, permisos.getCodEmp(), anula);
+		else
+			throw new NoTienePermisosException();
+	}
+	
 	/**
 	 * Actualiza los datos de un gasto
 	 * @throws NoTienePermisosException 

@@ -20,6 +20,7 @@ public class DocumDetalleVO extends DatosDocumVO{
 	private String nomRubro;
 	private String codRubro;
 	private String estadoGasto;
+	private String anulado;
 	
 	
 	private int linea;
@@ -48,7 +49,7 @@ public class DocumDetalleVO extends DatosDocumVO{
 		this.estadoGasto = t.getEstadoGasto();
 		this.porcentajeImpuesto = t.getPorcentajeImpuesto();
 		this.nomImpuesto = t.getNomImpuesto();
-		
+		this.anulado = t.getAnulado();
 	}
 
 	
@@ -175,6 +176,14 @@ public class DocumDetalleVO extends DatosDocumVO{
 	public void setEstadoGasto(String estadoGasto) {
 		this.estadoGasto = estadoGasto;
 	}
-	
+
+	public String getAnulado() {
+		return anulado;
+	}
+
+	public void setAnulado(String anulado) {
+		this.anulado = anulado;
+	}
+
 	
 }

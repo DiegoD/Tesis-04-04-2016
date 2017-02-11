@@ -48,4 +48,6 @@ public interface IDAOGastos {
 	
 	public ArrayList<Gasto> getGastosConSaldoCobrableProceso(Connection con, String codEmp, String codTit, Integer codProceso)
 			throws ObteniendoGastosException, ConexionException;
+	
+	public void anularGastoPK(int nroDocum, String serieDocum, String codDocum, String codEmp, Connection con, boolean anula) throws EliminandoGastoException, ConexionException;
 }

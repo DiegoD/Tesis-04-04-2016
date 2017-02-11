@@ -1097,6 +1097,17 @@ public class Consultas {
 		return sb.toString();
 	}
 	
+	public String anularEgresoCobroCab(){
+		
+		StringBuilder sb = new StringBuilder();
+   	 
+       	sb.append("UPDATE vaadin.c_egrcobro ");
+      	sb.append("SET anulado = ? ");
+      	sb.append(" WHERE nro_trans = ?");
+      	 
+      	return sb.toString();
+	}
+	
 	public String deleteEgresoCobroCabDet(){
 	
 		StringBuilder sb = new StringBuilder();
@@ -1119,7 +1130,8 @@ public class Consultas {
 		sb.append(", COALESCE(m_ctasbcos.nom_cta,'0') nom_cta, COALESCE(cod_mpago,'0') cod_mpago, cod_doc_ref, serie_doc_ref ");
 		sb.append(", nro_doc_ref,	m_monedas.cod_moneda, m_monedas.descripcion, m_monedas.simbolo, imp_tot_mn ");
 		sb.append(", imp_tot_mo, tc_mov, observaciones, nro_trans, c_egrcobro.fecha_mod, c_egrcobro.usuario_mod ");
-		sb.append(", c_egrcobro.operacion, m_monedas.descripcion, m_monedas.simbolo, c_egrcobro.cod_cuenta   "); 
+		sb.append(", c_egrcobro.operacion, m_monedas.descripcion, m_monedas.simbolo, c_egrcobro.cod_cuenta,"
+				+ "  c_egrcobro.anulado   "); 
 		sb.append("	FROM c_egrcobro ");
 		
 		sb.append("INNER JOIN m_monedas "); 

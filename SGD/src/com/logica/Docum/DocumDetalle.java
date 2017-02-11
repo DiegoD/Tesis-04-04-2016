@@ -22,6 +22,7 @@ public abstract class DocumDetalle extends DatosDocum{
 	
 	private int linea;
 	private String estadoGasto;
+	private String anulado;
 	
 	
 	public DocumDetalle(){
@@ -47,6 +48,7 @@ public abstract class DocumDetalle extends DatosDocum{
 		this.linea = t.getLinea();
 		this.referencia = t.getReferencia();
 		this.estadoGasto = t.getEstadoGasto();
+		this.anulado = t.getAnulado(); 
 	}
 	
 	
@@ -153,8 +155,13 @@ public abstract class DocumDetalle extends DatosDocum{
 		this.estadoGasto = estadoGasto;
 	}
 
-	
+	public String getAnulado() {
+		return anulado;
+	}
 
-	
-	
+	public void setAnulado(String anulado) {
+		this.anulado = anulado;
+	}
+
+
 }

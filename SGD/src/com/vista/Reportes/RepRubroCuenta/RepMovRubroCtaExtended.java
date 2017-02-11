@@ -244,4 +244,11 @@ public class RepMovRubroCtaExtended extends RepMovRubroCta implements IBusqueda,
 		
 		return ok;
 	}
+
+
+	@Override
+	public void anularFact() {
+		// TODO Auto-generated method stub
+		
+	}
 }

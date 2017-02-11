@@ -1760,7 +1760,7 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 		
 		  gridNoCobrables.getColumn("operacion").setHidden(true);
 		  gridNoCobrables.getColumn("fechaMod").setHidden(true);
-		  
+		  gridNoCobrables.getColumn("anulado").setHidden(true);
 		  gridNoCobrables.getColumn("codCtaInd").setHidden(true);
 		  gridNoCobrables.getColumn("codCuenta").setHidden(true);
 		  gridNoCobrables.getColumn("codDocum").setHidden(true);
@@ -1861,7 +1861,7 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 		  gridCobrables.getColumn("tcMov").setHidden(true);
 		  gridCobrables.getColumn("usuarioMod").setHidden(true);
 		  gridCobrables.getColumn("nacional").setHidden(true);
-		  
+		  gridNoCobrables.getColumn("anulado").setHidden(true);
 		  
 		  /*Seteamos tamanios*/
 		  gridCobrables.getColumn("nroDocum").setWidth(100);
@@ -1925,7 +1925,7 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 		gridAPagar.getColumn("tcMov").setHidden(true);
 		gridAPagar.getColumn("usuarioMod").setHidden(true);
 		gridAPagar.getColumn("nacional").setHidden(true);
-		  
+		gridNoCobrables.getColumn("anulado").setHidden(true);  
 		  
 		  /*Seteamos tamanios*/
 		gridAPagar.getColumn("nroDocum").setWidth(100);
@@ -1953,7 +1953,7 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 		
 		gridAnular.getColumn("operacion").setHidden(true);
 		gridAnular.getColumn("fechaMod").setHidden(true);
-		  
+		gridNoCobrables.getColumn("anulado").setHidden(true); 
 		gridAnular.getColumn("codCtaInd").setHidden(true);
 		gridAnular.getColumn("codCuenta").setHidden(true);
 		gridAnular.getColumn("codDocum").setHidden(true);
@@ -2014,7 +2014,7 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 		gridSaldoProceso.setContainerDataSource(container);
 		  
 		  
-		
+		gridNoCobrables.getColumn("anulado").setHidden(true);
 		gridSaldoProceso.getColumn("impTotMN").setHidden(true);
 		gridSaldoProceso.getColumn("codMoneda").setHidden(true);
 		gridSaldoProceso.getColumn("descMoneda").setHidden(true);

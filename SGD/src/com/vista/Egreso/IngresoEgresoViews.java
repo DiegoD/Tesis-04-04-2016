@@ -35,6 +35,7 @@ public class IngresoEgresoViews extends FormLayout {
 	protected Label lblFuncionario;
 	protected CheckBox chkFuncionario;
 	protected DateField fecDoc;
+	protected TextField anulado;
 	protected DateField fecValor;
 	protected HorizontalLayout name_wrapper;
 	protected TextField codTitular;
@@ -61,6 +62,7 @@ public class IngresoEgresoViews extends FormLayout {
 	protected Button btnEditar;
 	protected Button cancelar;
 	protected Button btnEliminar;
+	protected Button btnAnular;
 	protected FormLayout formLay2;
 	protected Grid lstGastos;
 	protected Button btnAgregar;

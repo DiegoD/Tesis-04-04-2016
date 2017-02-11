@@ -138,6 +138,37 @@ public class DAOSaldos implements IDAOSaldos{
 		}
 	}
 	
+	/**
+	 * Elimina Saldo
+	 */
+	@Override
+	public void anularSaldo(DatosDocum documento, Connection con, boolean anula)
+			throws EliminandoSaldoException, ConexionException {
+		// TODO Auto-generated method stub
+		ConsultasDD consultas = new ConsultasDD();
+		String eliminar = consultas.anulaSaldo();
+		PreparedStatement pstmt1;
+		
+		try {
+			
+			pstmt1 =  con.prepareStatement(eliminar);
+			pstmt1.setBoolean(1, anula);
+			pstmt1.setString(2, documento.getCodDocum());
+			pstmt1.setString(3, documento.getSerieDocum());
+			pstmt1.setInt(4, documento.getNroDocum());
+			pstmt1.setString(5, documento.getCodEmp());
+			
+			pstmt1.executeUpdate ();
+			pstmt1.close ();
+	
+		} 
+		
+		catch (SQLException e) {
+			
+			throw new EliminandoSaldoException();
+		}
+	}
+	
 	
 	/**
 	 * Modifica saldo verificando el saldo anterior

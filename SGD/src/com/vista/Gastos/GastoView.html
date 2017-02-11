@@ -81,6 +81,7 @@
         </vaadin-combo-box> 
         <vaadin-label caption="Tasa" size-auto></vaadin-label> 
         <vaadin-text-field style-name="tiny" null-representation="0" width="90px" _id="tcMov"></vaadin-text-field> 
+        <vaadin-text-field visible="false" _id="anulado"></vaadin-text-field> 
        </vaadin-horizontal-layout> 
        <vaadin-horizontal-layout caption="Importe" spacing responsive height="35px"> 
         <vaadin-text-field style-name="tiny" null-representation="0" width="90px" _id="impTotMo"></vaadin-text-field> 
@@ -107,6 +108,9 @@
         </vaadin-button> 
         <vaadin-button style-name="tiny primary danger" plain-text _id="btnEliminar" :middle>
           Eliminar 
+        </vaadin-button> 
+        <vaadin-button style-name="tiny primary danger" plain-text _id="btnAnular">
+          Anular 
         </vaadin-button> 
        </vaadin-horizontal-layout> 
       </vaadin-form-layout> 

@@ -18,6 +18,7 @@ public class IngresoCobro extends DatosDocum{
 	private int nroDocRef;
 	private BancoInfo bancoInfo;
 	private CuentaBcoInfo cuentaBcoInfo;
+	private boolean anulado;
 	
 	ArrayList<IngresoCobroLinea> detalle;
 	
@@ -43,6 +44,7 @@ public class IngresoCobro extends DatosDocum{
 		this.nroDocRef = Integer.parseInt(t.getNroDocRef());
 		this.bancoInfo = new BancoInfo(t.getCodBanco(), t.getNomBanco());
 		this.setCuenta(new CuentaInfo(t.getCodCuenta(), t.getNomCuenta(), t.getCodMonedaCtaBco(), t.isNacionalMonedaCtaBco()));
+		this.anulado = t.isAnulado();
 		
 		this.cuentaBcoInfo = new CuentaBcoInfo(t.getCodCtaBco(), t.getNomCtaBco(), t.getCodMonedaCtaBco(), t.isNacionalMonedaCtaBco());
 		
@@ -72,6 +74,7 @@ public class IngresoCobro extends DatosDocum{
 		aux.setCodCtaInd("0");
 		aux.setFecValor(aux.getFecValor());
 		aux.setFecDoc(aux.getFecDoc());
+		aux.setAnulado(anulado);
 		
 		aux.setCodCtaInd(this.getCodCuentaInd());
 		
@@ -164,6 +167,16 @@ public class IngresoCobro extends DatosDocum{
 
 	public void setCuentaBcoInfo(CuentaBcoInfo cuentaBcoInfo) {
 		this.cuentaBcoInfo = cuentaBcoInfo;
+	}
+
+
+	public boolean isAnulado() {
+		return anulado;
+	}
+
+
+	public void setAnulado(boolean anulado) {
+		this.anulado = anulado;
 	}
 	
 	

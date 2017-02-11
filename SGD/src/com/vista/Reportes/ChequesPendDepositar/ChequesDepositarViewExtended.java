@@ -502,4 +502,12 @@ public void inicializarComboMoneda(String cod){
 		
 		return aux;
 	}
+
+
+
+	@Override
+	public void anularFact() {
+		// TODO Auto-generated method stub
+		
+	}
 }

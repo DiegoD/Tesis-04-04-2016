@@ -521,4 +521,12 @@ public void inicializarComboMoneda(String cod){
         }
         return sqlDate;
     }
+
+
+
+	@Override
+	public void anularFact() {
+		// TODO Auto-generated method stub
+		
+	}
 }

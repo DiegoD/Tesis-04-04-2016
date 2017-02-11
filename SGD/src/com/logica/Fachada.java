@@ -2247,6 +2247,117 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 		}
 	}
 	
+	public void anularEgresoCobro(IngresoCobroVO ingVO, String codEmp, boolean anula) throws InsertandoEgresoCobroException, ConexionException, ExisteEgresoCobroException, NoExisteEgresoCobroException{
+		
+		Connection con = null;
+		boolean existe = false;
+		Integer codigo;
+		NumeradoresVO codigos = new NumeradoresVO();
+		
+		
+		try 
+		{
+			con = this.pool.obtenerConeccion();
+			con.setAutoCommit(false);
+			
+			IngresoCobro ing = new IngresoCobro(ingVO); 
+			Cotizacion cotiAux;
+			
+			/*Obtenemos el importe moneda operativa de la cuenta del banco*/
+			double impMoCtaBco = 0;
+			
+			 if(!ing.getmPago().equals("Caja")) /*Si es banco*/
+			 {
+				 /*Obtenemos el importe moneda operativa de la cuenta del banco*/
+				 impMoCtaBco = this.importeMOCtaBanco(ing);
+			 }
+			
+			/*Verificamos no exista un el cobro*/
+			if(this.egresoCobro.memberEgresoCobro(ing.getNroDocum(), codEmp, con))
+			{
+				
+				/*Para cada linea volvemos el saldo sin este cobro*/
+				for (DocumDetalle docum : ing.getDetalle()) {
+				
+					if(docum.getCodDocum().equals("Gasto")){ /*Para los gastos modificamos el saldo al documento*/
+					
+						/*Eliminamos el saldo del gasto*/
+						this.saldos.anularSaldo(docum, con, anula);
+						
+						/*Luego eliminamos el gasto*/
+						this.gastos.anularGastoPK(docum.getNroDocum(), docum.getSerieDocum(), docum.getCodDocum(), codEmp, con, anula);
+					}
+					/* CON PROCESO POR EL MOMENTO NO HACEMOS NADA
+					else if(docum.getCodDocum().equals("Proceso")) //Modificamos el saldo para el proceso ingresado
+					{
+						//Signo -1 para que restarue los saldos del proceso sin este cobro
+						this.saldosProceso.modificarSaldo(docum, -1, ingVO.getTcMov(), con);
+					}*/
+				}
+				
+//				/*Si el ingreso de cobro es con cheque, eliminamos el cheque */
+//				if(ingVO.getCodDocRef().equals("cheqemi"))
+//				{
+//					//Primero obtenemos el DatosDocum para el cheque dado el ingreso cobro
+//					DatosDocumVO auxCheque = ConvertirDocumento.getDatosDocumChequeDadoEgrCobro(ingVO);
+//					
+//					Cheque cheque = new Cheque();
+//					cheque = cheque.convierteIng(ing);
+//					
+//					//Eliminamos el saldo para el cheque 
+//					//DatosDocum auxCheque2 = new DatosDocum(auxCheque);
+//					//this.saldos.eliminarSaldo(auxCheque2, con);
+//					
+//					/*Eliminamos el cheque de tabla base*/   
+//					
+//					auxCheque.setImpTotMo(impMoCtaBco);
+//					auxCheque.setCodMoneda(ing.getCuenta().getCodMoneda());
+//					auxCheque.setNacional(ing.getCuenta().isNacional());
+//					//DatosDocum chequeL = new DatosDocum(auxCheque); /*Lo convertimos a objeto de logica para pasarlo al DAO*/
+//					this.cheques.eliminarCheque(cheque, con);
+//				}
+				
+				/*Subimos el saldo a la cuenta (Banco o caja)*/
+				/*Obtenemos el objeto DocumSaldo dado el egreso de cobro*/
+				
+				DocumSaldo saldoCuenta = ConvertirDocumento.getDocumSaldoChequeDadoEgrCobro(ingVO);
+				
+				if(!ing.getmPago().equals("Caja")) /*Si es banco*/
+					saldoCuenta.setImpTotMo(impMoCtaBco);
+				
+				this.saldosCuentas.anularSaldoCuenta(saldoCuenta, con, anula);
+				
+				/*Una vez hechos todos los movimientos de saldos y documentos
+				* procedemos a eliminar el cobro*/
+				this.egresoCobro.anularEgresoCobro(ing, con, anula); 
+				
+				con.commit();
+			}
+			else{
+				throw new NoExisteEgresoCobroException();
+			}
+		
+		}catch(Exception e){
+		
+		try {
+			con.rollback();
+		
+		} catch (SQLException ex) {
+		
+			throw new InsertandoEgresoCobroException();
+		}
+		
+			throw new InsertandoEgresoCobroException();
+		}
+		finally
+		{
+			pool.liberarConeccion(con);
+		}
+			if (existe){
+				throw new ExisteEgresoCobroException();
+		}
+	}
+	
 	public void modificarEgresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) throws  ConexionException, ModificandoEgresoCobroException, ExisteEgresoCobroException, NoExisteEgresoCobroException{
 	
 		Connection con = null;

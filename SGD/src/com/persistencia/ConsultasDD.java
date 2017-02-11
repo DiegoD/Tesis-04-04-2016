@@ -1398,7 +1398,7 @@ public class ConsultasDD {
 				+ "m_cuentas.cod_cuenta, m_cuentas.descripcion, "
 				+ "m_rubros.cod_rubro, m_rubros.descripcion, m_rubros.cod_tipo_rubro, m_rubros.cod_impuesto, "
 				+ "m_impuestos.cod_impuesto, m_impuestos.descripcion, m_impuestos.porcentaje, "
-				+ "c_procesos.descripcion, c_gastos.estado ");
+				+ "c_procesos.descripcion, c_gastos.estado, c_gastos.anulado ");
 		
 		sb.append("FROM c_gastos"
 				+ " INNER JOIN  m_clientes ON c_gastos.cod_tit = m_clientes.cod_tit AND m_clientes.cod_emp = c_gastos.cod_emp "
@@ -1649,7 +1649,7 @@ public class ConsultasDD {
 				+ "m_cuentas.cod_cuenta, m_cuentas.descripcion, "
 				+ "m_rubros.cod_rubro, m_rubros.descripcion, m_rubros.cod_tipo_rubro, m_rubros.cod_impuesto, "
 				+ "m_impuestos.cod_impuesto, m_impuestos.descripcion, m_impuestos.porcentaje,"
-				+ "c_gastos.estado ");
+				+ "c_gastos.estado, c_gastos.anulado ");
 		
 		sb.append("FROM c_gastos"
 				+ " INNER JOIN  m_funcionarios ON c_gastos.cod_tit = m_funcionarios.cod_tit AND m_funcionarios.cod_emp = c_gastos.cod_emp "
@@ -1677,7 +1677,7 @@ public class ConsultasDD {
 				+ "m_monedas.cod_moneda, m_monedas.descripcion, m_monedas.simbolo, "
 				+ "m_cuentas.cod_cuenta, m_cuentas.descripcion, "
 				+ "m_rubros.cod_rubro, m_rubros.descripcion, m_rubros.cod_tipo_rubro, m_rubros.cod_impuesto, "
-				+ "m_impuestos.cod_impuesto, m_impuestos.descripcion, m_impuestos.porcentaje, c_gastos.estado ");
+				+ "m_impuestos.cod_impuesto, m_impuestos.descripcion, m_impuestos.porcentaje, c_gastos.estado, c_gastos.anulado ");
 		
 		sb.append("FROM c_gastos"
 				+ " LEFT JOIN  m_titulares ON c_gastos.cod_tit = m_titulares.cod_tit AND m_titulares.cod_emp = c_gastos.cod_emp "
@@ -1914,6 +1914,17 @@ public class ConsultasDD {
 		
 		return sb.toString();
 	}
+	
+	public String anularGasto(){
+    	
+    	StringBuilder sb = new StringBuilder();
+    	 
+       	sb.append("UPDATE vaadin.c_gastos ");
+      	sb.append("SET anulado = ? ");
+      	sb.append("WHERE nro_docum = ? AND cod_emp = ? AND serie_docum = ? AND cod_docum = ?");
+      	 
+      	return sb.toString();
+    }
 
 ////////////////////////FIN GASTOS//////////////////////////////////////////////
 
@@ -1988,6 +1999,17 @@ public class ConsultasDD {
 		return sb.toString();
 	}		
 	
+	public String anulaSaldo(){
+    	
+    	StringBuilder sb = new StringBuilder();
+    	 
+       	sb.append("UPDATE vaadin.sa_docum ");
+      	sb.append("SET anulado = ? ");
+  		sb.append("WHERE cod_docum = ? AND serie_docum = ? AND nro_docum = ? AND cod_emp = ? ");
+      	 
+      	return sb.toString();
+    }
+
 	public String updateSaldoImporte(){
     	
     	StringBuilder sb = new StringBuilder();
@@ -2200,6 +2222,17 @@ public class ConsultasDD {
 		
 		return sb.toString();
 	}	
+	
+	public String anularSaldoCuenta(){
+    	
+    	StringBuilder sb = new StringBuilder();
+    	 
+       	sb.append("UPDATE vaadin.sa_cuentas ");
+      	sb.append("SET anulado = ? ");
+      	sb.append("WHERE nro_trans = ? ");
+      	 
+      	return sb.toString();
+    }
 	
 ////////////////////////FIN SALO CUENTAS/////////////////////////////////////////
 	

@@ -177,6 +177,7 @@ public class GastosPanelExtended extends GastosPanel implements IGastosMain{
 			gridGastos.removeColumn("nacional");
 			gridGastos.removeColumn("estadoGasto");
 			gridGastos.removeColumn("tipo");
+			gridGastos.removeColumn("anulado");
 			
 			gridGastos.setColumnOrder("fecValor", "nomTitular", "nroDocum", "referencia", "descProceso");
 		

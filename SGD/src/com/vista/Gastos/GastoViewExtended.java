@@ -224,6 +224,13 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 					gastoVO.setCodRubro(codRubro.getValue().trim());
 					gastoVO.setNomRubro(nomRubro.getValue().trim());
 					
+					if(this.anulado.getValue().equals("S")){
+						gastoVO.setAnulado("S");
+					}
+					else{
+						gastoVO.setAnulado("N");
+					}
+					
 					
 					if(impTotMn.getValue() != "" && impTotMn.getValue() != null){
 						gastoVO.setImpTotMn((double) impTotMn.getConvertedValue());
@@ -506,6 +513,228 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 			
 		});
 			
+		
+		this.btnAnular.addClickListener(click -> {
+			
+			UsuarioPermisosVO permisoAux = 
+			new UsuarioPermisosVO(this.permisos.getCodEmp(),
+					this.permisos.getUsuario(),
+					VariablesPermisos.FORMULARIO_GASTOS,
+					VariablesPermisos.OPERACION_BORRAR);
+			
+			try {
+				if(!val.validaPeriodo(fecValor.getValue(), permisoAux)){
+					String fecha = new SimpleDateFormat("dd/MM/yyyy").format(fecValor.getValue());
+					Mensajes.mostrarMensajeError("El período está cerrado para la fecha " + fecha);
+					return;
+				}
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			
+			
+			try {
+				
+				GastoVO gastoVO = new GastoVO();
+				
+				gastoVO.setCodEmp(this.permisos.getCodEmp());
+				gastoVO.setUsuarioMod(this.permisos.getUsuario());
+				gastoVO.setOperacion(operacion);
+				
+				if(comboSeleccion.getValue().equals("Proceso")){
+					
+					gastoVO.setDescProceso(descProceso.getValue().trim());
+					
+					if(codProceso.getValue() != "" && codProceso.getValue() != null){
+						gastoVO.setCodProceso(codProceso.getValue());
+					}
+					else{
+						gastoVO.setCodProceso("0");
+					}
+				}
+				else{
+					gastoVO.setCodProceso("0");
+				}
+				
+				gastoVO.setCodDocum("Gasto");
+				gastoVO.setSerieDocum("A");
+				gastoVO.setCodImpuesto(codImpuesto.getValue().trim());
+				gastoVO.setNomImpuesto(nomImpuesto.getValue().trim());
+				
+				
+				gastoVO.setPorcentajeImpuesto((double) porcentajeImpuesto.getConvertedValue());
+				
+				if(comboSeleccion.getValue().equals("Proceso")){
+					gastoVO.setCodCtaInd("IngGastoProceso");
+				}
+				else if(comboSeleccion.getValue().equals("Empleado")){
+					gastoVO.setCodCtaInd("IngGastoEmpleado");
+				}
+				else if(comboSeleccion.getValue().equals("Oficina")){
+					gastoVO.setCodCtaInd("IngGastoOficina");
+				}
+				
+				
+				//Cliente
+				if(comboSeleccion.getValue().equals("Oficina")){
+					gastoVO.setCodTitular("0");
+					gastoVO.setNomTitular("Oficina");
+				}
+				else{
+					gastoVO.setCodTitular(codTitular.getValue().trim());
+					gastoVO.setNomTitular(nomTitular.getValue().trim());
+				}
+				
+				
+				//Moneda
+				if(this.comboMoneda.getValue() != null){
+					MonedaVO auxMoneda = new MonedaVO();
+					auxMoneda = (MonedaVO) this.comboMoneda.getValue();
+					gastoVO.setCodMoneda(auxMoneda.getCodMoneda());
+					gastoVO.setNomMoneda(auxMoneda.getDescripcion());
+					gastoVO.setSimboloMoneda(auxMoneda.getSimbolo());
+					gastoVO.setNacional(auxMoneda.isNacional());
+				}
+				else{
+					gastoVO.setCodMoneda("");
+					gastoVO.setNomMoneda("");
+					gastoVO.setSimboloMoneda("");
+				}
+				
+				if(this.comboEstado.getValue()!= null){
+					if(this.comboEstado.getValue().equals("Cobrable")){
+						gastoVO.setEstadoGasto("cobr");
+					}
+					else if(this.comboEstado.getValue().equals("No cobrable")){
+						gastoVO.setEstadoGasto("nocobr");
+					}
+					else if(this.comboEstado.getValue().equals("Facturable")){
+						gastoVO.setEstadoGasto("fact");
+					}
+					else if(this.comboEstado.getValue().equals("Anulado")){
+						gastoVO.setEstadoGasto("anul");
+					}
+				}
+				
+				
+				gastoVO.setReferencia(referencia.getValue().trim());
+				gastoVO.setCodCuenta(codCuenta.getValue().trim());
+				gastoVO.setNomCuenta(nomCuenta.getValue().trim());
+				gastoVO.setCodRubro(codRubro.getValue().trim());
+				gastoVO.setNomRubro(nomRubro.getValue().trim());
+				
+				
+				if(impTotMn.getValue() != "" && impTotMn.getValue() != null){
+					gastoVO.setImpTotMn((double) impTotMn.getConvertedValue());
+				}
+				else{
+					gastoVO.setImpTotMn(0);
+				}
+				
+				if(impTotMo.getValue() != "" && impTotMo.getValue() != null){
+					gastoVO.setImpTotMo((double) impTotMo.getConvertedValue());
+				}
+				else{
+					gastoVO.setImpTotMo(0);
+				}
+				
+				if(impImpuMn.getValue() != "" && impImpuMn.getValue() != null){
+					gastoVO.setImpImpuMn((double) impImpuMn.getConvertedValue());
+				}
+				else{
+					gastoVO.setImpImpuMn(0);
+				}
+				
+				if(impImpuMo.getValue() != "" && impImpuMo.getValue() != null){
+					gastoVO.setImpImpuMo((double) impImpuMo.getConvertedValue());
+				}
+				else{
+					gastoVO.setImpImpuMo(0);
+				}
+				
+				
+				gastoVO.setImpSubMn(gastoVO.getImpTotMn() - gastoVO.getImpImpuMn());  
+				gastoVO.setImpSubMo(gastoVO.getImpTotMo() - gastoVO.getImpImpuMo());
+				
+				if(tcMov.getValue() != "" && tcMov.getValue() != null){
+					gastoVO.setTcMov(Double.valueOf(tcMov.getConvertedValue().toString()));
+				}
+				else{
+					gastoVO.setTcMov(0);
+				}
+				
+				
+				if(this.operacion.equals(Variables.OPERACION_NUEVO)){
+					gastoVO.setNroDocum(("0"));
+				}
+				else{
+					gastoVO.setNroDocum((nroDocum.getValue()));
+				}
+				
+				if(this.operacion.equals(Variables.OPERACION_NUEVO)){
+					gastoVO.setNroTrans((0));
+				}
+				else{
+					gastoVO.setNroTrans(((Long) nroTrans.getConvertedValue()));;
+				}
+				
+				gastoVO.setFecDoc(new java.sql.Timestamp(fecDoc.getValue().getTime()));
+				gastoVO.setFecValor(new java.sql.Timestamp(fecValor.getValue().getTime()));
+				
+				
+				try {
+					if(val.existeEgreso(permisoAux, Integer.valueOf(gastoVO.getNroDocum()))){
+						Mensajes.mostrarMensajeError("Existe un egreso asociado al gasto");
+						return;
+					}
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					Mensajes.mostrarMensajeError(e.getMessage());
+				}
+				
+				try {
+					if(val.existeFacturaGasto(permisoAux, Integer.valueOf(gastoVO.getNroDocum()))){
+						Mensajes.mostrarMensajeError("Existe una factura asociada al gasto");
+						return;
+					}
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					Mensajes.mostrarMensajeError(e.getMessage());
+				}
+				
+				try {
+					if(val.existeGastoIngresoCobro(permisoAux, Integer.valueOf(gastoVO.getNroDocum()))){
+						Mensajes.mostrarMensajeError("Existe un ingreso de cobro asociada al gasto");
+						return;
+					}
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					Mensajes.mostrarMensajeError(e.getMessage());
+				}
+				
+				if(this.anulado.getValue().equals("N")){
+					gastoVO.setAnulado("S");
+					controlador.anularGasto(gastoVO, permisoAux, true);
+				}
+				else{
+					gastoVO.setAnulado("N");
+					controlador.anularGasto(gastoVO, permisoAux, false);
+				}
+				this.mainView.actulaizarGrilla(gastoVO);
+				Mensajes.mostrarMensajeOK("Se ha anulado el gasto");
+				main.cerrarVentana();
+				
+			} catch (ObteniendoPermisosException | ConexionException | InicializandoException | ExisteGastoException |
+					EliminandoGastoException | EliminandoProcesoException | NoTienePermisosException | EliminandoSaldoException e) {
+				// TODO Auto-generated catch block
+				Mensajes.mostrarMensajeError(e.getMessage());
+			}
+			
+		});
+
+
 		this.btnBuscarProceso.addClickListener(click -> {
 			
 			BusquedaViewExtended form = new BusquedaViewExtended(this, new ProcesoVO());
@@ -1085,7 +1314,12 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		this.inicializarComboSeleccion(gasto.getCodCtaInd());
 		this.inicializarComboEstado(gasto.getEstadoGasto());
 		
-		
+		if(this.anulado.getValue().equals("S")){
+			this.btnAnular.setCaption("Desanular");
+		}
+		else{
+			this.btnAnular.setCaption("Anular");
+		}
 				
 		/*SETEAMOS LA OPERACION EN MODO LECUTA
 		 * ES CUANDO LLAMAMOS ESTE METODO*/
@@ -1362,7 +1596,9 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		if(operacion != Variables.OPERACION_NUEVO){
 			this.btnEliminar.setEnabled(true);
 			this.btnEliminar.setVisible(true);
-			this.botones.setWidth("270px");
+			this.btnAnular.setEnabled(true);
+			this.btnAnular.setVisible(true);
+			this.botones.setWidth("350px");
 		}
 		else{
 			disableBotonEliminar();
@@ -1373,6 +1609,8 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 	{
 		this.btnEliminar.setEnabled(false);
 		this.btnEliminar.setVisible(false);
+		this.btnAnular.setEnabled(false);
+		this.btnAnular.setVisible(false);
 		this.botones.setWidth("187px");
 		
 		

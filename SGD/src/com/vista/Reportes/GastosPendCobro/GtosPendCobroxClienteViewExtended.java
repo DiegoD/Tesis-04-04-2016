@@ -547,4 +547,12 @@ public void inicializarComboMoneda(String cod){
 		
 		return lstClientes;
 	}
+
+
+
+	@Override
+	public void anularFact() {
+		// TODO Auto-generated method stub
+		
+	}
 }

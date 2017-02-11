@@ -225,7 +225,7 @@ private static final long serialVersionUID = 1L;
 				e.printStackTrace();
 			}
 			
-			MensajeExtended form = new MensajeExtended("Elimina la conciliación?",this);
+			MensajeExtended form = new MensajeExtended("Elimina la conciliación?",this, "Eliminar");
 			
 			this.operacion = Variables.OPERACION_ELIMINAR;
 			
@@ -1304,6 +1304,12 @@ private static final long serialVersionUID = 1L;
 			}catch(Exception e)
 			{}
 		}
+		
+	}
+
+	@Override
+	public void anularFact() {
+		// TODO Auto-generated method stub
 		
 	}
 }

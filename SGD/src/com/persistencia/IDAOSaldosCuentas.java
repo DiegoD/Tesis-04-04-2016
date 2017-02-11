@@ -28,4 +28,6 @@ public interface IDAOSaldosCuentas {
 	
 	public ArrayList<SaCuentasVO> getSaCuentas(String codEmp, Connection con) throws Exception;
 	public ArrayList<SaDocumsVO> getSaldosDocum(String codEmp, Connection con) throws Exception;
+	public void anularSaldoCuenta(DocumSaldo documento, Connection con, boolean anula)
+			throws EliminandoSaldoCuetaException, ConexionException;
 }

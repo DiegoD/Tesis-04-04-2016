@@ -318,4 +318,12 @@ public class RepIvaViewExtended extends RepIvaViews implements IBusqueda, IMensa
         }
         return sqlDate;
     }
+
+
+
+	@Override
+	public void anularFact() {
+		// TODO Auto-generated method stub
+		
+	}
 }

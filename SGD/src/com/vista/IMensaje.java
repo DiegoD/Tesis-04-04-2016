@@ -10,4 +10,6 @@ public interface IMensaje {
 	public void cerrarVentana();
 	
 	public void eliminarFact();
+	
+	public void anularFact();
 }

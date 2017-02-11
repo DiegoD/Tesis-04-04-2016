@@ -624,6 +624,7 @@ public class BusquedaViewExtended extends BusquedaView{
 			grid.removeColumn("nacional");
 			grid.removeColumn("estadoGasto");
 			grid.removeColumn("tipo");
+			grid.removeColumn("anulado");
 			
 			grid.setEditorEnabled(true);
 			grid.getColumn("impTotMn").setEditable(true);

@@ -28,4 +28,7 @@ public interface IDAOSaldos {
 	public void modificarSaldoImporte(DatosDocum documento, Connection con)
 			throws ModificandoSaldoException, ConexionException, ExisteSaldoException;
 	
+	public void anularSaldo(DatosDocum documento, Connection con, boolean anula)
+			throws EliminandoSaldoException, ConexionException;
+	
 }

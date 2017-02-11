@@ -8,6 +8,7 @@ import com.valueObject.Gasto.GastoVO;
 public class Gasto extends DocumDetalle{
 	
 	
+	
 	public Gasto(){
 		super();
 	}

@@ -12,4 +12,5 @@ public class GastoVO extends DocumDetalleVO{
 		super.copiar(gastoVO);
 	}
 
+
 }

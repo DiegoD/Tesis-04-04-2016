@@ -19,6 +19,7 @@ public class IngresoCobroVO extends DatosDocumVO{
 	private String nomCtaBco;
 	private String codMonedaCtaBco;
 	boolean nacionalMonedaCtaBco;
+	boolean anulado;
 	
 	
 	private ArrayList<IngresoCobroDetalleVO> detalle;
@@ -47,6 +48,7 @@ public class IngresoCobroVO extends DatosDocumVO{
 		
 		this.codMonedaCtaBco = t.codMonedaCtaBco;
 		this.nacionalMonedaCtaBco = t.nacionalMonedaCtaBco;
+		this.anulado = t.isAnulado();
 		
 		IngresoCobroDetalleVO aux;
 		for (IngresoCobroDetalleVO detVO : t.detalle) {
@@ -141,8 +143,12 @@ public class IngresoCobroVO extends DatosDocumVO{
 		this.nacionalMonedaCtaBco = nacionalMonedaCtaBco;
 	}
 
+	public boolean isAnulado() {
+		return anulado;
+	}
 
+	public void setAnulado(boolean anulado) {
+		this.anulado = anulado;
+	}
 
-	
-	
 }
