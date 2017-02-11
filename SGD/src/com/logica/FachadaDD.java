@@ -2987,6 +2987,7 @@ public class FachadaDD {
 				aux.setNomImpuesto(gasto.getImpuestoInfo().getNomImpuesto());
 				aux.setPorcentajeImpuesto(gasto.getImpuestoInfo().getPorcentaje());
 				aux.setEstadoGasto(gasto.getEstadoGasto());
+				aux.setAnulado(gasto.getAnulado());
 				lstGastosVO.add(aux);
 			}
 		
@@ -3066,6 +3067,7 @@ public class FachadaDD {
 				aux.setNomImpuesto(gasto.getImpuestoInfo().getNomImpuesto());
 				aux.setPorcentajeImpuesto(gasto.getImpuestoInfo().getPorcentaje());
 				aux.setEstadoGasto(gasto.getEstadoGasto());
+				aux.setAnulado(gasto.getAnulado());
 				lstGastosVO.add(aux);
 			}
 		
@@ -3146,6 +3148,7 @@ public class FachadaDD {
 				aux.setNomImpuesto(gasto.getImpuestoInfo().getNomImpuesto());
 				aux.setPorcentajeImpuesto(gasto.getImpuestoInfo().getPorcentaje());
 				aux.setEstadoGasto(gasto.getEstadoGasto());
+				aux.setAnulado(gasto.getAnulado());
 				lstGastosVO.add(aux);
 			}
 		
@@ -3259,6 +3262,7 @@ public class FachadaDD {
 				aux.setNomImpuesto(gasto.getImpuestoInfo().getNomImpuesto());
 				aux.setPorcentajeImpuesto(gasto.getImpuestoInfo().getPorcentaje());
 				aux.setEstadoGasto(gasto.getEstadoGasto());
+				aux.setAnulado(gasto.getAnulado());
 				lstGastosVO.add(aux);
 			}
 		
@@ -3384,6 +3388,7 @@ public class FachadaDD {
 				aux.setNomImpuesto(gasto.getImpuestoInfo().getNomImpuesto());
 				aux.setPorcentajeImpuesto(gasto.getImpuestoInfo().getPorcentaje());
 				aux.setEstadoGasto(gasto.getEstadoGasto());
+				aux.setAnulado(gasto.getAnulado());
 				lstGastosVO.add(aux);
 			}
 		
@@ -3463,6 +3468,7 @@ public class FachadaDD {
 				aux.setSimboloMoneda(gasto.getMoneda().getSimbolo());
 				aux.setNacional(gasto.getMoneda().isNacional());
 				aux.setEstadoGasto(gasto.getEstadoGasto());
+				aux.setAnulado(gasto.getAnulado());
 				lstGastosVO.add(aux);
 			}
 		
@@ -3542,6 +3548,7 @@ public class FachadaDD {
 				aux.setSimboloMoneda(gasto.getMoneda().getSimbolo());
 				aux.setNacional(gasto.getMoneda().isNacional());
 				aux.setEstadoGasto(gasto.getEstadoGasto());
+				aux.setAnulado(gasto.getAnulado());
 				lstGastosVO.add(aux);
 			}
 		
@@ -3621,6 +3628,7 @@ public class FachadaDD {
 				aux.setSimboloMoneda(gasto.getMoneda().getSimbolo());
 				aux.setNacional(gasto.getMoneda().isNacional());
 				aux.setEstadoGasto(gasto.getEstadoGasto());
+				aux.setAnulado(gasto.getAnulado());
 				lstGastosVO.add(aux);
 			}
 		
@@ -3700,6 +3708,7 @@ public class FachadaDD {
 				aux.setSimboloMoneda(gasto.getMoneda().getSimbolo());
 				aux.setNacional(gasto.getMoneda().isNacional());
 				aux.setEstadoGasto(gasto.getEstadoGasto());
+				aux.setAnulado(gasto.getAnulado());
 				lstGastosVO.add(aux);
 			}
 		
@@ -3779,6 +3788,7 @@ public class FachadaDD {
 				aux.setSimboloMoneda(gasto.getMoneda().getSimbolo());
 				aux.setNacional(gasto.getMoneda().isNacional());
 				aux.setEstadoGasto(gasto.getEstadoGasto());
+				aux.setAnulado(gasto.getAnulado());
 				lstGastosVO.add(aux);
 			}
 		

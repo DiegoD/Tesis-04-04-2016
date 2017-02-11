@@ -1861,7 +1861,7 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 		  gridCobrables.getColumn("tcMov").setHidden(true);
 		  gridCobrables.getColumn("usuarioMod").setHidden(true);
 		  gridCobrables.getColumn("nacional").setHidden(true);
-		  gridNoCobrables.getColumn("anulado").setHidden(true);
+		  gridCobrables.getColumn("anulado").setHidden(true);
 		  
 		  /*Seteamos tamanios*/
 		  gridCobrables.getColumn("nroDocum").setWidth(100);
@@ -1872,7 +1872,6 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 		
 		  gridCobrables.getColumn("simboloMoneda").setHeaderCaption("Moneda");
 		  gridCobrables.getColumn("impTotMo").setHeaderCaption("Importe");
-		
 		
 	}
 	
@@ -1925,7 +1924,8 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 		gridAPagar.getColumn("tcMov").setHidden(true);
 		gridAPagar.getColumn("usuarioMod").setHidden(true);
 		gridAPagar.getColumn("nacional").setHidden(true);
-		gridNoCobrables.getColumn("anulado").setHidden(true);  
+		gridAPagar.getColumn("anulado").setHidden(true); 
+		
 		  
 		  /*Seteamos tamanios*/
 		gridAPagar.getColumn("nroDocum").setWidth(100);
@@ -1936,7 +1936,6 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 		
 		gridAPagar.getColumn("simboloMoneda").setHeaderCaption("Moneda");
 		gridAPagar.getColumn("impTotMo").setHeaderCaption("Importe");
-		
 		
 	}
 	
@@ -1953,7 +1952,7 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 		
 		gridAnular.getColumn("operacion").setHidden(true);
 		gridAnular.getColumn("fechaMod").setHidden(true);
-		gridNoCobrables.getColumn("anulado").setHidden(true); 
+		gridAnular.getColumn("anulado").setHidden(true); 
 		gridAnular.getColumn("codCtaInd").setHidden(true);
 		gridAnular.getColumn("codCuenta").setHidden(true);
 		gridAnular.getColumn("codDocum").setHidden(true);
@@ -1990,7 +1989,6 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 		gridAnular.getColumn("usuarioMod").setHidden(true);
 		gridAnular.getColumn("nacional").setHidden(true);
 		  
-		  
 		  /*Seteamos tamanios*/
 		gridAnular.getColumn("nroDocum").setWidth(100);
 		gridAnular.getColumn("referencia").setWidth(280);
@@ -2014,7 +2012,7 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 		gridSaldoProceso.setContainerDataSource(container);
 		  
 		  
-		gridNoCobrables.getColumn("anulado").setHidden(true);
+		gridSaldoProceso.getColumn("anulado").setHidden(true);
 		gridSaldoProceso.getColumn("impTotMN").setHidden(true);
 		gridSaldoProceso.getColumn("codMoneda").setHidden(true);
 		gridSaldoProceso.getColumn("descMoneda").setHidden(true);

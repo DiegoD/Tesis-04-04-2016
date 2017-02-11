@@ -509,6 +509,7 @@ public class DAOGastos implements IDAOGastos{
 					imp.setPorcentaje(rs.getDouble(35));
 					aux.setImpuestoInfo(imp);
 					aux.setDescProceso(rs.getString(36));
+					aux.setAnulado(rs.getString(37));
 					
 					lstGastos.add(aux);
 					
@@ -581,6 +582,7 @@ public class DAOGastos implements IDAOGastos{
 					imp.setPorcentaje(rs.getDouble(35));
 					aux.setImpuestoInfo(imp);
 					aux.setDescProceso(rs.getString(36));
+					aux.setAnulado(rs.getString(37));
 					
 					
 					lstGastos.add(aux);
@@ -653,6 +655,7 @@ public class DAOGastos implements IDAOGastos{
 					imp.setPorcentaje(rs.getDouble(35));
 					aux.setImpuestoInfo(imp);
 					aux.setDescProceso(rs.getString(36));
+					aux.setAnulado(rs.getString(37));
 					
 					
 					lstGastos.add(aux);
@@ -726,7 +729,7 @@ public class DAOGastos implements IDAOGastos{
 					imp.setPorcentaje(rs.getDouble(35));
 					aux.setImpuestoInfo(imp);
 					aux.setDescProceso(rs.getString(36));
-					
+					aux.setAnulado(rs.getString(37));
 					
 					lstGastos.add(aux);
 					
@@ -802,7 +805,7 @@ public class DAOGastos implements IDAOGastos{
 					imp.setPorcentaje(rs.getDouble(35));
 					aux.setImpuestoInfo(imp);
 					aux.setDescProceso(rs.getString(36));
-					
+					aux.setAnulado(rs.getString(37));
 					
 					lstGastos.add(aux);
 					
@@ -878,7 +881,7 @@ public class DAOGastos implements IDAOGastos{
 					imp.setPorcentaje(rs.getDouble(35));
 					aux.setImpuestoInfo(imp);
 					aux.setDescProceso(rs.getString(36));
-					
+					aux.setAnulado(rs.getString(37));
 					
 					lstGastos.add(aux);
 					
@@ -949,7 +952,7 @@ public class DAOGastos implements IDAOGastos{
 						aux.setImpuestoInfo(imp);
 						aux.setDescProceso(rs.getString(36));
 						aux.setEstadoGasto(rs.getString(37));
-						
+						aux.setAnulado(rs.getString(38));
 						
 						lstGastos.add(aux);
 						
@@ -1020,6 +1023,7 @@ public class DAOGastos implements IDAOGastos{
 					aux.setImpuestoInfo(imp);
 					aux.setDescProceso(rs.getString(36));
 					aux.setEstadoGasto(rs.getString(37));
+					aux.setAnulado(rs.getString(38));
 					
 					lstGastos.add(aux);
 					
@@ -1091,7 +1095,7 @@ public class DAOGastos implements IDAOGastos{
 					aux.setImpuestoInfo(imp);
 					aux.setDescProceso(rs.getString(36));
 					aux.setEstadoGasto(rs.getString(37));
-					
+					aux.setAnulado(rs.getString(38));
 					
 					lstGastos.add(aux);
 					
@@ -1162,7 +1166,7 @@ public class DAOGastos implements IDAOGastos{
 					aux.setImpuestoInfo(imp);
 					aux.setDescProceso(rs.getString(36));
 					aux.setEstadoGasto(rs.getString(37));
-					
+					aux.setAnulado(rs.getString(38));
 					
 					lstGastos.add(aux);
 					

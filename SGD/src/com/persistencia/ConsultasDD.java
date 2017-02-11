@@ -1433,7 +1433,7 @@ public class ConsultasDD {
 				+ "m_cuentas.cod_cuenta, m_cuentas.descripcion, "
 				+ "m_rubros.cod_rubro, m_rubros.descripcion, m_rubros.cod_tipo_rubro, m_rubros.cod_impuesto, "
 				+ "m_impuestos.cod_impuesto, m_impuestos.descripcion, m_impuestos.porcentaje, "
-				+ "c_procesos.descripcion, c_gastos.estado ");
+				+ "c_procesos.descripcion, c_gastos.estado, c_gastos.anulado ");
 		
 		sb.append("FROM c_gastos"
 				+ " INNER JOIN  m_clientes ON c_gastos.cod_tit = m_clientes.cod_tit AND m_clientes.cod_emp = c_gastos.cod_emp "
@@ -1464,7 +1464,7 @@ public class ConsultasDD {
 				+ "m_cuentas.cod_cuenta, m_cuentas.descripcion, "
 				+ "m_rubros.cod_rubro, m_rubros.descripcion, m_rubros.cod_tipo_rubro, m_rubros.cod_impuesto, "
 				+ "m_impuestos.cod_impuesto, m_impuestos.descripcion, m_impuestos.porcentaje, "
-				+ "c_procesos.descripcion, m_monedas.nacional ");
+				+ "c_procesos.descripcion, m_monedas.nacional, c_gastos.anulado ");
 		
 		sb.append("FROM c_gastos"
 				+ " INNER JOIN  m_clientes ON c_gastos.cod_tit = m_clientes.cod_tit AND c_gastos.cod_emp = m_clientes.cod_emp  "
@@ -1505,7 +1505,7 @@ public class ConsultasDD {
 				+ "m_cuentas.cod_cuenta, m_cuentas.descripcion, "
 				+ "m_rubros.cod_rubro, m_rubros.descripcion, m_rubros.cod_tipo_rubro, m_rubros.cod_impuesto, "
 				+ "m_impuestos.cod_impuesto, m_impuestos.descripcion, m_impuestos.porcentaje, "
-				+ "c_procesos.descripcion, m_monedas.nacional ");
+				+ "c_procesos.descripcion, m_monedas.nacional, c_gastos.anulado ");
 		
 		sb.append("FROM c_gastos"
 				+ " INNER JOIN  m_clientes ON c_gastos.cod_tit = m_clientes.cod_tit AND c_gastos.cod_emp = m_clientes.cod_emp  "
@@ -1552,7 +1552,7 @@ public class ConsultasDD {
 				+ "m_cuentas.cod_cuenta, m_cuentas.descripcion, "
 				+ "m_rubros.cod_rubro, m_rubros.descripcion, m_rubros.cod_tipo_rubro, m_rubros.cod_impuesto, "
 				+ "m_impuestos.cod_impuesto, m_impuestos.descripcion, m_impuestos.porcentaje, "
-				+ "c_procesos.descripcion, c_gastos.estado ");
+				+ "c_procesos.descripcion, c_gastos.estado, c_gastos.anulado ");
 		
 		sb.append("FROM c_gastos"
 				+ " INNER JOIN  m_clientes ON c_gastos.cod_tit = m_clientes.cod_tit AND m_clientes.cod_emp = c_gastos.cod_emp "
@@ -1583,7 +1583,7 @@ public class ConsultasDD {
 				+ "m_cuentas.cod_cuenta, m_cuentas.descripcion, "
 				+ "m_rubros.cod_rubro, m_rubros.descripcion, m_rubros.cod_tipo_rubro, m_rubros.cod_impuesto, "
 				+ "m_impuestos.cod_impuesto, m_impuestos.descripcion, m_impuestos.porcentaje, "
-				+ "c_procesos.descripcion, c_gastos.estado, sa_docum.imp_tot_mo ");
+				+ "c_procesos.descripcion, c_gastos.estado, sa_docum.imp_tot_mo, c_gastos.anulado ");
 		
 		sb.append("FROM c_gastos"
 				+ " INNER JOIN  m_clientes ON c_gastos.cod_tit = m_clientes.cod_tit AND m_clientes.cod_emp = c_gastos.cod_emp "
@@ -1617,7 +1617,7 @@ public class ConsultasDD {
 			+ "m_cuentas.cod_cuenta, m_cuentas.descripcion, "
 			+ "m_rubros.cod_rubro, m_rubros.descripcion, m_rubros.cod_tipo_rubro, m_rubros.cod_impuesto, "
 			+ "m_impuestos.cod_impuesto, m_impuestos.descripcion, m_impuestos.porcentaje, "
-			+ "c_procesos.descripcion, c_gastos.estado ");
+			+ "c_procesos.descripcion, c_gastos.estado, c_gastos.anulado ");
 	
 	sb.append("FROM c_gastos"
 			+ " INNER JOIN  m_clientes ON c_gastos.cod_tit = m_clientes.cod_tit AND m_clientes.cod_emp = c_gastos.cod_emp "
@@ -1706,7 +1706,7 @@ public class ConsultasDD {
 				+ "m_cuentas.cod_cuenta, m_cuentas.descripcion, "
 				+ "m_rubros.cod_rubro, m_rubros.descripcion, m_rubros.cod_tipo_rubro, m_rubros.cod_impuesto, "
 				+ "m_impuestos.cod_impuesto, m_impuestos.descripcion, m_impuestos.porcentaje, "
-				+ "c_procesos.descripcion ");
+				+ "c_procesos.descripcion, c_gastos.anulado ");
 		
 		sb.append("FROM c_gastos"
 				+ " INNER JOIN  m_titulares ON c_gastos.cod_tit = m_titulares.cod_tit AND c_gastos.cod_emp = m_titulares.cod_emp  "
@@ -1746,7 +1746,7 @@ public class ConsultasDD {
 				+ "m_cuentas.cod_cuenta, m_cuentas.descripcion, "
 				+ "m_rubros.cod_rubro, m_rubros.descripcion, m_rubros.cod_tipo_rubro, m_rubros.cod_impuesto, "
 				+ "m_impuestos.cod_impuesto, m_impuestos.descripcion, m_impuestos.porcentaje, "
-				+ "c_procesos.descripcion, m_monedas.nacional ");
+				+ "c_procesos.descripcion, m_monedas.nacional, c_gastos.anulado ");
 		
 		sb.append("FROM c_gastos"
 				+ " INNER JOIN  m_titulares ON c_gastos.cod_tit = m_titulares.cod_tit AND c_gastos.cod_emp = m_titulares.cod_emp  "
@@ -1785,7 +1785,7 @@ public class ConsultasDD {
 				+ "m_cuentas.cod_cuenta, m_cuentas.descripcion, "
 				+ "m_rubros.cod_rubro, m_rubros.descripcion, m_rubros.cod_tipo_rubro, m_rubros.cod_impuesto, "
 				+ "m_impuestos.cod_impuesto, m_impuestos.descripcion, m_impuestos.porcentaje, "
-				+ "c_procesos.descripcion, m_monedas.nacional ");
+				+ "c_procesos.descripcion, m_monedas.nacional, c_gastos.anulado ");
 		
 		sb.append("FROM c_gastos"
 				+ " INNER JOIN  m_titulares ON c_gastos.cod_tit = m_titulares.cod_tit AND c_gastos.cod_emp = m_titulares.cod_emp  "
@@ -1824,7 +1824,7 @@ public class ConsultasDD {
 				+ "m_cuentas.cod_cuenta, m_cuentas.descripcion, "
 				+ "m_rubros.cod_rubro, m_rubros.descripcion, m_rubros.cod_tipo_rubro, m_rubros.cod_impuesto, "
 				+ "m_impuestos.cod_impuesto, m_impuestos.descripcion, m_impuestos.porcentaje, "
-				+ "c_procesos.descripcion, m_monedas.nacional ");
+				+ "c_procesos.descripcion, m_monedas.nacional, c_gastos.anulado ");
 		
 		sb.append("FROM c_gastos"
 				+ " INNER JOIN  m_clientes ON c_gastos.cod_tit = m_clientes.cod_tit AND c_gastos.cod_emp = m_clientes.cod_emp  "
