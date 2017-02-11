@@ -495,7 +495,8 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
    			else{
    				
    			
-   				tcMov.setVisible(false);
+   				//tcMov.setVisible(false);
+   				tcMov.setEnabled(false);
    				cotizacionVenta = (double)1;
    				calculos();
    			}

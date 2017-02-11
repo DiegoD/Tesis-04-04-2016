@@ -79,7 +79,6 @@ public class MenuExtended extends Menu{
 	    public void menuSelected(MenuItem selectedItem) {
 	        
 	    	setSizeFull();
-			
 			content.removeAllComponents();
 			try {
 				
@@ -564,12 +563,19 @@ public class MenuExtended extends Menu{
 		
 		this.factura.addClickListener(click -> {
 			
+			setSizeUndefined();
 			setSizeFull();
+			setWidth("100%");
+			setHeight("100%");
 			
 			this.content.removeAllComponents();
 			try {
 				
-				FacturaPanelExtended u = new FacturaPanelExtended(); 
+				FacturaPanelExtended u = new FacturaPanelExtended();
+				this.content.removeAllComponents();
+				this.content.setWidth("100%");
+				this.content.setHeight("100%");
+				//this.content.setSizeFull();
 				this.content.addComponent(u);
 				
 			} catch (Exception e) {
@@ -579,6 +585,7 @@ public class MenuExtended extends Menu{
 		
 		this.recibo.addClickListener(click -> {
 			
+			setSizeUndefined();
 			setSizeFull();
 			
 			this.content.removeAllComponents();
@@ -916,6 +923,8 @@ public class MenuExtended extends Menu{
 	{
 		contentAnterior = this.content;
 		this.content.removeAllComponents();
+		this.content.setHeight("100%");
+		this.content.setWidth("100%");
 		this.content.addComponent(comp);
 	}
 	

@@ -25,8 +25,8 @@ public class EmpresaView extends FormLayout {
 	protected Link auditoria;
 	protected TextField codEmp;
 	protected TextField nomEmp;
-	protected TextField usuario;
-	protected PasswordField pass;
+	protected TextField campo2;
+	protected PasswordField campo1;
 	protected CheckBox activo;
 	protected Button aceptar;
 	protected Button btnEditar;

@@ -415,7 +415,8 @@ public class NotaCreditoViewExtended extends NotaCreditoViews implements IBusque
    			else{
    				
    			
-   				tcMov.setVisible(false);
+   				//tcMov.setVisible(false);
+   				tcMov.setEnabled(false);
    				cotizacionVenta = (double)1;
    				calculos();
    			}

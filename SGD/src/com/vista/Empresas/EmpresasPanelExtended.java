@@ -61,7 +61,7 @@ public class EmpresasPanelExtended extends EmpresasPanel{
 				
 					this.btnNuevaEmpresa.addClickListener(click -> {
 						
-						sub = new MySub("50%","32%");
+						sub = new MySub("330px","400px");
 						form = new EmpresaViewExtended(Variables.OPERACION_NUEVO, this);
 						sub.setModal(true);
 						sub.setVista(form);
@@ -149,7 +149,7 @@ public class EmpresasPanelExtended extends EmpresasPanel{
 				    	BeanItem<EmpresaUsuVO> item2 = new BeanItem<EmpresaUsuVO>(empUsu);
 				    	
 				    	form = new EmpresaViewExtended(Variables.OPERACION_LECTURA, EmpresasPanelExtended.this);
-				    	sub = new MySub("50%","32%");
+				    	sub = new MySub("280px","350px");
 						sub.setModal(true);
 						sub.setVista(form);
 						/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/

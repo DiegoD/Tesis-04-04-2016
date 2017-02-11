@@ -77,6 +77,7 @@ public class ReciboPanelExtended extends ReciboPanel{
 					this.btnNuevo.addClickListener(click -> {
 						
 							sub = new MySub("600px", "1080px");
+							//sub = new MySub("90%", "90%");
 							form = new ReciboViewExtended(Variables.OPERACION_NUEVO, this);
 							sub.setModal(true);
 							sub.setVista(form);

@@ -633,7 +633,8 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 		   				Mensajes.mostrarMensajeWarning("La moneda del banco es diferente a la moneda del documento");
 		   			}
    				}
-   				tcMov.setVisible(false);
+   				//tcMov.setVisible(false);
+   				tcMov.setEnabled(false);
    				cotizacionVenta = (double)1;
    				calculos();
    			}

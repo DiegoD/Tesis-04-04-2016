@@ -76,8 +76,8 @@ public class EmpresaViewExtended extends EmpresaView{
 					
 					/*Datos del usuario administrador*/
 					MD5 md5 = new MD5(); /*Para encriptar la contrasena*/
-					empresaUsuVO.setUsuario(usuario.getValue().trim());
-					empresaUsuVO.setPass(md5.getMD5Hash(pass.getValue().trim()));
+					empresaUsuVO.setUsuario(campo2.getValue().trim());
+					empresaUsuVO.setPass(md5.getMD5Hash(campo1.getValue().trim()));
 					
 					
 										
@@ -193,11 +193,11 @@ public class EmpresaViewExtended extends EmpresaView{
 		this.nomEmp.setRequired(setear);
 		this.nomEmp.setRequiredError("Es requerido");
 		
-		this.usuario.setRequired(true);
-		this.usuario.setRequiredError("Es requerido");
+		this.campo2.setRequired(true);
+		this.campo2.setRequiredError("Es requerido");
 		
-		this.pass.setRequired(true);
-		this.pass.setRequiredError("Es requerido");
+		this.campo1.setRequired(true);
+		this.campo1.setRequiredError("Es requerido");
 		
 	}
 	
@@ -442,19 +442,19 @@ public class EmpresaViewExtended extends EmpresaView{
 	
 	private void disableFieldsUsuario()
 	{
-		this.usuario.setEnabled(false);
-		this.usuario.setVisible(false);
+		this.campo2.setEnabled(false);
+		this.campo2.setVisible(false);
 		
-		this.pass.setEnabled(false);
-		this.pass.setVisible(false);
+		this.campo1.setEnabled(false);
+		this.campo1.setVisible(false);
 	}
 	
 	private void enableFieldsUsuario()
 	{
-		this.usuario.setEnabled(true);
-		this.usuario.setVisible(true);
+		this.campo2.setEnabled(true);
+		this.campo2.setVisible(true);
 		
-		this.pass.setEnabled(true);
-		this.pass.setVisible(true);
+		this.campo1.setEnabled(true);
+		this.campo1.setVisible(true);
 	}
 }
