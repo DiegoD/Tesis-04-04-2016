@@ -294,6 +294,8 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 						/*Si el mainView es el panel:*/
 						if(this.mainView.nomForm().equals("Panel")){
 							
+							gastoVO.setAnulado("N");
+							
 							codigos = this.controlador.insertarGasto(gastoVO, permisoAux);
 							gastoVO.setNroDocum(String.valueOf(codigos.getCodigo()));
 							gastoVO.setNroTrans(codigos.getNumeroTrans());
@@ -314,6 +316,13 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 						
 						/*Si el mainView es el panel:*/
 						if(this.mainView.nomForm().equals("Panel")){
+							
+							if(this.anulado.getValue().equals("S")){
+								gastoVO.setAnulado("S");
+							}
+							else{
+								gastoVO.setAnulado("N");
+							}
 							this.controlador.actualizarGasto(gastoVO, permisoAux);
 							this.mainView.actulaizarGrilla(gastoVO);
 							

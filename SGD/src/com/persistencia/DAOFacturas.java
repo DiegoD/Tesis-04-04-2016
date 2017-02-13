@@ -236,8 +236,8 @@ public class DAOFacturas implements IDAOFacturas{
 				
 				fact.setFecValor(rs.getTimestamp("fec_valor"));
 				
-				fact.setImpTotMn(rs.getDouble("imp_tot_mn"));
-				fact.setImpTotMo(rs.getDouble("imp_tot_mo"));
+				fact.setImpTotMn(rs.getDouble("c_facturas.imp_tot_mn"));
+				fact.setImpTotMo(rs.getDouble("c_facturas.imp_tot_mo"));
 				fact.setTcMov(rs.getDouble("tc_mov"));
 				
 				fact.setFechaMod(rs.getTimestamp("fecha_mod"));

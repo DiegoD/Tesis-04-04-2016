@@ -2181,6 +2181,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		  
 		  lstGastos.getColumn("estadoGasto").setHidden(true);
 		  lstGastos.getColumn("tipo").setHidden(true);
+		  lstGastos.getColumn("anulado").setHidden(true);
 		  
 		lstGastos.setColumnOrder("nroDocum", "referencia", "simboloMoneda", "impTotMo", "codProceso");
 		

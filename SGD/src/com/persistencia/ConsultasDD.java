@@ -1859,7 +1859,7 @@ public class ConsultasDD {
 				+ " imp_sub_mo, imp_tot_mn, imp_tot_mo, tc_mov, cod_cuenta, cod_rubro, cuenta, "
 				+ " fecha_mod, usuario_mod, operacion, estado, cod_impuesto, anulado ) ");
 		sb.append("VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
-				+ " ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?, 'N' ) ");
+				+ " ?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?, ? ) ");
 		
 		return sb.toString();
 	}

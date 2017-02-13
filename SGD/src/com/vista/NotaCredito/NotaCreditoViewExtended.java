@@ -1239,7 +1239,7 @@ public class NotaCreditoViewExtended extends NotaCreditoViews implements IBusque
 		this.btnQuitar.setVisible(true);
 		
 		this.btnEditarItem.setEnabled(true);
-		this.btnEditarItem.setVisible(true);
+		this.btnEditarItem.setVisible(false);
 		
 	}
 	

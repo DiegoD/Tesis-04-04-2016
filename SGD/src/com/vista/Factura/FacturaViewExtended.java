@@ -1866,7 +1866,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		  lstGastos.getColumn("usuarioMod").setHidden(true);
 		  lstGastos.getColumn("nacional").setHidden(true);
 		  lstGastos.getColumn("tipo").setHidden(true);
-		  //lstGastos.getColumn("tipoContCred").setHidden(true);
+		  lstGastos.getColumn("anulado").setHidden(true);
 		  
 		lstGastos.setColumnOrder("nroDocum", "simboloMoneda", "impSubMo",  "impImpuMo",  "impTotMo", "referencia");
 		

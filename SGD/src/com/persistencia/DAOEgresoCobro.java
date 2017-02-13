@@ -298,6 +298,7 @@ public class DAOEgresoCobro implements IDAOEgresoCobro{
 			//pstmt1.setTimestamp(21, cobro.getFechaMod());
 			pstmt1.setString(21, cobro.getUsuarioMod());
 			pstmt1.setString(22, cobro.getOperacion());
+			pstmt1.setBoolean(23, cobro.isAnulado());
 			
 			
 			

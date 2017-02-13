@@ -2394,7 +2394,7 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 	@Override
 	public String nomForm() {
 		// TODO Auto-generated method stub
-		return null;
+		return "Resumen";
 	}
 	
 	/**
@@ -2490,6 +2490,8 @@ public class ResumenProcesoViewExtended extends ResumenProcesoView implements IB
 	public void actulaizarGrilla() {
 		// TODO Auto-generated method stub
 		
+		
 	}
+	
 	
 }

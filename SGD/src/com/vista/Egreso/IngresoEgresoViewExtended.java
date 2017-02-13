@@ -2197,6 +2197,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		  lstGastos.getColumn("nacional").setHidden(true);
 		  lstGastos.getColumn("tipo").setHidden(true);
 		  lstGastos.getColumn("estadoGasto").setHidden(true);
+		  lstGastos.getColumn("anulado").setHidden(true);
 		  
 		lstGastos.setColumnOrder("nroDocum", "referencia", "simboloMoneda", "impTotMo", "codProceso");
 		
