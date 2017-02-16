@@ -639,7 +639,7 @@ public class MenuExtended extends Menu{
 				
 				RepChequesxClienteViewExtended form = new RepChequesxClienteViewExtended();
 				
-				sub = new MySub("450px","450px");
+				sub = new MySub("270px","500px");
 				
 				sub.setModal(true);
 				
@@ -749,7 +749,7 @@ public class MenuExtended extends Menu{
 				
 				RepEstadoCuentaViewExtended form = new RepEstadoCuentaViewExtended();
 				
-				sub = new MySub("260px","300px");
+				sub = new MySub("270px","500px");
 				
 				sub.setModal(true);
 				

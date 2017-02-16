@@ -494,6 +494,8 @@ public class DAOEgresoCobro implements IDAOEgresoCobro{
 	    	pstmt1.setLong(1, cab.getNroTrans());
 			rs = pstmt1.executeQuery();
 			
+			String s = pstmt1.toString();
+			
 			IngresoCobroLinea aux;
 			
 			while(rs.next ()) {
@@ -547,6 +549,7 @@ public class DAOEgresoCobro implements IDAOEgresoCobro{
 				aux.setOperacion(rs.getString("operacion"));
 				aux.setLinea(rs.getInt("linea"));
 				aux.setEstadoGasto(rs.getString("estado"));
+				aux.setAnulado(rs.getString("anulado")); 
 				
 				
 				lst.add(aux);

@@ -1208,7 +1208,7 @@ public class Consultas {
 		sb.append("m_rubros.cod_rubro, m_rubros.descripcion nom_rubro, d_egrcobro.cuenta, fec_doc, fec_valor, m_monedas.cod_moneda, m_monedas.simbolo, m_monedas.descripcion nom_moneda ");
 		sb.append(", m_impuestos.cod_impuesto, m_impuestos.descripcion nom_impuesto, m_impuestos.porcentaje, d_egrcobro.imp_impu_mn,  ");
 		sb.append("d_egrcobro.imp_impu_mo, d_egrcobro.imp_sub_mn, d_egrcobro.imp_sub_mo, d_egrcobro.imp_tot_mn, d_egrcobro.imp_tot_mo, d_egrcobro.tc_mov, d_egrcobro.referencia,  ");
-		sb.append("d_egrcobro.referencia2, d_egrcobro.nro_trans, d_egrcobro.fecha_mod, d_egrcobro.usuario_mod, d_egrcobro.operacion, d_egrcobro.linea, c_gastos.estado ");
+		sb.append("d_egrcobro.referencia2, d_egrcobro.nro_trans, d_egrcobro.fecha_mod, d_egrcobro.usuario_mod, d_egrcobro.operacion, d_egrcobro.linea, c_gastos.estado, c_gastos.anulado ");
 		
 		
 		sb.append("FROM d_egrcobro, m_monedas, m_impuestos, m_rubros, m_cuentas, c_gastos  ");
@@ -1464,7 +1464,7 @@ public class Consultas {
 		sb.append("WHERE c_facturas.cod_emp = ?  "); 
 		sb.append("AND c_facturas.cod_proceso = ?  "); 
 		
-		
+		sb.append("AND NOT EXISTS (SELECT * FROM d_notacred d WHERE d.cod_emp = c_facturas.cod_emp AND d.cod_docum = c_facturas.cod_docum AND d.serie_docum = c_facturas.serie_docum AND d.nro_docum = c_facturas.nro_docum )  "); 
 		
 		return sb.toString();
 	}

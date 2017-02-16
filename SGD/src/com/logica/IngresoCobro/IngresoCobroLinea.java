@@ -70,6 +70,7 @@ public IngresoCobroDetalleVO retornarDatosDocumVO(){
 		aux.setEstadoGasto(this.getEstadoGasto());
 		
 		aux.setNroTrans(this.getNroTrans());
+		aux.setAnulado(this.getAnulado());
 		
 		return aux;
 	}
