@@ -424,7 +424,20 @@ public class ConsultasDD {
 		sb.append("INSERT INTO vaadin.m_monedas (cod_moneda, descripcion ");
 		sb.append(", simbolo, acepta_cotizacion, activo, fecha_mod ");
 		sb.append(", usuario_mod, operacion, cod_emp, nacional) ");
-		sb.append("VALUES ('2', 'Dolares', 'U$S', 1, 1, NOW(), 'SISTE', 'EDITAR', ?, 0) ");
+		sb.append("VALUES ('2', 'Dolares', 'U$S', 1, 1, NOW(), 'SISTE', 'NUEVO', ?, 0) ");
+		
+		return sb.toString();
+	}
+	
+	public String insMonedaNacional(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+	
+		sb.append("INSERT INTO vaadin.m_monedas (cod_moneda, descripcion ");
+		sb.append(", simbolo, acepta_cotizacion, activo, fecha_mod ");
+		sb.append(", usuario_mod, operacion, cod_emp, nacional) ");
+		sb.append("VALUES ('1', 'Pesos', '$', 1, 1, NOW(), 'SISTE', 'NUEVO', ?, 1) ");
 		
 		return sb.toString();
 	}
@@ -1804,6 +1817,52 @@ public class ConsultasDD {
 		
 		sb.append(" AND c_gastos.cod_tit = ? "
 				+ " AND sa_docum.imp_tot_mo <> 0 ");
+				
+		return sb.toString();
+	}
+	
+	public String getGastosSinMedioDePago(){
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("SELECT c_gastos.fecDoc, c_gastos.cod_docum, c_gastos.serie_docum, "
+				+ "c_gastos.nro_docum, c_gastos.cod_emp, c_gastos.referencia, "
+				+ "c_gastos.nro_trans, c_gastos.fecValor, c_gastos.cod_proceso, "
+				+ "c_gastos.referenciaDetalle, c_gastos.imp_impu_mn, c_gastos.imp_impu_mo, "
+				+ "c_gastos.imp_sub_mn, c_gastos.imp_sub_mo, sa_docum.imp_tot_mn, "
+				+ "sa_docum.imp_tot_mo, c_gastos.tc_mov, c_gastos.cuenta, "
+				+ "c_gastos.fecha_mod, c_gastos.usuario_mod, c_gastos.operacion, "
+				+ "m_titulares.cod_tit, m_titulares.nom_tit, "
+				+ "m_monedas.cod_moneda, m_monedas.descripcion, m_monedas.simbolo, "
+				+ "m_cuentas.cod_cuenta, m_cuentas.descripcion, "
+				+ "m_rubros.cod_rubro, m_rubros.descripcion, m_rubros.cod_tipo_rubro, m_rubros.cod_impuesto, "
+				+ "m_impuestos.cod_impuesto, m_impuestos.descripcion, m_impuestos.porcentaje, "
+				+ "c_procesos.descripcion, m_monedas.nacional, c_gastos.anulado ");
+		
+		sb.append("FROM c_gastos"
+				+ " INNER JOIN  m_titulares ON c_gastos.cod_tit = m_titulares.cod_tit AND c_gastos.cod_emp = m_titulares.cod_emp  "
+				+ " INNER JOIN m_cuentas ON c_gastos.cod_cuenta = m_cuentas.cod_cuenta AND c_gastos.cod_emp = m_cuentas.cod_emp "
+				+ " INNER JOIN m_rubros ON c_gastos.cod_rubro = m_rubros.cod_rubro AND c_gastos.cod_emp = m_rubros.cod_emp "
+				+ " INNER JOIN m_monedas ON c_gastos.cod_moneda = m_monedas.cod_moneda AND c_gastos.cod_emp = m_monedas.cod_emp "
+				+ " INNER JOIN m_impuestos ON c_gastos.cod_impuesto = m_impuestos.cod_impuesto AND c_gastos.cod_emp = m_impuestos.cod_emp "
+				+ " INNER JOIN c_procesos ON c_gastos.cod_proceso = c_procesos.cod_proceso AND c_gastos.cod_emp = c_procesos.cod_emp "
+				+" INNER JOIN sa_docum ON c_gastos.cod_docum = sa_docum.cod_docum  "
+				+" AND c_gastos.serie_docum = sa_docum.serie_docum "
+				+" AND c_gastos.nro_docum = sa_docum.nro_docum "
+				+" AND c_gastos.cod_emp = sa_docum.cod_emp "
+				+" AND c_gastos.cod_tit = sa_docum.cod_tit "
+				+ " AND c_gastos.cod_emp = ?  AND c_gastos.anulado = 'N' "); 
+		
+		
+		sb.append(" AND c_gastos.cod_tit = ? "
+				+ " AND sa_docum.imp_tot_mo <> 0 ");
+		
+		/*Obtenemos los gastos que no esten en un igreso de cobro*/
+		sb.append("AND c_gastos.nro_trans IN (SELECT nro_trans FROM c_gastos j WHERE NOT EXISTS (SELECT * FROM d_egrcobro k  ");
+		sb.append("WHERE j.cod_emp = k.cod_emp  ");
+		sb.append("AND j.cod_docum = k.cod_docum ");
+		sb.append("AND j.serie_docum = k.serie_docum  ");
+		sb.append("AND j.nro_docum = k.nro_docum)) ");
 				
 		return sb.toString();
 	}

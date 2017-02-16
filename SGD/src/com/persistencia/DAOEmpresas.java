@@ -125,6 +125,14 @@ public class DAOEmpresas implements IDAOEmpresas{
 			pstmMonDolares.executeUpdate();
 			pstmMonDolares.close();
 			
+			/*Insertamos Moneda pesos 1 nacional (se puede editar luego el simbolo y el nombre)*/ 
+			String mon1 = clts.insMonedaNacional();
+			PreparedStatement pstmmon1;
+			pstmmon1 = con.prepareStatement(mon1);
+			pstmmon1.setString(1, codEmp);
+			pstmmon1.executeUpdate();
+			pstmmon1.close();
+			
 			/*Insertamos Banco no asignado*/
 			pstmBcoNoAsig = con.prepareStatement(insertBcoNoAsignado);
 			pstmBcoNoAsig.setString(1, codEmp);

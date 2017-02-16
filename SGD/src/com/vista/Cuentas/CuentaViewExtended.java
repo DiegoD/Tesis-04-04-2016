@@ -58,6 +58,7 @@ public class CuentaViewExtended extends CuentaView{
 		this.lstRubrosAgregar = new ArrayList<RubroVO>();
 		
 		this.inicializarForm();
+	
 		
 		/*Inicializamos listener de boton aceptar*/
 		this.aceptar.addClickListener(click -> {
@@ -760,6 +761,8 @@ public class CuentaViewExtended extends CuentaView{
 		{
 		
 			com.vaadin.ui.Grid.HeaderRow filterRow = lstRubros.appendHeaderRow();
+			
+			
 	
 			// Set up a filter for all columns
 			for (Object pid: lstRubros.getContainerDataSource()
@@ -793,6 +796,8 @@ public class CuentaViewExtended extends CuentaView{
 				    cell.setComponent(filterField);
 				}
 			}
+			
+			
 			
 		}catch(Exception e)
 		{

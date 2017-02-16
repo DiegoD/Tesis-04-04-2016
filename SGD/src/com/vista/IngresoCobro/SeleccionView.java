@@ -21,6 +21,7 @@ import com.vaadin.ui.declarative.Design;
 public class SeleccionView extends FormLayout {
 	protected OptionGroup operacion;
 	protected OptionGroup operacion_Factura;
+	protected OptionGroup operacion_Egreso;
 	protected Button aceptar;
 	protected Button cancelar;
 

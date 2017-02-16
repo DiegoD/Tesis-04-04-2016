@@ -64,6 +64,7 @@ import com.vista.Variables;
 import com.vista.VariablesPermisos;
 import com.vista.Gastos.GastoViewExtended;
 import com.vista.Gastos.IGastosMain;
+import com.vista.IngresoCobro.SeleccionViewExtended;
 import com.vista.Validaciones.Validaciones;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
@@ -1073,49 +1074,31 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		
 		/*Inicalizamos listener para boton de Agregar gastos a cobrar*/
 		this.btnAgregar.addClickListener(click -> {
-						
+			
 			if(this.codTitular.getValue() != null && this.codTitular.getValue() != "" 
 					&& this.fecValor.getValue() != null && this.comboMoneda.getValue() != null)
 			{
-				try {
 				
-					GastoViewExtended form = new GastoViewExtended(Variables.OPERACION_NUEVO, this, titularVO, "Egreso");
-					
-					sub = new MySub("1000px","900px");
-					sub.setModal(true);
-					//sub.setVista(form);
-					sub.setVista((Component) form);
-					sub.setHeight("900px");
-					sub.setWidth("650px");
-					sub.center();
-					
-					String codCliente;/*Codigo del cliente para obtener los gastos a cobrar del mismo*/
-					
-					/*Obtenemos los formularios que no estan en el grupo
-					 * para mostrarlos en la grilla para seleccionar*/
-					if(this.operacion.equals(Variables.OPERACION_NUEVO) )
-					{
-						/*Si la operacion es nuevo, ponemos el  codGrupo vacio
-						 * asi nos trae todos los grupos disponibles*/
-						codCliente = this.codTitular.getValue().toString().trim();
-					}
-					else 
-					{
-						/*Si es operacion Editar tomamos el codGrupo de el fieldGroup*/
-						codCliente = fieldGroup.getItemDataSource().getBean().getCodTitular();
-					}
-					
-					
-					UI.getCurrent().addWindow(sub);
+				SeleccionViewExtended form = new SeleccionViewExtended(this);
+				
+				sub = new MySub("210px", "270px" );
+				sub.setModal(true);
+				sub.center();
+				sub.setModal(true);
+				sub.setVista(form);
+				sub.center();
+				sub.setClosable(false);
+				sub.setResizable(false);
+				sub.setDraggable(true);
+				UI.getCurrent().addWindow(sub);
+				
 
-				}
-				catch(Exception e){
-					Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
-				}
 			}
 			else{
 				Mensajes.mostrarMensajeError("Debe ingresar los datos de cabecera");
 			}
+		
+			
 		});
 			
 		this.cancelar.addClickListener(click -> {
@@ -3465,6 +3448,132 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 	      } catch (NumberFormatException e) {  
 	         return false;  
 	      }  
+	}
+	
+	public void agregarGasto(){
+		try {
+		
+		UI.getCurrent().removeWindow(sub);
+		BusquedaViewExtended form = new BusquedaViewExtended(this, new GastoVO());
+		
+		sub = new MySub("450px", "880px" );
+		sub.setModal(true);
+		sub.setVista(form);
+
+		sub.center();
+		
+		String codCliente;/*Codigo del cliente para obtener los gastos a cobrar del mismo*/
+		int codProceso;
+		String codMoneda = null;
+		
+		/*Obtenemos moneda*/
+		MonedaVO auxMoneda = null;
+		
+		//Obtenemos la moneda del cabezal
+		auxMoneda = new MonedaVO();
+		if(this.comboMoneda.getValue() != null){
+			
+			auxMoneda = (MonedaVO) this.comboMoneda.getValue();
+			
+			codMoneda = auxMoneda.getCodMoneda(); 
+		}
+		
+		/*Obtenemos los formularios que no estan en el grupo
+		 * para mostrarlos en la grilla para seleccionar*/
+		if(this.operacion.equals(Variables.OPERACION_NUEVO) )
+		{
+			/*Si la operacion es nuevo, ponemos el  codGrupo vacio
+			 * asi nos trae todos los grupos disponibles*/
+			codCliente = this.codTitular.getValue().toString().trim();
+		}
+		else 
+		{
+			/*Si es operacion Editar tomamos el codGrupo de el fieldGroup*/
+			codCliente = fieldGroup.getItemDataSource().getBean().getCodTitular();
+			
+		}
+		
+		/*Inicializamos VO de permisos para el usuario, formulario y operacion
+		 * para confirmar los permisos del usuario*/
+		UsuarioPermisosVO permisoAux = 
+				new UsuarioPermisosVO(this.permisos.getCodEmp(),
+						this.permisos.getUsuario(),
+						VariablesPermisos.FORMULARIO_FACTURA,
+						VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		
+
+		/*Obtenemos los gastos sin medio de pago para el cliente*/
+		ArrayList<GastoVO> lstGastosConSaldo = this.controlador.getGastosSinMedioDePago(permisoAux, codCliente);
+		
+		/*Hacemos una lista auxliar para pasarselo al BusquedaViewExtended*/
+		ArrayList<Object> lst = new ArrayList<Object>();
+		Object obj;
+		for (GastoVO i: lstGastosConSaldo) {
+			
+			/*Verificamos que el gasto ya no esta en la grilla*/
+			if(!this.existeFormularioenLista(Integer.parseInt(i.getNroDocum())))
+			{
+				obj = new Object();
+				obj = (Object)i;
+				lst.add(obj);
+			}
+		}
+		
+		form.inicializarGrilla(lst);
+		
+		UI.getCurrent().addWindow(sub);
+
+		}catch(Exception e)
+		{
+			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+		}
+	}
+
+	public void agregarDetalle() {
+
+		if(this.codTitular.getValue() != null && this.codTitular.getValue() != "" 
+				&& this.fecValor.getValue() != null && this.comboMoneda.getValue() != null)
+		{
+			try {
+			
+				GastoViewExtended form = new GastoViewExtended(Variables.OPERACION_NUEVO, this, titularVO, "Egreso");
+				
+				sub = new MySub("1000px","900px");
+				sub.setModal(true);
+				//sub.setVista(form);
+				sub.setVista((Component) form);
+				sub.setHeight("900px");
+				sub.setWidth("650px");
+				sub.center();
+				
+				String codCliente;/*Codigo del cliente para obtener los gastos a cobrar del mismo*/
+				
+				/*Obtenemos los formularios que no estan en el grupo
+				 * para mostrarlos en la grilla para seleccionar*/
+				if(this.operacion.equals(Variables.OPERACION_NUEVO) )
+				{
+					/*Si la operacion es nuevo, ponemos el  codGrupo vacio
+					 * asi nos trae todos los grupos disponibles*/
+					codCliente = this.codTitular.getValue().toString().trim();
+				}
+				else 
+				{
+					/*Si es operacion Editar tomamos el codGrupo de el fieldGroup*/
+					codCliente = fieldGroup.getItemDataSource().getBean().getCodTitular();
+				}
+				
+				
+				UI.getCurrent().addWindow(sub);
+
+			}
+			catch(Exception e){
+				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			}
+		}
+		else{
+			Mensajes.mostrarMensajeError("Debe ingresar los datos de cabecera");
+		}
+		
 	}
 	
 }

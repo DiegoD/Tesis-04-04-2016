@@ -190,6 +190,15 @@ public class IngresoEgresoControlador {
 			throw new NoTienePermisosException();
 	}
 	
+	
+	public ArrayList<GastoVO> getGastosSinMedioDePago(UsuarioPermisosVO permisos, String cod_tit) throws ConexionException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ObteniendoGastosException{
+		
+		/*Primero se verifican los permisos*/
+		if(Fachada.getInstance().permisoEnFormulario(permisos))
+			return FachadaDD.getInstance().getGastosConSaldoCobrable(permisos.getCodEmp(), cod_tit);
+		else
+			throw new NoTienePermisosException();
+	}
 
 
 	
