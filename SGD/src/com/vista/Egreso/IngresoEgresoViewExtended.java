@@ -79,17 +79,23 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 	private ArrayList<IngresoCobroDetalleVO> lstDetalleVO; /*Lista de detalle del Cobro*/
 	private ArrayList<IngresoCobroDetalleVO> lstDetalleAgregar; /*Lista de detalle a agregar*/
 	private ArrayList<IngresoCobroDetalleVO> lstDetalleQuitar; /*Lista de detalle a agregar*/
+	private ArrayList<IngresoCobroDetalleVO> lstDetalleSinMedioDePago; /*Lista de detalle a agregar a la copia para modificar el gasto*/
 	private IngresoEgresoControlador controlador;
 	private String operacion;
 	private IngresoEgresoPanelExtended mainView;
 	BeanItemContainer<IngresoCobroDetalleVO> container;
 	private IngresoCobroDetalleVO formSelecccionado; /*Variable utilizada cuando se selecciona
 	 										  un detalle, para poder quitarlo de la lista*/
+	
+	private ArrayList<GtoSaldoAux> saldoOriginalGastosControl; /*Variable auxliar para poder
+	 															controlar que el saldo del gasto quede
+	 															en negativo*/
+	
 	UsuarioPermisosVO permisoAux;
 	CotizacionVO cotizacion =  new CotizacionVO();
 	Double cotizacionVenta = null;
 	TitularVO titularVO = new TitularVO();
-	private Hashtable<Integer, GtoSaldoAux> saldoOriginalGastos; /*Variable auxliar para poder
+	private Hashtable<Integer, GtoSaldoAux> saldoOriginalGastos; 	/*Variable auxliar para poder
 	 															 controlar que el saldo del gasto quede
 	 															 en negativo*/
 	
@@ -124,6 +130,8 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 	this.permisos = (PermisosUsuario)VaadinService.getCurrentRequest().getWrappedSession().getAttribute("permisos");
 	
 	saldoOriginalGastos = new Hashtable<Integer, GtoSaldoAux>();
+	saldoOriginalGastosControl = new ArrayList<GtoSaldoAux>();
+	
 	
 	this.operacion = opera;
 	this.mainView = main;
@@ -134,6 +142,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 	 * agregados*/
 	this.lstDetalleAgregar = new ArrayList<IngresoCobroDetalleVO>();
 	this.lstDetalleQuitar = new ArrayList<IngresoCobroDetalleVO>();
+	this.lstDetalleSinMedioDePago = new ArrayList<IngresoCobroDetalleVO>();
 	this.inicializarForm();
 	
 	
@@ -917,7 +926,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 					
 					
 					/*VER DE IMPLEMENTAR PARA EDITAR BORRO TODO E INSERTO NUEVAMENTE*/
-					this.controlador.modificarIngresoEgreso(ingCobroVO,ingresoCopia, permisoAux);
+					this.controlador.modificarIngresoEgreso(ingCobroVO,ingresoCopia, permisoAux, this.lstDetalleSinMedioDePago);
 					
 					this.mainView.actulaizarGrilla(ingCobroVO);
 					
@@ -2731,6 +2740,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 					if(cotizacionVenta != 0){
 						this.lstDetalleVO.add(g);
 						this.lstDetalleAgregar.add(g);
+						//this.lstDetalleSinMedioDePago.add(g);//LO AGREGAMOS PARA QUE EN LA MODIFICACION SE TOME ENCUENTA
 						
 					}
 					else{
@@ -2742,6 +2752,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		else{
 			this.lstDetalleVO.add(g);
 			this.lstDetalleAgregar.add(g);
+			//this.lstDetalleSinMedioDePago.add(g); //LO AGREGAMOS PARA QUE EN LA MODIFICACION SE TOME ENCUENTA
 		}
 		/*Actualizamos el container y la grilla*/
 		container.removeAllItems();
@@ -2874,9 +2885,106 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		return "Egreso";
 	}
 
+	/***
+	 * Nos retorna la linea maxima del detalle
+	 * para poder asignar correctamente la proxima linea
+	 * a la hora de quitar
+	 */
+	private int getLineaMaxima(){
+		
+		int max = 0;
+		
+		if(this.lstDetalleVO != null)
+		{
+			for (IngresoCobroDetalleVO d : this.lstDetalleVO) {
+				
+				if(d.getLinea() > max)
+					max = d.getLinea();
+				
+			}
+		}
+		
+		return max;
+	}
+	
 	@Override
 	public void setInfoLst(ArrayList<Object> lstDatos) {
 		// TODO Auto-generated method stub
+		
+		int j = 0;
+		boolean salir = false;
+		MonedaVO monedaVO;
+		
+		int linea = this.getLineaMaxima() + 1; /*Obtenemos linea maxima y sumamos uno*/
+		
+		
+		
+		IngresoCobroDetalleVO g;
+		for (Object obj : lstDatos) {
+			j = 0;
+			salir = false;
+			
+			g = new IngresoCobroDetalleVO();
+			g.copiar((DocumDetalleVO)obj);
+			g.setLinea(linea);
+			
+			if(!g.isNacional()){
+				
+				while(lstMonedas.size()>j && !salir){
+					monedaVO = new MonedaVO();
+					monedaVO = lstMonedas.get(j);
+					j++;
+					if(g.getCodMoneda().equals(monedaVO.getCodMoneda())){
+						salir = true;
+						
+						if(monedaVO.getCotizacion() != 0){
+							
+							this.lstDetalleVO.add(g);
+							this.lstDetalleAgregar.add(g);
+							/*OTRO*/
+							this.lstDetalleSinMedioDePago.add(g);
+							
+							/*Tambien agrefamos a la lista de los saldos originales
+							 * para poder controlar que no ingresen un saldo mayor al que tien el gasto*/
+							GtoSaldoAux saldoAux =  new GtoSaldoAux(Integer.parseInt(g.getNroDocum()), g.getImpTotMo());
+							//this.saldoOriginalGastos.add(saldoAux); VERACAAA
+							this.saldoOriginalGastosControl.add(saldoAux.getCopia());
+						}
+						else{
+							Mensajes.mostrarMensajeError("Debe ingresar la cotización de la moneda " + monedaVO.getDescripcion());
+						}
+					}
+				}
+			}
+			else{
+				this.lstDetalleVO.add(g);
+				this.lstDetalleAgregar.add(g);
+				/*OTRO*/
+				this.lstDetalleSinMedioDePago.add(g);
+				
+				/*Tambien agrefamos a la lista de los saldos originales
+				 * para poder controlar que no ingresen un saldo mayor al que tien el gasto*/
+				GtoSaldoAux saldoAux =  new GtoSaldoAux(Integer.parseInt(g.getNroDocum()), g.getImpTotMo());
+				//this.saldoOriginalGastos.add(saldoAux); VERACAAA
+				this.saldoOriginalGastosControl.add(saldoAux.getCopia());
+			}
+			
+			linea ++;
+			
+			if(lstDetalleVO.size() > 0){
+				this.tcMov.setEnabled(false);
+			}
+		}
+			
+		/*Actualizamos el container y la grilla*/
+		container.removeAllItems();
+		container.addAll(lstDetalleVO);
+		//lstFormularios.setContainerDataSource(container);
+		this.actualizarGrillaContainer(container);
+		
+		/*Calculamos el importe total de todos los gastos*/
+		
+		this.calcularImporteTotal();
 		
 	}
 	
@@ -3450,7 +3558,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 	      }  
 	}
 	
-	public void agregarGasto(){
+	public void asociarGastoSinMedioDePago(){
 		try {
 		
 		UI.getCurrent().removeWindow(sub);
@@ -3529,12 +3637,15 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		}
 	}
 
-	public void agregarDetalle() {
+	public void agregarNuevoGasto() {
 
+		UI.getCurrent().removeWindow(sub);
+		
 		if(this.codTitular.getValue() != null && this.codTitular.getValue() != "" 
 				&& this.fecValor.getValue() != null && this.comboMoneda.getValue() != null)
 		{
 			try {
+				
 			
 				GastoViewExtended form = new GastoViewExtended(Variables.OPERACION_NUEVO, this, titularVO, "Egreso");
 				

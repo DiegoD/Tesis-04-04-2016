@@ -86,6 +86,7 @@ import com.valueObject.Docum.DocumSaldoVO;
 import com.valueObject.Docum.FacturaVO;
 import com.valueObject.Docum.NotaCreditoVO;
 import com.valueObject.Docum.ReciboVO;
+import com.valueObject.IngresoCobro.IngresoCobroDetalleVO;
 import com.valueObject.IngresoCobro.IngresoCobroVO;
 import com.valueObject.Numeradores.NumeradoresVO;
 import com.valueObject.Saldos.SaCuentasVO;
@@ -2358,7 +2359,7 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 		}
 	}
 	
-	public void modificarEgresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) throws  ConexionException, ModificandoEgresoCobroException, ExisteEgresoCobroException, NoExisteEgresoCobroException{
+	public void modificarEgresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO, ArrayList<IngresoCobroDetalleVO> lstDetalleSinMedioDePago) throws  ConexionException, ModificandoEgresoCobroException, ExisteEgresoCobroException, NoExisteEgresoCobroException{
 	
 		Connection con = null;
 		
@@ -2372,6 +2373,13 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 			/*Verificamos que exista el nro de cobro*/
 			if(this.egresoCobro.memberEgresoCobro(ing.getNroDocum(), ingVO.getCodEmp(), con))
 			{
+				/*Agregamos a la copia la lista de los gastos sin medio de pago para que sean eliminados
+				 * para volver a ser insertados*/
+				for (IngresoCobroDetalleVO det : lstDetalleSinMedioDePago) {
+					copiaVO.getDetalle().add(det);
+				}
+				
+				
 				/*Primero eliminamos la transaccion, con la copia, para poder detectar las lineas
 				* eliminadas*/
 				this.eliminarEgresoCobroxModificacion(copiaVO, con); 

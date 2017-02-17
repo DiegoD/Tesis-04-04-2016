@@ -81,16 +81,19 @@ public class SeleccionViewExtended extends SeleccionView{
 	public SeleccionViewExtended(IngresoEgresoViewExtended main){
 		
 		this.operacion.setVisible(false);
+		this.operacion_Factura.setVisible(false);
 		
 		this.aceptar.addClickListener(click -> {
 			
-			if(operacion_Factura.getValue() != null){
-				if(this.operacion_Factura.getValue().equals("Agregar Gasto")){
-					main.agregarGasto();
+			if(operacion_Egreso.getValue() != null){
+				if(this.operacion_Egreso.getValue().equals("Agregar Gasto")){
+					
+					main.agregarNuevoGasto();
 				}
 				else{
 					
-					main.agregarDetalle();
+					main.asociarGastoSinMedioDePago();
+					
 					
 				}
 				

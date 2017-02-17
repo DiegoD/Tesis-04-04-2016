@@ -27,6 +27,7 @@ import com.valueObject.TitularVO;
 import com.valueObject.UsuarioPermisosVO;
 import com.valueObject.Cotizacion.CotizacionVO;
 import com.valueObject.Gasto.GastoVO;
+import com.valueObject.IngresoCobro.IngresoCobroDetalleVO;
 import com.valueObject.IngresoCobro.IngresoCobroVO;
 import com.valueObject.banco.BancoVO;
 import com.valueObject.banco.CtaBcoVO;
@@ -95,11 +96,11 @@ public class IngresoEgresoControlador {
 	 * Modifica los datos de un cobro
 	 * @throws NoExisteNotaCreditoException 
 	 */
-	public void modificarIngresoEgreso(IngresoCobroVO ingVO, IngresoCobroVO copiaVO, UsuarioPermisosVO permisos) throws ConexionException, ModificandoEgresoCobroException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ExisteEgresoCobroException, NoExisteEgresoCobroException 
+	public void modificarIngresoEgreso(IngresoCobroVO ingVO, IngresoCobroVO copiaVO, UsuarioPermisosVO permisos, ArrayList<IngresoCobroDetalleVO> lstDetalleSinMedioDePago) throws ConexionException, ModificandoEgresoCobroException, InicializandoException, ObteniendoPermisosException, NoTienePermisosException, ExisteEgresoCobroException, NoExisteEgresoCobroException 
 	{
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			Fachada.getInstance().modificarEgresoCobro(ingVO, copiaVO);
+			Fachada.getInstance().modificarEgresoCobro(ingVO, copiaVO, lstDetalleSinMedioDePago);
 		else
 			throw new NoTienePermisosException();
 	}
