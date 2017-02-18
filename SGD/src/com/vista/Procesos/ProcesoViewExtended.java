@@ -26,6 +26,7 @@ import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.validator.StringLengthValidator;
+import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinService;
 import com.vaadin.ui.UI;
 import com.valueObject.DocumentoAduaneroVO;
@@ -153,13 +154,18 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 					procesoVO.setFecha(new java.sql.Timestamp(fecha.getValue().getTime()));
 					
 					if(nroMega.getValue() != "" && nroMega.getValue() != null){
-						procesoVO.setNroMega((Integer) nroMega.getConvertedValue());
+						String aux;
+						aux = nroMega.getValue().replace(".", "");
+						
+						procesoVO.setNroMega((aux));
 					}
 					else{
-						procesoVO.setNroMega(0);
+						procesoVO.setNroMega("0");
 					}
 					
 					if(nroDocum.getValue() != "" && nroDocum.getValue() != null){
+						String aux;
+						aux = nroMega.getValue().replace(".", "");
 						procesoVO.setNroDocum(nroDocum.getValue());
 					}
 					else{
@@ -343,7 +349,7 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 			ProcesoObservacionesViewExtended form = new ProcesoObservacionesViewExtended(this, obseAux.getValue(), this.operacion);
 			try {
 			
-				sub = new MySub("400px", "350px" );
+				sub = new MySub("400px", "500px" );
 				sub.setModal(true);
 				sub.center();
 				sub.setModal(true);
@@ -857,6 +863,16 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 					&& this.comboDocumento.isValid() && this.comboMoneda.isValid())
 				valido = true;
 			
+			if(!this.tryParseInt(nroMega.getValue())){
+				nroMega.setComponentError(new UserError("Debe ingresar un número entero"));
+				valido = false;
+			}
+			if(!this.tryParseInt(nroDocum.getValue())){
+				nroDocum.setComponentError(new UserError("Debe ingresar un número entero"));
+				valido = false;
+			}
+			
+			
 		}catch(Exception e)
 		{
 			Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
@@ -1021,18 +1037,18 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 		Kilos.setConverter(Double.class);
 		Kilos.setConversionError("Error en formato de número");
 		
-		nroMega .setConverter(Integer.class);
-		nroMega .setConversionError("Ingrese un número entero");
+		//nroMega .setConverter(String.class);
+		//nroMega .setConversionError("Ingrese un número entero");
 		
-		nroDocum .setConverter(Integer.class);
-		nroDocum .setConversionError("Ingrese un número entero");
+		//nroDocum .setConverter(Integer.class);
+		//nroDocum .setConversionError("Ingrese un número entero");
 		
 		impMo.setData("ProgramaticallyChanged");
 		tcMov.setData("ProgramaticallyChanged");
 		
 	}
 
-	public MonedaVO seteaCotizaciones(MonedaVO monedaVO){
+	public MonedaVO seteaCotizaciones(MonedaVO monedaVO){	
 		
 		UsuarioPermisosVO permisosAux;
 		permisosAux = 
@@ -1062,5 +1078,14 @@ public class ProcesoViewExtended extends ProcesoView implements IBusqueda{
 			}
 		}
 		return monedaVO;
+	}
+	
+	boolean tryParseInt(String value) {  
+	     try {  
+	         Integer.parseInt(value);  
+	         return true;  
+	      } catch (NumberFormatException e) {  
+	         return false;  
+	      }  
 	}
 }

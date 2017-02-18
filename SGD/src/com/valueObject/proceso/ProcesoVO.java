@@ -19,7 +19,7 @@ public class ProcesoVO extends AuditoriaVO{
 
 	
 	private Timestamp fecha;
-	private int nroMega;
+	private String nroMega;
 	private String codDocum;
 	private String nomDocum;
 	private String nroDocum;
@@ -169,10 +169,10 @@ public class ProcesoVO extends AuditoriaVO{
 	public void setFecha(Timestamp timestamp) {
 		this.fecha = timestamp;
 	}
-	public int getNroMega() {
+	public String getNroMega() {
 		return nroMega;
 	}
-	public void setNroMega(int nroMega) {
+	public void setNroMega(String nroMega) {
 		this.nroMega = nroMega;
 	}
 	public String getCodDocum() {

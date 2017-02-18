@@ -15,7 +15,7 @@ public class Proceso extends Auditoria{
 	
 	private int codigo;
 	private Timestamp fecha;
-	private int nroMega;
+	private String nroMega;
 	private int nroDocum;
 	private Timestamp fecDocum;
 	private String carpeta;
@@ -33,7 +33,7 @@ public class Proceso extends Auditoria{
 	public Proceso(){}
 	
 	
-	public Proceso(ClienteInfo clienteInfo, DocumentoAduanero documento, int codigo, Timestamp fecha, int nroMega,
+	public Proceso(ClienteInfo clienteInfo, DocumentoAduanero documento, int codigo, Timestamp fecha, String nroMega,
 			Integer nroDocum, Timestamp fecDocum, String carpeta, double impMo, double impMn, double impTr, double tcMov,
 			double kilos, Timestamp fecCruce, String marca, String medio, String descripcion, String observaciones,
 			MonedaInfo monedaInfo) {
@@ -151,10 +151,10 @@ public class Proceso extends Auditoria{
 	public void setFecha(Timestamp fecha) {
 		this.fecha = fecha;
 	}
-	public int getNroMega() {
+	public String getNroMega() {
 		return nroMega;
 	}
-	public void setNroMega(int nroMega) {
+	public void setNroMega(String nroMega) {
 		this.nroMega = nroMega;
 	}
 //	public String getCodDocum() {

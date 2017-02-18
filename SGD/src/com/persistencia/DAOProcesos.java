@@ -52,7 +52,7 @@ public class DAOProcesos implements IDAOProcesos{
 				aux.setFecha(rs.getTimestamp(2));
 				aux.setNroDocum(rs.getInt(3));
 				aux.setFecDocum(rs.getTimestamp(4));
-				aux.setNroMega(rs.getInt(5));
+				aux.setNroMega(rs.getString(5));
 				aux.setCarpeta(rs.getString(6));
 				aux.setImpMo(rs.getDouble(7));
 				aux.setImpMn(rs.getDouble(8));
@@ -121,7 +121,7 @@ public class DAOProcesos implements IDAOProcesos{
 				aux.setFecha(rs.getTimestamp(2));
 				aux.setNroDocum(rs.getInt(3));
 				aux.setFecDocum(rs.getTimestamp(4));
-				aux.setNroMega(rs.getInt(5));
+				aux.setNroMega(rs.getString(5));
 				aux.setCarpeta(rs.getString(6));
 				aux.setImpMo(rs.getDouble(7));
 				aux.setImpMn(rs.getDouble(8));
@@ -193,7 +193,7 @@ public class DAOProcesos implements IDAOProcesos{
 				aux.setFecha(rs.getTimestamp(2));
 				aux.setNroDocum(rs.getInt(3));
 				aux.setFecDocum(rs.getTimestamp(4));
-				aux.setNroMega(rs.getInt(5));
+				aux.setNroMega(rs.getString(5));
 				aux.setCarpeta(rs.getString(6));
 				aux.setImpMo(rs.getDouble(7));
 				aux.setImpMn(rs.getDouble(8));
@@ -260,7 +260,7 @@ public class DAOProcesos implements IDAOProcesos{
 				aux.setFecha(rs.getTimestamp(2));
 				aux.setNroDocum(rs.getInt(3));
 				aux.setFecDocum(rs.getTimestamp(4));
-				aux.setNroMega(rs.getInt(5));
+				aux.setNroMega(rs.getString(5));
 				aux.setCarpeta(rs.getString(6));
 				aux.setImpMo(rs.getDouble(7));
 				aux.setImpMn(rs.getDouble(8));
@@ -354,7 +354,7 @@ public class DAOProcesos implements IDAOProcesos{
 			pstmt1.setTimestamp(1, proceso.getFecha());
 			pstmt1.setInt(2, proceso.getNroDocum());
 			pstmt1.setTimestamp(3, proceso.getFecDocum());
-			pstmt1.setInt(4, proceso.getNroMega());
+			pstmt1.setInt(4, Integer.parseInt(proceso.getNroMega()));
 			pstmt1.setString(5, proceso.getCarpeta());
 			pstmt1.setDouble(6, proceso.getImpMo());
 			pstmt1.setDouble(7, proceso.getImpMn());
@@ -407,7 +407,7 @@ public class DAOProcesos implements IDAOProcesos{
 			pstmt1.setTimestamp(1, proceso.getFecha());
 			pstmt1.setInt(2, proceso.getNroDocum());
 			pstmt1.setTimestamp(3, proceso.getFecDocum());
-			pstmt1.setInt(4, proceso.getNroMega());
+			pstmt1.setInt(4, Integer.parseInt(proceso.getNroMega()));
 			pstmt1.setString(5, proceso.getCarpeta());
 			pstmt1.setDouble(6, proceso.getImpMo());
 			pstmt1.setDouble(7, proceso.getImpMn());
@@ -487,7 +487,7 @@ public class DAOProcesos implements IDAOProcesos{
 				aux.setFecha(rs.getTimestamp(2));
 				aux.setNroDocum(rs.getInt(3));
 				aux.setFecDocum(rs.getTimestamp(4));
-				aux.setNroMega(rs.getInt(5));
+				aux.setNroMega(rs.getString(5));
 				aux.setCarpeta(rs.getString(6));
 				aux.setImpMo(rs.getDouble(7));
 				aux.setImpMn(rs.getDouble(8));
