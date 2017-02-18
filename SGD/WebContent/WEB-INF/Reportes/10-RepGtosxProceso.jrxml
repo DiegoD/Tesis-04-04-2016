@@ -35,7 +35,7 @@
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["C:\\Users\\User\\Tesis3\\Repositorio\\trunk\\SGD\\WebContent\\WEB-INF\\Reportes\\"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<parameter name="codProceso" class="java.lang.String"/>
 	<queryString>
@@ -59,7 +59,7 @@ g.nro_docum
 ,(SELECT imp_tot_mo FROM sa_docum sa WHERE  sa.cod_docum = g.cod_docum AND sa.serie_docum = g.serie_docum AND sa.nro_docum = g.nro_docum AND sa.cod_emp = g.cod_emp) saldo
 FROM c_gastos g,  c_procesos c
 WHERE g.cod_proceso = c.cod_proceso AND (g.cod_emp = c.cod_emp OR g.cod_proceso = '0')
-AND g.cod_tit = $P{codTit} AND g.estado <> 'nocobr' AND g.anulado = 'N' AND g.cod_emp = $P{codEmp} AND g.fecDoc <= $P{fecHasta} AND ( g.cod_moneda = $P{codMoneda} OR $P{codMoneda} = 'TODAS' ) ) AUX WHERE cod_proceso = $P{codProceso} ORDER BY moneda, imp_tot_mo DESC ]]>
+AND g.cod_tit = $P{codTit} AND g.estado <> 'nocobr' AND g.anulado = 'N' AND g.cod_emp = $P{codEmp} AND g.fecDoc <= $P{fecHasta} AND ( g.cod_moneda = $P{codMoneda} OR $P{codMoneda} = 'TODAS' ) ) AUX WHERE cod_proceso = $P{codProceso} ORDER BY moneda, imp_tot_mo DESC]]>
 	</queryString>
 	<field name="nro_docum" class="java.lang.Integer">
 		<fieldDescription><![CDATA[]]></fieldDescription>
@@ -271,14 +271,14 @@ AND g.cod_tit = $P{codTit} AND g.estado <> 'nocobr' AND g.anulado = 'N' AND g.co
 		<band height="79" splitType="Stretch">
 			<subreport>
 				<reportElement x="359" y="11" width="295" height="68" uuid="fd35293d-9910-4e81-9cb1-0932cd614b86"/>
-				<subreportParameter name="codTit">
-					<subreportParameterExpression><![CDATA[$P{codTit}]]></subreportParameterExpression>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="REPORTS_DIR">
 					<subreportParameterExpression><![CDATA[$P{REPORTS_DIR}]]></subreportParameterExpression>
 				</subreportParameter>
-				<subreportParameter name="SUBREPORT_DIR">
-					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				<subreportParameter name="codTit">
+					<subreportParameterExpression><![CDATA[$P{codTit}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="codMoneda">
 					<subreportParameterExpression><![CDATA[$P{codMoneda}]]></subreportParameterExpression>
@@ -292,11 +292,11 @@ AND g.cod_tit = $P{codTit} AND g.estado <> 'nocobr' AND g.anulado = 'N' AND g.co
 				<subreportParameter name="nomTit">
 					<subreportParameterExpression><![CDATA[$P{nomTit}]]></subreportParameterExpression>
 				</subreportParameter>
-				<subreportParameter name="codProceso">
-					<subreportParameterExpression><![CDATA[$P{codProceso}]]></subreportParameterExpression>
-				</subreportParameter>
 				<subreportParameter name="fecHasta">
 					<subreportParameterExpression><![CDATA[$P{fecHasta}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="codProceso">
+					<subreportParameterExpression><![CDATA[$P{codProceso}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "10-RepGtosxProceso_TOTALES.jasper"]]></subreportExpression>
