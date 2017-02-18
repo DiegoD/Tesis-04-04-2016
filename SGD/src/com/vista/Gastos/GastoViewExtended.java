@@ -1507,7 +1507,7 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		this.impImpuMn.setEnabled(false);
 		this.impImpuMo.setReadOnly(false);
 		this.impImpuMo.setEnabled(false);
-		this.impTotMn.setReadOnly(true);
+		this.impTotMn.setReadOnly(false);
 		this.impTotMn.setEnabled(false);
 		
 		this.impTotMo.setReadOnly(false); //ESTE
