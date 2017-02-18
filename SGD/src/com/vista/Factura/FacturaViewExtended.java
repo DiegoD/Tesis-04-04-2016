@@ -583,6 +583,18 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 								VariablesPermisos.FORMULARIO_FACTURA,
 								VariablesPermisos.OPERACION_NUEVO_EDITAR);				
 				
+				try {
+					if(!val.validaPeriodo(fecValor.getValue(), permisoAux)){
+						String fecha = new SimpleDateFormat("dd/MM/yyyy").format(fecValor.getValue());
+						fecValor.setData("ProgramaticallyChanged");
+						fecValor.setValue(null);
+						Mensajes.mostrarMensajeError("El período está cerrado para la fecha " + fecha);
+						return;
+					}
+				} catch (Exception e1) {
+					Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+				}
+				
 				if(!this.chkDiferencia.getValue()){
 					int comp = Double.compare(importeTotalCalculado, (Double)impTotMo.getConvertedValue());
 					
@@ -751,7 +763,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 					
 					this.mainView.actulaizarGrilla();
 					
-					Mensajes.mostrarMensajeOK("Se ha modificado el Cobro");
+					Mensajes.mostrarMensajeOK("Se ha modificado la factura");
 					main.cerrarVentana();
 					
 				}

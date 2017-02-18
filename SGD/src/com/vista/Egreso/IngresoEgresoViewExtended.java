@@ -653,6 +653,18 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 								VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
 								VariablesPermisos.OPERACION_NUEVO_EDITAR);				
 				
+				try {
+					if(!val.validaPeriodo(fecValor.getValue(), permisoAux)){
+						String fecha = new SimpleDateFormat("dd/MM/yyyy").format(fecValor.getValue());
+						fecValor.setData("ProgramaticallyChanged");
+						fecValor.setValue(null);
+						Mensajes.mostrarMensajeError("El período está cerrado para la fecha " + fecha);
+						return;
+					}
+				} catch (Exception e1) {
+					Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+				}
+				
 				if(!this.chkDiferencia.getValue()){
 					int comp = Double.compare(importeTotalCalculado, (Double)impTotMo.getConvertedValue());
 					
@@ -1269,7 +1281,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 			    	}
 					
 			    	GastoViewExtended form = new GastoViewExtended(Variables.OPERACION_LECTURA, this, titularVO, "Egreso");
-			    	sub = new MySub("900px","650px");
+			    	sub = new MySub("600px","620px");
 					sub.setModal(true);
 					sub.setVista((Component) form);
 					/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
@@ -3669,7 +3681,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 			
 				GastoViewExtended form = new GastoViewExtended(Variables.OPERACION_NUEVO, this, titularVO, "Egreso");
 				
-				sub = new MySub("1000px","900px");
+				sub = new MySub("600px","620px");
 				sub.setModal(true);
 				//sub.setVista(form);
 				sub.setVista((Component) form);

@@ -715,6 +715,18 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 								VariablesPermisos.FORMULARIO_RECIBO,
 								VariablesPermisos.OPERACION_NUEVO_EDITAR);				
 				
+				try {
+					if(!val.validaPeriodo(fecValor.getValue(), permisoAux)){
+						String fecha = new SimpleDateFormat("dd/MM/yyyy").format(fecValor.getValue());
+						fecValor.setData("ProgramaticallyChanged");
+						fecValor.setValue(null);
+						Mensajes.mostrarMensajeError("El período está cerrado para la fecha " + fecha);
+						return;
+					}
+				} catch (Exception e1) {
+					Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+				}
+				
 				this.calcularImporteTotal(); /*Calculamos nuevamente por si se cambio en grilla el importe de un gasto*/		
 				
 				if(!this.chkDiferencia.getValue()){

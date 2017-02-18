@@ -596,6 +596,18 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 								VariablesPermisos.OPERACION_NUEVO_EDITAR);				
 				
 				
+				try {
+					if(!val.validaPeriodo(fecValor.getValue(), permisoAux)){
+						String fecha = new SimpleDateFormat("dd/MM/yyyy").format(fecValor.getValue());
+						fecValor.setData("ProgramaticallyChanged");
+						fecValor.setValue(null);
+						Mensajes.mostrarMensajeError("El período está cerrado para la fecha " + fecha);
+						return;
+					}
+				} catch (Exception e1) {
+					Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+				}
+				
 				IngresoCobroVO ingCobroVO = new IngresoCobroVO();	
 				
 				ingCobroVO.setImpTotMo((Double) impTotMo.getConvertedValue());
