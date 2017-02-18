@@ -172,4 +172,6 @@ public class Validaciones {
 		validaciones = new ValidacionesControlador();
 		return validaciones.existeNCFactura(nro_docum, serie_docum, permisos);
 	}
+	
+	
 }

@@ -988,7 +988,27 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 					
 					if(val.existeGastoIngresoCobro(permisoAux, Integer.valueOf(detVO.getNroDocum()))){
 						UI.getCurrent().removeWindow(sub);
-						Mensajes.mostrarMensajeError("El gasto está asociado a un cobro");
+						Mensajes.mostrarMensajeError("Uno o mas gastos están asociados a un cobro");
+						return;
+					}
+					
+					
+				} catch (NumberFormatException e) {
+					// TODO Auto-generated catch block
+					Mensajes.mostrarMensajeError(e.toString());
+				}
+				
+			}
+			
+			
+			/*Esto lo mismo pero si esta facturado*/
+			for (IngresoCobroDetalleVO detVO : this.lstDetalleVO) {
+				
+				try {
+					
+					if(val.existeFacturaGasto(permisoAux, Integer.valueOf(detVO.getNroDocum()))){
+						UI.getCurrent().removeWindow(sub);
+						Mensajes.mostrarMensajeError("Uno o mas gastos están asociados a una factura");
 						return;
 					}
 					

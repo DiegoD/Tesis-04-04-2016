@@ -358,9 +358,11 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		this.btnEditar.addClickListener(click -> {
 				
 			int mes, anio;
+			String formdesde= "";
 			try {
 				
-				
+				if(mainView!= null)
+					formdesde = mainView.nomForm(); //Egreso
 			
 				permisoAux = 
 						new UsuarioPermisosVO(this.permisos.getCodEmp(),
@@ -376,12 +378,19 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 				}
 				
 				try {
-					if(val.existeEgreso(permisoAux, Integer.valueOf(nroDocum.getValue()))){
-						Mensajes.mostrarMensajeError("Existe un egreso asociado al gasto");
-						return;
+					
+					/*Si es distinto de egreso el form desde
+					 * si lo es no controlamos porque se llama desde el egreso mismo*/
+					if(!formdesde.equals("Egreso")){
+					
+						if(val.existeEgreso(permisoAux, Integer.valueOf(nroDocum.getValue()))){
+							Mensajes.mostrarMensajeError("Existe un egreso asociado al gasto");
+							return;
+						}
 					}
+					
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
+
 					Mensajes.mostrarMensajeError(e.getMessage());
 				}
 				
@@ -1500,8 +1509,10 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		this.impImpuMo.setEnabled(false);
 		this.impTotMn.setReadOnly(true);
 		this.impTotMn.setEnabled(false);
-		this.impTotMo.setReadOnly(true);
-		this.impTotMo.setEnabled(false);
+		
+		this.impTotMo.setReadOnly(false); //ESTE
+		this.impTotMo.setEnabled(true); //ESTE
+		
 		this.referencia.setReadOnly(false);
 		
 		this.codProceso.setReadOnly(false);
