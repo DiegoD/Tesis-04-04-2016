@@ -2020,6 +2020,7 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 		boolean existe = false;
 		NumeradoresVO codigos = new NumeradoresVO();
 		
+		long nroTransAux; /*utilizado para mantener la transaccion anterior de los gastos a asignar medio de pago*/
 		
 		try 
 		{
@@ -2058,12 +2059,29 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 				
 					if(docum.getCodDocum().equals("Gasto")){ /*Para los gastos modificamos el saldo al documento*/
 						
+						/*Si es para asignar medio de pago, nos quedamos con la trans anterior
+						 * para poder modificarlo y con el estado*/
+						nroTransAux = docum.getNroTrans();
+						
+						
+						
 						/*Seteamos el nroTrans con el del cabezal*/
 						docum.setNroTrans(codigos.getNumeroTrans());
 						
 						/*Seteamos el nroDocum del gasto*/
-						docum.setNroDocum(numeradores.getNumero(con, "02", codEmp));
-						
+						/*Si el gasto ya existe es porque se le asigno el medio de pago
+						 * entonces no tomamos desde el numerador si no que dejamos su numero*/
+
+						/*Si no existe es nuevo y tomamos desde el numeroador*/
+						if(!this.gastos.memberGastoxNro(docum.getNroDocum(), codEmp, con)){
+							docum.setNroDocum(numeradores.getNumero(con, "02", codEmp));
+						} 
+						else{/*De lo contrario dejamos su nro docum y lo eliminamos para 
+								luego volver a insertarlo*/
+							
+							this.gastos.eliminarGasto(nroTransAux, codEmp, con);
+							this.saldos.eliminarSaldo(docum, con);
+						}
 						
 						/*Ingresamos cada uno de los Gastos*/
 						//this.gastos.insertarGasto((Gasto)docum, codEmp, con);

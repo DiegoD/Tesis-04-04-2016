@@ -52,4 +52,8 @@ public interface IDAOGastos {
 	public void anularGastoPK(int nroDocum, String serieDocum, String codDocum, String codEmp, Connection con, boolean anula) throws EliminandoGastoException, ConexionException;
 	
 	public ArrayList<Gasto> getGastosSinMedioDePago(Connection con, String codEmp, String codTit) throws ObteniendoGastosException, ConexionException;
+	
+	public boolean memberGastoxNro(int nroGasto, String codEmp, Connection con)
+			throws ExisteGastoException, ConexionException;
+
 }

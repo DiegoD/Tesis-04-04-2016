@@ -229,6 +229,39 @@ public class DAOGastos implements IDAOGastos{
 		}
 	}
 	
+	@Override
+	public boolean memberGastoxNro(int nroGasto, String codEmp, Connection con)
+			throws ExisteGastoException, ConexionException {
+		// TODO Auto-generated method stub
+		boolean existe = false;
+		
+		try{
+			
+			
+			ConsultasDD consultas = new ConsultasDD();
+			String query = consultas.memberGastoxNro();
+			
+			PreparedStatement pstmt1 = con.prepareStatement(query);
+			
+			pstmt1.setInt(1, nroGasto);
+			pstmt1.setString(2, codEmp);
+			
+			ResultSet rs = pstmt1.executeQuery();
+			
+			if (rs.next ()) 
+				existe = true;
+						
+			rs.close ();
+			pstmt1.close ();
+			
+			return existe;
+			
+		}catch(SQLException e){
+			
+			throw new ExisteGastoException();
+		}
+	}
+	
 	public boolean existeGastoIngreso(String serieDocum, Integer nroDocum, String codEmp, Connection con)
 			throws ExisteGastoException, ConexionException {
 		// TODO Auto-generated method stub
@@ -583,7 +616,8 @@ public class DAOGastos implements IDAOGastos{
 					imp.setPorcentaje(rs.getDouble(35));
 					aux.setImpuestoInfo(imp);
 					aux.setDescProceso(rs.getString(36));
-					aux.setAnulado(rs.getString(37));
+					aux.setAnulado(rs.getString(38));
+					aux.setEstadoGasto(rs.getString(39));
 					
 					
 					lstGastos.add(aux);
@@ -656,7 +690,8 @@ public class DAOGastos implements IDAOGastos{
 					imp.setPorcentaje(rs.getDouble(35));
 					aux.setImpuestoInfo(imp);
 					aux.setDescProceso(rs.getString(36));
-					aux.setAnulado(rs.getString(37));
+					aux.setAnulado(rs.getString(38));
+					aux.setEstadoGasto(rs.getString(39));
 					
 					
 					lstGastos.add(aux);
@@ -685,7 +720,7 @@ public class DAOGastos implements IDAOGastos{
 			try {
 				
 		    	ConsultasDD clts = new ConsultasDD();
-		    	String query = clts.getGastosConSaldoCobrable();
+		    	String query = clts.getGastosSinMedioDePago();
 		    	PreparedStatement pstmt1 = con.prepareStatement(query);
 		    	
 		    	ResultSet rs;
@@ -693,6 +728,8 @@ public class DAOGastos implements IDAOGastos{
 		    	pstmt1.setString(1, codEmp);
 		    	pstmt1.setString(2, codTit);
 				rs = pstmt1.executeQuery();
+				
+				String s = pstmt1.toString();
 				
 				Gasto aux;
 				while(rs.next ()) {
@@ -729,7 +766,8 @@ public class DAOGastos implements IDAOGastos{
 					imp.setPorcentaje(rs.getDouble(35));
 					aux.setImpuestoInfo(imp);
 					aux.setDescProceso(rs.getString(36));
-					aux.setAnulado(rs.getString(37));
+					aux.setAnulado(rs.getString(38));
+					aux.setEstadoGasto(rs.getString(39));
 					
 					
 					lstGastos.add(aux);
@@ -803,7 +841,8 @@ public class DAOGastos implements IDAOGastos{
 					imp.setPorcentaje(rs.getDouble(35));
 					aux.setImpuestoInfo(imp);
 					aux.setDescProceso(rs.getString(36));
-					aux.setAnulado(rs.getString(37));
+					aux.setAnulado(rs.getString(38));
+					aux.setEstadoGasto(rs.getString(39));
 					
 					lstGastos.add(aux);
 					
@@ -879,7 +918,8 @@ public class DAOGastos implements IDAOGastos{
 					imp.setPorcentaje(rs.getDouble(35));
 					aux.setImpuestoInfo(imp);
 					aux.setDescProceso(rs.getString(36));
-					aux.setAnulado(rs.getString(37));
+					aux.setAnulado(rs.getString(38));
+					aux.setEstadoGasto(rs.getString(39));
 					
 					lstGastos.add(aux);
 					
@@ -955,7 +995,8 @@ public class DAOGastos implements IDAOGastos{
 					imp.setPorcentaje(rs.getDouble(35));
 					aux.setImpuestoInfo(imp);
 					aux.setDescProceso(rs.getString(36));
-					aux.setAnulado(rs.getString(37));
+					aux.setAnulado(rs.getString(38));
+					aux.setEstadoGasto(rs.getString(39));
 					
 					lstGastos.add(aux);
 					

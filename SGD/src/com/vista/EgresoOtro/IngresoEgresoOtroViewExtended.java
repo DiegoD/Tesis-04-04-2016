@@ -848,9 +848,12 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 					/*Si es edicion tomamos una copia del ingreso cobro, para detectar
 					 * que lineas del cobro se eliminaron*/
 					
+					/*Es una lista auxiliar utilizado por el Ingreso Egreso
+					 * y en esta clase no lo utilizamos, pero pasamos
+					 * la lista vacia ya que usan el mismo metodo*/
+					ArrayList<IngresoCobroDetalleVO> lstDetalleSinMedioDePago = new ArrayList<IngresoCobroDetalleVO>();
 					
-					/*VER DE IMPLEMENTAR PARA EDITAR BORRO TODO E INSERTO NUEVAMENTE*/
-					this.controlador.modificarIngresoEgreso(ingCobroVO,ingresoCopia, permisoAux);
+					this.controlador.modificarIngresoEgreso(ingCobroVO,ingresoCopia, permisoAux, lstDetalleSinMedioDePago);
 					
 					this.mainView.actulaizarGrilla(ingCobroVO);
 					

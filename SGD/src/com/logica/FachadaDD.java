@@ -3586,7 +3586,7 @@ public class FachadaDD {
 		{
 			con = this.pool.obtenerConeccion();
 			
-			lstGastos = this.gastos.getGastosConSaldoCobrable(con, cod_emp, codTit);
+			lstGastos = this.gastos.getGastosSinMedioDePago(con, cod_emp, codTit);
 			
 			
 			GastoVO aux;

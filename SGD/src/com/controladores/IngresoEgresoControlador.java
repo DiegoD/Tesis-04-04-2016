@@ -196,7 +196,7 @@ public class IngresoEgresoControlador {
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			return FachadaDD.getInstance().getGastosConSaldoCobrable(permisos.getCodEmp(), cod_tit);
+			return FachadaDD.getInstance().getGastosSinMedioDePago(permisos.getCodEmp(), cod_tit);
 		else
 			throw new NoTienePermisosException();
 	}

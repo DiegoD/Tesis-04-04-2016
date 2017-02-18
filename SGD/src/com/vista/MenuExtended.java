@@ -901,7 +901,7 @@ public class MenuExtended extends Menu{
 				
 				GtosxProcesoViewExtended form = new GtosxProcesoViewExtended();
 				
-				sub = new MySub("400px","450px");
+				sub = new MySub("300px","510px");
 				
 				sub.setModal(true);
 				
