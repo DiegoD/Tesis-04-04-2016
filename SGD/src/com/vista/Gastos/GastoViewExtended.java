@@ -1332,13 +1332,21 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 		this.inicializarComboSeleccion(gasto.getCodCtaInd());
 		this.inicializarComboEstado(gasto.getEstadoGasto());
 		
-		if(this.anulado.getValue().equals("S")){
-			this.btnAnular.setCaption("Desanular");
-		}
-		else{
-			this.btnAnular.setCaption("Anular");
-		}
-				
+		
+		if(!mainView.nomForm().equals("Factura")){
+			if(this.anulado.getValue().equals("S")){
+				this.btnAnular.setCaption("Desanular");
+			}
+			else{
+				this.btnAnular.setCaption("Anular");
+			}
+		}else{
+			
+			this.btnAnular.setEnabled(false);
+			this.btnAnular.setVisible(false);
+		}	
+		
+		
 		/*SETEAMOS LA OPERACION EN MODO LECUTA
 		 * ES CUANDO LLAMAMOS ESTE METODO*/
 		if(this.operacion.equals(Variables.OPERACION_LECTURA)){

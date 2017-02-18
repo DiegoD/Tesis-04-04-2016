@@ -214,6 +214,7 @@ public class GtosPendCobroxClienteViewExtended extends GtosPendCobroxClienteView
 					        fillParameters.put("codMoneda", this.getCodMonedaSeleccionada());
 					        
 					        fillParameters.put("REPORTS_DIR",basepath);
+					        fillParameters.put("SUBREPORT_DIR",basepath+ "/");
 					      
 						  }catch(Exception e) {}
 					        
