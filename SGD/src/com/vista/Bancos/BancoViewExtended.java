@@ -321,7 +321,7 @@ public class BancoViewExtended extends BancoView{
 					
 					this.frmFCtaBcos = new CtaBcoViewExtended(this, ctaBcoSelecccionado, Variables.OPERACION_LECTURA);
 					
-					sub = new MySub("400px", "350px" );
+					sub = new MySub("350px", "350px" );
 					sub.setModal(true);
 					sub.setVista(this.frmFCtaBcos);
 					sub.center();

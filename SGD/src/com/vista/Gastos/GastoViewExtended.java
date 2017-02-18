@@ -844,30 +844,45 @@ public class GastoViewExtended extends GastoView implements IBusqueda{
 
 				Mensajes.mostrarMensajeError(e.getMessage());
 			}
+			
 			Object obj;
-			for (RubroCuentaVO i: lstRubros) {
-				obj = new Object();
-				obj = (Object)i;
-				lst.add(obj);
+			if(comboSeleccion.getValue()!=null){
+				for (RubroCuentaVO i: lstRubros) {
+					obj = new Object();
+					obj = (Object)i;
+					if(comboSeleccion.getValue().equals("Proceso")&&i.isProceso()){
+						lst.add(obj);
+					}
+					if(comboSeleccion.getValue().equals("Oficina")&&i.isOficina()){
+						lst.add(obj);
+					}
+					if(comboSeleccion.getValue().equals("Empleado")&&i.isPersona()){
+						lst.add(obj);
+					}
+				}
+				try {
+					
+					form.inicializarGrilla(lst);
+				
+					
+				} catch (Exception e) {
+					
+					Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+				}
+				
+				sub = new MySub("550px", "950px" );
+				sub.setModal(true);
+				sub.center();
+				sub.setModal(true);
+				sub.setVista(form);
+				sub.center();
+				sub.setDraggable(true);
+				UI.getCurrent().addWindow(sub);
 			}
-			try {
-				
-				form.inicializarGrilla(lst);
-			
-				
-			} catch (Exception e) {
-				
-				Mensajes.mostrarMensajeError(Variables.ERROR_INESPERADO);
+			else{
+				Mensajes.mostrarMensajeError("Debe ingresar el tipo de gasto");
+				return;
 			}
-			
-			sub = new MySub("550px", "950px" );
-			sub.setModal(true);
-			sub.center();
-			sub.setModal(true);
-			sub.setVista(form);
-			sub.center();
-			sub.setDraggable(true);
-			UI.getCurrent().addWindow(sub);
 			
 		});
 		
