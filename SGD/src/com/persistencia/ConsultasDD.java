@@ -767,7 +767,7 @@ public class ConsultasDD {
 				+ " and m_impuestos.cod_emp = m_rubrosxcuenta.cod_emp "
 				+ " and m_rubros.cod_tipo_rubro = m_tiporubro.cod_tipoRubro "
 				+ " and m_tiporubro.cod_emp = m_rubrosxcuenta.cod_emp "
-				+ " and m_rubros.facturable = 1 ");
+				+ " and m_rubros.facturable = 1 AND  m_rubrosxcuenta.proceso = 1 ");
 
 		return sb.toString();
 	}
