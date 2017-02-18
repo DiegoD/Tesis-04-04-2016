@@ -15,14 +15,14 @@ SELECT
 a.nom_tit
 ,m.simbolo
 
-,CASE WHEN (SELECT COUNT(*) FROM v_movimientos
+,CASE WHEN (SELECT COUNT(*) FROM v_saldoAnteriorEstadoCuentaTotales
 	WHERE cod_emp = a.cod_emp AND cod_moneda = m.cod_moneda
 	AND cod_tit = a.cod_tit
 	AND fec_doc < $P{fecDesde}) > 0
 
 	THEN
 
-	 (SELECT SUM(entrada + salida) FROM v_movimientos
+	 (SELECT SUM(entrada + salida) FROM v_saldoAnteriorEstadoCuentaTotales
 		WHERE cod_emp = a.cod_emp AND cod_moneda = m.cod_moneda
 		AND cod_tit = a.cod_tit
 		AND fec_doc < $P{fecDesde})

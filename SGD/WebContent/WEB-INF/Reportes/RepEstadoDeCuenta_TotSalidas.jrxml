@@ -54,6 +54,7 @@ FROM c_facturas f, c_procesos p, m_monedas m
 WHERE f.cod_proceso = p.cod_proceso AND f.cod_emp = p.cod_emp
 AND f.cod_moneda = m.cod_moneda AND m.cod_emp = f.cod_emp
 AND f.tipo_factura = 'Factura'
+AND NOT EXISTS (SELECT * FROM d_notacred d WHERE d.cod_emp = f.cod_emp AND d.cod_docum = f.cod_docum AND d.serie_docum = f.serie_docum AND d.nro_docum = f.nro_docum )
 
 UNION
 
@@ -75,25 +76,7 @@ FROM c_recibos r,  m_monedas m
 WHERE  r.cod_moneda = m.cod_moneda AND m.cod_emp = r.cod_emp
 
 
-UNION
 
-
-SELECT
-CONCAT('NC. ',n.serie_docum , ' ', n.nro_docum) documento
-,DATE_FORMAT(n.fec_doc , '%d-%m-%Y') fecha
-,'' proceso
-,'' carpeta
-,m.simbolo moneda
-,0 entrada
-,(n.imp_tot_mo * -1) salida
-
-,n.cod_tit
-,n.cod_emp
-,n.fec_doc
-,n.cod_moneda
-
-FROM c_notacred n,  m_monedas m
-WHERE  n.cod_moneda = m.cod_moneda AND m.cod_emp = n.cod_emp
 
 )AUX WHERE  cod_tit = $P{codTit} AND cod_emp = $P{codEmp} AND fec_doc < $P{fecDesde} AND cod_moneda = $P{codMoneda}
 

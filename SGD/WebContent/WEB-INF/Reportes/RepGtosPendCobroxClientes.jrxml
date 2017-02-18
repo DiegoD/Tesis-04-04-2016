@@ -56,9 +56,11 @@ g.nro_docum
 ,(SELECT simbolo FROM m_monedas m WHERE m.cod_moneda = g.cod_moneda AND m.cod_emp = g.cod_emp) moneda
 ,g.imp_tot_mo
 ,(SELECT imp_tot_mo FROM sa_docum sa WHERE  sa.cod_docum = g.cod_docum AND sa.serie_docum = g.serie_docum AND sa.nro_docum = g.nro_docum AND sa.cod_emp = g.cod_emp) saldo
-FROM c_gastos g,  c_procesos c
-WHERE g.cod_proceso = c.cod_proceso AND (g.cod_emp = c.cod_emp OR g.cod_proceso = '0')
-AND g.cod_tit = $P{codTit} AND g.estado <> 'nocobr' AND g.anulado = 'N' AND g.cod_emp = $P{codEmp} AND g.fecDoc <= $P{fecHasta} AND ( g.cod_moneda = $P{codMoneda} OR $P{codMoneda} = 'TODAS' ) ) AUX WHERE saldo > 0 ORDER BY saldo DESC]]>
+FROM c_gastos g LEFT JOIN  c_procesos c ON g.cod_emp = c.cod_emp  AND g.cod_proceso = c.cod_proceso
+WHERE g.cod_tit = $P{codTit} AND g.estado <> 'nocobr' AND g.anulado = 'N'
+AND g.cod_emp = $P{codEmp} AND g.fecDoc <= $P{fecHasta}
+AND ( g.cod_moneda = $P{codMoneda} OR $P{codMoneda} = 'TODAS' ) ) AUX
+WHERE saldo > 0 ORDER BY saldo DESC]]>
 	</queryString>
 	<field name="nro_docum" class="java.lang.Integer">
 		<fieldDescription><![CDATA[]]></fieldDescription>
