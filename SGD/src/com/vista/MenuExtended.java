@@ -976,7 +976,6 @@ public class MenuExtended extends Menu{
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_PROCESOS) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_RESUMEN_PROCESO) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_PERIODO) ||
-				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_CONCILIACION) ||
 				formularioVO.getCodigo().equals("SaldoDocumentos") ||
 				formularioVO.getCodigo().equals("SaldoCuentas") ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_RUBROS))
@@ -1118,12 +1117,7 @@ public class MenuExtended extends Menu{
 						}
 					break;
 					
-					case VariablesPermisos.FORMULARIO_CONCILIACION:
-						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_CONCILIACION, VariablesPermisos.OPERACION_LEER)){
-							this.habilitarConciliacion();
-							this.layoutMenu.addComponent(this.conciliacion);
-						}
-					break;
+					
 				
 				}
 				
@@ -1735,6 +1729,7 @@ public class MenuExtended extends Menu{
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_INGRESO_EGRESO) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_GASTOS) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_DEPOSITO) ||
+				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_CONCILIACION) ||
 				formularioVO.getCodigo().equals(VariablesPermisos.FORMULARIO_INGRESO_EGRESO_OTRO))
 				
 			{
@@ -1809,7 +1804,12 @@ public class MenuExtended extends Menu{
 						}
 					break;
 					
-					
+					case VariablesPermisos.FORMULARIO_CONCILIACION:
+						if(this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_CONCILIACION, VariablesPermisos.OPERACION_LEER)){
+							this.habilitarConciliacion();
+							this.layoutMenu.addComponent(this.conciliacion);
+						}
+					break;
 				}
 				
 			}

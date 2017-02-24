@@ -3685,8 +3685,8 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 				sub.setModal(true);
 				//sub.setVista(form);
 				sub.setVista((Component) form);
-				sub.setHeight("900px");
-				sub.setWidth("650px");
+				sub.setHeight("600px");
+				sub.setWidth("620px");
 				sub.center();
 				
 				String codCliente;/*Codigo del cliente para obtener los gastos a cobrar del mismo*/
