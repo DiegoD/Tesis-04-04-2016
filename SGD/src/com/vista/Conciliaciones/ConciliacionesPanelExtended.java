@@ -184,14 +184,14 @@ public class ConciliacionesPanelExtended extends ConciliacionesPanel {
 			gridConciliaciones.getColumn("nomBanco").setHeaderCaption("Banco");
 			gridConciliaciones.getColumn("nomCuenta").setHeaderCaption("Cuenta");
 			
-			gridConciliaciones.getColumn("fecValor").setWidth(120);
-			gridConciliaciones.getColumn("nroDocum").setWidth(100);
-			gridConciliaciones.getColumn("tipo").setWidth(120);
-			gridConciliaciones.getColumn("impTotMo").setWidth(120);
-			gridConciliaciones.getColumn("observaciones").setWidth(300);
-			gridConciliaciones.getColumn("descripcion").setWidth(150);
-			gridConciliaciones.getColumn("nomBanco").setWidth(150);
-			gridConciliaciones.getColumn("nomCuenta").setWidth(150);
+//			gridConciliaciones.getColumn("fecValor").setWidth(120);
+//			gridConciliaciones.getColumn("nroDocum").setWidth(100);
+//			gridConciliaciones.getColumn("tipo").setWidth(120);
+//			gridConciliaciones.getColumn("impTotMo").setWidth(120);
+//			gridConciliaciones.getColumn("observaciones").setWidth(300);
+//			gridConciliaciones.getColumn("descripcion").setWidth(150);
+//			gridConciliaciones.getColumn("nomBanco").setWidth(150);
+//			gridConciliaciones.getColumn("nomCuenta").setWidth(150);
 			
 			/*Agregamos los filtros a la grilla*/
 			this.filtroGrilla();
