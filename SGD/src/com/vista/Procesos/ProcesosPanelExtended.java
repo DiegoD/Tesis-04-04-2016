@@ -75,7 +75,7 @@ public class ProcesosPanelExtended extends ProcesosPanel{
 				
 					this.btnNuevoProceso.addClickListener(click -> {
 						
-						sub = new MySub("550px","600px");
+						sub = new MySub("570px","620px");
 						form = new ProcesoViewExtended(Variables.OPERACION_NUEVO, this);
 						sub.setModal(true);
 						sub.setVista((Component) form);
@@ -184,7 +184,7 @@ public class ProcesosPanelExtended extends ProcesosPanel{
 					    	}
 								
 					    	form = new ProcesoViewExtended(Variables.OPERACION_LECTURA, ProcesosPanelExtended.this);
-					    	sub = new MySub("550px","600px");
+					    	sub = new MySub("570px","620px");
 							sub.setModal(true);
 							sub.setVista((Component) form);
 							/*ACA SETEAMOS EL FORMULARIO EN MODO LEECTURA*/
