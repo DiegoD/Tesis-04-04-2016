@@ -970,7 +970,7 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 					
 					this.mainView.actulaizarGrilla(ingCobroVO);
 					
-					Mensajes.mostrarMensajeOK("Se ha guardado el Cobro");
+					Mensajes.mostrarMensajeOK("Se ha guardado el Recibo");
 					main.cerrarVentana();
 				
 				}else if(this.operacion.equals(Variables.OPERACION_EDITAR))
@@ -989,7 +989,7 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 					
 					this.mainView.actulaizarGrilla(ingCobroVO);
 					
-					Mensajes.mostrarMensajeOK("Se ha modificado el Cobro");
+					Mensajes.mostrarMensajeOK("Se ha modificado el Recibo");
 					main.cerrarVentana();
 					
 				}
@@ -1501,7 +1501,8 @@ public class ReciboViewExtended extends ReciboViews implements IBusqueda, IMensa
 		
 		if(permisoEliminar)
 			this.enableBotonEliminar();
-		
+		else
+			this.disableBotonEliminar();
 		
 		
 		/*Seteamos la grilla con los formularios*/

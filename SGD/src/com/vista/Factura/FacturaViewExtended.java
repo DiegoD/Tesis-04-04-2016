@@ -163,7 +163,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		UsuarioPermisosVO permisoAux = 
 				new UsuarioPermisosVO(this.permisos.getCodEmp(),
 						this.permisos.getUsuario(),
-						VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+						VariablesPermisos.FORMULARIO_FACTURA,
 						VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
 		try {
@@ -297,7 +297,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		UsuarioPermisosVO permisoAux = 
 				new UsuarioPermisosVO(this.permisos.getCodEmp(),
 						this.permisos.getUsuario(),
-						VariablesPermisos.FORMULARIO_GASTOS,
+						VariablesPermisos.FORMULARIO_FACTURA,
 						VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
 		try {
@@ -360,7 +360,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 					permisoAux = 
 							new UsuarioPermisosVO(permisos.getCodEmp(),
 									permisos.getUsuario(),
-									VariablesPermisos.FORMULARIO_GASTOS,
+									VariablesPermisos.FORMULARIO_FACTURA,
 									VariablesPermisos.OPERACION_NUEVO_EDITAR);
 					
 					if(!val.validaPeriodo(fecValor.getValue(), permisoAux)){
@@ -388,7 +388,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
    			UsuarioPermisosVO permisoAux = 
    					new UsuarioPermisosVO(permisos.getCodEmp(),
    							permisos.getUsuario(),
-   							VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+   							VariablesPermisos.FORMULARIO_FACTURA,
    							VariablesPermisos.OPERACION_NUEVO_EDITAR);
    			
    			//CtaBcoVO ctaBcoAux;
@@ -452,7 +452,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
    			UsuarioPermisosVO permisoAux = 
    					new UsuarioPermisosVO(permisos.getCodEmp(),
    							permisos.getUsuario(),
-   							VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+   							VariablesPermisos.FORMULARIO_FACTURA,
    							VariablesPermisos.OPERACION_NUEVO_EDITAR);
    			
    			MonedaVO auxMoneda = new MonedaVO();
@@ -1297,6 +1297,9 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		
 		if(permisoEliminar)
 			this.enableBotonEliminar();
+		else{
+			this.disableBotonEliminar();
+		}
 		
 		/*No mostramos las validaciones*/
 		this.setearValidaciones(false);
@@ -1985,7 +1988,7 @@ public class FacturaViewExtended extends FacturaViews implements IBusqueda, IGas
 		permisosAux = 
 				new UsuarioPermisosVO(this.permisos.getCodEmp(),
 						this.permisos.getUsuario(),
-						VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+						VariablesPermisos.FORMULARIO_FACTURA,
 						VariablesPermisos.OPERACION_LEER);
 		
 		try {

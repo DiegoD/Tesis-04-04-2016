@@ -203,7 +203,7 @@ public class DepositoViewExtended extends DepositoView implements IMensaje{
 				permisoAux = 
 						new UsuarioPermisosVO(this.permisos.getCodEmp(),
 								this.permisos.getUsuario(),
-								VariablesPermisos.FORMULARIO_GASTOS,
+								VariablesPermisos.FORMULARIO_DEPOSITO,
 								VariablesPermisos.OPERACION_NUEVO_EDITAR);
 				
 				
@@ -474,6 +474,9 @@ public class DepositoViewExtended extends DepositoView implements IMensaje{
 		if(permisoEliminar){
 			this.btnEliminar.setVisible(true);
 		}
+		else{
+			this.btnEliminar.setVisible(false);
+		}
 		
 		this.comboResponsable.setEnabled(false);
 		this.comboBancos.setEnabled(false);
@@ -594,7 +597,7 @@ public class DepositoViewExtended extends DepositoView implements IMensaje{
 			permisosAux = 
 					new UsuarioPermisosVO(this.permisos.getCodEmp(),
 							this.permisos.getUsuario(),
-							VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+							VariablesPermisos.FORMULARIO_DEPOSITO,
 							VariablesPermisos.OPERACION_LEER);
 			
 			lstBcos = this.controlador.getBcos(permisosAux);
@@ -726,7 +729,7 @@ public class DepositoViewExtended extends DepositoView implements IMensaje{
 					new UsuarioPermisosVO(this.permisos.getCodEmp(),
 							this.permisos.getUsuario(),
 							VariablesPermisos.FORMULARIO_DEPOSITO,
-							VariablesPermisos.OPERACION_NUEVO_EDITAR);
+							VariablesPermisos.OPERACION_LEER);
 			
 			lstTitulares = this.controlador.getTitulares(permisosAux);
 			
@@ -771,7 +774,7 @@ public class DepositoViewExtended extends DepositoView implements IMensaje{
 					new UsuarioPermisosVO(permisos.getCodEmp(),
 							permisos.getUsuario(),
 							VariablesPermisos.FORMULARIO_DEPOSITO,
-							VariablesPermisos.OPERACION_NUEVO_EDITAR);
+							VariablesPermisos.OPERACION_LEER);
 		
 		BancoVO bcoAux = null;
 		if(comboBancos.getValue() != null){

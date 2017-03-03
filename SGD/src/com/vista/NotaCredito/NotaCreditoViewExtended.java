@@ -1083,7 +1083,8 @@ public class NotaCreditoViewExtended extends NotaCreditoViews implements IBusque
 		
 		if(permisoEliminar)
 			this.enableBotonEliminar();
-		
+		else
+			this.disableBotonEliminar();
 		
 		
 		/*Seteamos la grilla con los formularios*/

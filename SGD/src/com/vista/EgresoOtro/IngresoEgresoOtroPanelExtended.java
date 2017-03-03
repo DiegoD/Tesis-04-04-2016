@@ -53,7 +53,7 @@ public class IngresoEgresoOtroPanelExtended extends IngresoEgresoOtroPanel{
 		
 			
         /*Verificamos que el usuario tenga permisos de lectura para mostrar la vista*/
-		boolean permisoLectura = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO, VariablesPermisos.OPERACION_LEER);
+		boolean permisoLectura = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO_OTRO, VariablesPermisos.OPERACION_LEER);
 		
 		if(permisoLectura){
         
@@ -70,7 +70,7 @@ public class IngresoEgresoOtroPanelExtended extends IngresoEgresoOtroPanel{
 				this.inicializarGrilla();
 				
 				/*Para el boton de nuevo, verificamos que tenga permisos de nuevoEditar*/
-				boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+				boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO_OTRO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 				if(permisoNuevoEditar)
 				{
 				
@@ -205,7 +205,7 @@ public class IngresoEgresoOtroPanelExtended extends IngresoEgresoOtroPanel{
 			UsuarioPermisosVO permisoAux = 
 					new UsuarioPermisosVO(this.permisos.getCodEmp(),
 							this.permisos.getUsuario(),
-							VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+							VariablesPermisos.FORMULARIO_INGRESO_EGRESO_OTRO,
 							VariablesPermisos.OPERACION_LEER);
 
 			

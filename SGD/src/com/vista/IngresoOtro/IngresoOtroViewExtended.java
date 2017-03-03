@@ -135,7 +135,7 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 		UsuarioPermisosVO permisoAux = 
 				new UsuarioPermisosVO(this.permisos.getCodEmp(),
 						this.permisos.getUsuario(),
-						VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+						VariablesPermisos.FORMULARIO_INGRESO_COBRO_OTRO,
 						VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
 		try {
@@ -243,8 +243,8 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 					permisoAux = 
 							new UsuarioPermisosVO(permisos.getCodEmp(),
 									permisos.getUsuario(),
-									VariablesPermisos.FORMULARIO_GASTOS,
-									VariablesPermisos.OPERACION_NUEVO_EDITAR);
+									VariablesPermisos.FORMULARIO_INGRESO_COBRO_OTRO,
+									VariablesPermisos.OPERACION_LEER);
 					
 					if(!val.validaPeriodo(fecValor.getValue(), permisoAux)){
 						String fecha = new SimpleDateFormat("dd/MM/yyyy").format(fecValor.getValue());
@@ -271,8 +271,8 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
    			UsuarioPermisosVO permisoAux = 
    					new UsuarioPermisosVO(permisos.getCodEmp(),
    							permisos.getUsuario(),
-   							VariablesPermisos.FORMULARIO_INGRESO_COBRO,
-   							VariablesPermisos.OPERACION_NUEVO_EDITAR);
+   							VariablesPermisos.FORMULARIO_INGRESO_COBRO_OTRO,
+   							VariablesPermisos.OPERACION_LEER);
    			
    			CtaBcoVO ctaBcoAux;
    			ctaBcoAux = new CtaBcoVO();
@@ -403,8 +403,8 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
    			UsuarioPermisosVO permisoAux = 
    					new UsuarioPermisosVO(permisos.getCodEmp(),
    							permisos.getUsuario(),
-   							VariablesPermisos.FORMULARIO_INGRESO_COBRO,
-   							VariablesPermisos.OPERACION_NUEVO_EDITAR);
+   							VariablesPermisos.FORMULARIO_INGRESO_COBRO_OTRO,
+   							VariablesPermisos.OPERACION_LEER);
    			
    			CtaBcoVO ctaBcoAux;
    			ctaBcoAux = new CtaBcoVO();
@@ -475,8 +475,8 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 			UsuarioPermisosVO permisoAux = 
 					new UsuarioPermisosVO(permisos.getCodEmp(),
 							permisos.getUsuario(),
-							VariablesPermisos.FORMULARIO_INGRESO_COBRO,
-							VariablesPermisos.OPERACION_NUEVO_EDITAR);
+							VariablesPermisos.FORMULARIO_INGRESO_COBRO_OTRO,
+							VariablesPermisos.OPERACION_LEER);
 			
 			MonedaVO auxMoneda = new MonedaVO();
 			Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
@@ -592,7 +592,7 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 				UsuarioPermisosVO permisoAux = 
 						new UsuarioPermisosVO(this.permisos.getCodEmp(),
 								this.permisos.getUsuario(),
-								VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+								VariablesPermisos.FORMULARIO_INGRESO_COBRO_OTRO,
 								VariablesPermisos.OPERACION_NUEVO_EDITAR);				
 				
 				
@@ -868,7 +868,7 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 		permisoAux = 
 				new UsuarioPermisosVO(permisos.getCodEmp(),
 						permisos.getUsuario(),
-						VariablesPermisos.FORMULARIO_GASTOS,
+						VariablesPermisos.FORMULARIO_INGRESO_COBRO_OTRO,
 						VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
 		try {
@@ -908,7 +908,7 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 		permisoAux = 
 				new UsuarioPermisosVO(permisos.getCodEmp(),
 						permisos.getUsuario(),
-						VariablesPermisos.FORMULARIO_GASTOS,
+						VariablesPermisos.FORMULARIO_INGRESO_COBRO_OTRO,
 						VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
 		if(!val.validaPeriodo(fecValor.getValue(), permisoAux)){
@@ -1176,8 +1176,8 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 	private void iniFormLectura()
 	{
 		/*Verificamos que tenga permisos para editar*/
-		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_COBRO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
-		boolean permisoEliminar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO, VariablesPermisos.OPERACION_BORRAR);
+		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_COBRO_OTRO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		boolean permisoEliminar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_COBRO_OTRO, VariablesPermisos.OPERACION_BORRAR);
 		
 		this.chkFuncionario.setVisible(false);
 		this.lblFuncionario.setVisible(false);
@@ -1196,6 +1196,8 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 		
 		if(permisoEliminar)
 			this.enableBotonEliminar();
+		else
+			this.disableBotonEliminar();
 		
 		/*Deshabilitamos botn aceptar*/
 		this.disableBotonAceptar();
@@ -1219,7 +1221,7 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 		
 		
 		/*Verificamos que tenga permisos*/
-		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_GRUPO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_COBRO_OTRO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
 		if(permisoNuevoEditar){
 			
@@ -1273,7 +1275,7 @@ public class IngresoOtroViewExtended extends IngresoOtroViews implements IBusque
 //		this.nroTrans.setValue("0");
 		
 		/*Chequeamos si tiene permiso de editar*/
-		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_COBRO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_COBRO_OTRO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
 		
 		/*Mostramos o ocultamos los datos del Banco, dependiendo del combo tipo (banco, caja)*/
@@ -1516,8 +1518,8 @@ public void inicializarComboMoneda(String cod){
 			permisosAux = 
 					new UsuarioPermisosVO(this.permisos.getCodEmp(),
 							this.permisos.getUsuario(),
-							VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
-							VariablesPermisos.OPERACION_NUEVO_EDITAR);
+							VariablesPermisos.FORMULARIO_INGRESO_COBRO_OTRO,
+							VariablesPermisos.OPERACION_LEER);
 			
 			lstMonedas = this.controlador.getMonedas(permisosAux);
 			
@@ -1567,7 +1569,7 @@ public void inicializarComboMoneda(String cod){
 				permisosAux = 
 						new UsuarioPermisosVO(this.permisos.getCodEmp(),
 								this.permisos.getUsuario(),
-								VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+								VariablesPermisos.FORMULARIO_INGRESO_COBRO_OTRO,
 								VariablesPermisos.OPERACION_LEER);
 				
 				/*Si se selacciona un banco buscamos las cuentas, de lo contrario no*/
@@ -1641,8 +1643,8 @@ public void inicializarComboMoneda(String cod){
 			permisosAux = 
 					new UsuarioPermisosVO(this.permisos.getCodEmp(),
 							this.permisos.getUsuario(),
-							VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
-							VariablesPermisos.OPERACION_NUEVO_EDITAR);
+							VariablesPermisos.FORMULARIO_INGRESO_COBRO_OTRO,
+							VariablesPermisos.OPERACION_LEER);
 			
 			lstBcos = this.controlador.getBcos(permisosAux);
 			
@@ -1807,7 +1809,7 @@ public void inicializarComboMoneda(String cod){
 		permisosAux = 
 				new UsuarioPermisosVO(this.permisos.getCodEmp(),
 						this.permisos.getUsuario(),
-						VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
+						VariablesPermisos.FORMULARIO_INGRESO_COBRO_OTRO,
 						VariablesPermisos.OPERACION_LEER);
 		
 		Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
@@ -1850,7 +1852,7 @@ public void inicializarComboMoneda(String cod){
 				UsuarioPermisosVO permisoAux = 
 						new UsuarioPermisosVO(this.permisos.getCodEmp(),
 								this.permisos.getUsuario(),
-								VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+								VariablesPermisos.FORMULARIO_INGRESO_COBRO_OTRO,
 								VariablesPermisos.OPERACION_NUEVO_EDITAR);				
 				
 				

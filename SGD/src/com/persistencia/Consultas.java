@@ -1205,7 +1205,7 @@ public class Consultas {
 		
 		sb.append("SELECT m_cuentas.cod_cuenta, m_cuentas.descripcion nom_cuenta, d_egrcobro.cod_emp, d_egrcobro.cod_docum, d_egrcobro.serie_docum, d_egrcobro.nro_docum, ");
 		sb.append("COALESCE(d_egrcobro.cod_proceso,0) cod_proceso, (SELECT COALESCE(descripcion,'Sin-Asignar') FROM c_procesos WHERE c_procesos.cod_proceso = d_egrcobro.cod_proceso AND c_procesos.cod_emp = d_egrcobro.cod_emp ) nom_proceso,  ");
-		sb.append("m_rubros.cod_rubro, m_rubros.descripcion nom_rubro, d_egrcobro.cuenta, fec_doc, fec_valor, m_monedas.cod_moneda, m_monedas.simbolo, m_monedas.descripcion nom_moneda ");
+		sb.append("m_rubros.cod_rubro, m_rubros.descripcion nom_rubro, d_egrcobro.cuenta, fec_doc, fec_valor, m_monedas.cod_moneda, m_monedas.simbolo, m_monedas.descripcion nom_moneda, m_monedas.nacional ");
 		sb.append(", m_impuestos.cod_impuesto, m_impuestos.descripcion nom_impuesto, m_impuestos.porcentaje, d_egrcobro.imp_impu_mn,  ");
 		sb.append("d_egrcobro.imp_impu_mo, d_egrcobro.imp_sub_mn, d_egrcobro.imp_sub_mo, d_egrcobro.imp_tot_mn, d_egrcobro.imp_tot_mo, d_egrcobro.tc_mov, d_egrcobro.referencia,  ");
 		sb.append("d_egrcobro.referencia2, d_egrcobro.nro_trans, d_egrcobro.fecha_mod, d_egrcobro.usuario_mod, d_egrcobro.operacion, d_egrcobro.linea, c_gastos.estado, c_gastos.anulado ");
@@ -1475,7 +1475,7 @@ public class Consultas {
 		
 		sb.append("SELECT m_cuentas.cod_cuenta, m_cuentas.descripcion nom_cuenta, d_facturas.cod_emp, d_facturas.cod_docum, d_facturas.serie_docum, d_facturas.nro_docum, ");
 		sb.append("COALESCE(d_facturas.cod_proceso,0) cod_proceso, (SELECT COALESCE(descripcion,'Sin-Asignar') FROM c_procesos WHERE c_procesos.cod_proceso = d_facturas.cod_proceso AND c_procesos.cod_emp = d_facturas.cod_emp ) nom_proceso,  ");
-		sb.append("m_rubros.cod_rubro, m_rubros.descripcion nom_rubro, d_facturas.cuenta, fec_doc, fec_valor, m_monedas.cod_moneda, m_monedas.simbolo, m_monedas.descripcion nom_moneda ");
+		sb.append("m_rubros.cod_rubro, m_rubros.descripcion nom_rubro, d_facturas.cuenta, fec_doc, fec_valor, m_monedas.cod_moneda, m_monedas.simbolo, m_monedas.descripcion nom_moneda, m_monedas.nacional ");
 		sb.append(", m_impuestos.cod_impuesto, m_impuestos.descripcion nom_impuesto, m_impuestos.porcentaje, d_facturas.imp_impu_mn,  ");
 		sb.append("d_facturas.imp_impu_mo, d_facturas.imp_sub_mn, d_facturas.imp_sub_mo, d_facturas.imp_tot_mn, d_facturas.imp_tot_mo, d_facturas.tc_mov, d_facturas.referencia,  ");
 		sb.append("d_facturas.referencia2, d_facturas.nro_trans, d_facturas.fecha_mod, d_facturas.usuario_mod, d_facturas.operacion, d_facturas.linea ");
@@ -1687,7 +1687,7 @@ public class Consultas {
 		
 		sb.append("SELECT m_cuentas.cod_cuenta, m_cuentas.descripcion nom_cuenta, d_recibos.cod_emp, d_recibos.cod_docum, d_recibos.serie_docum, d_recibos.nro_docum, ");
 		sb.append("COALESCE(d_recibos.cod_proceso,0) cod_proceso, (SELECT COALESCE(descripcion,'Sin-Asignar') FROM c_procesos WHERE c_procesos.cod_proceso = d_recibos.cod_proceso AND c_procesos.cod_emp = d_recibos.cod_emp ) nom_proceso,  ");
-		sb.append("m_rubros.cod_rubro, m_rubros.descripcion nom_rubro, d_recibos.cuenta, fec_doc, fec_valor, m_monedas.cod_moneda, m_monedas.simbolo, m_monedas.descripcion nom_moneda ");
+		sb.append("m_rubros.cod_rubro, m_rubros.descripcion nom_rubro, d_recibos.cuenta, fec_doc, fec_valor, m_monedas.cod_moneda, m_monedas.simbolo, m_monedas.descripcion nom_moneda, m_monedas.nacional ");
 		sb.append(", m_impuestos.cod_impuesto, m_impuestos.descripcion nom_impuesto, m_impuestos.porcentaje, d_recibos.imp_impu_mn,  ");
 		sb.append("d_recibos.imp_impu_mo, d_recibos.imp_sub_mn, d_recibos.imp_sub_mo, d_recibos.imp_tot_mn, d_recibos.imp_tot_mo, d_recibos.tc_mov, d_recibos.referencia,  ");
 		sb.append("d_recibos.referencia2, d_recibos.nro_trans, d_recibos.fecha_mod, d_recibos.usuario_mod, d_recibos.operacion, d_recibos.linea ");
@@ -1838,7 +1838,7 @@ public class Consultas {
 		
 		sb.append("SELECT m_cuentas.cod_cuenta, m_cuentas.descripcion nom_cuenta, d_notacred.cod_emp, d_notacred.cod_docum, d_notacred.serie_docum, d_notacred.nro_docum, ");
 		sb.append("COALESCE(d_notacred.cod_proceso,0) cod_proceso, (SELECT COALESCE(descripcion,'Sin-Asignar') FROM c_procesos WHERE c_procesos.cod_proceso = d_notacred.cod_proceso AND c_procesos.cod_emp = d_notacred.cod_emp ) nom_proceso,  ");
-		sb.append("m_rubros.cod_rubro, m_rubros.descripcion nom_rubro, d_notacred.cuenta, fec_doc, fec_valor, m_monedas.cod_moneda, m_monedas.simbolo, m_monedas.descripcion nom_moneda ");
+		sb.append("m_rubros.cod_rubro, m_rubros.descripcion nom_rubro, d_notacred.cuenta, fec_doc, fec_valor, m_monedas.cod_moneda, m_monedas.simbolo, m_monedas.descripcion nom_moneda, m_monedas.nacional ");
 		sb.append(", m_impuestos.cod_impuesto, m_impuestos.descripcion nom_impuesto, m_impuestos.porcentaje, d_notacred.imp_impu_mn,  ");
 		sb.append("d_notacred.imp_impu_mo, d_notacred.imp_sub_mn, d_notacred.imp_sub_mo, d_notacred.imp_tot_mn, d_notacred.imp_tot_mo, d_notacred.tc_mov, d_notacred.referencia,  ");
 		sb.append("d_notacred.referencia2, d_notacred.nro_trans, d_notacred.fecha_mod, d_notacred.usuario_mod, d_notacred.operacion, d_notacred.linea ");

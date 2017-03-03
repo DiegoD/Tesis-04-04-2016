@@ -137,7 +137,7 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 		UsuarioPermisosVO permisoAux = 
 				new UsuarioPermisosVO(this.permisos.getCodEmp(),
 						this.permisos.getUsuario(),
-						VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+						VariablesPermisos.FORMULARIO_INGRESO_EGRESO_OTRO,
 						VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
 		try {
@@ -246,7 +246,7 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 					permisoAux = 
 							new UsuarioPermisosVO(permisos.getCodEmp(),
 									permisos.getUsuario(),
-									VariablesPermisos.FORMULARIO_GASTOS,
+									VariablesPermisos.FORMULARIO_INGRESO_EGRESO_OTRO,
 									VariablesPermisos.OPERACION_NUEVO_EDITAR);
 					
 					if(!val.validaPeriodo(fecValor.getValue(), permisoAux)){
@@ -275,8 +275,8 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
    			UsuarioPermisosVO permisoAux = 
    					new UsuarioPermisosVO(permisos.getCodEmp(),
    							permisos.getUsuario(),
-   							VariablesPermisos.FORMULARIO_INGRESO_COBRO,
-   							VariablesPermisos.OPERACION_NUEVO_EDITAR);
+   							VariablesPermisos.FORMULARIO_INGRESO_EGRESO_OTRO,
+   							VariablesPermisos.OPERACION_LEER);
    			
    			CtaBcoVO ctaBcoAux;
    			ctaBcoAux = new CtaBcoVO();
@@ -411,8 +411,8 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
    			UsuarioPermisosVO permisoAux = 
    					new UsuarioPermisosVO(permisos.getCodEmp(),
    							permisos.getUsuario(),
-   							VariablesPermisos.FORMULARIO_INGRESO_COBRO,
-   							VariablesPermisos.OPERACION_NUEVO_EDITAR);
+   							VariablesPermisos.FORMULARIO_INGRESO_EGRESO_OTRO,
+   							VariablesPermisos.OPERACION_LEER);
    			
    			CtaBcoVO ctaBcoAux;
    			ctaBcoAux = new CtaBcoVO();
@@ -483,8 +483,8 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
    			UsuarioPermisosVO permisoAux = 
    					new UsuarioPermisosVO(permisos.getCodEmp(),
    							permisos.getUsuario(),
-   							VariablesPermisos.FORMULARIO_INGRESO_COBRO,
-   							VariablesPermisos.OPERACION_NUEVO_EDITAR);
+   							VariablesPermisos.FORMULARIO_INGRESO_EGRESO_OTRO,
+   							VariablesPermisos.OPERACION_LEER);
    			
    			MonedaVO auxMoneda = new MonedaVO();
    			Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
@@ -600,7 +600,7 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 				UsuarioPermisosVO permisoAux = 
 						new UsuarioPermisosVO(this.permisos.getCodEmp(),
 								this.permisos.getUsuario(),
-								VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
+								VariablesPermisos.FORMULARIO_INGRESO_EGRESO_OTRO,
 								VariablesPermisos.OPERACION_NUEVO_EDITAR);				
 				
 				
@@ -900,7 +900,7 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 			permisoAux = 
 					new UsuarioPermisosVO(permisos.getCodEmp(),
 							permisos.getUsuario(),
-							VariablesPermisos.FORMULARIO_GASTOS,
+							VariablesPermisos.FORMULARIO_INGRESO_EGRESO_OTRO,
 							VariablesPermisos.OPERACION_NUEVO_EDITAR);
 			
 			if(!val.validaPeriodo(fecValor.getValue(), permisoAux)){
@@ -936,7 +936,7 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 			permisoAux = 
 					new UsuarioPermisosVO(permisos.getCodEmp(),
 							permisos.getUsuario(),
-							VariablesPermisos.FORMULARIO_GASTOS,
+							VariablesPermisos.FORMULARIO_INGRESO_EGRESO_OTRO,
 							VariablesPermisos.OPERACION_NUEVO_EDITAR);
 			
 			try {
@@ -1205,8 +1205,8 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 	private void iniFormLectura()
 	{
 		/*Verificamos que tenga permisos para editar*/
-		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
-		boolean permisoEliminar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO, VariablesPermisos.OPERACION_BORRAR);
+		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO_OTRO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		boolean permisoEliminar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO_OTRO, VariablesPermisos.OPERACION_BORRAR);
 		
 		this.chkFuncionario.setVisible(false);
 		this.lblFuncionario.setVisible(false);
@@ -1229,6 +1229,8 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 		
 		if(permisoEliminar)
 			this.enableBotonEliminar();
+		else
+			this.disableBotonEliminar();
 		
 		/*No mostramos las validaciones*/
 		this.setearValidaciones(false);
@@ -1249,7 +1251,7 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 		
 		
 		/*Verificamos que tenga permisos*/
-		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO_OTRO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
 		this.chkFuncionario.setVisible(false);
 		this.lblFuncionario.setVisible(false);
@@ -1303,7 +1305,7 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 		
 		
 		/*Chequeamos si tiene permiso de editar*/
-		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
+		boolean permisoNuevoEditar = this.permisos.permisoEnFormulaior(VariablesPermisos.FORMULARIO_INGRESO_EGRESO_OTRO, VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
 		
 		/*Mostramos o ocultamos los datos del Banco, dependiendo del combo tipo (banco, caja)*/
@@ -1547,8 +1549,8 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 			permisosAux = 
 					new UsuarioPermisosVO(this.permisos.getCodEmp(),
 							this.permisos.getUsuario(),
-							VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
-							VariablesPermisos.OPERACION_NUEVO_EDITAR);
+							VariablesPermisos.FORMULARIO_INGRESO_EGRESO_OTRO,
+							VariablesPermisos.OPERACION_LEER);
 			
 			lstMonedas = this.controlador.getMonedas(permisosAux);
 			
@@ -1598,7 +1600,7 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 				permisosAux = 
 						new UsuarioPermisosVO(this.permisos.getCodEmp(),
 								this.permisos.getUsuario(),
-								VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+								VariablesPermisos.FORMULARIO_INGRESO_EGRESO_OTRO,
 								VariablesPermisos.OPERACION_LEER);
 				
 				/*Si se selacciona un banco buscamos las cuentas, de lo contrario no*/
@@ -1672,8 +1674,8 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 			permisosAux = 
 					new UsuarioPermisosVO(this.permisos.getCodEmp(),
 							this.permisos.getUsuario(),
-							VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
-							VariablesPermisos.OPERACION_NUEVO_EDITAR);
+							VariablesPermisos.FORMULARIO_INGRESO_EGRESO_OTRO,
+							VariablesPermisos.OPERACION_LEER);
 			
 			lstBcos = this.controlador.getBcos(permisosAux);
 			
@@ -1868,7 +1870,7 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 		permisosAux = 
 				new UsuarioPermisosVO(this.permisos.getCodEmp(),
 						this.permisos.getUsuario(),
-						VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
+						VariablesPermisos.FORMULARIO_INGRESO_EGRESO_OTRO,
 						VariablesPermisos.OPERACION_LEER);
 		
 		Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
@@ -1912,7 +1914,7 @@ public class IngresoEgresoOtroViewExtended extends IngresoEgresoOtroViews implem
 				UsuarioPermisosVO permisoAux = 
 						new UsuarioPermisosVO(this.permisos.getCodEmp(),
 								this.permisos.getUsuario(),
-								VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
+								VariablesPermisos.FORMULARIO_INGRESO_EGRESO_OTRO,
 								VariablesPermisos.OPERACION_NUEVO_EDITAR);				
 				
 				

@@ -167,7 +167,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		UsuarioPermisosVO permisoAux = 
 				new UsuarioPermisosVO(this.permisos.getCodEmp(),
 						this.permisos.getUsuario(),
-						VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+						VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
 						VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
 		try {
@@ -276,7 +276,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 					permisoAux = 
 							new UsuarioPermisosVO(permisos.getCodEmp(),
 									permisos.getUsuario(),
-									VariablesPermisos.FORMULARIO_GASTOS,
+									VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
 									VariablesPermisos.OPERACION_NUEVO_EDITAR);
 					
 					if(!val.validaPeriodo(fecValor.getValue(), permisoAux)){
@@ -304,7 +304,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
    			UsuarioPermisosVO permisoAux = 
    					new UsuarioPermisosVO(permisos.getCodEmp(),
    							permisos.getUsuario(),
-   							VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+   							VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
    							VariablesPermisos.OPERACION_NUEVO_EDITAR);
    			
    			CtaBcoVO ctaBcoAux;
@@ -440,7 +440,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
    			UsuarioPermisosVO permisoAux = 
    					new UsuarioPermisosVO(permisos.getCodEmp(),
    							permisos.getUsuario(),
-   							VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+   							VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
    							VariablesPermisos.OPERACION_NUEVO_EDITAR);
    			
    			CtaBcoVO ctaBcoAux;
@@ -514,8 +514,8 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
    			UsuarioPermisosVO permisoAux = 
    					new UsuarioPermisosVO(permisos.getCodEmp(),
    							permisos.getUsuario(),
-   							VariablesPermisos.FORMULARIO_INGRESO_COBRO,
-   							VariablesPermisos.OPERACION_NUEVO_EDITAR);
+   							VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
+   							VariablesPermisos.OPERACION_LEER);
    			
    			MonedaVO auxMoneda = new MonedaVO();
    			Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
@@ -973,7 +973,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 			permisoAux = 
 					new UsuarioPermisosVO(permisos.getCodEmp(),
 							permisos.getUsuario(),
-							VariablesPermisos.FORMULARIO_GASTOS,
+							VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
 							VariablesPermisos.OPERACION_NUEVO_EDITAR);
 			
 			if(!val.validaPeriodo(fecValor.getValue(), permisoAux)){
@@ -1046,7 +1046,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 			permisoAux = 
 					new UsuarioPermisosVO(permisos.getCodEmp(),
 							permisos.getUsuario(),
-							VariablesPermisos.FORMULARIO_GASTOS,
+							VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
 							VariablesPermisos.OPERACION_NUEVO_EDITAR);
 			
 			try {
@@ -1080,7 +1080,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 			permisoAux = 
 					new UsuarioPermisosVO(permisos.getCodEmp(),
 							permisos.getUsuario(),
-							VariablesPermisos.FORMULARIO_GASTOS,
+							VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
 							VariablesPermisos.OPERACION_NUEVO_EDITAR);
 			
 			try {
@@ -1576,7 +1576,9 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		
 		if(permisoEliminar)
 			this.enableBotonEliminar();
-		
+		else{
+			this.disableBotonEliminar();
+		}
 		/*No mostramos las validaciones*/
 		this.setearValidaciones(false);
 		
@@ -2324,7 +2326,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		permisosAux = 
 				new UsuarioPermisosVO(this.permisos.getCodEmp(),
 						this.permisos.getUsuario(),
-						VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+						VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
 						VariablesPermisos.OPERACION_LEER);
 		
 		try {
@@ -2380,7 +2382,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 				permisosAux = 
 						new UsuarioPermisosVO(this.permisos.getCodEmp(),
 								this.permisos.getUsuario(),
-								VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+								VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
 								VariablesPermisos.OPERACION_LEER);
 				
 				/*Si se selacciona un banco buscamos las cuentas, de lo contrario no*/
@@ -2454,7 +2456,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 			permisosAux = 
 					new UsuarioPermisosVO(this.permisos.getCodEmp(),
 							this.permisos.getUsuario(),
-							VariablesPermisos.FORMULARIO_INGRESO_COBRO,
+							VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
 							VariablesPermisos.OPERACION_LEER);
 			
 			lstBcos = this.controlador.getBcos(permisosAux);
@@ -3638,7 +3640,7 @@ public class IngresoEgresoViewExtended extends IngresoEgresoViews implements IBu
 		UsuarioPermisosVO permisoAux = 
 				new UsuarioPermisosVO(this.permisos.getCodEmp(),
 						this.permisos.getUsuario(),
-						VariablesPermisos.FORMULARIO_FACTURA,
+						VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
 						VariablesPermisos.OPERACION_NUEVO_EDITAR);
 		
 

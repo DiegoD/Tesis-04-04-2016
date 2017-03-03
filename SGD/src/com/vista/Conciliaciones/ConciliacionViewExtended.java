@@ -256,7 +256,7 @@ private static final long serialVersionUID = 1L;
 				permisoAux = 
 						new UsuarioPermisosVO(this.permisos.getCodEmp(),
 								this.permisos.getUsuario(),
-								VariablesPermisos.FORMULARIO_GASTOS,
+								VariablesPermisos.FORMULARIO_CONCILIACION,
 								VariablesPermisos.OPERACION_NUEVO_EDITAR);
 				
 				
@@ -295,7 +295,7 @@ private static final long serialVersionUID = 1L;
     	   			permisoAux = 
     	   					new UsuarioPermisosVO(permisos.getCodEmp(),
     	   							permisos.getUsuario(),
-    	   							VariablesPermisos.FORMULARIO_DEPOSITO,
+    	   							VariablesPermisos.FORMULARIO_CONCILIACION,
     	   							VariablesPermisos.OPERACION_NUEVO_EDITAR);
     	   			
 					/*ACA*/
@@ -522,6 +522,9 @@ private static final long serialVersionUID = 1L;
 		
 		if(permisoEliminar){
 			this.btnEliminar.setVisible(true);
+		}
+		else{
+			this.btnEliminar.setVisible(false);
 		}
 		
 		this.comboBancos.setEnabled(false);
@@ -861,7 +864,7 @@ private static final long serialVersionUID = 1L;
 					new UsuarioPermisosVO(permisos.getCodEmp(),
 							permisos.getUsuario(),
 							VariablesPermisos.FORMULARIO_CONCILIACION,
-							VariablesPermisos.OPERACION_NUEVO_EDITAR);
+							VariablesPermisos.OPERACION_LEER);
 		
 		if(this.comboCajaBanco.getValue()!=null){
 			if(this.comboCajaBanco.getValue().equals("Banco")){
@@ -1269,8 +1272,8 @@ private static final long serialVersionUID = 1L;
 			permisosAux = 
 					new UsuarioPermisosVO(this.permisos.getCodEmp(),
 							this.permisos.getUsuario(),
-							VariablesPermisos.FORMULARIO_INGRESO_EGRESO,
-							VariablesPermisos.OPERACION_NUEVO_EDITAR);
+							VariablesPermisos.FORMULARIO_CONCILIACION,
+							VariablesPermisos.OPERACION_LEER);
 			
 			lstMonedas = this.controlador.getMonedas(permisosAux);
 			

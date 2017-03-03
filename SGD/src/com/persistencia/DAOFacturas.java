@@ -574,6 +574,7 @@ public class DAOFacturas implements IDAOFacturas{
 				aux.setFecValor(rs.getTimestamp("fec_valor"));
 				
 				aux.setMoneda(new MonedaInfo(rs.getString("cod_moneda"), rs.getString("nom_moneda"), rs.getString("simbolo")));
+				aux.getMoneda().setNacional(rs.getBoolean("nacional"));
 				
 				aux.setImpuestoInfo(new ImpuestoInfo(rs.getString("cod_impuesto"), rs.getString("nom_impuesto"), rs.getDouble("porcentaje")));
 				

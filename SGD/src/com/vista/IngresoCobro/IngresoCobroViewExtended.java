@@ -253,7 +253,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 					permisoAux = 
 							new UsuarioPermisosVO(permisos.getCodEmp(),
 									permisos.getUsuario(),
-									VariablesPermisos.FORMULARIO_GASTOS,
+									VariablesPermisos.FORMULARIO_INGRESO_COBRO,
 									VariablesPermisos.OPERACION_NUEVO_EDITAR);
 					
 					if(!val.validaPeriodo(fecValor.getValue(), permisoAux)){
@@ -511,7 +511,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
    					new UsuarioPermisosVO(permisos.getCodEmp(),
    							permisos.getUsuario(),
    							VariablesPermisos.FORMULARIO_INGRESO_COBRO,
-   							VariablesPermisos.OPERACION_NUEVO_EDITAR);
+   							VariablesPermisos.OPERACION_LEER);
    			
    			MonedaVO auxMoneda = new MonedaVO();
    			Date fecha = convertFromJAVADateToSQLDate(fecValor.getValue());
@@ -967,7 +967,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			permisoAux = 
 					new UsuarioPermisosVO(permisos.getCodEmp(),
 							permisos.getUsuario(),
-							VariablesPermisos.FORMULARIO_GASTOS,
+							VariablesPermisos.FORMULARIO_INGRESO_COBRO,
 							VariablesPermisos.OPERACION_NUEVO_EDITAR);
 			
 			//Controla que el período esté abierto
@@ -1040,7 +1040,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 			permisoAux = 
 					new UsuarioPermisosVO(permisos.getCodEmp(),
 							permisos.getUsuario(),
-							VariablesPermisos.FORMULARIO_GASTOS,
+							VariablesPermisos.FORMULARIO_INGRESO_COBRO,
 							VariablesPermisos.OPERACION_NUEVO_EDITAR);
 			
 			try {
@@ -1534,7 +1534,8 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 		
 		if(permisoEliminar)
 			this.enableBotonEliminar();
-		
+		else
+			this.disableBotonEliminar();
 		
 		
 		/*Seteamos la grilla con los formularios*/
@@ -3405,7 +3406,7 @@ public class IngresoCobroViewExtended extends IngresoCobroViews implements IBusq
 				permisosAux = 
 						new UsuarioPermisosVO(this.permisos.getCodEmp(),
 								this.permisos.getUsuario(),
-								VariablesPermisos.FORMULARIO_RECIBO,
+								VariablesPermisos.FORMULARIO_INGRESO_COBRO,
 								VariablesPermisos.OPERACION_LEER);
 				
 				try {
