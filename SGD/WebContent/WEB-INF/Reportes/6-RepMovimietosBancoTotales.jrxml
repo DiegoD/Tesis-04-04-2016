@@ -50,7 +50,7 @@
 
 FROM v_rep_movimientos_bco v, m_ctasbcos  m, m_bancos b
 WHERE v.cod_emp = m.cod_emp AND v.cod_ctabco = m.cod_ctabco
-AND v.cod_emp = b.cod_emp AND v.cod_bco = b.cod_bco
+AND v.cod_emp = b.cod_emp AND v.cod_bco = b.cod_bco AND m.cod_bco = b.cod_bco
 AND fecha BETWEEN $P{fecDesde}    AND $P{fecHasta} AND v.cod_emp = $P{codEmp}  AND (conciliado = $P{conciliados} OR $P{conciliados} = '0')
 GROUP BY v.cod_bco, v.cod_ctabco, m.nom_cta, v.simbolo]]>
 	</queryString>
@@ -197,7 +197,7 @@ GROUP BY v.cod_bco, v.cod_ctabco, m.nom_cta, v.simbolo]]>
 				<textElement textAlignment="Right">
 					<font size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[(($F{importe} == null) ? new Double("0") :$F{importe}) + (($F{saldoAnterior} == null) ? new Double("0") :$F{saldoAnterior}) ]]></textFieldExpression>
+				<textFieldExpression><![CDATA[(($F{importe} == null) ? new Double("0") :$F{importe}) + (($F{saldoAnterior} == null) ? new Double("0") :$F{saldoAnterior})]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement style="Detail" positionType="Float" x="502" y="1" width="150" height="18" backcolor="#1A85E2" uuid="19649327-e8f1-441f-b809-669e6b580a4d"/>
