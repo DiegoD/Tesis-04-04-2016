@@ -3177,6 +3177,46 @@ public void modificarIngresoCobro(IngresoCobroVO ingVO, IngresoCobroVO copiaVO) 
 		
 		return lstVO;
 	}	 
+	
+	/**
+	*Nos retorna una lista con todos las facturas con saldo para titular, empresa y moneda
+	*
+	*/
+	@SuppressWarnings("unchecked") 
+	public ArrayList<FacturaVO> getFacturaConSaldoxMonedaNC(String codEmp, String codMoneda, String codTit) throws ObteniendoFacturasException, ConexionException {
+	
+		Connection con = null;
+		
+		ArrayList<Factura> lst;
+		ArrayList<FacturaVO> lstVO = new ArrayList<FacturaVO>();
+		
+		try
+		{
+			con = this.pool.obtenerConeccion();
+			
+			lst = this.facturas.getFacturaConSaldoxMonedaNC(con, codEmp, codMoneda, codTit);
+			
+			for (Factura fac : lst) 
+			{
+				FacturaVO aux = fac.retornarVO();
+			
+				lstVO.add(aux);
+			}
+		
+		}catch(ObteniendoFacturasException  e){
+			throw e;
+		
+		} catch (ConexionException e) {
+		
+			throw e;
+		} 
+		finally
+		{
+			this.pool.liberarConeccion(con);
+		}
+		
+		return lstVO;
+	}	 
 
 	@SuppressWarnings("unchecked") 
 	public ArrayList<FacturaVO> getFacturaxProceso(String codEmp, Integer codProceso) throws ObteniendoFacturasException, ConexionException {

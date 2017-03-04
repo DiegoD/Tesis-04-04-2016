@@ -99,7 +99,7 @@ public class NotaCreditoControlador {
 		
 		/*Primero se verifican los permisos*/
 		if(Fachada.getInstance().permisoEnFormulario(permisos))
-			return Fachada.getInstance().getFacturaConSaldoxMoneda(permisos.getCodEmp(), codMoneda, codTit);
+			return Fachada.getInstance().getFacturaConSaldoxMonedaNC(permisos.getCodEmp(), codMoneda, codTit);
 		else
 			throw new NoTienePermisosException();
 	}
