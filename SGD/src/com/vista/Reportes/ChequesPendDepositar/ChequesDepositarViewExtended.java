@@ -380,19 +380,19 @@ public void inicializarComboMoneda(String cod){
 		
 		/*Agregamos moneda TODAS*/
 		
-		MonedaVO monedaTODAS = new MonedaVO();
-		monedaTODAS.setAceptaCotizacion(false);
-		monedaTODAS.setActivo(true);
-		monedaTODAS.setCodMoneda("TODAS");
-		monedaTODAS.setCotizacion(1);
-		monedaTODAS.setDescripcion("TODAS");
-		monedaTODAS.setFechaMod(lstMonedas.get(0).getFechaMod());
-		monedaTODAS.setNacional(false);
-		monedaTODAS.setOperacion("");
-		monedaTODAS.setSimbolo("");
-		monedaTODAS.setUsuarioMod("SISTE");
+		//MonedaVO monedaTODAS = new MonedaVO();
+		//monedaTODAS.setAceptaCotizacion(false);
+		//monedaTODAS.setActivo(true);
+		//monedaTODAS.setCodMoneda("TODAS");
+		//monedaTODAS.setCotizacion(1);
+		//monedaTODAS.setDescripcion("TODAS");
+		//monedaTODAS.setFechaMod(lstMonedas.get(0).getFechaMod());
+		//monedaTODAS.setNacional(false);
+		//monedaTODAS.setOperacion("");
+		//monedaTODAS.setSimbolo("");
+		//monedaTODAS.setUsuarioMod("SISTE");
 		
-		monedasObj.addBean(monedaTODAS);
+		//monedasObj.addBean(monedaTODAS);
 		
 		
 		
